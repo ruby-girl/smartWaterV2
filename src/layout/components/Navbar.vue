@@ -23,7 +23,7 @@
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown">      
+        <el-dropdown-menu slot="dropdown">
             <el-dropdown-item> <span style="display:block;" @click="logout">Log Out</span></el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
