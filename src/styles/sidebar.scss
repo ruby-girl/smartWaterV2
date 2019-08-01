@@ -64,17 +64,21 @@
     }
 
     // menu hover
-    .submenu-title-noDropdown,
-    .el-submenu__title {
-      &:hover {
-        background-color: $menuHover !important;
-      }
-    }
+    // .submenu-title-noDropdown,
+    // .el-submenu__title {
+    //   &:hover {
+    //     background-color: $menuHover !important;
+    //   }
+    // }
 
     .is-active>.el-submenu__title {
       color: $subMenuActiveText !important;
     }
-
+    // 这里是设置子菜单选择时的背景色
+    .is-active>.el-menu>.nest-menu .router-link-active .el-menu-item {
+      background-color:$menuHover !important;
+     
+    }
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
       min-width: $sideBarWidth !important;
@@ -185,10 +189,22 @@
     &:hover {
       // you can use $subMenuHover
       background-color: $menuHover !important;
+      color:$menuActiveText !important;
     }
   }
-
-  // the scroll bar appears when the subMenu is too long
+  .el-scrollbar__view .el-menu>.menu-wrapper,
+  .el-menu-item {
+    &:hover {
+      // you can use $subMenuHover
+      background-color: $menuHover !important;
+      color:$menuActiveText !important;
+    }
+  }
+  .nest-menu>.router-link-active{
+    background-color: $menuHover !important;
+    color:$menuActiveText !important;
+  }
+   // the scroll bar appears when the subMenu is too long
   >.el-menu--popup {
     max-height: 100vh;
     overflow-y: auto;
