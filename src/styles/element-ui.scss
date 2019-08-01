@@ -78,10 +78,18 @@
   display: inline-flex !important;
 }
 // 警告提示框样式
-.el-message-box__wrapper .warningBox .el-message-box__header{
-  background-color: $warn;
-  .el-message-box__title{
-    color:#fff !important;
+.el-message-box__wrapper .warningBox{
+  .el-message-box__content{
+    padding-top:40px;
+    padding-bottom:40px;
+    font-size: 16px;
+  }
+  .el-message-box__header{
+    background-color: $warn;
+    .el-message-box__title{
+      color:#fff !important;
+      font-size: 14px;
+    }
   }
 }
 .el-message-box{
@@ -89,4 +97,24 @@
 }
 .el-message-box__btns{
   text-align: center;
+}
+// 通用弹出框样式
+.el-dialog__wrapper .el-dialog{
+  .el-dialog__header{
+    background-color: $green;
+    font-size: 14px;
+    padding-top:10px!important;
+    .el-dialog__headerbtn{
+      top:12px;
+      .el-dialog__close{
+        color:#fff;
+      }
+    }
+  }
+  .el-dialog__title{
+    color:#fff !important;
+  }
+  .el-dialog__footer{
+    text-align: center;
+  }
 }

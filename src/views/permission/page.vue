@@ -17,6 +17,8 @@ export default {
       type: 'warning',
       customClass: 'warningBox',
       showClose: false
+    }).then(() => {
+      console.log('asd')
     })
   },
   methods: {
