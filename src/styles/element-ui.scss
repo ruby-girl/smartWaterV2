@@ -1,5 +1,5 @@
 // cover some element-ui styles
-
+@import './variables.scss';
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
   font-weight: 400 !important;
@@ -76,4 +76,17 @@
 // fix date-picker ui bug in filter-item
 .el-range-editor.el-input__inner {
   display: inline-flex !important;
+}
+// 警告提示框样式
+.el-message-box__wrapper .warningBox .el-message-box__header{
+  background-color: $warn;
+  .el-message-box__title{
+    color:#fff !important;
+  }
+}
+.el-message-box{
+ border:none;
+}
+.el-message-box__btns{
+  text-align: center;
 }
