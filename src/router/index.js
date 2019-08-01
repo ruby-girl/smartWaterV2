@@ -49,6 +49,18 @@ export const constantRoutes = [
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
       }
     ]
+  },
+  {
+    path: '/organizationManage',
+    component: Layout,
+    children: [
+      {
+        path: '/organizationManage',
+        name: 'organizationManage',
+        component: () => import('@/views/organizationManage/index'),
+        meta: { title: 'organizationManage', icon: 'dashboard', affix: true }
+      }
+    ]
   }
 ]
 const createRouter = () => new Router({
