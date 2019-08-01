@@ -75,7 +75,6 @@
         </li>
       </ul>
     </div>
-
     <!--弹窗-->
     <div v-show="ifImg" class="cl-image-viewer">
       <div class="cl-image-viewer__mask" @click="ifImg=false" />
