@@ -72,6 +72,7 @@
             <i class="el-icon-close" @click="handleRemove(item)" />
           </div>
           <img v-show="(item.type === 0&&item.active)?true:false" class="smallImg" :src="item.url" alt="">
+          
         </li>
       </ul>
     </div>
