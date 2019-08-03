@@ -1,6 +1,30 @@
 <template>
   <div class="logo-container main-color">
-    <h1 class="sidebar-title main-color-fff">{{ title }} </h1>
+    <div class="font-weight logo-margin">▍&nbsp;登录信息</div>
+    <div class="display-flex logo-item-height">
+      <div class="iconfont icondengluxinxi-zhanghao" />
+      <div class="logo-label">账号:</div>
+      <div class="main-color-fff">admin</div>
+    </div>
+    <div class="display-flex logo-item-height">
+      <div class="iconfont iconzhanghu" />
+      <div class="logo-label">角色:</div>
+      <div class="main-color-fff">管理员</div>
+    </div>
+    <div class="display-flex">
+      <div class="iconfont icondengluxinxi-youxiang" />
+      <div class="logo-label">邮箱:</div>
+    </div>
+    <div class="logo-item-height">
+      <div class="main-color-fff text-wrap">59703277@qq.com</div>
+    </div>
+    <div class="display-flex">
+      <div class="iconfont icondengluxinxi-shangcidenglu" />
+      <div class="logo-label">上次登录时间:</div>
+    </div>
+    <div class="logo-item-height">
+      <div class="main-color-fff text-wrap">2018-08-02</div>
+    </div>
   </div>
 </template>
 
@@ -18,17 +42,21 @@ export default {
 
 <style lang="scss" scoped>
 .logo-container{
-  height:200px;
-  width:150px;
+  height:210px;
+  width:164px;
   border: 1px solid #008C83;
-  margin:0 auto;
-}
-.sidebar-title {
-  text-align: center;
-  font-weight: 600;
-  line-height: 50px;
+  margin:20px auto;
   font-size: 14px;
-  font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-  vertical-align: middle;
+  padding:15px;
+  .logo-margin{
+    margin-bottom: 20px;
+  }
+  .logo-label{
+    padding:0 5px;
+  }
+  .logo-item-height{
+    padding-bottom: 12px;
+  }
 }
+
 </style>
