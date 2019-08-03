@@ -1,0 +1,36 @@
+.cl-container{
+  i{font-style:normal}
+  .el-button--small{padding: 7px 15px;}
+  .cl-color1{background: #FADB14;border: solid 1px #FADB14;}
+  .cl-color2{background: #CC4141;border: solid 1px #CC4141;}
+  position: relative;
+  padding: 16px 16px 0 16px;
+  height: calc(100vh - 74px);
+  .el-dialog__title{font-size: 14px;}
+  .warningBox{
+    .el-dialog__header{background: #AD8B00}
+    .warnInfo{
+      text-align: center;
+      color: #777C82;
+      font-size: 16px;
+      >i{color: #AD8B00;font-size: 18px;}
+    }
+  }
+}
+
+.cl-container1{
+  >div{
+    background: #fff;height: inherit;
+    .cl-searchCont{
+      padding: 16px 16px 32px 16px;
+      >label{color: #777C82;font-size: 14px;}
+      .el-input{width: 50%;}
+      .cl-search{margin-left: 20px;}
+    }
+    .cl-orn-searchCont{width: 50%}
+    .cl-operation1{padding: 16px;width: 50%;text-align: right;
+      .el-button{margin-left: 20px;}
+    }
+  }
+  .cl-baseImg{position: absolute;top: 50%;margin-top: -147px;right: 12%}
+}
