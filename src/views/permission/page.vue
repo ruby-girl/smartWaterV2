@@ -1,15 +1,12 @@
 <template>
   <div class="app-container">
-    <switch-roles @change="handleRolesChange" />
+    <div>asdad</div>
   </div>
 </template>
 
 <script>
-import SwitchRoles from './components/SwitchRoles'
-
 export default {
   name: 'PagePermission',
-  components: { SwitchRoles },
   created() {
     this.$confirm('这里是需要确认的信息', '提示', {
       confirmButtonText: '确定',

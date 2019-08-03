@@ -52,9 +52,4 @@ export default {
   }
 }
 </script>
-<style  scoped>
-.el-menu-item .is-active{
-  background-color: red !important;
-}
-</style>
 

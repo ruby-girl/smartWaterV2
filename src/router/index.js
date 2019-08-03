@@ -69,7 +69,7 @@ export const constantRoutes = [
     alwaysShow: true, // will always show the root menu
     name: 'Permission',
     meta: {
-      title: 'Permission',
+      title: '权限管理',
       icon: 'lock',
       roles: ['3'] // you can set roles in root nav
     },
@@ -94,11 +94,11 @@ export const constantRoutes = [
       },
       {
         path: 'role',
-        component: () => import('@/views/permission/role'),
+        component: () => import('@/views/permission/role/index'),
         name: 'RolePermission',
         meta: {
-          title: 'Role Permission',
-          roles: ['4']
+          title: '角色管理'
+          // if do not set roles, means: this page does not require permission
         }
       }
     ]
@@ -133,15 +133,6 @@ export const asyncRoutes = [
         meta: {
           title: 'Directive Permission'
           // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: 'Role Permission',
-          roles: ['4']
         }
       }
     ]
