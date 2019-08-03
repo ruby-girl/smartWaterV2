@@ -39,54 +39,54 @@
 </template>
 
 <script>
-  export default {
-    name: 'index',
-    data() {
-      return {
-        checkData: [// 所有列可选项
-          { checked: true, text: '日期', prop: 'date', position: 'left' },
-          { checked: true, text: '姓名', prop: 'name', position: 'left' },
-          { checked: false, text: '地址', prop: 'address', position: 'left' },
-          { checked: false, text: '年龄', prop: 'age', position: 'left' },
-          { checked: false, text: '性别', prop: 'sex', position: 'left' },
-          { checked: false, text: '身高', prop: 'height', position: 'left' }
-        ],
-        tableData: [
-          {
-            date: '2012-10-30',
-            name: ' 机库顶',
-            address: '新世纪欧式党纪国法',
-            age: '12',
-            sex: '女',
-            height: '120'
-          },
-          {
-            date: '2012-10-31',
-            name: ' 西涵涵',
-            address: '第三个根本不被覆盖不是多',
-            age: '13',
-            sex: '男',
-            height: '130'
-          }
-        ],
-      }
-    },
-    computed: {
-      tableDataHead: function() {
-        let arrayHead = []
-        const data = this.checkData
-        for (let i = 0; i < data.length; i++) { // 过滤选中列
-          if (data[i].checked) {
-            arrayHead.push(data[i])
-          }
+export default {
+  name: 'CustomTable',
+  data() {
+    return {
+      checkData: [// 所有列可选项
+        { checked: true, text: '日期', prop: 'date', position: 'left' },
+        { checked: true, text: '姓名', prop: 'name', position: 'left' },
+        { checked: false, text: '地址', prop: 'address', position: 'left' },
+        { checked: false, text: '年龄', prop: 'age', position: 'left' },
+        { checked: false, text: '性别', prop: 'sex', position: 'left' },
+        { checked: false, text: '身高', prop: 'height', position: 'left' }
+      ],
+      tableData: [
+        {
+          date: '2012-10-30',
+          name: ' 机库顶',
+          address: '新世纪欧式党纪国法',
+          age: '12',
+          sex: '女',
+          height: '120'
+        },
+        {
+          date: '2012-10-31',
+          name: ' 西涵涵',
+          address: '第三个根本不被覆盖不是多',
+          age: '13',
+          sex: '男',
+          height: '130'
         }
-        return arrayHead;
-      }
-    },
-    mounted() {
-      this.$dragging.$on('dragged', ({ value }) => {})
+      ]
     }
+  },
+  computed: {
+    tableDataHead: function() {
+      const arrayHead = []
+      const data = this.checkData
+      for (let i = 0; i < data.length; i++) { // 过滤选中列
+        if (data[i].checked) {
+          arrayHead.push(data[i])
+        }
+      }
+      return arrayHead
+    }
+  },
+  mounted() {
+    this.$dragging.$on('dragged', ({ value }) => {})
   }
+}
 </script>
 <style lang="scss">
   .customTableBox{
