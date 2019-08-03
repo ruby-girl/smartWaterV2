@@ -3,13 +3,13 @@
     <div>
       <div class="clearfix">
         <div class="cl-searchCont cl-orn-searchCont fl">
-          <label>公司：</label>
-          <el-input
-            maxlength="20"
-            placeholder="公司（长度20内）"
-            v-model="searchText"
-            size="small">
-          </el-input>
+            <label>公司：</label>
+            <el-input
+              maxlength="20"
+              placeholder="公司（长度20内）"
+              v-model="searchText"
+              size="small">
+            </el-input>
           <el-button type="primary" size="small" class="cl-search"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
         </div>
         <div class="cl-operation1 fr">
@@ -28,14 +28,15 @@
         :visible.sync="dialogVisible"
         width="22%">
         <div>
-          <label>公司：</label>
-          <el-input
-            style="width: 80%;margin-bottom: 10%;"
-            placeholder="公司（长度20内）"
-            v-model="addName"
-            maxlength="20"
-            size="small">
-          </el-input>
+          <div class="cl-inlineItem">
+            <label class="cl-label">公司：</label>
+            <el-input
+              placeholder="公司（长度20内）"
+              v-model="addName"
+              maxlength="20"
+              size="small">
+            </el-input>
+          </div>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="saveFun" size="small">确 定</el-button>
@@ -67,7 +68,7 @@ import '../../styles/organization.scss'
 import myTree from '../../components/Tree/index'
 
 export default {
-  name: 'OrganizationManage',
+  name: 'Company',
   components: { myTree },
   data() {
     return {

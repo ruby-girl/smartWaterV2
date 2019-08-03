@@ -52,13 +52,20 @@ export const constantRoutes = [
   },
   {
     path: '/organizationManage',
+    redirect: '/organizationManage/company',
     component: Layout,
     children: [
       {
-        path: '/organizationManage',
-        name: 'organizationManage',
-        component: () => import('@/views/organizationManage/index'),
-        meta: { title: 'organizationManage', icon: 'dashboard', affix: true }
+        path: '/organizationManage/company',
+        name: 'company',
+        component: () => import('@/views/organizationManage/company'),
+        meta: { title: 'company', icon: 'company', affix: true }
+      },
+      {
+        path: '/organizationManage/department',
+        name: 'department',
+        component: () => import('@/views/organizationManage/department'),
+        meta: { title: 'department', icon: 'department', affix: true }
       }
     ]
   },

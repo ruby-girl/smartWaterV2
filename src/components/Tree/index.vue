@@ -52,7 +52,7 @@ export default {
     height: calc(100vh - 20%);
     overflow: auto;
     .custom-tree-container{
-      width: 25%;padding: 0 0 0 16px;
+      width: 25%;
       .el-tree{
         color: #777C82;
         .icongongsishu-yiji{color: #006663}
