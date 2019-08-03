@@ -3,17 +3,16 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <img src="../../assets/imgs/logo.png" alt="">
       </div>
 
       <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
+        <span class="svg-container iconfont iconzhanghu">
         </span>
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="请输入您的登录账号"
           name="username"
           type="text"
           tabindex="1"
@@ -23,15 +22,14 @@
 
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
+          <span class="svg-container iconfont iconmima">
           </span>
           <el-input
             :key="passwordType"
             ref="password"
             v-model="loginForm.password"
             :type="passwordType"
-            placeholder="Password"
+            placeholder="请输入您的登录密码"
             name="password"
             tabindex="2"
             autocomplete="on"
@@ -45,7 +43,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-top:25px;" @click.native.prevent="handleLogin">Login</el-button>
     </el-form>
 
     <el-dialog title="Or connect with" :visible.sync="showDialog">
@@ -59,7 +57,6 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 
 export default {
@@ -67,15 +64,17 @@ export default {
   components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+      if (!value) {
+        callback(new Error('不能为空'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+      if (!value) {
+        callback(new Error('不能为空'))
+      } else if (value.length < 6 || value.length > 20) {
+        callback(new Error('长度6-18'))
       } else {
         callback()
       }
@@ -198,7 +197,7 @@ export default {
 
 $bg:#283443;
 $light_gray:#fff;
-$cursor: #fff;
+$cursor: #283443;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -208,9 +207,10 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+  width:350px;
   .el-input {
     display: inline-block;
-    height: 47px;
+    height: 36px;
     width: 85%;
 
     input {
@@ -218,11 +218,11 @@ $cursor: #fff;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
+      padding:0  5px 0 15px;
+      color: $cursor;
+      height: 27px;
       caret-color: $cursor;
-
+      margin-top:3px;
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
         -webkit-text-fill-color: $cursor !important;
@@ -231,30 +231,32 @@ $cursor: #fff;
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #D8E2E7;
+    //background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
+  }
+  .el-form-item__content{
+    line-height: 24px;
   }
 }
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
+$bg:#fff;
 $dark_gray:#889aa4;
 $light_gray:#eee;
 
 .login-container {
-  min-height: 100%;
-  width: 100%;
+  height: 460px;
   background-color: $bg;
   overflow: hidden;
-
+  background-image: url('../../assets/imgs/logo_bg.png');
   .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding:27px 35px 47px 35px;
     margin: 0 auto;
     overflow: hidden;
   }
@@ -272,16 +274,19 @@ $light_gray:#eee;
   }
 
   .svg-container {
-    padding: 6px 5px 6px 15px;
+    padding: 6px 6px 6px 7px;
     color: $dark_gray;
     vertical-align: middle;
-    width: 30px;
+    width: 36px;
     display: inline-block;
+    border-right:1px solid #D8E2E7;
+    font-size: 24px;
   }
 
   .title-container {
     position: relative;
-
+    text-align: center;
+    margin-bottom: 44px;
     .title {
       font-size: 26px;
       color: $light_gray;
@@ -290,7 +295,9 @@ $light_gray:#eee;
       font-weight: bold;
     }
   }
-
+  .el-form-item{
+    margin-bottom: 44px;
+  }
   .show-pwd {
     position: absolute;
     right: 10px;

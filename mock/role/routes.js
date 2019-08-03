@@ -100,15 +100,6 @@ export const asyncRoutes = [
         meta: {
           title: 'Directive Permission'
         }
-      },
-      {
-        path: 'role',
-        component: 'views/permission/role',
-        name: 'RolePermission',
-        meta: {
-          title: 'Role Permission',
-          roles: ['admin']
-        }
       }
     ]
   },

@@ -14,9 +14,6 @@ body {
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
 
-label {
-  font-weight: 700;
-}
 
 html {
   height: 100%;
@@ -66,12 +63,12 @@ div:focus {
   float: left;
 }
 
-.pr-5 {
-  padding-right: 5px;
+.pr-15 {
+  padding-right: 15px;
 }
 
-.pl-5 {
-  padding-left: 5px;
+.pl-15 {
+  padding-left: 15px;
 }
 
 .block {
@@ -281,9 +278,16 @@ aside {
 .main-color-fff{
   color:#fff;
 }
+.main-color-red{
+  color:$red;
+}
 .font-weight{
   font-weight: bold;
 }
 .text-wrap{
   word-wrap:break-word;
+}
+.table-top-btn-padding{
+  padding-left:20px;
+  padding-bottom:20px;
 }
