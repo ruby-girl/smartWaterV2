@@ -27,9 +27,10 @@ export default {
   .customTableBox{
     margin-top: 10px;
     .customOption {
-        padding:0 30px;border: solid 1px #eee;margin-bottom: 16px;background: #ffffe7;border: solid 1px #fbdb14;line-height: 50px;height: 50px;
-        color: #8b8c89;font-size: 14px;
-      >span{display: inline-block;}
+        padding:0 30px;border: solid 1px #eee;margin-bottom: 16px;background: #ffffe7;border: solid 1px #fbdb14;line-height: 50px;overflow: auto;
+        color: #8b8c89;font-size: 14px;max-height: 100px;display: flex;
+      >span{display: inline-block;width: 85px}
+      >div{flex: 1}
    }
   }
 </style>

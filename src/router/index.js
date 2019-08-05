@@ -66,6 +66,18 @@ export const constantRoutes = [
         name: 'department',
         component: () => import('@/views/organizationManage/department'),
         meta: { title: 'department', icon: 'department', affix: true }
+      },
+      {
+        path: '/organizationManage/postManage',
+        name: 'postManage',
+        component: () => import('@/views/organizationManage/postManage'),
+        meta: { title: 'postManage', icon: 'postManage', affix: true }
+      },
+      {
+        path: '/organizationManage/postDetail',
+        name: 'postManage',
+        component: () => import('@/views/organizationManage/postDetail'),
+        meta: { title: 'postDetail', icon: 'postDetail', affix: true }
       }
     ]
   },
