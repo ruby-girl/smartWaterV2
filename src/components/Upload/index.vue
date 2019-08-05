@@ -59,7 +59,7 @@ export default {
       ifImg: false,
       curSrc: '',
       curPdfSrc: '',
-      fileList: [// 上传后文件
+      fileList: [
         {
           name: 'city.jpeg',
           type: 0,
@@ -130,6 +130,7 @@ export default {
         file.type = 3
       }
       this.fileList.push(file)
+      this.$emit('getFileFun', this.fileList)
     },
     selectStyle(item) {
       const _this = this
@@ -183,7 +184,7 @@ export default {
         font-size: 16px;
         cursor: pointer;
         position: relative;
-        >div{position: relative;border-bottom: solid 1px #eee;margin: 0;padding: 5px;
+        >div{position: relative;border-bottom: solid 1px #eee;margin: 0;padding: 0px;
           >p{margin: 0;display: inline-block;}
         }
         padding: 0 15px;

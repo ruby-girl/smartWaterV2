@@ -1,8 +1,9 @@
 <template>
   <div class="cl-container cl-container1">
     <div>
-      <div class="clearfix">
-        <div class="cl-searchCont cl-orn-searchCont fl">
+      <el-row>
+        <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+          <div class="cl-searchCont">
             <label>公司：</label>
             <el-input
               maxlength="20"
@@ -10,15 +11,18 @@
               v-model="searchText"
               size="small">
             </el-input>
-          <el-button type="primary" size="small" class="cl-search"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
-        </div>
-        <div class="cl-operation1 fr">
-          <el-button type="primary" size="small" class="cl-search" @click="getCheckedNodes(1)"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
-          <el-button type="primary" size="small" class="cl-search cl-color1" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe677;</i> 编辑</el-button>
-          <el-button type="primary" size="small" class="cl-search cl-color2" @click="getCheckedNodes(3)"><i class="icon iconfont">&#xe687;</i> 删除</el-button>
-          <el-button type="success" size="small" class="cl-search" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
-        </div>
-      </div>
+            <el-button type="primary" size="small" class="cl-search"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
+          </div>
+        </el-col>
+        <el-col  :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+          <div class="fr">
+            <el-button type="primary" size="small" class="cl-search" @click="getCheckedNodes(1)"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
+            <el-button type="primary" size="small" class="cl-search cl-color1" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe677;</i> 编辑</el-button>
+            <el-button type="primary" size="small" class="cl-search cl-color2" @click="getCheckedNodes(3)"><i class="icon iconfont">&#xe687;</i> 删除</el-button>
+            <el-button type="success" size="small" class="cl-search" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
+          </div>
+        </el-col>
+      </el-row>
       <myTree ref="myChild" :treeData = treeData></myTree>
 
       <img class="cl-baseImg" src="../../assets/source_img/build.png" alt="">
@@ -31,7 +35,7 @@
           <div class="cl-inlineItem">
             <label class="cl-label">公司：</label>
             <el-input
-              placeholder="公司（长度20内）"
+              placeholder="公司（长度20内）已存在提示红色"
               v-model="addName"
               maxlength="20"
               size="small">

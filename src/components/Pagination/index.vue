@@ -90,10 +90,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .pagination-container {
   background: #fff;
-  padding: 32px 16px;
+  margin: 0;
+  padding: 5px;
+  border: solid 1px #eee;
+  border-top: none;
+  .el-pagination.is-background .btn-prev, .el-pagination.is-background .btn-next, .el-pagination.is-background .el-pager li{
+    background: none;
+  }
 }
 .pagination-container.hidden {
   display: none;
