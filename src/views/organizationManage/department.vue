@@ -27,7 +27,7 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" size="small" class="cl-search"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
+          <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
         </el-col>
       </el-row>
       <div class="cl-operation1">
@@ -41,10 +41,11 @@
         <el-table-column
           type="selection"
           width="55"
+          align="center"
         />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
-            min-width="200px"
+            :min-width="item.width"
             :key="index"
             :prop="item.prop"
             :align="item.position"
@@ -52,20 +53,20 @@
             :label="item.text"
           />
         </template>
-        <el-table-column label="操作" width="200px">
+        <el-table-column label="操作" width="200px" align="center">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button>
+            <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
+            <a class="operation2" @click="handleDelete(scope.$index, scope.row)">删除</a>
           </template>
         </el-table-column>
       </el-table>
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="page"
+        :limit.sync="limit"
+        @pagination="searchFun"
+      />
     </div>
   </div>
 </template>
@@ -73,11 +74,15 @@
 <script>
 import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
+import Pagination from '../../components/Pagination/index'
 export default {
   name: 'Department',
-  components: { customTable },
+  components: { customTable, Pagination },
   data() {
     return {
+      total: 100,
+      page: 10,
+      limit: 10,
       company: [{
         value: '选项1',
         label: '黄金糕'
@@ -115,12 +120,12 @@ export default {
         }
       ],
       checkAllData: [// 所有列可选项
-        { checked: true, text: '日期', prop: 'date', position: 'left' },
-        { checked: true, text: '姓名', prop: 'name', position: 'left' },
-        { checked: false, text: '地址', prop: 'address', position: 'left' },
-        { checked: false, text: '年龄', prop: 'age', position: 'left' },
-        { checked: false, text: '性别', prop: 'sex', position: 'left' },
-        { checked: false, text: '身高', prop: 'height', position: 'left' }
+        { checked: true, text: '日期', prop: 'date', position: 'center', width: '200px' },
+        { checked: true, text: '姓名', prop: 'name', position: 'center', width: '200px' },
+        { checked: false, text: '地址', prop: 'address', position: 'center', width: '200px' },
+        { checked: false, text: '年龄', prop: 'age', position: 'center', width: '200px' },
+        { checked: false, text: '性别', prop: 'sex', position: 'center', width: '200px' },
+        { checked: false, text: '身高', prop: 'height', position: 'center', width: '200px' }
       ],
       checksData: []
     }
@@ -132,7 +137,25 @@ export default {
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
     },
+    /**
+     * 导出
+     * */
     exportExcel() {
+    },
+    /**
+     * 编辑
+     * */
+    handleEdit() {
+    },
+    /**
+     * 删除
+     * */
+    handleDelete() {
+    },
+    /**
+     * 查询
+     * */
+    searchFun() {
     }
   },
   computed: {

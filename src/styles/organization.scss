@@ -23,11 +23,14 @@
   }
   .cl-inlineItem{
     display: flex;
-    padding-bottom: 20px;
+    padding-bottom: 32px;
     width: 90%;position: relative;
     .cl-label{font: normal 14px/30px '';color: #777C82;text-align: right;}
     >.el-input, >.el-select{flex: 1;}
   }
+  .operation1{ color: #00B3A1;font-size: 13px;margin: 10px}
+  .operation2{ color: #FF3D3D;font-size: 13px;margin: 10px}
+  .el-table thead tr th{ background: #F0F2F5}
 }
 
 .cl-container1{
