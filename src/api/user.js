@@ -8,6 +8,14 @@ export function login(data) {
   })
 }
 
+export function getKey(data) {
+  return request({
+    url: '/Login/GetLoginPublicKey',
+    method: 'post',
+    data
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/user/info',

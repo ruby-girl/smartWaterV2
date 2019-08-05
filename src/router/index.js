@@ -82,11 +82,11 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        path: 'account',
+        component: () => import('@/views/permission/account'),
+        name: 'AccountPermission',
         meta: {
-          title: 'Page Permission',
+          title: '账号管理',
           roles: ['1'] // or you can only set roles in sub nav
         }
       },

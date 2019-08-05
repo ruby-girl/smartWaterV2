@@ -58,7 +58,8 @@
 
 <script>
 import SocialSign from './components/SocialSignin'
-
+import RSA from 'rsa-js-java'
+import { getKey } from '@/api/user'
 export default {
   name: 'Login',
   components: { SocialSign },
@@ -147,15 +148,20 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
+          // this.loading = true
+          // this.$store.dispatch('user/login', this.loginForm)
+          //   .then(() => {
+          //     this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          //     this.loading = false
+          //   })
+          //   .catch(() => {
+          //     this.loading = false
+          //   })
+          getKey({}).then((res)=>{
+            console.log(res)
+          })
+          // RSA.setMaxDigits(129)
+          // key = new RSA.RSAKeyPair(10001,'','1e2qwe2we32qw35e4qw3e43qwe4qw3e')
         } else {
           console.log('error submit!!')
           return false
@@ -170,24 +176,6 @@ export default {
         return acc
       }, {})
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
 }
 </script>

@@ -122,3 +122,10 @@
 .el-button--mini span,.el-button--small span{
   font-size: 14px !important;
 }
+.el-select__tags .el-tag .el-select__tags-text{
+ color:#8A9299;
+}
+// 下拉框宽度
+.el-select .el-input--suffix .el-input__inner{
+  padding-right:15px;
+}
