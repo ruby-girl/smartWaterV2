@@ -4,7 +4,7 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="120px"
+    label-width="100px"
     @submit.native.prevent
   >
     <el-form-item label="角色：">

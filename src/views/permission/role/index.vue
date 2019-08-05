@@ -1,13 +1,14 @@
 <template>
-  <div class="pipeline-select-padding">
+  <div class="section-container">
     <div ref="formHeight">
       <select-head :select-head="listQuery" @handleFilter="handleFilter" />
     </div>
     <div class="table-top-btn-padding">
-      <el-button type="primary" size="mini" class="iconfont icontianjia">添加</el-button>
+      <el-button type="primary" size="mini" class="iconfont icontianjia" @click="addRole">添加</el-button>
       <el-button type="success" size="mini" class="iconfont icondaochuexcel">导出Excel</el-button>
-      <el-button type="warning" size="mini" class="iconfont iconbiaogezidingyi">表格自定义</el-button>
+      <el-button type="warning" size="mini" class="iconfont iconbiaogezidingyi"  @click="setCustomData()">表格自定义</el-button>
     </div>
+    <customTable ref="myChild"></customTable>
     <div class="main-padding-20-y">
       <el-table
         :key="tableKey"
@@ -17,35 +18,29 @@
         stripe
         :height="tableHeight"
         style="width: 100%;"
-        :header-cell-style="{'background-color': '#F0F5FF'}"
+        :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
         >
         <el-table-column type="index"></el-table-column>
-        <el-table-column label="角色" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.role }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作人" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.roleName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作时间" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.roleName }}</span>
-          </template>
-        </el-table-column>
+        <template v-for="(item ,index) in tableHead">
+          <el-table-column
+            min-width="100px"
+            :key="index"
+            :prop="item.prop"
+            :align="item.position"
+            sortable
+            :label="item.text"
+          />
+        </template>
         <el-table-column label="操作" align="center" class-name="small-padding">
           <template slot-scope="{row}">
             <div class="display-flex justify-content-flex-center">
-              <div class="main-color" @click="handleUpdate(row)"><a>操作</a></div>
-              <div class="main-color-red pl-15" @click="delRow"><a>删除</a></div>
+              <div class="main-color" @click="handleUpdate(row)"><a>编辑</a></div>
+              <div class="main-color-red pl-15" @click="delRow(row)"><a>删除</a></div>
             </div>
           </template>
         </el-table-column>
       </el-table>
-
       <pagination
         v-show="total>0"
         :total="total"
@@ -54,13 +49,17 @@
         @pagination="getList"
       />
     </div>
+    <!-- 编辑弹窗 -->
+    <Dialog :show.sync="dialogFormVisible" :temp="temp" @createData="createData" @updateData="updateData" :dialogStatus="dialogStatus"></Dialog>
   </div>
 </template>
 <script>
 import SelectHead from './components/SelectHead'
 import Pagination from '@/components/Pagination'
+import Dialog from './components/Dialog'
+import customTable from '@/components/CustomTable/index'
 export default {
-  components: { SelectHead, Pagination },
+  components: { SelectHead, Pagination, Dialog, customTable},
   data() {
     return {
       total: 1,
@@ -78,7 +77,23 @@ export default {
         startTime: '', // 操作时间起
         endTime: '' // 操作时间止
       },
-      tableData: [{ role: '123', roleName: '羊阿萨德' }]
+      dialogStatus: '', // 识别添加还是编辑
+      dialogFormVisible: false, // 弹窗
+      tableData: [{ role: '123', roleName: '羊阿萨德', time: '2018-01-01'}],
+      checksData: [],
+      checkAllData: [// 所有列可选项
+        { checked: true, text: '角色', prop: 'role', position: 'left' },
+        { checked: true, text: '操作人', prop: 'roleName', position: 'left' },
+        { checked: true, text: '操作时间', prop: 'time', position: 'left' }
+      ],
+    }
+  },
+  computed: {
+    tableHead: function() {
+      let arrayHead= this.checksData.filter((item)=>{
+          return item.checked
+      })
+      return arrayHead
     }
   },
   mounted: function() {
@@ -86,13 +101,18 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight
       const that = this
-      that.tableHeight = document.body.clientHeight - formHeight - 250
+      that.tableHeight = document.body.clientHeight - formHeight - 300
       window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight - 250
+        that.tableHeight = document.body.clientHeight - formHeight - 300
       }
+      this.$refs.myChild.checkData = this.checkAllData // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.myChild.checkData // 获取自定义字段中选中了字段
     })
   },
   methods: {
+    setCustomData() {
+      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
+    },
     getList() {
       console.log('请求')
     },
@@ -105,11 +125,8 @@ export default {
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
     },
-    delRow() {
+    delRow(r) {
       this.$confirm('这里是需要确认的信息', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -117,8 +134,19 @@ export default {
         customClass: 'warningBox',
         showClose: false
       }).then(() => {
-        console.log('asd')
+        console.log(r)
       })
+    },
+    addRole() {
+      this.temp = {}
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+    },
+    createData() {
+      console.log('添加了')
+    },
+    updateData() {
+      console.log('编辑了')
     }
   }
 }
