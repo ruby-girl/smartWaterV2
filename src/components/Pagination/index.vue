@@ -94,7 +94,7 @@ export default {
 .pagination-container {
   background: #fff;
   margin: 0;
-  padding: 10px;
+  padding: 5px;
   border: solid 1px #eee;
   border-top: none;
   .el-pagination.is-background .btn-prev, .el-pagination.is-background .btn-next, .el-pagination.is-background .el-pager li{
