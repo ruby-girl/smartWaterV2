@@ -63,42 +63,70 @@ export default {
     },
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
+        color: ['#00B3A1', '#33B300', '#CC4141'],
         xAxis: {
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
-          axisTick: {
-            show: false
+          boundaryGap: true,
+          axisLine: {
+            onZero: false,
+            lineStyle: {
+              type: 'solid',
+              color: '#CFDAE6',
+              width: 2
+            }
+          },
+          axisLabel: {
+            color: '#777C82',
+            margin: 15
           }
         },
         grid: {
           left: 10,
           right: 10,
           bottom: 20,
-          top: 30,
+          top: 40,
           containLabel: true
         },
         tooltip: {
+          backgroundColor: 'rgba(14, 43, 68, .6)',
           trigger: 'axis',
           axisPointer: {
-            type: 'cross'
+            type: 'line'
           },
           padding: [5, 10]
         },
         yAxis: {
-          axisTick: {
-            show: false
+          splitLine: {
+            lineStyle: {
+              type: 'dashed',
+              color: '#DAE6F2'
+            }
+          },
+          splitArea: {
+            areaStyle: {
+              color: 'transparent'
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              type: 'solid',
+              color: '#fff'
+            }
+          },
+          axisLabel: {
+            color: '#777C82'
           }
         },
         legend: {
+          x: 'right',
           data: ['expected', 'actual']
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: 'expected',
+          itemStyle: {
             normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
+              areaStyle: {
+                color: 'transparent'
               }
             }
           },
@@ -114,13 +142,8 @@ export default {
           type: 'line',
           itemStyle: {
             normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
               areaStyle: {
-                color: '#f3f8ff'
+                color: 'transparent'
               }
             }
           },

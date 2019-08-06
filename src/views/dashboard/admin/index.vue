@@ -1,30 +1,30 @@
 <template>
   <div class="dashboard-editor-container">
-    <!-- <github-corner class="github-corner" /> -->
-
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
-
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
-    </el-row>
-
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
+    <el-row :gutter="16">
+      <el-col :xs="24" :sm="12" :lg="12">
         <div class="chart-wrapper">
-          <raddar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
+          <h2><i></i>今日缴费开户简览</h2>
           <bar-chart />
         </div>
       </el-col>
+      <el-col :xs="24" :sm="12" :lg="12">
+        <div class="chart-wrapper">
+          <h2><i></i>近5日缴费开户简览</h2>
+          <line-chart :chart-data="lineChartData" />
+        </div>
+      </el-col>
     </el-row>
+    <div class="chart-wrapper" style="padding: 16px 16px 16px">
+      <h2><i></i>操作员信息</h2>
+      <ul class="userInfo">
+        <li>所属公司 <span class="fr">四川府星仪表有限公司成都分公司</span></li>
+        <li>账号 <span class="fr">admin</span></li>
+        <li>角色 <span class="fr">管理员</span></li>
+        <li>人员 <span class="fr">管理员</span></li>
+        <li>上一次登录时间 <span class="fr">2018-07-22 13:52</span></li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -79,7 +79,7 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 32px;
+  padding: 16px;
   background-color: rgb(240, 242, 245);
   position: relative;
 
@@ -94,6 +94,18 @@ export default {
     background: #fff;
     padding: 16px 16px 0;
     margin-bottom: 32px;
+    h2 {
+      color: #00B3A1;font: bold 14px '';margin: 0;
+      i{display: inline-block;background: #00B3A1;width: 3px;height: 12px;margin-right: 8px;}
+    }
+  }
+  .userInfo {
+    border: solid 1px #E5EBF4;padding: 0;
+    li {
+      list-style: none;border-bottom: solid 1px #E5EBF4;padding: 13px 16px;font-size: 14px;color: #8A9299;
+      span {color: #46494D}
+    }
+    li:last-child{border: none}
   }
 }
 
