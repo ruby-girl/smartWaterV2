@@ -74,10 +74,23 @@ export const constantRoutes = [
         meta: { title: 'postManage', icon: 'postManage', affix: true }
       },
       {
-        path: '/organizationManage/postDetail',
-        name: 'postManage',
-        component: () => import('@/views/organizationManage/postDetail'),
-        meta: { title: 'postDetail', icon: 'postDetail', affix: true }
+        path: '/organizationManage/peopleDetail',
+        name: 'peopleDetail',
+        component: () => import('@/views/organizationManage/peopleDetail'),
+        meta: { title: 'peopleDetail', icon: 'peopleDetail', affix: true }
+      },
+      {
+        path: '/organizationManage/PeopleManage',
+        name: 'PeopleManage',
+        component: () => import('@/views/organizationManage/peopleManage'),
+        meta: { title: 'PeopleManage', icon: 'PeopleManage', affix: true }
+      }
+      ,
+      {
+        path: '/organizationManage/peopleEdit',
+        name: 'peopleEdit',
+        component: () => import('@/views/organizationManage/peopleEdit'),
+        meta: { title: 'peopleEdit', icon: 'peopleEdit', affix: true }
       }
     ]
   },
