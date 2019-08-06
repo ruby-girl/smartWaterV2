@@ -67,7 +67,11 @@ export default {
       total: 1,
       tableKey: 0,
       tableHeight: 0,
-      temp: {},
+      temp: {
+        role: '',
+        roleName: '',
+        userNum: [1]
+      },
       listQuery: {
         // 查询条件
         page: 1,
@@ -81,7 +85,7 @@ export default {
       },
       addDialogFormVisible: false, // 新增弹窗
       dialogFormVisible: false, // 编辑弹窗
-      tableData: [{ role: '123', roleName: '羊阿萨德', time: '2018-01-01'}],
+      tableData: [{ role: '123', roleName: '羊阿萨德', time: '2018-01-01',userNum:[1,2]}],
       checksData: [],
       checkAllData: [// 所有列可选项
         { checked: true, text: '人员编号', prop: 'role', position: 'left' },
@@ -106,9 +110,9 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight
       const that = this
-      that.tableHeight = document.body.clientHeight - formHeight - 300
+      that.tableHeight = document.body.clientHeight - formHeight-220
       window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight - 300
+        that.tableHeight = document.body.clientHeight - formHeight - 220
       }
       this.$refs.myChild.checkData = this.checkAllData // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData // 获取自定义字段中选中了字段
@@ -142,7 +146,11 @@ export default {
       })
     },
     addRole() {
-      this.temp = {}
+      this.temp = {
+        role: '',
+        roleName: '',
+        userNum: []
+      }
       this.addDialogFormVisible = true
     },
     createData() {

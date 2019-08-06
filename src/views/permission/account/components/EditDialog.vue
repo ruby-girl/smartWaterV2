@@ -1,6 +1,6 @@
 <template>
   <!-- 编辑弹窗 -->
-  <el-dialog title="编辑" :visible.sync="dialogFormVisible" top="30vh" width="660px" center>
+  <el-dialog title="编辑" :visible.sync="dialogFormVisible" top="30vh" width="660px" center @closed="editDialogClose">
     <el-form
       ref="dataForm"
       :rules="rules"
@@ -19,7 +19,7 @@
         multiple
         placeholder="可多选">
        <el-option
-         v-for="item in editUserList"
+         v-for="item in editUserList2"
          :key="item.label"
          :label="item.label"
          :value="item.type">
@@ -58,9 +58,9 @@ export default {
   },
   watch: {
     show () {
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+      // this.$nextTick(() => {
+      //   this.$refs['dataForm'].clearValidate()
+      // })
       this.dialogFormVisible = this.show;
     },
     dialogFormVisible (val, oldVal) {
@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       timevalue: [],
-      editUserList: [{ label: '羊子兮', type: 1 },{ label: '羊子兮2', type: 2 }],
+      editUserList2: [{ label: '羊子兮', type: 1 },{ label: '羊子兮2', type: 2 }],
       rules: {
         userNum: [
           { required: true, message: '请选择角色', trigger: 'blur' }
@@ -85,6 +85,11 @@ export default {
   methods: {
     updateData() {
       this.$emit('updateData', this.temp)
+    },
+    editDialogClose() {
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
     }
   }
 }

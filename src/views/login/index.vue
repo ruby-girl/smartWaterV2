@@ -1,14 +1,19 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
       <div class="title-container">
-        <img src="../../assets/imgs/logo.png" alt="">
+        <img src="../../assets/imgs/logo.png" alt />
       </div>
 
       <el-form-item prop="username">
-        <span class="svg-container iconfont iconzhanghu">
-        </span>
+        <span class="svg-container iconfont iconzhanghu"></span>
         <el-input
           ref="username"
           v-model="loginForm.username"
@@ -22,8 +27,7 @@
 
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
-          <span class="svg-container iconfont iconmima">
-          </span>
+          <span class="svg-container iconfont iconmima"></span>
           <el-input
             :key="passwordType"
             ref="password"
@@ -43,67 +47,77 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-top:25px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-top:25px;"
+        @click.native.prevent="handleLogin"
+      >Login</el-button>
     </el-form>
 
     <el-dialog title="Or connect with" :visible.sync="showDialog">
       Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
+      <br />
+      <br />
+      <br />
       <social-sign />
     </el-dialog>
   </div>
 </template>
 
 <script>
-import SocialSign from './components/SocialSignin'
-import RSA from 'rsa-js-java'
-import { getKey } from '@/api/user'
+import SocialSign from "./components/SocialSignin";
+import RSA from "rsa-js-java";
+import { getKey } from "@/api/user";
+import { setTimeout } from "timers";
 export default {
-  name: 'Login',
+  name: "Login",
   components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('不能为空'))
+        callback(new Error("不能为空"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('不能为空'))
+        callback(new Error("不能为空"));
       } else if (value.length < 6 || value.length > 20) {
-        callback(new Error('长度6-18'))
+        callback(new Error("长度6-18"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: "admin",
+        password: "111111"
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, trigger: "blur", validator: validateUsername }
+        ],
+        password: [
+          { required: true, trigger: "blur", validator: validatePassword }
+        ]
       },
-      passwordType: 'password',
+      passwordType: "password",
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
       otherQuery: {}
-    }
+    };
   },
   watch: {
     $route: {
       handler: function(route) {
-        const query = route.query
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
       immediate: true
@@ -113,10 +127,10 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+    if (this.loginForm.username === "") {
+      this.$refs.username.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
   },
   destroyed() {
@@ -125,25 +139,28 @@ export default {
   methods: {
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
-        if (shiftKey && (key >= 'a' && key <= 'z') || !shiftKey && (key >= 'A' && key <= 'Z')) {
-          this.capsTooltip = true
+        if (
+          (shiftKey && (key >= "a" && key <= "z")) ||
+          (!shiftKey && (key >= "A" && key <= "Z"))
+        ) {
+          this.capsTooltip = true;
         } else {
-          this.capsTooltip = false
+          this.capsTooltip = false;
         }
       }
-      if (key === 'CapsLock' && this.capsTooltip === true) {
-        this.capsTooltip = false
+      if (key === "CapsLock" && this.capsTooltip === true) {
+        this.capsTooltip = false;
       }
     },
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -157,34 +174,57 @@ export default {
           //   .catch(() => {
           //     this.loading = false
           //   })
-          getKey({}).then((res)=>{
-            console.log(res)
-          })
-          // RSA.setMaxDigits(129)
-          // key = new RSA.RSAKeyPair(10001,'','1e2qwe2we32qw35e4qw3e43qwe4qw3e')
+          let postData = {
+            LoginName: this.loginForm.username,
+            LoginPwd: "",
+            privateKeyId: ""
+          };
+          let resp = {};
+          getKey().then(res => {  
+            RSA.setMaxDigits(129);         
+            let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);       
+            let pwd = RSA.encryptedString(key, "123123");
+            postData.LoginPwd=pwd
+            postData.privateKeyId=res.data.privateKeyId
+            this.$store
+              .dispatch("user/login", postData)
+              .then(() => {
+                this.$router.push({
+                  path: this.redirect || "/",
+                  query: this.otherQuery
+                });
+                this.loading = false;
+              })
+              .catch(() => {
+                this.loading = false;
+              });
+         
+            // postData.privateKeyId = res.data.privateKeyId;
+          });
+     
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
+        return acc;
+      }, {});
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #283443;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -195,7 +235,7 @@ $cursor: #283443;
 
 /* reset element-ui css */
 .login-container {
-  width:350px;
+  width: 350px;
   .el-input {
     display: inline-block;
     height: 36px;
@@ -206,11 +246,11 @@ $cursor: #283443;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
-      padding:0  5px 0 15px;
+      padding: 0 5px 0 15px;
       color: $cursor;
       height: 27px;
       caret-color: $cursor;
-      margin-top:3px;
+      margin-top: 3px;
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
         -webkit-text-fill-color: $cursor !important;
@@ -219,32 +259,32 @@ $cursor: #283443;
   }
 
   .el-form-item {
-    border: 1px solid #D8E2E7;
+    border: 1px solid #d8e2e7;
     //background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
   }
-  .el-form-item__content{
+  .el-form-item__content {
     line-height: 24px;
   }
 }
 </style>
 
 <style lang="scss" scoped>
-$bg:#fff;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #fff;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   height: 460px;
   background-color: $bg;
   overflow: hidden;
-  background-image: url('../../assets/imgs/logo_bg.png');
+  background-image: url("../../assets/imgs/logo_bg.png");
   .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding:27px 35px 47px 35px;
+    padding: 27px 35px 47px 35px;
     margin: 0 auto;
     overflow: hidden;
   }
@@ -267,7 +307,7 @@ $light_gray:#eee;
     vertical-align: middle;
     width: 36px;
     display: inline-block;
-    border-right:1px solid #D8E2E7;
+    border-right: 1px solid #d8e2e7;
     font-size: 24px;
   }
 
@@ -283,7 +323,7 @@ $light_gray:#eee;
       font-weight: bold;
     }
   }
-  .el-form-item{
+  .el-form-item {
     margin-bottom: 44px;
   }
   .show-pwd {
