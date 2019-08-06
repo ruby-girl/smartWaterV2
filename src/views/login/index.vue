@@ -54,25 +54,15 @@
         @click.native.prevent="handleLogin"
       >Login</el-button>
     </el-form>
-
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br />
-      <br />
-      <br />
-      <social-sign />
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import SocialSign from "./components/SocialSignin";
 import RSA from "rsa-js-java";
 import { getKey } from "@/api/user";
-import { setTimeout } from "timers";
+
 export default {
   name: "Login",
-  components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
@@ -92,7 +82,7 @@ export default {
     };
     return {
       loginForm: {
-        username: "admin",
+        username: "测试",
         password: "111111"
       },
       loginRules: {
@@ -165,21 +155,11 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          // this.loading = true
-          // this.$store.dispatch('user/login', this.loginForm)
-          //   .then(() => {
-          //     this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-          //     this.loading = false
-          //   })
-          //   .catch(() => {
-          //     this.loading = false
-          //   })
           let postData = {
             LoginName: this.loginForm.username,
             LoginPwd: "",
             privateKeyId: ""
-          };
-          let resp = {};
+          };      
           getKey().then(res => {  
             RSA.setMaxDigits(129);         
             let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);       
@@ -198,12 +178,9 @@ export default {
               .catch(() => {
                 this.loading = false;
               });
-         
-            // postData.privateKeyId = res.data.privateKeyId;
           });
      
         } else {
-          console.log("error submit!!");
           return false;
         }
       });

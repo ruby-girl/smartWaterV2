@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function login(data) {//登录
   return request({
     url: '/Login/Login',
     method: 'post',
@@ -8,19 +8,17 @@ export function login(data) {
   })
 }
 
-export function getKey(data) {
+export function getKey() {//获取密码解密前的ID等
   return request({
     url: '/Login/GetLoginPublicKey',
-    method: 'post',
-    data
+    method: 'post'
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {//获取权限
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
+    url: '/Login/GetAuthInfo',
+    method: 'post'    
   })
 }
 

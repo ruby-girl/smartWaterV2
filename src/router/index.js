@@ -59,41 +59,83 @@ export const constantRoutes = [
         path: '/organizationManage/company',
         name: 'company',
         component: () => import('@/views/organizationManage/company'),
-        meta: { title: 'company', icon: 'company', affix: true }
+        meta: { title: 'company', icon: 'company', affix: false }
       },
       {
         path: '/organizationManage/department',
         name: 'department',
         component: () => import('@/views/organizationManage/department'),
-        meta: { title: 'department', icon: 'department', affix: true }
+        meta: { title: 'department', icon: 'department', affix: false }
       },
       {
         path: '/organizationManage/postManage',
         name: 'postManage',
         component: () => import('@/views/organizationManage/postManage'),
-        meta: { title: 'postManage', icon: 'postManage', affix: true }
+        meta: { title: 'postManage', icon: 'postManage', affix: false }
       },
       {
         path: '/organizationManage/peopleDetail',
         name: 'peopleDetail',
         component: () => import('@/views/organizationManage/peopleDetail'),
-        meta: { title: 'peopleDetail', icon: 'peopleDetail', affix: true }
+        meta: { title: 'peopleDetail', icon: 'peopleDetail', affix: false }
       },
       {
         path: '/organizationManage/PeopleManage',
         name: 'PeopleManage',
         component: () => import('@/views/organizationManage/peopleManage'),
-        meta: { title: 'PeopleManage', icon: 'PeopleManage', affix: true }
+        meta: { title: 'PeopleManage', icon: 'PeopleManage', affix: false }
       }
       ,
       {
         path: '/organizationManage/peopleEdit',
         name: 'peopleEdit',
         component: () => import('@/views/organizationManage/peopleEdit'),
-        meta: { title: 'peopleEdit', icon: 'peopleEdit', affix: true }
+        meta: { title: 'peopleEdit', icon: 'peopleEdit', affix: false }
       }
     ]
   },
+  {
+    path: '/permission',
+    component: Layout,
+    redirect: '/permission/page',
+    alwaysShow: true, // will always show the root menu
+    name: 'Permission',
+    meta: {
+      title: '权限管理',
+      icon: 'lock'
+    },
+    children: [
+      {
+        path: 'account',
+        component: () => import('@/views/permission/account'),
+        name: 'AccountPermission',
+        meta: {
+          title: '账号管理',
+          roles: ['1'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'directive',
+        component: () => import('@/views/permission/directive'),
+        name: 'DirectivePermission',
+        meta: {
+          title: 'Directive Permission'
+          // if do not set roles, means: this page does not require permission
+        }
+      },
+      {
+        path: 'role',
+        component: () => import('@/views/permission/role/index'),
+        name: 'RolePermission',
+        meta: {
+          title: '角色管理'
+          // if do not set roles, means: this page does not require permission
+        }
+      }
+    ]
+  },
+]
+export const asyncRoutes = [
   {
     path: '/permission',
     component: Layout,
@@ -130,40 +172,6 @@ export const constantRoutes = [
         name: 'RolePermission',
         meta: {
           title: '角色管理'
-          // if do not set roles, means: this page does not require permission
-        }
-      }
-    ]
-  }
-]
-export const asyncRoutes = [
-  {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: 'Permission',
-    meta: {
-      title: 'Permission',
-      icon: 'lock',
-      roles: ['3'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
-        meta: {
-          title: 'Page Permission',
-          roles: ['1'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: 'Directive Permission'
           // if do not set roles, means: this page does not require permission
         }
       }
