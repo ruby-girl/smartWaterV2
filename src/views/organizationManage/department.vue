@@ -36,9 +36,9 @@
           <el-button type="success" size="small" class="cl-search" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
           <el-button type="primary" size="small" class="cl-search cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
         </div>
+        <customTable ref="myChild"></customTable>
       </div>
-      <customTable ref="myChild"></customTable>
-      <el-table :data="tableData" :height="tableHeight"  style="width: 100%" border>
+      <el-table :data="tableData" :height="tableHeight" id="table"  style="width: 100%" border>
         <el-table-column
           type="selection"
           width="55"
@@ -179,7 +179,8 @@ export default {
         { checked: false, text: '性别', prop: 'sex', position: 'center', width: '200px' },
         { checked: false, text: '身高', prop: 'height', position: 'center', width: '200px' }
       ],
-      checksData: []
+      checksData: [],
+      customHeight: ''
     }
   },
   methods: {
@@ -188,6 +189,7 @@ export default {
      * */
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
+      this.customHeight = this.$refs.myChild.isCustom
     },
     /**
      * 导出
@@ -238,10 +240,17 @@ export default {
       return arrayHead
     }
   },
+  watch: {
+    customHeight(val, oldVal) {
+      this.$nextTick(() => {
+        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      })
+    }
+  },
   mounted() {
     this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - (document.getElementById('conditionBox').offsetHeight) - 200
+    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
   }
 }
 </script>

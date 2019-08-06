@@ -1,9 +1,9 @@
 <template>
-  <div class="cl-container">
+  <div class="cl-container cl-container2">
     <div>
       <div id="conditionBox">
         <el-row>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">公司：</label>
               <el-select v-model="value" placeholder="请选择（单选）" size="small">
@@ -16,15 +16,17 @@
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
-              <el-input
-                placeholder="部门（长度10以内）"
-                v-model="department"
-                maxlength="10"
-                size="small">
-              </el-input>
+              <el-select v-model="value" placeholder="请选择（单选）" size="small">
+                <el-option
+                  v-for="item in company"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </div>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
@@ -38,8 +40,124 @@
               </el-input>
             </div>
           </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+            <div class="cl-inlineItem">
+              <label class="cl-label">模糊查询：</label>
+              <el-input
+                placeholder="人员名称/员工编号"
+                v-model="department"
+                maxlength="10"
+                size="small">
+              </el-input>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+            <div class="cl-inlineItem" style="width: 100%">
+              <label class="cl-label">入职时间：</label>
+              <el-date-picker
+                style="width: 83%"
+                size="small"
+                v-model="value"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+            </el-date-picker>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8"  :lg="6" :xl="6">
+            <div class="cl-inlineItem">
+              <label class="cl-label">岗位状态：</label>
+              <el-select v-model="value" placeholder="请选择（单选）" size="small">
+                <el-option
+                  v-for="item in company"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8"  :lg="6" :xl="6" v-show="ifMore">
+            <div class="cl-inlineItem">
+              <label class="cl-label">性别：</label>
+              <el-select v-model="value" placeholder="请选择（单选）" size="small">
+                <el-option
+                  v-for="item in company"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" v-show="ifMore">
+            <div class="cl-inlineItem" style="width: 100%">
+              <label class="cl-label">出生日期：</label>
+              <el-date-picker
+                style="width: 83%"
+                size="small"
+                v-model="value"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" v-show="ifMore">
+            <div class="cl-inlineItem">
+              <label class="cl-label">电话号码：</label>
+              <el-input
+                placeholder="人员名称/员工编号"
+                v-model="department"
+                maxlength="10"
+                size="small">
+              </el-input>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8"  :lg="6" :xl="6" v-show="ifMore">
+            <div class="cl-inlineItem">
+              <label class="cl-label">省份证号：</label>
+              <el-input
+                placeholder="人员名称/员工编号"
+                v-model="department"
+                maxlength="10"
+                size="small">
+              </el-input>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8"  :lg="6" :xl="6" v-show="ifMore">
+            <div class="cl-inlineItem">
+              <label class="cl-label">操作人：</label>
+              <el-select v-model="value" placeholder="请选择（单选）" size="small">
+                <el-option
+                  v-for="item in company"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" v-show="ifMore">
+            <div class="cl-inlineItem" style="width: 100%">
+              <label class="cl-label">操作时间：</label>
+              <el-date-picker
+                style="width: 83%"
+                size="small"
+                v-model="value"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4">
             <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
+            <i class="icon iconfont getUpDown" v-show="ifMore" @click="ifMore=!ifMore">收起 &#xe692;</i>
+            <i class="icon iconfont getUpDown" v-show="!ifMore" @click="ifMore=!ifMore">展开 &#xe68f;</i>
           </el-col>
         </el-row>
         <div class="cl-operation1">
@@ -47,9 +165,9 @@
           <el-button type="success" size="small" class="cl-search" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
           <el-button type="primary" size="small" class="cl-search cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
         </div>
-      <customTable ref="myChild"></customTable>
       </div>
-      <el-table :data="tableData" :height="tableHeight" id="table" style="width: 100%" border>
+      <customTable ref="myChild"></customTable>
+      <el-table :data="tableData" :height="tableHeight" id="table"  style="width: 100%" border>
         <el-table-column
           type="selection"
           width="55"
@@ -66,7 +184,8 @@
         </template>
         <el-table-column label="操作" width="200px" align="center">
           <template slot-scope="scope">
-            <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
+            <a class="operation1" @click="handleEdit(scope.$index, scope.row,1)">编辑</a>
+            <a class="operation1" @click="handleEdit(scope.$index, scope.row,2)">详情</a>
             <a class="operation2" @click="handleDelete(scope.$index, scope.row)">删除</a>
           </template>
         </el-table-column>
@@ -80,38 +199,6 @@
       />
     </div>
 
-    <!--编辑或新增窗口 s-->
-    <el-dialog
-      :title=title
-      :visible.sync="dialogVisible"
-      width="22%">
-      <div>
-        <div class="cl-inlineItem">
-          <label class="cl-label">部门：</label>
-          <el-select v-model="value" placeholder="请选择（单选）" size="small">
-            <el-option
-              v-for="item in company"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="cl-inlineItem">
-          <label class="cl-label">岗位：</label>
-          <el-input
-            placeholder="判断是否存在 已存在提示红色"
-            maxlength="20"
-            size="small">
-          </el-input>
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="saveFun" size="small">确 定</el-button>
-          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        </span>
-    </el-dialog>
-    <!--编辑或新增窗口 e-->
     <!--警告信息 s-->
     <el-dialog
       title= '提示'
@@ -135,14 +222,13 @@ import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
 export default {
-  name: 'PostManage',
+  name: 'PeopleManage',
   components: { customTable, Pagination },
   data() {
     return {
+      ifMore: false,
       tableHeight: '',
       warnVisible: false,
-      dialogVisible: false,
-      title: '',
       total: 100,
       page: 10,
       limit: 10,
@@ -210,14 +296,12 @@ export default {
     },
     /**
        * 编辑及新增
+       * 1: 编辑
+       * 2：详情
        * */
     handleEdit() {
-      this.dialogVisible = true
-      this.title = '编辑'
     },
     addNewFun() {
-      this.dialogVisible = true
-      this.title = '添加'
     },
     /**
        * 删除
@@ -252,6 +336,11 @@ export default {
     }
   },
   watch: {
+    ifMore(val) {
+      this.$nextTick(() => {
+        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      })
+    },
     customHeight(val) {
       this.$nextTick(() => {
         this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
