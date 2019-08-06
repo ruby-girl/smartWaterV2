@@ -93,7 +93,7 @@ export default {
   .chart-wrapper {
     background: #fff;
     padding: 16px 16px 0;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
     h2 {
       color: #00B3A1;font: bold 14px '';margin: 0;
       i{display: inline-block;background: #00B3A1;width: 3px;height: 12px;margin-right: 8px;}
