@@ -142,7 +142,7 @@ export default {
         ]
       },
       curSrc: '',
-      ifImg: '',
+      ifImg: false,
       dialogVisible: false,
       iframeUrl: '',
       clientHeight: ''
