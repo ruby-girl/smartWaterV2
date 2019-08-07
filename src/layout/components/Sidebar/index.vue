@@ -1,6 +1,6 @@
 <template>
   <div :class="{'has-logo':showLogo}">
-    <logo v-if="showLogo" />
+    <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
@@ -46,10 +46,9 @@ export default {
     variables() {
       return variables
     },
-    isCollapse() {
-      return !this.sidebar.opened
+    isCollapse() {//是否左侧展示导航
+      return this.sidebar.opened
     }
   }
 }
 </script>
-
