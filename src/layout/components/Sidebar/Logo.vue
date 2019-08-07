@@ -38,7 +38,6 @@ export default {
   name: 'SidebarLogo',
   data() {
     return {
-<<<<<<< HEAD
       user: {
         firstRole:[]
       }
@@ -55,12 +54,6 @@ export default {
       })
     }
   }  
-=======
-      title: 'asdasdasd',
-      logo: '//www.baidu.com/s?wd=%E4%BB%8A%E6%97%A5%E6%96%B0%E9%B2%9C%E4%BA%8B&tn=SE_PclogoS_8whnvm25&sa=ire_dl_gh_logo&rsv_dl=igh_logo_pcs'
-    }
-  }
->>>>>>> 4e483560c93f3020939364de8f6c0c111cf49904
 }
 </script>
 
