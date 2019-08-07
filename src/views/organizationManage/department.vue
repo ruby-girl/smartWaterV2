@@ -99,7 +99,7 @@
 import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
-import { GetList, Add, UpDate, Delete} from "@/api/organize"
+import { GetList, Add, UpDate, Delete } from "@/api/organize"
 
 export default {
   name: 'Department',

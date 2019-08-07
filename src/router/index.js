@@ -84,8 +84,7 @@ export const constantRoutes = [
         name: 'PeopleManage',
         component: () => import('@/views/organizationManage/peopleManage'),
         meta: { title: 'PeopleManage', icon: 'PeopleManage', affix: true }
-      }
-      ,
+      },
       {
         path: '/organizationManage/peopleEdit',
         name: 'peopleEdit',
