@@ -82,8 +82,8 @@ export default {
     };
     return {
       loginForm: {
-        username: "测试",
-        password: "111111"
+        username: "",
+        password: ""
       },
       loginRules: {
         username: [
@@ -162,8 +162,8 @@ export default {
           };      
           getKey().then(res => {  
             RSA.setMaxDigits(129);         
-            let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);       
-            let pwd = RSA.encryptedString(key, "123123");
+            let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);//密码加密   
+            let pwd = RSA.encryptedString(key, this.loginForm.password);
             postData.LoginPwd=pwd
             postData.privateKeyId=res.data.privateKeyId
             this.$store
@@ -178,8 +178,7 @@ export default {
               .catch(() => {
                 this.loading = false;
               });
-          });
-     
+          });   
         } else {
           return false;
         }

@@ -48,7 +48,12 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
-        data.roles=response.data
+        let arr=[]
+        response.data.map((item)=>{
+          arr.push(item.Id)
+        })
+        data.roles=arr
+        // data.roles=response.data
         const { roles } = data
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {

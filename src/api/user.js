@@ -28,3 +28,10 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getUserInfo() {//获取首页登录信息
+  return request({
+    url: '/FirstPage/GetFirstPageRoleInfo',
+    method: 'post'
+  })
+}

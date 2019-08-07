@@ -4,12 +4,12 @@
     <div class="display-flex logo-item-height">
       <div class="iconfont icondengluxinxi-zhanghao" />
       <div class="logo-label">账号:</div>
-      <div class="main-color-fff">admin</div>
+      <div class="main-color-fff">{{user.UserName}}</div>
     </div>
     <div class="display-flex logo-item-height">
       <div class="iconfont iconzhanghu" />
       <div class="logo-label">角色:</div>
-      <div class="main-color-fff">管理员</div>
+      <div class="main-color-fff">{{user.RoleNames}}</div>
     </div>
     <div class="display-flex">
       <div class="iconfont icondengluxinxi-youxiang" />
@@ -23,20 +23,30 @@
       <div class="logo-label">上次登录时间:</div>
     </div>
     <div class="logo-item-height">
-      <div class="main-color-fff text-wrap">2018-08-02</div>
+      <div class="main-color-fff text-wrap">{{user.LastLoginTime}}</div>
     </div>
   </div>
 </template>
 
 <script>
+import {getUserInfo} from '@/api/user'
 export default {
   name: 'SidebarLogo',
   data() {
     return {
-      title: 'asdasdasd',
-      logo: '//www.baidu.com/s?wd=%E4%BB%8A%E6%97%A5%E6%96%B0%E9%B2%9C%E4%BA%8B&tn=SE_PclogoS_8whnvm25&sa=ire_dl_gh_logo&rsv_dl=igh_logo_pcs'
+      user: {}
     }
-  }
+  },
+  mounted() {
+    this.getUser()
+  },
+  methods: {
+    getUser() {
+      getUserInfo().then((res)=>{
+        this.user=res.data
+      })
+    }
+  }  
 }
 </script>
 

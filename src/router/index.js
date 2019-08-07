@@ -93,47 +93,7 @@ export const constantRoutes = [
         meta: { title: 'peopleEdit', icon: 'peopleEdit', affix: false }
       }
     ]
-  },
-  {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: 'Permission',
-    meta: {
-      title: '权限管理',
-      icon: 'lock'
-    },
-    children: [
-      {
-        path: 'account',
-        component: () => import('@/views/permission/account'),
-        name: 'AccountPermission',
-        meta: {
-          title: '账号管理',
-          roles: ['1'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: 'Directive Permission'
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role/index'),
-        name: 'RolePermission',
-        meta: {
-          title: '角色管理'
-          // if do not set roles, means: this page does not require permission
-        }
-      }
-    ]
-  },
+  }
 ]
 export const asyncRoutes = [
   {
@@ -145,7 +105,7 @@ export const asyncRoutes = [
     meta: {
       title: '权限管理',
       icon: 'lock',
-      roles: ['3'] // you can set roles in root nav
+      roles: ['1']
     },
     children: [
       {
@@ -154,7 +114,7 @@ export const asyncRoutes = [
         name: 'AccountPermission',
         meta: {
           title: '账号管理',
-          roles: ['1'] // or you can only set roles in sub nav
+          roles: ['1']
         }
       },
       {
@@ -162,8 +122,8 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
         meta: {
-          title: 'Directive Permission'
-          // if do not set roles, means: this page does not require permission
+          title: 'Directive Permission',
+          roles: ['2']
         }
       },
       {
@@ -171,8 +131,8 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/role/index'),
         name: 'RolePermission',
         meta: {
-          title: '角色管理'
-          // if do not set roles, means: this page does not require permission
+          title: '角色管理',
+          roles: ['1']
         }
       }
     ]
