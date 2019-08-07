@@ -9,7 +9,12 @@
     <div class="display-flex logo-item-height">
       <div class="iconfont iconzhanghu" />
       <div class="logo-label">角色:</div>
-      <div class="main-color-fff">{{user.RoleNames}}</div>
+      <div class="main-color-fff">
+        <el-tooltip class="item" effect="dark" :content="user.RoleNames" placement="top" v-if="user.firstRole.length>0">
+          <span>{{user.firstRole[0]}}...</span>
+        </el-tooltip>
+        <span v-else>{{user.RoleNames}}</span>
+      </div>
     </div>
     <div class="display-flex">
       <div class="iconfont icondengluxinxi-youxiang" />
@@ -34,7 +39,9 @@ export default {
   name: 'SidebarLogo',
   data() {
     return {
-      user: {}
+      user: {
+        firstRole:[]
+      }
     }
   },
   mounted() {
@@ -44,6 +51,7 @@ export default {
     getUser() {
       getUserInfo().then((res)=>{
         this.user=res.data
+        this.user.firstRole=res.data.RoleNames.split(',')
       })
     }
   }  

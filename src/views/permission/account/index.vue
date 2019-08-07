@@ -60,6 +60,7 @@ import Pagination from '@/components/Pagination'
 import EditDialog from './components/EditDialog'
 import AddDialog from './components/AddDialog'
 import customTable from '@/components/CustomTable/index'
+import {getRoles} from '@/api/role'//获取下拉框角色
 export default {
   components: { SelectHead, Pagination, EditDialog, customTable, AddDialog},
   data() {
