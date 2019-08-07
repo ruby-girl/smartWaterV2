@@ -180,9 +180,9 @@ export default {
             privateKeyId: ""
           };
           let resp = {};
-          getKey().then(res => {  
-            RSA.setMaxDigits(129);         
-            let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);       
+          getKey().then(res => {
+            RSA.setMaxDigits(129);
+            let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);
             let pwd = RSA.encryptedString(key, "123123");
             postData.LoginPwd=pwd
             postData.privateKeyId=res.data.privateKeyId
@@ -198,10 +198,10 @@ export default {
               .catch(() => {
                 this.loading = false;
               });
-         
+
             // postData.privateKeyId = res.data.privateKeyId;
           });
-     
+
         } else {
           console.log("error submit!!");
           return false;

@@ -5,19 +5,6 @@
         <el-row>
           <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
             <div class="cl-inlineItem">
-              <label class="cl-label">公司：</label>
-              <el-select v-model="value" placeholder="请选择（单选）" size="small">
-                <el-option
-                  v-for="item in company"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
-            <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-input
                 placeholder="部门（长度10以内）"
@@ -74,31 +61,20 @@
       :title=title
       :visible.sync="dialogVisible"
       width="22%">
-      <div>
-        <div class="cl-inlineItem">
-          <label class="cl-label">公司：</label>
-          <el-select v-model="value" placeholder="请选择（单选）" size="small">
-            <el-option
-              v-for="item in company"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="cl-inlineItem">
-          <label class="cl-label">部门：</label>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="部门:" prop="newDertmentName">
           <el-input
-            placeholder="判断是否存在 已存在提示红色"
+            v-model="ruleForm.newDertmentName"
+            placeholder="请输入部门名称"
             maxlength="20"
             size="small">
           </el-input>
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="saveFun" size="small">确 定</el-button>
+        </el-form-item>
+        <p class="footBox dialogFooter" >
+          <el-button type="primary" @click="submitForm('ruleForm')" size="small">确 定</el-button>
           <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        </span>
+        </p>
+      </el-form>
     </el-dialog>
     <!--编辑或新增窗口 e-->
     <!--警告信息 s-->
@@ -123,6 +99,8 @@
 import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
+import { GetList, Add, UpDate, Delete} from "@/api/organize"
+
 export default {
   name: 'Department',
   components: { customTable, Pagination },
@@ -135,24 +113,15 @@ export default {
       total: 100,
       page: 10,
       limit: 10,
-      company: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
       department: '',
+      ruleForm: {
+        newDertmentName: ''
+      },
+      rules: {
+        newDertmentName: [
+          { required: true, message: '不能为空', trigger: 'change' }
+        ]
+      },
       tableData: [
         {
           date: '2012-10-30',
@@ -172,12 +141,10 @@ export default {
         }
       ],
       checkAllData: [// 所有列可选项
-        { checked: true, text: '日期', prop: 'date', position: 'center', width: '200px' },
-        { checked: true, text: '姓名', prop: 'name', position: 'center', width: '200px' },
-        { checked: false, text: '地址', prop: 'address', position: 'center', width: '200px' },
-        { checked: false, text: '年龄', prop: 'age', position: 'center', width: '200px' },
-        { checked: false, text: '性别', prop: 'sex', position: 'center', width: '200px' },
-        { checked: false, text: '身高', prop: 'height', position: 'center', width: '200px' }
+        { checked: true, text: '公司', prop: 'date', position: 'center', width: '200px' },
+        { checked: true, text: '部门', prop: 'name', position: 'center', width: '200px' },
+        { checked: false, text: '操作人', prop: 'address', position: 'center', width: '200px' },
+        { checked: false, text: '操作时间', prop: 'age', position: 'center', width: '200px' },
       ],
       checksData: [],
       customHeight: ''
@@ -216,16 +183,46 @@ export default {
     },
     deleteFun() {
       this.warnVisible = false
+      let params = {}
+      Delete(params).then(res => {
+      })
     },
     /**
      * 查询
      * */
     searchFun() {
+      let params = {
+        page: this.page,
+        limit: this.limit,
+        DeptName: this.department
+      }
+      GetList(params).then(res => {
+        this.total = this.count;
+        this.tableData = this.data;
+      })
     },
     /**
      * 编辑新增保存
      * */
-    saveFun() {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let params = { deptName: this.newDertmentName }
+          if (this.title ==='编辑') {
+            UpDate(params).then(res => {
+            })
+          } else {
+            Add(params).then(res => {
+              this.$message({
+                message: res,
+                type: 'warning'
+              });
+            })
+          }
+        } else {
+          return false
+        }
+      })
     }
   },
   computed: {
