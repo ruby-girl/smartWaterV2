@@ -10,8 +10,8 @@
       size="small"
       label-width="100px"
     >
-    <el-form-item label="角色名称：" prop="roleName">
-      <el-input v-model="temp.roleName"></el-input>
+    <el-form-item label="角色名称：" prop="RoleName">
+      <el-input v-model="temp.RoleName "></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -56,10 +56,8 @@ export default {
   },
   data() {
     return {
-      timevalue: [],
-      editUserList: [{ label: '羊子兮', type: 1 }],
       rules: {
-        roleName: [
+        RoleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' },
           { max: 20, message: '最大长度20个字符', trigger: 'blur' }
         ]

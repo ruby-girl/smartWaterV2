@@ -124,7 +124,7 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
     },
     getList() {
-      //console.log('请求')
+     
     },
     handleFilter() {
       this.listQuery.page = 1
