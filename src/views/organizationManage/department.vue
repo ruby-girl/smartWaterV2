@@ -232,6 +232,7 @@
        * 编辑新增保存
        * */
       submitForm(formName) {
+        alert(3)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.title ==='编辑') {
