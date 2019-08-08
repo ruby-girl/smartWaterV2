@@ -7,10 +7,10 @@ export function getRoutes() {
   })
 }
 
-export function getRoles() {
+export function getRoles() {//获取所有角色-下拉框
   return request({
-    url: '/roles',
-    method: 'get'
+    url: '/Role/GetRoleNameList',
+    method: 'post'
   })
 }
 

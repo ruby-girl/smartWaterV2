@@ -18,7 +18,7 @@
           :key="item.label"
           :label="item.label"
           :value="item.type"
-        ></el-option>
+        />
       </el-select>
     </el-form-item>
     <el-form-item label="状态：">
@@ -54,7 +54,7 @@
         format="yyyy 年 MM 月 dd 日"
         value-format="yyyy-MM-dd HH-mm-ss"
         @change="getTime"
-      ></el-date-picker>
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" size="mini" class="iconfont iconsousuo" @click="handleFilter">搜索</el-button>
@@ -67,7 +67,7 @@ export default {
     selectHead: {
       type: Object,
       default: function() {
-        return {};
+        return {}
       }
     }
   },
@@ -92,8 +92,8 @@ export default {
   },
   methods: {
     getTime(v) {
-      this.selectHead.startTime = v[0];
-      this.selectHead.endTime = v[1];
+      this.selectHead.startTime = v[0]
+      this.selectHead.endTime = v[1]
     },
     handleFilter() {
      this.selectHead.userNum=this.selectHead.userNum.filter((item)=>{
@@ -122,7 +122,6 @@ export default {
       }
       //全选未选 但是其他选项全部选上 则全选选上 上次和当前 都没有全选
       if (!oldVal.includes("-1") && !val.includes("-1")) {
-        console.log(11);
         if (val.length === allValues.length - 1)
           this.selectHead.userNum = ["-1"].concat(val);
       }
@@ -130,7 +129,7 @@ export default {
       this.oldOptions[1] = this.selectHead.userNum;
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 </style>

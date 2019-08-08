@@ -4,12 +4,17 @@
     <div class="display-flex logo-item-height">
       <div class="iconfont icondengluxinxi-zhanghao" />
       <div class="logo-label">账号:</div>
-      <div class="main-color-fff">{{user.UserName}}</div>
+      <div class="main-color-fff">{{ user.UserName }}</div>
     </div>
     <div class="display-flex logo-item-height">
       <div class="iconfont iconzhanghu" />
       <div class="logo-label">角色:</div>
-      <div class="main-color-fff">{{user.RoleNames}}</div>
+      <div class="main-color-fff">
+        <el-tooltip v-if="user.firstRole.length>0" class="item" effect="dark" :content="user.RoleNames" placement="top">
+          <span>{{ user.firstRole[0] }}...</span>
+        </el-tooltip>
+        <span v-else>{{ user.RoleNames }}</span>
+      </div>
     </div>
     <div class="display-flex">
       <div class="iconfont icondengluxinxi-youxiang" />
@@ -23,18 +28,20 @@
       <div class="logo-label">上次登录时间:</div>
     </div>
     <div class="logo-item-height">
-      <div class="main-color-fff text-wrap">{{user.LastLoginTime}}</div>
+      <div class="main-color-fff text-wrap">{{ user.LastLoginTime }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import {getUserInfo} from '@/api/user'
+import { getUserInfo } from "@/api/user"
 export default {
   name: 'SidebarLogo',
   data() {
     return {
-      user: {}
+      user: {
+        firstRole:[]
+      }
     }
   },
   mounted() {
@@ -44,9 +51,10 @@ export default {
     getUser() {
       getUserInfo().then((res)=>{
         this.user=res.data
+        this.user.firstRole=res.data.RoleNames.split(',')
       })
     }
-  }  
+  }
 }
 </script>
 

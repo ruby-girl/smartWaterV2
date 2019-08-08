@@ -6,9 +6,9 @@
     <div class="table-top-btn-padding">
       <el-button type="primary" size="mini" class="iconfont icontianjia" @click="addRole">添加</el-button>
       <el-button type="success" size="mini" class="iconfont icondaochuexcel">导出Excel</el-button>
-      <el-button type="warning" size="mini" class="iconfont iconbiaogezidingyi"  @click="setCustomData()">表格自定义</el-button>
+      <el-button type="warning" size="mini" class="iconfont iconbiaogezidingyi" @click="setCustomData()">表格自定义</el-button>
     </div>
-    <customTable ref="myChild"></customTable>
+    <customTable ref="myChild" />
     <div class="main-padding-20-y">
       <el-table
         :key="tableKey"
@@ -20,12 +20,12 @@
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
-        >
-        <el-table-column type="index"></el-table-column>
+      >
+        <el-table-column type="index" />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
-            min-width="100px"
             :key="index"
+            min-width="100px"
             :prop="item.prop"
             :align="item.position"
             sortable
@@ -50,8 +50,8 @@
       />
     </div>
     <!-- 编辑弹窗 -->
-    <edit-dialog :show.sync="dialogFormVisible" :temp="temp" @createData="createData"></edit-dialog>
-    <add-dialog :addShow.sync="addDialogFormVisible" :temp="temp"  @updateData="updateData"></add-dialog>
+    <edit-dialog :show.sync="dialogFormVisible" :temp="temp" @createData="createData" />
+    <add-dialog :add-show.sync="addDialogFormVisible" :temp="temp" @updateData="updateData" />
   </div>
 </template>
 <script>
@@ -60,6 +60,7 @@ import Pagination from '@/components/Pagination'
 import EditDialog from './components/EditDialog'
 import AddDialog from './components/AddDialog'
 import customTable from '@/components/CustomTable/index'
+
 export default {
   components: { SelectHead, Pagination, EditDialog, customTable, AddDialog},
   data() {
@@ -123,7 +124,7 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
     },
     getList() {
-      console.log('请求')
+      //console.log('请求')
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -134,7 +135,7 @@ export default {
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogFormVisible = true
     },
-    delRow(r) {
+    delRow() {
       this.$confirm('这里是需要确认的信息', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -142,7 +143,7 @@ export default {
         customClass: 'warningBox',
         showClose: false
       }).then(() => {
-        console.log(r)
+        //console.log(r)
       })
     },
     addRole() {
@@ -154,10 +155,10 @@ export default {
       this.addDialogFormVisible = true
     },
     createData() {
-      console.log('添加了')
+      //console.log('添加了')
     },
     updateData() {
-      console.log('编辑了')
+      //console.log('编辑了')
     }
   }
 }
