@@ -5,37 +5,24 @@
         <el-row>
           <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
             <div class="cl-inlineItem">
-              <label class="cl-label">公司：</label>
-              <el-select v-model="value" placeholder="请选择（单选）" size="small">
-                <el-option
-                  v-for="item in company"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
-            <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-input
-                placeholder="部门（长度10以内）"
                 v-model="department"
+                placeholder="部门（长度10以内）"
                 maxlength="10"
-                size="small">
-              </el-input>
+                size="small"
+              />
             </div>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
               <el-input
-                placeholder="岗位名称（长度10以内）"
                 v-model="department"
+                placeholder="岗位名称（长度10以内）"
                 maxlength="10"
-                size="small">
-              </el-input>
+                size="small"
+              />
             </div>
           </el-col>
           <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
@@ -47,9 +34,9 @@
           <el-button type="success" size="small" class="cl-search" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
           <el-button type="primary" size="small" class="cl-search cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
         </div>
-      <customTable ref="myChild"></customTable>
+        <customTable ref="myChild" />
       </div>
-      <el-table :data="tableData" :height="tableHeight" id="table" style="width: 100%" border>
+      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border>
         <el-table-column
           type="selection"
           width="55"
@@ -57,8 +44,8 @@
         />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
-            :min-width="item.width"
             :key="index"
+            :min-width="item.width"
             :prop="item.prop"
             :align="item.position"
             :label="item.text"
@@ -82,9 +69,10 @@
 
     <!--编辑或新增窗口 s-->
     <el-dialog
-      :title=title
+      :title="title"
       :visible.sync="dialogVisible"
-      width="22%">
+      width="22%"
+    >
       <div>
         <div class="cl-inlineItem">
           <label class="cl-label">部门：</label>
@@ -93,8 +81,8 @@
               v-for="item in company"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
-            </el-option>
+              :value="item.value"
+            />
           </el-select>
         </div>
         <div class="cl-inlineItem">
@@ -102,29 +90,30 @@
           <el-input
             placeholder="判断是否存在 已存在提示红色"
             maxlength="20"
-            size="small">
-          </el-input>
+            size="small"
+          />
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="saveFun" size="small">确 定</el-button>
-          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        </span>
+        <el-button type="primary" size="small" @click="saveFun">确 定</el-button>
+        <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+      </span>
     </el-dialog>
     <!--编辑或新增窗口 e-->
     <!--警告信息 s-->
     <el-dialog
-      title= '提示'
+      title="提示"
       class="warningBox"
       :visible.sync="warnVisible"
-      width="20%">
+      width="20%"
+    >
       <p class="warnInfo">
-        <i class="icon iconfont icontishixunwen"></i> 是否删除当前信息？
+        <i class="icon iconfont icontishixunwen" /> 是否删除当前信息？
       </p>
       <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="deleteFun" size="small">确 定</el-button>
-          <el-button @click="warnVisible = false" size="small">取 消</el-button>
-        </span>
+        <el-button type="primary" size="small" @click="deleteFun">确 定</el-button>
+        <el-button size="small" @click="warnVisible = false">取 消</el-button>
+      </span>
     </el-dialog>
     <!--警告信息 e-->
   </div>
@@ -146,23 +135,6 @@ export default {
       total: 100,
       page: 10,
       limit: 10,
-      company: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
       department: '',
       tableData: [
         {
@@ -193,6 +165,30 @@ export default {
       checksData: [],
       customHeight: ''
     }
+  },
+  computed: {
+    tableHead: function() {
+      const arrayHead = []
+      const data = this.checksData
+      for (let i = 0; i < data.length; i++) { // 过滤选中列
+        if (data[i].checked) {
+          arrayHead.push(data[i])
+        }
+      }
+      return arrayHead
+    }
+  },
+  watch: {
+    customHeight() {
+      this.$nextTick(() => {
+        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      })
+    }
+  },
+  mounted() {
+    this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
+    this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
   },
   methods: {
     /**
@@ -238,30 +234,6 @@ export default {
        * */
     saveFun() {
     }
-  },
-  computed: {
-    tableHead: function() {
-      const arrayHead = []
-      const data = this.checksData
-      for (let i = 0; i < data.length; i++) { // 过滤选中列
-        if (data[i].checked) {
-          arrayHead.push(data[i])
-        }
-      }
-      return arrayHead
-    }
-  },
-  watch: {
-    customHeight(val) {
-      this.$nextTick(() => {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      })
-    }
-  },
-  mounted() {
-    this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
   }
 }
 </script>

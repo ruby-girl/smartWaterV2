@@ -41,12 +41,17 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
+    meta: {
+      title: '首页',
+      icon: 'lock',
+      roles: ['1']
+    },
     children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'dashboard'}
       }
     ]
   },
@@ -54,43 +59,47 @@ export const constantRoutes = [
     path: '/organizationManage',
     redirect: '/organizationManage/company',
     component: Layout,
+    meta: {
+      title: '组织管理',
+      icon: 'lock',
+      roles: ['1']
+    },
     children: [
-      {
+  /*    {
         path: '/organizationManage/company',
         name: 'company',
         component: () => import('@/views/organizationManage/company'),
-        meta: { title: 'company', icon: 'company', affix: false }
-      },
+        meta: { title: '公司信息管理',  roles: ['1'] }
+      },*/
       {
         path: '/organizationManage/department',
         name: 'department',
         component: () => import('@/views/organizationManage/department'),
-        meta: { title: 'department', icon: 'department', affix: false }
+        meta: { title: '部门管理',  roles: ['1'] }
       },
       {
         path: '/organizationManage/postManage',
         name: 'postManage',
         component: () => import('@/views/organizationManage/postManage'),
-        meta: { title: 'postManage', icon: 'postManage', affix: false }
-      },
-      {
-        path: '/organizationManage/peopleDetail',
-        name: 'peopleDetail',
-        component: () => import('@/views/organizationManage/peopleDetail'),
-        meta: { title: 'peopleDetail', icon: 'peopleDetail', affix: false }
+        meta: { title: '岗位管理',  roles: ['1'] }
       },
       {
         path: '/organizationManage/PeopleManage',
         name: 'PeopleManage',
         component: () => import('@/views/organizationManage/peopleManage'),
-        meta: { title: 'PeopleManage', icon: 'PeopleManage', affix: false }
-      }
-      ,
+        meta: { title: '人员管理',  roles: ['1'] }
+      },
+      {
+        path: '/organizationManage/peopleDetail',
+        name: 'peopleDetail',
+        component: () => import('@/views/organizationManage/peopleDetail'),
+        meta: { title: '人员管理 - 详情',  roles: ['1'] }
+      },
       {
         path: '/organizationManage/peopleEdit',
         name: 'peopleEdit',
         component: () => import('@/views/organizationManage/peopleEdit'),
-        meta: { title: 'peopleEdit', icon: 'peopleEdit', affix: false }
+        meta: { title: '人员管理 - 编辑',  roles: ['1'] }
       }
     ]
   }

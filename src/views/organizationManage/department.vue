@@ -5,26 +5,13 @@
         <el-row>
           <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
             <div class="cl-inlineItem">
-              <label class="cl-label">公司：</label>
-              <el-select v-model="value" placeholder="请选择（单选）" size="small">
-                <el-option
-                  v-for="item in company"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
-            <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-input
-                placeholder="部门（长度10以内）"
                 v-model="department"
+                placeholder="部门（长度10以内）"
                 maxlength="10"
-                size="small">
-              </el-input>
+                size="small"
+              />
             </div>
           </el-col>
           <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
@@ -36,9 +23,9 @@
           <el-button type="success" size="small" class="cl-search" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
           <el-button type="primary" size="small" class="cl-search cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
         </div>
-        <customTable ref="myChild"></customTable>
+        <customTable ref="myChild" />
       </div>
-      <el-table :data="tableData" :height="tableHeight" id="table"  style="width: 100%" border>
+      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border>
         <el-table-column
           type="selection"
           width="55"
@@ -46,8 +33,8 @@
         />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
-            :min-width="item.width"
             :key="index"
+            :min-width="item.width"
             :prop="item.prop"
             :align="item.position"
             :label="item.text"
@@ -71,186 +58,229 @@
 
     <!--编辑或新增窗口 s-->
     <el-dialog
-      :title=title
+      :title="title"
       :visible.sync="dialogVisible"
-      width="22%">
-      <div>
-        <div class="cl-inlineItem">
-          <label class="cl-label">公司：</label>
-          <el-select v-model="value" placeholder="请选择（单选）" size="small">
-            <el-option
-              v-for="item in company"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="cl-inlineItem">
-          <label class="cl-label">部门：</label>
+      width="22%"
+    >
+      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="部门:" prop="newDertmentName">
           <el-input
-            placeholder="判断是否存在 已存在提示红色"
+            v-model="ruleForm.newDertmentName"
+            placeholder="请输入部门名称"
             maxlength="20"
-            size="small">
-          </el-input>
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="saveFun" size="small">确 定</el-button>
-          <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        </span>
+            size="small"
+          />
+        </el-form-item>
+        <p class="footBox dialogFooter">
+          <el-button type="primary" size="small" @click="submitForm('ruleForm')">确 定</el-button>
+          <el-button size="small" @click="resetForm('ruleForm')">取 消</el-button>
+        </p>
+      </el-form>
     </el-dialog>
     <!--编辑或新增窗口 e-->
     <!--警告信息 s-->
     <el-dialog
-      title= '提示'
+      title="提示"
       class="warningBox"
       :visible.sync="warnVisible"
-      width="20%">
+      width="20%"
+    >
       <p class="warnInfo">
-        <i class="icon iconfont icontishixunwen"></i> 是否删除当前信息？
+        <i class="icon iconfont icontishixunwen" /> 是否删除当前信息？
       </p>
       <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="deleteFun" size="small">确 定</el-button>
-          <el-button @click="warnVisible = false" size="small">取 消</el-button>
-        </span>
+        <el-button type="primary" size="small" @click="deleteFun">确 定</el-button>
+        <el-button size="small" @click="warnVisible = false">取 消</el-button>
+      </span>
     </el-dialog>
     <!--警告信息 e-->
   </div>
 </template>
 
 <script>
-import '../../styles/organization.scss'
-import customTable from '../../components/CustomTable/index'
-import Pagination from '../../components/Pagination/index'
-export default {
-  name: 'Department',
-  components: { customTable, Pagination },
-  data() {
-    return {
-      tableHeight: '',
-      warnVisible: false,
-      dialogVisible: false,
-      title: '',
-      total: 100,
-      page: 10,
-      limit: 10,
-      company: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
-      department: '',
-      tableData: [
-        {
-          date: '2012-10-30',
-          name: ' 机库顶',
-          address: '新世纪欧式党纪国法',
-          age: '12',
-          sex: '女',
-          height: '120'
+  import '../../styles/organization.scss'
+  import customTable from '../../components/CustomTable/index'
+  import Pagination from '../../components/Pagination/index'
+  import { GetList, Add, UpDate, Delete } from "@/api/organize"
+  let ID = '',editObj = {};
+  export default {
+    name: 'Department',
+    components: { customTable, Pagination },
+    data() {
+      return {
+        tableHeight: '',
+        warnVisible: false,
+        dialogVisible: false,
+        title: '',
+        total: 100,
+        page: 10,
+        limit: 10,
+        department: '',
+        ruleForm: {
+          newDertmentName: ''
         },
-        {
-          date: '2012-10-31',
-          name: ' 西涵涵',
-          address: '第三个根本不被覆盖不是多',
-          age: '13',
-          sex: '男',
-          height: '130'
-        }
-      ],
-      checkAllData: [// 所有列可选项
-        { checked: true, text: '日期', prop: 'date', position: 'center', width: '200px' },
-        { checked: true, text: '姓名', prop: 'name', position: 'center', width: '200px' },
-        { checked: false, text: '地址', prop: 'address', position: 'center', width: '200px' },
-        { checked: false, text: '年龄', prop: 'age', position: 'center', width: '200px' },
-        { checked: false, text: '性别', prop: 'sex', position: 'center', width: '200px' },
-        { checked: false, text: '身高', prop: 'height', position: 'center', width: '200px' }
-      ],
-      checksData: [],
-      customHeight: ''
-    }
-  },
-  methods: {
-    /**
-     * 表格自定义
-     * */
-    setCustomData() {
-      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
-      this.customHeight = this.$refs.myChild.isCustom
-    },
-    /**
-     * 导出
-     * */
-    exportExcel() {
-      alert('导出')
-    },
-    /**
-     * 编辑及新增
-     * */
-    handleEdit() {
-      this.dialogVisible = true
-      this.title = '编辑'
-    },
-    addNewFun() {
-      this.dialogVisible = true
-      this.title = '添加'
-    },
-    /**
-     * 删除
-     * */
-    handleDelete() {
-      this.warnVisible = true
-    },
-    deleteFun() {
-      this.warnVisible = false
-    },
-    /**
-     * 查询
-     * */
-    searchFun() {
-    },
-    /**
-     * 编辑新增保存
-     * */
-    saveFun() {
-    }
-  },
-  computed: {
-    tableHead: function() {
-      const arrayHead = []
-      const data = this.checksData
-      for (let i = 0; i < data.length; i++) { // 过滤选中列
-        if (data[i].checked) {
-          arrayHead.push(data[i])
-        }
+        rules: {
+          newDertmentName: [
+            { required: true, message: '不能为空', trigger: 'change' }
+          ]
+        },
+        tableData: [],
+        checkAllData: [// 所有列可选项
+          { checked: true, text: '部门', prop: 'DeptName', position: 'center', width: '200px' },
+          { checked: true, text: '操作人', prop: 'EditUser', position: 'center', width: '200px' },
+          { checked: false, text: '操作时间', prop: 'DataState', position: 'center', width: '200px' },
+        ],
+        checksData: [],
+        customHeight: ''
       }
-      return arrayHead
+    },
+    computed: {
+      tableHead: function() {
+        const arrayHead = []
+        const data = this.checksData
+        for (let i = 0; i < data.length; i++) { // 过滤选中列
+          if (data[i].checked) {
+            arrayHead.push(data[i])
+          }
+        }
+        return arrayHead
+      }
+    },
+    watch: {
+      customHeight() {
+        this.$nextTick(() => {
+          this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+        })
+      }
+    },
+    mounted() {
+      this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
+      this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+
+      this.searchFun()
+    },
+    methods: {
+      /**
+       * 表格自定义
+       * */
+      setCustomData() {
+        this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
+        this.customHeight = this.$refs.myChild.isCustom
+      },
+      /**
+       * 导出
+       * */
+      exportExcel() {
+        alert('导出')
+      },
+      /**
+       * 编辑及新增
+       * */
+      handleEdit(scope,row) {
+        editObj = row
+        this.dialogVisible = true
+        this.title = '编辑'
+        this.ruleForm.newDertmentName = row.DeptName
+      },
+      addNewFun() {
+        this.dialogVisible = true
+        this.title = '添加'
+        this.ruleForm.newDertmentName = ''
+      },
+      /**
+       * 删除
+       * */
+      handleDelete(scope,row) {
+        ID = row.Id
+        this.warnVisible = true
+      },
+      deleteFun() {
+        this.warnVisible = false
+        let params = { Id: ID }
+        Delete(params).then(res => {
+          if (res.code ==0 ) {
+            this.$message({
+              message: res.message,
+              type: 'success'
+            });
+            this.dialogVisible = false
+            this.searchFun()
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+      },
+      /**
+       * 查询
+       * */
+      searchFun() {
+        let params = {
+          page: this.page,
+          limit: this.limit,
+          DeptName: this.department
+        }
+        GetList(params).then(res => {
+          this.total = res.count;
+          this.tableData = res.data;
+        })
+      },
+      /**
+       * 编辑新增保存
+       * */
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (this.title ==='编辑') {
+              let params = { Id: editObj.Id, DeptName: this.ruleForm.newDertmentName }
+              UpDate(params).then(res => {
+                 if (res.code ==0 ) {
+                   this.$message({
+                     message: res.message,
+                     type: 'success'
+                   });
+                   this.dialogVisible = false
+                   this.$refs[formName].resetFields();
+                   this.searchFun()
+                 } else {
+                   this.$message({
+                     message: res.message,
+                     type: 'warning'
+                   });
+                 }
+              })
+            } else {
+              let params = { deptName: this.ruleForm.newDertmentName }
+              Add(params).then(res => {
+                if (res.code == 0) {
+                  this.$message({
+                    message: res.message,
+                    type: 'success'
+                  });
+                  this.dialogVisible = false
+                  this.$refs[formName].resetFields();
+                  this.searchFun()
+                } else {
+                  this.$message({
+                    message: res.message,
+                    type: 'warning'
+                  });
+                }
+              })
+            }
+          } else {
+            return false
+          }
+        })
+      },
+      resetForm(formName){
+        this.dialogVisible = false;
+        this.ruleForm.newDertmentName = ''
+        this.$refs[formName].resetFields();
+      }
     }
-  },
-  watch: {
-    customHeight(val, oldVal) {
-      this.$nextTick(() => {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      })
-    }
-  },
-  mounted() {
-    this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
   }
-}
 </script>
