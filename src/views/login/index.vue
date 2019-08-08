@@ -21,7 +21,7 @@
           name="username"
           type="text"
           tabindex="1"
-          autocomplete="on"
+          autocomplete="off"
         />
       </el-form-item>
 
@@ -36,7 +36,7 @@
             placeholder="请输入您的登录密码"
             name="password"
             tabindex="2"
-            autocomplete="on"
+            autocomplete="off"
             @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
