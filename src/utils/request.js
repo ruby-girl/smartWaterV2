@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../router'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
@@ -68,7 +69,8 @@ service.interceptors.response.use(
       type: 'warning'
     }).then(() => {
       store.dispatch('user/resetToken').then(() => {
-        location.reload()
+        // location.reload()
+        router.push(`/login`)
       })
     })
     
