@@ -1,12 +1,13 @@
 import Cookies from 'js-cookie'
-
+import { getDictionaryItem } from '@/api/index'
 const state = {
   sidebar: {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
   device: 'desktop',
-  size: Cookies.get('size') || 'medium'
+  size: Cookies.get('size') || 'medium',
+  dictionaryItem:[]//字典项
 }
 
 const mutations = {
@@ -30,6 +31,9 @@ const mutations = {
   SET_SIZE: (state, size) => {
     state.size = size
     Cookies.set('size', size)
+  },
+  SET_DICTIONARY: (state, dictionary) => {
+    state.dictionaryItem = dictionary
   }
 }
 
@@ -45,7 +49,16 @@ const actions = {
   },
   setSize({ commit }, size) {
     commit('SET_SIZE', size)
-  }
+  },
+  setDictionary({commit},dictionary){
+    commit('SET_DICTIONARY', dictionary)
+  },
+  setDictionary({ commit }) {//set字典项
+      getDictionaryItem().then(response => {
+        const { data } = response
+        commit('SET_DICTIONARY', data)      
+      })
+  },
 }
 
 export default {

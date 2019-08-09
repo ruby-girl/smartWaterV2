@@ -4,37 +4,59 @@
     <el-row :gutter="16">
       <el-col :xs="24" :sm="12" :lg="12">
         <div class="chart-wrapper">
-          <h2><i></i>今日缴费开户简览</h2>
+          <h2>
+            <i></i>今日缴费开户简览
+          </h2>
           <bar-chart />
         </div>
       </el-col>
       <el-col :xs="24" :sm="12" :lg="12">
         <div class="chart-wrapper">
-          <h2><i></i>近5日缴费开户简览</h2>
+          <h2>
+            <i></i>近5日缴费开户简览
+          </h2>
           <line-chart :chart-data="lineChartData" />
         </div>
       </el-col>
     </el-row>
     <div class="chart-wrapper" style="padding: 16px 16px 16px">
-      <h2><i></i>操作员信息</h2>
+      <h2>
+        <i></i>操作员信息
+      </h2>
       <ul class="userInfo">
-        <li>所属公司 <span class="fr">四川府星仪表有限公司成都分公司</span></li>
-        <li>账号 <span class="fr">admin</span></li>
-        <li>角色 <span class="fr">管理员</span></li>
-        <li>人员 <span class="fr">管理员</span></li>
-        <li>上一次登录时间 <span class="fr">2018-07-22 13:52</span></li>
+        <li>
+          所属公司
+          <span class="fr">四川府星仪表有限公司成都分公司</span>
+        </li>
+        <li>
+          账号
+          <span class="fr">admin</span>
+        </li>
+        <li>
+          角色
+          <span class="fr">管理员</span>
+        </li>
+        <li>
+          人员
+          <span class="fr">管理员</span>
+        </li>
+        <li>
+          上一次登录时间
+          <span class="fr">2018-07-22 13:52</span>
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
-
+import PanelGroup from "./components/PanelGroup";
+import LineChart from "./components/LineChart";
+import RaddarChart from "./components/RaddarChart";
+import PieChart from "./components/PieChart";
+import BarChart from "./components/BarChart";
+import { getDictionaryItem } from "@/api/index"; //获取字典项
+import { setTimeout } from 'timers';
 const lineChartData = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -52,10 +74,10 @@ const lineChartData = {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
     actualData: [120, 82, 91, 154, 162, 140, 130]
   }
-}
+};
 
 export default {
-  name: 'DashboardAdmin',
+  name: "DashboardAdmin",
   components: {
     // GithubCorner,
     PanelGroup,
@@ -64,17 +86,22 @@ export default {
     PieChart,
     BarChart
   },
+  created() {
+    getDictionaryItem().then(res => {
+      this.$store.dispatch("app/setDictionary")
+    });
+  },
   data() {
     return {
       lineChartData: lineChartData.newVisitis
-    }
+    };
   },
   methods: {
     handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+      this.lineChartData = lineChartData[type];
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -95,21 +122,38 @@ export default {
     padding: 16px 16px 0;
     margin-bottom: 16px;
     h2 {
-      color: #00B3A1;font: bold 14px '';margin: 0;
-      i{display: inline-block;background: #00B3A1;width: 3px;height: 12px;margin-right: 8px;}
+      color: #00b3a1;
+      font: bold 14px "";
+      margin: 0;
+      i {
+        display: inline-block;
+        background: #00b3a1;
+        width: 3px;
+        height: 12px;
+        margin-right: 8px;
+      }
     }
   }
   .userInfo {
-    border: solid 1px #E5EBF4;padding: 0;
+    border: solid 1px #e5ebf4;
+    padding: 0;
     li {
-      list-style: none;border-bottom: solid 1px #E5EBF4;padding: 13px 16px;font-size: 14px;color: #8A9299;
-      span {color: #46494D}
+      list-style: none;
+      border-bottom: solid 1px #e5ebf4;
+      padding: 13px 16px;
+      font-size: 14px;
+      color: #8a9299;
+      span {
+        color: #46494d;
+      }
     }
-    li:last-child{border: none}
+    li:last-child {
+      border: none;
+    }
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .chart-wrapper {
     padding: 8px;
   }

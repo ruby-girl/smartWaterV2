@@ -16,14 +16,13 @@
       <el-form-item label="角色：">
       <el-select
         v-model="temp.userNum"
-        multiple
-        placeholder="可多选">
+        placeholder="请选择">
        <el-option
-         v-for="item in editUserList"
-         :key="item.label"
-         :label="item.label"
-         :value="item.type">
-       </el-option>
+          v-for="item in roleList"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
+        />
     </el-select>
     </el-form-item>
     <el-form-item label="账号：">
@@ -52,6 +51,12 @@ export default {
     addShow: {
       type: Boolean,
       default: false 
+    },
+    roleList:{
+      type: Array,
+      default: function() {
+        return []
+      }
     }
   },
   watch: {
@@ -69,7 +74,6 @@ export default {
   data() {
     return {
       timevalue: [],
-      editUserList: [{ label: '羊子兮', type: 1 },{ label: '羊子兮2', type: 2 }],
       rules: {
         roleName: [
           { required: true, message: '请输入角色名称', trigger: 'blur' },

@@ -11,23 +11,22 @@
       label-width="100px"
     >
     <el-form-item label="人员编号：">
-      <el-input v-model="temp.roleName" disabled></el-input>
+      <el-input v-model="temp.userNum" disabled></el-input>
     </el-form-item>
-     <el-form-item label="关联角色：" prop="userNum">
+     <el-form-item label="关联角色：" prop="roldId">
       <el-select
-        v-model="temp.userNum"
-        multiple
-        placeholder="可多选">
+        v-model="temp.roldId"     
+        placeholder="请选择">
        <el-option
-         v-for="item in editUserList2"
-         :key="item.label"
-         :label="item.label"
-         :value="item.type">
-       </el-option>
+          v-for="item in roleList"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
+        />
     </el-select>
     </el-form-item>
     <el-form-item label="账号：">
-      <el-input v-model="temp.roleName" disabled></el-input>
+      <el-input v-model="temp.loginName" disabled></el-input>
     </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -54,6 +53,12 @@ export default {
     show: {
       type: Boolean,
       default: false 
+    },
+    roleList:{
+      type: Array,
+      default: function() {
+        return []
+      }
     }
   },
   watch: {

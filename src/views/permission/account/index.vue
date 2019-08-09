@@ -1,7 +1,7 @@
 <template>
   <div class="section-container">
     <div ref="formHeight">
-      <select-head :select-head="listQuery" @handleFilter="handleFilter" />
+      <select-head :select-head="listQuery" @handleFilter="handleFilter" :role-list="roleList"/>
     </div>
     <div class="table-top-btn-padding">
       <el-button type="primary" size="mini" class="iconfont icontianjia" @click="addRole">添加</el-button>
@@ -50,8 +50,8 @@
       />
     </div>
     <!-- 编辑弹窗 -->
-    <edit-dialog :show.sync="dialogFormVisible" :temp="temp" @createData="createData" />
-    <add-dialog :add-show.sync="addDialogFormVisible" :temp="temp" @updateData="updateData" />
+    <edit-dialog :show.sync="dialogFormVisible" :temp="temp" @createData="createData" :role-list="roleList"/>
+    <add-dialog :add-show.sync="addDialogFormVisible" :temp="temp" @updateData="updateData" :role-list="roleList"/>
   </div>
 </template>
 <script>
@@ -60,7 +60,8 @@ import Pagination from '@/components/Pagination'
 import EditDialog from './components/EditDialog'
 import AddDialog from './components/AddDialog'
 import customTable from '@/components/CustomTable/index'
-
+import {getAccountList,getAccountDetail} from '@/api/account'
+import {getRoles} from '@/api/role' //获取角色下拉框
 export default {
   components: { SelectHead, Pagination, EditDialog, customTable, AddDialog},
   data() {
@@ -69,32 +70,36 @@ export default {
       tableKey: 0,
       tableHeight: 0,
       temp: {
-        role: '',
-        roleName: '',
-        userNum: [1]
+        userNum:'',//用户编号，请求后端得到employeeId，userId
+        employeeId:'',
+        roleId: '',
+        loginName: '',//账号
+        loginPwd:'',
+        userId:''
       },
       listQuery: {
         // 查询条件
         page: 1,
         limit: 20,
-        roleName: '', // 角色名称
-        userName: '', // 人员名称
-        userNum: '', // 人员编号
-        editName: '', // 操作人
-        startTime: '', // 操作时间起
-        endTime: '' // 操作时间止
+        roldId: '-1', // 角色ID
+        userState: '-1', // 账号状态
+        empNo: '', // 人员编号
+        editUserId: '-1', // 操作人
+        editStartTime: '', // 操作时间起
+        editEndTime: '' // 操作时间止
       },
+      roleList:[],//角色下拉框，传递给组件
       addDialogFormVisible: false, // 新增弹窗
       dialogFormVisible: false, // 编辑弹窗
-      tableData: [{ role: '123', roleName: '羊阿萨德', time: '2018-01-01',userNum:[1,2]}],
+      tableData: [],
       checksData: [],
       checkAllData: [// 所有列可选项
-        { checked: true, text: '人员编号', prop: 'role', position: 'left' },
-        { checked: true, text: '角色', prop: 'roleName', position: 'left' },
-        { checked: true, text: '账号', prop: 'roleName', position: 'left' },
-        { checked: true, text: '状态', prop: 'roleName', position: 'left' },
-        { checked: true, text: '操作人', prop: 'roleName', position: 'left' },
-        { checked: true, text: '操作时间', prop: 'time', position: 'left' }
+        { checked: true, text: '人员编号', prop: 'EmpNo', position: 'left' },
+        { checked: true, text: '角色', prop: 'RoleName', position: 'left' },
+        { checked: true, text: '账号', prop: 'LoginName', position: 'left' },
+        { checked: true, text: '状态', prop: 'UserStatus', position: 'left' },
+        { checked: true, text: '操作人', prop: 'CreateUser', position: 'left' },
+        { checked: true, text: '操作时间', prop: 'EditTime', position: 'left' }
       ],
     }
   },
@@ -117,6 +122,9 @@ export default {
       }
       this.$refs.myChild.checkData = this.checkAllData // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData // 获取自定义字段中选中了字段
+      getRoles().then(res=>{
+        this.roleList=res.data
+      })
     })
   },
   methods: {
@@ -124,15 +132,22 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
     },
     getList() {
-     
+     getAccountList(this.listQuery).then((res)=>{
+        this.total=res.count
+        this.tableData=res.data
+     })
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row)
-      this.temp.timestamp = new Date(this.temp.timestamp)
+      getAccountDetail(row.Id).then((res)=>{
+        this.temp.empNo=res.EmpNo//人员编号
+        this.temp.roleId=res.roleId
+      })
+      
+      console.log(this.temp)
       this.dialogFormVisible = true
     },
     delRow() {

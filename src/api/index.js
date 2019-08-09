@@ -7,3 +7,10 @@ export function login(data) {
     data
   })
 }
+// 获取配置项
+export function getDictionaryItem() {
+  return request({
+    url: '/Dictionary/GetDictionaryListAll',
+    method: 'get',
+  })
+}

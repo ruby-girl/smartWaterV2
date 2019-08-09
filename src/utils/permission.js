@@ -5,7 +5,7 @@ import store from '@/store'
  * @returns {Boolean}
  * @example see @/views/permission/directive.vue
  */
-export default function checkPermission(value) {
+export  function checkPermission(value) {
   if (value && value instanceof Array && value.length > 0) {
     const roles = store.getters && store.getters.roles
     const permissionRoles = value
@@ -20,6 +20,18 @@ export default function checkPermission(value) {
     return true
   } else {
     console.error(`need roles! Like v-permission="['admin','editor']"`)
+    return false
+  }
+}
+
+export function getDictionaryItem(value) {//获取具体的字典项
+  if(store.getters.dictionaryItem){
+   let item=store.getters.dictionaryItem.filter(item=>{
+      return item.Id==value
+    })
+    return item.CboList//这里是option数据
+  }else{
+    console.error(`没有获取到字典项`)
     return false
   }
 }

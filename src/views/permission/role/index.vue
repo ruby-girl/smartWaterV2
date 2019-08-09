@@ -74,13 +74,12 @@ import Pagination from "@/components/Pagination";
 import Dialog from "./components/Dialog";
 import customTable from "@/components/CustomTable/index";
 import { getRolesList, addRole, updateRole,deleteRole } from "@/api/role";
-import { constants } from "crypto";
-import { parseStartTime, parseEndTime } from "@/utils/index";
+
 export default {
   components: { SelectHead, Pagination, Dialog, customTable },
   data() {
     return {
-      total: 1,
+      total: 0,
       tableKey: 0,
       tableHeight: 0,
       temp: {},
@@ -126,8 +125,7 @@ export default {
       };
       this.$refs.myChild.checkData = this.checkAllData; // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-      let a = parseStartTime(new Date());
-      let e = parseEndTime(new Date());
+     
     });
   },
   methods: {
