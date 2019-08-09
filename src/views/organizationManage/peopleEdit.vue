@@ -189,7 +189,7 @@ export default {
         if (valid) {
           alert('submit!')
         } else {
-          return false
+                return false
         }
       })
     },

@@ -27,18 +27,18 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="建设时间：">
+    <el-form-item label="建设时间1：">
       <el-date-picker
         v-model="timevalue"
         type="daterange"
-        range-separator="至"
+        range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         :default-time="['00:00:00', '23:59:59']"
-        format="yyyy 年 MM 月 dd 日"
-        value-format="yyyy-MM-dd HH-mm-ss"
-        @change="getTime">
-      </el-date-picker>
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        @change="getTime"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" size="mini" class="iconfont iconsousuo" @click="handleFilter">搜索</el-button>
@@ -63,11 +63,10 @@ export default {
   },
   methods: {
     getTime(v) {
-      this.selectHead.startTime = v[0]
-      this.selectHead.endTime = v[1]
+      this.selectHead.editStartTime = v[0]
+      this.selectHead.editEndTime = v[1]
     },
     handleFilter() {
-      console.info(this.selectHead)
       this.$emit('handleFilter', this.selectHead)
     }
   }

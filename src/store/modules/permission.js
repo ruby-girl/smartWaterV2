@@ -20,8 +20,6 @@ function hasPermission(roles, route) {
  */
 export function filterAsyncRoutes(routes, roles) {
   const res = []
-  console.log('这里看权限')
-  console.log(roles)
   routes.forEach(route => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {

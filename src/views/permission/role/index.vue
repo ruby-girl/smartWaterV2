@@ -6,9 +6,14 @@
     <div class="table-top-btn-padding">
       <el-button type="primary" size="mini" class="iconfont icontianjia" @click="addRole">添加</el-button>
       <el-button type="success" size="mini" class="iconfont icondaochuexcel">导出Excel</el-button>
-      <el-button type="warning" size="mini" class="iconfont iconbiaogezidingyi"  @click="setCustomData()">表格自定义</el-button>
+      <el-button
+        type="warning"
+        size="mini"
+        class="iconfont iconbiaogezidingyi"
+        @click="setCustomData()"
+      >表格自定义</el-button>
     </div>
-    <customTable ref="myChild"></customTable>
+    <customTable ref="myChild" />
     <div class="main-padding-20-y">
       <el-table
         :key="tableKey"
@@ -20,12 +25,12 @@
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
-        >
-        <el-table-column type="index"></el-table-column>
+      >
+        <el-table-column type="index" />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
-            min-width="100px"
             :key="index"
+            min-width="100px"
             :prop="item.prop"
             :align="item.position"
             sortable
@@ -35,8 +40,12 @@
         <el-table-column label="操作" align="center" class-name="small-padding">
           <template slot-scope="{row}">
             <div class="display-flex justify-content-flex-center">
-              <div class="main-color" @click="handleUpdate(row)"><a>编辑</a></div>
-              <div class="main-color-red pl-15" @click="delRow(row)"><a>删除</a></div>
+              <div class="main-color" @click="handleUpdate(row)">
+                <a>编辑</a>
+              </div>
+              <div class="main-color-red pl-15" @click="delRow(row)">
+                <a>删除</a>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -50,16 +59,25 @@
       />
     </div>
     <!-- 编辑弹窗 -->
-    <Dialog :show.sync="dialogFormVisible" :temp="temp" @createData="createData" @updateData="updateData" :dialogStatus="dialogStatus"></Dialog>
+    <Dialog
+      :show.sync="dialogFormVisible"
+      :temp="temp"
+      :dialog-status="dialogStatus"
+      @createData="createData"
+      @updateData="updateData"
+    />
   </div>
 </template>
 <script>
-import SelectHead from './components/SelectHead'
-import Pagination from '@/components/Pagination'
-import Dialog from './components/Dialog'
-import customTable from '@/components/CustomTable/index'
+import SelectHead from "./components/SelectHead";
+import Pagination from "@/components/Pagination";
+import Dialog from "./components/Dialog";
+import customTable from "@/components/CustomTable/index";
+import { getRolesList, addRole, updateRole,deleteRole } from "@/api/role";
+/*import { constants } from "crypto";*/
+/*import { parseStartTime, parseEndTime } from "@/utils/index";*/
 export default {
-  components: { SelectHead, Pagination, Dialog, customTable},
+  components: { SelectHead, Pagination, Dialog, customTable },
   data() {
     return {
       total: 1,
@@ -69,87 +87,122 @@ export default {
       listQuery: {
         // 查询条件
         page: 1,
-        limit: 20,
-        roleName: '', // 角色名称
-        userName: '', // 人员名称
-        userNum: '', // 人员编号
-        editName: '', // 操作人
-        startTime: '', // 操作时间起
-        endTime: '' // 操作时间止
+        limit: 10,
+        roleName: "", // 角色名称
+        empName: "", // 人员名称
+        empNo: "", // 人员编号
+        editUserId: "-1", // 操作人
+        editStartTime: "", // 操作时间起
+        editEndTime: "" // 操作时间止
       },
-      dialogStatus: '', // 识别添加还是编辑
+      dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
-      tableData: [{ role: '123', roleName: '羊阿萨德', time: '2018-01-01'}],
+      tableData: [],
       checksData: [],
-      checkAllData: [// 所有列可选项
-        { checked: true, text: '角色', prop: 'role', position: 'left' },
-        { checked: true, text: '操作人', prop: 'roleName', position: 'left' },
-        { checked: true, text: '操作时间', prop: 'time', position: 'left' }
-      ],
-    }
+      checkAllData: [
+        // 所有列可选项
+        { checked: true, text: "角色", prop: "RoleName", position: "left" },
+        { checked: true, text: "操作人", prop: "CreateUser", position: "left" },
+        { checked: true, text: "操作时间", prop: "EditTime", position: "left" }
+      ]
+    };
   },
   computed: {
     tableHead: function() {
-      let arrayHead= this.checksData.filter((item)=>{
-          return item.checked
-      })
-      return arrayHead
+      let arrayHead = this.checksData.filter(item => {
+        return item.checked;
+      });
+      return arrayHead;
     }
   },
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
-      var formHeight = this.$refs.formHeight.offsetHeight
-      const that = this
-      that.tableHeight = document.body.clientHeight - formHeight - 220
+      var formHeight = this.$refs.formHeight.offsetHeight;
+      const that = this;
+      that.tableHeight = document.body.clientHeight - formHeight - 220;
       window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight - 220
-      }
-      this.$refs.myChild.checkData = this.checkAllData // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData // 获取自定义字段中选中了字段
-    })
+        that.tableHeight = document.body.clientHeight - formHeight - 220;
+      };
+      this.$refs.myChild.checkData = this.checkAllData; // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+ /*     let a = parseStartTime(new Date());
+      let e = parseEndTime(new Date());*/
+    });
   },
   methods: {
     setCustomData() {
-      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
+      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
     },
     getList() {
-      console.log('请求')
+      getRolesList(this.listQuery).then(res => {
+        this.total=res.count
+        this.tableData=res.data
+      });
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row)
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
+      this.temp = Object.assign({}, row);
+      this.temp.timestamp = new Date(this.temp.timestamp);
+      this.dialogStatus = "update";
+      this.dialogFormVisible = true;
     },
     delRow(r) {
-      this.$confirm('这里是需要确认的信息', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        customClass: 'warningBox',
+      this.$confirm("是否删除当前信息", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        customClass: "warningBox",
         showClose: false
       }).then(() => {
-        console.log(r)
-      })
+        deleteRole(r.Id).then((res)=>{
+          this.$message({
+            message: res.message,
+            type: "success"
+          });
+          this.getList()
+        })
+      });
     },
     addRole() {
-      this.temp = {}
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
+      this.temp = {};
+      this.dialogStatus = "create";
+      this.dialogFormVisible = true;
     },
-    createData() {
-      console.log('添加了')
+    createData(dialog) {
+      addRole(dialog.RoleName).then(res => {
+        this.$message({
+          message: res.message,
+          type: "success"
+        });
+        this.dialogFormVisible = false;
+        this.handleFilter();
+      });
     },
-    updateData() {
-      console.log('编辑了')
+    updateData(dialog) {
+      updateRole(dialog.RoleName,dialog.Id).then(
+        res => {
+          this.$message({
+            message: res.message,
+            type: "success"
+          });
+          this.dialogFormVisible = false;
+          for (const v of this.tableData) {
+            if (v.Id == this.temp.Id) {
+              const index = this.tableData.indexOf(v);
+              this.tableData.splice(index, 1, this.temp);
+              break;
+            }
+          }
+          this.dialogFormVisible = false;
+        }
+      );
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .pipeline-select-padding {
