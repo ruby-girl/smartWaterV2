@@ -5,27 +5,14 @@
         <el-row>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
-              <label class="cl-label">公司：</label>
-              <el-select v-model="value" placeholder="请选择（单选）" size="small">
-                <el-option
-                  v-for="item in company"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
-            <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-select v-model="value" placeholder="请选择（单选）" size="small">
                 <el-option
                   v-for="item in company"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                />
               </el-select>
             </div>
           </el-col>
@@ -33,39 +20,25 @@
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
               <el-input
-                placeholder="岗位名称（长度10以内）"
                 v-model="department"
+                placeholder="岗位名称（长度10以内）"
                 maxlength="10"
-                size="small">
-              </el-input>
+                size="small"
+              />
             </div>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">模糊查询：</label>
               <el-input
-                placeholder="人员名称/员工编号"
                 v-model="department"
+                placeholder="人员名称/员工编号"
                 maxlength="10"
-                size="small">
-              </el-input>
-            </div>
-          </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-            <div class="cl-inlineItem" style="width: 100%">
-              <label class="cl-label">入职时间：</label>
-              <el-date-picker
-                style="width: 83%"
                 size="small"
-                v-model="value"
-                type="daterange"
-                range-separator="~"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-            </el-date-picker>
+              />
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8"  :lg="6" :xl="6">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位状态：</label>
               <el-select v-model="value" placeholder="请选择（单选）" size="small">
@@ -73,12 +46,27 @@
                   v-for="item in company"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                />
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8"  :lg="6" :xl="6" v-show="ifMore">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+            <div class="cl-inlineItem" style="width: 100%">
+              <label class="cl-label">入职时间：</label>
+              <el-date-picker
+                v-model="value"
+                style="width: 83%"
+                size="small"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              />
+            </div>
+          </el-col>
+
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">性别：</label>
               <el-select v-model="value" placeholder="请选择（单选）" size="small">
@@ -86,48 +74,50 @@
                   v-for="item in company"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                />
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" v-show="ifMore">
-            <div class="cl-inlineItem" style="width: 100%">
-              <label class="cl-label">出生日期：</label>
-              <el-date-picker
-                style="width: 83%"
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+            <div class="cl-inlineItem">
+              <label class="cl-label">身份证号：</label>
+              <el-input
+                v-model="department"
+                placeholder="人员名称/员工编号"
+                maxlength="10"
                 size="small"
-                v-model="value"
-                type="daterange"
-                range-separator="~"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-              </el-date-picker>
+              />
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" v-show="ifMore">
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">电话号码：</label>
               <el-input
-                placeholder="人员名称/员工编号"
                 v-model="department"
+                placeholder="人员名称/员工编号"
                 maxlength="10"
-                size="small">
-              </el-input>
+                size="small"
+              />
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8"  :lg="6" :xl="6" v-show="ifMore">
-            <div class="cl-inlineItem">
-              <label class="cl-label">省份证号：</label>
-              <el-input
-                placeholder="人员名称/员工编号"
-                v-model="department"
-                maxlength="10"
-                size="small">
-              </el-input>
+          <el-col v-show="ifMore" :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+            <div class="cl-inlineItem" style="width: 100%">
+              <label class="cl-label">出生日期：</label>
+              <el-date-picker
+                v-model="value"
+                style="width: 83%"
+                size="small"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              />
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8"  :lg="6" :xl="6" v-show="ifMore">
+
+
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
               <el-select v-model="value" placeholder="请选择（单选）" size="small">
@@ -135,29 +125,29 @@
                   v-for="item in company"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                />
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" v-show="ifMore">
+          <el-col v-show="ifMore" :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">操作时间：</label>
               <el-date-picker
+                v-model="value"
                 style="width: 83%"
                 size="small"
-                v-model="value"
                 type="daterange"
                 range-separator="~"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期">
-              </el-date-picker>
+                end-placeholder="结束日期"
+              />
             </div>
           </el-col>
           <el-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4">
             <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
-            <i class="icon iconfont getUpDown" v-show="ifMore" @click="ifMore=!ifMore">收起 &#xe692;</i>
-            <i class="icon iconfont getUpDown" v-show="!ifMore" @click="ifMore=!ifMore">展开 &#xe68f;</i>
+            <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
+            <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
           </el-col>
         </el-row>
         <div class="cl-operation1">
@@ -166,8 +156,8 @@
           <el-button type="primary" size="small" class="cl-search cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
         </div>
       </div>
-      <customTable ref="myChild"></customTable>
-      <el-table :data="tableData" :height="tableHeight" id="table"  style="width: 100%" border>
+      <customTable ref="myChild" />
+      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border>
         <el-table-column
           type="selection"
           width="55"
@@ -175,8 +165,8 @@
         />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
-            :min-width="item.width"
             :key="index"
+            :min-width="item.width"
             :prop="item.prop"
             :align="item.position"
             :label="item.text"
@@ -201,17 +191,18 @@
 
     <!--警告信息 s-->
     <el-dialog
-      title= '提示'
+      title="提示"
       class="warningBox"
       :visible.sync="warnVisible"
-      width="20%">
+      width="20%"
+    >
       <p class="warnInfo">
-        <i class="icon iconfont icontishixunwen"></i> 是否删除当前信息？
+        <i class="icon iconfont icontishixunwen" /> 是否删除当前信息？
       </p>
       <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="deleteFun" size="small">确 定</el-button>
-          <el-button @click="warnVisible = false" size="small">取 消</el-button>
-        </span>
+        <el-button type="primary" size="small" @click="deleteFun">确 定</el-button>
+        <el-button size="small" @click="warnVisible = false">取 消</el-button>
+      </span>
     </el-dialog>
     <!--警告信息 e-->
   </div>
@@ -280,6 +271,35 @@ export default {
       customHeight: ''
     }
   },
+  computed: {
+    tableHead: function() {
+      const arrayHead = []
+      const data = this.checksData
+      for (let i = 0; i < data.length; i++) { // 过滤选中列
+        if (data[i].checked) {
+          arrayHead.push(data[i])
+        }
+      }
+      return arrayHead
+    }
+  },
+  watch: {
+    ifMore() {
+      this.$nextTick(() => {
+        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      })
+    },
+    customHeight() {
+      this.$nextTick(() => {
+        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      })
+    }
+  },
+  mounted() {
+    this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
+    this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+  },
   methods: {
     /**
        * 表格自定义
@@ -322,35 +342,6 @@ export default {
        * */
     saveFun() {
     }
-  },
-  computed: {
-    tableHead: function() {
-      const arrayHead = []
-      const data = this.checksData
-      for (let i = 0; i < data.length; i++) { // 过滤选中列
-        if (data[i].checked) {
-          arrayHead.push(data[i])
-        }
-      }
-      return arrayHead
-    }
-  },
-  watch: {
-    ifMore(val) {
-      this.$nextTick(() => {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      })
-    },
-    customHeight(val) {
-      this.$nextTick(() => {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      })
-    }
-  },
-  mounted() {
-    this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
   }
 }
 </script>

@@ -1,76 +1,76 @@
 <template>
   <div class="cl-container cl-container3">
     <div>
-        <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form ref="ruleForm" :model="ruleForm" label-width="100px">
         <el-row :gutter="50">
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="人员编号:">
-              <span>{{ruleForm.code}}</span>
+              <span>{{ ruleForm.code }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="人员名称:">
-              <span>{{ruleForm.name}}</span>
+              <span>{{ ruleForm.name }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="公司:">
-              <span>{{ruleForm.company}}</span>
+              <span>{{ ruleForm.company }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="水厂:">
-              <span>{{ruleForm.waterworks}}</span>
+              <span>{{ ruleForm.waterworks }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="部门:">
-              <span>{{ruleForm.department}}</span>
+              <span>{{ ruleForm.department }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="岗位:">
-              <span>{{ruleForm.post}}</span>
+              <span>{{ ruleForm.post }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="性别:">
-             <span>{{ruleForm.sex}}</span>
+              <span>{{ ruleForm.sex }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="出生日期:">
-              <span>{{ruleForm.birthday}}</span>
+              <span>{{ ruleForm.birthday }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="电话号码:">
-              <span>{{ruleForm.phone}}</span>
+              <span>{{ ruleForm.phone }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="身份证号:">
-              <span>{{ruleForm.id}}</span>
+              <span>{{ ruleForm.id }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="入职时间:">
-             <span> {{ruleForm.entryTime}}</span>
+              <span> {{ ruleForm.entryTime }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="岗位状态:">
-              <span>{{ruleForm.status}}</span>
+              <span>{{ ruleForm.status }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item label="地址:">
-             <span>{{ruleForm.adress}}</span>
+              <span>{{ ruleForm.adress }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="附件:">
-              <span>{{ruleForm.Certificates}}</span>
+              <span>{{ ruleForm.Certificates }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -81,7 +81,7 @@
                   <p v-show="item.type === 1?true:false"><span class="icon iconfont" style="color:#345e9e;font-size: 60px;">&#xe65d;</span></p>
                   <p v-show="item.type === 2?true:false"><span class="icon iconfont" style="color:#389850;font-size: 60px;">&#xe693;</span></p>
                   <p v-show="item.type === 3?true:false"><span class="icon iconfont" style="color:#dc2e1b;font-size: 60px;">&#xe691;</span></p>
-                  <i @click="handlePreview(item)" >{{item.name}}</i>
+                  <i @click="handlePreview(item)">{{ item.name }}</i>
                 </li>
               </ul>
             </el-form-item>
@@ -97,8 +97,9 @@
 
     <el-dialog
       :visible.sync="dialogVisible"
-      :fullscreen="dialogVisible">
-      <iframe :src="iframeUrl" width="100%" frameborder="0" :height="clientHeight-100"></iframe>
+      :fullscreen="dialogVisible"
+    >
+      <iframe :src="iframeUrl" width="100%" frameborder="0" :height="clientHeight-100" />
     </el-dialog>
   </div>
 </template>
@@ -148,6 +149,12 @@ export default {
       clientHeight: ''
     }
   },
+  mounted() {
+    this.clientHeight = document.documentElement.clientHeight
+    window.onresize = function temp() {
+      this.clientHeight = document.documentElement.clientHeight
+    }
+  },
   methods: {
     handlePreview(file) { // 点击文件列表中已上传的文件时的事件
       const type = file.type
@@ -169,12 +176,6 @@ export default {
           this.iframeUrl = file.url
           break
       }
-    }
-  },
-  mounted() {
-    this.clientHeight = document.documentElement.clientHeight
-    window.onresize = function temp() {
-      this.clientHeight = document.documentElement.clientHeight
     }
   }
 }

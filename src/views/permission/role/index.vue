@@ -13,7 +13,7 @@
         @click="setCustomData()"
       >表格自定义</el-button>
     </div>
-    <customTable ref="myChild"></customTable>
+    <customTable ref="myChild" />
     <div class="main-padding-20-y">
       <el-table
         :key="tableKey"
@@ -26,11 +26,11 @@
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
       >
-        <el-table-column type="index"></el-table-column>
+        <el-table-column type="index" />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
-            min-width="100px"
             :key="index"
+            min-width="100px"
             :prop="item.prop"
             :align="item.position"
             sortable
@@ -62,10 +62,10 @@
     <Dialog
       :show.sync="dialogFormVisible"
       :temp="temp"
+      :dialog-status="dialogStatus"
       @createData="createData"
       @updateData="updateData"
-      :dialogStatus="dialogStatus"
-    ></Dialog>
+    />
   </div>
 </template>
 <script>
@@ -74,7 +74,6 @@ import Pagination from "@/components/Pagination";
 import Dialog from "./components/Dialog";
 import customTable from "@/components/CustomTable/index";
 import { getRolesList, addRole, updateRole,deleteRole } from "@/api/role";
-
 export default {
   components: { SelectHead, Pagination, Dialog, customTable },
   data() {

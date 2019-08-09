@@ -27,7 +27,8 @@
       </div>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border>
         <el-table-column
-          type="selection"
+          type="index"
+          label="序号"
           width="55"
           align="center"
         />
@@ -40,7 +41,7 @@
             :label="item.text"
           />
         </template>
-        <el-table-column label="操作" width="200px" align="center">
+        <el-table-column label="操作" width="200px" align="center" fixed="right">
           <template slot-scope="scope">
             <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
             <a class="operation2" @click="handleDelete(scope.$index, scope.row)">删除</a>
@@ -112,8 +113,8 @@
         warnVisible: false,
         dialogVisible: false,
         title: '',
-        total: 100,
-        page: 10,
+        total: 0,
+        page: 1,
         limit: 10,
         department: '',
         ruleForm: {
@@ -232,7 +233,6 @@
        * 编辑新增保存
        * */
       submitForm(formName) {
-        alert(3)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.title ==='编辑') {
