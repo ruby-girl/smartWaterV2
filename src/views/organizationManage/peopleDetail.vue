@@ -14,16 +14,6 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="公司:">
-              <span>{{ ruleForm.company }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="水厂:">
-              <span>{{ ruleForm.waterworks }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="部门:">
               <span>{{ ruleForm.department }}</span>
             </el-form-item>

@@ -14,22 +14,6 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="公司:" prop="company">
-              <el-select v-model="ruleForm.company" placeholder="请选择（单选）" size="small">
-                <el-option label="区域一" value="shanghai" />
-                <el-option label="区域二" value="beijing" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="水厂:" prop="waterworks">
-              <el-select v-model="ruleForm.waterworks" placeholder="请选择（单选）" size="small">
-                <el-option label="区域一" value="shanghai" />
-                <el-option label="区域二" value="beijing" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="部门:" prop="department">
               <el-select v-model="ruleForm.department" placeholder="请选择（单选）" size="small">
                 <el-option label="区域一" value="shanghai" />

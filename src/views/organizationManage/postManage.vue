@@ -6,7 +6,7 @@
           <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
-              <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择（单选）" size="small">
+              <el-select v-model="jp.SYS_Department_Id" placeholder="请选择（单选）" size="small">
                 <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </div>
@@ -15,7 +15,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
               <el-input
-                v-model="queryData.JobName"
+                v-model="jp.JobName"
                 placeholder="岗位名称（长度10以内）"
                 maxlength="10"
                 size="small"
@@ -59,8 +59,8 @@
       <pagination
         v-show="total>0"
         :total="total"
-        :page.sync="queryData.page"
-        :limit.sync="queryData.limit"
+        :page.sync="jp.page"
+        :limit.sync="jp.limit"
         @pagination="searchFun"
       />
     </div>
@@ -142,7 +142,7 @@ export default {
       dialogVisible: false,
       title: '',
       total: 0,
-      queryData: {
+      jp: {
         page: 1,
         limit: 10,
         SYS_Department_Id: '',
@@ -245,7 +245,7 @@ export default {
        * 查询
        * */
     searchFun() {
-      GetListPost(this.queryData).then(res => {
+      GetListPost(this.jp).then(res => {
         this.total = res.count;
         this.tableData = res.data;
       })

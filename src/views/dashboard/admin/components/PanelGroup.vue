@@ -4,63 +4,74 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <p class="card-panel-text">
-            11232
+            {{ Pay }}
           </p>
           今日缴费
         </div>
         <div class="card-panel-description">
-          <span class="icon iconfont iconshouye-jinrijiaofei" style="color: #93E6D2"></span>
+          <span class="icon iconfont iconshouye-jinrijiaofei" style="color: #93E6D2" />
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-      <div class="card-panel-icon-wrapper icon-people">
-        <p class="card-panel-text">
-          11232
-        </p>
-        今日开户
+        <div class="card-panel-icon-wrapper icon-people">
+          <p class="card-panel-text">
+            {{ account }}
+          </p>
+          今日开户
+        </div>
+        <div class="card-panel-description">
+          <span class="icon iconfont iconshouye-jinrikaihu" style="color: #93E6D2" />
+        </div>
       </div>
-      <div class="card-panel-description">
-        <span class="icon iconfont iconshouye-jinrikaihu" style="color: #93E6D2"></span>
-      </div>
-    </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-      <div class="card-panel-icon-wrapper icon-people">
-        <p class="card-panel-text">
-          11232
-        </p>
-        今日销户
+        <div class="card-panel-icon-wrapper icon-people">
+          <p class="card-panel-text">
+            {{ salesAcount }}
+          </p>
+          今日销户
+        </div>
+        <div class="card-panel-description">
+          <span class="icon iconfont iconshouye-jinrixiaohu" style="color: #93E6D2" />
+        </div>
       </div>
-      <div class="card-panel-description">
-        <span class="icon iconfont iconshouye-jinrixiaohu" style="color: #93E6D2"></span>
-      </div>
-    </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-      <div class="card-panel-icon-wrapper icon-people">
-        <p class="card-panel-text">
-          11232
-        </p>
-        软件到期时间
+        <div class="card-panel-icon-wrapper icon-people">
+          <p class="card-panel-text">
+            {{ time }}
+          </p>
+          软件到期时间
+        </div>
+        <div class="card-panel-description">
+          <span class="icon iconfont iconshouye-ruanjiandaoqi" style="color: #93E6D2" />
+        </div>
       </div>
-      <div class="card-panel-description">
-        <span class="icon iconfont iconshouye-ruanjiandaoqi" style="color: #93E6D2"></span>
-      </div>
-    </div>
     </el-col>
   </el-row>
 </template>
 
 <script>
-import CountTo from 'vue-count-to'
+/*import CountTo from 'vue-count-to'*/
 
 export default {
-  components: {
+/*  components: {
     CountTo
+  },*/
+  data() {
+    return {
+      Pay:'',
+      account:'',
+      salesAcount:'',
+      time:''
+    }
+  },
+  methods: {
+
   }
 }
 </script>

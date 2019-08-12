@@ -219,12 +219,12 @@
        * 查询
        * */
       searchFun() {
-        let params = {
+        let dp = {
           page: this.page,
           limit: this.limit,
           DeptName: this.department
         }
-        GetList(params).then(res => {
+        GetList(dp).then(res => {
           this.total = res.count;
           this.tableData = res.data;
         })

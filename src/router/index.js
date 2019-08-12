@@ -100,6 +100,12 @@ export const constantRoutes = [
         name: 'peopleEdit',
         component: () => import('@/views/organizationManage/peopleEdit'),
         meta: { title: '人员管理 - 编辑',  roles: ['1'] }
+      },
+      {
+        path: '/organizationManage/peopleAdd',
+        name: 'peopleAdd',
+        component: () => import('@/views/organizationManage/peopleAdd'),
+        meta: { title: '人员管理 - 新增',  roles: ['1'] }
       }
     ]
   }

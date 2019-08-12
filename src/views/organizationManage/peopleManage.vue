@@ -6,12 +6,12 @@
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
-              <el-select v-model="value" placeholder="请选择（单选）" size="small">
+              <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择（单选）" size="small" @change="getPostList">
                 <el-option
-                  v-for="item in company"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="(item,index) in departArray"
+                  :key="index"
+                  :label="item.Name"
+                  :value="item.Id"
                 />
               </el-select>
             </div>
@@ -19,19 +19,21 @@
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
-              <el-input
-                v-model="department"
-                placeholder="岗位名称（长度10以内）"
-                maxlength="10"
-                size="small"
-              />
+              <el-select v-model="queryData.OA_Job_Id" placeholder="请选择（单选）" size="small">
+                <el-option
+                  v-for="(item,index) in postArray"
+                  :key="index"
+                  :label="item.Name"
+                  :value="item.Id"
+                />
+              </el-select>
             </div>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">模糊查询：</label>
               <el-input
-                v-model="department"
+                v-model="queryData.EmpNo"
                 placeholder="人员名称/员工编号"
                 maxlength="10"
                 size="small"
@@ -41,13 +43,8 @@
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位状态：</label>
-              <el-select v-model="value" placeholder="请选择（单选）" size="small">
-                <el-option
-                  v-for="item in company"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
+              <el-select v-model="queryData.JobStatus" placeholder="请选择（单选）" size="small">
+                <el-option label="在职" value="在职" />
               </el-select>
             </div>
           </el-col>
@@ -55,27 +52,26 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">入职时间：</label>
               <el-date-picker
-                v-model="value"
+                v-model="EntryTime"
                 style="width: 83%"
                 size="small"
                 type="daterange"
                 range-separator="~"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="getTime1"
               />
             </div>
           </el-col>
-
           <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">性别：</label>
-              <el-select v-model="value" placeholder="请选择（单选）" size="small">
-                <el-option
-                  v-for="item in company"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
+              <el-select v-model="queryData.Gender" placeholder="请选择（单选）" size="small">
+                <el-option label="女" value="女" />
+                <el-option label="男" value="男" />
               </el-select>
             </div>
           </el-col>
@@ -83,7 +79,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">身份证号：</label>
               <el-input
-                v-model="department"
+                v-model="queryData.IDNumber"
                 placeholder="人员名称/员工编号"
                 maxlength="10"
                 size="small"
@@ -94,7 +90,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">电话号码：</label>
               <el-input
-                v-model="department"
+                v-model="queryData.MobileNumber"
                 placeholder="人员名称/员工编号"
                 maxlength="10"
                 size="small"
@@ -105,27 +101,29 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">出生日期：</label>
               <el-date-picker
-                v-model="value"
+                v-model="birthdayTime"
                 style="width: 83%"
                 size="small"
                 type="daterange"
                 range-separator="~"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="getTime2"
               />
             </div>
           </el-col>
-
-
           <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
-              <el-select v-model="value" placeholder="请选择（单选）" size="small">
+              <el-select v-model="queryData.createUserId" placeholder="请选择（单选）" size="small">
                 <el-option
-                  v-for="item in company"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="(item,index) in operationArray"
+                  :key="index"
+                  :label="item.Name"
+                  :value="item.Id"
                 />
               </el-select>
             </div>
@@ -134,13 +132,17 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">操作时间：</label>
               <el-date-picker
-                v-model="value"
+                v-model="operationTime"
                 style="width: 83%"
                 size="small"
                 type="daterange"
                 range-separator="~"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="getTime3"
               />
             </div>
           </el-col>
@@ -183,8 +185,8 @@
       <pagination
         v-show="total>0"
         :total="total"
-        :page.sync="page"
-        :limit.sync="limit"
+        :page.sync="queryData.page"
+        :limit.sync="queryData.limit"
         @pagination="searchFun"
       />
     </div>
@@ -212,6 +214,8 @@
 import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
+import { /*peopleDelete, peopleUpDate,*/ peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList} from "@/api/organize"
+
 export default {
   name: 'PeopleManage',
   components: { customTable, Pagination },
@@ -220,52 +224,46 @@ export default {
       ifMore: false,
       tableHeight: '',
       warnVisible: false,
-      total: 100,
-      page: 10,
-      limit: 10,
-      company: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
-      department: '',
-      tableData: [
-        {
-          date: '2012-10-30',
-          name: ' 机库顶',
-          address: '新世纪欧式党纪国法',
-          age: '12',
-          sex: '女',
-          height: '120'
-        },
-        {
-          date: '2012-10-31',
-          name: ' 西涵涵',
-          address: '第三个根本不被覆盖不是多',
-          age: '13',
-          sex: '男',
-          height: '130'
-        }
-      ],
+      queryData: {
+        page: 1,
+        limit: 10,
+        SYS_Department_Id: '',
+        OA_Job_Id: '',
+        EmpNo: '',
+        JobStatus: '',
+        EnrollingTime: '',
+        EnrollingTimeEnd: '',
+        Gender: '',
+        IDNumber: '',
+        MobileNumber: '',
+        Birthday: '',
+        BirthdayEnd: '',
+        createUserId: '',
+        createStartTime: '',
+        createEndTime: ''
+      },
+      operationTime: [],
+      EntryTime: [],
+      birthdayTime: [],
+      postArray: [],
+      departArray: [],
+      operationArray: [],
+      total: 0,
+      tableData: [],
       checkAllData: [// 所有列可选项
-        { checked: true, text: '日期', prop: 'date', position: 'center', width: '200px' },
-        { checked: true, text: '姓名', prop: 'name', position: 'center', width: '200px' },
-        { checked: false, text: '地址', prop: 'address', position: 'center', width: '200px' },
-        { checked: false, text: '年龄', prop: 'age', position: 'center', width: '200px' },
-        { checked: false, text: '性别', prop: 'sex', position: 'center', width: '200px' },
-        { checked: false, text: '身高', prop: 'height', position: 'center', width: '200px' }
+        { checked: true, text: '人员编号', prop: 'date', position: 'center', width: '200px' },
+        { checked: true, text: '人员名称', prop: 'name', position: 'center', width: '200px' },
+        { checked: false, text: '入职时间', prop: 'address', position: 'center', width: '200px' },
+        { checked: false, text: '公司', prop: 'age', position: 'center', width: '200px' },
+        { checked: false, text: '部门', prop: 'sex', position: 'center', width: '200px' },
+        { checked: false, text: '岗位', prop: 'height', position: 'center', width: '200px' },
+        { checked: false, text: '岗位状态', prop: 'height', position: 'center', width: '200px' },
+        { checked: false, text: '性别', prop: 'height', position: 'center', width: '200px' },
+        { checked: false, text: '出生日期', prop: 'height', position: 'center', width: '200px' },
+        { checked: false, text: '电话号码', prop: 'height', position: 'center', width: '200px' },
+        { checked: false, text: '身份证号', prop: 'height', position: 'center', width: '200px' },
+        { checked: false, text: '操作人', prop: 'height', position: 'center', width: '200px' },
+        { checked: false, text: '操作时间', prop: 'height', position: 'center', width: '200px' },
       ],
       checksData: [],
       customHeight: ''
@@ -299,6 +297,8 @@ export default {
     this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
     this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+    this.getComboBoxList()
+    this.GetRoleNameList()
   },
   methods: {
     /**
@@ -322,6 +322,7 @@ export default {
     handleEdit() {
     },
     addNewFun() {
+      this.$router.push({ path: '/organizationManage/peopleAdd' })
     },
     /**
        * 删除
@@ -336,12 +337,98 @@ export default {
        * 查询
        * */
     searchFun() {
+      let jp ;
+      if(!this.ifMore) {
+         jp = {
+            page: this.queryData.page,
+            limit: this.queryData.limit,
+            SYS_Department_Id: this.queryData.SYS_Department_Id,
+            OA_Job_Id: this.queryData.OA_Job_Id,
+            EmpNo: this.queryData.EmpNo,
+            JobStatus: this.queryData.JobStatus,
+            EnrollingTime: this.queryData.EnrollingTime,
+            EnrollingTimeEnd: this.queryData.EnrollingTime,
+            Gender: '',
+            IDNumber: '',
+            MobileNumber: '',
+            Birthday: '',
+            BirthdayEnd: '',
+            createUserId: '',
+            createStartTime: '',
+            createEndTime: ''
+        }
+      }else {
+        jp = this.queryData
+      }
+
+      peopleGetList(jp).then(res => {
+        this.total = res.count;
+        this.tableData = res.data;
+      })
     },
     /**
        * 编辑新增保存
        * */
     saveFun() {
-    }
+    },
+    /**
+     * 获取部门信息
+     * */
+    getComboBoxList() {
+      ComboBoxList().then(res => {
+        if(res.code==0){
+          this.departArray = res.data;
+        } else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+    },
+    /**
+     * 岗位联动
+     * */
+    getPostList(id) {
+      let params = { SYS_Department_Id : id}
+      linkComboBoxList(params).then(res => {
+        if(res.code==0){
+          this.postArray = res.data;
+        } else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+    },
+    /**
+     * 获取操作员下拉
+     * */
+    GetRoleNameList() {
+      GetRoleNameList().then(res => {
+        if(res.code==0){
+          this.operationArray = res.data;
+        } else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+    },
+    getTime1(data) {
+      this.queryData.EnrollingTime = data[0]
+      this.queryData.EnrollingTimeEnd = data[1]
+    },
+    getTime2(data) {
+      this.queryData.Birthday = data[0]
+      this.queryData.BirthdayEnd = data[1]
+    },
+    getTime3(data) {
+      this.queryData.createStartTime = data[0]
+      this.queryData.createEndTime = data[1]
+    },
   }
 }
 </script>

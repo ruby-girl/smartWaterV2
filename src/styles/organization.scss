@@ -113,5 +113,5 @@
     background: #000;
     cursor: pointer;
   }
-
+  .on .el-input__inner, .on .el-input__inner:focus{border: solid 1px red;}
 }
