@@ -23,6 +23,10 @@ export default {
     height: {
       type: String,
       default: '350px'
+    },
+    barData: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -30,9 +34,17 @@ export default {
       chart: null
     }
   },
+  watch: {
+    barData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
+    }
+  },
   mounted() {
     this.$nextTick(() => {
-      this.initChart()
+       this.initChart()
     })
   },
   beforeDestroy() {
@@ -45,12 +57,14 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      this.setOptions(this.barData)
+    },
+    setOptions({ TodayPayment, TodayOpenAccount, TodayCancelAccount } = {}) {
       this.chart.setOption({
         color: ['#00B3A1', '#33B300', '#CC4141'],
         legend: {
           x: 'right',
-          data: ['pageA', 'pageB', 'pageC']
+          data: ['缴费统计', '开户统计','销户统计']
         },
         tooltip: {
           backgroundColor: 'rgba(14, 43, 68, .6)',
@@ -69,7 +83,7 @@ export default {
         xAxis: [{
           type: 'category',
           boundaryGap: true,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: [this.getNowFormatDate()],
           axisLine: {
             onZero: false,
             lineStyle: {
@@ -107,28 +121,45 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '缴费统计',
           type: 'bar',
           tiled: 'vistors',
           barWidth: '20',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          data: [TodayPayment],
           animationDuration
         }, {
-          name: 'pageB',
+          name: '开户统计',
           type: 'bar',
           tiled: 'vistors',
           barWidth: '20',
-          data: [80, 52, 200, 334, 390, 330, 220],
+          data: [TodayOpenAccount],
           animationDuration
         }, {
-          name: 'pageC',
+          name: '销户统计',
           type: 'bar',
           tiled: 'vistors',
           barWidth: '20',
-          data: [30, 52, 200, 334, 390, 330, 220],
+          data: [TodayCancelAccount],
           animationDuration
         }]
       })
+    },
+    getNowFormatDate() {
+      var date = new Date();
+      var seperator1 = "-";
+      var seperator2 = ":";
+      var month = date.getMonth() + 1;
+      var strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = "0" + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+      }
+      var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+        + " " + '00' + seperator2 + '00'
+        + seperator2 + '00';
+      return currentdate;
     }
   }
 }

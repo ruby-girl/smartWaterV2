@@ -4,7 +4,7 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <p class="card-panel-text">
-            {{ Pay }}
+            {{ panelData.TodayPayment }}
           </p>
           今日缴费
         </div>
@@ -17,7 +17,7 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <p class="card-panel-text">
-            {{ account }}
+            {{ panelData.TodayOpenAccount }}
           </p>
           今日开户
         </div>
@@ -30,7 +30,7 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <p class="card-panel-text">
-            {{ salesAcount }}
+            {{ panelData.TodayCancelAccount }}
           </p>
           今日销户
         </div>
@@ -42,7 +42,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
-          <p class="card-panel-text">
+          <p class="card-panel-text card-panel-text2" style="font-size: 14px;">
             {{ time }}
           </p>
           软件到期时间
@@ -56,22 +56,38 @@
 </template>
 
 <script>
-/*import CountTo from 'vue-count-to'*/
-
+import { GetSoftExpirationDate } from "@/api/index"
 export default {
-/*  components: {
-    CountTo
-  },*/
+  props:{
+    panelData: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
-      Pay:'',
-      account:'',
-      salesAcount:'',
       time:''
     }
   },
+  mounted() {
+    this.GetSoftExpirationDate()
+  },
   methods: {
-
+    /**
+     *获取软件到期时间
+     * */
+    GetSoftExpirationDate() {
+      GetSoftExpirationDate().then(res => {
+        if(res.code==0) {
+          this.time = res.data;
+        }else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+    }
   }
 }
 </script>
@@ -124,6 +140,11 @@ export default {
       color: #00B3A1;
       font: bold 22px/30px '';
       margin: 0;
+    }
+    .card-panel-text2 {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
     .card-panel-description {
       float: right;

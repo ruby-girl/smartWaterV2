@@ -1,19 +1,19 @@
 <template>
   <div class="dashboard-editor-container">
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group :panel-data="paneldata" />
     <el-row :gutter="16">
       <el-col :xs="24" :sm="12" :lg="12">
         <div class="chart-wrapper">
           <h2>
-            <i></i>今日缴费开户简览
+            <i />今日缴费开户简览
           </h2>
-          <bar-chart />
+          <bar-chart :bar-data="paneldata" />
         </div>
       </el-col>
       <el-col :xs="24" :sm="12" :lg="12">
         <div class="chart-wrapper">
           <h2>
-            <i></i>近5日缴费开户简览
+            <i />近5日缴费开户简览
           </h2>
           <line-chart :chart-data="lineChartData" />
         </div>
@@ -21,7 +21,7 @@
     </el-row>
     <div class="chart-wrapper" style="padding: 16px 16px 16px">
       <h2>
-        <i></i>操作员信息
+        <i />操作员信息
       </h2>
       <ul class="userInfo">
         <li>
@@ -52,53 +52,77 @@
 <script>
 import PanelGroup from "./components/PanelGroup";
 import LineChart from "./components/LineChart";
-import RaddarChart from "./components/RaddarChart";
-import PieChart from "./components/PieChart";
 import BarChart from "./components/BarChart";
 import { getDictionaryItem } from "@/api/index"; //获取字典项
-import { setTimeout } from 'timers';
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-};
+import {GetTodayData, GetNearly5DaysData,} from "@/api/index"
 
 export default {
   name: "DashboardAdmin",
   components: {
-    // GithubCorner,
     PanelGroup,
     LineChart,
-    RaddarChart,
-    PieChart,
     BarChart
-  },
-  created() {
-    getDictionaryItem().then(res => {
-      this.$store.dispatch("app/setDictionary")
-    });
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: {
+        data: [],
+        pay: [],
+        openAcount: [],
+        closeAcount: []
+      },
+      paneldata:{
+        TodayPayment:'',
+        TodayOpenAccount:'',
+        TodayCancelAccount:'',
+      }
     };
   },
+  created() {
+    getDictionaryItem().then(() => {
+      this.$store.dispatch("app/setDictionary")
+    });
+  },
+  mounted() {
+    this.GetNearly5DaysData()
+    this.GetTodayData()
+  },
   methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type];
+    /**
+     * 获取近5日缴费开户简览
+     * */
+    GetNearly5DaysData() {
+      GetNearly5DaysData().then(res => {
+        if(res.code==0) {
+          let datas = res.data
+          for(let i=0;i < datas.length;i++){
+            this.lineChartData.data.push(datas[i].Date)
+            this.lineChartData.pay.push(datas[i].Payment)
+            this.lineChartData.openAcount.push(datas[i].OpenAccount)
+            this.lineChartData.closeAcount.push(datas[i].CancelAccount)
+          }
+        }else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+    },
+    /**
+     * 获取缴费开户销户信息
+     * */
+    GetTodayData() {
+      GetTodayData().then(res => {
+        if(res.code==0) {
+           this.paneldata = res.data;
+        }else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
     }
   }
 };

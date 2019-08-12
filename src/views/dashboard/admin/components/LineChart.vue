@@ -61,11 +61,11 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ data, pay, openAcount, closeAcount } = {}) {
       this.chart.setOption({
         color: ['#00B3A1', '#33B300', '#CC4141'],
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: data,
           boundaryGap: true,
           axisLine: {
             onZero: false,
@@ -119,10 +119,10 @@ export default {
         },
         legend: {
           x: 'right',
-          data: ['expected', 'actual']
+          data: ['缴费统计', '开户统计','销户统计']
         },
         series: [{
-          name: 'expected',
+          name: '缴费统计',
           itemStyle: {
             normal: {
               areaStyle: {
@@ -132,12 +132,12 @@ export default {
           },
           smooth: true,
           type: 'line',
-          data: expectedData,
+          data: pay,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
+          name: '开户统计',
           smooth: true,
           type: 'line',
           itemStyle: {
@@ -147,10 +147,25 @@ export default {
               }
             }
           },
-          data: actualData,
+          data: openAcount,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'
-        }]
+        },
+          {
+            name: '销户统计',
+            smooth: true,
+            type: 'line',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  color: 'transparent'
+                }
+              }
+            },
+            data: closeAcount,
+            animationDuration: 2800,
+            animationEasing: 'quadraticOut'
+          }]
       })
     }
   }
