@@ -44,7 +44,7 @@ export default {
     return {
       rules: {
         RoleName: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' },
+          { required: true, message: '不能为空', trigger: 'blur' },
           { max: 20, message: '最大长度20个字符', trigger: 'blur' }
         ]
       },

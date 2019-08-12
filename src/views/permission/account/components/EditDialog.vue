@@ -3,7 +3,6 @@
   <el-dialog title="编辑" :visible.sync="dialogFormVisible" top="30vh" width="660px" center @closed="editDialogClose">
     <el-form
       ref="dataForm"
-      :rules="rules"
       :model="temp"
       :inline="true"
       class="form-inline-small-input"
@@ -11,11 +10,11 @@
       label-width="100px"
     >
     <el-form-item label="人员编号：">
-      <el-input v-model="temp.userNum" disabled></el-input>
+      <el-input v-model="temp.empNo" disabled></el-input>
     </el-form-item>
-     <el-form-item label="关联角色：" prop="roldId">
+     <el-form-item label="关联角色：">
       <el-select
-        v-model="temp.roldId"     
+        v-model="temp.roleId"     
         placeholder="请选择">
        <el-option
           v-for="item in roleList"
@@ -63,9 +62,6 @@ export default {
   },
   watch: {
     show () {
-      // this.$nextTick(() => {
-      //   this.$refs['dataForm'].clearValidate()
-      // })
       this.dialogFormVisible = this.show;
     },
     dialogFormVisible (val, oldVal) {
@@ -78,17 +74,12 @@ export default {
   data() {
     return {
       timevalue: [],
-      editUserList2: [{ label: '羊子兮', type: 1 },{ label: '羊子兮2', type: 2 }],
-      rules: {
-        userNum: [
-          { required: true, message: '请选择角色', trigger: 'blur' }
-        ]
-      },
       dialogFormVisible: false
     }
   },
   methods: {
     updateData() {
+      console.log('11')
       this.$emit('updateData', this.temp)
     },
     editDialogClose() {

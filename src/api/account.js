@@ -21,3 +21,36 @@ export function getAccountDetail(data) {//获取账号详情
       data
     })
 }
+export function deitAccount(data) {//编辑
+  return request({
+    url: `/User/EditUserRoleName`,
+    method: 'post',
+    data
+  })
+}
+export function numGetAccount(data) {//通过人员编号获取该用户信息
+  return request({
+    url: `/Employee/GetObjByEmpNo?empNo=${data}`,
+    method: 'post',
+  })
+}
+export function addAccount(data) {//新增
+  return request({
+    url: '/User/InsertUser',
+    method: 'post',
+    data
+  })
+}
+export function cancelAccount(data) {//注销
+  return request({
+    url: `/User/Cancel?userId=${data}`,
+    method: 'post',
+  })
+}
+export function resetPwd(data) {//重置密码
+  return request({
+    url: `/User/ResetPwd`,
+    method: 'post',
+    data
+  })
+}

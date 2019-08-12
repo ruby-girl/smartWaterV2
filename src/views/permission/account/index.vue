@@ -32,11 +32,12 @@
             :label="item.text"
           />
         </template>
-        <el-table-column label="操作" align="center" class-name="small-padding">
+        <el-table-column label="操作" align="center" class-name="small-padding" min-width="150px">
           <template slot-scope="{row}">
             <div class="display-flex justify-content-flex-center">
               <div class="main-color" @click="handleUpdate(row)"><a>编辑</a></div>
-              <div class="main-color-red pl-15" @click="delRow(row)"><a>删除</a></div>
+              <div class="main-color-red pl-15" @click="cancel(row)"><a>注销</a></div>
+              <div class="main-color-red pl-15" @click="reset(row)"><a>重置密码</a></div>
             </div>
           </template>
         </el-table-column>
@@ -50,33 +51,34 @@
       />
     </div>
     <!-- 编辑弹窗 -->
-    <edit-dialog :show.sync="dialogFormVisible" :temp="temp" @createData="createData" :role-list="roleList"/>
-    <add-dialog :add-show.sync="addDialogFormVisible" :temp="temp" @updateData="updateData" :role-list="roleList"/>
+    <reset-dialog :reset-show.sync="resetdialogFormVisible" :id="restId" />
+    <edit-dialog :show.sync="dialogFormVisible" :temp="temp" @updateData="updateData" :role-list="roleList"/>
+    <add-dialog :add-show.sync="addDialogFormVisible" :temp="temp" @createData="createData" :role-list="roleList"/>
   </div>
 </template>
 <script>
 import SelectHead from './components/SelectHead'
 import Pagination from '@/components/Pagination'
 import EditDialog from './components/EditDialog'
+import ResetDialog from './components/ResetDialog'
 import AddDialog from './components/AddDialog'
 import customTable from '@/components/CustomTable/index'
-import {getAccountList,getAccountDetail} from '@/api/account'
+import {getAccountList,getAccountDetail,deitAccount,addAccount,cancelAccount} from '@/api/account'
 import {getRoles} from '@/api/role' //获取角色下拉框
 export default {
-  components: { SelectHead, Pagination, EditDialog, customTable, AddDialog},
+  components: { SelectHead, Pagination, EditDialog, customTable, AddDialog,ResetDialog},
   data() {
     return {
       total: 1,
       tableKey: 0,
       tableHeight: 0,
       temp: {
-        userNum:'',//用户编号，请求后端得到employeeId，userId
-        employeeId:'',
-        roleId: '',
-        loginName: '',//账号
-        loginPwd:'',
-        userId:''
+        empNo:'',//用户编号，请求后端得到employeeId
+        roleId:'',
+        userId: '',
+        loginName: ''//账号
       },
+      restId:'',//重置行ID
       listQuery: {
         // 查询条件
         page: 1,
@@ -91,6 +93,7 @@ export default {
       roleList:[],//角色下拉框，传递给组件
       addDialogFormVisible: false, // 新增弹窗
       dialogFormVisible: false, // 编辑弹窗
+      resetdialogFormVisible: false, // 重置弹窗
       tableData: [],
       checksData: [],
       checkAllData: [// 所有列可选项
@@ -143,11 +146,11 @@ export default {
     },
     handleUpdate(row) {
       getAccountDetail(row.Id).then((res)=>{
-        this.temp.empNo=res.EmpNo//人员编号
-        this.temp.roleId=res.roleId
+        this.temp.empNo=res.data.EmpNo//人员编号
+        this.temp.roleId=res.data.SYS_Role_Id
+        this.temp.userId=res.data.Id
+        this.temp.loginName=res.data.LoginName
       })
-      
-      console.log(this.temp)
       this.dialogFormVisible = true
     },
     delRow() {
@@ -163,17 +166,55 @@ export default {
     },
     addRole() {
       this.temp = {
-        role: '',
-        roleName: '',
-        userNum: []
+        employeeId: '',
+        roleId:'',
+        loginName:'',
+        loginPwd:'',
+        userId:'',
+        userNum:''
       }
       this.addDialogFormVisible = true
     },
     createData() {
-      //console.log('添加了')
+     addAccount(this.temp).then((res)=>{
+        this.addDialogFormVisible = false
+        this.$message({
+            message: res.message,
+            type: "success"
+          });
+        this.getList()
+      })
     },
     updateData() {
-      //console.log('编辑了')
+      deitAccount(this.temp).then((res)=>{
+        this.dialogFormVisible = false
+        this.$message({
+            message: res.message,
+            type: "success"
+          });
+        this.getList()
+      })
+    },
+    cancel(row){
+      this.$confirm("是否申请注销当前账号", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        customClass: "warningBox",
+        showClose: false
+      }).then(() => {
+        cancelAccount(row.Id).then((res)=>{
+          this.$message({
+            message: res.message,
+            type: "success"
+          });
+          this.getList()
+        })
+      });    
+    },
+    reset(row){
+      this.restId=row.Id
+      this.resetdialogFormVisible=true
     }
   }
 }
