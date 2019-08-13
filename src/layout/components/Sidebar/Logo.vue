@@ -10,10 +10,7 @@
       <div class="iconfont iconzhanghu" />
       <div class="logo-label">角色:</div>
       <div class="main-color-fff">
-        <el-tooltip v-if="user.firstRole.length>0" class="item" effect="dark" :content="user.RoleNames" placement="top">
-          <span>{{ user.firstRole[0] }}...</span>
-        </el-tooltip>
-        <span v-else>{{ user.RoleNames }}</span>
+        <span>{{ user.RoleNames }}</span>
       </div>
     </div>
     <div class="display-flex">

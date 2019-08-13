@@ -5,7 +5,7 @@
     </div>
     <div class="table-top-btn-padding">
       <el-button type="primary" size="mini" class="iconfont icontianjia" @click="addRole">添加</el-button>
-      <el-button type="success" size="mini" class="iconfont icondaochuexcel">导出Excel</el-button>
+      <el-button type="success" size="mini" class="iconfont icondaochuexcel" @click="excel">导出Excel</el-button>
       <el-button
         type="warning"
         size="mini"
@@ -19,12 +19,12 @@
         :key="tableKey"
         :data="tableData"
         border
-        fit
-        stripe
         :height="tableHeight"
+        :row-class-name="tableRowClassName"
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
+        @sort-change="sortChanges"
       >
         <el-table-column type="index" />
         <template v-for="(item ,index) in tableHead">
@@ -33,7 +33,7 @@
             min-width="100px"
             :prop="item.prop"
             :align="item.position"
-            sortable
+            sortable='custom'
             :label="item.text"
           />
         </template>
@@ -43,7 +43,7 @@
               <div class="main-color" @click="handleUpdate(row)">
                 <a>编辑</a>
               </div>
-              <div class="main-color-red pl-15" @click="delRow(row)">
+              <div v-if="row.SYS_ModuleCount==0&&row.SYS_UserCount==0" class="main-color-red pl-15" @click="delRow(row)">
                 <a>删除</a>
               </div>
             </div>
@@ -73,8 +73,9 @@ import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import Dialog from "./components/Dialog";
 import customTable from "@/components/CustomTable/index";
-import { getRolesList, addRole, updateRole,deleteRole } from "@/api/role";
+import { getRolesList, addRole, updateRole,deleteRole,exportExcel } from "@/api/role";
 export default {
+  name:'RolePermission',
   components: { SelectHead, Pagination, Dialog, customTable },
   data() {
     return {
@@ -86,6 +87,8 @@ export default {
         // 查询条件
         page: 1,
         limit: 10,
+        filed:"",
+        sort:"",
         roleName: "", // 角色名称
         empName: "", // 人员名称
         empNo: "", // 人员编号
@@ -128,6 +131,12 @@ export default {
     });
   },
   methods: {
+    tableRowClassName({row}){//不能删除行的样式
+      if (row.SYS_ModuleCount!==0||row.SYS_UserCount!==0) {
+          return 'no-del';
+      } 
+      return '';
+    },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
     },
@@ -136,6 +145,12 @@ export default {
         this.total=res.count
         this.tableData=res.data
       });
+    },
+    sortChanges({prop, order }){//筛选
+      this.listQuery.page=1
+      this.listQuery.filed=prop
+      this.listQuery.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+      this.getList()
     },
     handleFilter() {
       this.listQuery.page = 1;
@@ -197,6 +212,11 @@ export default {
           this.dialogFormVisible = false;
         }
       );
+    },
+    excel(){//导出
+      exportExcel(this.listQuery).then((res)=>{
+        window.location.href = res.data;
+      })
     }
   }
 };

@@ -46,6 +46,7 @@ export const constantRoutes = [
       icon: 'lock',
       roles: ['1']
     },
+    hidden: true,
     children: [
       {
         path: 'dashboard',
@@ -119,7 +120,7 @@ export const asyncRoutes = [
     name: 'Permission',
     meta: {
       title: '权限管理',
-      icon: 'lock',
+      icon: 'iconfont iconcaidan-quanxianguanli',
       roles: ['1']
     },
     children: [

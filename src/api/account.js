@@ -54,3 +54,10 @@ export function resetPwd(data) {//重置密码
     data
   })
 }
+export function exportExcel(data) {//导出
+  return request({
+    url: '/User/ExcelGetUserList',
+    method: 'post',
+    data
+  })
+}
