@@ -176,9 +176,9 @@
         </template>
         <el-table-column label="操作" width="200px" align="center">
           <template slot-scope="scope">
-            <a class="operation1" @click="handleEdit(scope.$index, scope.row,1)">编辑</a>
-            <a class="operation1" @click="handleEdit(scope.$index, scope.row,2)">详情</a>
-            <a class="operation2" @click="handleDelete(scope.$index, scope.row)">删除</a>
+            <a class="operation1" @click="handleEdit(scope.row,1)">编辑</a>
+            <a class="operation1" @click="handleEdit(scope.row,2)">详情</a>
+            <a class="operation2" @click="handleDelete(scope.row)">删除</a>
           </template>
         </el-table-column>
       </el-table>
@@ -214,7 +214,8 @@
 import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
-import { /*peopleDelete, peopleUpDate,*/ peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList} from "@/api/organize"
+import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList} from "@/api/organize"
+let deleteId;
 
 export default {
   name: 'PeopleManage',
@@ -251,19 +252,18 @@ export default {
       total: 0,
       tableData: [],
       checkAllData: [// 所有列可选项
-        { checked: true, text: '人员编号', prop: 'date', position: 'center', width: '200px' },
-        { checked: true, text: '人员名称', prop: 'name', position: 'center', width: '200px' },
-        { checked: false, text: '入职时间', prop: 'address', position: 'center', width: '200px' },
-        { checked: false, text: '公司', prop: 'age', position: 'center', width: '200px' },
+        { checked: true, text: '人员编号', prop: 'EmpNo', position: 'center', width: '200px' },
+        { checked: true, text: '人员名称', prop: 'EmpName', position: 'center', width: '200px' },
+        { checked: false, text: '入职时间', prop: 'EnrollingTime', position: 'center', width: '200px' },
         { checked: false, text: '部门', prop: 'sex', position: 'center', width: '200px' },
         { checked: false, text: '岗位', prop: 'height', position: 'center', width: '200px' },
-        { checked: false, text: '岗位状态', prop: 'height', position: 'center', width: '200px' },
-        { checked: false, text: '性别', prop: 'height', position: 'center', width: '200px' },
-        { checked: false, text: '出生日期', prop: 'height', position: 'center', width: '200px' },
-        { checked: false, text: '电话号码', prop: 'height', position: 'center', width: '200px' },
-        { checked: false, text: '身份证号', prop: 'height', position: 'center', width: '200px' },
-        { checked: false, text: '操作人', prop: 'height', position: 'center', width: '200px' },
-        { checked: false, text: '操作时间', prop: 'height', position: 'center', width: '200px' },
+        { checked: false, text: '岗位状态', prop: 'JobStatus', position: 'center', width: '200px' },
+        { checked: false, text: '性别', prop: 'Gender', position: 'center', width: '200px' },
+        { checked: false, text: '出生日期', prop: 'Birthday', position: 'center', width: '200px' },
+        { checked: false, text: '电话号码', prop: 'MobileNumber', position: 'center', width: '200px' },
+        { checked: false, text: '身份证号', prop: 'IDNumber', position: 'center', width: '200px' },
+        { checked: false, text: '操作人', prop: 'CreateUser', position: 'center', width: '200px' },
+        { checked: false, text: '操作时间', prop: 'CreateTime', position: 'center', width: '200px' },
       ],
       checksData: [],
       customHeight: ''
@@ -319,7 +319,12 @@ export default {
        * 1: 编辑
        * 2：详情
        * */
-    handleEdit() {
+    handleEdit(row,type) {
+      if(type==1) {
+         this.$router.push({ path: '/organizationManage/peopleEdit' })
+      }else {
+        this.$router.push({ path: '/organizationManage/peopleDetail' })
+      }
     },
     addNewFun() {
       this.$router.push({ path: '/organizationManage/peopleAdd' })
@@ -327,11 +332,26 @@ export default {
     /**
        * 删除
        * */
-    handleDelete() {
+    handleDelete(row) {
+      deleteId = row.Id
       this.warnVisible = true
+
     },
     deleteFun() {
-      this.warnVisible = false
+      peopleDelete({id:deleteId}).then(res => {
+        if(res.code==0){
+          this.$message({
+            message: res.message,
+            type: 'success'
+          });
+          this.warnVisible = false
+        }else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
     },
     /**
        * 查询

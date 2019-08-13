@@ -1,58 +1,76 @@
 <template>
-    <div class="uploadBox">
-      <div class="uploadPart">
-        <el-upload
-          ref="foreignPersonUploadItem"
-          class="upload-demo uploadFile"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :before-upload="beforeAvatarUpload"
-          :on-success="uploadSuccess"
-          :limit="10"
-          :show-file-list="false"
-          :on-exceed="handleExceed"
-          accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.JPG,.JPEG,.PDF,.DOC,.DOCX,.XLS,.XLSX"
-          :file-list="fileList">
-          <el-button size="small" type="success"><i class="icon iconfont">&#xe688;</i> 添加附件</el-button>
-          <div slot="tip" class="el-upload__tip">可选择jpg/png/word/excel/pdf格式，每张图片大小限制为10M内</div>
-        </el-upload>
+  <div class="uploadBox">
 
-        <ul class="uploadList el-upload-list el-upload-list--text">
-          <li v-for="(item,index) in fileList" tabindex="0" :key="index" class="el-upload-list__item is-success">
-            <div>
-              <p @mouseover="selectStyle (item)" @mouseout="outStyle(item)">
-                <i v-show="item.type === 0?true:false" class="icon iconfont" style="color:#EBB021">&#xe68b;</i><!--图片-->
-                <i v-show="item.type === 1?true:false" class="icon iconfont" style="color:#345e9e">&#xe65d;</i><!--word-->
-                <i v-show="item.type === 2?true:false" class="icon iconfont" style="color:#389850">&#xe693;</i><!--excel-->
-                <i v-show="item.type === 3?true:false" class="icon iconfont" style="color:#dc2e1b">&#xe691;</i><!--pdf-->
-                <span>{{ item.name }}</span>
-              </p>
-              <i class="el-icon-view" @click="handlePreview(item)" />
-              <i class="el-icon-close" @click="handleRemove(item)" />
-            </div>
-            <img v-show="(item.type === 0&&item.active)?true:false" class="smallImg" :src="item.url" alt="">
+    <el-form-item label="附件:" style="margin: 0 0 20px -100px;width: 250px">
+      <el-select v-model="certificates" placeholder="请选择" size="small">
+        <el-option label="身份证" value="1" />
+        <el-option label="居住证" value="2" />
+      </el-select>
+    </el-form-item>
 
-          </li>
-        </ul>
-      </div>
-      <!--弹窗-->
-      <div v-show="ifImg" class="cl-image-viewer">
-        <div class="cl-image-viewer__mask" @click="ifImg=false" />
-        <img :src="curSrc" alt="">
-      </div>
+    <div class="uploadPart">
+      <el-upload
+        ref="foreignPersonUploadItem"
+        class="upload-demo uploadFile"
+        :action="upUrl"
+        :headers="headers"
+        :before-upload="beforeAvatarUpload"
+        :on-success="uploadSuccess"
+        :limit="10"
+        :show-file-list="false"
+        :on-exceed="handleExceed"
+        accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.JPG,.JPEG,.PDF,.DOC,.DOCX,.XLS,.XLSX"
+        :file-list="fileList"
+      >
+        <el-button size="small" type="success"><i class="icon iconfont">&#xe688;</i> 添加附件</el-button>
+        <div slot="tip" class="el-upload__tip">可选择jpg/png/word/excel/pdf格式，每张图片大小限制为10M内</div>
+      </el-upload>
 
-      <el-dialog
-        :visible.sync="dialogVisible"
-        :fullscreen="dialogVisible">
-        <iframe :src="iframeUrl" width="100%" frameborder="0" :height="clientHeight-100"></iframe>
-      </el-dialog>
+      <ul class="uploadList el-upload-list el-upload-list--text">
+        <li v-for="(item,index) in fileList" :key="index" tabindex="0" class="el-upload-list__item is-success">
+          <div>
+            <p @mouseover="selectStyle (item)" @mouseout="outStyle(item)">
+              <i v-show="item.type === 0?true:false" class="icon iconfont" style="color:#EBB021">&#xe68b;</i><!--图片-->
+              <i v-show="item.type === 1?true:false" class="icon iconfont" style="color:#345e9e">&#xe65d;</i><!--word-->
+              <i v-show="item.type === 2?true:false" class="icon iconfont" style="color:#389850">&#xe693;</i><!--excel-->
+              <i v-show="item.type === 3?true:false" class="icon iconfont" style="color:#dc2e1b">&#xe691;</i><!--pdf-->
+              <span>{{ item.name }}</span>
+            </p>
+            <i class="el-icon-view" @click="handlePreview(item)" />
+            <i class="el-icon-close" @click="handleRemove(item.id)" />
+          </div>
+          <img v-show="(item.type === 0&&item.active)?true:false" class="smallImg" :src="item.url" alt="">
+
+        </li>
+      </ul>
     </div>
+    <!--弹窗-->
+    <div v-show="ifImg" class="cl-image-viewer">
+      <div class="cl-image-viewer__mask" @click="ifImg=false" />
+      <img :src="curSrc" alt="">
+    </div>
+
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :fullscreen="dialogVisible"
+    >
+      sdfsdf
+      <iframe :src="iframeUrl" width="100%" frameborder="0" :height="clientHeight-100" />
+    </el-dialog>
+  </div>
 </template>
 
 <script>
-export default {
+  import { getToken } from '@/utils/auth'
+  import { FileDelete } from "@/api/upload"
+  let baseUrl = 'http://192.168.2.216:10002'
+
+ export default {
   name: 'Upload',
   data() {
     return {
+      upUrl: '',
+      certificates:'身份证',
       dialogVisible: false,
       iframeUrl: '',
       clientHeight: '',
@@ -60,22 +78,24 @@ export default {
       curSrc: '',
       curPdfSrc: '',
       fileList: [
-        {
-          name: 'city.jpeg',
-          type: 0,
-          url: 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg' },
-        {
-          name: 'sds1.xls',
-          type: 2,
-          url: 'https://view.officeapps.live.com/op/view.aspx?src=http://storage.xuetangx.com/public_assets/xuetangx/PDF/1.xls'
-        },
-        {
-          name: 'PlayerAPI_v1.0.6.pdf',
-          type: 3,
-          url: 'http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf'
-        }
-      ]
+      ],
+      headers: {
+        Authorization: ''
+      },
     }
+  },
+  watch: {
+    certificates() {
+      this.upUrl = baseUrl + '/api/Files/Upload?FileType=' + this.certificates
+    }
+  },
+  mounted() {
+    this.headers.Authorization = getToken()
+    this.clientHeight = document.documentElement.clientHeight
+    window.onresize = function temp() {
+      this.clientHeight = document.documentElement.clientHeight
+    }
+    this.upUrl = baseUrl + '/api/Files/Upload?FileType=' + this.certificates
   },
   methods: {
     handleRemove(file) { // 删除文件
@@ -84,6 +104,21 @@ export default {
           this.fileList.splice(i, 1)
         }
       }
+      return
+      FileDelete({id:''}).then(res => {
+        if(res.code==0){
+          this.$message({
+            message: res.message,
+            type: 'success'
+          });
+        }else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+
     },
     handlePreview(file) { // 点击文件列表中已上传的文件时的事件
       const type = file.type
@@ -120,15 +155,21 @@ export default {
       }
       return isLt5M
     },
-    uploadSuccess(response, file, fileLis) { // 上传成功
-      const Suffix = file.name.split('.')[1]
+    uploadSuccess(response, file) { // 上传成功
+      let data= response.data;
+      const Suffix = data.FileExtName.split('.')[1]
       if (Suffix === 'docx' || Suffix === 'doc') {
         file.type = 1
       } else if (Suffix === 'xlsx' || Suffix === 'xls') {
         file.type = 2
       } else if (Suffix === 'pdf') {
         file.type = 3
+      }else {
+        file.type = 0
       }
+      file.name = data.FileName
+      file.id = data.Id
+      file.url = baseUrl + (data.RelativePath).replace("~","")
       this.fileList.push(file)
       this.$emit('getFileFun', this.fileList)
     },
@@ -143,13 +184,7 @@ export default {
     },
     outStyle(item) {
       this.$set(item, 'active', false)
-    }
-  },
-  mounted() {
-    this.clientHeight = document.documentElement.clientHeight
-    window.onresize = function temp() {
-      this.clientHeight = document.documentElement.clientHeight
-    }
+    },
   }
 }
 </script>

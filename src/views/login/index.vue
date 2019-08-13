@@ -9,11 +9,11 @@
       label-position="left"
     >
       <div class="title-container">
-        <img src="../../assets/imgs/logo.png" alt />
+        <img src="../../assets/imgs/logo.png" alt>
       </div>
 
       <el-form-item prop="username">
-        <span class="svg-container iconfont iconzhanghu"></span>
+        <span class="svg-container iconfont iconzhanghu" />
         <el-input
           ref="username"
           v-model="loginForm.username"
@@ -27,7 +27,7 @@
 
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
-          <span class="svg-container iconfont iconmima"></span>
+          <span class="svg-container iconfont iconmima" />
           <el-input
             :key="passwordType"
             ref="password"
@@ -60,6 +60,7 @@
 <script>
 import RSA from "rsa-js-java";
 import { getKey } from "@/api/user";
+import { getToken } from '@/utils/auth'
 
 export default {
   name: "Login",
@@ -159,26 +160,28 @@ export default {
             LoginName: this.loginForm.username,
             LoginPwd: "",
             privateKeyId: ""
-          };      
-          getKey().then(res => {  
-            RSA.setMaxDigits(129);         
-            let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);//密码加密   
+          };
+          getKey().then(res => {
+            RSA.setMaxDigits(129);
+            let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);//密码加密
             let pwd = RSA.encryptedString(key, this.loginForm.password);
             postData.LoginPwd=pwd
             postData.privateKeyId=res.data.privateKeyId
             this.$store
               .dispatch("user/login", postData)
               .then(() => {
+                this.getSingle()
                 this.$router.push({
                   path: this.redirect || "/",
                   query: this.otherQuery
                 });
                 this.loading = false;
+
               })
               .catch(() => {
                 this.loading = false;
               });
-          });   
+          });
         } else {
           return false;
         }
@@ -191,6 +194,44 @@ export default {
         }
         return acc;
       }, {});
+    },
+    getSingle() {
+      var token = getToken(); //登录成功后后端返回的Token
+      let _this = this
+      $.connection.hub.url = 'http://192.168.2.216:10002/signalr';
+      var chat = $.connection.FXYBHub;
+      //后端请求前端的连接
+      chat.client.message = function (code) {
+        switch (code) {
+          case 100://Token失效
+            this.$message({
+              message: 'Token已失效，请重新登陆',
+              type: 'warning'
+            });
+            _this.$router.push({ path: "/login"});
+            break
+          case 101://已在其他电脑登录
+            this.$message({
+              message: '该账户已在其他电脑登录，请重新登陆',
+              type: 'warning'
+            });
+            _this.$router.push({ path: "/login"});
+            break
+          case 102://账户权限发生变化，需重新登录
+            this.$message({
+              message: '账户权限发生变化，请重新登陆',
+              type: 'warning'
+            });
+            _this.$router.push({ path: "/login"});
+            break
+        }
+      }
+
+      //启动链接
+      $.connection.hub.start({jsonp:true}).done(function () {
+        //请求后端的连接
+        chat.server.login(token); //注册signalr连接 ,Token 登录成功后后端返回的Token
+      });
     }
   }
 };

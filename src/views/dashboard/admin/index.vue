@@ -26,23 +26,23 @@
       <ul class="userInfo">
         <li>
           所属公司
-          <span class="fr">四川府星仪表有限公司成都分公司</span>
+          <span class="fr">{{ user.CompanyNames || '-' }}</span>
         </li>
         <li>
           账号
-          <span class="fr">admin</span>
+          <span class="fr">{{ user.UserName || '-' }}</span>
         </li>
         <li>
           角色
-          <span class="fr">管理员</span>
+          <span class="fr">{{ user.RoleNames || '-' }}</span>
         </li>
         <li>
           人员
-          <span class="fr">管理员</span>
+          <span class="fr">{{ user.EmpName || '-' }}</span>
         </li>
         <li>
           上一次登录时间
-          <span class="fr">2018-07-22 13:52</span>
+          <span class="fr">{{ user.LastLoginTime || '-' }}</span>
         </li>
       </ul>
     </div>
@@ -54,7 +54,8 @@ import PanelGroup from "./components/PanelGroup";
 import LineChart from "./components/LineChart";
 import BarChart from "./components/BarChart";
 import { getDictionaryItem } from "@/api/index"; //获取字典项
-import {GetTodayData, GetNearly5DaysData,} from "@/api/index"
+import {GetTodayData, GetNearly5DaysData, GetFirstPageRoleInfo} from "@/api/index"
+
 
 export default {
   name: "DashboardAdmin",
@@ -75,7 +76,8 @@ export default {
         TodayPayment:'',
         TodayOpenAccount:'',
         TodayCancelAccount:'',
-      }
+      },
+      user:{}
     };
   },
   created() {
@@ -86,6 +88,7 @@ export default {
   mounted() {
     this.GetNearly5DaysData()
     this.GetTodayData()
+    this.GetFirstPageRoleInfo()
   },
   methods: {
     /**
@@ -123,7 +126,22 @@ export default {
           });
         }
       })
-    }
+    },
+    /**
+     * 获取操作员信息
+     * */
+    GetFirstPageRoleInfo() {
+      GetFirstPageRoleInfo().then(res => {
+        if(res.code==0) {
+          this.user = res.data
+        }else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+    },
   }
 };
 </script>

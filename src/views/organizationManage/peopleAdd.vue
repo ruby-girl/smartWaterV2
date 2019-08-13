@@ -91,13 +91,6 @@
               <el-input v-model="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="附件:">
-              <el-select v-model="upload.certificates" placeholder="请选择" size="small">
-                <el-option label="身份证" value="身份证" />
-              </el-select>
-            </el-form-item>
-          </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item>
               <uploadImg @getFileFun="getFileFun" />

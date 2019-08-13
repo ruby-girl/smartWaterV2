@@ -1,37 +1,61 @@
 <template>
   <div class="cl-container cl-container3">
     <div>
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px">
+      <el-form ref="jp" :model="jp" :rules="rules" label-width="100px">
         <el-row :gutter="50">
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="人员编号:">
-              <el-input v-model="ruleForm.code" size="small" disabled />
+              <el-input size="small" disabled />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="人员名称:" prop="name">
-              <el-input v-model="ruleForm.name" size="small" maxlength="10" placeholder="长度10" />
+            <el-form-item label="人员名称:" prop="EmpName">
+              <el-input v-model="jp.EmpName" size="small" maxlength="10" placeholder="长度10" />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="部门:" prop="department">
-              <el-select v-model="ruleForm.department" placeholder="请选择（单选）" size="small">
-                <el-option label="区域一" value="shanghai" />
-                <el-option label="区域二" value="beijing" />
-              </el-select>
-            </el-form-item>
+
+          <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+            <el-row>
+              <el-col :span="12" style="position: relative">
+                <span style="position: absolute;color: #F56C6C;left: 45px;top:10px;">*</span>
+                <span v-show="item.SYS_Department_Id==''&&isFlag" style="position: absolute;color: #F56C6C;left: 100px;top:40px;font-size: 12px;">不能为空</span>
+                <el-form-item label="部门:" label-width="100px" :class="item.SYS_Department_Id==''&&isFlag?'on':''">
+                  <el-select v-model="item.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList(item.SYS_Department_Id,index)">
+                    <el-option
+                      v-for="(items,indexs) in item.depart"
+                      :key="indexs"
+                      :label="items.Name"
+                      :value="items.Id"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="11" style="position: relative">
+                <span style="position: absolute;color: #F56C6C;left: 15px;top:10px;">*</span>
+                <span v-show="item.OA_Job_Id==''&&isFlag" style="position: absolute;color: #F56C6C;left: 70px;top:40px;font-size: 12px;">不能为空</span>
+                <el-form-item label="岗位:" label-width="70px" :class="item.OA_Job_Id==''&&isFlag?'on':''">
+                  <el-select v-model="item.OA_Job_Id" placeholder="请选择" size="small">
+                    <el-option
+                      v-for="(items,indexs) in item.post"
+                      :key="indexs"
+                      :label="items.Name"
+                      :value="items.Id"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col v-show="index<=sojList.length-2" :span="1">
+                <span class="el-icon-minus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer" @click="reduceFun(index)" />
+              </el-col>
+              <el-col v-show="index==sojList.length-1" :span="1">
+                <span class="el-icon-plus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer" @click="addFun" />
+              </el-col>
+            </el-row>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="岗位:" prop="post">
-              <el-select v-model="ruleForm.post" placeholder="请选择（单选）" size="small">
-                <el-option label="区域一" value="shanghai" />
-                <el-option label="区域二" value="beijing" />
-              </el-select>
-            </el-form-item>
-          </el-col>
+
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="性别:">
-              <el-select v-model="ruleForm.sex" placeholder="请选择（单选）" size="small">
+              <el-select v-model="jp.Gender" placeholder="请选择" size="small">
                 <el-option label="女" value="女" />
                 <el-option label="男" value="男" />
               </el-select>
@@ -39,41 +63,41 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="出生日期:">
-              <el-date-picker v-model="ruleForm.birthday" type="date" placeholder="年月日（单选）" size="small" />
+              <el-date-picker v-model="jp.Birthday" type="date" placeholder="年月日" size="small" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="电话号码:" prop="phone">
-              <el-input v-model="ruleForm.phone" size="small" maxlength="11" placeholder="长度11" />
+            <el-form-item label="电话号码:" prop="MobileNumber">
+              <el-input v-model="jp.MobileNumber" size="small" maxlength="11" placeholder="长度11" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="身份证号:" prop="id">
-              <el-input v-model="ruleForm.id" size="small" maxlength="18" placeholder="长度18" />
+            <el-form-item label="身份证号:" prop="IDNumber">
+              <el-input v-model="jp.IDNumber" size="small" maxlength="18" placeholder="长度18" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="入职时间:">
-              <el-date-picker v-model="ruleForm.entryTime" type="date" placeholder="年月日（单选）" size="small" />
+              <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="岗位状态:">
-              <el-input v-model="ruleForm.status" size="small" disabled />
+              <el-input v-model="jp.JobStatus" size="small" disabled />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item label="地址:" prop="adress">
-              <el-input v-model="ruleForm.adress" type="textarea" size="small" maxlength="100" placeholder="长度100" />
+              <el-input v-model="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <!--<el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
             <el-form-item label="附件:">
-              <el-select v-model="ruleForm.certificates" placeholder="请选择（单选）" size="small">
+              <el-select v-model="upload.certificates" placeholder="请选择" size="small">
                 <el-option label="身份证" value="身份证" />
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col>-->
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item>
               <uploadImg @getFileFun="getFileFun" />
@@ -82,8 +106,8 @@
         </el-row>
         <p class="footBox">
           <el-checkbox v-model="goOn">继续添加</el-checkbox>
-          <el-button type="primary" size="small" @click="submitForm('ruleForm')">保存</el-button>
-          <el-button size="small" @click="resetForm('ruleForm')">取消</el-button>
+          <el-button type="primary" size="small" @click="submitForm('jp')">保存</el-button>
+          <el-button size="small" @click="resetForm('jp')">取消</el-button>
         </p>
       </el-form>
     </div>
@@ -91,104 +115,198 @@
 </template>
 
 <script>
-import '../../styles/organization.scss'
-import uploadImg from '../../components/Upload/index'
-export default {
-  name: 'PeopleEdit',
-  components: { uploadImg },
-  data() {
-    return {
-      goOn: false,
-      ruleForm: {
-        code: '',
-        name: '',
-        company: '',
-        waterworks: '',
-        department: '',
-        post: '',
-        sex: '',
-        birthday: '',
-        phone: '',
-        id: '',
-        entryTime: '',
-        status: '在职',
-        adress: '',
-        Certificates: '',
-        file: []
-      },
-      rules: {
-        name: [
-          { required: true, message: '请输入人员名称', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
-        ],
-        company: [
-          { required: true, message: '请选择公司', trigger: 'change' }
-        ],
-        waterworks: [
-          { required: true, message: '请选择水厂', trigger: 'change' }
-        ],
-        department: [
-          { required: true, message: '请选择部门', trigger: 'change' }
-        ],
-        post: [
-          { required: true, message: '请选择岗位', trigger: 'change' }
-        ],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
+  import '../../styles/organization.scss'
+  import uploadImg from '../../components/Upload/index'
+  import { peopleAdd, ComboBoxList, linkComboBoxList } from "@/api/organize"
+
+  export default {
+    name: 'PeopleEdit',
+    components: { uploadImg },
+    data() {
+      return {
+        isFlag:false,
+        goOn: false,
+        rules: {
+          EmpName: [
+            { required: true, message: '请输入人员名称', trigger: 'blur' },
+            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          ],
+          SYS_Department_Id: [
+            { required: true, message: '请选择部门', trigger: 'change' }
+          ],
+          OA_Job_Id: [
+            { required: true, message: '请选择岗位', trigger: 'change' }
+          ],
+          MobileNumber: [
+            { required: true, message: '请输入手机号', trigger: 'blur' },
+            {
+              pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
+              message: '手机号格式有误',
+              trigger: 'blur'
+            }
+          ],
+          IDNumber: [
+            { required: true, message: '请输入证件号', trigger: 'blur' },
+            {
+              pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
+              message: '证件号码格式有误！',
+              trigger: 'blur'
+            }
+          ],
+          date2: [
+            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          ],
+          type: [
+            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+          ],
+          resource: [
+            { required: true, message: '请选择活动资源', trigger: 'change' }
+          ],
+          desc: [
+            { required: true, message: '请填写活动形式', trigger: 'blur' }
+          ]
+        },
+        jp: {
+          EmpName: '',
+          ojList:[],
+          Gender: '',
+          Birthday: '',
+          MobileNumber: '',
+          IDNumber: '',
+          EnrollingTime: '',
+          JobStatus: '在职',
+          Address: '',
+        },
+        upload: {
+          Certificates: '',
+          file: []
+        },
+        sojList:[
           {
-            pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
-            message: '手机号格式有误',
-            trigger: 'blur'
-          }
+            SYS_Department_Id: '',
+            OA_Job_Id: '',
+            post: [],
+            depart: []
+          },
         ],
-        id: [
-          { required: true, message: '请输入证件号', trigger: 'blur' },
-          {
-            pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
-            message: '证件号码格式有误！',
-            trigger: 'blur'
-          }
-        ],
-        date2: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-        ],
-        type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-        ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
-        ],
-        desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
-        ]
       }
-    }
-  },
-  methods: {
-    /**
-     * 提交
-     * */
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-                return false
+    },
+    mounted() {
+      this.getComboBoxList()
+    },
+    methods: {
+      /**
+       * 增加部门
+       * */
+      addFun() {
+        this.sojList.push({
+          SYS_Department_Id: '',
+          OA_Job_Id: '',
+          post: [],
+          depart: []
+        })
+        this.getComboBoxList()
+      },
+      /**
+       * 删除部门
+       * */
+      reduceFun(index) {
+        this.sojList.splice(index,1);//从start的位置开始向后删除delCount个元素
+        this.getComboBoxList()
+      },
+      /**
+       * 提交
+       * */
+      submitForm(formName) {
+        this.isFlag = true;
+        for(let i=0;i< this.sojList.length; i++) {
+          this.jp.ojList.push({
+            SYS_Department_Id: this.sojList[i].SYS_Department_Id,
+            OA_Job_Id: this.sojList[i].OA_Job_Id
+          })
         }
-      })
-    },
-    /**
-     * 重置
-     * */
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
-    },
-    /**
-     * 获取上传文件信息
-     * */
-    getFileFun(data) {
-      this.ruleForm.file = data
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+
+            let p = new Promise((resolve, reject) => {
+              peopleAdd(this.jp).then(res => {
+                if(res.code==0){
+                  this.$message({
+                    message: res.message,
+                    type: 'success'
+                  });
+                  resolve(res)
+                }else {
+                  this.$message({
+                    message: res.message,
+                    type: 'warning'
+                  });
+                  reject(res.message)
+                }
+              })
+              return p;
+            });
+            p.then(
+              /*res => {
+                console.log(res.data);
+              }*/
+            )
+
+
+          } else {
+            return false
+          }
+        })
+      },
+      /**
+       * 重置
+       * */
+      resetForm(formName) {
+        this.$refs[formName].resetFields()
+      },
+      /**
+       * 获取上传文件信息
+       * */
+      getFileFun(data) {
+        this.upload.file = data
+      },
+      /**
+       * 获取部门信息
+       * */
+      getComboBoxList() {
+        ComboBoxList().then(res => {
+          if(res.code==0){
+            for(let i = 0;i< this.sojList.length;i++) {
+              this.sojList[i].depart = res.data
+            }
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+      },
+      /**
+       * 岗位联动
+       * */
+      getPostList(id,index) {
+        let params = { SYS_Department_Id : id}
+        linkComboBoxList(params).then(res => {
+          if(res.code==0){
+            for(let i = 0;i< this.sojList.length;i++) {
+              if(i==index){
+                this.sojList[i].post = res.data
+              }
+            }
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+      },
     }
   }
-}
 </script>

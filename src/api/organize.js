@@ -93,7 +93,7 @@ export function peopleDelete(data) {
   return request({
     url: '/Employee/Delete',
     method: 'post',
-    data: data
+    params: data
   })
 }
 
