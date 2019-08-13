@@ -5,7 +5,7 @@
     </div>
     <div class="table-top-btn-padding">
       <el-button type="primary" size="mini" class="iconfont icontianjia" @click="addRole">添加</el-button>
-      <el-button type="success" size="mini" class="iconfont icondaochuexcel">导出Excel</el-button>
+      <el-button type="success" size="mini" class="iconfont icondaochuexcel" @click="excel">导出Excel</el-button>
       <el-button type="warning" size="mini" class="iconfont iconbiaogezidingyi" @click="setCustomData()">表格自定义</el-button>
     </div>
     <customTable ref="myChild" />
@@ -15,11 +15,12 @@
         :data="tableData"
         border
         fit
-        stripe
         :height="tableHeight"
         style="width: 100%;"
+        :row-class-name="tableRowClassName"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
+        @sort-change="sortChanges"
       >
         <el-table-column type="index" />
         <template v-for="(item ,index) in tableHead">
@@ -28,17 +29,18 @@
             min-width="100px"
             :prop="item.prop"
             :align="item.position"
-            sortable
+            sortable='custom'
             :label="item.text"
           />
         </template>
         <el-table-column label="操作" align="center" class-name="small-padding" min-width="150px">
           <template slot-scope="{row}">
-            <div class="display-flex justify-content-flex-center">
-              <div class="main-color" @click="handleUpdate(row)"><a>编辑</a></div>
-              <div class="main-color-red pl-15" @click="cancel(row)"><a>注销</a></div>
-              <div class="main-color-red pl-15" @click="reset(row)"><a>重置密码</a></div>
+            <div class="display-flex justify-content-flex-center" v-if="row.UserStatusCode=='ZC'">
+              <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']"><a>编辑</a></div>
+              <div class="main-color-red pl-15" @click="cancel(row)" v-permission="['1010105']"><a>注销</a></div>
+              <div class="main-color-red pl-15" @click="reset(row)" v-permission="['1010107']"><a>重置密码</a></div>
             </div>
+            <div v-else>-</div>
           </template>
         </el-table-column>
       </el-table>
@@ -63,11 +65,13 @@ import EditDialog from './components/EditDialog'
 import ResetDialog from './components/ResetDialog'
 import AddDialog from './components/AddDialog'
 import customTable from '@/components/CustomTable/index'
-import {getAccountList,getAccountDetail,deitAccount,addAccount,cancelAccount} from '@/api/account'
+import {getAccountList,getAccountDetail,deitAccount,addAccount,cancelAccount,exportExcel} from '@/api/account'
 import {getRoles} from '@/api/role' //获取角色下拉框
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  components: { SelectHead, Pagination, EditDialog, customTable, AddDialog,ResetDialog},
   name:"AccountPermission",
+  directives: { permission },
+  components: { SelectHead, Pagination, EditDialog, customTable, AddDialog,ResetDialog},
   data() {
     return {
       total: 1,
@@ -84,6 +88,8 @@ export default {
         // 查询条件
         page: 1,
         limit: 20,
+        sort:'',//升序
+        filed:'',//排序字段
         roldId: '-1', // 角色ID
         userState: '-1', // 账号状态
         empNo: '', // 人员编号
@@ -132,6 +138,12 @@ export default {
     })
   },
   methods: {
+    tableRowClassName({row}){//不能编辑行的样式
+      if (row.UserStatusCode=='ZX') {
+          return 'no-del';
+      } 
+      return '';
+    },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
     },
@@ -141,11 +153,17 @@ export default {
         this.tableData=res.data
      })
     },
+    sortChanges({prop, order }){//筛选
+      this.listQuery.page=1
+      this.listQuery.filed=prop
+      this.listQuery.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+      this.getList()
+    },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
-    handleUpdate(row) {
+    handleUpdate(row) {//获取详情
       getAccountDetail(row.Id).then((res)=>{
         this.temp.empNo=res.data.EmpNo//人员编号
         this.temp.roleId=res.data.SYS_Role_Id
@@ -153,17 +171,6 @@ export default {
         this.temp.loginName=res.data.LoginName
       })
       this.dialogFormVisible = true
-    },
-    delRow() {
-      this.$confirm('这里是需要确认的信息', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        customClass: 'warningBox',
-        showClose: false
-      }).then(() => {
-        //console.log(r)
-      })
     },
     addRole() {
       this.temp = {
@@ -216,6 +223,11 @@ export default {
     reset(row){
       this.restId=row.Id
       this.resetdialogFormVisible=true
+    },
+    excel(){//导出
+      exportExcel(this.listQuery).then((res)=>{
+        window.location.href = res.data;
+      })
     }
   }
 }

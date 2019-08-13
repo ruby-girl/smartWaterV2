@@ -42,3 +42,11 @@ export function deleteRole(id) {//删除
     method: 'post'
   })
 }
+
+export function exportExcel(data) {//导出
+  return request({
+    url: '/Role/ExcelGetRoleList',
+    method: 'post',
+    data
+  })
+}

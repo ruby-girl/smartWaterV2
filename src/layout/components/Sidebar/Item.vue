@@ -17,7 +17,8 @@ export default {
     const vnodes = []
 
     if (icon) {
-      vnodes.push(<svg-icon icon-class={icon}/>)
+      let iconfont=`icon-margin iconfont ${icon}`
+      vnodes.push(<span class={iconfont}></span>)
     }
 
     if (title) {
@@ -27,3 +28,9 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.icon-margin{
+  display: inline-block;
+  margin-right:12px;
+}
+</style>

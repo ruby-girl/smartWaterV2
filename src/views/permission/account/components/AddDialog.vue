@@ -63,7 +63,6 @@ export default {
   watch: {
     addShow() {
       this.AdialogFormVisible = this.addShow;
-      console.info(this.temp);
     },
     AdialogFormVisible(val, oldVal) {
       if (val === oldVal) {
@@ -77,10 +76,7 @@ export default {
       if (value === "") {
         return callback(new Error("必填"));
       }
-      if (!Number.isInteger(value)) {
-        return callback(new Error("信息有误"));
-      }
-
+      
       if (value.length < 11) {
         numGetAccount(value).then(res => {
           if (res.data) {
@@ -109,7 +105,11 @@ export default {
         max: 20,
         message: '最大长度为20位'
         }],
-        loginPwd: [{ required: true, message: "不能为空", trigger: "blur" }]
+        loginPwd: [{ required: true, message: "不能为空", trigger: "blur" },{
+        min:6,
+        max: 18,
+        message: '密码长度为6-18位'
+        }]
       },
       AdialogFormVisible: false
     };
