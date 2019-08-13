@@ -76,6 +76,7 @@ import customTable from "@/components/CustomTable/index";
 import { getRolesList, addRole, updateRole,deleteRole } from "@/api/role";
 export default {
   components: { SelectHead, Pagination, Dialog, customTable },
+  name:'RolePermission',
   data() {
     return {
       total: 0,

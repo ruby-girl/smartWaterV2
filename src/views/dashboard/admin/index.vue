@@ -78,10 +78,8 @@ export default {
       }
     };
   },
-  created() {
-    getDictionaryItem().then(() => {
-      this.$store.dispatch("app/setDictionary")
-    });
+  created() {   
+    this.$store.dispatch("app/setDictionary")
   },
   mounted() {
     this.GetNearly5DaysData()

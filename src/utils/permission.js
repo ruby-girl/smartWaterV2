@@ -24,12 +24,12 @@ export  function checkPermission(value) {
   }
 }
 
-export function getDictionaryItem(value) {//获取具体的字典项
+export function getDictionaryOption(value) {//获取具体的字典项
   if(store.getters.dictionaryItem){
-   let item=store.getters.dictionaryItem.filter(item=>{
+   let items=store.getters.dictionaryItem.filter(item=>{
       return item.Id==value
     })
-    return item.CboList//这里是option数据
+    return items[0].CboList//这里是option数据
   }else{
     console.error(`没有获取到字典项`)
     return false

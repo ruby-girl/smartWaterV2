@@ -67,6 +67,7 @@ import {getAccountList,getAccountDetail,deitAccount,addAccount,cancelAccount} fr
 import {getRoles} from '@/api/role' //获取角色下拉框
 export default {
   components: { SelectHead, Pagination, EditDialog, customTable, AddDialog,ResetDialog},
+  name:"AccountPermission",
   data() {
     return {
       total: 1,

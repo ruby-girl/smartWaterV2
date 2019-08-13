@@ -23,12 +23,12 @@
     </el-form-item>
     <el-form-item label="状态：">
       <el-select v-model="selectHead.userState" placeholder="请选择">
-        <el-option label="全部" value />
+        <el-option label="全部" value="-1" />
         <el-option
-          v-for="item in editUserList"
-          :key="item.label"
-          :label="item.label"
-          :value="item.type"
+          v-for="item in stateType"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
         />
       </el-select>
     </el-form-item>
@@ -64,6 +64,7 @@
 <script>
 import { parseStartTime, parseEndTime } from "@/utils/index";
 import {getSelectUser} from "@/api/account"//获取操作人下拉框
+import {getDictionaryOption} from "@/utils/permission"
 export default {
   props: {
     selectHead: {
@@ -83,7 +84,8 @@ export default {
     return {
       timevalue: [],
       oldOptions: [],
-      editUserList: []
+      editUserList: [],
+      stateType:[]
     };
   },
   created() {
@@ -96,6 +98,7 @@ export default {
     getSelectUser().then((res)=>{
       this.editUserList=res.data
     })
+    this.stateType=getDictionaryOption("用户状态")
   },
   methods: {
     getTime(v) {
