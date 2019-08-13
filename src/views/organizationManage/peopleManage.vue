@@ -320,10 +320,20 @@ export default {
        * 2：详情
        * */
     handleEdit(row,type) {
-      if(type==1) {
-         this.$router.push({ path: '/organizationManage/peopleEdit' })
-      }else {
-        this.$router.push({ path: '/organizationManage/peopleDetail' })
+      if(type==1) {//编辑
+          this.$router.push({
+            name:"peopleEdit",
+            params:{
+              id:row.Id
+            }
+          })
+      }else {//详情
+        this.$router.push({
+          name:"peopleDetail",
+          params:{
+            id:row.Id
+          }
+        })
       }
     },
     addNewFun() {

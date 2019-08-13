@@ -91,22 +91,22 @@ export const constantRoutes = [
         meta: { title: '人员管理',  roles: ['1'] }
       },
       {
-        path: '/organizationManage/peopleDetail',
+        path: '/organizationManage/peopleDetail/:id',
         name: 'peopleDetail',
         component: () => import('@/views/organizationManage/peopleDetail'),
-        meta: { title: '人员管理 - 详情',  roles: ['1'] }
+        meta: { title: '人员管理 - 详情',  roles: ['1000000000000'] }
       },
       {
-        path: '/organizationManage/peopleEdit',
+        path: '/organizationManage/peopleEdit/:id',
         name: 'peopleEdit',
         component: () => import('@/views/organizationManage/peopleEdit'),
-        meta: { title: '人员管理 - 编辑',  roles: ['1'] }
+        meta: { title: '人员管理 - 编辑',  roles: ['10000000000001'] }
       },
       {
         path: '/organizationManage/peopleAdd',
         name: 'peopleAdd',
         component: () => import('@/views/organizationManage/peopleAdd'),
-        meta: { title: '人员管理 - 新增',  roles: ['1'] }
+        meta: { title: '人员管理 - 新增',  roles: ['10000000000002'] }
       }
     ]
   }

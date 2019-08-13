@@ -1,72 +1,72 @@
 <template>
   <div class="cl-container cl-container3">
     <div>
-      <el-form ref="ruleForm" :model="ruleForm" label-width="100px">
+      <el-form ref="form" :model="form" label-width="100px">
         <el-row :gutter="50">
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="人员编号:">
-              <span>{{ ruleForm.code }}</span>
+              <span>{{ form.EmpNo }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="人员名称:">
-              <span>{{ ruleForm.name }}</span>
+              <span>{{ form.EmpName }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="部门:">
-              <span>{{ ruleForm.department }}</span>
-            </el-form-item>
+
+          <el-col v-for="(item,index) in form.blList" :key="index" :xs="24" :sm="24" :md="24" :lg="24" :xl="16">
+              <el-col :span="12">
+                <el-form-item label="部门:">
+                  <span>{{ item.SYS_DepartmentName }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="岗位:">
+                  <span>{{ item.OA_JobName }}</span>
+                </el-form-item>
+              </el-col>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="岗位:">
-              <span>{{ ruleForm.post }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="性别:">
-              <span>{{ ruleForm.sex }}</span>
+              <span>{{ form.Gender }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="出生日期:">
-              <span>{{ ruleForm.birthday }}</span>
+              <span>{{ form.Birthday }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="电话号码:">
-              <span>{{ ruleForm.phone }}</span>
+              <span>{{ form.MobileNumber }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="身份证号:">
-              <span>{{ ruleForm.id }}</span>
+              <span>{{ form.IDNumber }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="入职时间:">
-              <span> {{ ruleForm.entryTime }}</span>
+              <span> {{ form.EnrollingTime }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="岗位状态:">
-              <span>{{ ruleForm.status }}</span>
+              <span>{{ form.JobStatus }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="24">
             <el-form-item label="地址:">
-              <span>{{ ruleForm.adress }}</span>
+              <span>{{ form.Address }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="附件:">
-              <span>{{ ruleForm.Certificates }}</span>
-            </el-form-item>
-          </el-col>
+
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item>
               <ul class="fileBox clearfix">
-                <li v-for="(item,index) in ruleForm.file" :key="index">
+                <li v-for="(item,index) in form.file" :key="index">
                   <p v-show="item.type === 0?true:false"><img :src="item.url"></p>
                   <p v-show="item.type === 1?true:false"><span class="icon iconfont" style="color:#345e9e;font-size: 60px;">&#xe65d;</span></p>
                   <p v-show="item.type === 2?true:false"><span class="icon iconfont" style="color:#389850;font-size: 60px;">&#xe693;</span></p>
@@ -95,26 +95,42 @@
 </template>
 
 <script>
+import { GetBlObjById } from "@/api/organize"
 import '../../styles/organization.scss'
 export default {
   name: 'PeopleDetail',
   data() {
     return {
-      ruleForm: {
-        code: '12312312',
-        name: '长大强',
-        company: 'XX公司',
-        waterworks: 'xx水厂',
-        department: 'xx部门',
-        post: 'xx岗位',
-        sex: '男',
-        birthday: '2112-12-12',
-        phone: '12323678',
-        id: '23',
-        entryTime: '2012-2-1',
-        status: '在职',
-        adress: '啊u嘿哈韦哈尔u和覅我和覅文化',
-        Certificates: '二五',
+      form: {
+        Address: '',
+        Birthday: '',
+        CreateTime: '',
+        CreateUser: '',
+        CreateUserId: '',
+        EmailAddress: '',
+        EmpName: '',
+        EmpNo: '',
+        EnrollingTime: '',
+        Gender: '',
+        IDNumber: '',
+        Id: '',
+        JobStatus: '',
+        LoginName: '',
+        MobileNumber: '',
+        ResignTime: '',
+        SYS_User_Id: '',
+        blList:[
+          {
+            Id: '',
+            OA_EmployeeName: '',
+            OA_Employee_Id: '',
+            OA_JobName: '',
+            OA_Job_Id: '',
+            SYS_DepartmentName: '',
+            SYS_Department_Id: '',
+            SYS_User_Id: '',
+          },
+        ],
         file: [
           {
             name: 'city.jpeg',
@@ -139,12 +155,6 @@ export default {
       clientHeight: ''
     }
   },
-  mounted() {
-    this.clientHeight = document.documentElement.clientHeight
-    window.onresize = function temp() {
-      this.clientHeight = document.documentElement.clientHeight
-    }
-  },
   methods: {
     handlePreview(file) { // 点击文件列表中已上传的文件时的事件
       const type = file.type
@@ -166,7 +176,26 @@ export default {
           this.iframeUrl = file.url
           break
       }
+    },
+    getInfo() {
+      GetBlObjById({id:this.$route.params.id}).then(res => {
+        if(res.code==0){
+          this.form = res.data
+        }else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
     }
+  },
+  mounted() {
+    this.clientHeight = document.documentElement.clientHeight
+    window.onresize = function temp() {
+      this.clientHeight = document.documentElement.clientHeight
+    }
+    this.getInfo()
   }
 }
 </script>

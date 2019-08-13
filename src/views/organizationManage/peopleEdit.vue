@@ -91,13 +91,6 @@
               <el-input v-model="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" />
             </el-form-item>
           </el-col>
-          <!--<el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="附件:">
-              <el-select v-model="upload.certificates" placeholder="请选择" size="small">
-                <el-option label="身份证" value="身份证" />
-              </el-select>
-            </el-form-item>
-          </el-col>-->
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item>
               <uploadImg @getFileFun="getFileFun" />
@@ -117,7 +110,7 @@
 <script>
   import '../../styles/organization.scss'
   import uploadImg from '../../components/Upload/index'
-  import { peopleAdd, ComboBoxList, linkComboBoxList } from "@/api/organize"
+  import { GetBlObjById, peopleAdd, ComboBoxList, linkComboBoxList } from "@/api/organize"
 
   export default {
     name: 'PeopleEdit',
@@ -191,9 +184,6 @@
         ],
       }
     },
-    mounted() {
-      this.getComboBoxList()
-    },
     methods: {
       /**
        * 增加部门
@@ -227,7 +217,6 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-
             let p = new Promise((resolve, reject) => {
               peopleAdd(this.jp).then(res => {
                 if(res.code==0){
@@ -251,7 +240,6 @@
                 console.log(res.data);
               }*/
             )
-
 
           } else {
             return false
@@ -307,6 +295,26 @@
           }
         })
       },
+      /**
+       * 获取详情
+       * */
+      getInfo() {
+        GetBlObjById({id:this.$route.params.id}).then(res => {
+          if(res.code==0){
+            this.jp = res.data
+            this.jp.ojList = res.data.blList
+          }else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+      }
+    },
+    mounted() {
+      this.getComboBoxList()
+      this.getInfo()
     }
   }
 </script>

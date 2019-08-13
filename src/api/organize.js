@@ -131,3 +131,16 @@ export function GetRoleNameList(data) {
     params: data
   })
 }
+
+/**
+ * 获取操人员详情
+ * */
+export function GetBlObjById(data) {
+  return request({
+    url: '/Employee/GetBlObjById',
+    method: 'post',
+    params: data
+  })
+}
+
+
