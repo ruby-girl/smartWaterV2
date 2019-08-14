@@ -41,7 +41,7 @@ module.exports = {
         target: 'http://192.168.2.216:10002',
         ws: true, // 为true表示可以给webscoket使用
         changeOrigin: true,
-        pathRewrite: { '^/api': '' }, // 重定向
+        pathRewrite: { '^/api': '/' }, // 重定向
         secure: false
       }
     }

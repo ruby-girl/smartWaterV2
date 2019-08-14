@@ -226,7 +226,7 @@ export default {
     },
     excel(){//导出
       exportExcel(this.listQuery).then((res)=>{
-        window.location.href = res.data;
+        window.location.href = `${this.common.excelPath}${res.data}`;
       })
     }
   }

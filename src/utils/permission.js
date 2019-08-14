@@ -30,7 +30,6 @@ export function getDictionaryOption(value) {//获取具体的字典项
     })
     return items[0].CboList//这里是option数据
   }else{
-    console.error(`没有获取到字典项`)
     return false
   }
 }

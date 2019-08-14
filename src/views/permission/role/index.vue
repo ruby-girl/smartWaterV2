@@ -147,10 +147,12 @@ export default {
       });
     },
     sortChanges({prop, order }){//筛选
-      this.listQuery.page=1
       this.listQuery.filed=prop
       this.listQuery.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
-      this.getList()
+      if(this.tableData.length>0){
+        this.listQuery.page=1
+        this.getList()
+      }
     },
     handleFilter() {
       this.listQuery.page = 1;
@@ -214,8 +216,8 @@ export default {
       );
     },
     excel(){//导出
-      exportExcel(this.listQuery).then((res)=>{
-        window.location.href = res.data;
+      exportExcel(this.listQuery).then((res)=>{      
+        window.location.href = `${this.common.excelPath}${res.data}`;
       })
     }
   }
