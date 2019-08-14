@@ -3,10 +3,10 @@ import router from '../router'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-
+import commonJS from "./common.js"
 // create an axios instance
 const service = axios.create({
-  baseURL: 'http://192.168.2.216:10002/api', // url = base url + request url
+  baseURL: commonJS.basePath, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
