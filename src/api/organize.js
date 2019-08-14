@@ -43,6 +43,14 @@ export function ComboBoxList(data) {
   })
 }
 
+export function GetList_Execl(data) {
+  return request({
+    url: '/Department/GetList_Execl',
+    method: 'post',
+    params: data
+  })
+}
+
 /**
  * 岗位接口
  * */
@@ -83,6 +91,14 @@ export function linkComboBoxList(data) {
     url: '/Job/ComboBoxList',
     method: 'post',
     params: data
+  })
+}
+
+export function JobGetList_Execl(data) {
+  return request({
+    url: '/Job/GetList_Execl',
+    method: 'post',
+    data: data
   })
 }
 

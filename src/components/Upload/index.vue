@@ -157,7 +157,9 @@
     },
     uploadSuccess(response, file) { // 上传成功
       let data= response.data;
-      const Suffix = data.FileExtName.split('.')[1]
+      console.log(data)
+      console.log("================")
+     /* const Suffix = data.FileExtName.split('.')[1]
       if (Suffix === 'docx' || Suffix === 'doc') {
         file.type = 1
       } else if (Suffix === 'xlsx' || Suffix === 'xls') {
@@ -166,7 +168,7 @@
         file.type = 3
       }else {
         file.type = 0
-      }
+      }*/
       file.name = data.FileName
       file.id = data.Id
       file.url = baseUrl + (data.RelativePath).replace("~","")

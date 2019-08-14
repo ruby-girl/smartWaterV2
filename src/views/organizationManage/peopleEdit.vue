@@ -98,7 +98,6 @@
           </el-col>
         </el-row>
         <p class="footBox">
-          <el-checkbox v-model="goOn">继续添加</el-checkbox>
           <el-button type="primary" size="small" @click="submitForm('jp')">保存</el-button>
           <el-button size="small" @click="resetForm('jp')">取消</el-button>
         </p>
@@ -118,7 +117,6 @@
     data() {
       return {
         isFlag:false,
-        goOn: false,
         rules: {
           EmpName: [
             { required: true, message: '请输入人员名称', trigger: 'blur' },

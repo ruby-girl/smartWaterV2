@@ -255,8 +255,6 @@ export default {
         { checked: true, text: '人员编号', prop: 'EmpNo', position: 'center', width: '200px' },
         { checked: true, text: '人员名称', prop: 'EmpName', position: 'center', width: '200px' },
         { checked: false, text: '入职时间', prop: 'EnrollingTime', position: 'center', width: '200px' },
-        { checked: false, text: '部门', prop: 'sex', position: 'center', width: '200px' },
-        { checked: false, text: '岗位', prop: 'height', position: 'center', width: '200px' },
         { checked: false, text: '岗位状态', prop: 'JobStatus', position: 'center', width: '200px' },
         { checked: false, text: '性别', prop: 'Gender', position: 'center', width: '200px' },
         { checked: false, text: '出生日期', prop: 'Birthday', position: 'center', width: '200px' },

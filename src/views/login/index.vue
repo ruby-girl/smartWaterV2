@@ -202,29 +202,32 @@ export default {
     getSingle() {
       var token = getToken(); //登录成功后后端返回的Token
       let _this = this
-
-      $.connection.hub.url = 'http://192.168.2.216:10002/signalr';
+      $.connection.hub.url = this.baseUrl + '/signalr';
 
       var chat = $.connection.FXYBHub;
+
       //后端请求前端的连接
       chat.client.message = function (code) {
+
+        alert(code)
+
         switch (code) {
-          case 100://Token失效
-            this.$message({
+          case '100'://Token失效
+            _this.$message({
               message: 'Token已失效，请重新登陆',
               type: 'warning'
             });
             _this.$router.push({ path: "/login"});
             break
-          case 101://已在其他电脑登录
-            this.$message({
+          case '101'://已在其他电脑登录
+            _this.$message({
               message: '该账户已在其他电脑登录，请重新登陆',
               type: 'warning'
             });
             _this.$router.push({ path: "/login"});
             break
-          case 102://账户权限发生变化，需重新登录
-            this.$message({
+          case '102'://账户权限发生变化，需重新登录
+            _this.$message({
               message: '账户权限发生变化，请重新登陆',
               type: 'warning'
             });
@@ -235,11 +238,13 @@ export default {
 
       //启动链接
       $.connection.hub.start({jsonp:true}).done(function () {
+        alert('coming')
         //请求后端的连接
         chat.server.login(token); //注册signalr连接 ,Token 登录成功后后端返回的Token
       });
     }
-  }
+  },
+
 };
 </script>
 

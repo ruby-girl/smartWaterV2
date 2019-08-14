@@ -31,14 +31,16 @@
           label="序号"
           width="55"
           align="center"
+          fixed="left"
         />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
             :key="index"
-            :min-width="item.width"
-            :prop="item.prop"
-            :align="item.position"
-            :label="item.text"
+            min-width="200px"
+            :prop="item.ColProp"
+            :align="item.Position"
+            :label="item.ColDesc"
+            :fixed="item.Freeze"
           />
         </template>
         <el-table-column label="操作" width="200px" align="center" fixed="right">
@@ -102,8 +104,9 @@
   import '../../styles/organization.scss'
   import customTable from '../../components/CustomTable/index'
   import Pagination from '../../components/Pagination/index'
-  import { GetList, Add, UpDate, Delete } from "@/api/organize"
+  import { GetList, Add, UpDate, Delete, GetList_Execl } from "@/api/organize"
   let ID = '',editObj = {};
+
   export default {
     name: 'Department',
     components: { customTable, Pagination },
@@ -126,11 +129,7 @@
           ]
         },
         tableData: [],
-        checkAllData: [// 所有列可选项
-          { checked: true, text: '部门', prop: 'DeptName', position: 'center', width: '200px' },
-          { checked: true, text: '操作人', prop: 'EditUser', position: 'center', width: '200px' },
-          { checked: false, text: '操作时间', prop: 'DataState', position: 'center', width: '200px' },
-        ],
+        checkAllData: [],
         checksData: [],
         customHeight: ''
       }
@@ -140,7 +139,7 @@
         const arrayHead = []
         const data = this.checksData
         for (let i = 0; i < data.length; i++) { // 过滤选中列
-          if (data[i].checked) {
+          if (data[i].IsCheck) {
             arrayHead.push(data[i])
           }
         }
@@ -154,13 +153,6 @@
         })
       }
     },
-    mounted() {
-      this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-
-      this.searchFun()
-    },
     methods: {
       /**
        * 表格自定义
@@ -173,7 +165,19 @@
        * 导出
        * */
       exportExcel() {
-        alert('导出')
+        GetList_Execl({DeptName: this.department}).then(res => {
+           if(res.code==0){
+             this.$message({
+               message: '导出成功！',
+               type: 'success'
+             });
+           }else{
+             this.$message({
+               message: res.message,
+               type: 'warning'
+             });
+           }
+        })
       },
       /**
        * 编辑及新增
@@ -281,7 +285,13 @@
         this.dialogVisible = false;
         this.ruleForm.newDertmentName = ''
         this.$refs[formName].resetFields();
-      }
+      },
+    },
+    mounted() {
+      this.$refs.myChild.GetTable('0000001');
+      this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      this.searchFun()
     }
   }
 </script>
