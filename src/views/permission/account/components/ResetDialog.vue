@@ -75,6 +75,9 @@ export default {
       if (value === "") {
         return callback(new Error("不能为空"));
       }
+       if (value.toString().length < 6 || value.toString().length > 18) {
+        return callback(new Error("密码长度为6-18位"));
+      }
       if (this.resetData.pwd !== this.resetData.pwdNew) {
         return callback(new Error("二次输入的密码不一致"));
       }
