@@ -28,6 +28,7 @@
 <script>
 import ScrollPane from './ScrollPane'
 import path from 'path'
+import Bus from '@/utils/bus.js'
 
 export default {
   components: { ScrollPane },
@@ -64,6 +65,10 @@ export default {
   mounted() {
     this.initTags()
     this.addTags()
+    let self = this
+    Bus.$on('msg', (e) => {
+      self.closeSelectedTag(e)
+    })
   },
   methods: {
     isActive(route) {
@@ -132,6 +137,7 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      console.log(view)
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           this.toLastView(visitedViews, view)

@@ -110,6 +110,7 @@
   import '../../styles/organization.scss'
   import uploadImg from '../../components/Upload/index'
   import { GetBlObjById, peopleAdd, ComboBoxList, linkComboBoxList } from "@/api/organize"
+  import Bus from '@/utils/bus.js'
 
   export default {
     name: 'PeopleEdit',
@@ -249,6 +250,7 @@
        * */
       resetForm(formName) {
         this.$refs[formName].resetFields()
+        Bus.$emit('msg', this.$route)
       },
       /**
        * 获取上传文件信息
