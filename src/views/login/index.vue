@@ -58,9 +58,13 @@
 </template>
 
 <script>
+
 import RSA from "rsa-js-java";
 import { getKey } from "@/api/user";
 import { getToken } from '@/utils/auth'
+import '@/utils/jquery-1.6.4.js'
+import '@/utils/jquery.signalR-2.4.1.js'
+import '@/utils/hubs'
 
 export default {
   name: "Login",
@@ -198,7 +202,9 @@ export default {
     getSingle() {
       var token = getToken(); //登录成功后后端返回的Token
       let _this = this
+
       $.connection.hub.url = 'http://192.168.2.216:10002/signalr';
+
       var chat = $.connection.FXYBHub;
       //后端请求前端的连接
       chat.client.message = function (code) {

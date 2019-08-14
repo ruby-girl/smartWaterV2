@@ -66,7 +66,7 @@
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item>
               <ul class="fileBox clearfix">
-                <li v-for="(item,index) in form.file" :key="index">
+                <li v-for="(item,index) in file" :key="index">
                   <p v-show="item.type === 0?true:false"><img :src="item.url"></p>
                   <p v-show="item.type === 1?true:false"><span class="icon iconfont" style="color:#345e9e;font-size: 60px;">&#xe65d;</span></p>
                   <p v-show="item.type === 2?true:false"><span class="icon iconfont" style="color:#389850;font-size: 60px;">&#xe693;</span></p>
@@ -131,23 +131,23 @@ export default {
             SYS_User_Id: '',
           },
         ],
-        file: [
-          {
-            name: 'city.jpeg',
-            type: 0,
-            url: 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg' },
-          {
-            name: 'sds1.xls',
-            type: 2,
-            url: 'https://view.officeapps.live.com/op/view.aspx?src=http://storage.xuetangx.com/public_assets/xuetangx/PDF/1.xls'
-          },
-          {
-            name: 'PlayerAPI_v1.0.6.pdf',
-            type: 3,
-            url: 'http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf'
-          }
-        ]
       },
+      file: [
+        {
+          name: 'city.jpeg',
+          type: 0,
+          url: 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg' },
+        {
+          name: 'sds1.xls',
+          type: 2,
+          url: 'https://view.officeapps.live.com/op/view.aspx?src=http://storage.xuetangx.com/public_assets/xuetangx/PDF/1.xls'
+        },
+        {
+          name: 'PlayerAPI_v1.0.6.pdf',
+          type: 3,
+          url: 'http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf'
+        }
+      ],
       curSrc: '',
       ifImg: false,
       dialogVisible: false,
