@@ -30,7 +30,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="11" style="position: relative">
+              <el-col :span="10" style="position: relative">
                 <span style="position: absolute;color: #F56C6C;left: 15px;top:10px;">*</span>
                 <span v-show="item.OA_Job_Id==''&&isFlag" style="position: absolute;color: #F56C6C;left: 70px;top:40px;font-size: 12px;">不能为空</span>
                 <el-form-item label="岗位:" label-width="70px" :class="item.OA_Job_Id==''&&isFlag?'on':''">
@@ -45,6 +45,9 @@
                 </el-form-item>
               </el-col>
               <el-col v-show="index<=sojList.length-2" :span="1">
+                <span class="el-icon-minus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer" @click="reduceFun(index)" />
+              </el-col>
+              <el-col v-show="index==sojList.length-1 && sojList.length>1" :span="1">
                 <span class="el-icon-minus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer" @click="reduceFun(index)" />
               </el-col>
               <el-col v-show="index==sojList.length-1" :span="1">
@@ -111,6 +114,7 @@
   import '../../styles/organization.scss'
   import uploadImg from '../../components/Upload/index'
   import { peopleAdd, ComboBoxList, linkComboBoxList } from "@/api/organize"
+  import Bus from '@/utils/bus.js'
 
   export default {
     name: 'PeopleAdd',
@@ -161,7 +165,7 @@
         },
         jp: {
           EmpName: '',
-          ojList:[],
+          oeoList:[],
           Gender: '',
           Birthday: '',
           MobileNumber: '',
@@ -169,9 +173,9 @@
           EnrollingTime: '',
           JobStatus: '在职',
           Address: '',
+          Idarr:[]
         },
         upload: {
-          Certificates: '',
           file: []
         },
         sojList:[
@@ -212,39 +216,31 @@
        * */
       submitForm(formName) {
         this.isFlag = true;
-        for(let i=0;i< this.sojList.length; i++) {
-          this.jp.ojList.push({
+        for(let i=0;i< this.sojList.length; i++) {//部门岗位信息
+          this.jp.oeoList.push({
             SYS_Department_Id: this.sojList[i].SYS_Department_Id,
             OA_Job_Id: this.sojList[i].OA_Job_Id
           })
         }
+        for(let j =0;j<this.upload.file.length;j++){
+          this.jp.Idarr.push(this.upload.file[j].id)
+        }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-
-            let p = new Promise((resolve, reject) => {
               peopleAdd(this.jp).then(res => {
                 if(res.code==0){
                   this.$message({
                     message: res.message,
                     type: 'success'
                   });
-                  resolve(res)
+                  Bus.$emit('msg', this.$route)
                 }else {
                   this.$message({
                     message: res.message,
                     type: 'warning'
                   });
-                  reject(res.message)
                 }
               })
-              return p;
-            });
-            p.then(
-              /*res => {
-                console.log(res.data);
-              }*/
-            )
-
 
           } else {
             return false
@@ -256,6 +252,7 @@
        * */
       resetForm(formName) {
         this.$refs[formName].resetFields()
+        Bus.$emit('msg', this.$route)
       },
       /**
        * 获取上传文件信息

@@ -159,7 +159,7 @@
         </div>
       </div>
       <customTable ref="myChild" />
-      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border>
+      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border :row-class-name="tableRowClassName">
         <el-table-column
           type="selection"
           width="55"
@@ -174,11 +174,11 @@
             :label="item.text"
           />
         </template>
-        <el-table-column label="操作" width="200px" align="center">
+        <el-table-column label="操作" width="200px" align="left">
           <template slot-scope="scope">
             <a class="operation1" @click="handleEdit(scope.row,1)">编辑</a>
             <a class="operation1" @click="handleEdit(scope.row,2)">详情</a>
-            <a class="operation2" @click="handleDelete(scope.row)">删除</a>
+            <a class="operation2" @click="handleDelete(scope.row)" v-show="scope.row.SYS_User_Id.length <= 0">删除</a>
           </template>
         </el-table-column>
       </el-table>
@@ -216,6 +216,7 @@ import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
 import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList} from "@/api/organize"
 let deleteId;
+import Bus from '@/utils/bus.js'
 
 export default {
   name: 'PeopleManage',
@@ -297,6 +298,11 @@ export default {
     this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList()
     this.GetRoleNameList()
+    this.searchFun()
+    let self = this
+    Bus.$on('msg', () => {
+      self.searchFun()
+    })
   },
   methods: {
     /**
@@ -353,6 +359,7 @@ export default {
             type: 'success'
           });
           this.warnVisible = false
+          this.searchFun()
         }else {
           this.$message({
             message: res.message,
@@ -457,6 +464,13 @@ export default {
       this.queryData.createStartTime = data[0]
       this.queryData.createEndTime = data[1]
     },
+    tableRowClassName({row}) {
+      if (row.SYS_User_Id.length > 0)
+      {
+        return 'warning-row';
+      }
+    }
   }
 }
 </script>
+

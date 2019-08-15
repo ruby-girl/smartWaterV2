@@ -54,7 +54,6 @@
       :visible.sync="dialogVisible"
       :fullscreen="dialogVisible"
     >
-      sdfsdf
       <iframe :src="iframeUrl" width="100%" frameborder="0" :height="clientHeight-100" />
     </el-dialog>
   </div>
@@ -77,8 +76,7 @@
       ifImg: false,
       curSrc: '',
       curPdfSrc: '',
-      fileList: [
-      ],
+      fileList: [],
       headers: {
         Authorization: ''
       },
@@ -157,9 +155,7 @@
     },
     uploadSuccess(response, file) { // 上传成功
       let data= response.data;
-      console.log(data)
-      console.log("================")
-     /* const Suffix = data.FileExtName.split('.')[1]
+      const Suffix = data.FileExtName.split('.')[1]
       if (Suffix === 'docx' || Suffix === 'doc') {
         file.type = 1
       } else if (Suffix === 'xlsx' || Suffix === 'xls') {
@@ -168,7 +164,7 @@
         file.type = 3
       }else {
         file.type = 0
-      }*/
+      }
       file.name = data.FileName
       file.id = data.Id
       file.url = baseUrl + (data.RelativePath).replace("~","")
@@ -187,6 +183,33 @@
     outStyle(item) {
       this.$set(item, 'active', false)
     },
+    /**
+     * 获取已保存附件信息回填预览列表
+     * */
+    setFiles(data) {
+      let obj = {}
+      for(let i=0;i<data.length;i++){
+        let thisType;
+        const Suffix = data[i].FileExtName.split('.')[1]
+        if (Suffix === 'docx' || Suffix === 'doc') {
+          thisType = 1
+        } else if (Suffix === 'xlsx' || Suffix === 'xls') {
+          thisType = 2
+        } else if (Suffix === 'pdf') {
+          thisType = 3
+        }else {
+          thisType = 0
+        }
+        obj = {
+          id: data[i].Id,
+          name:data[i].FileName,
+          type: thisType,
+          url:baseUrl + (data[i].RelativePath).replace("~",""),
+        }
+        this.fileList.push(obj)
+      }
+      this.$emit('getFileFun', this.fileList)
+    }
   }
 }
 </script>
