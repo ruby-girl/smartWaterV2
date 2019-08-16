@@ -13,7 +13,7 @@ export function FileDelete(data) {
   return request({
     url: '/Files/Delete',
     method: 'post',
-    data: data
+    params: data
   })
 }
 
