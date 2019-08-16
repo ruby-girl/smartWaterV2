@@ -4,7 +4,7 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="100px"
+    label-width="80px"
     @submit.native.prevent
   >
     <el-form-item label="人员编号：">
@@ -47,7 +47,7 @@
       <el-date-picker
         v-model="timevalue"
         type="daterange"
-        range-separator="至"
+        range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         :default-time="['00:00:00', '23:59:59']"

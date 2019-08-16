@@ -292,9 +292,15 @@ aside {
   padding-top:20px;
 }
 .section-container{
-  padding: 20px;
-  margin:15px;
-  background: #fff;
+  position: relative;
+    padding: 16px 16px 0 16px;
+    height: calc(100vh - 74px);
+    background: #eee;
+    .section-full-container{
+      height: 100%;
+      background: #fff;
+      padding: 15px;
+    }
 }
 .no-del{
   background-color: #FFCCC7 !important;

@@ -1,6 +1,7 @@
 <template>
   <div class="section-container">
-    <div ref="formHeight">
+   <div class="section-full-container">
+      <div ref="formHeight">
       <select-head :select-head="listQuery" @handleFilter="handleFilter" />
     </div>
     <div class="table-top-btn-padding">
@@ -66,6 +67,7 @@
       @createData="createData"
       @updateData="updateData"
     />
+   </div>
   </div>
 </template>
 <script>

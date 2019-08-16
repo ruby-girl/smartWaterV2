@@ -10,6 +10,7 @@
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
+      <div class="footer-class">版权所有：四川府星仪表有限公司</div>
     </div>
   </div>
 </template>
@@ -94,5 +95,11 @@ export default {
 
   .mobile .fixed-header {
     width: 100%;
+  }
+  .footer-class{
+    color:#B8C2CC;
+    font-size: 12px;
+    text-align: center;
+    line-height: 30px;
   }
 </style>

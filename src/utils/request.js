@@ -57,7 +57,7 @@ service.interceptors.response.use(
     // }).then(() => {
       loadinginstace.close()
       Element.Message.error({
-        message:error.response.data.message
+        message:"请求错误，请重新登录！"
       })
       store.dispatch('user/resetToken').then(() => {
         // location.reload()

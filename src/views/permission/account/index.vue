@@ -1,6 +1,7 @@
 <template>
   <div class="section-container">
-    <div ref="formHeight">
+   <div class="section-full-container">
+      <div ref="formHeight">
       <select-head :select-head="listQuery" @handleFilter="handleFilter" :role-list="roleList"/>
     </div>
     <div class="table-top-btn-padding">
@@ -56,6 +57,7 @@
     <reset-dialog :reset-show.sync="resetdialogFormVisible" :id="restId" />
     <edit-dialog :show.sync="dialogFormVisible" :temp="temp" @updateData="updateData" :role-list="roleList"/>
     <add-dialog :add-show.sync="addDialogFormVisible" :temp="temp" @createData="createData" :role-list="roleList"/>
+   </div>
   </div>
 </template>
 <script>
@@ -233,8 +235,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.pipeline-select-padding {
-  padding: 20px 20px 10px 20px;
-}
 </style>
 
