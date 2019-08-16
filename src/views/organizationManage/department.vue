@@ -3,18 +3,44 @@
     <div>
       <div id="conditionBox">
         <el-row>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-input
-                v-model="department"
+                v-model="dp.DeptName"
                 placeholder="部门（长度10以内）"
                 maxlength="10"
                 size="small"
               />
             </div>
           </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="4">
+            <div class="cl-inlineItem">
+              <label class="cl-label">操作人：</label>
+              <el-select v-model="dp.createUserId" placeholder="请选择" size="small">
+                <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="12" :md="12" :lg="10" :xl="12">
+            <div class="cl-inlineItem" style="width: 100%">
+              <label class="cl-label">操作时间：</label>
+              <el-date-picker
+                v-model="createStartTimes"
+                style="width: 83%"
+                size="small"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="getTime1"
+              />
+            </div>
+          </el-col>
+          <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
             <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
           </el-col>
         </el-row>
@@ -29,7 +55,7 @@
         <el-table-column
           type="index"
           label="序号"
-          width="55"
+          width="80"
           align="center"
           fixed="left"
         />
@@ -40,7 +66,7 @@
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
-            :fixed="item.Freeze"
+            :fixed="item.IsFreeze?item.Freeze:''"
           />
         </template>
         <el-table-column label="操作" width="200px" align="center" fixed="right">
@@ -53,8 +79,8 @@
       <pagination
         v-show="total>0"
         :total="total"
-        :page.sync="page"
-        :limit.sync="limit"
+        :page.sync="dp.page"
+        :limit.sync="dp.limit"
         @pagination="searchFun"
       />
     </div>
@@ -63,7 +89,7 @@
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
-      width="22%"
+      width="400px"
     >
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
         <el-form-item label="部门:" prop="newDertmentName">
@@ -72,6 +98,7 @@
             placeholder="请输入部门名称"
             maxlength="20"
             size="small"
+            style="width: 250px"
           />
         </el-form-item>
         <p class="footBox dialogFooter">
@@ -105,6 +132,7 @@
   import customTable from '../../components/CustomTable/index'
   import Pagination from '../../components/Pagination/index'
   import { GetList, Add, UpDate, Delete, GetList_Execl } from "@/api/organize"
+  import { GetLoginNameList } from "@/api/user"
   let ID = '',editObj = {};
 
   export default {
@@ -112,14 +140,22 @@
     components: { customTable, Pagination },
     data() {
       return {
+        operatorArray:[],
         tableHeight: '',
         warnVisible: false,
         dialogVisible: false,
         title: '',
         total: 0,
-        page: 1,
-        limit: 10,
-        department: '',
+        createStartTimes:'',
+        dp: {
+          page: 1,
+          limit: 10,
+          DeptName: '',
+          createUserId: '',
+          createStartTime: '',
+          createEndTime: '',
+          tableId: '0000001'
+        },
         ruleForm: {
           newDertmentName: ''
         },
@@ -165,7 +201,7 @@
        * 导出
        * */
       exportExcel() {
-        GetList_Execl({DeptName: this.department}).then(res => {
+        GetList_Execl(this.dp).then(res => {
            if(res.code==0){
              this.$message({
                message: '导出成功！',
@@ -223,14 +259,16 @@
        * 查询
        * */
       searchFun() {
-        let dp = {
-          page: this.page,
-          limit: this.limit,
-          DeptName: this.department
-        }
-        GetList(dp).then(res => {
-          this.total = res.count;
-          this.tableData = res.data;
+        GetList(this.dp).then(res => {
+          if (res.code ==0 ) {
+            this.total = res.count;
+            this.tableData = res.data;
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
         })
       },
       /**
@@ -286,9 +324,29 @@
         this.ruleForm.newDertmentName = ''
         this.$refs[formName].resetFields();
       },
+      getTime1(data) {
+        this.dp.createStartTime = data[0]
+        this.dp.createEndTime = data[1]
+      },
+      /**
+       * 获取操作人信息
+       * */
+      GetLoginNameList() {
+        GetLoginNameList().then(res => {
+          if (res.code ==0 ) {
+            this.operatorArray = res.data;
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+      }
     },
     mounted() {
-      this.$refs.myChild.GetTable('0000001');
+      this.GetLoginNameList()
+      this.$refs.myChild.GetTable(this.dp.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
       this.searchFun()

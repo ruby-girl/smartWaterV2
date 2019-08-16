@@ -3,18 +3,46 @@
     <div>
       <el-form ref="jp" :model="jp" :rules="rules" label-width="100px">
         <el-row :gutter="50">
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="人员编号:">
               <el-input size="small" disabled v-model="jp.EmpNo"/>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="人员名称:" prop="EmpName">
-              <el-input v-model="jp.EmpName" size="small" maxlength="10" placeholder="长度10" />
+              <el-input v-model="jp.EmpName" size="small" maxlength="10" placeholder="请输入人员名称" />
             </el-form-item>
           </el-col>
 
-          <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+            <el-form-item label="性别:">
+              <el-select v-model="jp.Gender" placeholder="请选择" size="small">
+                <el-option label="女" value="女" />
+                <el-option label="男" value="男" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+            <el-form-item label="出生日期:">
+              <el-date-picker v-model="jp.Birthday" type="date" placeholder="年月日" size="small" />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+            <el-form-item label="电话号码:" prop="MobileNumber">
+              <el-input v-model="jp.MobileNumber" size="small" maxlength="11" placeholder="请输入11位电话号码" />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+            <el-form-item label="身份证号:" prop="IDNumber">
+              <el-input v-model="jp.IDNumber" size="small" maxlength="18" placeholder="请输入18位身份证号" />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+            <el-form-item label="入职时间:">
+              <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small" />
+            </el-form-item>
+          </el-col>
+          <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
             <el-row>
               <el-col :span="12" style="position: relative">
                 <span style="position: absolute;color: #F56C6C;left: 45px;top:10px;">*</span>
@@ -45,50 +73,21 @@
                 </el-form-item>
               </el-col>
               <el-col v-show="index<=sojList.length-2" :span="1">
-                <span class="el-icon-minus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer" @click="reduceFun(index)" />
+                <span class="el-icon-minus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold" @click="reduceFun(index)" />
               </el-col>
               <el-col v-show="index==sojList.length-1 && sojList.length>1" :span="1">
-                <span class="el-icon-minus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer" @click="reduceFun(index)" />
+                <span class="el-icon-minus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold" @click="reduceFun(index)" />
               </el-col>
               <el-col v-show="index==sojList.length-1" :span="1">
-                <span class="el-icon-plus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer" @click="addFun" />
+                <span class="el-icon-plus" style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold" @click="addFun" />
               </el-col>
             </el-row>
           </el-col>
-
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="性别:">
-              <el-select v-model="jp.Gender" placeholder="请选择" size="small">
-                <el-option label="女" value="女" />
-                <el-option label="男" value="男" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="出生日期:">
-              <el-date-picker v-model="jp.Birthday" type="date" placeholder="年月日" size="small" />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="电话号码:" prop="MobileNumber">
-              <el-input v-model="jp.MobileNumber" size="small" maxlength="11" placeholder="长度11" />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="身份证号:" prop="IDNumber">
-              <el-input v-model="jp.IDNumber" size="small" maxlength="18" placeholder="长度18" />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="入职时间:">
-              <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small" />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
+          <!--<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="岗位状态:">
               <el-input v-model="jp.JobStatus" size="small" disabled />
             </el-form-item>
-          </el-col>
+          </el-col>-->
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item label="地址:" prop="adress">
               <el-input v-model="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" />
@@ -272,6 +271,7 @@
         ComboBoxList().then(res => {
           if(res.code==0){
             for(let i = 0;i< this.sojList.length;i++) {
+              res.data.shift()
               this.sojList[i].depart = res.data
             }
           } else {
@@ -291,6 +291,7 @@
           if(res.code==0){
             for(let i = 0;i< this.sojList.length;i++) {
               if(i==index){
+                res.data.shift()
                 this.sojList[i].post = res.data
                 if(type!=0){//编辑部门时候初始化岗位
                   this.sojList[i].OA_Job_Id = ''

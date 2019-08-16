@@ -18,7 +18,7 @@ export function getKey() {//获取密码解密前的ID等
 export function getInfo() {//获取权限
   return request({
     url: '/Login/GetAuthInfo',
-    method: 'post'    
+    method: 'post'
   })
 }
 
@@ -36,5 +36,11 @@ export function getUserInfo() {//获取首页登录信息
   })
 }
 
+export function GetLoginNameList() {//获取所有账户信息
+  return request({
+    url: 'User/GetLoginNameList',
+    method: 'post'
+  })
+}
 
 

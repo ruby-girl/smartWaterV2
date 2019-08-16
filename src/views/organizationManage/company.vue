@@ -30,7 +30,7 @@
       <el-dialog
         :title=title
         :visible.sync="dialogVisible"
-        width="22%">
+        width="400px">
         <div>
           <div class="cl-inlineItem">
             <label class="cl-label">公司：</label>
@@ -38,6 +38,7 @@
               placeholder="公司（长度20内）已存在提示红色"
               v-model="addName"
               maxlength="20"
+              style="width: 250px"
               size="small">
             </el-input>
           </div>

@@ -3,66 +3,63 @@
     <div>
       <el-form ref="form" :model="form" label-width="100px">
         <el-row :gutter="50">
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="人员编号:">
               <span>{{ form.EmpNo }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="人员名称:">
               <span>{{ form.EmpName }}</span>
             </el-form-item>
           </el-col>
-
-          <el-col v-for="(item,index) in form.blList" :key="index" :xs="24" :sm="24" :md="24" :lg="24" :xl="16">
-              <el-col :span="12">
-                <el-form-item label="部门:">
-                  <span>{{ item.SYS_DepartmentName }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="岗位:">
-                  <span>{{ item.OA_JobName }}</span>
-                </el-form-item>
-              </el-col>
-          </el-col>
-
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="性别:">
               <span>{{ form.Gender }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="出生日期:">
               <span>{{ form.Birthday }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="电话号码:">
               <span>{{ form.MobileNumber }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="身份证号:">
               <span>{{ form.IDNumber }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="入职时间:">
               <span> {{ form.EnrollingTime }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="岗位状态:">
               <span>{{ form.JobStatus }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="24">
+          <el-col v-for="(item,index) in form.blList" :key="index" :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+            <el-col :span="12">
+              <el-form-item label="部门:">
+                <span>{{ item.SYS_DepartmentName }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="岗位:">
+                <span>{{ item.OA_JobName }}</span>
+              </el-form-item>
+            </el-col>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item label="地址:">
               <span>{{ form.Address }}</span>
             </el-form-item>
           </el-col>
-
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item>
               <ul class="fileBox clearfix">
@@ -74,6 +71,16 @@
                   <i @click="handlePreview(item)">{{ item.name }}</i>
                 </li>
               </ul>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
+            <el-form-item label="操作人:">
+              <span>{{ form.CreateUser }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
+            <el-form-item label="操作时间:">
+              <span>{{ form.CreateTime }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -131,6 +138,8 @@ export default {
             SYS_User_Id: '',
           },
         ],
+        CreateUser:'',
+        CreateTime:''
       },
       file: [],
       curSrc: '',

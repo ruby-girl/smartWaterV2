@@ -6,7 +6,7 @@
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
-              <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择（单选）" size="small" @change="getPostList">
+              <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList">
                 <el-option
                   v-for="(item,index) in departArray"
                   :key="index"
@@ -19,7 +19,7 @@
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
-              <el-select v-model="queryData.OA_Job_Id" placeholder="请选择（单选）" size="small">
+              <el-select v-model="queryData.OA_Job_Id" placeholder="请选择" size="small">
                 <el-option
                   v-for="(item,index) in postArray"
                   :key="index"
@@ -31,7 +31,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
-              <label class="cl-label">模糊查询：</label>
+              <label class="cl-label">人员：</label>
               <el-input
                 v-model="queryData.EmpNo"
                 placeholder="人员名称/员工编号"
@@ -43,7 +43,7 @@
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位状态：</label>
-              <el-select v-model="queryData.JobStatus" placeholder="请选择（单选）" size="small">
+              <el-select v-model="queryData.JobStatus" placeholder="请选择" size="small">
                 <el-option label="在职" value="在职" />
               </el-select>
             </div>
@@ -69,21 +69,10 @@
           <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">性别：</label>
-              <el-select v-model="queryData.Gender" placeholder="请选择（单选）" size="small">
+              <el-select v-model="queryData.Gender" placeholder="请选择" size="small">
                 <el-option label="女" value="女" />
                 <el-option label="男" value="男" />
               </el-select>
-            </div>
-          </el-col>
-          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
-            <div class="cl-inlineItem">
-              <label class="cl-label">身份证号：</label>
-              <el-input
-                v-model="queryData.IDNumber"
-                placeholder="人员名称/员工编号"
-                maxlength="10"
-                size="small"
-              />
             </div>
           </el-col>
           <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
@@ -117,8 +106,19 @@
           </el-col>
           <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
             <div class="cl-inlineItem">
+              <label class="cl-label">身份证号：</label>
+              <el-input
+                v-model="queryData.IDNumber"
+                placeholder="请输入身份证号"
+                maxlength="10"
+                size="small"
+              />
+            </div>
+          </el-col>
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+            <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
-              <el-select v-model="queryData.createUserId" placeholder="请选择（单选）" size="small">
+              <el-select v-model="queryData.createUserId" placeholder="请选择" size="small">
                 <el-option
                   v-for="(item,index) in operationArray"
                   :key="index"
@@ -146,7 +146,30 @@
               />
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4">
+
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+            <div class="cl-inlineItem">
+              <label class="cl-label">账号状态：</label>
+              <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small">
+                <el-option label="全部" value="全部"/>
+                <el-option label="已分配" value="已分配"/>
+                <el-option label="未分配" value="未分配"/>
+              </el-select>
+            </div>
+          </el-col>
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+            <div class="cl-inlineItem">
+              <label class="cl-label">邮箱：</label>
+              <el-input
+                v-model="queryData.EmailAddress"
+                placeholder="长度0-50"
+                maxlength="10"
+                size="small"
+              />
+            </div>
+          </el-col>
+
+          <el-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" style="margin-bottom: 20px;">
             <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
             <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
             <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
@@ -161,17 +184,20 @@
       <customTable ref="myChild" />
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border :row-class-name="tableRowClassName">
         <el-table-column
-          type="selection"
-          width="55"
+          type="index"
+          label="序号"
+          width="80"
           align="center"
+          fixed="left"
         />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
             :key="index"
-            :min-width="item.width"
-            :prop="item.prop"
-            :align="item.position"
-            :label="item.text"
+            min-width="200px"
+            :prop="item.ColProp"
+            :align="item.Position"
+            :label="item.ColDesc"
+            :fixed="item.IsFreeze?item.Freeze:''"
           />
         </template>
         <el-table-column label="操作" width="200px" align="left">
@@ -242,7 +268,10 @@ export default {
         BirthdayEnd: '',
         createUserId: '',
         createStartTime: '',
-        createEndTime: ''
+        createEndTime: '',
+        EmailAddress: '',
+        AccountStatus:'',
+        tableId: '0000003'
       },
       operationTime: [],
       EntryTime: [],
@@ -252,18 +281,7 @@ export default {
       operationArray: [],
       total: 0,
       tableData: [],
-      checkAllData: [// 所有列可选项
-        { checked: true, text: '人员编号', prop: 'EmpNo', position: 'center', width: '200px' },
-        { checked: true, text: '人员名称', prop: 'EmpName', position: 'center', width: '200px' },
-        { checked: false, text: '入职时间', prop: 'EnrollingTime', position: 'center', width: '200px' },
-        { checked: false, text: '岗位状态', prop: 'JobStatus', position: 'center', width: '200px' },
-        { checked: false, text: '性别', prop: 'Gender', position: 'center', width: '200px' },
-        { checked: false, text: '出生日期', prop: 'Birthday', position: 'center', width: '200px' },
-        { checked: false, text: '电话号码', prop: 'MobileNumber', position: 'center', width: '200px' },
-        { checked: false, text: '身份证号', prop: 'IDNumber', position: 'center', width: '200px' },
-        { checked: false, text: '操作人', prop: 'CreateUser', position: 'center', width: '200px' },
-        { checked: false, text: '操作时间', prop: 'CreateTime', position: 'center', width: '200px' },
-      ],
+      checkAllData: [],
       checksData: [],
       customHeight: ''
     }
@@ -273,7 +291,7 @@ export default {
       const arrayHead = []
       const data = this.checksData
       for (let i = 0; i < data.length; i++) { // 过滤选中列
-        if (data[i].checked) {
+        if (data[i].IsCheck) {
           arrayHead.push(data[i])
         }
       }
@@ -291,18 +309,6 @@ export default {
         this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
       })
     }
-  },
-  mounted() {
-    this.$refs.myChild.checkData = this.checkAllData//先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-    this.getComboBoxList()
-    this.GetRoleNameList()
-    this.searchFun()
-    let self = this
-    Bus.$on('msg', () => {
-      self.searchFun()
-    })
   },
   methods: {
     /**
@@ -390,7 +396,9 @@ export default {
             BirthdayEnd: '',
             createUserId: '',
             createStartTime: '',
-            createEndTime: ''
+            createEndTime: '',
+            EmailAddress: '',
+            AccountStatus:''
         }
       }else {
         jp = this.queryData
@@ -470,6 +478,18 @@ export default {
         return 'warning-row';
       }
     }
+  },
+  mounted() {
+    this.$refs.myChild.GetTable(this.queryData.tableId);
+    this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+    this.getComboBoxList()
+    this.GetRoleNameList()
+    this.searchFun()
+    let self = this
+    Bus.$on('msg', () => {
+      self.searchFun()
+    })
   }
 }
 </script>

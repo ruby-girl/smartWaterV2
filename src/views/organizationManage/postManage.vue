@@ -3,15 +3,15 @@
     <div>
       <div id="conditionBox">
         <el-row>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-col :xs="24" :sm="6" :md="6" :lg="8" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
-              <el-select v-model="jp.SYS_Department_Id" placeholder="请选择（单选）" size="small">
+              <el-select v-model="jp.SYS_Department_Id" placeholder="请选择" size="small">
                 <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col :xs="24" :sm="6" :md="6" :lg="8" :xl="6">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
               <el-input
@@ -22,7 +22,33 @@
               />
             </div>
           </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-col :xs="24" :sm="6" :md="6" :lg="8" :xl="4">
+            <div class="cl-inlineItem">
+              <label class="cl-label">操作人：</label>
+              <el-select v-model="jp.createUserId" placeholder="请选择" size="small">
+                <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :xs="24" :sm="18" :md="14" :lg="12" :xl="12">
+            <div class="cl-inlineItem" style="width: 100%">
+              <label class="cl-label">操作时间：</label>
+              <el-date-picker
+                v-model="createStartTimes"
+                style="width: 83%"
+                size="small"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="getTime1"
+              />
+            </div>
+          </el-col>
+          <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
             <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
           </el-col>
         </el-row>
@@ -37,7 +63,7 @@
         <el-table-column
           type="index"
           label="序号"
-          width="55"
+          width="80"
           align="center"
           fixed="left"
         />
@@ -45,10 +71,10 @@
           <el-table-column
             :key="index"
             min-width="200"
-            :prop="item.prop"
-            :align="item.position"
-            :label="item.text"
-            :fixed="item.Freeze"
+            :prop="item.ColProp"
+            :align="item.Position"
+            :label="item.ColDesc"
+            :fixed="item.IsFreeze?item.Freeze:''"
           />
         </template>
         <el-table-column label="操作" width="200px" align="center" fixed="right">
@@ -71,20 +97,21 @@
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
-      width="22%"
+      width="400px"
     >
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
         <el-form-item label="部门:" prop="SYS_Department_Id">
-          <el-select v-model="ruleForm.SYS_Department_Id" placeholder="请选择（单选）" size="small">
+          <el-select v-model="ruleForm.SYS_Department_Id" placeholder="请选择（单选）" size="small"  style="width: 250px">
             <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
           </el-select>
         </el-form-item>
         <el-form-item label="岗位:" prop="JobName">
           <el-input
             v-model="ruleForm.JobName"
-            placeholder="判断是否存在 已存在提示红色"
+            placeholder="请输入岗位信息"
             maxlength="20"
             size="small"
+            style="width: 250px"
           />
         </el-form-item>
         <p class="footBox dialogFooter">
@@ -120,12 +147,14 @@ import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
 import { GetListPost, AddPost, UpDatePost, DeletePost, ComboBoxList, JobGetList_Execl } from "@/api/organize"
+import { GetLoginNameList } from "@/api/user"
 let ID;
 export default {
   name: 'PostManage',
   components: { customTable, Pagination },
   data() {
     return {
+      operatorArray: [],
       ruleForm: {
         SYS_Department_Id: '',
         JobName: ''
@@ -142,6 +171,7 @@ export default {
       tableHeight: '',
       warnVisible: false,
       dialogVisible: false,
+      createStartTimes:[],
       title: '',
       total: 0,
       jp: {
@@ -149,6 +179,10 @@ export default {
         limit: 10,
         SYS_Department_Id: '',
         JobName:'',
+        createUserId:'',
+        createStartTime:'',
+        createEndTime:'',
+        tableId: '0000002'
       },
       tableData: [],
       checkAllData: [],//表头信息
@@ -332,10 +366,30 @@ export default {
           });
         }
       })
-    }
+    },
+    /**
+     * 获取操作人信息
+     * */
+    GetLoginNameList() {
+      GetLoginNameList().then(res => {
+        if (res.code ==0 ) {
+          this.operatorArray = res.data;
+        } else {
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+    },
+    getTime1(data) {
+      this.jp.createStartTime = data[0]
+      this.jp.createEndTime = data[1]
+    },
   },
   mounted() {
-    this.$refs.myChild.GetTable('0000001');
+    this.GetLoginNameList()
+    this.$refs.myChild.GetTable(this.jp.tableId);
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
     this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList();

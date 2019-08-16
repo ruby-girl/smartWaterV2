@@ -94,7 +94,6 @@ export default {
 
 <style lang="scss" scoped>
 .panel-group {
-  margin-bottom: 16px;
   .card-panel {
     height: 70px;
     cursor: pointer;
@@ -106,6 +105,7 @@ export default {
     box-shadow: 0px 0px 5px #00B3A1;
     border-color: rgba(0, 0, 0, .05);
     border-radius: 3px;
+    margin-bottom: 16px;
 
     .icon-people {
       color: #40c9c6;
