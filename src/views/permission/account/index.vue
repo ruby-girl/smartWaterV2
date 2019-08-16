@@ -74,7 +74,7 @@ export default {
   components: { SelectHead, Pagination, EditDialog, customTable, AddDialog,ResetDialog},
   data() {
     return {
-      total: 1,
+      total: 0,
       tableKey: 0,
       tableHeight: 0,
       temp: {

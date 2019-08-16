@@ -21,7 +21,7 @@
           name="username"
           type="text"
           tabindex="1"
-          autocomplete="off"
+          autocomplete="on"
         />
       </el-form-item>
 
@@ -251,7 +251,7 @@ export default {
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 
-$bg: #283443;
+$bg: #fff;
 $light_gray: #fff;
 $cursor: #283443;
 
