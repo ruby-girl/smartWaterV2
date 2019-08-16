@@ -132,22 +132,7 @@ export default {
           },
         ],
       },
-      file: [
-        {
-          name: 'city.jpeg',
-          type: 0,
-          url: 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg' },
-        {
-          name: 'sds1.xls',
-          type: 2,
-          url: 'https://view.officeapps.live.com/op/view.aspx?src=http://storage.xuetangx.com/public_assets/xuetangx/PDF/1.xls'
-        },
-        {
-          name: 'PlayerAPI_v1.0.6.pdf',
-          type: 3,
-          url: 'http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf'
-        }
-      ],
+      file: [],
       curSrc: '',
       ifImg: false,
       dialogVisible: false,
@@ -181,6 +166,28 @@ export default {
       GetBlObjById({id:this.$route.params.id}).then(res => {
         if(res.code==0){
           this.form = res.data
+          let fileData = res.data.saList
+          let obj = {}
+          for(let i=0;i<fileData.length;i++){
+            let thisType;
+            const Suffix = fileData[i].FileExtName.split('.')[1]
+            if (Suffix === 'docx' || Suffix === 'doc') {
+              thisType = 1
+            } else if (Suffix === 'xlsx' || Suffix === 'xls') {
+              thisType = 2
+            } else if (Suffix === 'pdf') {
+              thisType = 3
+            }else {
+              thisType = 0
+            }
+            obj = {
+              id: fileData[i].Id,
+              name:fileData[i].FileName,
+              type: thisType,
+              url: this.baseUrl + (fileData[i].RelativePath).replace("~",""),
+            }
+            this.file.push(obj)
+          }
         }else {
           this.$message({
             message: res.message,

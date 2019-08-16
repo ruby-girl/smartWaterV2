@@ -62,7 +62,6 @@
 <script>
   import { getToken } from '@/utils/auth'
   import { FileDelete } from "@/api/upload"
-  let baseUrl = 'http://192.168.2.216:10002'
 
  export default {
   name: 'Upload',
@@ -84,7 +83,7 @@
   },
   watch: {
     certificates() {
-      this.upUrl = baseUrl + '/api/Files/Upload?FileType=' + this.certificates
+      this.upUrl = this.baseUrl + '/api/Files/Upload?FileType=' + this.certificates
     }
   },
   mounted() {
@@ -93,17 +92,17 @@
     window.onresize = function temp() {
       this.clientHeight = document.documentElement.clientHeight
     }
-    this.upUrl = baseUrl + '/api/Files/Upload?FileType=' + this.certificates
+    this.upUrl = this.baseUrl + '/api/Files/Upload?FileType=' + this.certificates
+
   },
   methods: {
-    handleRemove(file) { // 删除文件
+    handleRemove(id) { // 删除文件
       for (let i = 0; i < this.fileList.length; i++) {
-        if (this.fileList[i].uid === file.uid) {
+        if (this.fileList[i].id === id) {
           this.fileList.splice(i, 1)
         }
       }
-      return
-      FileDelete({id:''}).then(res => {
+      FileDelete({id:id}).then(res => {
         if(res.code==0){
           this.$message({
             message: res.message,
@@ -167,7 +166,7 @@
       }
       file.name = data.FileName
       file.id = data.Id
-      file.url = baseUrl + (data.RelativePath).replace("~","")
+      file.url = this.baseUrl + (data.RelativePath).replace("~","")
       this.fileList.push(file)
       this.$emit('getFileFun', this.fileList)
     },
@@ -204,7 +203,7 @@
           id: data[i].Id,
           name:data[i].FileName,
           type: thisType,
-          url:baseUrl + (data[i].RelativePath).replace("~",""),
+          url:this.baseUrl + (data[i].RelativePath).replace("~",""),
         }
         this.fileList.push(obj)
       }

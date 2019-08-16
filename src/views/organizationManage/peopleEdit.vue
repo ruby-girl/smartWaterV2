@@ -34,7 +34,7 @@
                 <span style="position: absolute;color: #F56C6C;left: 15px;top:10px;">*</span>
                 <span v-show="item.OA_Job_Id==''&&isFlag" style="position: absolute;color: #F56C6C;left: 70px;top:40px;font-size: 12px;">不能为空</span>
                 <el-form-item label="岗位:" label-width="70px" :class="item.OA_Job_Id==''&&isFlag?'on':''">
-                  <el-select v-model="item.OA_Job_Id" placeholder="请选择" size="small">
+                  <el-select v-model="item.OA_Job_Id" placeholder="请选择" size="small" @change="recurFun(index)">
                     <el-option
                       v-for="(items,indexs) in item.post"
                       :key="indexs"
@@ -340,6 +340,27 @@
             });
           }
         })
+      },
+      /**
+       * 添加岗位部门信息去重
+       * */
+      recurFun(index) {
+        let arr = []
+        for(let i=0;i<this.sojList.length;i++){
+          arr.push(this.sojList[i].OA_Job_Id)
+        }
+        var nary = arr.sort();
+        for(var i = 0; i < nary.length - 1; i++)
+        {
+          if (nary[i] == nary[i+1])
+          {
+            this.$message({
+              message: '个人所属岗位不能重复',
+              type: 'warning'
+            });
+            this.sojList[index].OA_Job_Id = ''
+          }
+        }
       }
     },
     mounted() {

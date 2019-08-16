@@ -19,7 +19,7 @@
               <el-col :span="12" style="position: relative">
                 <span style="position: absolute;color: #F56C6C;left: 45px;top:10px;">*</span>
                 <span v-show="item.SYS_Department_Id==''&&isFlag" style="position: absolute;color: #F56C6C;left: 100px;top:40px;font-size: 12px;">不能为空</span>
-                <el-form-item label="部门:" label-width="100px" :class="item.SYS_Department_Id==''&&isFlag?'on':''">
+                <el-form-item label="部门:" label-width="100px" :class="item.SYS_Department_Id==''&&isFlag?'on':''" >
                   <el-select v-model="item.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList(item.SYS_Department_Id,index)">
                     <el-option
                       v-for="(items,indexs) in item.depart"
@@ -33,8 +33,8 @@
               <el-col :span="10" style="position: relative">
                 <span style="position: absolute;color: #F56C6C;left: 15px;top:10px;">*</span>
                 <span v-show="item.OA_Job_Id==''&&isFlag" style="position: absolute;color: #F56C6C;left: 70px;top:40px;font-size: 12px;">不能为空</span>
-                <el-form-item label="岗位:" label-width="70px" :class="item.OA_Job_Id==''&&isFlag?'on':''">
-                  <el-select v-model="item.OA_Job_Id" placeholder="请选择" size="small">
+                <el-form-item label="岗位:" label-width="70px" :class="item.OA_Job_Id==''&&isFlag?'on':''" >
+                  <el-select v-model="item.OA_Job_Id" placeholder="请选择" size="small" @change="recurFun(index)" >
                     <el-option
                       v-for="(items,indexs) in item.post"
                       :key="indexs"
@@ -57,7 +57,7 @@
           </el-col>
 
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="性别:">
+            <el-form-item label="性别:" prop="Gender">
               <el-select v-model="jp.Gender" placeholder="请选择" size="small">
                 <el-option label="女" value="女" />
                 <el-option label="男" value="男" />
@@ -65,7 +65,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="出生日期:">
+            <el-form-item label="出生日期:" prop="Birthday">
               <el-date-picker v-model="jp.Birthday" type="date" placeholder="年月日" size="small" />
             </el-form-item>
           </el-col>
@@ -80,23 +80,23 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="入职时间:">
+            <el-form-item label="入职时间:" prop="EnrollingTime">
               <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
-            <el-form-item label="岗位状态:">
+            <el-form-item label="岗位状态:" prop="JobStatus">
               <el-input v-model="jp.JobStatus" size="small" disabled />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-            <el-form-item label="地址:" prop="adress">
+            <el-form-item label="地址:" prop="Address">
               <el-input v-model="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item>
-              <uploadImg @getFileFun="getFileFun" />
+              <uploadImg @getFileFun="getFileFun" ref="uploadCom"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -225,6 +225,7 @@
         for(let j =0;j<this.upload.file.length;j++){
           this.jp.Idarr.push(this.upload.file[j].id)
         }
+
         this.$refs[formName].validate((valid) => {
           if (valid) {
               peopleAdd(this.jp).then(res => {
@@ -233,7 +234,21 @@
                     message: res.message,
                     type: 'success'
                   });
-                  Bus.$emit('msg', this.$route)
+                  if(this.goOn){
+                    this.sojList = [{
+                      SYS_Department_Id: '',
+                      OA_Job_Id: '',
+                      post: [],
+                      depart: []
+                    }]
+                    this.getComboBoxList()
+                    this.isFlag = false
+                    this.$refs.uploadCom.certificates = '身份证'
+                    this.$refs.uploadCom.fileList = []
+                    this.$refs[formName].resetFields()
+                  }else{
+                    Bus.$emit('msg', this.$route)
+                  }
                 }else {
                   this.$message({
                     message: res.message,
@@ -297,6 +312,27 @@
           }
         })
       },
+      /**
+       * 添加岗位部门信息去重
+       * */
+      recurFun(index) {
+        let arr = []
+        for(let i=0;i<this.sojList.length;i++){
+          arr.push(this.sojList[i].OA_Job_Id)
+        }
+        var nary = arr.sort();
+        for(var i = 0; i < nary.length - 1; i++)
+        {
+          if (nary[i] == nary[i+1])
+          {
+            this.$message({
+              message: '个人所属岗位不能重复',
+              type: 'warning'
+            });
+            this.sojList[index].OA_Job_Id = ''
+          }
+        }
+      }
     }
   }
 </script>
