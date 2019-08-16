@@ -209,8 +209,6 @@ export default {
       //后端请求前端的连接
       chat.client.message = function (code) {
 
-        alert(code)
-
         switch (code) {
           case '100'://Token失效
             _this.$message({
@@ -238,7 +236,6 @@ export default {
 
       //启动链接
       $.connection.hub.start({jsonp:true}).done(function () {
-        alert('coming')
         //请求后端的连接
         chat.server.login(token); //注册signalr连接 ,Token 登录成功后后端返回的Token
       });

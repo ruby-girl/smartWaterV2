@@ -55,6 +55,9 @@
 }
 .cl-container2 {
   .cl-inlineItem .cl-label{width: 100px;}
+  .el-table .warning-row {
+    background: #FFCCC7;color: #FF3D3D;
+  }
 }
 .cl-container3 {
   >div:first-child {padding: 16px 130px 16px 50px}
