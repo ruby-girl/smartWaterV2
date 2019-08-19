@@ -115,7 +115,7 @@
   import Bus from '@/utils/bus.js'
 
   export default {
-    name: 'PeopleEdit',
+    name: 'peopleEdit',
     components: { uploadImg },
     data() {
       return {
@@ -271,7 +271,6 @@
         ComboBoxList().then(res => {
           if(res.code==0){
             for(let i = 0;i< this.sojList.length;i++) {
-              res.data.shift()
               this.sojList[i].depart = res.data
             }
           } else {
@@ -291,7 +290,6 @@
           if(res.code==0){
             for(let i = 0;i< this.sojList.length;i++) {
               if(i==index){
-                res.data.shift()
                 this.sojList[i].post = res.data
                 if(type!=0){//编辑部门时候初始化岗位
                   this.sojList[i].OA_Job_Id = ''

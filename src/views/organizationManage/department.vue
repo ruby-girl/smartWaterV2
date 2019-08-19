@@ -8,7 +8,7 @@
               <label class="cl-label">部门：</label>
               <el-input
                 v-model="dp.DeptName"
-                placeholder="部门（长度10以内）"
+                placeholder="请输入部门名称"
                 maxlength="10"
                 size="small"
               />
@@ -18,6 +18,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
               <el-select v-model="dp.createUserId" placeholder="请选择" size="small">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </div>
@@ -59,8 +60,9 @@
           align="center"
           fixed="left"
         />
-        <template v-for="(item ,index) in tableHead" v-if="item.isFreeze">
+        <template v-for="(item ,index) in tableHead" >
           <el-table-column
+            v-if="item.IsFreeze"
             :key="index"
             min-width="200px"
             :prop="item.ColProp"
@@ -68,9 +70,8 @@
             :label="item.ColDesc"
             :fixed= "item.Freeze"
           />
-        </template>
-        <template v-for="(item ,index) in tableHead" v-else>
           <el-table-column
+            v-else
             :key="index"
             min-width="200px"
             :prop="item.ColProp"
@@ -93,7 +94,6 @@
         @pagination="searchFun"
       />
     </div>
-
     <!--编辑或新增窗口 s-->
     <el-dialog
       :title="title"
@@ -145,7 +145,7 @@
   let ID = '',editObj = {};
 
   export default {
-    name: 'Department',
+    name: 'department',
     components: { customTable, Pagination },
     data() {
       return {
@@ -334,8 +334,13 @@
         this.$refs[formName].resetFields();
       },
       getTime1(data) {
-        this.dp.createStartTime = data[0]
-        this.dp.createEndTime = data[1]
+        if(data !=null){
+          this.dp.createStartTime = data[0]
+          this.dp.createEndTime = data[1]
+        }else{
+          this.dp.createStartTime = ''
+          this.dp.createEndTime = ''
+        }
       },
       /**
        * 获取操作人信息

@@ -43,7 +43,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="邮箱:">
-              <el-input v-model="jp.EmailAddress" size="small" maxlength="10" placeholder="长度0-50" />
+              <el-input v-model="jp.EmailAddress" size="small" maxlength="50" placeholder="长度0-50" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
@@ -120,7 +120,7 @@
   import Bus from '@/utils/bus.js'
 
   export default {
-    name: 'PeopleAdd',
+    name: 'peopleAdd',
     components: { uploadImg },
     data() {
       return {
@@ -286,7 +286,6 @@
         ComboBoxList().then(res => {
           if(res.code==0){
             for(let i = 0;i< this.sojList.length;i++) {
-              res.data.shift()
               this.sojList[i].depart = res.data
             }
           } else {
@@ -306,7 +305,6 @@
           if(res.code==0){
             for(let i = 0;i< this.sojList.length;i++) {
               if(i==index){
-                res.data.shift()
                 this.sojList[i].post = res.data
               }
             }

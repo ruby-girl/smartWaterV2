@@ -7,6 +7,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-select v-model="jp.SYS_Department_Id" placeholder="请选择" size="small">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </div>
@@ -16,7 +17,7 @@
               <label class="cl-label">岗位：</label>
               <el-input
                 v-model="jp.JobName"
-                placeholder="岗位名称（长度10以内）"
+                placeholder="请输入岗位名称"
                 maxlength="10"
                 size="small"
               />
@@ -26,6 +27,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
               <el-select v-model="jp.createUserId" placeholder="请选择" size="small">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </div>
@@ -67,8 +69,9 @@
           align="center"
           fixed="left"
         />
-        <template v-for="(item ,index) in tableHead" v-if="item.isFreeze">
+        <template v-for="(item ,index) in tableHead">
           <el-table-column
+            v-if="item.IsFreeze"
             :key="index"
             min-width="200px"
             :prop="item.ColProp"
@@ -76,9 +79,8 @@
             :label="item.ColDesc"
             :fixed= "item.Freeze"
           />
-        </template>
-        <template v-for="(item ,index) in tableHead" v-else>
           <el-table-column
+            v-else
             :key="index"
             min-width="200px"
             :prop="item.ColProp"
@@ -159,7 +161,7 @@ import { GetListPost, AddPost, UpDatePost, DeletePost, ComboBoxList, JobGetList_
 import { GetLoginNameList } from "@/api/user"
 let ID;
 export default {
-  name: 'PostManage',
+  name: 'postManage',
   components: { customTable, Pagination },
   data() {
     return {
@@ -392,8 +394,13 @@ export default {
       })
     },
     getTime1(data) {
-      this.jp.createStartTime = data[0]
-      this.jp.createEndTime = data[1]
+      if(data !=null) {
+        this.jp.createStartTime = data[0]
+        this.jp.createEndTime = data[1]
+      }else {
+        this.jp.createStartTime = ''
+        this.jp.createEndTime = ''
+      }
     },
   },
   mounted() {

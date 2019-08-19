@@ -7,6 +7,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option
                   v-for="(item,index) in departArray"
                   :key="index"
@@ -20,6 +21,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
               <el-select v-model="queryData.OA_Job_Id" placeholder="请选择" size="small">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option
                   v-for="(item,index) in postArray"
                   :key="index"
@@ -190,8 +192,9 @@
           align="center"
           fixed="left"
         />
-        <template v-for="(item ,index) in tableHead" v-if="item.isFreeze">
+        <template v-for="(item ,index) in tableHead">
           <el-table-column
+            v-if="item.IsFreeze"
             :key="index"
             min-width="200px"
             :prop="item.ColProp"
@@ -199,9 +202,8 @@
             :label="item.ColDesc"
             :fixed= "item.Freeze"
           />
-        </template>
-        <template v-for="(item ,index) in tableHead" v-else>
           <el-table-column
+            v-else
             :key="index"
             min-width="200px"
             :prop="item.ColProp"
@@ -254,7 +256,7 @@ let deleteId;
 import Bus from '@/utils/bus.js'
 
 export default {
-  name: 'PeopleManage',
+  name: 'peopleManage',
   components: { customTable, Pagination },
   data() {
     return {
@@ -470,16 +472,31 @@ export default {
       })
     },
     getTime1(data) {
-      this.queryData.EnrollingTime = data[0]
-      this.queryData.EnrollingTimeEnd = data[1]
+      if(data !=null) {
+        this.queryData.EnrollingTime = data[0]
+        this.queryData.EnrollingTimeEnd = data[1]
+      }else {
+        this.queryData.EnrollingTime = ''
+        this.queryData.EnrollingTimeEnd = ''
+      }
     },
     getTime2(data) {
-      this.queryData.Birthday = data[0]
-      this.queryData.BirthdayEnd = data[1]
+      if(data !=null) {
+        this.queryData.Birthday = data[0]
+        this.queryData.BirthdayEnd = data[1]
+      }else {
+        this.queryData.Birthday = ''
+        this.queryData.BirthdayEnd = ''
+      }
     },
     getTime3(data) {
-      this.queryData.createStartTime = data[0]
-      this.queryData.createEndTime = data[1]
+      if(data !=null) {
+        this.queryData.createStartTime = data[0]
+        this.queryData.createEndTime = data[1]
+      }else {
+        this.queryData.createStartTime = ''
+        this.queryData.createEndTime = ''
+      }
     },
     tableRowClassName({row}) {
       if (row.SYS_User_Id.length > 0)

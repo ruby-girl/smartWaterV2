@@ -105,7 +105,7 @@
 import { GetBlObjById } from "@/api/organize"
 import '../../styles/organization.scss'
 export default {
-  name: 'PeopleDetail',
+  name: 'peopleDetail',
   data() {
     return {
       form: {

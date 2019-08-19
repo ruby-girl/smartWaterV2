@@ -15,3 +15,13 @@ export function AddTableStyle(data) {//设置表格样式
     data: data
   })
 }
+
+export function InitTableStyle(data) {//默认样式
+  return request({
+    url: '/TableStyle/InitTableStyle',
+    method: 'post',
+    data: data
+  })
+}
+
+

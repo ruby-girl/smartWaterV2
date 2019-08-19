@@ -47,7 +47,7 @@ export function GetList_Execl(data) {
   return request({
     url: '/Department/GetList_Execl',
     method: 'post',
-    params: data
+    data: data
   })
 }
 

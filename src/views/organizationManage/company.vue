@@ -73,7 +73,7 @@ import '../../styles/organization.scss'
 import myTree from '../../components/Tree/index'
 
 export default {
-  name: 'Company',
+  name: 'company',
   components: { myTree },
   data() {
     return {
