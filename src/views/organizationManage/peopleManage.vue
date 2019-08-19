@@ -190,17 +190,26 @@
           align="center"
           fixed="left"
         />
-        <template v-for="(item ,index) in tableHead">
+        <template v-for="(item ,index) in tableHead" v-if="item.isFreeze">
           <el-table-column
             :key="index"
             min-width="200px"
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
-            :fixed="item.IsFreeze?item.Freeze:''"
+            :fixed= "item.Freeze"
           />
         </template>
-        <el-table-column label="操作" width="200px" align="left">
+        <template v-for="(item ,index) in tableHead" v-else>
+          <el-table-column
+            :key="index"
+            min-width="200px"
+            :prop="item.ColProp"
+            :align="item.Position"
+            :label="item.ColDesc"
+          />
+        </template>
+        <el-table-column label="操作" width="200px" align="left" fixed="right">
           <template slot-scope="scope">
             <a class="operation1" @click="handleEdit(scope.row,1)">编辑</a>
             <a class="operation1" @click="handleEdit(scope.row,2)">详情</a>
