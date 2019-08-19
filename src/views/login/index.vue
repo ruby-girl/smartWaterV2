@@ -267,13 +267,14 @@ $dark_gray: #889aa4;
 $light_gray: #eee;
 
 .login-container {
-  height: 460px;
+  height: 410px;
   background-color: $bg;
   overflow: hidden;
   background-image: url("../../assets/imgs/logo_bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   .login-form {
     position: relative;
-    width: 520px;
     max-width: 100%;
     padding: 27px 35px 47px 35px;
     margin: 0 auto;
