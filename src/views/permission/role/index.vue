@@ -27,15 +27,15 @@
         :cell-style="{'padding':'7px 0'}"
         @sort-change="sortChanges"
       >
-        <el-table-column type="index" />
+        <el-table-column type="index" label="序号" width="80" align="center"/>
         <template v-for="(item ,index) in tableHead">
           <el-table-column
             :key="index"
             min-width="100px"
-            :prop="item.prop"
-            :align="item.position"
+            :prop="item.ColProp"
+            :align="item.Position"
             sortable='custom'
-            :label="item.text"
+            :label="item.ColDesc"
           />
         </template>
         <el-table-column label="操作" align="center" class-name="small-padding">
@@ -96,24 +96,19 @@ export default {
         empNo: "", // 人员编号
         editUserId: "-1", // 操作人
         editStartTime: "", // 操作时间起
-        editEndTime: "" // 操作时间止
+        editEndTime: "", // 操作时间止
+        tableId: '0000004'
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableData: [],
-      checksData: [],
-      checkAllData: [
-        // 所有列可选项
-        { checked: true, text: "角色", prop: "RoleName", position: "left" },
-        { checked: true, text: "操作人", prop: "CreateUser", position: "left" },
-        { checked: true, text: "操作时间", prop: "EditTime", position: "left" }
-      ]
+      checksData: []
     };
   },
   computed: {
     tableHead: function() {
       let arrayHead = this.checksData.filter(item => {
-        return item.checked;
+        return item.IsCheck;
       });
       return arrayHead;
     }
@@ -127,7 +122,7 @@ export default {
       window.onresize = () => {
         that.tableHeight = document.body.clientHeight - formHeight - 220;
       };
-      this.$refs.myChild.checkData = this.checkAllData; // 先获取所有自定义字段赋值
+      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
      
     });
@@ -141,6 +136,10 @@ export default {
     },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
+      if(this.$refs.myChild.isCustom)
+        this.tableHeight=this.tableHeight-60
+      else
+        this.tableHeight=this.tableHeight+60
     },
     getList() {
       getRolesList(this.listQuery).then(res => {
@@ -225,9 +224,4 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-.pipeline-select-padding {
-  padding: 20px 20px 10px 20px;
-}
-</style>
 

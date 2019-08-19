@@ -23,9 +23,7 @@
           tabindex="1"
           autocomplete="on"
         />
-      </el-form-item>
-
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      </el-form-item> 
         <el-form-item prop="password">
           <span class="svg-container iconfont iconmima" />
           <el-input
@@ -37,16 +35,10 @@
             name="password"
             tabindex="2"
             autocomplete="off"
-            @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
           />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
         </el-form-item>
-      </el-tooltip>
-
       <el-button
         :loading="loading"
         type="primary"
@@ -99,7 +91,6 @@ export default {
         ]
       },
       passwordType: "password",
-      capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
@@ -132,31 +123,6 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    checkCapslock({ shiftKey, key } = {}) {
-      if (key && key.length === 1) {
-        if (
-          (shiftKey && (key >= "a" && key <= "z")) ||
-          (!shiftKey && (key >= "A" && key <= "Z"))
-        ) {
-          this.capsTooltip = true;
-        } else {
-          this.capsTooltip = false;
-        }
-      }
-      if (key === "CapsLock" && this.capsTooltip === true) {
-        this.capsTooltip = false;
-      }
-    },
-    showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
-      } else {
-        this.passwordType = "password";
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
-    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
