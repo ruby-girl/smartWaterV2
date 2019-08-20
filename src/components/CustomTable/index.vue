@@ -69,13 +69,13 @@ export default {
               }
             }
           }*/
-          this.checkData = []
-          this.GetTable(this.curID)
           this.$message({
             message: '已恢复默认设置',
             type: 'success'
           });
           sessionStorage.removeItem(this.curID)
+          this.checkData = []
+          this.GetTable(this.curID)
         } else {
           this.$message({
             message: res.message,
