@@ -27,7 +27,7 @@
         <template v-for="(item ,index) in tableHead">
           <el-table-column
             :key="index"
-            min-width="100px"
+            :min-width="item.ColProp=='EditTime'?'160px':'110px'"
             :prop="item.ColProp"
             :align="item.Position"
             sortable='custom'
@@ -139,9 +139,9 @@ export default {
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
       if(this.$refs.myChild.isCustom)
-        this.tableHeight=this.tableHeight-60
+        this.tableHeight=this.tableHeight-80
       else
-        this.tableHeight=this.tableHeight+60
+        this.tableHeight=this.tableHeight+80
     },
     getList() {
      getAccountList(this.listQuery).then((res)=>{

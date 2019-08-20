@@ -137,9 +137,9 @@ export default {
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       if(this.$refs.myChild.isCustom)
-        this.tableHeight=this.tableHeight-60
+        this.tableHeight=this.tableHeight-80
       else
-        this.tableHeight=this.tableHeight+60
+        this.tableHeight=this.tableHeight+80
     },
     getList() {
       getRolesList(this.listQuery).then(res => {
