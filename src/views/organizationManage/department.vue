@@ -270,7 +270,6 @@
       searchFun() {
         GetList(this.dp).then(res => {
           if (res.code ==0 ) {
-            console.log(res.data)
             this.total = res.count;
             this.tableData = res.data;
           } else {

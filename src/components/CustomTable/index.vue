@@ -42,6 +42,7 @@ export default {
             message: res.message,
             type: 'success'
           });
+          sessionStorage.removeItem(this.curID)
         } else {
           this.$message({
             message: res.message,
@@ -60,18 +61,21 @@ export default {
       }
       InitTableStyle(tsp).then(res => {
         if(res.code==0){
-          let data = res.data
+         /* let data = res.data
           for(let i = 0;i <data.length; i++){
             for(let j=0;j<this.checkData.length;j++){
               if(data[i].Id==this.checkData[j].Id&&data[i].IsShow){
                  this.checkData[j].IsCheck = true
               }
             }
-          }
+          }*/
+          this.checkData = []
+          this.GetTable(this.curID)
           this.$message({
             message: '已恢复默认设置',
             type: 'success'
           });
+          sessionStorage.removeItem(this.curID)
         } else {
           this.$message({
             message: res.message,
@@ -85,19 +89,27 @@ export default {
      * */
     GetTable(id) {
       this.curID = id;
-      GetTable({Id:id}).then(res => {
-        if(res.code==0){
-          let data = res.data
-          for(let i = 0;i <data.length; i++){
-            this.checkData.push(data[i])
-          }
-        } else {
-          this.$message({
-            message: res.message,
-            type: 'warning'
-          });
+      let curData = JSON.parse(sessionStorage.getItem(id))
+      if(curData!=null){//先从缓存取
+        for(let i = 0;i <curData.length; i++){
+          this.checkData.push(curData[i])
         }
-      })
+      }else {
+        GetTable({Id:id}).then(res => {
+          if(res.code==0){
+            let data = res.data
+            sessionStorage.setItem(id,JSON.stringify(data))
+            for(let i = 0;i <data.length; i++){
+              this.checkData.push(data[i])
+            }
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+      }
     }
   },
   mounted() {
