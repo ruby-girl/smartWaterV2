@@ -21,7 +21,6 @@
         :data="tableData"
         border
         :height="tableHeight"
-        :row-class-name="tableRowClassName"
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
@@ -44,7 +43,7 @@
               <div class="main-color" @click="handleUpdate(row)">
                 <a>编辑</a>
               </div>
-              <div v-if="row.SYS_ModuleCount==0&&row.SYS_UserCount==0" class="main-color-red pl-15" @click="delRow(row)">
+              <div v-if="row.SYS_UserCount==0" class="main-color-red pl-15" @click="delRow(row)">
                 <a>删除</a>
               </div>
             </div>
@@ -128,12 +127,6 @@ export default {
     });
   },
   methods: {
-    tableRowClassName({row}){//不能删除行的样式
-      if (row.SYS_ModuleCount!==0||row.SYS_UserCount!==0) {
-          return 'no-del';
-      } 
-      return '';
-    },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       if(this.$refs.myChild.isCustom)

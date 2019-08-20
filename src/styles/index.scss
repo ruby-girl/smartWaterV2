@@ -304,3 +304,19 @@ aside {
 .no-del{
   background-color: #FFCCC7 !important;
 }
+.el-loading-spinner .circular{
+  width: 50px;
+  height: 50px;
+  animation: loading-rotate 2s linear infinite;
+  display: none;
+}
+.el-loading-spinner{
+  background: url(../assets/imgs/loading.gif) no-repeat;
+  background-size: 48px 48px;
+  width: 56px;
+  padding-top: 50px;
+  height: 100%;
+  position: relative;
+  top: 45%;
+  left: 50%;
+}

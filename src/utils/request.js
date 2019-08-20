@@ -15,7 +15,7 @@ var loadinginstace
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    loadinginstace = Element.Loading.service({ fullscreen: true, background: 'rgba(0, 0, 0, 0)' })
+    loadinginstace = Element.Loading.service({ fullscreen: true, background: 'rgba(0, 0, 0, 0)',text:'加载中...' })
   
     if (store.getters.token) {
       // let each request carry token

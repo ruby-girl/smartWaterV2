@@ -18,7 +18,6 @@
         fit
         :height="tableHeight"
         style="width: 100%;"
-        :row-class-name="tableRowClassName"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
         @sort-change="sortChanges"
@@ -130,12 +129,6 @@ export default {
     })
   },
   methods: {
-    tableRowClassName({row}){//不能编辑行的样式
-      if (row.UserStatusCode=='ZX') {
-          return 'no-del';
-      } 
-      return '';
-    },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
       if(this.$refs.myChild.isCustom)
