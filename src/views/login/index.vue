@@ -141,7 +141,7 @@ export default {
               .dispatch("user/login", postData)
               .then(() => {
                 this.getSingle()
-                window.HeadEvent.ChangeHead()
+                //window.HeadEvent.ChangeHead()
                 this.$router.push({
                   path: this.redirect || "/",
                   query: this.otherQuery
