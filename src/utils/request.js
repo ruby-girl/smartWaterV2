@@ -35,6 +35,7 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
+    
     loadinginstace.close()
     const res = response.data
     // if the custom code is not 20000, it is judged as an error.

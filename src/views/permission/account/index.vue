@@ -88,7 +88,7 @@ export default {
       listQuery: {
         // 查询条件
         page: 1,
-        limit: 20,
+        limit: 10,
         sort:'',//升序
         filed:'',//排序字段
         roldId: '-1', // 角色ID

@@ -55,7 +55,7 @@ import LineChart from "./components/LineChart";
 import BarChart from "./components/BarChart";
 import { getDictionaryItem } from "@/api/index"; //获取字典项
 import {GetTodayData, GetNearly5DaysData, GetFirstPageRoleInfo} from "@/api/index"
-
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "DashboardAdmin",
@@ -82,6 +82,10 @@ export default {
   },
   created() {   
     this.$store.dispatch("app/setDictionary")
+    let token=getToken()
+    let _this=this
+     window.HeadEvent.ChangeHead(token,_this.common.basePath)
+     
   },
   mounted() {
     this.GetNearly5DaysData()
@@ -132,6 +136,7 @@ export default {
       GetFirstPageRoleInfo().then(res => {
         if(res.code==0) {
           this.user = res.data
+           window.FXYB_WEB_CS_Account.SetAccount(res.data.UserName)
         }else {
           this.$message({
             message: res.message,
