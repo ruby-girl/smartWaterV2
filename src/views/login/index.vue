@@ -9,36 +9,42 @@
       label-position="left"
     >
       <div class="title-container">
-        <img src="../../assets/imgs/logo.png" alt>
+        <img src="../../assets/imgs/logo.png" alt />
       </div>
 
       <el-form-item prop="username">
         <span class="svg-container iconfont iconzhanghu" />
         <el-input
+          class="login-name"
           ref="username"
           v-model="loginForm.username"
           placeholder="请输入您的登录账号"
           name="username"
           type="text"
           tabindex="1"
-          autocomplete="on"
+          autocomplete="off"
+          @focus="down=true"
+         
         />
-      </el-form-item> 
-        <el-form-item prop="password">
-          <span class="svg-container iconfont iconmima" />
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="请输入您的登录密码"
-            name="password"
-            tabindex="2"
-            autocomplete="off"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
-          />
-        </el-form-item>
+        <i class="iconfont iconzhankai" @click="down=true" v-show="down==false"/>
+        <i class="iconfont iconshouqi"  @click="down=false" v-show="down==true"/>
+      </el-form-item>
+
+      <el-form-item prop="password">
+        <span class="svg-container iconfont iconmima" />
+        <el-input
+          :key="passwordType"
+          ref="password"
+          v-model="loginForm.password"
+          :type="passwordType"
+          placeholder="请输入您的登录密码"
+          name="password"
+          tabindex="2"
+          autocomplete="off"
+          @blur="capsTooltip = false"
+          @keyup.enter.native="handleLogin"
+        />
+      </el-form-item>
       <el-button
         :loading="loading"
         type="primary"
@@ -46,27 +52,63 @@
         @click.native.prevent="handleLogin"
       >Login</el-button>
     </el-form>
+     <transition name="fade">
+    <div
+      class="el-select-dropdown el-popper"
+      style="min-width: 233.516px; transform-origin: center top; z-index: 2056; position: absolute; top: 186px; left: 76px;"
+      x-placement="bottom-start"
+      v-show="down"
+    >
+      <div class="el-scrollbar" style>
+        <div
+          class="el-select-dropdown__wrap el-scrollbar__wrap"
+          style="margin-bottom: -17px; margin-right: -17px;"
+        >
+          <ul class="el-scrollbar__view el-select-dropdown__list">
+            <!---->
+            <li data-v-37dfd6fc class="el-select-dropdown__item" @click.stop.prevent="selectedUser(item)" v-for="item in optionList" style>
+              <span>{{item}}</span>
+            </li> 
+          </ul>
+        </div>
+        <div class="el-scrollbar__bar is-horizontal">
+          <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
+        </div>
+        <div class="el-scrollbar__bar is-vertical">
+          <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
+        </div>
+      </div>
+      <!---->
+      <div x-arrow class="popper__arrow" style="left: 35px;"></div>
+      
+    </div>
+    </transition>
   </div>
 </template>
 
 <script>
-
 import RSA from "rsa-js-java";
 import { getKey } from "@/api/user";
-import { getToken } from '@/utils/auth'
-import '@/utils/jquery-1.6.4.js'
-import '@/utils/jquery.signalR-2.4.1.js'
-import '@/utils/hubs'
+import { getToken } from "@/utils/auth";
+import "@/utils/jquery-1.6.4.js";
+import "@/utils/jquery.signalR-2.4.1.js";
+import "@/utils/hubs";
+import { setTimeout } from 'timers';
 
 export default {
   name: "Login",
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!value) {
+      let _this=this
+      setTimeout(function(){
+        if (!_this.loginForm.username) {
+          _this.down=false
         callback(new Error("不能为空"));
       } else {
+         _this.down=false
         callback();
       }
+      },300)
     };
     const validatePassword = (rule, value, callback) => {
       if (!value) {
@@ -82,6 +124,8 @@ export default {
         username: "",
         password: ""
       },
+      optionList:['admin','yangzixi','ruby'],
+      down:false,
       loginRules: {
         username: [
           { required: true, trigger: "blur", validator: validateUsername }
@@ -113,16 +157,23 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === "") {
-      this.$refs.username.focus();
-    } else if (this.loginForm.password === "") {
-      this.$refs.password.focus();
-    }
+   
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    selectedUser(val){
+      
+      this.loginForm.username=val
+       this.down=false
+    },
+    hideDown(){
+      var _this=this
+      setTimeout(function(){
+        this.down=false
+      },200)
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -133,21 +184,24 @@ export default {
           };
           getKey().then(res => {
             RSA.setMaxDigits(129);
-            let key =new RSA.RSAKeyPair(res.data.publicKeyExponent, "", res.data.publicKeyModulus);//密码加密
+            let key = new RSA.RSAKeyPair(
+              res.data.publicKeyExponent,
+              "",
+              res.data.publicKeyModulus
+            ); //密码加密
             let pwd = RSA.encryptedString(key, this.loginForm.password);
-            postData.LoginPwd=pwd
-            postData.privateKeyId=res.data.privateKeyId
+            postData.LoginPwd = pwd;
+            postData.privateKeyId = res.data.privateKeyId;
             this.$store
               .dispatch("user/login", postData)
               .then(() => {
-                this.getSingle()
+                this.getSingle();
                 //window.HeadEvent.ChangeHead()
                 this.$router.push({
                   path: this.redirect || "/",
                   query: this.otherQuery
                 });
                 this.loading = false;
-                
               })
               .catch(() => {
                 this.loading = false;
@@ -168,47 +222,45 @@ export default {
     },
     getSingle() {
       var token = getToken(); //登录成功后后端返回的Token
-      let _this = this
-      $.connection.hub.url = this.baseUrl + '/signalr';
+      let _this = this;
+      $.connection.hub.url = this.baseUrl + "/signalr";
 
       var chat = $.connection.FXYBHub;
 
       //后端请求前端的连接
-      chat.client.message = function (code) {
-
+      chat.client.message = function(code) {
         switch (code) {
-          case '100'://Token失效
+          case "100": //Token失效
             _this.$message({
-              message: 'Token已失效，请重新登陆',
-              type: 'warning'
+              message: "Token已失效，请重新登陆",
+              type: "warning"
             });
-            _this.$router.push({ path: "/login"});
-            break
-          case '101'://已在其他电脑登录
+            _this.$router.push({ path: "/login" });
+            break;
+          case "101": //已在其他电脑登录
             _this.$message({
-              message: '该账户已在其他电脑登录，请重新登陆',
-              type: 'warning'
+              message: "该账户已在其他电脑登录，请重新登陆",
+              type: "warning"
             });
-            _this.$router.push({ path: "/login"});
-            break
-          case '102'://账户权限发生变化，需重新登录
+            _this.$router.push({ path: "/login" });
+            break;
+          case "102": //账户权限发生变化，需重新登录
             _this.$message({
-              message: '账户权限发生变化，请重新登陆',
-              type: 'warning'
+              message: "账户权限发生变化，请重新登陆",
+              type: "warning"
             });
-            _this.$router.push({ path: "/login"});
-            break
+            _this.$router.push({ path: "/login" });
+            break;
         }
-      }
+      };
 
       //启动链接
-      $.connection.hub.start({jsonp:true}).done(function () {
+      $.connection.hub.start({ jsonp: true }).done(function() {
         //请求后端的连接
         chat.server.login(token); //注册signalr连接 ,Token 登录成功后后端返回的Token
       });
     }
-  },
-
+  }
 };
 </script>
 
@@ -248,6 +300,13 @@ $cursor: #283443;
         -webkit-text-fill-color: $cursor !important;
       }
     }
+  }
+  .login-name {
+    width: 74%;
+  }
+  .login-name + i {
+    cursor: pointer;
+    color: #889aa4;
   }
 
   .el-form-item {
