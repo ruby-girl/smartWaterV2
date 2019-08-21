@@ -22,9 +22,7 @@
           name="username"
           type="text"
           tabindex="1"
-          autocomplete="off"
-          @focus="down=true"
-         
+          autocomplete="off"     
         />
         <i class="iconfont iconzhankai" @click="down=true" v-show="down==false"/>
         <i class="iconfont iconshouqi"  @click="down=false" v-show="down==true"/>
@@ -57,7 +55,7 @@
       class="el-select-dropdown el-popper"
       style="min-width: 233.516px; transform-origin: center top; z-index: 2056; position: absolute; top: 186px; left: 76px;"
       x-placement="bottom-start"
-      v-show="down"
+      v-show="down&&optionList.length>0"
     >
       <div class="el-scrollbar" style>
         <div
@@ -101,11 +99,9 @@ export default {
     const validateUsername = (rule, value, callback) => {
       let _this=this
       setTimeout(function(){
-        if (!_this.loginForm.username) {
-          _this.down=false
+        if (!_this.loginForm.username) {       
         callback(new Error("不能为空"));
-      } else {
-         _this.down=false
+      } else {    
         callback();
       }
       },300)
@@ -124,7 +120,7 @@ export default {
         username: "",
         password: ""
       },
-      optionList:['admin','yangzixi','ruby'],
+      optionList:[],
       down:false,
       loginRules: {
         username: [
@@ -163,16 +159,10 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    selectedUser(val){
-      
+    selectedUser(val){    
       this.loginForm.username=val
-       this.down=false
-    },
-    hideDown(){
-      var _this=this
-      setTimeout(function(){
-        this.down=false
-      },200)
+      this.$refs.username.focus();
+      this.down=false
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -196,11 +186,12 @@ export default {
               .dispatch("user/login", postData)
               .then(() => {
                 this.getSingle();
-                //window.HeadEvent.ChangeHead()
+                
                 this.$router.push({
                   path: this.redirect || "/",
                   query: this.otherQuery
                 });
+                window.HeadEvent.ChangeHead(getToken())
                 this.loading = false;
               })
               .catch(() => {
@@ -304,9 +295,12 @@ $cursor: #283443;
   .login-name {
     width: 74%;
   }
-  .login-name + i {
+  .login-name + i{
     cursor: pointer;
     color: #889aa4;
+    &+i{
+      color: #889aa4;
+    }
   }
 
   .el-form-item {
