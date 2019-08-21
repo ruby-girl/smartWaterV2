@@ -61,7 +61,7 @@
         </div>
         <customTable ref="myChild" />
       </div>
-      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border >
+      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
         <el-table-column
           type="index"
           label="序号"
@@ -74,6 +74,7 @@
             v-if="item.IsFreeze"
             :key="index"
             min-width="200px"
+            sortable='custom'
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
@@ -83,6 +84,7 @@
             v-else
             :key="index"
             min-width="200px"
+            sortable='custom'
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
@@ -118,9 +120,9 @@
         </el-form-item>
         <el-form-item label="岗位:" prop="JobName">
           <el-input
-            v-model="ruleForm.JobName"
+            v-model.trim="ruleForm.JobName"
             placeholder="请输入岗位信息"
-            maxlength="20"
+            maxlength="10"
             size="small"
             style="width: 250px"
           />
@@ -179,7 +181,7 @@ export default {
         ]
       },
       postArray: [],
-      tableHeight: '',
+      tableHeight: null,
       warnVisible: false,
       dialogVisible: false,
       createStartTimes:[],
@@ -188,6 +190,8 @@ export default {
       jp: {
         page: 1,
         limit: 10,
+        filed:'',
+        sort:"",
         SYS_Department_Id: '',
         JobName:'',
         createUserId:'',
@@ -215,8 +219,9 @@ export default {
   },
   watch: {
     customHeight() {
-      this.$nextTick(() => {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      let self = this
+      self.$nextTick(() => {
+        self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
       })
     }
   },
@@ -402,6 +407,17 @@ export default {
         this.jp.createEndTime = ''
       }
     },
+    /**
+     * 排序
+     * */
+    sortChanges({prop, order }){
+      this.jp.filed = prop
+      this.jp.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+      if(this.tableData.length>0){
+        this.jp.page = 1
+        this.searchFun()
+      }
+    }
   },
   mounted() {
     this.GetLoginNameList()
@@ -413,3 +429,4 @@ export default {
   }
 }
 </script>
+                                                                                                                             

@@ -110,7 +110,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">身份证号：</label>
               <el-input
-                v-model="queryData.IDNumber"
+                v-model.trim="queryData.IDNumber"
                 placeholder="请输入身份证号"
                 maxlength="10"
                 size="small"
@@ -184,7 +184,7 @@
         </div>
       </div>
       <customTable ref="myChild" />
-      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border :row-class-name="tableRowClassName">
+      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
         <el-table-column
           type="index"
           label="序号"
@@ -197,6 +197,7 @@
             v-if="item.IsFreeze"
             :key="index"
             min-width="200px"
+            sortable='custom'
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
@@ -206,6 +207,7 @@
             v-else
             :key="index"
             min-width="200px"
+            sortable='custom'
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
@@ -251,21 +253,23 @@
 import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
-import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList} from "@/api/organize"
+import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl} from "@/api/organize"
 let deleteId;
 import Bus from '@/utils/bus.js'
 
 export default {
   name: 'peopleManage',
-  components: { customTable, Pagination },
+  components: {customTable, Pagination},
   data() {
     return {
       ifMore: false,
-      tableHeight: '',
+      tableHeight: null,
       warnVisible: false,
       queryData: {
         page: 1,
         limit: 10,
+        filed:'',
+        sort:"",
         SYS_Department_Id: '',
         OA_Job_Id: '',
         EmpNo: '',
@@ -281,7 +285,7 @@ export default {
         createStartTime: '',
         createEndTime: '',
         EmailAddress: '',
-        AccountStatus:'',
+        AccountStatus: '',
         tableId: '0000003'
       },
       operationTime: [],
@@ -298,7 +302,7 @@ export default {
     }
   },
   computed: {
-    tableHead: function() {
+    tableHead: function () {
       const arrayHead = []
       const data = this.checksData
       for (let i = 0; i < data.length; i++) { // 过滤选中列
@@ -311,73 +315,115 @@ export default {
   },
   watch: {
     ifMore() {
-      this.$nextTick(() => {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      let self = this
+      self.$nextTick(() => {
+        self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
       })
     },
     customHeight() {
-      this.$nextTick(() => {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      let self = this
+      self.$nextTick(() => {
+        self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
       })
     }
   },
   methods: {
     /**
-       * 表格自定义
-       * */
+     * 表格自定义
+     * */
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
       this.customHeight = this.$refs.myChild.isCustom
     },
     /**
-       * 导出
-       * */
+     * 导出
+     * */
     exportExcel() {
-      alert('导出')
+      let jp;
+      if (!this.ifMore) {
+        jp = {
+          page: this.queryData.page,
+          limit: this.queryData.limit,
+          filed: this.queryData.filed,
+          sort: this.queryData.sort,
+          SYS_Department_Id: this.queryData.SYS_Department_Id,
+          OA_Job_Id: this.queryData.OA_Job_Id,
+          EmpNo: this.queryData.EmpNo,
+          JobStatus: this.queryData.JobStatus,
+          EnrollingTime: this.queryData.EnrollingTime,
+          EnrollingTimeEnd: this.queryData.EnrollingTime,
+          Gender: '',
+          IDNumber: '',
+          MobileNumber: '',
+          Birthday: '',
+          BirthdayEnd: '',
+          createUserId: '',
+          createStartTime: '',
+          createEndTime: '',
+          EmailAddress: '',
+          AccountStatus: ''
+        }
+      } else {
+        jp = this.queryData
+      }
+      Employee_Execl(jp).then(res => {
+        if(res.code==0){
+          this.$message({
+            message: '导出成功！',
+            type: 'success'
+          });
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        }
+      })
+
     },
     /**
-       * 编辑及新增
-       * 1: 编辑
-       * 2：详情
-       * */
-    handleEdit(row,type) {
-      if(type==1) {//编辑
-          this.$router.push({
-            name:"peopleEdit",
-            params:{
-              id:row.Id
-            }
-          })
-      }else {//详情
+     * 编辑及新增
+     * 1: 编辑
+     * 2：详情
+     * */
+    handleEdit(row, type) {
+      if (type == 1) {//编辑
         this.$router.push({
-          name:"peopleDetail",
-          params:{
-            id:row.Id
+          name: "peopleEdit",
+          params: {
+            id: row.Id
+          }
+        })
+      } else {//详情
+        this.$router.push({
+          name: "peopleDetail",
+          params: {
+            id: row.Id
           }
         })
       }
     },
     addNewFun() {
-      this.$router.push({ path: '/organizationManage/peopleAdd' })
+      this.$router.push({path: '/organizationManage/peopleAdd'})
     },
     /**
-       * 删除
-       * */
+     * 删除
+     * */
     handleDelete(row) {
       deleteId = row.Id
       this.warnVisible = true
 
     },
     deleteFun() {
-      peopleDelete({id:deleteId}).then(res => {
-        if(res.code==0){
+      peopleDelete({id: deleteId}).then(res => {
+        if (res.code == 0) {
           this.$message({
             message: res.message,
             type: 'success'
           });
           this.warnVisible = false
           this.searchFun()
-        }else {
+        } else {
           this.$message({
             message: res.message,
             type: 'warning'
@@ -386,32 +432,34 @@ export default {
       })
     },
     /**
-       * 查询
-       * */
+     * 查询
+     * */
     searchFun() {
-      let jp ;
-      if(!this.ifMore) {
-         jp = {
-            page: this.queryData.page,
-            limit: this.queryData.limit,
-            SYS_Department_Id: this.queryData.SYS_Department_Id,
-            OA_Job_Id: this.queryData.OA_Job_Id,
-            EmpNo: this.queryData.EmpNo,
-            JobStatus: this.queryData.JobStatus,
-            EnrollingTime: this.queryData.EnrollingTime,
-            EnrollingTimeEnd: this.queryData.EnrollingTime,
-            Gender: '',
-            IDNumber: '',
-            MobileNumber: '',
-            Birthday: '',
-            BirthdayEnd: '',
-            createUserId: '',
-            createStartTime: '',
-            createEndTime: '',
-            EmailAddress: '',
-            AccountStatus:''
+      let jp;
+      if (!this.ifMore) {
+        jp = {
+          page: this.queryData.page,
+          limit: this.queryData.limit,
+          filed: this.queryData.filed,
+          sort: this.queryData.sort,
+          SYS_Department_Id: this.queryData.SYS_Department_Id,
+          OA_Job_Id: this.queryData.OA_Job_Id,
+          EmpNo: this.queryData.EmpNo,
+          JobStatus: this.queryData.JobStatus,
+          EnrollingTime: this.queryData.EnrollingTime,
+          EnrollingTimeEnd: this.queryData.EnrollingTime,
+          Gender: '',
+          IDNumber: '',
+          MobileNumber: '',
+          Birthday: '',
+          BirthdayEnd: '',
+          createUserId: '',
+          createStartTime: '',
+          createEndTime: '',
+          EmailAddress: '',
+          AccountStatus: ''
         }
-      }else {
+      } else {
         jp = this.queryData
       }
 
@@ -421,16 +469,11 @@ export default {
       })
     },
     /**
-       * 编辑新增保存
-       * */
-    saveFun() {
-    },
-    /**
      * 获取部门信息
      * */
     getComboBoxList() {
       ComboBoxList().then(res => {
-        if(res.code==0){
+        if (res.code == 0) {
           this.departArray = res.data;
         } else {
           this.$message({
@@ -444,9 +487,9 @@ export default {
      * 岗位联动
      * */
     getPostList(id) {
-      let params = { SYS_Department_Id : id}
+      let params = {SYS_Department_Id: id}
       linkComboBoxList(params).then(res => {
-        if(res.code==0){
+        if (res.code == 0) {
           this.postArray = res.data;
         } else {
           this.$message({
@@ -461,7 +504,7 @@ export default {
      * */
     GetRoleNameList() {
       GetRoleNameList().then(res => {
-        if(res.code==0){
+        if (res.code == 0) {
           this.operationArray = res.data;
         } else {
           this.$message({
@@ -472,36 +515,41 @@ export default {
       })
     },
     getTime1(data) {
-      if(data !=null) {
+      if (data != null) {
         this.queryData.EnrollingTime = data[0]
         this.queryData.EnrollingTimeEnd = data[1]
-      }else {
+      } else {
         this.queryData.EnrollingTime = ''
         this.queryData.EnrollingTimeEnd = ''
       }
     },
     getTime2(data) {
-      if(data !=null) {
+      if (data != null) {
         this.queryData.Birthday = data[0]
         this.queryData.BirthdayEnd = data[1]
-      }else {
+      } else {
         this.queryData.Birthday = ''
         this.queryData.BirthdayEnd = ''
       }
     },
     getTime3(data) {
-      if(data !=null) {
+      if (data != null) {
         this.queryData.createStartTime = data[0]
         this.queryData.createEndTime = data[1]
-      }else {
+      } else {
         this.queryData.createStartTime = ''
         this.queryData.createEndTime = ''
       }
     },
-    tableRowClassName({row}) {
-      if (row.SYS_User_Id.length > 0)
-      {
-        return 'warning-row';
+    /**
+     * 排序
+     * */
+    sortChanges({prop, order }){
+      this.queryData.filed = prop
+      this.queryData.sort = order =='ascending'?'ASC':(order=='descending'?'DESC':'')
+      if(this.tableData.length>0){
+        this.queryData.page = 1
+        this.searchFun()
       }
     }
   },
@@ -512,11 +560,6 @@ export default {
     this.getComboBoxList()
     this.GetRoleNameList()
     this.searchFun()
-    let self = this
-    Bus.$on('msg', () => {
-      self.searchFun()
-    })
   }
 }
 </script>
-

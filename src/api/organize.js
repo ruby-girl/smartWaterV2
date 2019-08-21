@@ -137,6 +137,14 @@ export function peopleAdd(data) {
   })
 }
 
+export function Employee_Execl(data) {
+  return request({
+    url: 'Employee/GetList_Execl',
+    method: 'post',
+    data: data
+  })
+}
+
 /**
  * 获取操作员信息
  * */

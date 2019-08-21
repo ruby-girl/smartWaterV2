@@ -7,7 +7,7 @@
       </p>
         <span class="fl">自定义选项：</span>
         <div class="fl">
-          <el-checkbox v-for="check in checkData" :key="check.Id" v-show="check.IsShow"  v-model="check.IsCheck" v-dragging="{ item: check, list: checkData, group: 'check' }">{{ check.ColDesc }}</el-checkbox>
+          <el-checkbox v-for="check in checkData" :key="check.Id" v-show="check.IsShow" :disabled="check.ifDisable"  v-model="check.IsCheck" v-dragging="{ item: check, list: checkData, group: 'check' }">{{ check.ColDesc }}</el-checkbox>
         </div>
     </div>
   </div>
@@ -21,7 +21,7 @@ export default {
     return {
       isCustom: false,
       checkData: [],
-      curID:''
+      curID:'',
     }
   },
   methods: {
@@ -61,21 +61,21 @@ export default {
       }
       InitTableStyle(tsp).then(res => {
         if(res.code==0){
-         /* let data = res.data
-          for(let i = 0;i <data.length; i++){
-            for(let j=0;j<this.checkData.length;j++){
-              if(data[i].Id==this.checkData[j].Id&&data[i].IsShow){
-                 this.checkData[j].IsCheck = true
-              }
-            }
-          }*/
           this.$message({
             message: '已恢复默认设置',
             type: 'success'
           });
           sessionStorage.removeItem(this.curID)
-          this.checkData = []
-          this.GetTable(this.curID)
+          let data = res.data
+          for(let i=0;i<data.length;i++){
+             for(let j=0;j<this.checkData.length;j++){
+               if(data[i].IsShow && data[i].Id == this.checkData[j].Id){
+                 this.checkData[j].IsCheck = true
+                 this.checkData[j].Sort =  data[i].Sort
+               }
+            }
+          }
+          this.sort(this.checkData)
         } else {
           this.$message({
             message: res.message,
@@ -83,6 +83,20 @@ export default {
           });
         }
       })
+    },
+    /**
+     * 重新排序
+     * */
+    sort(arr){
+      for(var j=0;j<arr.length-1;j++){
+        for(var i=0;i<arr.length-1-j;i++){
+          if(arr[i].Sort>arr[i+1].Sort){
+            var temp = arr[i];
+            arr[i] = arr[i+1];
+            arr[i+1] = temp;
+          }
+        }
+      }
     },
     /**
      * 根据ID获取表头信息
@@ -100,6 +114,7 @@ export default {
             let data = res.data
             sessionStorage.setItem(id,JSON.stringify(data))
             for(let i = 0;i <data.length; i++){
+              data[i].ifDisable = false//手动添加是否禁用字段
               this.checkData.push(data[i])
             }
           } else {
@@ -110,6 +125,30 @@ export default {
           }
         })
       }
+    }
+  },
+  watch: {
+    checkData:{//深度监听，可监听到对象、数组的变化
+      handler(val){
+        let isCheckArr = []
+        for(let i=0;i<val.length;i++){
+          if(val[i].IsCheck){
+           isCheckArr.push(val[i].IsCheck)
+          }
+        }
+        if(isCheckArr.length<=1){
+          for(let i=0;i<val.length;i++){
+            if(val[i].IsCheck){
+              val[i].ifDisable = true
+            }
+          }
+        }else{
+          for(let i=0;i<val.length;i++){
+              val[i].ifDisable = false
+          }
+        }
+      },
+      deep:true
     }
   },
   mounted() {

@@ -7,7 +7,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-input
-                v-model="dp.DeptName"
+                v-model.trim="dp.DeptName"
                 placeholder="请输入部门名称"
                 maxlength="10"
                 size="small"
@@ -52,7 +52,7 @@
         </div>
         <customTable ref="myChild" />
       </div>
-      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border>
+      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
         <el-table-column
           type="index"
           label="序号"
@@ -65,6 +65,7 @@
             v-if="item.IsFreeze"
             :key="index"
             min-width="200px"
+            sortable='custom'
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
@@ -74,6 +75,7 @@
             v-else
             :key="index"
             min-width="200px"
+            sortable='custom'
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
@@ -82,7 +84,7 @@
         <el-table-column label="操作" width="200px" align="left" fixed="right">
           <template slot-scope="scope">
             <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
-            <a class="operation2" @click="handleDelete(scope.$index, scope.row)">删除</a>
+            <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-show="scope.row.isDelete">删除</a>
           </template>
         </el-table-column>
       </el-table>
@@ -103,9 +105,9 @@
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
         <el-form-item label="部门:" prop="newDertmentName">
           <el-input
-            v-model="ruleForm.newDertmentName"
+            v-model.trim="ruleForm.newDertmentName"
             placeholder="请输入部门名称"
-            maxlength="20"
+            maxlength="10"
             size="small"
             style="width: 250px"
           />
@@ -150,7 +152,7 @@
     data() {
       return {
         operatorArray:[],
-        tableHeight: '',
+        tableHeight: null,
         warnVisible: false,
         dialogVisible: false,
         title: '',
@@ -159,6 +161,8 @@
         dp: {
           page: 1,
           limit: 10,
+          filed:'',
+          sort:"",
           DeptName: '',
           createUserId: '',
           createStartTime: '',
@@ -193,8 +197,9 @@
     },
     watch: {
       customHeight() {
-        this.$nextTick(() => {
-          this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+        let self = this
+        self.$nextTick(() => {
+          self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
         })
       }
     },
@@ -356,6 +361,17 @@
             });
           }
         })
+      },
+      /**
+       * 排序
+       * */
+      sortChanges({prop, order }){
+        this.dp.filed = prop
+        this.dp.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        if(this.tableData.length>0){
+          this.dp.page = 1
+          this.searchFun()
+        }
       }
     },
     mounted() {

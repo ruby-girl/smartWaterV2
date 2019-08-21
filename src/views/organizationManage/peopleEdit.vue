@@ -10,7 +10,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="人员名称:" prop="EmpName">
-              <el-input v-model="jp.EmpName" size="small" maxlength="10" placeholder="请输入人员名称" />
+              <el-input v-model.trim="jp.EmpName" size="small" maxlength="10" placeholder="请输入人员名称" />
             </el-form-item>
           </el-col>
 
@@ -29,12 +29,12 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="电话号码:" prop="MobileNumber">
-              <el-input v-model="jp.MobileNumber" size="small" maxlength="11" placeholder="请输入11位电话号码" />
+              <el-input v-model.trim="jp.MobileNumber" size="small" maxlength="11" placeholder="请输入11位电话号码" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="身份证号:" prop="IDNumber">
-              <el-input v-model="jp.IDNumber" size="small" maxlength="18" placeholder="请输入18位身份证号" />
+              <el-input v-model.trim="jp.IDNumber" size="small" maxlength="18" placeholder="请输入18位身份证号" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
@@ -83,14 +83,9 @@
               </el-col>
             </el-row>
           </el-col>
-          <!--<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
-            <el-form-item label="岗位状态:">
-              <el-input v-model="jp.JobStatus" size="small" disabled />
-            </el-form-item>
-          </el-col>-->
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item label="地址:" prop="adress">
-              <el-input v-model="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" />
+              <el-input v-model.trim="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
