@@ -46,6 +46,11 @@
               <div v-if="row.SYS_UserCount==0" class="main-color-red pl-15" @click="delRow(row)">
                 <a>删除</a>
               </div>
+              <div v-else class="disable-color pl-15">
+                <el-tooltip effect="dark" content="角色已建立权限且与账号关联，不可删除" placement="bottom-start">
+                <a>删除</a>
+                 </el-tooltip>
+              </div>
             </div>
           </template>
         </el-table-column>
