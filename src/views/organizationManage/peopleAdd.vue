@@ -117,6 +117,7 @@
   import '../../styles/organization.scss'
   import uploadImg from '../../components/Upload/index'
   import { peopleAdd, ComboBoxList, linkComboBoxList } from "@/api/organize"
+  import { DeleteList } from "@/api/upload"
   import Bus from '@/utils/bus.js'
 
   export default {
@@ -272,6 +273,27 @@
       resetForm(formName) {
         this.$refs[formName].resetFields()
         Bus.$emit('msg', this.$route)
+
+        let ids = []
+        for(let i=0;i<this.upload.file.length;i++){
+          ids.push(this.upload.file[i].id)
+        }
+        if(ids.length<=0)
+          return
+        DeleteList({idarr:ids}).then(res => {
+          if(res.code==0){
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+
       },
       /**
        * 获取上传文件信息

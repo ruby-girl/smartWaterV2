@@ -25,3 +25,11 @@ export function getFile(data) {
     data: data
   })
 }
+
+export function DeleteList(data) {
+  return request({
+    url: '/Files/DeleteList',
+    method: 'post',
+    data: data
+  })
+}
