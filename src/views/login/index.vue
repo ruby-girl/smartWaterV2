@@ -18,7 +18,7 @@
           class="login-name"
           ref="username"
           v-model="loginForm.username"
-          placeholder="请输入您的登录账号test"
+          placeholder="请输入您的登录账号"
           name="username"
           type="text"
           tabindex="1"
@@ -150,17 +150,17 @@ export default {
     }
   },
   created() {
-   let optionList=window.FXYB_WEB_CS_Account.GetAccount()
+   let optionList=[]
+   try {
+     optionList=window.FXYB_WEB_CS_Account.GetAccount()
+   } catch (error) {
+     console.log('请在CS端操作')
+   }
     if(!optionList){
     this.optionList=[]
     }else{
       this.optionList=optionList
     }
-    console.info(this.optionList)
-    // window.addEventListener('storage', this.afterQRScan)
-  },
-  destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
     selectedUser(val){    
