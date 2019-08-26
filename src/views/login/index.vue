@@ -190,7 +190,7 @@ export default {
               .dispatch("user/login", postData)
               .then(() => {
                 this.getSingle();
-                
+                this.$store.dispatch('tagsView/delAllViews').then()
                 this.$router.push({
                   path: this.redirect || "/",
                   query: this.otherQuery
