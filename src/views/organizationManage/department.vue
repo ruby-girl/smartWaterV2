@@ -84,7 +84,10 @@
         <el-table-column label="操作" width="200px" align="center" fixed="right">
           <template slot-scope="scope">
             <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
-            <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-show="scope.row.isDelete">删除</a>
+            <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDelete">删除</a>
+            <el-tooltip v-else effect="dark" content="部门已关联岗位，不可删除" placement="bottom-start">
+              <a style="color: #C0C8CC;margin: 10px;">删除</a>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -216,17 +219,7 @@
        * */
       exportExcel() {
         GetList_Execl(this.dp).then(res => {
-           if(res.code==0){
-             this.$message({
-               message: '导出成功！',
-               type: 'success'
-             });
-           }else{
-             this.$message({
-               message: res.message,
-               type: 'warning'
-             });
-           }
+          window.location.href = `${this.common.excelPath}${res.data}`;
         })
       },
       /**

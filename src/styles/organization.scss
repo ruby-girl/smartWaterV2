@@ -69,11 +69,11 @@
     position: absolute;bottom: 0;text-align: center;width: 100%;
     label{position: absolute;left: 0;bottom: 25px;left: 50px;}
   }
+  .fileBoxHeight{height: 320px;overflow:auto;}
   .fileBox {
     padding: 0;
-    max-height: 316px;
-    overflow: auto;
     li{
+      img{width: 100%;height: 100%}
       width: 130px;height: 130px;list-style: none;float: left;border: solid 1px #D8E2E7;margin-right: 24px;position: relative;margin-bottom: 30px;
       p{width: 100%;height:100%;overflow: hidden;margin: 0;text-align: center;line-height: 130px;}
       i {display: block;width: 100%;text-align: center;color: #00B3A1;font:normal 14px/25px '';text-decoration: underline;cursor: pointer}

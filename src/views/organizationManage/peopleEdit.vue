@@ -24,7 +24,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="出生日期:">
-              <el-date-picker v-model="jp.Birthday" type="date" placeholder="年月日" size="small" />
+              <el-date-picker v-model="jp.Birthday" type="date" placeholder="年月日" size="small" value-format="yyyy-MM-dd"/>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
@@ -39,7 +39,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="入职时间:">
-              <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small" />
+              <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small" value-format="yyyy-MM-dd"/>
             </el-form-item>
           </el-col>
           <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
@@ -205,6 +205,7 @@
        * 提交
        * */
       submitForm(formName) {
+        let self =this
         this.isFlag = true;
         this.jp.oeoList = [];
         for(let i=0;i< this.sojList.length; i++) {
@@ -225,9 +226,13 @@
         for(let j =0;j<this.upload.file.length;j++){
           this.jp.Idarr.push(this.upload.file[j].id)
         }
+        console.log(self.jp.Birthday)
+        console.log("======================")
+
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            peopleUpDate(this.jp).then(res => {
+            console.log(self.jp.Birthday)
+            peopleUpDate(self.jp).then(res => {
                 if(res.code==0){
                   this.$message({
                     message: res.message,

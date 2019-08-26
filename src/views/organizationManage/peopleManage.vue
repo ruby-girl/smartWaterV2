@@ -215,7 +215,10 @@
           <template slot-scope="scope">
             <a class="operation1" @click="handleEdit(scope.row,1)">编辑</a>
             <a class="operation1" @click="handleEdit(scope.row,2)">详情</a>
-            <a class="operation2" @click="handleDelete(scope.row)" v-show="scope.row.SYS_User_Id.length <= 0">删除</a>
+            <a class="operation2" @click="handleDelete(scope.row)" v-if="scope.row.SYS_User_Id.length <= 0">删除</a>
+            <el-tooltip v-else effect="dark" content="人员已关联账号，不可删除" placement="bottom-start">
+              <a style="color: #C0C8CC;margin: 10px;">删除</a>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -359,23 +362,14 @@ export default {
           createStartTime: '',
           createEndTime: '',
           EmailAddress: '',
-          AccountStatus: ''
+          AccountStatus: '',
+          tableId: '0000003'
         }
       } else {
         jp = this.queryData
       }
       Employee_Execl(jp).then(res => {
-        if(res.code==0){
-          this.$message({
-            message: '导出成功！',
-            type: 'success'
-          });
-        }else{
-          this.$message({
-            message: res.message,
-            type: 'warning'
-          });
-        }
+        window.location.href = `${this.common.excelPath}${res.data}`;
       })
 
     },
@@ -455,7 +449,8 @@ export default {
           createStartTime: '',
           createEndTime: '',
           EmailAddress: '',
-          AccountStatus: ''
+          AccountStatus: '',
+          tableId: '0000003'
         }
       } else {
         jp = this.queryData
