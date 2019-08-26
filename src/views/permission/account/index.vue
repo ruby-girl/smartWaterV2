@@ -28,6 +28,7 @@
           fit
           :height="tableHeight"
           style="width: 100%;"
+          :cell-class-name="cellClass"
           :header-cell-style="{'background-color': '#F0F2F5'}"
           :cell-style="{'padding':'7px 0'}"
           @sort-change="sortChanges"
@@ -41,7 +42,7 @@
               :align="item.Position"
               sortable="custom"
               :label="item.ColDesc"
-            />
+            /> 
           </template>
           <el-table-column
             label="操作"
@@ -191,6 +192,11 @@ export default {
     });
   },
   methods: {
+    cellClass({row, column, rowIndex, columnIndex}){
+      if(row.UserStatusCode=='ZX'&&column.property=='UserStatus'){
+        return 'main-color-red'
+      }
+    },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;

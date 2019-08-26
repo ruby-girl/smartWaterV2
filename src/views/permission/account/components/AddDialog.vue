@@ -4,7 +4,7 @@
     title="添加"
     :visible.sync="AdialogFormVisible"
     top="30vh"
-    width="660px"
+    width="674px"
     center
     @closed="addDialogClose"
   >
@@ -74,7 +74,7 @@ export default {
   data() {
     var userNum = (rule, value, callback) => {
       if (value === "") {
-        return callback(new Error("必填"));
+        return callback(new Error("不能为空"));
       }
       
       if (value.length < 11) {
