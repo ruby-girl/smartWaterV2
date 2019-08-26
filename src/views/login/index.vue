@@ -22,10 +22,10 @@
           name="username"
           type="text"
           tabindex="1"
-          autocomplete="off"     
+          autocomplete="off"
         />
-        <i class="iconfont iconzhankai" @click="down=true" v-show="down==false"/>
-        <i class="iconfont iconshouqi"  @click="down=false" v-show="down==true"/>
+        <i class="iconfont iconzhankai" @click="down=true" v-show="down==false" />
+        <i class="iconfont iconshouqi" @click="down=false" v-show="down==true" />
       </el-form-item>
 
       <el-form-item prop="password">
@@ -50,36 +50,41 @@
         @click.native.prevent="handleLogin"
       >Login</el-button>
     </el-form>
-     <transition name="fade">
-    <div
-      class="el-select-dropdown el-popper"
-      style="min-width: 233.516px; transform-origin: center top; z-index: 2056; position: absolute; top: 186px; left: 76px;"
-      x-placement="bottom-start"
-      v-show="down&&optionList.length>0"
-    >
-      <div class="el-scrollbar" style>
-        <div
-          class="el-select-dropdown__wrap el-scrollbar__wrap"
-          style="margin-bottom: -17px; margin-right: -17px;"
-        >
-          <ul class="el-scrollbar__view el-select-dropdown__list">
-            <!---->
-            <li data-v-37dfd6fc class="el-select-dropdown__item" @click.stop.prevent="selectedUser(item)" v-for="item in optionList" style>
-              <span>{{item}}</span>
-            </li> 
-          </ul>
+    <transition name="fade">
+      <div
+        class="el-select-dropdown el-popper"
+        style="min-width: 233.516px; transform-origin: center top; z-index: 2056; position: absolute; top: 186px; left: 76px;"
+        x-placement="bottom-start"
+        v-show="down&&optionList.length>0"
+      >
+        <div class="el-scrollbar" style>
+          <div
+            class="el-select-dropdown__wrap el-scrollbar__wrap"
+            style="margin-bottom: -17px; margin-right: -17px;"
+          >
+            <ul class="el-scrollbar__view el-select-dropdown__list">
+              <!---->
+              <li
+                data-v-37dfd6fc
+                class="el-select-dropdown__item"
+                @click.stop.prevent="selectedUser(item)"
+                v-for="item in optionList"
+                style
+              >
+                <span>{{item}}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="el-scrollbar__bar is-horizontal">
+            <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
+          </div>
+          <div class="el-scrollbar__bar is-vertical">
+            <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
+          </div>
         </div>
-        <div class="el-scrollbar__bar is-horizontal">
-          <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
-        </div>
-        <div class="el-scrollbar__bar is-vertical">
-          <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
-        </div>
+        <!---->
+        <div x-arrow class="popper__arrow" style="left: 35px;"></div>
       </div>
-      <!---->
-      <div x-arrow class="popper__arrow" style="left: 35px;"></div>
-      
-    </div>
     </transition>
   </div>
 </template>
@@ -91,20 +96,20 @@ import { getToken } from "@/utils/auth";
 import "@/utils/jquery-1.6.4.js";
 import "@/utils/jquery.signalR-2.4.1.js";
 import "@/utils/hubs";
-import { setTimeout } from 'timers';
+import { setTimeout } from "timers";
 
 export default {
   name: "Login",
   data() {
     const validateUsername = (rule, value, callback) => {
-      let _this=this
-      setTimeout(function(){
-        if (!_this.loginForm.username) {       
-        callback(new Error("不能为空"));
-      } else {    
-        callback();
-      }
-      },300)
+      let _this = this;
+      setTimeout(function() {
+        if (!_this.loginForm.username) {
+          callback(new Error("不能为空"));
+        } else {
+          callback();
+        }
+      }, 300);
     };
     const validatePassword = (rule, value, callback) => {
       if (!value) {
@@ -120,8 +125,8 @@ export default {
         username: "",
         password: ""
       },
-      optionList:[],
-      down:false,
+      optionList: [],
+      down: false,
       loginRules: {
         username: [
           { required: true, trigger: "blur", validator: validateUsername }
@@ -150,23 +155,23 @@ export default {
     }
   },
   created() {
-   let optionList=window.FXYB_WEB_CS_Account.GetAccount()
-    if(!optionList){
-    this.optionList=[]
-    }else{
-      this.optionList=optionList
+    let optionList = [];
+    try {
+      optionList = window.FXYB_WEB_CS_Account.GetAccount();
+    } catch (error) {
+      console.log("请在CS端操作");
     }
-    console.info(this.optionList)
-    // window.addEventListener('storage', this.afterQRScan)
-  },
-  destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
+    if (!optionList) {
+      this.optionList = [];
+    } else {
+      this.optionList = optionList;
+    }
   },
   methods: {
-    selectedUser(val){    
-      this.loginForm.username=val
+    selectedUser(val) {
+      this.loginForm.username = val;
       this.$refs.username.focus();
-      this.down=false
+      this.down = false;
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -190,12 +195,12 @@ export default {
               .dispatch("user/login", postData)
               .then(() => {
                 this.getSingle();
-                
+                this.$store.dispatch("tagsView/delAllViews").then();
                 this.$router.push({
                   path: this.redirect || "/",
                   query: this.otherQuery
                 });
-               
+
                 this.loading = false;
               })
               .catch(() => {
@@ -299,10 +304,10 @@ $cursor: #283443;
   .login-name {
     width: 74%;
   }
-  .login-name + i{
+  .login-name + i {
     cursor: pointer;
     color: #889aa4;
-    &+i{
+    & + i {
       color: #889aa4;
     }
   }

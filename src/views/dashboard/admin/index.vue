@@ -84,8 +84,11 @@ export default {
     this.$store.dispatch("app/setDictionary")
     let token=getToken()
     let _this=this
-     window.HeadEvent.ChangeHead(token,_this.common.basePath)
-     
+    try {
+      window.HeadEvent.ChangeHead(token,_this.common.basePath)
+    } catch (error) {
+      console.log('请在CS端操作')
+    }
   },
   mounted() {
     this.GetNearly5DaysData()
@@ -136,7 +139,11 @@ export default {
       GetFirstPageRoleInfo().then(res => {
         if(res.code==0) {
           this.user = res.data
-           window.FXYB_WEB_CS_Account.SetAccount(res.data.UserName)
+          try {
+             window.FXYB_WEB_CS_Account.SetAccount(res.data.UserName)
+          } catch (error) {
+            console.log('请在CS端操作')
+          }
         }else {
           this.$message({
             message: res.message,

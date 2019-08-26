@@ -31,8 +31,8 @@
           <el-table-column
             :key="index"
             min-width="100px"
+            align="center"
             :prop="item.ColProp"
-            :align="item.Position"
             sortable='custom'
             :label="item.ColDesc"
           />
