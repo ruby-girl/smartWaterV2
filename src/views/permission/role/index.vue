@@ -32,7 +32,7 @@
             :key="index"
             min-width="100px"
             :prop="item.ColProp"
-            :align="item.Position"
+            align="center"
             sortable='custom'
             :label="item.ColDesc"
           />

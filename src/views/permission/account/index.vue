@@ -39,7 +39,7 @@
               :key="index"
               :min-width="item.ColProp=='EditTime'?'160px':'110px'"
               :prop="item.ColProp"
-              :align="item.Position"
+              align="center"
               sortable="custom"
               :label="item.ColDesc"
             /> 
