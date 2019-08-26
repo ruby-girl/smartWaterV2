@@ -3,7 +3,7 @@
     <div>
       <div id="conditionBox">
         <el-row>
-          <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="4">
+          <el-col :xs="15" :sm="8" :md="8" :lg="6" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-input
@@ -14,7 +14,7 @@
               />
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="4">
+          <el-col :xs="15" :sm="8" :md="8" :lg="6" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
               <el-select v-model="dp.createUserId" placeholder="请选择" size="small">
@@ -23,7 +23,7 @@
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="12" :sm="12" :md="12" :lg="10" :xl="12">
+          <el-col :xs="24" :sm="16" :md="16" :lg="10" :xl="7">
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">操作时间：</label>
               <el-date-picker
@@ -67,7 +67,7 @@
             min-width="200px"
             sortable='custom'
             :prop="item.ColProp"
-            :align="item.Position"
+            align="center"
             :label="item.ColDesc"
             :fixed= "item.Freeze"
           />
@@ -77,11 +77,11 @@
             min-width="200px"
             sortable='custom'
             :prop="item.ColProp"
-            :align="item.Position"
+            align="center"
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column label="操作" width="200px" align="left" fixed="right">
+        <el-table-column label="操作" width="200px" align="center" fixed="right">
           <template slot-scope="scope">
             <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
             <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-show="scope.row.isDelete">删除</a>
@@ -379,7 +379,7 @@
       this.$refs.myChild.GetTable(this.dp.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      this.searchFun()
+      //this.searchFun()
     }
   }
 </script>

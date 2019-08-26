@@ -1,4 +1,5 @@
 .cl-container{
+  font-family: 'Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial,sans-serif';
   .el-form-item__label {
     padding: 0 12px 0 0 !important;
     color: #777C82;
@@ -29,7 +30,7 @@
     display: flex;
     padding-bottom: 32px;
     width: 90%;position: relative;
-    .cl-label{font: normal 14px/30px "micosoft yahei";color: #777C82;text-align: right;}
+    .cl-label{font-size: 14px;line-height: 30px;color: #777C82;text-align: right;width: 75px;}
     >.el-input, >.el-select{flex: 1;}
   }
   .operation1{ color: #00B3A1;font-size: 13px;margin: 10px}
@@ -37,6 +38,7 @@
   .el-table thead tr th{ background: #F0F2F5}
   .getUpDown{ font-size: 14px;color: #00B3A0;display: inline-block;margin-left: 20px;cursor: pointer}
   .dialogFooter{text-align: center;padding-top: 30px;}
+
 }
 
 .cl-container1{
@@ -55,7 +57,7 @@
   .cl-baseImg{position: absolute;top: 50%;margin-top: -147px;right: 12%}
 }
 .cl-container2 {
-  .cl-inlineItem .cl-label{width: 100px;}
+  .cl-inlineItem .cl-label{width: 75px;}
   .el-table .warning-row {
     background: #FFCCC7;color: #FF3D3D;
   }

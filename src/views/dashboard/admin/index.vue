@@ -19,7 +19,7 @@
         </div>
       </el-col>
     </el-row>
-    <div class="chart-wrapper" style="padding: 16px 16px 16px">
+    <div class="chart-wrapper" style="padding: 16px 16px 16px;margin-bottom: 0;">
       <h2>
         <i />操作员信息
       </h2>
@@ -80,12 +80,12 @@ export default {
       user:{}
     };
   },
-  created() {   
+  created() {
     this.$store.dispatch("app/setDictionary")
     let token=getToken()
     let _this=this
      window.HeadEvent.ChangeHead(token,_this.common.basePath)
-     
+
   },
   mounted() {
     this.GetNearly5DaysData()
@@ -180,12 +180,13 @@ export default {
     }
   }
   .userInfo {
+    margin-top: 24px;
     border: solid 1px #e5ebf4;
     padding: 0;
     li {
       list-style: none;
       border-bottom: solid 1px #e5ebf4;
-      padding: 13px 16px;
+      padding: 14px 16px;
       font-size: 14px;
       color: #8a9299;
       span {

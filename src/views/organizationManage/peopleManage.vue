@@ -3,7 +3,7 @@
     <div>
       <div id="conditionBox">
         <el-row>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
               <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList">
@@ -17,7 +17,7 @@
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
               <el-select v-model="queryData.OA_Job_Id" placeholder="请选择" size="small">
@@ -31,7 +31,7 @@
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">人员：</label>
               <el-input
@@ -42,7 +42,7 @@
               />
             </div>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位状态：</label>
               <el-select v-model="queryData.JobStatus" placeholder="请选择" size="small">
@@ -50,7 +50,7 @@
               </el-select>
             </div>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">入职时间：</label>
               <el-date-picker
@@ -68,7 +68,7 @@
               />
             </div>
           </el-col>
-          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">性别：</label>
               <el-select v-model="queryData.Gender" placeholder="请选择" size="small">
@@ -77,7 +77,7 @@
               </el-select>
             </div>
           </el-col>
-          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">电话号码：</label>
               <el-input
@@ -88,7 +88,7 @@
               />
             </div>
           </el-col>
-          <el-col v-show="ifMore" :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">出生日期：</label>
               <el-date-picker
@@ -106,7 +106,7 @@
               />
             </div>
           </el-col>
-          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">身份证号：</label>
               <el-input
@@ -117,7 +117,7 @@
               />
             </div>
           </el-col>
-          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
               <el-select v-model="queryData.createUserId" placeholder="请选择" size="small">
@@ -130,7 +130,7 @@
               </el-select>
             </div>
           </el-col>
-          <el-col v-show="ifMore" :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+          <el-col v-show="ifMore" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">操作时间：</label>
               <el-date-picker
@@ -148,8 +148,7 @@
               />
             </div>
           </el-col>
-
-          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">账号状态：</label>
               <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small">
@@ -159,7 +158,7 @@
               </el-select>
             </div>
           </el-col>
-          <el-col v-show="ifMore" :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+          <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">邮箱：</label>
               <el-input
@@ -170,7 +169,6 @@
               />
             </div>
           </el-col>
-
           <el-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" style="margin-bottom: 20px;">
             <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
             <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
@@ -199,7 +197,7 @@
             min-width="200px"
             sortable='custom'
             :prop="item.ColProp"
-            :align="item.Position"
+            align="center"
             :label="item.ColDesc"
             :fixed= "item.Freeze"
           />
@@ -209,11 +207,11 @@
             min-width="200px"
             sortable='custom'
             :prop="item.ColProp"
-            :align="item.Position"
+            align="center"
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column label="操作" width="200px" align="left" fixed="right">
+        <el-table-column label="操作" width="200px"  align="center" fixed="right">
           <template slot-scope="scope">
             <a class="operation1" @click="handleEdit(scope.row,1)">编辑</a>
             <a class="operation1" @click="handleEdit(scope.row,2)">详情</a>
@@ -352,7 +350,7 @@ export default {
           JobStatus: this.queryData.JobStatus,
           EnrollingTime: this.queryData.EnrollingTime,
           EnrollingTimeEnd: this.queryData.EnrollingTime,
-          Gender: '',
+          Gender: this.queryData.Gender,
           IDNumber: '',
           MobileNumber: '',
           Birthday: '',
@@ -448,7 +446,7 @@ export default {
           JobStatus: this.queryData.JobStatus,
           EnrollingTime: this.queryData.EnrollingTime,
           EnrollingTimeEnd: this.queryData.EnrollingTime,
-          Gender: '',
+          Gender: this.queryData.Gender,
           IDNumber: '',
           MobileNumber: '',
           Birthday: '',
@@ -559,7 +557,7 @@ export default {
     this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList()
     this.GetRoleNameList()
-    this.searchFun()
+    //this.searchFun()
   }
 }
 </script>
