@@ -8,39 +8,29 @@
     @submit.native.prevent
   >
     <el-form-item label="人员编号：">
-      <el-input maxlength="10" v-model="selectHead.empNo" placeholder="人员编号（长度1-10）" @keyup.enter.native="handleFilter" />
+      <el-input
+        maxlength="10"
+        v-model="selectHead.empNo"
+        placeholder="人员编号（长度1-10）"
+        @keyup.enter.native="handleFilter"
+      />
     </el-form-item>
     <el-form-item label="角色：">
-      <el-select v-model="selectHead.roldId"  placeholder="请选择" >
+      <el-select v-model="selectHead.roldId" placeholder="请选择">
         <el-option label="全部" value="-1" />
-        <el-option
-          v-for="item in roleList"
-          :key="item.Id"
-          :label="item.Name"
-          :value="item.Id"
-        />
+        <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="状态：">
       <el-select v-model="selectHead.userState" placeholder="请选择">
         <el-option label="全部" value="-1" />
-        <el-option
-          v-for="item in stateType"
-          :key="item.Id"
-          :label="item.Name"
-          :value="item.Id"
-        />
+        <el-option v-for="item in stateType" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="操作人：">
       <el-select v-model="selectHead.editUserId" placeholder="请选择">
         <el-option label="全部" value="-1" />
-        <el-option
-          v-for="item in editUserList"
-          :key="item.Id"
-          :label="item.Name"
-          :value="item.Id"
-        />
+        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="操作时间：">
@@ -63,20 +53,20 @@
 </template>
 <script>
 import { parseStartTime, parseEndTime } from "@/utils/index";
-import {getSelectUser} from "@/api/account"//获取操作人下拉框
-import {getDictionaryOption} from "@/utils/permission"
+import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import { getDictionaryOption } from "@/utils/permission";
 export default {
   props: {
     selectHead: {
       type: Object,
       default: function() {
-        return {}
+        return {};
       }
     },
-    roleList:{
+    roleList: {
       type: Array,
       default: function() {
-        return []
+        return [];
       }
     }
   },
@@ -85,7 +75,7 @@ export default {
       timevalue: [],
       oldOptions: [],
       editUserList: [],
-      stateType:[]
+      stateType: []
     };
   },
   created() {
@@ -95,21 +85,27 @@ export default {
     this.timevalue.push(new Date(end));
     this.selectHead.editStartTime = start;
     this.selectHead.editEndTime = end;
-    getSelectUser().then((res)=>{
-      this.editUserList=res.data
-    })
-    this.stateType=getDictionaryOption("用户状态")
+    getSelectUser().then(res => {
+      this.editUserList = res.data;
+    });
+    this.stateType = getDictionaryOption("用户状态");
   },
+
   methods: {
     getTime(v) {
-      this.selectHead.editStartTime = v[0]
-      this.selectHead.editEndTime = v[1]
+      if (v) {
+        this.selectHead.editStartTime = v[0];
+        this.selectHead.editEndTime = v[1];
+      } else {
+        this.selectHead.editStartTime = "";
+        this.selectHead.editEndTime = "";
+      }
     },
     handleFilter() {
       this.$emit("handleFilter", this.selectHead);
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 </style>

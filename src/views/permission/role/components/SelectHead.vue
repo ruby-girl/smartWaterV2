@@ -76,8 +76,13 @@ export default {
   },
   methods: {
     getTime(v) {
-      this.selectHead.editStartTime = v[0];
-      this.selectHead.editEndTime = v[1];
+      if (v) {
+        this.selectHead.editStartTime = v[0];
+        this.selectHead.editEndTime = v[1];
+      } else {
+        this.selectHead.editStartTime = "";
+        this.selectHead.editEndTime = "";
+      }
     },
     handleFilter() {
       this.$emit("handleFilter", this.selectHead);
