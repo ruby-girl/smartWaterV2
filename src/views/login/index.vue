@@ -18,7 +18,7 @@
           class="login-name"
           ref="username"
           v-model="loginForm.username"
-          placeholder="请输入您的登录账号"
+          placeholder="请输入您的登录账号（长度20）"
           name="username"
           type="text"
           tabindex="1"
@@ -34,8 +34,8 @@
           :key="passwordType"
           ref="password"
           v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="请输入您的登录密码"
+          @keyup.native="setNum"
+          placeholder="请输入您的登录密码（长度6-18）"
           name="password"
           tabindex="2"
           autocomplete="off"
@@ -46,9 +46,9 @@
       <el-button
         :loading="loading"
         type="primary"
-        style="width:100%;margin-top:25px;"
+        style="width:100%;margin-top:12px;font-size:20px;font-weight:ormal;"
         @click.native.prevent="handleLogin"
-      >Login</el-button>
+      >登&nbsp;&nbsp;录</el-button>
     </el-form>
      <transition name="fade">
     <div
@@ -110,7 +110,7 @@ export default {
       if (!value) {
         callback(new Error("不能为空"));
       } else if (value.length < 6 || value.length > 20) {
-        callback(new Error("长度6-18"));
+        callback(new Error("长度6-18位"));
       } else {
         callback();
       }
@@ -118,6 +118,7 @@ export default {
     return {
       loginForm: {
         username: "",
+        passwordSave:"",
         password: ""
       },
       optionList:[],
@@ -163,6 +164,15 @@ export default {
     }
   },
   methods: {
+     setNum() {
+      let value=this.loginForm.password
+     if(value.length>=this.loginForm.passwordSave.length){
+       this.loginForm.passwordSave+=value.substr(this.loginForm.passwordSave.length,value.length-this.loginForm.passwordSave.length) 
+     }else{
+       this.loginForm.passwordSave=this.loginForm.passwordSave.substr(0,value.length)
+     }
+     this.loginForm.password=this.loginForm.password.replace(/./g,"*")
+    },
     selectedUser(val){    
       this.loginForm.username=val
       this.$refs.username.focus();
@@ -183,7 +193,7 @@ export default {
               "",
               res.data.publicKeyModulus
             ); //密码加密
-            let pwd = RSA.encryptedString(key, this.loginForm.password);
+            let pwd = RSA.encryptedString(key, this.loginForm.passwordSave);
             postData.LoginPwd = pwd;
             postData.privateKeyId = res.data.privateKeyId;
             this.$store
@@ -285,7 +295,7 @@ $cursor: #283443;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
-      padding: 0 5px 0 15px;
+      padding: 0 5px 0 8px;
       color: $cursor;
       height: 27px;
       caret-color: $cursor;

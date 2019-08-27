@@ -8,7 +8,7 @@
     @submit.native.prevent
   >
     <el-form-item label="人员编号：">
-      <el-input v-model="selectHead.empNo" placeholder @keyup.enter.native="handleFilter" />
+      <el-input maxlength="10" v-model="selectHead.empNo" placeholder="人员编号（长度1-10）" @keyup.enter.native="handleFilter" />
     </el-form-item>
     <el-form-item label="角色：">
       <el-select v-model="selectHead.roldId"  placeholder="请选择" >

@@ -18,13 +18,12 @@
       label-width="100px"
     >
       <el-form-item label="新密码：" prop="pwd">
-        <el-input @keyup.native="setNum" v-model="resetData.pwd"></el-input>
+        <el-input @keyup.native="setNum" placeholder="请输入新密码" v-model="resetData.pwd"></el-input>
       </el-form-item>
       <el-form-item label="确认密码：" prop="pwdNew">
-        <el-input v-model="resetData.pwdNew"></el-input>
+        <el-input @keyup.native="setConfirmNum" placeholder="再次输入新密码" v-model="resetData.pwdNew"></el-input>
       </el-form-item>
     </el-form>
-
     <div slot="footer" class="dialog-footer">
       <el-button size="mini" @click="rDialogFormVisible = false">取消</el-button>
       <el-button size="mini" type="primary" @click="reset">确认</el-button>
@@ -66,8 +65,8 @@ export default {
         return callback(new Error("密码长度为6-18位"));
       }
       if (
-        this.resetData.pwd !== this.resetData.pwdNew &&
-        this.resetData.pwdNew !== ""
+        this.resetData.pwdSave !== this.resetData.pwdNewSave &&
+        this.resetData.pwdNewSave !== ""
       ) {
         return callback(new Error("二次输入的密码不一致"));
       }
@@ -81,7 +80,7 @@ export default {
       if (value.toString().length < 6 || value.toString().length > 18) {
         return callback(new Error("密码长度为6-18位"));
       }
-      if (this.resetData.pwd !== this.resetData.pwdNew) {
+      if (this.resetData.pwdSave !== this.resetData.pwdNewSave) {
         return callback(new Error("二次输入的密码不一致"));
       }
       this.$refs["dataFormReset"].clearValidate();
@@ -90,7 +89,9 @@ export default {
     return {
       resetData: {
         pwd: "",
-        pwdNew: ""
+        pwdNew: "",
+        pwdSave:"",
+        pwdNewSave:""
       },
       rules: {
         pwd: [{ required: true, validator: userPwd, trigger: "blur" }],
@@ -101,25 +102,27 @@ export default {
   },
   methods: {
     setNum() {
-     
-      this.resetData.pwd2 += this.resetData.pwd.charAt(this.resetData.pwd.length-1);
-      if (this.resetData.pwd2.length >= this.resetData.pwd.length) {
-        //当密码长度增加时由于前面的已经变成星号，所以截取后面输入的字符追加到str中
-        this.resetData.pwd2 += this.resetData.pwd.substr(
-          this.resetData.pwd2.length,
-          this.resetData.pwd.length - this.resetData.pwd2.length
-        );
-      } else {
-        //当密码长度减小时，判断减小后的长度，然后从真实密码中截取
-        this.resetData.pwd2 = this.resetData.pwd2.substr(0, value.length);
-      }
-      this.resetData.pwd = this.resetData.pwd.replace(/./g, "*");
-      console.log(this.resetData.pwd2)
+      let value=this.resetData.pwd
+     if(value.length>=this.resetData.pwdSave.length){
+       this.resetData.pwdSave+=value.substr(this.resetData.pwdSave.length,value.length-this.resetData.pwdSave.length) 
+     }else{
+       this.resetData.pwdSave=this.resetData.pwdSave.substr(0,value.length)
+     }
+     this.resetData.pwd=this.resetData.pwd.replace(/./g,"*")
+    },
+    setConfirmNum(){
+       let value=this.resetData.pwdNew
+     if(value.length>=this.resetData.pwdNewSave.length){
+       this.resetData.pwdNewSave+=value.substr(this.resetData.pwdNewSave.length,value.length-this.resetData.pwdNewSave.length) 
+     }else{
+       this.resetData.pwdNewSave=this.resetData.pwdNewSave.substr(0,value.length)
+     }
+     this.resetData.pwdNew=this.resetData.pwdNew.replace(/./g,"*")
     },
     reset() {
       this.$refs["dataFormReset"].validate(valid => {
         if (!valid) return false;
-        resetPwd({ userId: this.id, loginPwd: this.resetData.pwd }).then(
+        resetPwd({ userId: this.id, loginPwd: this.resetData.pwdSave }).then(
           res => {
             this.$message({
               message: res.message,
@@ -132,6 +135,12 @@ export default {
     },
     resetDialogClose() {
       this.$nextTick(() => {
+        this.resetData={
+          pwd:'',
+          pwdNew:'',
+          pwdSave:'',
+          pwdNewSave:''
+        }
         this.$refs["dataFormReset"].clearValidate();
       });
     }
