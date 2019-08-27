@@ -8,13 +8,13 @@
     @submit.native.prevent
   >
     <el-form-item label="角色：">
-      <el-input v-model="selectHead.roleName" placeholder @keyup.enter.native="handleFilter" />
+      <el-input v-model="selectHead.roleName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
     </el-form-item>
     <el-form-item label="人员名称：">
-      <el-input v-model="selectHead.userName" placeholder @keyup.enter.native="handleFilter" />
+      <el-input v-model="selectHead.userName" maxlength="10" placeholder="请输入人员名称" @keyup.enter.native="handleFilter" />
     </el-form-item>
     <el-form-item label="人员编号：">
-      <el-input v-model="selectHead.userNum" placeholder @keyup.enter.native="handleFilter" />
+      <el-input v-model="selectHead.userNum" maxlength="10" placeholder="请输入人员编号" @keyup.enter.native="handleFilter" />
     </el-form-item>
     <el-form-item label="操作人：">
       <el-select v-model="selectHead.editUserId" placeholder="请选择">

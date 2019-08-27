@@ -110,7 +110,7 @@ export default {
       if (!value) {
         callback(new Error("不能为空"));
       } else if (value.length < 6 || value.length > 20) {
-        callback(new Error("长度6-18位"));
+        callback(new Error("长度6-18"));
       } else {
         callback();
       }
