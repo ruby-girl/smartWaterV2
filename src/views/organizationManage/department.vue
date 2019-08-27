@@ -28,7 +28,7 @@
               <label class="cl-label">操作时间：</label>
               <el-date-picker
                 v-model="createStartTimes"
-                style="width: 83%"
+                style="width: 80%"
                 size="small"
                 type="datetimerange"
                 range-separator="~"

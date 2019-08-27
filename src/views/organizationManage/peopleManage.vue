@@ -55,7 +55,7 @@
               <label class="cl-label">入职时间：</label>
               <el-date-picker
                 v-model="EntryTime"
-                style="width: 83%"
+                style="width: 81%"
                 size="small"
                 type="daterange"
                 range-separator="~"
@@ -94,7 +94,7 @@
               <label class="cl-label">出生日期：</label>
               <el-date-picker
                 v-model="birthdayTime"
-                style="width: 83%"
+                style="width: 81%"
                 size="small"
                 type="daterange"
                 range-separator="~"
@@ -136,7 +136,7 @@
               <label class="cl-label">操作时间：</label>
               <el-date-picker
                 v-model="operationTime"
-                style="width: 83%"
+                style="width: 81%"
                 size="small"
                 type="daterange"
                 range-separator="~"
