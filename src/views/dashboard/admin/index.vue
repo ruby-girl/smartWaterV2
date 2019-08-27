@@ -50,6 +50,7 @@
 </template>
 
 <script>
+
 import PanelGroup from "./components/PanelGroup";
 import LineChart from "./components/LineChart";
 import BarChart from "./components/BarChart";
@@ -153,6 +154,7 @@ export default {
         }
       })
     },
+
   }
 };
 </script>

@@ -123,7 +123,7 @@ export const asyncRoutes = [
       },
       {
         path: '/organizationManage/PeopleManage',
-        name: 'PeopleManage',
+        name: 'peopleManage',
         component: () => import('@/views/organizationManage/peopleManage'),
         meta: { title: '人员管理',  roles: ['1'] }
       },

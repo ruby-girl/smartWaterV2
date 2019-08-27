@@ -72,6 +72,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">性别：</label>
               <el-select v-model="queryData.Gender" placeholder="请选择" size="small">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option label="女" value="女" />
                 <el-option label="男" value="男" />
               </el-select>
@@ -82,7 +83,7 @@
               <label class="cl-label">电话号码：</label>
               <el-input
                 v-model="queryData.MobileNumber"
-                placeholder="人员名称/员工编号"
+                placeholder="请输入11位电话号码"
                 maxlength="10"
                 size="small"
               />
@@ -111,7 +112,7 @@
               <label class="cl-label">身份证号：</label>
               <el-input
                 v-model.trim="queryData.IDNumber"
-                placeholder="请输入身份证号"
+                placeholder="请输入18位身份证号"
                 maxlength="10"
                 size="small"
               />
@@ -257,6 +258,7 @@ import Pagination from '../../components/Pagination/index'
 import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl} from "@/api/organize"
 let deleteId;
 import Bus from '@/utils/bus.js'
+import { parseStartTime, parseEndTime } from "@/utils/index";
 
 export default {
   name: 'peopleManage',
@@ -271,13 +273,13 @@ export default {
         limit: 10,
         filed:'',
         sort:"",
-        SYS_Department_Id: '',
-        OA_Job_Id: '',
+        SYS_Department_Id: '-1',
+        OA_Job_Id: '-1',
         EmpNo: '',
-        JobStatus: '',
+        JobStatus: '在职',
         EnrollingTime: '',
         EnrollingTimeEnd: '',
-        Gender: '',
+        Gender: '-1',
         IDNumber: '',
         MobileNumber: '',
         Birthday: '',
@@ -547,12 +549,20 @@ export default {
     }
   },
   mounted() {
+    let start = parseStartTime(new Date());
+    let end = parseEndTime(new Date());
+    this.EntryTime.push(new Date(start));
+    this.EntryTime.push(new Date(end));
+
     this.$refs.myChild.GetTable(this.queryData.tableId);
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
     this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList()
     this.GetRoleNameList()
-    //this.searchFun()
+    let self = this
+    Bus.$on('msg', (e) => {
+      self.searchFun()
+    })
   }
 }
 </script>

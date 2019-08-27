@@ -61,21 +61,22 @@ export default {
       }
       InitTableStyle(tsp).then(res => {
         if(res.code==0){
-          this.$message({
-            message: '已恢复默认设置',
-            type: 'success'
-          });
           sessionStorage.removeItem(this.curID)
           let data = res.data
           for(let i=0;i<data.length;i++){
              for(let j=0;j<this.checkData.length;j++){
                if(data[i].IsShow && data[i].Id == this.checkData[j].Id){
+                 this.checkData[j].IsCheck = false
                  this.checkData[j].IsCheck = true
                  this.checkData[j].Sort =  data[i].Sort
                }
             }
           }
           this.sort(this.checkData)
+          this.$message({
+            message: '已恢复默认设置',
+            type: 'success'
+          });
         } else {
           this.$message({
             message: res.message,

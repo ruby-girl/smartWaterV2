@@ -22,7 +22,7 @@
           name="username"
           type="text"
           tabindex="1"
-          autocomplete="off"     
+          autocomplete="off"
         />
         <i class="iconfont iconzhankai" @click="down=true" v-show="down==false"/>
         <i class="iconfont iconshouqi"  @click="down=false" v-show="down==true"/>
@@ -66,7 +66,7 @@
             <!---->
             <li data-v-37dfd6fc class="el-select-dropdown__item" @click.stop.prevent="selectedUser(item)" v-for="item in optionList" style>
               <span>{{item}}</span>
-            </li> 
+            </li>
           </ul>
         </div>
         <div class="el-scrollbar__bar is-horizontal">
@@ -78,7 +78,7 @@
       </div>
       <!---->
       <div x-arrow class="popper__arrow" style="left: 35px;"></div>
-      
+
     </div>
     </transition>
   </div>
@@ -99,9 +99,9 @@ export default {
     const validateUsername = (rule, value, callback) => {
       let _this=this
       setTimeout(function(){
-        if (!_this.loginForm.username) {       
+        if (!_this.loginForm.username) {
         callback(new Error("不能为空"));
-      } else {    
+      } else {
         callback();
       }
       },300)
@@ -163,7 +163,7 @@ export default {
     }
   },
   methods: {
-    selectedUser(val){    
+    selectedUser(val){
       this.loginForm.username=val
       this.$refs.username.focus();
       this.down=false
@@ -195,7 +195,7 @@ export default {
                   path: this.redirect || "/",
                   query: this.otherQuery
                 });
-               
+
                 this.loading = false;
               })
               .catch(() => {

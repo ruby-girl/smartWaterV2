@@ -30,12 +30,11 @@
                 v-model="createStartTimes"
                 style="width: 83%"
                 size="small"
-                type="daterange"
+                type="datetimerange"
                 range-separator="~"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                :default-time="['00:00:00', '23:59:59']"
-                format="yyyy-MM-dd"
+                format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 @change="getTime1"
               />
@@ -148,6 +147,7 @@
   import { GetList, Add, UpDate, Delete, GetList_Execl } from "@/api/organize"
   import { GetLoginNameList } from "@/api/user"
   let ID = '',editObj = {};
+  import { parseTime } from "@/utils/index"
 
   export default {
     name: 'department',
@@ -160,14 +160,14 @@
         dialogVisible: false,
         title: '',
         total: 0,
-        createStartTimes:'',
+        createStartTimes:[],
         dp: {
           page: 1,
           limit: 10,
           filed:'',
           sort:"",
           DeptName: '',
-          createUserId: '',
+          createUserId: '-1',
           createStartTime: '',
           createEndTime: '',
           tableId: '0000001'
@@ -368,11 +368,15 @@
       }
     },
     mounted() {
+      let start = parseTime(new Date());
+      let end = parseTime(new Date());
+      this.createStartTimes.push(new Date(start));
+      this.createStartTimes.push(new Date(end));
+
       this.GetLoginNameList()
       this.$refs.myChild.GetTable(this.dp.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      //this.searchFun()
     }
   }
 </script>

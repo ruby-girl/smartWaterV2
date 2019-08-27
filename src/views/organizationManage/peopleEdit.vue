@@ -192,6 +192,7 @@
           post: [],
           depart: []
         })
+        this.isFlag = false;
         this.getComboBoxList()
       },
       /**
@@ -206,7 +207,7 @@
        * */
       submitForm(formName) {
         let self =this
-        this.isFlag = true;
+       // this.isFlag = true;
         this.jp.oeoList = [];
         for(let i=0;i< this.sojList.length; i++) {
           this.jp.oeoList.push({
@@ -226,12 +227,17 @@
         for(let j =0;j<this.upload.file.length;j++){
           this.jp.Idarr.push(this.upload.file[j].id)
         }
-        console.log(self.jp.Birthday)
-        console.log("======================")
+        for(let i=0;i<this.jp.oeoList.length;i++){
+          if(this.jp.oeoList[i].OA_Job_Id==''||this.jp.oeoList[i].SYS_Department_Id==''){
+            this.isFlag = true;
+          }else {
+            this.isFlag = false;
+          }
+        }
 
+        return
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(self.jp.Birthday)
             peopleUpDate(self.jp).then(res => {
                 if(res.code==0){
                   this.$message({
@@ -263,18 +269,9 @@
         for(let i=0;i<this.upload.file.length;i++){
           ids.push(this.upload.file[i].id)
         }
+        if(ids.length<=0)
+          return
         DeleteList({idarr:ids}).then(res => {
-          if(res.code==0){
-            this.$message({
-              message: res.message,
-              type: 'warning'
-            });
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'warning'
-            });
-          }
         })
       },
       /**

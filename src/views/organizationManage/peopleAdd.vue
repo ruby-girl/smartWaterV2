@@ -281,17 +281,6 @@
         if(ids.length<=0)
           return
         DeleteList({idarr:ids}).then(res => {
-          if(res.code==0){
-            this.$message({
-              message: res.message,
-              type: 'warning'
-            });
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'warning'
-            });
-          }
         })
 
       },
