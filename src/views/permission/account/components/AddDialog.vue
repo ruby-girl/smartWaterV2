@@ -18,7 +18,7 @@
       label-width="100px"
     >
       <el-form-item label="人员编号：" prop="userNum">
-        <el-input v-model="temp.userNum"></el-input>
+        <el-input maxlength="10" v-model="temp.userNum" placeholder="请输入人员编号"></el-input>
       </el-form-item>
       <el-form-item label="角色：" prop="roleId">
         <el-select v-model="temp.roleId" placeholder="请选择">
@@ -26,10 +26,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="账号：" prop="loginName">
-        <el-input v-model="temp.loginName"></el-input>
+        <el-input  v-model="temp.loginName" maxlength="20" placeholder="长度20"></el-input>
       </el-form-item>
       <el-form-item label="密码：" prop="loginPwd">
-        <el-input v-model="temp.loginPwd"></el-input>
+        <el-input v-model="temp.loginPwd" maxlength="18" placeholder="请输入6-18位密码"></el-input>
       </el-form-item>
     </el-form>
 
