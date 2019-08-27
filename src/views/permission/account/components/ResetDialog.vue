@@ -18,7 +18,7 @@
       label-width="100px"
     >
       <el-form-item label="新密码：" prop="pwd">
-        <el-input v-model="resetData.pwd"></el-input>
+        <el-input @keyup.native="setNum" v-model="resetData.pwd"></el-input>
       </el-form-item>
       <el-form-item label="确认密码：" prop="pwdNew">
         <el-input v-model="resetData.pwdNew"></el-input>
@@ -58,14 +58,17 @@ export default {
     }
   },
   data() {
-    var userPwd = (rule, value, callback) => {   
+    var userPwd = (rule, value, callback) => {
       if (value === "") {
         return callback(new Error("不能为空"));
       }
       if (value.toString().length < 6 || value.toString().length > 18) {
         return callback(new Error("密码长度为6-18位"));
       }
-    if (this.resetData.pwd !== this.resetData.pwdNew&&this.resetData.pwdNew!=='') {
+      if (
+        this.resetData.pwd !== this.resetData.pwdNew &&
+        this.resetData.pwdNew !== ""
+      ) {
         return callback(new Error("二次输入的密码不一致"));
       }
       this.$refs["dataFormReset"].clearValidate();
@@ -75,7 +78,7 @@ export default {
       if (value === "") {
         return callback(new Error("不能为空"));
       }
-       if (value.toString().length < 6 || value.toString().length > 18) {
+      if (value.toString().length < 6 || value.toString().length > 18) {
         return callback(new Error("密码长度为6-18位"));
       }
       if (this.resetData.pwd !== this.resetData.pwdNew) {
@@ -97,16 +100,34 @@ export default {
     };
   },
   methods: {
+    setNum() {
+     
+      this.resetData.pwd2 += this.resetData.pwd.charAt(this.resetData.pwd.length-1);
+      if (this.resetData.pwd2.length >= this.resetData.pwd.length) {
+        //当密码长度增加时由于前面的已经变成星号，所以截取后面输入的字符追加到str中
+        this.resetData.pwd2 += this.resetData.pwd.substr(
+          this.resetData.pwd2.length,
+          this.resetData.pwd.length - this.resetData.pwd2.length
+        );
+      } else {
+        //当密码长度减小时，判断减小后的长度，然后从真实密码中截取
+        this.resetData.pwd2 = this.resetData.pwd2.substr(0, value.length);
+      }
+      this.resetData.pwd = this.resetData.pwd.replace(/./g, "*");
+      console.log(this.resetData.pwd2)
+    },
     reset() {
       this.$refs["dataFormReset"].validate(valid => {
         if (!valid) return false;
-        resetPwd({userId:this.id,loginPwd:this.resetData.pwd}).then((res)=>{
-             this.$message({
-            message: res.message,
-            type: "success"
-          });
-          this.rDialogFormVisible=false
-        })
+        resetPwd({ userId: this.id, loginPwd: this.resetData.pwd }).then(
+          res => {
+            this.$message({
+              message: res.message,
+              type: "success"
+            });
+            this.rDialogFormVisible = false;
+          }
+        );
       });
     },
     resetDialogClose() {

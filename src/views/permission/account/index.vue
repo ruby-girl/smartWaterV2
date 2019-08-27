@@ -59,7 +59,7 @@
                 <div class="main-color-red pl-15" @click="cancel(row)" v-permission="['1010105']">
                   <a>注销</a>
                 </div>
-                <div class="main-color-red pl-15" @click="reset(row)" v-permission="['1010107']">
+                <div class="main-color pl-15" @click="reset(row)" v-permission="['1010107']">
                   <a>重置密码</a>
                 </div>
               </div>
