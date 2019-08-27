@@ -44,13 +44,13 @@
             </el-form-item>
           </el-col>
           <el-col v-for="(item,index) in form.blList" :key="index" :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
-            <el-col :span="12">
-              <el-form-item label="部门:">
+            <el-col :span="12" style="padding-left: 0">
+              <el-form-item label="部门:" >
                 <span>{{ item.SYS_DepartmentName }}</span>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="岗位:">
+            <el-col :span="12" style="padding-left: 0">
+              <el-form-item label="岗位:" >
                 <span>{{ item.OA_JobName }}</span>
               </el-form-item>
             </el-col>
@@ -62,7 +62,7 @@
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item>
-              <ul class="fileBox clearfix">
+              <ul :class="maxHeight? 'fileBox clearfix fileBoxHeight':'fileBox clearfix'">
                 <li v-for="(item,index) in file" :key="index">
                   <p v-show="item.type === 0?true:false"><img :src="item.url"></p>
                   <p v-show="item.type === 1?true:false"><span class="icon iconfont" style="color:#345e9e;font-size: 60px;">&#xe65d;</span></p>
@@ -75,12 +75,12 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
             <el-form-item label="操作人:">
-              <span>{{ form.CreateUser }}</span>
+              <span>{{ form.EditUser }}</span>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
             <el-form-item label="操作时间:">
-              <span>{{ form.CreateTime }}</span>
+              <span>{{ form.EditTime }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -108,6 +108,7 @@ export default {
   name: 'peopleDetail',
   data() {
     return {
+      maxHeight:false,
       form: {
         Address: '',
         Birthday: '',
@@ -174,6 +175,8 @@ export default {
     getInfo() {
       GetBlObjById({id:this.$route.params.id}).then(res => {
         if(res.code==0){
+          res.data.Birthday = res.data.Birthday.replace(' 00:00:00','')
+          res.data.EnrollingTime = res.data.EnrollingTime.replace(' 00:00:00','')
           this.form = res.data
           let fileData = res.data.saList
           let obj = {}
@@ -196,6 +199,11 @@ export default {
               url: this.baseUrl + (fileData[i].RelativePath).replace("~",""),
             }
             this.file.push(obj)
+            if(this.file.length>16){
+              this.maxHeight = true
+            }else{
+              this.maxHeight = false
+            }
           }
         }else {
           this.$message({
