@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-editor-container">
+  <div class="dashboard-editor-container totalHieght">
     <panel-group :panel-data="paneldata" />
     <el-row :gutter="16">
       <el-col :xs="24" :sm="12" :lg="12">
@@ -19,7 +19,7 @@
         </div>
       </el-col>
     </el-row>
-    <div class="chart-wrapper" style="padding: 16px 16px 16px;margin-bottom: 0;">
+    <div class="chart-wrapper" id="oprationBox" style="padding: 16px 16px 16px;margin-bottom: 0;">
       <h2>
         <i />操作员信息
       </h2>
@@ -93,6 +93,9 @@ export default {
     }
   },
   mounted() {
+    this.$nextTick(() => {
+      document.getElementById('oprationBox').style.height = (document.getElementsByClassName('totalHieght')[0].offsetHeight - document.getElementById('oprationBox').offsetTop) + 'px'
+    })
     this.GetNearly5DaysData()
     this.GetTodayData()
     this.GetFirstPageRoleInfo()
@@ -178,7 +181,7 @@ export default {
     margin-bottom: 16px;
     h2 {
       color: #00b3a1;
-      font: bold 14px "";
+      font: bold 14px "MicrosoftYaHei";
       margin: 0;
       i {
         display: inline-block;
