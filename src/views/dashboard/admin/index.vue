@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-editor-container totalHieght">
+  <div class="dashboard-editor-container totalHieght" style="height: 100%">
     <panel-group :panel-data="paneldata" />
     <el-row :gutter="16">
       <el-col :xs="24" :sm="12" :lg="12">

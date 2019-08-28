@@ -23,3 +23,9 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .dashboard-container{
+    height: calc(100vh - 64px);position: relative;
+  }
+</style>
+
