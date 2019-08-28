@@ -46,7 +46,7 @@
       />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" size="mini" class="iconfont iconsousuo" @click="handleFilter">搜索</el-button>
+      <el-button type="primary" size="mini"  @click="handleFilter"><i class="iconfont iconsousuo"></i>搜索</el-button>
     </el-form-item>
   </el-form>
 </template>

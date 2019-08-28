@@ -181,7 +181,7 @@ export default {
     margin-bottom: 16px;
     h2 {
       color: #00b3a1;
-      font: bold 14px "MicrosoftYaHei";
+      font: bold 14px "Microsoft YaHei";
       margin: 0;
       i {
         display: inline-block;

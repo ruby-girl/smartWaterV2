@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" @click="down=false">
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -25,8 +25,8 @@
           tabindex="1"
           autocomplete="off"
         />
-        <i class="iconfont iconzhankai" @click="down=true" v-show="down==false"/>
-        <i class="iconfont iconshouqi"  @click="down=false" v-show="down==true"/>
+        <i class="iconfont iconzhankai" @click.prevent="down=true" v-show="down==false"/>
+        <i class="iconfont iconshouqi"  @click.prevent="down=false" v-show="down==true"/>
       </el-form-item>
 
       <el-form-item prop="password">
@@ -178,8 +178,12 @@ export default {
      }
      this.loginForm.password=this.loginForm.password.replace(/./g,"*")
     },
-    selectedUser(val){    
+    selectedUser(val){
+      if(this.loginForm.username!==val){
+        this.loginForm.password=''
+      }  
       this.loginForm.username=val
+
       this.$refs.username.focus();
       this.down=false
     },
