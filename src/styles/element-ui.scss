@@ -132,3 +132,20 @@
 .el-form-item__label{
   padding:0 !important;
 }
+.el-submenu__title{
+  height:45px !important;
+  line-height: 42px !important;
+}
+.el-table th > .cell{
+  font-weight: 400;
+  color:#46494C;
+}
+tbody .hover-row>td{
+  background-color: #DAF2EC !important;
+}
+.el-table--medium th{
+  padding:3px 0;
+}
+.el-pagination__editor.el-input .el-input__inner{
+  line-height: 28px !important;
+}

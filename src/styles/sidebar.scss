@@ -84,7 +84,8 @@
       background-color: $subMenuBg !important;
       padding-left: 50px !important;
       font-size: 13px;
-
+      height:40px;
+      line-height: 40px;
       &:hover {
         background-color: $subMenuHover !important;
       }
