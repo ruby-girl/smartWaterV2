@@ -42,7 +42,6 @@ module.exports = {
         ws: true, // 为true表示可以给webscoket使用
         changeOrigin: true,
         pathRewrite: { '^/api': '/' }, // 重定向
-        secure: false
       }
     }
   },

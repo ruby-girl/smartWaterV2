@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getToken() {
   return request({
-    url: '/qiniu/upload/token', // 
+    url: '/api/qiniu/upload/token', //
     method: 'get'
   })
 }
