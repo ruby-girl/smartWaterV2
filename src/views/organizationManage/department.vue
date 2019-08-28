@@ -100,6 +100,7 @@
     </div>
     <!--编辑或新增窗口 s-->
     <el-dialog
+      top="30vh"
       :title="title"
       :visible.sync="dialogVisible"
       :before-close="handleClose"
@@ -124,6 +125,7 @@
     <!--编辑或新增窗口 e-->
     <!--警告信息 s-->
     <el-dialog
+      top="30vh"
       title="提示"
       class="warningBox"
       :visible.sync="warnVisible"
