@@ -130,6 +130,7 @@ export default {
       font-size: 14px;
       color: #00B3A1;
       margin: 10px 0 0 20px;
+      font-family: 'MicrosoftYaHei';
     }
 
     .card-panel-icon {
@@ -138,7 +139,7 @@ export default {
     }
     .card-panel-text {
       color: #00B3A1;
-      font: bold 22px/30px '';
+      font: bold 22px/30px 'MicrosoftYaHei';
       margin: 0;
     }
     .card-panel-text2 {
@@ -149,7 +150,7 @@ export default {
     .card-panel-description {
       float: right;
       margin: 7px 10px 0 0px;
-      span { font-size: 50px;}
+      span { font-size: 50px;font-family: 'MicrosoftYaHei'}
     }
   }
 }
