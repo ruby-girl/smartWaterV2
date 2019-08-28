@@ -67,10 +67,16 @@ export default {
   },
   methods: {
     createData() {
-      this.$emit('createData', this.temp)
+       this.$refs["dataForm"].validate(valid => {
+        if (!valid) return false;
+       this.$emit('createData', this.temp)
+       })
     },
     updateData() {
+       this.$refs["dataForm"].validate(valid => {
+        if (!valid) return false;
       this.$emit('updateData', this.temp)
+       })   
     }
   }
 }

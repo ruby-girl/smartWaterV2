@@ -79,7 +79,6 @@ export default {
   },
   methods: {
     updateData() {
-      console.log('11')
       this.$emit('updateData', this.temp)
     },
     editDialogClose() {

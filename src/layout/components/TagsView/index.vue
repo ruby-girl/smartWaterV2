@@ -282,6 +282,7 @@ export default {
         transform: scale(.6);
         display: inline-block;
         vertical-align: -3px;
+        font-size: 15px;
       }
       &:hover {
         background-color: #b4bccc;

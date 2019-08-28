@@ -66,9 +66,9 @@ export function parseStartTime(time, cFormat) {
     y: date.getFullYear(),
     m: date.getMonth() + 1,
     d: date.getDate(),
-    h: 0,
-    i: 0,
-    s: 0,
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
     a: date.getDay()
   }
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
@@ -103,9 +103,9 @@ export function parseEndTime(time, cFormat) {
     y: date.getFullYear(),
     m: date.getMonth() + 1,
     d: date.getDate(),
-    h: 23,
-    i: 59,
-    s: 59,
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
     a: date.getDay()
   }
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {

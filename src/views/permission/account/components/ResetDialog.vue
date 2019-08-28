@@ -18,10 +18,10 @@
       label-width="100px"
     >
       <el-form-item label="新密码：" prop="pwd">
-        <el-input @keyup.native="setNum" placeholder="请输入新密码" v-model="resetData.pwd"></el-input>
+        <el-input @keyup.native="setNum" maxlength="18" placeholder="请输入新密码" v-model="resetData.pwd"></el-input>
       </el-form-item>
       <el-form-item label="确认密码：" prop="pwdNew">
-        <el-input @keyup.native="setConfirmNum" placeholder="再次输入新密码" v-model="resetData.pwdNew"></el-input>
+        <el-input :disabled="disabled" @keyup.native="setConfirmNum" maxlength="18" placeholder="再次输入新密码" v-model="resetData.pwdNew"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -93,6 +93,7 @@ export default {
         pwdSave:"",
         pwdNewSave:""
       },
+      disabled:true,
       rules: {
         pwd: [{ required: true, validator: userPwd, trigger: "blur" }],
         pwdNew: [{ required: true, validator: userPwdNew, trigger: "blur" }]
@@ -109,6 +110,10 @@ export default {
        this.resetData.pwdSave=this.resetData.pwdSave.substr(0,value.length)
      }
      this.resetData.pwd=this.resetData.pwd.replace(/./g,"*")
+     if(value.length>0)
+       this.disabled=false
+     else
+      this.disabled=true
     },
     setConfirmNum(){
        let value=this.resetData.pwdNew
