@@ -112,6 +112,7 @@
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
+      :before-close="handleClose"
       width="400px"
     >
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
@@ -361,6 +362,14 @@ export default {
       }
       this.$refs[formName].resetFields();
     },
+    handleClose(){
+      this.dialogVisible = false;
+      this.ruleForm = {
+        SYS_Department_Id: '',
+        JobName: ''
+      }
+      this.$refs['ruleForm'].resetFields();
+    },
     /**
      * 获取部门信息
      * */
@@ -391,6 +400,7 @@ export default {
         }
       })
     },
+
     getTime1(data) {
       if(data !=null) {
         this.jp.createStartTime = data[0]

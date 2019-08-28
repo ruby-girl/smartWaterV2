@@ -102,6 +102,7 @@
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
+      :before-close="handleClose"
       width="400px"
     >
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
@@ -330,6 +331,11 @@
         this.dialogVisible = false;
         this.ruleForm.newDertmentName = ''
         this.$refs[formName].resetFields();
+      },
+      handleClose(){
+        this.dialogVisible = false;
+        this.ruleForm.newDertmentName = ''
+        this.$refs['ruleForm'].resetFields();
       },
       getTime1(data) {
         if(data !=null){
