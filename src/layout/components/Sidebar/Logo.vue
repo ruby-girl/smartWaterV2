@@ -18,7 +18,7 @@
       <div class="logo-label">邮箱:</div>
     </div>
     <div class="logo-item-height">
-      <div class="main-color-fff text-wrap">59703277@qq.com</div>
+      <div class="main-color-fff text-wrap"></div>
     </div>
     <div class="display-flex">
       <div class="iconfont icondengluxinxi-shangcidenglu" />

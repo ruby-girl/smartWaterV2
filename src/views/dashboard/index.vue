@@ -16,6 +16,17 @@ export default {
       currentRole: 'adminDashboard'
     }
   },
+  created(){
+      document.onkeydown = function(e) {
+        var ev = document.all ? window.event : e;
+        var obj = ev.target || ev.srcElement;
+        var t = obj.type;    
+        if (ev.keyCode == 8 && t != "password" && t != "text" && t != "textarea") {
+				// 禁用BackSpace事件
+            return false;
+        }
+    };
+  },
   computed: {
     ...mapGetters([
       'roles'

@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container" @click="down=false">
+  <div class="login-container">
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -25,8 +25,8 @@
           tabindex="1"
           autocomplete="off"
         />
-        <i class="iconfont iconzhankai" @click.prevent="down=true" v-show="down==false"/>
-        <i class="iconfont iconshouqi"  @click.prevent="down=false" v-show="down==true"/>
+        <i class="iconfont iconzhankai" @click.stop="down=true" v-show="down==false"/>
+        <i class="iconfont iconshouqi"  @click.stop="down=false" v-show="down==true"/>
       </el-form-item>
 
       <el-form-item prop="password">
@@ -41,7 +41,6 @@
           tabindex="2"
           maxlength="18"
           autocomplete="off"
-          @blur="capsTooltip = false"
           @keyup.enter.native="handleLogin"
         />
       </el-form-item>
@@ -126,7 +125,7 @@ export default {
         passwordSave:"",
         password: ""
       },
-      optionList:[],
+      optionList:['1'],
       down:false,
       loginRules: {
         username: [
@@ -166,6 +165,10 @@ export default {
     this.optionList=[]
     }else{
       this.optionList=optionList
+    }
+    let _this=this
+     document.onclick = function (e) {
+      _this.down=false
     }
   },
   methods: {

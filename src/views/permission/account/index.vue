@@ -260,7 +260,7 @@ export default {
       });
     },
     cancel(row) {
-      this.$confirm("是否申请注销当前账号", "提示", {
+      this.$confirm("是否注销当前账号", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
