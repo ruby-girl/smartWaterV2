@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/api/Login/Login',
+    url: '/Login/Login',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function login(data) {
 // 获取配置项
 export function getDictionaryItem() {
   return request({
-    url: '/api/Dictionary/GetDictionaryListAll',
+    url: '/Dictionary/GetDictionaryListAll',
     method: 'get',
   })
 }
@@ -18,28 +18,28 @@ export function getDictionaryItem() {
 //首页
 export function GetTodayData() {
   return request({
-    url: '/api/FirstPage/GetTodayData',
+    url: '/FirstPage/GetTodayData',
     method: 'post',
   })
 }
 
 export function GetSoftExpirationDate() {
   return request({
-    url: '/api/FirstPage/GetSoftExpirationDate',
+    url: '/FirstPage/GetSoftExpirationDate',
     method: 'post',
   })
 }
 
 export function GetNearly5DaysData() {
   return request({
-    url: '/api/FirstPage/GetNearly5DaysData',
+    url: '/FirstPage/GetNearly5DaysData',
     method: 'post',
   })
 }
 
 export function GetFirstPageRoleInfo() {
   return request({
-    url: '/api/FirstPage/GetFirstPageRoleInfo',
+    url: '/FirstPage/GetFirstPageRoleInfo',
     method: 'post',
   })
 }

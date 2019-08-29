@@ -5,7 +5,7 @@ import request from '@/utils/request'
  * */
 export function GetList(data) {
   return request({
-    url: '/api/Department/GetList',
+    url: '/Department/GetList',
     method: 'post',
     data: data
   })
@@ -13,7 +13,7 @@ export function GetList(data) {
 
 export function Add(data) {
   return request({
-    url: '/api/Department/Add',
+    url: '/Department/Add',
     method: 'post',
     data: data
   })
@@ -21,7 +21,7 @@ export function Add(data) {
 
 export function UpDate(data) {
   return request({
-    url: '/api/Department/UpDate',
+    url: '/Department/UpDate',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function UpDate(data) {
 
 export function Delete(data) {
   return request({
-    url: '/api/Department/Delete',
+    url: '/Department/Delete',
     method: 'post',
     data: data
   })
@@ -37,7 +37,7 @@ export function Delete(data) {
 
 export function ComboBoxList(data) {
   return request({
-    url: '/api/Department/ComboBoxList',
+    url: '/Department/ComboBoxList',
     method: 'post',
     data: data
   })
@@ -45,7 +45,7 @@ export function ComboBoxList(data) {
 
 export function GetList_Execl(data) {
   return request({
-    url: '/api/Department/GetList_Execl',
+    url: '/Department/GetList_Execl',
     method: 'post',
     data: data
   })
@@ -56,7 +56,7 @@ export function GetList_Execl(data) {
  * */
 export function GetListPost(data) {
   return request({
-    url: '/api/Job/GetList',
+    url: '/Job/GetList',
     method: 'post',
     data: data
   })
@@ -64,7 +64,7 @@ export function GetListPost(data) {
 
 export function AddPost(data) {
   return request({
-    url: '/api/Job/Add',
+    url: '/Job/Add',
     method: 'post',
     data: data
   })
@@ -72,7 +72,7 @@ export function AddPost(data) {
 
 export function UpDatePost(data) {
   return request({
-    url: '/api/Job/UpDate',
+    url: '/Job/UpDate',
     method: 'post',
     data: data
   })
@@ -80,7 +80,7 @@ export function UpDatePost(data) {
 
 export function DeletePost(data) {
   return request({
-    url: '/api/Job/Delete',
+    url: '/Job/Delete',
     method: 'post',
     data: data
   })
@@ -88,7 +88,7 @@ export function DeletePost(data) {
 
 export function linkComboBoxList(data) {
   return request({
-    url: '/api/Job/ComboBoxList',
+    url: '/Job/ComboBoxList',
     method: 'post',
     params: data
   })
@@ -96,7 +96,7 @@ export function linkComboBoxList(data) {
 
 export function JobGetList_Execl(data) {
   return request({
-    url: '/api/Job/GetList_Execl',
+    url: '/Job/GetList_Execl',
     method: 'post',
     data: data
   })
@@ -107,7 +107,7 @@ export function JobGetList_Execl(data) {
  **/
 export function peopleDelete(data) {
   return request({
-    url: '/api/Employee/Delete',
+    url: '/Employee/Delete',
     method: 'post',
     params: data
   })
@@ -115,7 +115,7 @@ export function peopleDelete(data) {
 
 export function peopleUpDate(data) {
   return request({
-    url: '/api/Employee/UpDate',
+    url: '/Employee/UpDate',
     method: 'post',
     data: data
   })
@@ -123,7 +123,7 @@ export function peopleUpDate(data) {
 
 export function peopleGetList(data) {
   return request({
-    url: '/api/Employee/GetList',
+    url: '/Employee/GetList',
     method: 'post',
     data: data
   })
@@ -131,7 +131,7 @@ export function peopleGetList(data) {
 
 export function peopleAdd(data) {
   return request({
-    url: '/api/Employee/Add',
+    url: '/Employee/Add',
     method: 'post',
     data: data
   })
@@ -139,7 +139,7 @@ export function peopleAdd(data) {
 
 export function Employee_Execl(data) {
   return request({
-    url: '/api/Employee/GetList_Execl',
+    url: '/Employee/GetList_Execl',
     method: 'post',
     data: data
   })
@@ -150,7 +150,7 @@ export function Employee_Execl(data) {
  * */
 export function GetRoleNameList(data) {
   return request({
-    url: '/api/User/GetLoginNameList',
+    url: '/User/GetLoginNameList',
     method: 'post',
     params: data
   })
@@ -161,7 +161,7 @@ export function GetRoleNameList(data) {
  * */
 export function GetBlObjById(data) {
   return request({
-    url: '/api/Employee/GetBlObjById',
+    url: '/Employee/GetBlObjById',
     method: 'post',
     params: data
   })

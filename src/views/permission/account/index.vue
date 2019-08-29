@@ -5,19 +5,17 @@
         <select-head :select-head="listQuery" @handleFilter="handleFilter" :role-list="roleList" />
       </div>
       <div class="table-top-btn-padding">
-        <el-button type="primary" size="mini" class="iconfont icontianjia" @click="addRole">添加</el-button>
+        <el-button type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
         <el-button
           type="success"
           size="mini"
-          class="iconfont icondaochuexcel"
           @click="excel"
-        >导出Excel</el-button>
+        ><i class="iconfont icondaochuexcel"></i>导出Excel</el-button>
         <el-button
           type="warning"
           size="mini"
-          class="iconfont iconbiaogezidingyi"
           @click="setCustomData()"
-        >表格自定义</el-button>
+        ><i class="iconfont iconbiaogezidingyi"></i>表格自定义</el-button>
       </div>
       <customTable ref="myChild" />
       <div class="main-padding-20-y">

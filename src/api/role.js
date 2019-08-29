@@ -2,21 +2,21 @@ import request from '@/utils/request'
 
 export function getRoutes() {
   return request({
-    url: '/api/routes',
+    url: '/routes',
     method: 'get'
   })
 }
 
 export function getRoles() {//获取所有角色-下拉框
   return request({
-    url: '/api/Role/GetRoleNameList',
+    url: '/Role/GetRoleNameList',
     method: 'post'
   })
 }
 
 export function getRolesList(data) {//查询角色表格
   return request({
-    url: '/api/Role/GetRoleList',
+    url: '/Role/GetRoleList',
     method: 'post',
     data
   })
@@ -24,28 +24,28 @@ export function getRolesList(data) {//查询角色表格
 
 export function addRole(name) {//添加
   return request({
-    url: `/api/Role/InsertRoleName?roleName=${name}`,
+    url: `/Role/InsertRoleName?roleName=${name}`,
     method: 'post',
   })
 }
 
 export function updateRole(name,id) {//编辑
   return request({
-    url: `/api/Role/EditRoleName?roleName=${name}&roleId=${id}`,
+    url: `/Role/EditRoleName?roleName=${name}&roleId=${id}`,
     method: 'post',
   })
 }
 
 export function deleteRole(id) {//删除
   return request({
-    url: `/api/Role/DeleteRoleName?roleId=${id}`,
+    url: `/Role/DeleteRoleName?roleId=${id}`,
     method: 'post'
   })
 }
 
 export function exportExcel(data) {//导出
   return request({
-    url: '/api/Role/ExcelGetRoleList',
+    url: '/Role/ExcelGetRoleList',
     method: 'post',
     data
   })
