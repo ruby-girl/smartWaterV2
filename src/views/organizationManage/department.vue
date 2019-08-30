@@ -381,6 +381,9 @@
       this.createStartTimes.push(new Date(start));
       this.createStartTimes.push(new Date(end));
 
+      this.dp.createStartTime = new Date(start);
+      this.dp.createEndTime = new Date(end);
+
       this.GetLoginNameList()
       this.$refs.myChild.GetTable(this.dp.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段

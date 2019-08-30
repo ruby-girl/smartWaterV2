@@ -235,7 +235,6 @@
           }
         }
 
-        return
         this.$refs[formName].validate((valid) => {
           if (valid) {
             peopleUpDate(self.jp).then(res => {

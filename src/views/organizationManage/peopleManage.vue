@@ -84,7 +84,7 @@
               <el-input
                 v-model="queryData.MobileNumber"
                 placeholder="请输入11位电话号码"
-                maxlength="10"
+                maxlength="11"
                 size="small"
               />
             </div>
@@ -113,7 +113,7 @@
               <el-input
                 v-model.trim="queryData.IDNumber"
                 placeholder="请输入18位身份证号"
-                maxlength="10"
+                maxlength="18"
                 size="small"
               />
             </div>
@@ -165,7 +165,7 @@
               <el-input
                 v-model="queryData.EmailAddress"
                 placeholder="长度0-50"
-                maxlength="10"
+                maxlength="50"
                 size="small"
               />
             </div>

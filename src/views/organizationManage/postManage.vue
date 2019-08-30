@@ -243,7 +243,7 @@ export default {
        * 导出
        * */
     exportExcel() {
-      JobGetList_Execl({jp: this.jp}).then(res => {
+      JobGetList_Execl(this.jp).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       })
     },
@@ -429,6 +429,9 @@ export default {
     let end = parseTime(new Date());
     this.createStartTimes.push(new Date(start));
     this.createStartTimes.push(new Date(end));
+
+    this.jp.createStartTime = new Date(start);
+    this.jp.createEndTime = new Date(end);
 
     this.GetLoginNameList()
     this.$refs.myChild.GetTable(this.jp.tableId);
