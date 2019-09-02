@@ -557,6 +557,9 @@ export default {
     this.EntryTime.push(new Date(start));
     this.EntryTime.push(new Date(end));
 
+    this.queryData.EnrollingTime = new Date(start);
+    this.queryData.EnrollingTimeEnd = new Date(end);
+
     this.$refs.myChild.GetTable(this.queryData.tableId);
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
     this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
