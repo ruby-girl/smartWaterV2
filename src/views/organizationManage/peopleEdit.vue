@@ -42,6 +42,11 @@
               <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small" value-format="yyyy-MM-dd"/>
             </el-form-item>
           </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+            <el-form-item label="邮箱:">
+              <el-input v-model="jp.EmailAddress" size="small" maxlength="50" placeholder="长度0-50" />
+            </el-form-item>
+          </el-col>
           <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
             <el-row>
               <el-col :span="12" style="position: relative">
@@ -165,6 +170,7 @@
           MobileNumber: '',
           IDNumber: '',
           EnrollingTime: '',
+          EmailAddress:'',
           JobStatus: '在职',
           Address: '',
           Idarr:[]

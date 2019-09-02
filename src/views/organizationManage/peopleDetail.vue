@@ -39,18 +39,24 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
+            <el-form-item label="邮箱:">
+              <span> {{ form.EmailAddress }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
             <el-form-item label="岗位状态:">
               <span>{{ form.JobStatus }}</span>
             </el-form-item>
           </el-col>
+
           <el-col v-for="(item,index) in form.blList" :key="index" :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
             <el-col :span="12" style="padding-left: 0">
-              <el-form-item label="部门:" >
+              <el-form-item label="部门:">
                 <span>{{ item.SYS_DepartmentName }}</span>
               </el-form-item>
             </el-col>
-            <el-col :span="12" style="padding-left: 0">
-              <el-form-item label="岗位:" >
+            <el-col :span="12" style="padding-left: 0;">
+              <el-form-item label="岗位:" style="margin-left: 25px;">
                 <span>{{ item.OA_JobName }}</span>
               </el-form-item>
             </el-col>
@@ -119,6 +125,7 @@ export default {
         EmpName: '',
         EmpNo: '',
         EnrollingTime: '',
+        EmailAddress:'',
         Gender: '',
         IDNumber: '',
         Id: '',
@@ -175,8 +182,12 @@ export default {
     getInfo() {
       GetBlObjById({id:this.$route.params.id}).then(res => {
         if(res.code==0){
-          res.data.Birthday = res.data.Birthday.replace(' 00:00:00','')
-          res.data.EnrollingTime = res.data.EnrollingTime.replace(' 00:00:00','')
+          if(res.data.Birthday!=null){
+            res.data.Birthday = res.data.Birthday.split(' ')[0]
+          }
+          if(res.data.EnrollingTime!=null){
+            res.data.EnrollingTime = res.data.EnrollingTime.split(' ')[0]
+          }
           this.form = res.data
           let fileData = res.data.saList
           let obj = {}

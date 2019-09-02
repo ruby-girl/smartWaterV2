@@ -200,8 +200,8 @@
             :prop="item.ColProp"
             align="center"
             :label="item.ColDesc"
-            :fixed= "item.Freeze"
-          />
+            :fixed= "item.Freeze">
+          </el-table-column>
           <el-table-column
             v-else
             :key="index"
