@@ -36,6 +36,7 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">操作时间：</label>
               <el-date-picker
+                :editable="false"
                 v-model="createStartTimes"
                 style="width: 80%"
                 size="small"
@@ -45,6 +46,7 @@
                 end-placeholder="结束日期"
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
+                :default-time="['00:00:00', '23:59:59']"
                 @change="getTime1"
               />
             </div>

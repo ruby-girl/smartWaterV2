@@ -54,6 +54,7 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">入职时间：</label>
               <el-date-picker
+                :editable="false"
                 v-model="EntryTime"
                 style="width: 81%"
                 size="small"
@@ -93,6 +94,7 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">出生日期：</label>
               <el-date-picker
+                :editable="false"
                 v-model="birthdayTime"
                 style="width: 81%"
                 size="small"
@@ -135,15 +137,16 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">操作时间：</label>
               <el-date-picker
+                :editable="false"
                 v-model="operationTime"
                 style="width: 81%"
                 size="small"
-                type="daterange"
+                type="datetimerange"
                 range-separator="~"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 :default-time="['00:00:00', '23:59:59']"
-                format="yyyy-MM-dd"
+                format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 @change="getTime3"
               />
