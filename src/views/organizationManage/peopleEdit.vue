@@ -213,7 +213,7 @@
        * */
       submitForm(formName) {
         let self =this
-       // this.isFlag = true;
+        this.isFlag = true;
         this.jp.oeoList = [];
         for(let i=0;i< this.sojList.length; i++) {
           this.jp.oeoList.push({
@@ -236,6 +236,7 @@
         for(let i=0;i<this.jp.oeoList.length;i++){
           if(this.jp.oeoList[i].OA_Job_Id==''||this.jp.oeoList[i].SYS_Department_Id==''){
             this.isFlag = true;
+            return false
           }else {
             this.isFlag = false;
           }

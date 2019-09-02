@@ -221,15 +221,21 @@
        * */
       submitForm(formName) {
         this.isFlag = true;
+        this.jp.oeoList = []
         for(let i=0;i< this.sojList.length; i++) {//部门岗位信息
-          this.jp.oeoList.push({
-            SYS_Department_Id: this.sojList[i].SYS_Department_Id,
-            OA_Job_Id: this.sojList[i].OA_Job_Id
-          })
+          if(this.sojList[i].SYS_Department_Id!=''&&this.sojList[i].OA_Job_Id!=''){
+            this.jp.oeoList.push({
+              SYS_Department_Id: this.sojList[i].SYS_Department_Id,
+              OA_Job_Id: this.sojList[i].OA_Job_Id
+            })
+          }else{
+            return false
+          }
         }
         for(let j =0;j<this.upload.file.length;j++){
           this.jp.Idarr.push(this.upload.file[j].id)
         }
+
 
         this.$refs[formName].validate((valid) => {
           if (valid) {

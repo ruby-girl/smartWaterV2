@@ -200,6 +200,41 @@
             :key="index"
             min-width="200px"
             sortable='custom'
+            align="center"
+            :label="item.ColDesc"
+            :fixed= "item.Freeze">
+            <template slot-scope="scope">
+              <i v-if="item.ColProp == 'EnrollingTime'||item.ColProp == 'Birthday'">
+                {{ scope.row[item.ColProp]!=''&&scope.row[item.ColProp]!=null? scope.row[item.ColProp].split(' ')[0]:''}}
+              </i>
+              <i v-else>
+                 {{ scope.row[item.ColProp] }}
+              </i>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-else
+            :key="index"
+            min-width="200px"
+            sortable='custom'
+            align="center"
+            :label="item.ColDesc">
+            <template slot-scope="scope">
+              <i v-if="item.ColProp == 'EnrollingTime'||item.ColProp == 'Birthday'">
+                {{ scope.row[item.ColProp]!=''&&scope.row[item.ColProp]!=null? scope.row[item.ColProp].split(' ')[0]:''}}
+              </i>
+              <i v-else>
+                {{ scope.row[item.ColProp] }}
+              </i>
+            </template>
+          </el-table-column>
+
+
+         <!-- <el-table-column
+            v-if="item.IsFreeze"
+            :key="index"
+            min-width="200px"
+            sortable='custom'
             :prop="item.ColProp"
             align="center"
             :label="item.ColDesc"
@@ -213,7 +248,7 @@
             :prop="item.ColProp"
             align="center"
             :label="item.ColDesc"
-          />
+          />-->
         </template>
         <el-table-column label="操作" width="200px"  align="center" fixed="right">
           <template slot-scope="scope">
@@ -261,7 +296,7 @@ import Pagination from '../../components/Pagination/index'
 import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl} from "@/api/organize"
 let deleteId;
 import Bus from '@/utils/bus.js'
-import { parseStartTime, parseEndTime } from "@/utils/index";
+import { getTime } from "@/utils/index";
 
 export default {
   name: 'peopleManage',
@@ -444,7 +479,7 @@ export default {
           EmpNo: this.queryData.EmpNo,
           JobStatus: this.queryData.JobStatus,
           EnrollingTime: this.queryData.EnrollingTime,
-          EnrollingTimeEnd: this.queryData.EnrollingTime,
+          EnrollingTimeEnd: this.queryData.EnrollingTimeEnd,
           Gender: this.queryData.Gender,
           IDNumber: '',
           MobileNumber: '',
@@ -552,13 +587,14 @@ export default {
     }
   },
   mounted() {
-    let start = parseStartTime(new Date());
-    let end = parseEndTime(new Date());
-    this.EntryTime.push(new Date(start));
-    this.EntryTime.push(new Date(end));
+    let start = new Date().Format("yyyy-MM-dd hh:mm:ss");
+    let end = new Date().Format("yyyy-MM-dd hh:mm:ss");
 
-    this.queryData.EnrollingTime = new Date(start);
-    this.queryData.EnrollingTimeEnd = new Date(end);
+    this.EntryTime.push(start);
+    this.EntryTime.push(end.replace('00:00:00','23:59:59'));
+
+    this.queryData.EnrollingTime = start;
+    this.queryData.EnrollingTimeEnd = end.replace('00:00:00','23:59:59');
 
     this.$refs.myChild.GetTable(this.queryData.tableId);
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
