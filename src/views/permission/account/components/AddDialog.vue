@@ -7,6 +7,7 @@
     width="674px"
     center
     @closed="addDialogClose"
+    :close-on-click-modal="false"
   >
     <el-form
       ref="dataFormAdd"

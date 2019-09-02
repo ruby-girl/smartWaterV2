@@ -249,21 +249,21 @@ export default {
         switch (code) {
           case "100": //Token失效
             _this.$message({
-              message: "Token已失效，请重新登陆",
+              message: "Token已失效，请重新登录",
               type: "warning"
             });
             _this.$router.push({ path: "/login" });
             break;
           case "101": //已在其他电脑登录
             _this.$message({
-              message: "该账户已在其他电脑登录，请重新登陆",
+              message: "该账户已在其他电脑登录，请重新登录",
               type: "warning"
             });
             _this.$router.push({ path: "/login" });
             break;
           case "102": //账户权限发生变化，需重新登录
             _this.$message({
-              message: "账户权限发生变化，请重新登陆",
+              message: "账户权限发生变化，请重新登录",
               type: "warning"
             });
             _this.$router.push({ path: "/login" });

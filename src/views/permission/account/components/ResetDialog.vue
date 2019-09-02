@@ -7,6 +7,7 @@
     width="400px"
     center
     @closed="resetDialogClose"
+    :close-on-click-modal="false"
   >
     <el-form
       ref="dataFormReset"

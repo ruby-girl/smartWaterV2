@@ -1,6 +1,6 @@
 <template>
   <!-- 编辑弹窗 -->
-  <el-dialog title="编辑" :visible.sync="dialogFormVisible" top="30vh" width="660px" center @closed="editDialogClose">
+  <el-dialog title="编辑" :visible.sync="dialogFormVisible" top="30vh" width="660px" center @closed="editDialogClose" :close-on-click-modal="false">
     <el-form
       ref="dataForm"
       :model="temp"

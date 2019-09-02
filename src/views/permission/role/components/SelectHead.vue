@@ -27,13 +27,15 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="建设时间：">
+    <el-form-item label="操作时间：">
       <el-date-picker
         v-model="timevalue"
-        type="daterange"
+        type="datetimerange"
+        :editable="false"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        :default-time="['00:00:00', '23:59:59']"
         format="yyyy-MM-dd HH:mm:ss"
         value-format="yyyy-MM-dd HH:mm:ss"
         @change="getTime"
