@@ -228,27 +228,6 @@
               </i>
             </template>
           </el-table-column>
-
-
-         <!-- <el-table-column
-            v-if="item.IsFreeze"
-            :key="index"
-            min-width="200px"
-            sortable='custom'
-            :prop="item.ColProp"
-            align="center"
-            :label="item.ColDesc"
-            :fixed= "item.Freeze">
-          </el-table-column>
-          <el-table-column
-            v-else
-            :key="index"
-            min-width="200px"
-            sortable='custom'
-            :prop="item.ColProp"
-            align="center"
-            :label="item.ColDesc"
-          />-->
         </template>
         <el-table-column label="操作" width="200px"  align="center" fixed="right">
           <template slot-scope="scope">
