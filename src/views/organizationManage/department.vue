@@ -29,6 +29,7 @@
               <el-date-picker
                 :editable="false"
                 v-model="createStartTimes"
+                :unlink-panels="true"
                 style="width: 80%"
                 size="small"
                 type="datetimerange"

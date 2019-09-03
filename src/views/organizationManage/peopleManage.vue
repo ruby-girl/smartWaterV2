@@ -56,6 +56,7 @@
               <el-date-picker
                 :editable="false"
                 v-model="EntryTime"
+                :unlink-panels="true"
                 style="width: 81%"
                 size="small"
                 type="daterange"
@@ -96,6 +97,7 @@
               <el-date-picker
                 :editable="false"
                 v-model="birthdayTime"
+                :unlink-panels="true"
                 style="width: 81%"
                 size="small"
                 type="daterange"
@@ -139,6 +141,7 @@
               <el-date-picker
                 :editable="false"
                 v-model="operationTime"
+                :unlink-panels="true"
                 style="width: 81%"
                 size="small"
                 type="datetimerange"
