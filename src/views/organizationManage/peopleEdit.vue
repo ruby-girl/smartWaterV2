@@ -268,6 +268,7 @@
        * 重置
        * */
       resetForm(formName) {
+        alert(0)
         this.$refs[formName].resetFields()
         Bus.$emit('msg', this.$route)
 

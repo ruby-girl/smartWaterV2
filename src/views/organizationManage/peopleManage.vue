@@ -506,6 +506,7 @@ export default {
       linkComboBoxList(params).then(res => {
         if (res.code == 0) {
           this.postArray = res.data;
+          this.queryData.OA_Job_Id = '-1'
         } else {
           this.$message({
             message: res.message,
