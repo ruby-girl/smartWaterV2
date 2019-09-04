@@ -381,7 +381,7 @@ export default {
           EmpNo: this.queryData.EmpNo,
           JobStatus: this.queryData.JobStatus,
           EnrollingTime: this.queryData.EnrollingTime,
-          EnrollingTimeEnd: this.queryData.EnrollingTime,
+          EnrollingTimeEnd: this.queryData.EnrollingTimeEnd,
           Gender: this.queryData.Gender,
           IDNumber: '',
           MobileNumber: '',
@@ -497,6 +497,7 @@ export default {
       ComboBoxList().then(res => {
         if (res.code == 0) {
           this.departArray = res.data;
+          this.getPostList('-1')
         } else {
           this.$message({
             message: res.message,

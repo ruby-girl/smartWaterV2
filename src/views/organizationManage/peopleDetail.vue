@@ -66,7 +66,7 @@
               <span>{{ form.Address }}</span>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" v-show="file.length>0">
             <el-form-item>
               <ul :class="maxHeight? 'fileBox clearfix fileBoxHeight':'fileBox clearfix'">
                 <li v-for="(item,index) in file" :key="index">

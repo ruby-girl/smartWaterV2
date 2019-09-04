@@ -374,7 +374,7 @@
         var nary = arr.sort();
         for(var i = 0; i < nary.length - 1; i++)
         {
-          if (nary[i] == nary[i+1])
+          if (nary[i] == nary[i+1]&&nary[i]!='')
           {
             this.$message({
               message: '个人所属岗位不能重复',
