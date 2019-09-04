@@ -6,7 +6,7 @@
           <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
-              <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList">
+              <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList" @keyup.enter.native="searchFun">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option
                   v-for="(item,index) in departArray"
@@ -20,7 +20,7 @@
           <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
-              <el-select v-model="queryData.OA_Job_Id" placeholder="请选择" size="small">
+              <el-select v-model="queryData.OA_Job_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option
                   v-for="(item,index) in postArray"
@@ -35,6 +35,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">人员：</label>
               <el-input
+                @keyup.enter.native="searchFun"
                 v-model="queryData.EmpNo"
                 placeholder="人员名称/员工编号"
                 maxlength="10"
@@ -45,7 +46,7 @@
           <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">岗位状态：</label>
-              <el-select v-model="queryData.JobStatus" placeholder="请选择" size="small">
+              <el-select v-model="queryData.JobStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
                 <el-option label="在职" value="在职" />
               </el-select>
             </div>
@@ -54,6 +55,7 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">入职时间：</label>
               <el-date-picker
+                @keydown.enter.native="searchFun"
                 :editable="false"
                 v-model="EntryTime"
                 :unlink-panels="true"
@@ -73,7 +75,7 @@
           <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">性别：</label>
-              <el-select v-model="queryData.Gender" placeholder="请选择" size="small">
+              <el-select v-model="queryData.Gender" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option label="女" value="女" />
                 <el-option label="男" value="男" />
@@ -84,6 +86,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">电话号码：</label>
               <el-input
+                @keyup.enter.native="searchFun"
                 v-model="queryData.MobileNumber"
                 placeholder="请输入11位电话号码"
                 maxlength="11"
@@ -95,6 +98,7 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">出生日期：</label>
               <el-date-picker
+                @keydown.enter.native="searchFun"
                 :editable="false"
                 v-model="birthdayTime"
                 :unlink-panels="true"
@@ -115,6 +119,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">身份证号：</label>
               <el-input
+                @keyup.enter.native="searchFun"
                 v-model.trim="queryData.IDNumber"
                 placeholder="请输入18位身份证号"
                 maxlength="18"
@@ -125,7 +130,7 @@
           <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
-              <el-select v-model="queryData.createUserId" placeholder="请选择" size="small">
+              <el-select v-model="queryData.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
                 <el-option
                   v-for="(item,index) in operationArray"
                   :key="index"
@@ -139,6 +144,7 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">操作时间：</label>
               <el-date-picker
+                @keydown.enter.native="searchFun"
                 :editable="false"
                 v-model="operationTime"
                 :unlink-panels="true"
@@ -158,7 +164,7 @@
           <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">账号状态：</label>
-              <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small">
+              <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
                 <el-option label="全部" value="全部"/>
                 <el-option label="已分配" value="已分配"/>
                 <el-option label="未分配" value="未分配"/>
@@ -169,6 +175,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">邮箱：</label>
               <el-input
+                @keyup.enter.native="searchFun"
                 v-model="queryData.EmailAddress"
                 placeholder="长度0-50"
                 maxlength="50"
@@ -589,12 +596,12 @@ export default {
       self.searchFun()
     })
 
-    document.onkeydown = function(e) {
+   /* document.onkeydown = function(e) {
       var key = window.event.keyCode;
       if (key == 13) {
         self.searchFun();
       }
-    }
+    }*/
   }
 }
 </script>

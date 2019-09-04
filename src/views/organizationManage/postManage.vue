@@ -6,7 +6,7 @@
           <el-col :xs="15" :sm="8" :md="6" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
-              <el-select v-model="jp.SYS_Department_Id" placeholder="请选择" size="small">
+              <el-select v-model="jp.SYS_Department_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
@@ -16,6 +16,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">岗位：</label>
               <el-input
+                @keyup.enter.native="searchFun"
                 v-model="jp.JobName"
                 placeholder="请输入岗位名称"
                 maxlength="10"
@@ -26,7 +27,7 @@
           <el-col :xs="15" :sm="8" :md="6" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
-              <el-select v-model="jp.createUserId" placeholder="请选择" size="small">
+              <el-select v-model="jp.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
@@ -36,6 +37,7 @@
             <div class="cl-inlineItem" style="width: 100%">
               <label class="cl-label">操作时间：</label>
               <el-date-picker
+                @keydown.enter.native="searchFun"
                 :editable="false"
                 v-model="createStartTimes"
                 :unlink-panels="true"
@@ -444,13 +446,6 @@ export default {
     this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList();
 
-    let self = this;
-    document.onkeydown = function(e) {
-      var key = window.event.keyCode;
-      if (key == 13) {
-        self.searchFun();
-      }
-    }
   }
 }
 </script>
