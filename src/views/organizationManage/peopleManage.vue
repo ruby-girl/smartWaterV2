@@ -131,6 +131,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">操作人：</label>
               <el-select v-model="queryData.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option
                   v-for="(item,index) in operationArray"
                   :key="index"
@@ -165,7 +166,7 @@
             <div class="cl-inlineItem">
               <label class="cl-label">账号状态：</label>
               <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
-                <el-option label="全部" value="全部"/>
+                <el-option label="全部" value="-1"/>
                 <el-option label="已分配" value="已分配"/>
                 <el-option label="未分配" value="未分配"/>
               </el-select>
@@ -191,8 +192,8 @@
         </el-row>
         <div class="cl-operation1">
           <el-button type="primary" size="small" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
-          <el-button type="success" size="small" class="cl-search" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
-          <el-button type="primary" size="small" class="cl-search cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+          <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+          <el-button type="success" size="small" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
         </div>
       </div>
       <customTable ref="myChild" />
@@ -311,11 +312,11 @@ export default {
         MobileNumber: '',
         Birthday: '',
         BirthdayEnd: '',
-        createUserId: '',
+        createUserId: '-1',
         createStartTime: '',
         createEndTime: '',
         EmailAddress: '',
-        AccountStatus: '',
+        AccountStatus: '-1',
         tableId: '0000003'
       },
       operationTime: [],
@@ -387,11 +388,11 @@ export default {
           MobileNumber: '',
           Birthday: '',
           BirthdayEnd: '',
-          createUserId: '',
+          createUserId: '-1',
           createStartTime: '',
           createEndTime: '',
           EmailAddress: '',
-          AccountStatus: '',
+          AccountStatus: '-1',
           tableId: '0000003'
         }
       } else {
@@ -474,11 +475,11 @@ export default {
           MobileNumber: '',
           Birthday: '',
           BirthdayEnd: '',
-          createUserId: '',
+          createUserId: '-1',
           createStartTime: '',
           createEndTime: '',
           EmailAddress: '',
-          AccountStatus: '',
+          AccountStatus: '-1',
           tableId: '0000003'
         }
       } else {
@@ -578,14 +579,14 @@ export default {
     }
   },
   mounted() {
-    let start = new Date().Format("yyyy-MM-dd hh:mm:ss");
+/*    let start = new Date().Format("yyyy-MM-dd hh:mm:ss");
     let end = new Date().Format("yyyy-MM-dd hh:mm:ss");
 
     this.EntryTime.push(start);
     this.EntryTime.push(end.replace('00:00:00','23:59:59'));
 
     this.queryData.EnrollingTime = start;
-    this.queryData.EnrollingTimeEnd = end.replace('00:00:00','23:59:59');
+    this.queryData.EnrollingTimeEnd = end.replace('00:00:00','23:59:59');*/
 
     this.$refs.myChild.GetTable(this.queryData.tableId);
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段

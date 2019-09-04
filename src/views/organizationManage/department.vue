@@ -51,8 +51,8 @@
         </el-row>
         <div class="cl-operation1">
           <el-button type="primary" size="small" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
-          <el-button type="success" size="small" class="cl-search" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
-          <el-button type="primary" size="small" class="cl-search cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+          <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+          <el-button type="success" size="small" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
         </div>
         <customTable ref="myChild" />
       </div>
@@ -383,13 +383,13 @@
       }
     },
     mounted() {
-      let start = parseTime(new Date());
-      let end = parseTime(new Date());
-      this.createStartTimes.push(new Date(start));
-      this.createStartTimes.push(new Date(end));
+      /*  let start = parseTime(new Date());
+        let end = parseTime(new Date());
+        this.createStartTimes.push(new Date(start));
+        this.createStartTimes.push(new Date(end));
 
-      this.dp.createStartTime = new Date(start);
-      this.dp.createEndTime = new Date(end);
+        this.dp.createStartTime = new Date(start);
+        this.dp.createEndTime = new Date(end);*/
 
       this.GetLoginNameList()
       this.$refs.myChild.GetTable(this.dp.tableId);
