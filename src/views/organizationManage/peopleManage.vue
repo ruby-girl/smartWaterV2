@@ -588,6 +588,13 @@ export default {
     Bus.$on('msg', (e) => {
       self.searchFun()
     })
+
+    document.onkeydown = function(e) {
+      var key = window.event.keyCode;
+      if (key == 13) {
+        self.searchFun();
+      }
+    }
   }
 }
 </script>

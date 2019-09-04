@@ -443,6 +443,14 @@ export default {
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
     this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList();
+
+    let self = this;
+    document.onkeydown = function(e) {
+      var key = window.event.keyCode;
+      if (key == 13) {
+        self.searchFun();
+      }
+    }
   }
 }
 </script>
