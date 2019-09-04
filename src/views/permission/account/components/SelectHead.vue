@@ -16,19 +16,19 @@
       />
     </el-form-item>
     <el-form-item label="角色：">
-      <el-select v-model="selectHead.roldId" placeholder="请选择">
+      <el-select v-model="selectHead.roldId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="状态：">
-      <el-select v-model="selectHead.userState" placeholder="请选择">
+      <el-select v-model="selectHead.userState" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in stateType" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="操作人：">
-      <el-select v-model="selectHead.editUserId" placeholder="请选择">
+      <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
@@ -45,6 +45,7 @@
         format="yyyy-MM-dd HH:mm:ss"
         value-format="yyyy-MM-dd HH:mm:ss"
         @change="getTime"
+        @keydown.enter.native="handleFilter"
       />
     </el-form-item>
     <el-form-item>

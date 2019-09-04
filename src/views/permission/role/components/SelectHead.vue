@@ -17,7 +17,7 @@
       <el-input v-model="selectHead.userNum" maxlength="10" placeholder="请输入人员编号" @keyup.enter.native="handleFilter" />
     </el-form-item>
     <el-form-item label="操作人：">
-      <el-select v-model="selectHead.editUserId" placeholder="请选择">
+      <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
           v-for="item in editUserList"
@@ -39,6 +39,7 @@
         format="yyyy-MM-dd HH:mm:ss"
         value-format="yyyy-MM-dd HH:mm:ss"
         @change="getTime"
+        @keydown.enter.native="handleFilter"
       ></el-date-picker>
     </el-form-item>
     <el-form-item>
