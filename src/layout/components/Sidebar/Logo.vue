@@ -18,7 +18,7 @@
       <div class="logo-label">邮箱:</div>
     </div>
     <div class="logo-item-height">
-      <div class="main-color-fff text-wrap"></div>
+      <div class="main-color-fff text-wrap">{{user.EmailAddress}}</div>
     </div>
     <div class="display-flex">
       <div class="iconfont icondengluxinxi-shangcidenglu" />

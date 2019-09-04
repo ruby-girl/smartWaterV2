@@ -11,7 +11,7 @@ const service = axios.create({
   baseURL:commonJS.basePath, // url = base url + request url
   //baseURL: commonJS.basePath, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  
 })
 var loadinginstace
 // request interceptor

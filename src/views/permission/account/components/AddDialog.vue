@@ -30,7 +30,7 @@
         <el-input  v-model="temp.loginName" maxlength="20" placeholder="长度20"></el-input>
       </el-form-item>
       <el-form-item label="密码：" prop="loginPwd">
-        <el-input v-model="temp.loginPwd" maxlength="18" placeholder="请输入6-18位密码"></el-input>
+        <el-input v-model="temp.loginPwd" maxlength="18" @keyup.native="setNum" placeholder="请输入6-18位密码"></el-input>
       </el-form-item>
     </el-form>
 
@@ -112,10 +112,20 @@ export default {
         message: '密码长度为6-18位'
         }]
       },
-      AdialogFormVisible: false
+      AdialogFormVisible: false,
+      passwordSave:''
     };
   },
   methods: {
+    setNum() {
+      let value=this.temp.loginPwd
+     if(value.length>=this.passwordSave.length){
+       this.passwordSave+=value.substr(this.passwordSave.length,value.length-this.passwordSave.length) 
+     }else{
+       this.passwordSave=this.passwordSave.substr(0,value.length)
+     }
+     this.temp.loginPwd=this.temp.loginPwd.replace(/./g,"*")
+    },
     createData() {
       this.$refs["dataFormAdd"].validate(valid => {
         if (!valid) return false;
