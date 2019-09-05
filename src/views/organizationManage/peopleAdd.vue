@@ -323,6 +323,7 @@
             for(let i = 0;i< this.sojList.length;i++) {
               if(i==index){
                 this.sojList[i].post = res.data
+                this.sojList[i].OA_Job_Id = ''
               }
             }
           } else {
