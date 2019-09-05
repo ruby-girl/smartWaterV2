@@ -46,7 +46,7 @@ service.interceptors.response.use(
       Element.Message.error({
         message: res.message || 'Error',
         type: 'error',
-        duration: 2 * 1000
+        duration: 4000
       })
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
@@ -61,7 +61,8 @@ service.interceptors.response.use(
     // }).then(() => {
       loadinginstace.close()
       Element.Message.error({
-        message:"请求错误，请重新登录！"
+        message:"请求错误，请重新登录！",
+        duration: 4000
       })
       store.dispatch('user/resetToken').then(() => {
         // location.reload()

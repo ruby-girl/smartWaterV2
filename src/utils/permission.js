@@ -24,7 +24,7 @@ export  function checkPermission(value) {
 }
 
 export function getDictionaryOption(value) {//获取具体的字典项
-  if(store.getters.dictionaryItem){
+  if(store.getters.dictionaryItem.length>0){
    let items=store.getters.dictionaryItem.filter(item=>{
       return item.Id==value
     })

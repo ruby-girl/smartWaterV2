@@ -98,6 +98,13 @@
 .el-message-box__btns{
   text-align: center;
 }
+// 消息提示样式
+.el-message{
+  top:80px;
+ .el-message__content,.el-message__icon{
+  font-size: 17px !important;
+ }
+}
 // 通用弹出框样式
 .el-dialog__wrapper .el-dialog{
   .el-dialog__header{

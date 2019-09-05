@@ -4,7 +4,7 @@
     title="添加"
     :visible.sync="AdialogFormVisible"
     top="30vh"
-    width="674px"
+    width="350px"
     center
     @closed="addDialogClose"
     :close-on-click-modal="false"
@@ -19,18 +19,41 @@
       label-width="100px"
     >
       <el-form-item label="人员编号：" prop="userNum">
-        <el-input maxlength="10" v-model="temp.userNum" placeholder="请输入人员编号"></el-input>
+        <!-- <el-input maxlength="10" v-model="temp.userNum" placeholder="请输入人员编号"></el-input> -->
+        <el-select v-model="temp.userNum" filterable remote :filter-method="selectOption" placeholder="请输入人员编号">
+          <el-option
+            v-for="item in userOptions"
+            :key="item.value"
+            :label="item.EmpName"
+            :value="item.EmpNo"
+          >
+          <span style="float: left">{{ item.EmpName }}</span>
+      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.EmpNo }}</span>
+          </el-option>
+        </el-select>
       </el-form-item>
+
       <el-form-item label="角色：" prop="roleId">
-        <el-select v-model="temp.roleId" placeholder="请选择">
+        <el-select v-model="temp.roleId" placeholder="请选择" :disabled="temp.userNum==''?true:false">
           <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
       <el-form-item label="账号：" prop="loginName">
-        <el-input  v-model="temp.loginName" maxlength="20" placeholder="长度20"></el-input>
+        <el-input
+          v-model="temp.loginName"
+          :disabled="temp.userNum==''?true:false"
+          maxlength="20"
+          placeholder="长度20"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="密码：" prop="loginPwd">
-        <el-input v-model="temp.loginPwd" maxlength="18" @keyup.native="setNum" placeholder="请输入6-18位密码"></el-input>
+      <el-form-item label="密码：" prop="loginPwdSave">
+        <el-input
+          v-model="temp.loginPwdSave"
+          :disabled="temp.userNum==''?true:false"
+          maxlength="18"
+          @keyup.native="setNum"
+          placeholder="请输入6-18位密码"
+        ></el-input>
       </el-form-item>
     </el-form>
 
@@ -72,12 +95,20 @@ export default {
       this.$emit("update:addShow", val);
     }
   },
+  mounted(){
+    numGetAccount('-1').then(res => {
+      if (res.data) {
+        this.userOptions=res.data
+        this.userOptionsSave=res.data
+      }
+    });
+  },
   data() {
     var userNum = (rule, value, callback) => {
       if (value === "") {
         return callback(new Error("不能为空"));
       }
-      
+
       if (value.length < 11) {
         numGetAccount(value).then(res => {
           if (res.data) {
@@ -100,36 +131,67 @@ export default {
     return {
       timevalue: [],
       rules: {
-        userNum: [{ required: true, validator: userNum, trigger: "blur" }],
+        userNum: [{ required: true, message: "不能为空", trigger: "blur" }],
         roleId: [{ required: true, message: "不能为空", trigger: "blur" }],
-        loginName: [{ required: true, message: "不能为空", trigger: "blur"},{
-        max: 20,
-        message: '最大长度为20位'
-        }],
-        loginPwd: [{ required: true, message: "不能为空", trigger: "blur" },{
-        min:6,
-        max: 18,
-        message: '密码长度为6-18位'
-        }]
+        loginName: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          {
+            max: 20,
+            message: "最大长度为20位"
+          }
+        ],
+        loginPwdSave: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          {
+            min: 6,
+            max: 18,
+            message: "密码长度为6-18位"
+          }
+        ]
       },
       AdialogFormVisible: false,
-      passwordSave:''
+      passwordSave: "",
+      userOptions: [],
+      userOptionsSave:[]
     };
   },
   methods: {
+    selectOption(query){
+      
+      if (query !== '') {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+            this.userOptions = this.userOptionsSave.filter(item => {
+              
+              return item.EmpName.toLowerCase()
+                .indexOf(query.toLowerCase()) > -1||item.EmpNo
+                .indexOf(query.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.userOptions = [];
+        }
+    },
     setNum() {
-      let value=this.temp.loginPwd
-     if(value.length>=this.passwordSave.length){
-       this.passwordSave+=value.substr(this.passwordSave.length,value.length-this.passwordSave.length) 
-     }else{
-       this.passwordSave=this.passwordSave.substr(0,value.length)
-     }
-     this.temp.loginPwd=this.temp.loginPwd.replace(/./g,"*")
+      let value = this.temp.loginPwdSave;
+      if (value.length >= this.passwordSave.length) {
+        this.passwordSave += value.substr(
+          this.passwordSave.length,
+          value.length - this.passwordSave.length
+        );
+      } else {
+        this.passwordSave = this.passwordSave.substr(0, value.length);
+      }
+      this.temp.loginPwdSave = this.temp.loginPwdSave.replace(/./g, "*");
     },
     createData() {
       this.$refs["dataFormAdd"].validate(valid => {
         if (!valid) return false;
-        else this.$emit("createData", this.temp);
+        else{
+          this.temp.loginPwd=this.passwordSave
+          this.$emit("createData", this.temp)
+        }
       });
     },
     addDialogClose() {

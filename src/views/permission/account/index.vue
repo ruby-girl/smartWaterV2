@@ -109,7 +109,7 @@
   </div>
 </template>
 <script>
-import SelectHead from "./components/SelectHead";
+import SelectHead from "./components/SelectHead"; 
 import Pagination from "@/components/Pagination";
 import EditDialog from "./components/EditDialog";
 import ResetDialog from "./components/ResetDialog";
@@ -157,6 +157,8 @@ export default {
         roldId: "-1", // 角色ID
         userState: "-1", // 账号状态
         empNo: "", // 人员编号
+        empName:"",//人员姓名
+        loginName:"",//账号
         editUserId: "-1", // 操作人
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
@@ -236,6 +238,7 @@ export default {
         roleId: "",
         loginName: "",
         loginPwd: "",
+        loginPwdSave:"",
         userId: "",
         userNum: ""
       };

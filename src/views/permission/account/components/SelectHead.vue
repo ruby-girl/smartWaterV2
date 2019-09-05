@@ -9,9 +9,25 @@
   >
     <el-form-item label="人员编号：">
       <el-input
-        maxlength="10"
         v-model="selectHead.empNo"
-        placeholder="人员编号（长度1-10）"
+        oninput = "value=value.replace(/[^\d]/g,'')"
+        placeholder="人员编号"
+        @keyup.enter.native="handleFilter"
+      />
+    </el-form-item>
+    <el-form-item label="人员姓名：">
+      <el-input
+        maxlength="10"
+        v-model="selectHead.empName"
+        placeholder="人员姓名（长度1-10）"
+        @keyup.enter.native="handleFilter"
+      />
+    </el-form-item>
+     <el-form-item label="账号：">
+      <el-input
+        maxlength="20"
+        v-model="selectHead.loginName"
+        placeholder="账号（长度1-20）"
         @keyup.enter.native="handleFilter"
       />
     </el-form-item>
