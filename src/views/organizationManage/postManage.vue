@@ -2,62 +2,56 @@
   <div class="cl-container">
     <div>
       <div id="conditionBox">
-        <el-row>
-          <el-col :xs="15" :sm="8" :md="6" :lg="4" :xl="4">
-            <div class="cl-inlineItem">
-              <label class="cl-label">部门：</label>
-              <el-select v-model="jp.SYS_Department_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
-                <el-option label="全部" value="-1"></el-option>
-                <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
-              </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="15" :sm="8" :md="6" :lg="4" :xl="4">
-            <div class="cl-inlineItem">
-              <label class="cl-label">岗位：</label>
-              <el-input
-                @keyup.enter.native="searchFun"
-                v-model="jp.JobName"
-                placeholder="请输入岗位名称"
-                maxlength="10"
-                size="small"
-              />
-            </div>
-          </el-col>
-          <el-col :xs="15" :sm="8" :md="6" :lg="4" :xl="4">
-            <div class="cl-inlineItem">
-              <label class="cl-label">操作人：</label>
-              <el-select v-model="jp.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
-                <el-option label="全部" value="-1"></el-option>
-                <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
-              </el-select>
-            </div>
-          </el-col>
-          <el-col :xs="18" :sm="12" :md="12" :lg="7" :xl="7">
-            <div class="cl-inlineItem" style="width: 100%">
-              <label class="cl-label">操作时间：</label>
-              <el-date-picker
-                @keydown.enter.native="searchFun"
-                :editable="false"
-                v-model="createStartTimes"
-                :unlink-panels="true"
-                style="width: 80%"
-                size="small"
-                type="datetimerange"
-                range-separator="~"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                :default-time="['00:00:00', '23:59:59']"
-                @change="getTime1"
-              />
-            </div>
-          </el-col>
-          <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
-            <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
-          </el-col>
-        </el-row>
+
+        <el-form
+          :inline="true"
+          :model="jp"
+          class="head-search-form form-inline-small-input"
+          size="small"
+          label-width="100px"
+          @submit.native.prevent
+        >
+          <el-form-item label="部门：">
+            <el-select v-model="jp.SYS_Department_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+              <el-option label="全部" value="-1"></el-option>
+              <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="岗位：">
+            <el-input
+              @keyup.enter.native="searchFun"
+              v-model="jp.JobName"
+              placeholder="请输入岗位名称"
+              maxlength="10"
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="操作人：">
+            <el-select v-model="jp.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+              <el-option label="全部" value="-1"></el-option>
+              <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="操作时间：">
+            <el-date-picker
+              @keydown.enter.native="searchFun"
+              :editable="false"
+              v-model="createStartTimes"
+              :unlink-panels="true"
+              size="small"
+              type="datetimerange"
+              range-separator="~"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :default-time="['00:00:00', '23:59:59']"
+              @change="getTime1"
+            />
+          </el-form-item>
+          <el-form-item label=""><el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
+        </el-form>
+
         <div class="cl-operation1">
           <el-button type="primary" size="small" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
           <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>

@@ -1,8 +1,161 @@
 <template>
-  <div class="cl-container cl-container2">
+  <div class="cl-container cl-container2" style="overflow: auto">
     <div>
       <div id="conditionBox">
-        <el-row>
+        <el-form
+          :inline="true"
+          :model="queryData"
+          class="head-search-form form-inline-small-input"
+          size="small"
+          label-width="100px"
+          @submit.native.prevent
+        >
+          <el-form-item label="部门：">
+              <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList" @keyup.enter.native="searchFun">
+                <el-option label="全部" value="-1"></el-option>
+                <el-option
+                  v-for="(item,index) in departArray"
+                  :key="index"
+                  :label="item.Name"
+                  :value="item.Id"
+                />
+              </el-select>
+          </el-form-item>
+          <el-form-item label="岗位：">
+              <el-select v-model="queryData.OA_Job_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+                <el-option label="全部" value="-1"></el-option>
+                <el-option
+                  v-for="(item,index) in postArray"
+                  :key="index"
+                  :label="item.Name"
+                  :value="item.Id"
+                />
+              </el-select>
+          </el-form-item>
+          <el-form-item label="人员：">
+              <el-input
+                @keyup.enter.native="searchFun"
+                v-model="queryData.EmpNo"
+                placeholder="人员名称/员工编号"
+                maxlength="10"
+                size="small"
+              />
+          </el-form-item>
+          <el-form-item label="岗位状态：">
+              <el-select v-model="queryData.JobStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+                <el-option label="在职" value="在职" />
+              </el-select>
+          </el-form-item>
+          <el-form-item label="入职时间：">
+              <el-date-picker
+                @keydown.enter.native="searchFun"
+                :editable="false"
+                v-model="EntryTime"
+                :unlink-panels="true"
+                size="small"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="getTime1"
+              />
+          </el-form-item>
+          <el-form-item label="性别：">
+              <el-select v-model="queryData.Gender" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+                <el-option label="全部" value="-1"></el-option>
+                <el-option label="女" value="女" />
+                <el-option label="男" value="男" />
+              </el-select>
+          </el-form-item>
+          <el-form-item label="电话号码：" v-show="ifMore">
+            <el-input
+              @keyup.enter.native="searchFun"
+              v-model="queryData.MobileNumber"
+              placeholder="请输入11位电话号码"
+              maxlength="11"
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="出生日期：" v-show="ifMore">
+              <el-date-picker
+                @keydown.enter.native="searchFun"
+                :editable="false"
+                v-model="birthdayTime"
+                :unlink-panels="true"
+                size="small"
+                type="daterange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="getTime2"
+              />
+          </el-form-item>
+          <el-form-item label="身份证号：" v-show="ifMore">
+              <el-input
+                @keyup.enter.native="searchFun"
+                v-model.trim="queryData.IDNumber"
+                placeholder="请输入18位身份证号"
+                maxlength="18"
+                size="small"
+              />
+          </el-form-item>
+          <el-form-item label="操作人：" v-show="ifMore">
+              <el-select v-model="queryData.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+                <el-option label="全部" value="-1"></el-option>
+                <el-option
+                  v-for="(item,index) in operationArray"
+                  :key="index"
+                  :label="item.Name"
+                  :value="item.Id"
+                />
+              </el-select>
+          </el-form-item>
+          <el-form-item label="操作时间：" v-show="ifMore">
+              <el-date-picker
+                @keydown.enter.native="searchFun"
+                :editable="false"
+                v-model="operationTime"
+                :unlink-panels="true"
+                size="small"
+                type="datetimerange"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="getTime3"
+              />
+          </el-form-item>
+          <el-form-item label="账号状态：" v-show="ifMore">
+              <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+                <el-option label="全部" value="-1"/>
+                <el-option label="已分配" value="已分配"/>
+                <el-option label="未分配" value="未分配"/>
+              </el-select>
+          </el-form-item>
+          <el-form-item label="邮箱：" v-show="ifMore">
+              <el-input
+                @keyup.enter.native="searchFun"
+                v-model="queryData.EmailAddress"
+                placeholder="长度0-50"
+                maxlength="50"
+                size="small"
+              />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button>
+            <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
+            <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
+          </el-form-item>
+        </el-form>
+      <!--  <el-row>
           <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
@@ -189,7 +342,7 @@
             <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
             <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
           </el-col>
-        </el-row>
+        </el-row>-->
         <div class="cl-operation1">
           <el-button type="primary" size="small" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
           <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
@@ -262,6 +415,8 @@
 
     <!--警告信息 s-->
     <el-dialog
+      :close-on-click-modal="false"
+      top="30vh"
       title="提示"
       class="warningBox"
       :visible.sync="warnVisible"
@@ -276,6 +431,19 @@
       </span>
     </el-dialog>
     <!--警告信息 e-->
+
+    <!--新增s-->
+    <el-dialog
+      :close-on-click-modal="false"
+      top="5vh"
+      title="人员管理添加"
+      :visible.sync="addVisible"
+      :before-close="handleClose"
+      width="60%"
+    >
+      <addmponent ref="child" :msg="addVisible" v-on:Changed = "changeMsg($event)"></addmponent>
+    </el-dialog>
+    <!--新增e-->
   </div>
 </template>
 
@@ -283,18 +451,19 @@
 import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
+import addmponent from './peopleComponent/add'
 import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl} from "@/api/organize"
 let deleteId;
 import Bus from '@/utils/bus.js'
 import { getTime } from "@/utils/index";
-
 export default {
   name: 'peopleManage',
-  components: {customTable, Pagination},
+  components: {customTable, Pagination,addmponent},
   data() {
     return {
+      addVisible:false,
       ifMore: false,
-      tableHeight: null,
+      tableHeight: 600,
       warnVisible: false,
       queryData: {
         page: 1,
@@ -345,7 +514,7 @@ export default {
     }
   },
   watch: {
-    ifMore() {
+   /* ifMore() {
       let self = this
       self.$nextTick(() => {
         self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
@@ -356,9 +525,20 @@ export default {
       self.$nextTick(() => {
         self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
       })
-    }
+    }*/
   },
   methods: {
+    handleClose(){
+      this.$refs.child.resetForm('jp')
+    },
+    changeMsg(msg){
+      if(msg==1){
+        this.addVisible = false
+        this.searchFun()
+      }else{
+        this.addVisible = msg
+      }
+    },
     /**
      * 表格自定义
      * */
@@ -426,7 +606,7 @@ export default {
       }
     },
     addNewFun() {
-      this.$router.push({path: '/organizationManage/peopleAdd'})
+      this.addVisible = true
     },
     /**
      * 删除
@@ -590,7 +770,7 @@ export default {
 
     this.$refs.myChild.GetTable(this.queryData.tableId);
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-    this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+   // this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList()
     this.GetRoleNameList()
     let self = this

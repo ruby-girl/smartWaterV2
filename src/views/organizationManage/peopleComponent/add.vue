@@ -1,7 +1,7 @@
 <template>
-  <div class="cl-container cl-container3">
-    <div>
-      <el-form  ref="jp" :model="jp" :rules="rules" label-width="100px">
+  <div class="cl-container cl-container3" style="padding: 0;height: auto">
+    <div style="padding: 0 30px 0 0;">
+      <el-form ref="jp" :model="jp" :rules="rules" label-width="100px">
         <el-row :gutter="50">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
             <el-form-item label="人员编号:">
@@ -42,7 +42,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
-            <el-form-item label="邮箱:">
+            <el-form-item label="邮箱:" prop="EmailAddress">
               <el-input v-model="jp.EmailAddress" size="small" maxlength="50" placeholder="长度0-50" />
             </el-form-item>
           </el-col>
@@ -51,7 +51,7 @@
               <el-input v-model.trim="jp.JobStatus" size="small" disabled />
             </el-form-item>
           </el-col>
-          <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
+          <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
             <el-row>
               <el-col :span="12" style="position: relative">
                 <span style="position: absolute;color: #F56C6C;left: 45px;top:10px;">*</span>
@@ -94,7 +94,7 @@
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item label="地址:" prop="Address">
-              <el-input v-model.trim="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" />
+              <el-input v-model.trim="jp.Address" type="textarea" size="small" maxlength="100" placeholder="长度100" resize="none"/>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -102,44 +102,44 @@
               <uploadImg @getFileFun="getFileFun" ref="uploadCom"/>
             </el-form-item>
           </el-col>
+          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" style="text-align: center">
+            <el-checkbox v-model="goOn">继续添加</el-checkbox>
+              <el-button type="primary" size="small" @click="submitForm('jp')">保存</el-button>
+              <el-button size="small" @click="resetForm('jp')">取消</el-button>
+          </el-col>
         </el-row>
-        <p class="footBox">
-          <el-checkbox v-model="goOn">继续添加</el-checkbox>
-          <el-button type="primary" size="small" @click="submitForm('jp')">保存</el-button>
-          <el-button size="small" @click="resetForm('jp')">取消</el-button>
-        </p>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
-  import '../../styles/organization.scss'
-  import uploadImg from '../../components/Upload/index'
-  import { peopleAdd, ComboBoxList, linkComboBoxList } from "@/api/organize"
-  import { DeleteList } from "@/api/upload"
-  import Bus from '@/utils/bus.js'
+  import '@/styles/organization.scss'
+  import uploadImg from '@/components/Upload/index'
+  import {peopleAdd, ComboBoxList, linkComboBoxList} from "@/api/organize"
+  import {DeleteList} from "@/api/upload"
 
   export default {
-    name: 'peopleAdd',
-    components: { uploadImg },
+    name: 'add',
+    components: {uploadImg},
+    props:[ 'msg' ],
     data() {
       return {
-        isFlag:false,
+        isFlag: false,
         goOn: false,
         rules: {
           EmpName: [
-            { required: true, message: '请输入人员名称', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+            {required: true, message: '请输入人员名称', trigger: 'blur'},
+            {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
           ],
           SYS_Department_Id: [
-            { required: true, message: '请选择部门', trigger: 'change' }
+            {required: true, message: '请选择部门', trigger: 'change'}
           ],
           OA_Job_Id: [
-            { required: true, message: '请选择岗位', trigger: 'change' }
+            {required: true, message: '请选择岗位', trigger: 'change'}
           ],
           MobileNumber: [
-            { required: true, message: '请输入手机号', trigger: 'blur' },
+            {required: true, message: '请输入手机号', trigger: 'blur'},
             {
               pattern: /^[1][3,4,5,6,7,8,9][0-9]{9}$/,
               message: '手机号格式有误',
@@ -147,7 +147,7 @@
             }
           ],
           IDNumber: [
-            { required: true, message: '请输入证件号', trigger: 'blur' },
+            {required: true, message: '请输入证件号', trigger: 'blur'},
             {
               pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
               message: '证件号码格式有误！',
@@ -155,21 +155,21 @@
             }
           ],
           date2: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+            {type: 'date', required: true, message: '请选择时间', trigger: 'change'}
           ],
           type: [
-            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+            {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
           ],
           resource: [
-            { required: true, message: '请选择活动资源', trigger: 'change' }
+            {required: true, message: '请选择活动资源', trigger: 'change'}
           ],
           desc: [
-            { required: true, message: '请填写活动形式', trigger: 'blur' }
+            {required: true, message: '请填写活动形式', trigger: 'blur'}
           ]
         },
         jp: {
           EmpName: '',
-          oeoList:[],
+          oeoList: [],
           Gender: '',
           Birthday: '',
           MobileNumber: '',
@@ -177,13 +177,13 @@
           EnrollingTime: '',
           JobStatus: '在职',
           Address: '',
-          Idarr:[],
-          EmailAddress:''
+          Idarr: [],
+          EmailAddress: ''
         },
         upload: {
           file: []
         },
-        sojList:[
+        sojList: [
           {
             SYS_Department_Id: '',
             OA_Job_Id: '',
@@ -213,7 +213,7 @@
        * 删除部门
        * */
       reduceFun(index) {
-        this.sojList.splice(index,1);//从start的位置开始向后删除delCount个元素
+        this.sojList.splice(index, 1);//从start的位置开始向后删除delCount个元素
         this.getComboBoxList()
       },
       /**
@@ -222,51 +222,50 @@
       submitForm(formName) {
         this.isFlag = true;
         this.jp.oeoList = []
-        for(let i=0;i< this.sojList.length; i++) {//部门岗位信息
-          if(this.sojList[i].SYS_Department_Id!=''&&this.sojList[i].OA_Job_Id!=''){
+        for (let i = 0; i < this.sojList.length; i++) {//部门岗位信息
+          if (this.sojList[i].SYS_Department_Id != '' && this.sojList[i].OA_Job_Id != '') {
             this.jp.oeoList.push({
               SYS_Department_Id: this.sojList[i].SYS_Department_Id,
               OA_Job_Id: this.sojList[i].OA_Job_Id
             })
-          }else{
+          } else {
             return false
           }
         }
-        for(let j =0;j<this.upload.file.length;j++){
+        for (let j = 0; j < this.upload.file.length; j++) {
           this.jp.Idarr.push(this.upload.file[j].id)
         }
 
-
         this.$refs[formName].validate((valid) => {
           if (valid) {
-              peopleAdd(this.jp).then(res => {
-                if(res.code==0){
-                  this.$message({
-                    message: res.message,
-                    type: 'success'
-                  });
-                  if(this.goOn){
-                    this.sojList = [{
-                      SYS_Department_Id: '',
-                      OA_Job_Id: '',
-                      post: [],
-                      depart: []
-                    }]
-                    this.getComboBoxList()
-                    this.isFlag = false
-                    this.$refs.uploadCom.certificates = '身份证'
-                    this.$refs.uploadCom.fileList = []
-                    this.$refs[formName].resetFields()
-                  }else{
-                    Bus.$emit('msg', this.$route)
-                  }
-                }else {
-                  this.$message({
-                    message: res.message,
-                    type: 'warning'
-                  });
+            peopleAdd(this.jp).then(res => {
+              if (res.code == 0) {
+                this.$message({
+                  message: res.message,
+                  type: 'success'
+                });
+                this.sojList = [{
+                  SYS_Department_Id: '',
+                  OA_Job_Id: '',
+                  post: [],
+                  depart: []
+                }]
+                this.getComboBoxList()
+                this.isFlag = false
+                this.$refs.uploadCom.certificates = '身份证'
+                this.$refs.uploadCom.fileList = []
+                this.$refs[formName].resetFields()
+                if(!this.goOn){
+                  this.$refs[formName].resetFields()
+                  this.$emit("Changed",1)
                 }
-              })
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: 'warning'
+                });
+              }
+            })
 
           } else {
             return false
@@ -278,15 +277,26 @@
        * */
       resetForm(formName) {
         this.$refs[formName].resetFields()
-        Bus.$emit('msg', this.$route)
+        this.$emit("Changed",false)
+
+        this.sojList = [{
+          SYS_Department_Id: '',
+          OA_Job_Id: '',
+          post: [],
+          depart: []
+        }]
+        this.getComboBoxList()
+        this.isFlag = false
+        this.$refs.uploadCom.certificates = '身份证'
+        this.$refs.uploadCom.fileList = []
 
         let ids = []
-        for(let i=0;i<this.upload.file.length;i++){
+        for (let i = 0; i < this.upload.file.length; i++) {
           ids.push(this.upload.file[i].id)
         }
-        if(ids.length<=0)
+        if (ids.length <= 0)
           return
-        DeleteList({idarr:ids}).then(res => {
+        DeleteList({idarr: ids}).then(res => {
         })
 
       },
@@ -301,8 +311,8 @@
        * */
       getComboBoxList() {
         ComboBoxList().then(res => {
-          if(res.code==0){
-            for(let i = 0;i< this.sojList.length;i++) {
+          if (res.code == 0) {
+            for (let i = 0; i < this.sojList.length; i++) {
               this.sojList[i].depart = res.data
             }
           } else {
@@ -316,12 +326,12 @@
       /**
        * 岗位联动
        * */
-      getPostList(id,index) {
-        let params = { SYS_Department_Id : id}
+      getPostList(id, index) {
+        let params = {SYS_Department_Id: id}
         linkComboBoxList(params).then(res => {
-          if(res.code==0){
-            for(let i = 0;i< this.sojList.length;i++) {
-              if(i==index){
+          if (res.code == 0) {
+            for (let i = 0; i < this.sojList.length; i++) {
+              if (i == index) {
                 this.sojList[i].post = res.data
                 this.sojList[i].OA_Job_Id = ''
               }
@@ -339,14 +349,12 @@
        * */
       recurFun(index) {
         let arr = []
-        for(let i=0;i<this.sojList.length;i++){
+        for (let i = 0; i < this.sojList.length; i++) {
           arr.push(this.sojList[i].OA_Job_Id)
         }
         var nary = arr.sort();
-        for(var i = 0; i < nary.length - 1; i++)
-        {
-          if (nary[i] == nary[i+1]&&nary[i]!='')
-          {
+        for (var i = 0; i < nary.length - 1; i++) {
+          if (nary[i] == nary[i + 1] && nary[i] != '') {
             this.$message({
               message: '个人所属岗位不能重复',
               type: 'warning'
