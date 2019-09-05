@@ -10,12 +10,6 @@
     <el-form-item label="角色：">
       <el-input v-model="selectHead.roleName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
     </el-form-item>
-    <el-form-item label="人员名称：">
-      <el-input v-model="selectHead.userName" maxlength="10" placeholder="请输入人员名称" @keyup.enter.native="handleFilter" />
-    </el-form-item>
-    <el-form-item label="人员编号：">
-      <el-input v-model="selectHead.userNum" maxlength="10" placeholder="请输入人员编号" @keyup.enter.native="handleFilter" />
-    </el-form-item>
     <el-form-item label="操作人：">
       <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
@@ -32,6 +26,7 @@
         v-model="timevalue"
         type="datetimerange"
         :editable="false"
+        :unlink-panels="true"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
@@ -48,7 +43,6 @@
   </el-form>
 </template>
 <script>
-import { parseStartTime, parseEndTime } from "@/utils/index";
 import {getSelectUser} from "@/api/account"//获取操作人下拉框
 export default {
   props: {
@@ -66,12 +60,6 @@ export default {
     };
   },
   created() {
-    let start = parseStartTime(new Date());
-    let end = parseEndTime(new Date());
-    this.timevalue.push(new Date(start));
-    this.timevalue.push(new Date(end));
-    this.selectHead.editStartTime = start;
-    this.selectHead.editEndTime = end;
     getSelectUser().then((res)=>{
       this.editUserList=res.data
     })

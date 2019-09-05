@@ -4,9 +4,10 @@
       <div ref="formHeight">
         <select-head :select-head="listQuery" @handleFilter="handleFilter" :role-list="roleList" />
       </div>
-      <div class="table-top-btn-padding">
+      <div class="table-top-btn-padding display-flex justify-content-flex-justify">
         <el-button type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
-        <el-button
+        <div>
+          <el-button
           type="success"
           size="mini"
           @click="excel"
@@ -16,6 +17,7 @@
           size="mini"
           @click="setCustomData()"
         ><i class="iconfont iconbiaogezidingyi"></i>表格自定义</el-button>
+        </div>
       </div>
       <customTable ref="myChild" />
       <div class="main-padding-20-y">

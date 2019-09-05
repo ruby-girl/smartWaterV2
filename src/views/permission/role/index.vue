@@ -4,14 +4,16 @@
       <div ref="formHeight">
       <select-head :select-head="listQuery" @handleFilter="handleFilter" />
     </div>
-    <div class="table-top-btn-padding">
+    <div class="table-top-btn-padding display-flex justify-content-flex-justify">
       <el-button type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
-      <el-button type="success" size="mini"  @click="excel"><i class="iconfont icondaochuexcel"></i>导出Excel</el-button>
+      <div>
+        <el-button type="success" size="mini"  @click="excel"><i class="iconfont icondaochuexcel"></i>导出Excel</el-button>
       <el-button
         type="warning"
         size="mini"
         @click="setCustomData()"
       ><i class="iconfont iconbiaogezidingyi"></i>表格自定义</el-button>
+      </div>
     </div>
     <customTable ref="myChild" />
     <div class="main-padding-20-y">
@@ -95,8 +97,6 @@ export default {
         filed:"",
         sort:"",
         roleName: "", // 角色名称
-        empName: "", // 人员名称
-        empNo: "", // 人员编号
         editUserId: "-1", // 操作人
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止

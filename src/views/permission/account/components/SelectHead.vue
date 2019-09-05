@@ -38,6 +38,7 @@
         v-model="timevalue"
         type="datetimerange"
         :editable="false"
+        :unlink-panels="true"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
@@ -54,7 +55,6 @@
   </el-form>
 </template>
 <script>
-import { parseStartTime, parseEndTime } from "@/utils/index";
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { getDictionaryOption } from "@/utils/permission";
 export default {
@@ -81,12 +81,6 @@ export default {
     };
   },
   created() {
-    let start = parseStartTime(new Date());
-    let end = parseEndTime(new Date());
-    this.timevalue.push(new Date(start));
-    this.timevalue.push(new Date(end));
-    this.selectHead.editStartTime = start;
-    this.selectHead.editEndTime = end;
     getSelectUser().then(res => {
       this.editUserList = res.data;
     });
