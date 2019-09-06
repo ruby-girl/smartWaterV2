@@ -1,14 +1,22 @@
 <template>
   <div class="uploadBox">
 
-    <el-form-item label="附件:" style="margin: 0 0 20px -100px;width: 250px">
+   <!-- <el-form-item label="附件:" style="margin: 0 0 20px -100px;width: 250px">
+      <el-select v-model="certificates" placeholder="请选择" size="small">
+        <el-option label="身份证" value="1" />
+        <el-option label="居住证" value="2" />
+      </el-select>
+    </el-form-item>-->
+
+    <el-form-item label="附件:">
       <el-select v-model="certificates" placeholder="请选择" size="small">
         <el-option label="身份证" value="1" />
         <el-option label="居住证" value="2" />
       </el-select>
     </el-form-item>
 
-    <div class="uploadPart">
+
+    <div class="uploadPart" style="margin: 0 100px 20px 100px">
       <el-upload
         ref="foreignPersonUploadItem"
         class="upload-demo uploadFile"
@@ -187,6 +195,7 @@
      * */
     setFiles(data) {
       let obj = {}
+      this.fileList = []
       for(let i=0;i<data.length;i++){
         let thisType;
         const Suffix = data[i].FileExtName.split('.')[1]

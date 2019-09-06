@@ -126,27 +126,6 @@ export const asyncRoutes = [
         name: 'peopleManage',
         component: () => import('@/views/organizationManage/peopleManage'),
         meta: { title: '人员管理',  roles: ['1'] }
-      },
-      {
-        path: '/organizationManage/peopleDetail/:id',
-        name: 'peopleDetail',
-        component: () => import('@/views/organizationManage/peopleDetail'),
-        meta: { title: '人员管理 - 详情' },
-        hidden: true
-      },
-      {
-        path: '/organizationManage/peopleEdit/:id',
-        name: 'peopleEdit',
-        component: () => import('@/views/organizationManage/peopleEdit'),
-        meta: { title: '人员管理 - 编辑' },
-        hidden: true
-      },
-      {
-        path: '/organizationManage/peopleAdd',
-        name: 'peopleAdd',
-        component: () => import('@/views/organizationManage/peopleAdd'),
-        meta: { title: '人员管理 - 新增' },
-        hidden: true
       }
     ]
   },

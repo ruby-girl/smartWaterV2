@@ -3,18 +3,18 @@
     <div style="padding: 0 30px 0 0;">
       <el-form :inline="true" ref="jp" :model="jp" :rules="rules" label-width="100px">
         <el-form-item label="人员编号:">
-          <el-input size="small" disabled/>
+          <el-input size="small" disabled v-model="jp.EmpNo"/>
         </el-form-item>
         <el-form-item label="人员名称:" prop="EmpName">
           <el-input v-model.trim="jp.EmpName" size="small" maxlength="10" placeholder="请输入人员名称"/>
         </el-form-item>
-        <el-form-item label="性别:" prop="Gender">
+        <el-form-item label="性别:">
           <el-select v-model="jp.Gender" placeholder="请选择" size="small">
             <el-option label="女" value="女"/>
             <el-option label="男" value="男"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="出生日期:" prop="Birthday">
+        <el-form-item label="出生日期:">
           <el-date-picker v-model="jp.Birthday" type="date" placeholder="年月日" size="small" value-format="yyyy-MM-dd" style="width: 185px"/>
         </el-form-item>
         <el-form-item label="电话号码:" prop="MobileNumber">
@@ -23,18 +23,13 @@
         <el-form-item label="身份证号:" prop="IDNumber">
           <el-input v-model.trim="jp.IDNumber" size="small" maxlength="18" placeholder="请输入18位身份证号"/>
         </el-form-item>
-        <el-form-item label="入职时间:" prop="EnrollingTime">
+        <el-form-item label="入职时间:">
           <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small"
                           value-format="yyyy-MM-dd" style="width: 185px"/>
         </el-form-item>
-        <el-form-item label="邮箱:" prop="EmailAddress">
+        <el-form-item label="邮箱:">
           <el-input v-model="jp.EmailAddress" size="small" maxlength="50" placeholder="长度0-50"/>
         </el-form-item>
-        <el-form-item label="岗位状态:" prop="JobStatus">
-          <el-input v-model.trim="jp.JobStatus" size="small" disabled/>
-        </el-form-item>
-
-
         <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
           <el-row>
             <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="8" style="position: relative">
@@ -54,7 +49,7 @@
               </el-form-item>
             </el-col>
             <el-col :xs="22" :sm="22" :md="22" :lg="10" :xl="6" style="position: relative">
-              <span style="position: absolute;color: #F56C6C;left:-4px;top:10px;">*</span>
+              <span style="position: absolute;color: #F56C6C;left: -4px;top:10px;">*</span>
               <span v-show="item.OA_Job_Id==''&&isFlag"
                     style="position: absolute;color: #F56C6C;left: 70px;top:40px;font-size: 12px;">不能为空</span>
               <el-form-item label="岗位:" label-width="50px" :class="item.OA_Job_Id==''&&isFlag?'on':''">
@@ -86,15 +81,14 @@
           </el-row>
         </el-col>
 
-        <el-form-item label="地址:" prop="Address" class="textAreaBox">
-          <el-input v-model.trim="jp.Address" type="textarea" size="small" :row="3" maxlength="100" placeholder="长度100"
+        <el-form-item label="地址:" prop="adress" class="textAreaBox">
+          <el-input v-model.trim="jp.Address" type="textarea" size="small" :rows="3" maxlength="100" placeholder="长度100"
                     resize="none"/>
         </el-form-item>
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-            <uploadImg @getFileFun="getFileFun" ref="uploadCom"/>
+          <uploadImg @getFileFun="getFileFun" ref="getFiles"/>
         </el-col>
         <el-form-item style="text-align: center;width: 100%">
-          <el-checkbox v-model="goOn">继续添加</el-checkbox>
           <el-button type="primary" size="small" @click="submitForm('jp')">保存</el-button>
           <el-button size="small" @click="resetForm('jp')">取消</el-button>
         </el-form-item>
@@ -106,17 +100,15 @@
 <script>
   import '@/styles/organization.scss'
   import uploadImg from '@/components/Upload/index'
-  import {peopleAdd, ComboBoxList, linkComboBoxList} from "@/api/organize"
+  import {GetBlObjById, peopleUpDate, ComboBoxList, linkComboBoxList} from "@/api/organize"
   import {DeleteList} from "@/api/upload"
 
   export default {
-    name: 'add',
+    name: 'edit',
     components: {uploadImg},
-    props: ['msg'],
     data() {
       return {
         isFlag: false,
-        goOn: false,
         rules: {
           EmpName: [
             {required: true, message: '请输入人员名称', trigger: 'blur'},
@@ -158,6 +150,7 @@
           ]
         },
         jp: {
+          EmpNo: '',
           EmpName: '',
           oeoList: [],
           Gender: '',
@@ -165,26 +158,16 @@
           MobileNumber: '',
           IDNumber: '',
           EnrollingTime: '',
+          EmailAddress: '',
           JobStatus: '在职',
           Address: '',
-          Idarr: [],
-          EmailAddress: ''
+          Idarr: []
         },
         upload: {
           file: []
         },
-        sojList: [
-          {
-            SYS_Department_Id: '',
-            OA_Job_Id: '',
-            post: [],
-            depart: []
-          },
-        ],
+        sojList: [],
       }
-    },
-    mounted() {
-      this.getComboBoxList()
     },
     methods: {
       /**
@@ -192,11 +175,18 @@
        * */
       addFun() {
         this.sojList.push({
-          SYS_Department_Id: '',
+          Id: '',
+          OA_EmployeeName: '',
+          OA_Employee_Id: '',
+          OA_JobName: '',
           OA_Job_Id: '',
+          SYS_DepartmentName: '',
+          SYS_Department_Id: '',
+          SYS_User_Id: '',
           post: [],
           depart: []
         })
+        this.isFlag = false;
         this.getComboBoxList()
       },
       /**
@@ -210,46 +200,45 @@
        * 提交
        * */
       submitForm(formName) {
+        let self = this
         this.isFlag = true;
-        this.jp.oeoList = []
+        this.jp.oeoList = [];
+        for (let i = 0; i < this.sojList.length; i++) {
+          this.jp.oeoList.push({
+            Id: this.sojList[i].Id,
+            SYS_Department_Id: this.sojList[i].SYS_Department_Id,
+            OA_Job_Id: this.sojList[i].OA_Job_Id,
+            OA_EmployeeName: '',
+            OA_Employee_Id: '',
+            OA_JobName: '',
+            SYS_DepartmentName: '',
+            SYS_User_Id: ''
+          })
+        }
+        this.jp.Idarr = []//初始上传文件ID集合字段
+        delete this.jp.saList
 
         for (let j = 0; j < this.upload.file.length; j++) {
           this.jp.Idarr.push(this.upload.file[j].id)
         }
+        for (let i = 0; i < this.jp.oeoList.length; i++) {
+          if (this.jp.oeoList[i].OA_Job_Id == '' || this.jp.oeoList[i].SYS_Department_Id == '') {
+            this.isFlag = true;
+            return false
+          } else {
+            this.isFlag = false;
+          }
+        }
 
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            for (let i = 0; i < this.sojList.length; i++) {//部门岗位信息
-              if (this.sojList[i].SYS_Department_Id != '' && this.sojList[i].OA_Job_Id != '') {
-                this.jp.oeoList.push({
-                  SYS_Department_Id: this.sojList[i].SYS_Department_Id,
-                  OA_Job_Id: this.sojList[i].OA_Job_Id
-                })
-              } else {
-                return false
-              }
-            }
-            peopleAdd(this.jp).then(res => {
+            peopleUpDate(self.jp).then(res => {
               if (res.code == 0) {
                 this.$message({
                   message: res.message,
                   type: 'success'
                 });
-                this.sojList = [{
-                  SYS_Department_Id: '',
-                  OA_Job_Id: '',
-                  post: [],
-                  depart: []
-                }]
-                this.getComboBoxList()
-                this.isFlag = false
-                this.$refs.uploadCom.certificates = '身份证'
-                this.$refs.uploadCom.fileList = []
-                this.$refs[formName].resetFields()
-                if (!this.goOn) {
-                  this.$refs[formName].resetFields()
-                  this.$emit("Changed", 1)
-                }
+                this.$emit("Changed1", 1)
               } else {
                 this.$message({
                   message: res.message,
@@ -268,18 +257,7 @@
        * */
       resetForm(formName) {
         this.$refs[formName].resetFields()
-        this.$emit("Changed", false)
-
-        this.sojList = [{
-          SYS_Department_Id: '',
-          OA_Job_Id: '',
-          post: [],
-          depart: []
-        }]
-        this.getComboBoxList()
-        this.isFlag = false
-        this.$refs.uploadCom.certificates = '身份证'
-        this.$refs.uploadCom.fileList = []
+        this.$emit("Changed1", false)
 
         let ids = []
         for (let i = 0; i < this.upload.file.length; i++) {
@@ -289,7 +267,6 @@
           return
         DeleteList({idarr: ids}).then(res => {
         })
-
       },
       /**
        * 获取上传文件信息
@@ -317,16 +294,55 @@
       /**
        * 岗位联动
        * */
-      getPostList(id, index) {
+      getPostList(id, index, type) {
         let params = {SYS_Department_Id: id}
         linkComboBoxList(params).then(res => {
           if (res.code == 0) {
             for (let i = 0; i < this.sojList.length; i++) {
               if (i == index) {
                 this.sojList[i].post = res.data
-                this.sojList[i].OA_Job_Id = ''
+                if (type != 0) {//编辑部门时候初始化岗位
+                  this.sojList[i].OA_Job_Id = ''
+                }
               }
             }
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+      },
+      /**
+       * 获取详情
+       * */
+      getInfo(id) {
+        GetBlObjById({id: id}).then(res => {
+          if (res.code == 0) {
+            this.sojList = []
+            let list = res.data.blList, obj = {}
+            for (let i = 0; i < list.length; i++) {
+              obj = {
+                Id: list[i].Id,
+                OA_EmployeeName: '',
+                OA_Employee_Id: '',
+                OA_JobName: '',
+                OA_Job_Id: list[i].OA_Job_Id,
+                SYS_DepartmentName: '',
+                SYS_Department_Id: list[i].SYS_Department_Id,
+                SYS_User_Id: '',
+                post: [],
+                depart: []
+              }
+              this.sojList.push(obj)
+              this.getComboBoxList()
+              this.getPostList(list[i].SYS_Department_Id, i, 0)
+            }
+            delete res.data.blList
+            this.jp = res.data
+            let fileList = res.data.saList//已经上传文件信息
+            this.$refs.getFiles.setFiles(fileList)
           } else {
             this.$message({
               message: res.message,
@@ -354,6 +370,9 @@
           }
         }
       }
+    },
+    mounted() {
+      this.getComboBoxList()
     }
   }
 </script>

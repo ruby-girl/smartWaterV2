@@ -121,3 +121,14 @@
   }
   .on .el-input__inner, .on .el-input__inner:focus{border: solid 1px red;}
 }
+.textAreaBox{
+  width: 100%;display: flex !important;padding-right: 100px;
+  > .el-form-item__label{width: 100px;}
+  > .el-form-item__content{flex: 1}
+}
+.detailBox {
+  span{
+    display: inline-block;
+    min-width: 180px
+  }
+}

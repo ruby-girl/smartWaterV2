@@ -444,6 +444,32 @@
       <addmponent ref="child" :msg="addVisible" v-on:Changed = "changeMsg($event)"></addmponent>
     </el-dialog>
     <!--新增e-->
+
+    <!--编辑s-->
+    <el-dialog
+      :close-on-click-modal="false"
+      top="5vh"
+      title="人员管理编辑"
+      :visible.sync="editVisible"
+      width="60%"
+    >
+      <editmponent ref="child2" :msg1="editVisible" v-on:Changed1 = "changeMsg1($event)"></editmponent>
+    </el-dialog>
+    <!--编辑e-->
+
+    <!--详情s-->
+    <el-dialog
+      :close-on-click-modal="false"
+      top="5vh"
+      title="人员管理详情"
+      :visible.sync="detailVisible"
+      :before-close="handleClose3"
+
+      width="60%"
+    >
+      <detailmponent ref="child3"></detailmponent>
+    </el-dialog>
+    <!--详情e-->
   </div>
 </template>
 
@@ -452,15 +478,19 @@ import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
 import addmponent from './peopleComponent/add'
+import editmponent from './peopleComponent/edit'
+import detailmponent from './peopleComponent/detail'
 import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl} from "@/api/organize"
 let deleteId;
-import Bus from '@/utils/bus.js'
 import { getTime } from "@/utils/index";
+
 export default {
   name: 'peopleManage',
-  components: {customTable, Pagination,addmponent},
+  components: {customTable, Pagination, addmponent, editmponent, detailmponent},
   data() {
     return {
+      detailVisible:false,
+      editVisible: false,
       addVisible:false,
       ifMore: false,
       tableHeight: 600,
@@ -531,12 +561,24 @@ export default {
     handleClose(){
       this.$refs.child.resetForm('jp')
     },
+    handleClose3(){
+      this.$refs.child3.resetForm('form')
+      this.detailVisible = false
+    },
     changeMsg(msg){
       if(msg==1){
         this.addVisible = false
         this.searchFun()
       }else{
         this.addVisible = msg
+      }
+    },
+    changeMsg1(msg){
+      if(msg==1){
+        this.editVisible = false
+        this.searchFun()
+      }else{
+        this.editVisible = msg
       }
     },
     /**
@@ -589,19 +631,16 @@ export default {
      * 2：详情
      * */
     handleEdit(row, type) {
+      let self = this
       if (type == 1) {//编辑
-        this.$router.push({
-          name: "peopleEdit",
-          params: {
-            id: row.Id
-          }
+        self.editVisible = true
+        self.$nextTick(() => {
+          self.$refs.child2.getInfo(row.Id)
         })
       } else {//详情
-        this.$router.push({
-          name: "peopleDetail",
-          params: {
-            id: row.Id
-          }
+        self.detailVisible = true
+        self.$nextTick(() => {
+          self.$refs.child3.getInfo(row.Id)
         })
       }
     },
@@ -759,31 +798,14 @@ export default {
     }
   },
   mounted() {
-/*    let start = new Date().Format("yyyy-MM-dd hh:mm:ss");
-    let end = new Date().Format("yyyy-MM-dd hh:mm:ss");
-
-    this.EntryTime.push(start);
-    this.EntryTime.push(end.replace('00:00:00','23:59:59'));
-
-    this.queryData.EnrollingTime = start;
-    this.queryData.EnrollingTimeEnd = end.replace('00:00:00','23:59:59');*/
 
     this.$refs.myChild.GetTable(this.queryData.tableId);
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
    // this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList()
     this.GetRoleNameList()
-    let self = this
-    Bus.$on('msg', (e) => {
-      self.searchFun()
-    })
 
-   /* document.onkeydown = function(e) {
-      var key = window.event.keyCode;
-      if (key == 13) {
-        self.searchFun();
-      }
-    }*/
+
   }
 }
 </script>
