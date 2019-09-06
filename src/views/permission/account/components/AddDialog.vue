@@ -18,14 +18,14 @@
       size="small"
       label-width="100px"
     >
-      <el-form-item label="人员编号：" prop="userNum">
-        <!-- <el-input maxlength="10" v-model="temp.userNum" placeholder="请输入人员编号"></el-input> -->
-        <el-select v-model="temp.userNum" filterable remote :filter-method="selectOption" placeholder="请输入人员编号">
+      <el-form-item label="人员编号：" prop="employeeId">
+        <!-- <el-input maxlength="10" v-model="temp.employeeId" placeholder="请输入人员编号"></el-input> -->
+        <el-select v-model="temp.employeeId" filterable remote :filter-method="selectOption" @visible-change="userChange" placeholder="请输入人员编号">
           <el-option
             v-for="item in userOptions"
             :key="item.value"
             :label="item.EmpName"
-            :value="item.EmpNo"
+            :value="item.Id"
           >
           <span style="float: left">{{ item.EmpName }}</span>
       <span style="float: right; color: #8492a6; font-size: 13px">{{ item.EmpNo }}</span>
@@ -34,14 +34,14 @@
       </el-form-item>
 
       <el-form-item label="角色：" prop="roleId">
-        <el-select v-model="temp.roleId" placeholder="请选择" :disabled="temp.userNum==''?true:false">
+        <el-select v-model="temp.roleId" placeholder="请选择" :disabled="temp.employeeId==''?true:false">
           <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
       <el-form-item label="账号：" prop="loginName">
         <el-input
           v-model="temp.loginName"
-          :disabled="temp.userNum==''?true:false"
+          :disabled="temp.employeeId==''?true:false"
           maxlength="20"
           placeholder="长度20"
         ></el-input>
@@ -49,7 +49,7 @@
       <el-form-item label="密码：" prop="loginPwdSave">
         <el-input
           v-model="temp.loginPwdSave"
-          :disabled="temp.userNum==''?true:false"
+          :disabled="temp.employeeId==''?true:false"
           maxlength="18"
           @keyup.native="setNum"
           placeholder="请输入6-18位密码"
@@ -65,6 +65,7 @@
 </template>
 <script>
 import { numGetAccount } from "@/api/account";
+import { setTimeout } from 'timers';
 export default {
   props: {
     temp: {
@@ -104,7 +105,7 @@ export default {
     });
   },
   data() {
-    var userNum = (rule, value, callback) => {
+    var employeeId = (rule, value, callback) => {
       if (value === "") {
         return callback(new Error("不能为空"));
       }
@@ -131,7 +132,7 @@ export default {
     return {
       timevalue: [],
       rules: {
-        userNum: [{ required: true, message: "不能为空", trigger: "blur" }],
+        employeeId: [{ required: true, message: "不能为空", trigger: "blur" }],
         roleId: [{ required: true, message: "不能为空", trigger: "blur" }],
         loginName: [
           { required: true, message: "不能为空", trigger: "blur" },
@@ -156,21 +157,25 @@ export default {
     };
   },
   methods: {
+    userChange(){
+      let _this=this
+      setTimeout(function(){
+        _this.userOptions = _this.userOptionsSave
+      },500)
+    },
     selectOption(query){
-      
-      if (query !== '') {
+      if (query !== ''&&query) {
           this.loading = true;
           setTimeout(() => {
             this.loading = false;
-            this.userOptions = this.userOptionsSave.filter(item => {
-              
+            this.userOptions = this.userOptionsSave.filter(item => {            
               return item.EmpName.toLowerCase()
                 .indexOf(query.toLowerCase()) > -1||item.EmpNo
                 .indexOf(query.toLowerCase()) > -1;
             });
           }, 200);
         } else {
-          this.userOptions = [];
+          this.userOptions = this.userOptionsSave
         }
     },
     setNum() {
@@ -196,6 +201,7 @@ export default {
     },
     addDialogClose() {
       this.$nextTick(() => {
+        this.userOptions = this.userOptionsSave
         this.$refs["dataFormAdd"].clearValidate();
       });
     }

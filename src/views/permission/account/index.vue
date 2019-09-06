@@ -249,7 +249,8 @@ export default {
         this.addDialogFormVisible = false;
         this.$message({
           message: res.message,
-          type: "success"
+          type: "success",
+          duration: 4000
         });
         this.getList();
       });
@@ -259,7 +260,8 @@ export default {
         this.dialogFormVisible = false;
         this.$message({
           message: res.message,
-          type: "success"
+          type: "success",
+          duration: 4000
         });
         this.getList();
       });
@@ -275,7 +277,8 @@ export default {
         cancelAccount(row.Id).then(res => {
           this.$message({
             message: res.message,
-            type: "success"
+            type: "success",
+            duration: 4000
           });
           this.getList();
         });

@@ -173,7 +173,8 @@ export default {
         deleteRole(r.Id).then((res)=>{
           this.$message({
             message: res.message,
-            type: "success"
+            type: "success",
+            duration: 4000
           });
           this.getList()
         })
@@ -188,7 +189,8 @@ export default {
       addRole(dialog.RoleName).then(res => {
         this.$message({
           message: res.message,
-          type: "success"
+          type: "success",
+          duration: 4000
         });
         this.dialogFormVisible = false;
         this.handleFilter();
@@ -199,7 +201,8 @@ export default {
         res => {
           this.$message({
             message: res.message,
-            type: "success"
+            type: "success",
+            duration: 4000
           });
           this.dialogFormVisible = false;
           for (const v of this.tableData) {
