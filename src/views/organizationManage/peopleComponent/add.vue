@@ -233,7 +233,8 @@
               if (res.code == 0) {
                 this.$message({
                   message: res.message,
-                  type: 'success'
+                  type: 'success',
+                  duration: 4000
                 });
                 this.sojList = [{
                   SYS_Department_Id: '',
@@ -253,7 +254,8 @@
               } else {
                 this.$message({
                   message: res.message,
-                  type: 'warning'
+                  type: 'warning',
+                  duration: 4000
                 });
               }
             })
@@ -309,7 +311,8 @@
           } else {
             this.$message({
               message: res.message,
-              type: 'warning'
+              type: 'warning',
+              duration: 4000
             });
           }
         })
@@ -330,7 +333,8 @@
           } else {
             this.$message({
               message: res.message,
-              type: 'warning'
+              type: 'warning',
+              duration: 4000
             });
           }
         })
@@ -348,7 +352,8 @@
           if (nary[i] == nary[i + 1] && nary[i] != '') {
             this.$message({
               message: '个人所属岗位不能重复',
-              type: 'warning'
+              type: 'warning',
+              duration: 4000
             });
             this.sojList[index].OA_Job_Id = ''
           }

@@ -660,14 +660,16 @@ export default {
         if (res.code == 0) {
           this.$message({
             message: res.message,
-            type: 'success'
+            type: 'success',
+            duration: 4000
           });
           this.warnVisible = false
           this.searchFun()
         } else {
           this.$message({
             message: res.message,
-            type: 'warning'
+            type: 'warning',
+            duration: 4000
           });
         }
       })
@@ -721,7 +723,8 @@ export default {
         } else {
           this.$message({
             message: res.message,
-            type: 'warning'
+            type: 'warning',
+            duration: 4000
           });
         }
       })
@@ -738,7 +741,8 @@ export default {
         } else {
           this.$message({
             message: res.message,
-            type: 'warning'
+            type: 'warning',
+            duration: 4000
           });
         }
       })
@@ -753,7 +757,8 @@ export default {
         } else {
           this.$message({
             message: res.message,
-            type: 'warning'
+            type: 'warning',
+            duration: 4000
           });
         }
       })

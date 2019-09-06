@@ -220,7 +220,8 @@
           }else {
             this.$message({
               message: res.message,
-              type: 'warning'
+              type: 'warning',
+              duration: 4000
             });
           }
         })
