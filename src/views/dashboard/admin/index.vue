@@ -146,6 +146,7 @@ export default {
           this.user = res.data
           try {
              window.FXYB_WEB_CS_Account.SetAccount(res.data.UserName)
+             window.HeadEvent.SetUserInfo(res.data)
           } catch (error) {
             console.log('请在CS端操作')
           }
