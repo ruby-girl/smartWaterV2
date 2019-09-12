@@ -132,3 +132,12 @@
     min-width: 180px
   }
 }
+@media screen and (min-width: 1280px){
+  .ssearchText1 {display: block}
+  .ssearchText2 {display: none}
+}
+
+@media screen and (min-width: 1680px){
+  .ssearchText1 {display: none}
+  .ssearchText2 {display: block}
+}

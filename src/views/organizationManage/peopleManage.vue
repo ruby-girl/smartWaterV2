@@ -5,7 +5,7 @@
         <el-form
           :inline="true"
           :model="queryData"
-          class="head-search-form form-inline-small-input"
+          class="head-search-form form-inline-small-input ssearchText1"
           size="small"
           label-width="100px"
           @submit.native.prevent
@@ -155,7 +155,8 @@
             <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
           </el-form-item>
         </el-form>
-      <!--  <el-row>
+
+        <el-row class="ssearchText2">
           <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
               <label class="cl-label">部门：</label>
@@ -342,7 +343,7 @@
             <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
             <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
           </el-col>
-        </el-row>-->
+        </el-row>
         <div class="cl-operation1">
           <el-button type="primary" size="small" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
           <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
