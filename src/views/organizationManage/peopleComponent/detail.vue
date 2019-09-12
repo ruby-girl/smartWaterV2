@@ -232,10 +232,16 @@
       }
     },
     mounted() {
+      let self = this
       this.clientHeight = document.documentElement.clientHeight
       window.onresize = function temp() {
         this.clientHeight = document.documentElement.clientHeight
       }
+      document.addEventListener('keydown', function(e){
+        if(e.which == 27){
+           self.ifImg = false
+        }
+      }, false);
     }
   }
 </script>
