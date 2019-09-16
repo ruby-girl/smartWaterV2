@@ -143,13 +143,20 @@ export default {
     GetFirstPageRoleInfo() {
       GetFirstPageRoleInfo().then(res => {
         if(res.code==0) {
-          this.user = res.data
+         
           try {
-             window.FXYB_WEB_CS_Account.SetAccount(res.data.UserName)
-             window.HeadEvent.SetUserInfo(res.data)
+             window.FXYB_WEB_CS_Account.SetAccount(res.data.UserName)         
           } catch (error) {
-            console.log('请在CS端操作')
+            console.log('请在CS端操作1')
+          }   
+        let user={...res.data}    
+        user=JSON.stringify(user)          
+          try {     
+             window.HeadEvent.SetUserInfo(user)
+          } catch (error) {
+            console.log('请在CS端操作2')
           }
+           this.user = res.data
         }else {
           this.$message({
             message: res.message,
