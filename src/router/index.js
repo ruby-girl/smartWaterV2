@@ -126,6 +126,12 @@ export const asyncRoutes = [
         name: 'peopleManage',
         component: () => import('@/views/organizationManage/peopleManage'),
         meta: { title: '人员管理',  roles: ['1'] }
+      },
+      {
+        path: '/organizationManage/areaManage',
+        name: 'areaManage',
+        component: () => import('@/views/organizationManage/areaManage'),
+        meta: { title: '片区管理',  roles: ['1'] }
       }
     ]
   },
