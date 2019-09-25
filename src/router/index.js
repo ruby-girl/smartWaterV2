@@ -110,6 +110,12 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'waterFactory',
+        name: 'waterFactoryPermission',
+        component: () => import('@/views/organizationManage/waterFactory'),
+        meta: { title: '水厂管理',  roles: ['1'] }
+      },
+      {
         path: '/organizationManage/department',
         name: 'department',
         component: () => import('@/views/organizationManage/department'),
