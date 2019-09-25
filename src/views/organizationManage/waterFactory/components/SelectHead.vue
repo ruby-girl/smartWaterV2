@@ -7,8 +7,16 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item label="角色：" label-width="45px">
-      <el-input v-model="selectHead.roleName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
+    <el-form-item label="水厂：" label-width="44px">
+      <el-select v-model="selectHead.Id" placeholder="请选择" @keydown.enter.native="handleFilter">
+        <el-option label="全部" value="-1" />
+        <el-option
+          v-for="item in editUserList"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
+        />
+      </el-select>
     </el-form-item>
     <el-form-item label="操作人：">
       <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">

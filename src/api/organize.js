@@ -167,4 +167,48 @@ export function GetBlObjById(data) {
   })
 }
 
+// 水厂管理API-----start
+export function waterFactoryGetList(data) {
+  return request({
+    url: '/SA_WaterFactory/GetList',
+    method: 'post',
+    data: data
+  })
+}
 
+// 编辑水厂
+export function waterFactoryUpDate(data) {
+  return request({
+    url: '/api/SA_WaterFactory/UpDate',
+    method: 'post',
+    data: data
+  })
+}
+
+// 新增水厂
+export function waterFactoryAdd(data) {
+  return request({
+    url: '/api/SA_WaterFactory/Add',
+    method: 'post',
+    data: data
+  })
+}
+
+// 删除水厂
+export function waterFactoryDelete(data) {
+  return request({
+    url: '/api/SA_WaterFactory/Delete',
+    method: 'post',
+    data: data
+  })
+}
+
+// 导出水厂
+export function waterFactoryExcel(data) {
+  return request({
+    url: '/api/SA_WaterFactory/Excel',
+    method: 'post',
+    data: data
+  })
+}
+// 水厂管理API-----end
