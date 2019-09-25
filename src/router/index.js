@@ -99,7 +99,7 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
+ /* {
     path: '/organizationManage',
     redirect: '/organizationManage/company',
     component: Layout,
@@ -125,6 +125,42 @@ export const asyncRoutes = [
         path: '/organizationManage/PeopleManage',
         name: 'peopleManage',
         component: () => import('@/views/organizationManage/peopleManage'),
+        meta: { title: '人员管理',  roles: ['1'] }
+      },
+      {
+        path: '/organizationManage/areaManage',
+        name: 'areaManage',
+        component: () => import('@/views/organizationManage/areaManage'),
+        meta: { title: '片区管理',  roles: ['1'] }
+      }
+    ]
+  },*/
+  {
+    path: '/organizationManage',
+    redirect: '/organizationManage/company',
+    component: Layout,
+    meta: {
+      title: '组织管理',
+      icon: 'iconfont iconcaidan-zuzhiguanli',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: '/organizationManage/department',
+        name: 'department',
+        component: () => import('@/views/organizationManage/department/index'),
+        meta: { title: '部门管理',  roles: ['1'] }
+      },
+      {
+        path: '/organizationManage/postManage',
+        name: 'postManage',
+        component: () => import('@/views/organizationManage/postManage/index'),
+        meta: { title: '岗位管理',  roles: ['1'] }
+      },
+      {
+        path: '/organizationManage/peopleManage',
+        name: 'peopleManage',
+        component: () => import('@/views/organizationManage/peopleManage/index'),
         meta: { title: '人员管理',  roles: ['1'] }
       },
       {
