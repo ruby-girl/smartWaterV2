@@ -52,34 +52,20 @@
             fixed="right"
           >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center" v-if="row.UserStatusCode=='ZC'">
+              <div class="display-flex justify-content-flex-center">
                 <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']">
                   <a>编辑</a>
                 </div>
-                <div class="main-color-red pl-15" @click="cancel(row)" v-permission="['1010105']">
-                  <a>注销</a>
+                <div class="main-color-red pl-15" @click="deleteRow(row)" v-permission="['1010105']" v-if="row.isDelete==true">
+                  <a>删除</a>
                 </div>
-                <div class="main-color pl-15" @click="reset(row)" v-permission="['1010107']">
-                  <a>重置密码</a>
-                </div>
-              </div>
-              <div v-else class="display-flex justify-content-flex-center">
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color" v-permission="['1010106']">
-                    <a>编辑</a>
-                  </div>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
+               <el-tooltip effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start" v-else>
                   <div class="disable-color pl-15" v-permission="['1010105']">
-                    <a>注销</a>
-                  </div>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color pl-15" v-permission="['1010107']">
-                    <a>重置密码</a>
+                    <a>删除</a>
                   </div>
                 </el-tooltip>
               </div>
+             
             </template>
           </el-table-column>
         </el-table>
@@ -97,6 +83,7 @@
         :temp="temp"
         :dialogStatus="dialogStatus"
         @createData="createData"
+        @updateData="updateData"
       />
     </div>
   </div>
@@ -141,7 +128,7 @@ export default {
         limit: 10,
         sort: "", //升序
         filed: "", //排序字段
-        Id:"",//水厂ID
+        Id:"-1",//水厂ID
         editUserId: "-1", // 操作人
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
@@ -186,7 +173,7 @@ export default {
       else this.tableHeight = this.tableHeight + 80;
     },
     getList() {
-      getAccountList(this.listQuery).then(res => {
+      waterFactoryGetList(this.listQuery).then(res => {
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -204,17 +191,18 @@ export default {
       this.getList();
     },
     handleUpdate(row) {
-     this.dialogStatus = "update";
+        this.dialogStatus = "update";
         this.temp.Id = row.Id;
         this.temp.WaterWorksName = row.WaterWorksName;
         this.dialogFormVisible = true;
     },
     addWaterFactory() {
+      this.temp = {};
       this.dialogStatus = "create";
       this.dialogFormVisible = true;
     },
     createData() {
-      addAccount(this.temp).then(res => {
+      waterFactoryAdd(this.temp).then(res => {
         this.dialogFormVisible = false;
         this.$message({
           message: res.message,
@@ -225,7 +213,7 @@ export default {
       });
     },
     updateData() {
-      deitAccount(this.temp).then(res => {
+      waterFactoryUpDate(this.temp).then(res => {
         this.dialogFormVisible = false;
         this.$message({
           message: res.message,
@@ -235,15 +223,15 @@ export default {
         this.getList();
       });
     },
-    cancel(row) {
-      this.$confirm("是否注销当前账号", "提示", {
+    deleteRow(row) {
+      this.$confirm("是否删除当前信息", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
         customClass: "warningBox",
         showClose: false
-      }).then(() => {
-        cancelAccount(row.Id).then(res => {
+      }).then(() => {      
+        waterFactoryDelete(row).then(res => {
           this.$message({
             message: res.message,
             type: "success",
@@ -255,7 +243,7 @@ export default {
     },
     excel() {
       //导出
-      exportExcel(this.listQuery).then(res => {
+      waterFactoryExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     }

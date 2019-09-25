@@ -18,9 +18,9 @@
       size="small"
       label-width="100px"
     >
-      <el-form-item label="人员编号：" prop="employeeId">
+      <el-form-item label="人员：" prop="employeeId">
         <!-- <el-input maxlength="10" v-model="temp.employeeId" placeholder="请输入人员编号"></el-input> -->
-        <el-select v-model="temp.employeeId" filterable remote :filter-method="selectOption" @visible-change="userChange" placeholder="请输入人员编号">
+        <el-select v-model="temp.employeeId" filterable remote :filter-method="selectOption" @visible-change="userChange" placeholder="请输入人员信息">
           <el-option
             v-for="item in userOptions"
             :key="item.value"

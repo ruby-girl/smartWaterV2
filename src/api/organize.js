@@ -176,10 +176,19 @@ export function waterFactoryGetList(data) {
   })
 }
 
+// 下拉框水厂
+export function waterFactoryGetSelectList(data) {
+  return request({
+    url: '/SA_WaterFactory/ComboBoxList',
+    method: 'post',
+    data: data
+  })
+}
+
 // 编辑水厂
 export function waterFactoryUpDate(data) {
   return request({
-    url: '/api/SA_WaterFactory/UpDate',
+    url: '/SA_WaterFactory/UpDate',
     method: 'post',
     data: data
   })
@@ -188,7 +197,7 @@ export function waterFactoryUpDate(data) {
 // 新增水厂
 export function waterFactoryAdd(data) {
   return request({
-    url: '/api/SA_WaterFactory/Add',
+    url: '/SA_WaterFactory/Add',
     method: 'post',
     data: data
   })
@@ -197,7 +206,7 @@ export function waterFactoryAdd(data) {
 // 删除水厂
 export function waterFactoryDelete(data) {
   return request({
-    url: '/api/SA_WaterFactory/Delete',
+    url: '/SA_WaterFactory/Delete',
     method: 'post',
     data: data
   })
@@ -206,7 +215,7 @@ export function waterFactoryDelete(data) {
 // 导出水厂
 export function waterFactoryExcel(data) {
   return request({
-    url: '/api/SA_WaterFactory/Excel',
+    url: '/SA_WaterFactory/Excel',
     method: 'post',
     data: data
   })

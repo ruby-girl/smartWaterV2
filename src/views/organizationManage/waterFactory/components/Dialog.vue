@@ -1,13 +1,7 @@
 <template>
   <!-- 新增弹窗 -->
   <el-dialog
-    :title="dialogStatus=='create'?'添加':'编辑'"
-    :visible.sync="dialogFormVisible"
-    top="30vh"
-    width="350px"
-    center
-    @closed="dialogClose"
-    :close-on-click-modal="false"
+    :title="dialogStatus==='create'?'添加':'编辑'" :visible.sync="dialogFormVisible" :close-on-click-modal="false" top="30vh" width="390px" center
   >
     <el-form
       ref="dataForm"
@@ -18,7 +12,7 @@
       size="small"
       label-width="100px"
     >
-      <el-form-item label="账号：" prop="WaterWorksName">
+      <el-form-item label="水厂：" prop="WaterWorksName">
         <el-input
           v-model="temp.WaterWorksName"
           maxlength="20"
@@ -28,7 +22,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
-      <el-button size="mini" type="primary" @click="createData">确认</el-button>
+      <el-button size="mini" type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
     </div>
   </el-dialog>
 </template>
@@ -54,13 +48,16 @@ export default {
   },
   watch: {
     show() {
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
       this.dialogFormVisible = this.show;
     },
     dialogFormVisible(val, oldVal) {
       if (val === oldVal) {
         return;
       }
-      this.$emit("update:addShow", val);
+      this.$emit("update:show", val);
     }
   },
   mounted(){
@@ -88,11 +85,11 @@ export default {
         }
       });
     },
-    dialogClose() {
-      this.$nextTick(() => {
-        this.userOptions = this.userOptionsSave
-        this.$refs["dataFormAdd"].clearValidate();
-      });
+     updateData() {
+       this.$refs["dataForm"].validate(valid => {
+        if (!valid) return false;
+      this.$emit('updateData', this.temp)
+       })   
     }
   }
 };

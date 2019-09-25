@@ -11,7 +11,7 @@
       <el-select v-model="selectHead.Id" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
-          v-for="item in editUserList"
+          v-for="item in waterList"
           :key="item.Id"
           :label="item.Name"
           :value="item.Id"
@@ -51,6 +51,7 @@
   </el-form>
 </template>
 <script>
+import {waterFactoryGetSelectList} from "@/api/organize"
 import {getSelectUser} from "@/api/account"//获取操作人下拉框
 export default {
   props: {
@@ -64,12 +65,16 @@ export default {
   data() {
     return {
       timevalue: [],
-      editUserList: []
+      editUserList: [],
+      waterList:[]
     };
   },
   created() {
     getSelectUser().then((res)=>{
       this.editUserList=res.data
+    })
+    waterFactoryGetSelectList().then((res)=>{
+      this.waterList=res.data
     })
   },
   methods: {
