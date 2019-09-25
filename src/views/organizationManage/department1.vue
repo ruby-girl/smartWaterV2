@@ -2,15 +2,13 @@
   <div class="cl-container">
     <div>
       <div id="conditionBox">
-
         <el-form
           :inline="true"
           :model="dp"
           class="head-search-form form-inline-small-input"
           size="small"
           label-width="100px"
-          @submit.native.prevent
-        >
+          @submit.native.prevent>
           <el-form-item label="部门：">
             <el-input v-model="dp.DeptName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
           </el-form-item>
@@ -101,8 +99,7 @@
       :title="title"
       :visible.sync="dialogVisible"
       :before-close="handleClose"
-      width="400px"
-    >
+      width="400px">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
         <el-form-item label="部门:" prop="newDertmentName">
           <el-input
@@ -127,11 +124,8 @@
       title="提示"
       class="warningBox"
       :visible.sync="warnVisible"
-      width="20%"
-    >
-      <p class="warnInfo">
-        <i class="icon iconfont icontishixunwen" /> 是否删除当前信息？
-      </p>
+      width="20%">
+      <p class="warnInfo"><i class="icon iconfont icontishixunwen" /> 是否删除当前信息？</p>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" size="small" @click="deleteFun">确 定</el-button>
         <el-button size="small" @click="warnVisible = false">取 消</el-button>
@@ -382,19 +376,10 @@
       }
     },
     mounted() {
-      /*  let start = parseTime(new Date());
-        let end = parseTime(new Date());
-        this.createStartTimes.push(new Date(start));
-        this.createStartTimes.push(new Date(end));
-
-        this.dp.createStartTime = new Date(start);
-        this.dp.createEndTime = new Date(end);*/
-
       this.GetLoginNameList()
       this.$refs.myChild.GetTable(this.dp.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-
     }
   }
 </script>

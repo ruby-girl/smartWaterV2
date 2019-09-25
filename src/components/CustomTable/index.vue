@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import { GetTable, AddTableStyle, InitTableStyle } from '@/api/table'
+import { GetTable, AddTableStyle, InitTableStyle } from '@/api/table'//http 请求方法
 export default {
   name: 'CustomTable',
   data() {
     return {
-      isCustom: false,
+      isCustom: false,//是否显示属性
       checkData: [],
       curID:'',
     }
@@ -153,7 +153,7 @@ export default {
     }
   },
   mounted() {
-    this.$dragging.$on('dragged', () => {})
+    this.$dragging.$on('dragged', () => {})//拖拽自定义字段排序
   }
 }
 </script>

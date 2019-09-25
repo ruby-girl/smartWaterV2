@@ -132,12 +132,18 @@
     min-width: 180px
   }
 }
+.detailFile {
+  span{
+    min-width: auto;
+  }
+}
+.ssearchText2{display: none}
 @media screen and (min-width: 1280px){
-  .ssearchText1 {display: block}
-  .ssearchText2 {display: none}
+  .ssearchText1 {display: block !important;}
+  .ssearchText2 {display: none !important;}
 }
 
 @media screen and (min-width: 1680px){
-  .ssearchText1 {display: none}
-  .ssearchText2 {display: block}
+  .ssearchText1 {display: none !important;}
+  .ssearchText2 {display: block !important;}
 }

@@ -155,7 +155,6 @@
             <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
           </el-form-item>
         </el-form>
-
         <el-row class="ssearchText2">
           <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="cl-inlineItem">
@@ -413,7 +412,6 @@
         @pagination="searchFun"
       />
     </div>
-
     <!--警告信息 s-->
     <el-dialog
       :close-on-click-modal="false"
@@ -432,7 +430,6 @@
       </span>
     </el-dialog>
     <!--警告信息 e-->
-
     <!--新增s-->
     <el-dialog
       :close-on-click-modal="false"
@@ -440,24 +437,20 @@
       title="人员管理添加"
       :visible.sync="addVisible"
       :before-close="handleClose"
-      width="60%"
-    >
+      width="60%">
       <addmponent ref="child" :msg="addVisible" v-on:Changed = "changeMsg($event)"></addmponent>
     </el-dialog>
     <!--新增e-->
-
     <!--编辑s-->
     <el-dialog
       :close-on-click-modal="false"
       top="5vh"
       title="人员管理编辑"
       :visible.sync="editVisible"
-      width="60%"
-    >
+      width="60%">
       <editmponent ref="child2" :msg1="editVisible" v-on:Changed1 = "changeMsg1($event)"></editmponent>
     </el-dialog>
     <!--编辑e-->
-
     <!--详情s-->
     <el-dialog
       :close-on-click-modal="false"
@@ -465,9 +458,7 @@
       title="人员管理详情"
       :visible.sync="detailVisible"
       :before-close="handleClose3"
-
-      width="60%"
-    >
+      width="60%">
       <detailmponent ref="child3"></detailmponent>
     </el-dialog>
     <!--详情e-->
@@ -478,9 +469,9 @@
 import '../../styles/organization.scss'
 import customTable from '../../components/CustomTable/index'
 import Pagination from '../../components/Pagination/index'
-import addmponent from './peopleComponent/add'
-import editmponent from './peopleComponent/edit'
-import detailmponent from './peopleComponent/detail'
+import addmponent from './peopleManage/components/Add'
+import editmponent from './peopleManage/components/Edit'
+import detailmponent from './peopleManage/components/Detail'
 import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl} from "@/api/organize"
 let deleteId;
 import { getTime } from "@/utils/index";
@@ -543,20 +534,6 @@ export default {
       }
       return arrayHead
     }
-  },
-  watch: {
-   /* ifMore() {
-      let self = this
-      self.$nextTick(() => {
-        self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      })
-    },
-    customHeight() {
-      let self = this
-      self.$nextTick(() => {
-        self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      })
-    }*/
   },
   methods: {
     handleClose(){
@@ -654,7 +631,6 @@ export default {
     handleDelete(row) {
       deleteId = row.Id
       this.warnVisible = true
-
     },
     deleteFun() {
       peopleDelete({id: deleteId}).then(res => {
@@ -707,7 +683,6 @@ export default {
       } else {
         jp = this.queryData
       }
-
       peopleGetList(jp).then(res => {
         this.total = res.count;
         this.tableData = res.data;
@@ -804,14 +779,10 @@ export default {
     }
   },
   mounted() {
-
     this.$refs.myChild.GetTable(this.queryData.tableId);
     this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-   // this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
     this.getComboBoxList()
     this.GetRoleNameList()
-
-
   }
 }
 </script>
