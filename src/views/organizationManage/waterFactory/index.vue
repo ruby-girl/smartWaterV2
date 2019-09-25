@@ -128,7 +128,8 @@ export default {
         limit: 10,
         sort: "", //升序
         filed: "", //排序字段
-        Id:"-1",//水厂ID
+        Id:"-1",//水厂ID,
+        WaterWorksName:"",
         editUserId: "-1", // 操作人
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止

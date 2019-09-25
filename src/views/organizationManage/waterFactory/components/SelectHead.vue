@@ -8,15 +8,12 @@
     @submit.native.prevent
   >
     <el-form-item label="水厂：" label-width="44px">
-      <el-select v-model="selectHead.Id" placeholder="请选择" @keydown.enter.native="handleFilter">
-        <el-option label="全部" value="-1" />
-        <el-option
-          v-for="item in waterList"
-          :key="item.Id"
-          :label="item.Name"
-          :value="item.Id"
-        />
-      </el-select>
+        <el-input
+        maxlength="20"
+        v-model="selectHead.WaterWorksName"
+        placeholder="水厂（长度1-20）"
+        @keyup.enter.native="handleFilter"
+      />
     </el-form-item>
     <el-form-item label="操作人：">
       <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
@@ -51,7 +48,6 @@
   </el-form>
 </template>
 <script>
-import {waterFactoryGetSelectList} from "@/api/organize"
 import {getSelectUser} from "@/api/account"//获取操作人下拉框
 export default {
   props: {
@@ -66,15 +62,11 @@ export default {
     return {
       timevalue: [],
       editUserList: [],
-      waterList:[]
     };
   },
   created() {
     getSelectUser().then((res)=>{
       this.editUserList=res.data
-    })
-    waterFactoryGetSelectList().then((res)=>{
-      this.waterList=res.data
     })
   },
   methods: {

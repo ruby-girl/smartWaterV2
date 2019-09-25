@@ -176,14 +176,6 @@ export function waterFactoryGetList(data) {
   })
 }
 
-// 下拉框水厂
-export function waterFactoryGetSelectList(data) {
-  return request({
-    url: '/SA_WaterFactory/ComboBoxList',
-    method: 'post',
-    data: data
-  })
-}
 
 // 编辑水厂
 export function waterFactoryUpDate(data) {
