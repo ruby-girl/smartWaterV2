@@ -197,7 +197,7 @@
           post: [],
           depart: []
         }]
-        this.getComboBoxList()
+        this.$refs.childPost.getComboBoxList()
         this.$refs.childPost.isFlag = false
         this.$refs.uploadCom.certificates = '身份证'
         this.$refs.uploadCom.fileList = []
