@@ -46,7 +46,7 @@ service.interceptors.response.use(
       Element.Message.error({
         message: res.message || 'Error',
         type: 'error',
-        duration: 0
+        duration: 4000
       })
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
