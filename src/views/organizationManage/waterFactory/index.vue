@@ -103,7 +103,7 @@ import {
 import { getRoles } from "@/api/role"; //获取角色下拉框
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
-  name: "AccountPermission",
+  name: "waterFactoryPermission",
   directives: { permission },
   components: {
     SelectHead,
