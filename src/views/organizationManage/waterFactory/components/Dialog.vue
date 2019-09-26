@@ -16,7 +16,7 @@
         <el-input
           v-model="temp.WaterWorksName"
           maxlength="20"
-          placeholder="长度20"
+          placeholder="（长度1-20）"
         ></el-input>
       </el-form-item>
     </el-form>
