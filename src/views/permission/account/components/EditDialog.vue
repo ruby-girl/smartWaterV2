@@ -14,7 +14,7 @@
     </el-form-item>
      <el-form-item label="关联角色：">
       <el-select
-        v-model="temp.roleId"     
+        v-model="temp.roleId"
         placeholder="请选择">
        <el-option
           v-for="item in roleList"
@@ -29,8 +29,8 @@
     </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
       <el-button size="mini" type="primary" @click="updateData()">确认</el-button>
+      <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -51,7 +51,7 @@ export default {
     },
     show: {
       type: Boolean,
-      default: false 
+      default: false
     },
     roleList:{
       type: Array,

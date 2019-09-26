@@ -104,7 +104,7 @@
         />
       </el-form-item>
       <el-form-item label="操作人：" v-show="ifMore">
-        <el-select v-model="queryData.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+        <el-select v-model="queryData.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
           <el-option label="全部" value="-1"></el-option>
           <el-option
             v-for="(item,index) in operationArray"
@@ -281,7 +281,7 @@
       <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
           <label class="cl-label">操作人：</label>
-          <el-select v-model="queryData.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+          <el-select v-model="queryData.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
             <el-option label="全部" value="-1"></el-option>
             <el-option
               v-for="(item,index) in operationArray"
@@ -391,11 +391,11 @@
       },
       getTime3(data) {
         if (data != null) {
-          this.queryData.createStartTime = data[0]
-          this.queryData.createEndTime = data[1]
+          this.queryData.editStartTime = data[0]
+          this.queryData.editEndTime = data[1]
         } else {
-          this.queryData.createStartTime = ''
-          this.queryData.createEndTime = ''
+          this.queryData.editStartTime = ''
+          this.queryData.editEndTime = ''
         }
       },
       /**

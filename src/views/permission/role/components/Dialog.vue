@@ -16,8 +16,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
       <el-button size="mini" type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
+      <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -38,7 +38,7 @@ export default {
     },
     show: {
       type: Boolean,
-      default: false 
+      default: false
     }
   },
   data() {
@@ -77,7 +77,7 @@ export default {
        this.$refs["dataForm"].validate(valid => {
         if (!valid) return false;
       this.$emit('updateData', this.temp)
-       })   
+       })
     }
   }
 }

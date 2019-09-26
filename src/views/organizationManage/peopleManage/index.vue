@@ -124,9 +124,9 @@
           MobileNumber: '',//手机号
           Birthday: '',//生日开始结束时间
           BirthdayEnd: '',
-          createUserId: '-1',//操作人
-          createStartTime: '',//操作开始结束时间
-          createEndTime: '',
+          editUserId: '-1',//操作者
+          editStartTime: '',//操作开始结束时间
+          editEndTime: '',
           EmailAddress: '',//邮箱地址
           AccountStatus: '-1',//账号状态
           tableId: '0000003'
@@ -190,9 +190,9 @@
             MobileNumber: '',
             Birthday: '',
             BirthdayEnd: '',
-            createUserId: '-1',
-            createStartTime: '',
-            createEndTime: '',
+            editUserId: '-1',//操作者
+            editStartTime: '',//操作开始结束时间
+            editEndTime: '',
             EmailAddress: '',
             AccountStatus: '-1',
             tableId: '0000003'
@@ -266,9 +266,9 @@
             MobileNumber: '',
             Birthday: '',
             BirthdayEnd: '',
-            createUserId: '-1',
-            createStartTime: '',
-            createEndTime: '',
+            editUserId: '-1',//操作者
+            editStartTime: '',//操作开始结束时间
+            editEndTime: '',
             EmailAddress: '',
             AccountStatus: '-1',
             tableId: '0000003'

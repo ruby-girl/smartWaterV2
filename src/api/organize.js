@@ -212,4 +212,76 @@ export function waterFactoryExcel(data) {
     data: data
   })
 }
+
+//获得水厂下拉数据
+export function WaterFactoryComboBoxList(data) {
+  return request({
+    url: 'SA_WaterFactory/ComboBoxList',
+    method: 'post',
+    data: data
+  })
+}
 // 水厂管理API-----end
+
+// 添加片区
+export function BlockAreaAdd(data) {
+  return request({
+    url: '/SA_BlockArea/Add',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改片区
+export function BlockAreaUpDate(data) {
+  return request({
+    url: '/SA_BlockArea/UpDate',
+    method: 'post',
+    data: data
+  })
+}
+
+// 删除片区
+export function BlockAreaDelete(data) {
+  return request({
+    url: '/SA_BlockArea/Delete',
+    method: 'post',
+    data: data
+  })
+}
+
+// 获取片区下拉数据
+export function BlockAreaComboBoxList(data) {
+  return request({
+    url: '/SA_BlockArea/ComboBoxList',
+    method: 'post',
+    data: data
+  })
+}
+
+// 片区分页查询
+export function BlockAreaGetList(data) {
+  return request({
+    url: '/SA_BlockArea/GetList',
+    method: 'post',
+    data: data
+  })
+}
+
+//片区导出
+export function BlockAreaExecl(data) {
+  return request({
+    url: '/SA_BlockArea/GetList_Execl',
+    method: 'post',
+    data: data
+  })
+}
+
+//通过id获取当前片区信息
+export function BlockAreaGetObjById(data) {
+  return request({
+    url: '/SA_BlockArea/GetObjById',
+    method: 'post',
+    data: data
+  })
+}

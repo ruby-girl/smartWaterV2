@@ -91,9 +91,9 @@
           sort:"",
           SYS_Department_Id: '-1',
           JobName:'',
-          createUserId:'-1',
-          createStartTime:'',
-          createEndTime:'',
+          editUserId: '-1',//操作者
+          editStartTime: '',//操作开始结束时间
+          editEndTime: '',
           tableId: '0000002'
         },
         tableData: [],//表格数据

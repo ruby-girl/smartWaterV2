@@ -58,8 +58,8 @@
     </el-form>
 
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" @click="AdialogFormVisible = false">取消</el-button>
       <el-button size="mini" type="primary" @click="createData">确认</el-button>
+      <el-button size="mini" @click="AdialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -168,7 +168,7 @@ export default {
           this.loading = true;
           setTimeout(() => {
             this.loading = false;
-            this.userOptions = this.userOptionsSave.filter(item => {            
+            this.userOptions = this.userOptionsSave.filter(item => {
               return item.EmpName.toLowerCase()
                 .indexOf(query.toLowerCase()) > -1||item.EmpNo
                 .indexOf(query.toLowerCase()) > -1;

@@ -10,7 +10,7 @@
       <el-input v-model="dp.DeptName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
     </el-form-item>
     <el-form-item label="操作人：">
-      <el-select v-model="dp.createUserId" placeholder="请选择" size="small"  @keyup.enter.native="searchFun">
+      <el-select v-model="dp.editUserId" placeholder="请选择" size="small"  @keyup.enter.native="searchFun">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
       </el-select>
@@ -61,11 +61,11 @@
          * */
         getTime1(data) {
           if(data !=null){
-            this.dp.createStartTime = data[0]
-            this.dp.createEndTime = data[1]
+            this.dp.editStartTime = data[0]
+            this.dp.editEndTime = data[1]
           }else{
-            this.dp.createStartTime = ''
-            this.dp.createEndTime = ''
+            this.dp.editStartTime = ''
+            this.dp.editEndTime = ''
           }
         },
         /**

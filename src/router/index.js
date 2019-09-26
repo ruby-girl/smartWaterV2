@@ -99,48 +99,6 @@ export const asyncRoutes = [
       }
     ]
   },
- /* {
-    path: '/organizationManage',
-    redirect: '/organizationManage/company',
-    component: Layout,
-    meta: {
-      title: '组织管理',
-      icon: 'iconfont iconcaidan-zuzhiguanli',
-      roles: ['1']
-    },
-    children: [
-      {
-        path: 'waterFactory',
-        name: 'waterFactoryPermission',
-        component: () => import('@/views/organizationManage/waterFactory'),
-        meta: { title: '水厂管理',  roles: ['1'] }
-      },
-      {
-        path: '/organizationManage/department',
-        name: 'department',
-        component: () => import('@/views/organizationManage/department'),
-        meta: { title: '部门管理',  roles: ['1'] }
-      },
-      {
-        path: '/organizationManage/postManage',
-        name: 'postManage',
-        component: () => import('@/views/organizationManage/postManage'),
-        meta: { title: '岗位管理',  roles: ['1'] }
-      },
-      {
-        path: '/organizationManage/PeopleManage',
-        name: 'peopleManage',
-        component: () => import('@/views/organizationManage/peopleManage'),
-        meta: { title: '人员管理',  roles: ['1'] }
-      },
-      {
-        path: '/organizationManage/areaManage',
-        name: 'areaManage',
-        component: () => import('@/views/organizationManage/areaManage'),
-        meta: { title: '片区管理',  roles: ['1'] }
-      }
-    ]
-  },*/
   {
     path: '/organizationManage',
     redirect: '/organizationManage/company',
@@ -156,6 +114,12 @@ export const asyncRoutes = [
         name: 'waterFactoryPermission',
         component: () => import('@/views/organizationManage/waterFactory'),
         meta: { title: '水厂管理',  roles: ['1'] }
+      },
+      {
+        path: '/organizationManage/areaManage',
+        name: 'areaManage',
+        component: () => import('@/views/organizationManage/areaManage/index'),
+        meta: { title: '片区管理',  roles: ['1'] }
       },
       {
         path: '/organizationManage/department',
@@ -174,12 +138,6 @@ export const asyncRoutes = [
         name: 'peopleManage',
         component: () => import('@/views/organizationManage/peopleManage/index'),
         meta: { title: '人员管理',  roles: ['1'] }
-      },
-      {
-        path: '/organizationManage/areaManage',
-        name: 'areaManage',
-        component: () => import('@/views/organizationManage/areaManage'),
-        meta: { title: '片区管理',  roles: ['1'] }
       }
     ]
   },

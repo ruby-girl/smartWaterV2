@@ -26,8 +26,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" @click="rDialogFormVisible = false">取消</el-button>
       <el-button size="mini" type="primary" @click="reset">确认</el-button>
+      <el-button size="mini" @click="rDialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -106,7 +106,7 @@ export default {
     setNum() {
       let value=this.resetData.pwd
      if(value.length>=this.resetData.pwdSave.length){
-       this.resetData.pwdSave+=value.substr(this.resetData.pwdSave.length,value.length-this.resetData.pwdSave.length) 
+       this.resetData.pwdSave+=value.substr(this.resetData.pwdSave.length,value.length-this.resetData.pwdSave.length)
      }else{
        this.resetData.pwdSave=this.resetData.pwdSave.substr(0,value.length)
      }
@@ -119,7 +119,7 @@ export default {
     setConfirmNum(){
        let value=this.resetData.pwdNew
      if(value.length>=this.resetData.pwdNewSave.length){
-       this.resetData.pwdNewSave+=value.substr(this.resetData.pwdNewSave.length,value.length-this.resetData.pwdNewSave.length) 
+       this.resetData.pwdNewSave+=value.substr(this.resetData.pwdNewSave.length,value.length-this.resetData.pwdNewSave.length)
      }else{
        this.resetData.pwdNewSave=this.resetData.pwdNewSave.substr(0,value.length)
      }

@@ -23,7 +23,7 @@
       />
     </el-form-item>
     <el-form-item label="操作人：">
-      <el-select v-model="jp.createUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+      <el-select v-model="jp.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
       </el-select>
@@ -74,11 +74,11 @@
       * */
       getTime1(data) {
         if(data !=null) {
-          this.jp.createStartTime = data[0]
-          this.jp.createEndTime = data[1]
+          this.jp.editStartTime = data[0]
+          this.jp.editEndTime = data[1]
         }else {
-          this.jp.createStartTime = ''
-          this.jp.createEndTime = ''
+          this.jp.editStartTime = ''
+          this.jp.editEndTime = ''
         }
       }
     },
