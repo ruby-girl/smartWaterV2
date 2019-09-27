@@ -60,7 +60,7 @@
       <!--列表组建 e-->
     </div>
     <!--编辑或新增窗口 s-->
-    <el-dialog
+    <!--<el-dialog
       :close-on-click-modal="false"
       top="30vh"
       :title="title"
@@ -86,29 +86,31 @@
           <el-button size="small" @click="resetForm('ruleForm')">取 消</el-button>
         </p>
       </el-form>
-    </el-dialog>
+    </el-dialog>-->
+    <Dialog ref="childDialog"></Dialog>
     <!--编辑或新增窗口 e-->
   </div>
 </template>
 
 <script>
   import '@/styles/organization.scss'
+  import Dialog from './components/Dialog'//新增或添加组建
   import customTable from '@/components/CustomTable/index'//自定义组建
   import SelectHead from './components/SelectHead'//查询条件组建
   import Pagination from '@/components/Pagination/index'//分页
-  import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, WaterFactoryComboBoxList, BlockAreaGetObjById } from "@/api/organize"//http 请求
-  let editObj = {};
+  import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"//http 请求
   import { parseTime } from "@/utils/index"
 
   export default {
     name: 'areaManage',
-    components: { customTable, Pagination, SelectHead },
+    components: { customTable, Pagination, SelectHead, Dialog },
     data() {
       return {
+        ID:'',
         waterFactory:[],//水厂数据集合
         tableHeight: null,//表格高度
-        dialogVisible: false,//弹窗隐藏标识
-        title: '',//新增或编辑title
+        //dialogVisible: false,//弹窗隐藏标识
+        //title: '',//新增或编辑title
         total: 0,
         sbap: {//查询条件对象集
           page: 1,
@@ -121,7 +123,7 @@
           editEndTime: '',
           tableId: '0000007'
         },
-        ruleForm: {//新增对象
+      /*  ruleForm: {//新增对象
           newAreaName: '',
           waterFactoryName:[]
         },
@@ -132,7 +134,7 @@
           waterFactoryName: [
             { required: true, message: '不能为空', trigger: 'change' }
           ]
-        },
+        },*/
         tableData: [],//表格数据
         checkAllData: [],
         checksData: [],
@@ -170,20 +172,20 @@
         })
       },
       handleEdit(scope,row) {//编辑方法
-        editObj = row
-        this.dialogVisible = true
-        this.title = '编辑'
+        this.ID = row.Id
+        this.$refs.childDialog.dialogVisible = true
+        this.$refs.childDialog.title = '编辑'
         let sbap = {Id: row.Id}
         BlockAreaGetObjById(sbap).then(res => {
           if (res.code == 0) {
-            this.ruleForm.newAreaName = res.data.BlockAreaName
-            this.ruleForm.waterFactoryName = res.data.WfList
+            this.$refs.childDialog.ruleForm.newAreaName = res.data.BlockAreaName
+            this.$refs.childDialog.ruleForm.waterFactoryName = res.data.WfList
           }
         })
       },
       addNewFun() {//新增方法
-        this.dialogVisible = true
-        this.title = '添加'
+        this.$refs.childDialog.dialogVisible = true
+        this.$refs.childDialog.title = '添加'
       },
       handleDelete(scope,row) {//删除方法
         this.$confirm("是否删除当前信息", "提示", {
@@ -200,7 +202,6 @@
                 type: 'success',
                 duration: 4000
               });
-              this.dialogVisible = false
               this.searchFun()
             } else {
               this.$message({
@@ -226,7 +227,7 @@
           }
         })
       },
-      submitForm(formName) {//编辑新增保存事件
+      /*submitForm(formName) {//编辑新增保存事件
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.title ==='编辑') {
@@ -285,7 +286,7 @@
       },
       handleClose(){//弹窗关闭初始化表单信息
         this.resetForm('ruleForm')
-      },
+      },*/
       sortChanges({prop, order }){//排序
         this.sbap.filed = prop
         this.sbap.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
@@ -293,23 +294,9 @@
           this.sbap.page = 1
           this.searchFun()
         }
-      },
-      getWaterFactoryList(){//获取水厂数据集合
-        WaterFactoryComboBoxList({SA_BlockArea_Id:''}).then(res => {
-          if (res.code ==0 ) {
-            this.waterFactory = res.data;
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
-          }
-        })
       }
     },
     mounted() {
-      this.getWaterFactoryList()//调用获取水厂数据集合方法
       this.$refs.myChild.GetTable(this.sbap.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
