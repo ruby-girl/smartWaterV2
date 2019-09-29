@@ -141,6 +141,29 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/systemManagement',
+    component: Layout,
+    redirect: '/permission/page',
+    alwaysShow: true, // will always show the root menu
+    name: 'Permission',
+    meta: {
+      title: '系统管理',
+      icon: 'iconfont iconcaidan-yewuguanli',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: 'waterQuality',
+        component: () => import('@/views/systemManagement/waterQualityManagement'),
+        name: 'WaterQualityManagement',
+        meta: {
+          title: '用水性质设置',
+          roles: ['1']
+        }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
