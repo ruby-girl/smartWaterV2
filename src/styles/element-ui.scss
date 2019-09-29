@@ -53,7 +53,10 @@
   position: relative;
   margin: 0 auto;
 }
-
+// 没有padding的弹窗
+.el-dialog.nopadding .el-dialog__body{
+  padding:0 !important;
+}
 // refine element ui upload
 .upload-container {
   .el-upload {

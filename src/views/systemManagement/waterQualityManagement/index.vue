@@ -90,6 +90,12 @@
           :limit.sync="listQuery.limit"
           @pagination="getList"
         />
+         <add-dialog
+        :add-show.sync="addDialogFormVisible"
+        :temp="temp"
+        @createData="createData"
+        :role-list="roleList"
+      />
       </div>
     </div>
   </div>
@@ -98,6 +104,7 @@
 import SelectHead from "./components/SelectHead"; 
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
+import AddDialog from "./components/Add";
 import {
   getAccountList,
   getAccountDetail,
@@ -114,7 +121,8 @@ export default {
   components: {
     SelectHead,
     Pagination,
-    customTable
+    customTable,
+    AddDialog
   },
   data() {
     return {
@@ -125,7 +133,8 @@ export default {
         empNo: "", //用户编号，请求后端得到employeeId
         roleId: "",
         userId: "",
-        loginName: "" //账号
+        loginName: "", //账号,
+        isLadder:1
       },
       restId: "", //重置行ID
       listQuery: {
