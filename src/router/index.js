@@ -52,7 +52,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '平台首页', icon: 'dashboard',affix: true}
+        meta: { title: '平台首页', icon: 'dashboard', affix: true }
       }
     ]
   }
@@ -113,31 +113,54 @@ export const asyncRoutes = [
         path: 'waterFactory',
         name: 'waterFactoryPermission',
         component: () => import('@/views/organizationManage/waterFactory'),
-        meta: { title: '水厂管理',  roles: ['1'] }
+        meta: { title: '水厂管理', roles: ['1'] }
       },
       {
         path: '/organizationManage/areaManage',
         name: 'areaManage',
         component: () => import('@/views/organizationManage/areaManage/index'),
-        meta: { title: '片区管理',  roles: ['1'] }
+        meta: { title: '片区管理', roles: ['1'] }
       },
       {
         path: '/organizationManage/department',
         name: 'department',
         component: () => import('@/views/organizationManage/department/index'),
-        meta: { title: '部门管理',  roles: ['1'] }
+        meta: { title: '部门管理', roles: ['1'] }
       },
       {
         path: '/organizationManage/postManage',
         name: 'postManage',
         component: () => import('@/views/organizationManage/postManage/index'),
-        meta: { title: '岗位管理',  roles: ['1'] }
+        meta: { title: '岗位管理', roles: ['1'] }
       },
       {
         path: '/organizationManage/peopleManage',
         name: 'peopleManage',
         component: () => import('@/views/organizationManage/peopleManage/index'),
-        meta: { title: '人员管理',  roles: ['1'] }
+        meta: { title: '人员管理', roles: ['1'] }
+      }
+    ]
+  },
+  {
+    path: '/businessManagement',
+    component: Layout,
+    redirect: '/businessManagement/page',
+    alwaysShow: true, // will always show the root menu
+    name: 'businessManagement',
+    meta: {
+      title: '业务管理',
+      icon: 'iconfont iconcaidan-yewuguanli',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: 'meterReadingPlan',
+        component: () => import('@/views/businessManagement/meterReadingPlan/index'),
+        name: 'MeterReadingPlan',
+        meta: {
+          title: '抄表计划',
+          roles: ['1']
+        }
       }
     ]
   },
