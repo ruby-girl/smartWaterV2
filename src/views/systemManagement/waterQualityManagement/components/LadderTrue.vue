@@ -1,183 +1,135 @@
 <template>
   <!-- 新增弹窗 -->
-  <el-dialog
-    title="添加"
-    :visible.sync="AdialogFormVisible"
-    top="30vh"
-    width="1000px"
-    center
-    custom-class="nopadding"
-    @closed="addDialogClose"
-    :close-on-click-modal="false"
+
+  <el-form
+    ref="dataFormAdd"
+    :model="temp"
+    :inline="true"
+    class="form-inline-small-input ladder-form-padding"
+    size="small"
+    label-width="100px"
   >
-    <el-form
-      ref="dataFormAdd"
-      :rules="rules"
-      :model="temp"
-      :inline="true"
-      class="form-inline-small-input dialog-title-border-shadow"
-      size="small"
-      label-width="120px"
-    >
-      <el-form-item label="是否执行阶梯计价">
-        <el-radio-group v-model="temp.isLadder">
-          <el-radio label="是" value="1"></el-radio>
-          <el-radio label="否" value="0"></el-radio>
-        </el-radio-group>
-      </el-form-item>
-    </el-form>
-    <div>asdasdasdasd</div>
-     <div>asdasdasdasd</div>
-      <div>asdasdasdasd</div>
-       <div>asdasdasdasd</div>
-  </el-dialog>
+    <el-form-item label="用水性质：">
+      <el-input
+        v-model="temp.name"
+        oninput="value=value.replace(/[^\d]/g,'')"
+        placeholder="长度1-50"
+      />
+    </el-form-item>
+    <el-form-item label="用水性质类型：">
+      <el-select v-model="temp.name" placeholder="请选择">
+        <el-option label="全部" value="-1" />
+        <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="阶梯结算月数：">
+      <el-select v-model="temp.name" placeholder="请选择">
+        <el-option label="全部" value="-1" />
+        <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="污水费：">
+      <el-input
+        v-model="temp.num"
+        oninput="value=value.replace(/[^\d]/g,'')"
+      />
+    </el-form-item>
+    <el-form-item label="其他费用1：">
+      <el-input
+        v-model="temp.num"
+        oninput="value=value.replace(/[^\d]/g,'')"
+      />
+    </el-form-item>
+    <el-form-item label="其他费用2：">
+      <el-input
+        v-model="temp.num"
+        oninput="value=value.replace(/[^\d]/g,'')"
+      />
+    </el-form-item>
+    <div class="ladder-box">
+      <div class="display-flex" v-for="(item) in ladder">
+        <div class="display-flex align-items-center ladder-item">
+          <i class="main-color-red">*</i>
+          <span>{{item.type}}阶单价：</span>
+          <div class="table-input-y">
+            <input type="text" v-model="item.num"/>
+            <span>元/吨</span>
+          </div>
+        </div>
+        <div class="display-flex align-items-center ladder-item">
+          <i class="main-color-red">*</i>
+          <span>{{item.type}}阶起始量：</span>
+          <div class="table-input-y">
+            <input type="text" v-model="item.start"/>
+            <span>元/吨</span>
+          </div>
+        </div>
+        <div class="display-flex align-items-center ladder-item">
+          <i class="main-color-red">*</i>
+          <span>{{item.type}}阶合计单价：</span>
+          <div class="table-input-y">
+            <input type="text" v-model="item.tot"/>
+            <span>元/吨</span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </el-form>
 </template>
 <script>
-import { numGetAccount } from "@/api/account";
-import { setTimeout } from "timers";
 export default {
-  props: {
-    temp: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
-    addShow: {
-      type: Boolean,
-      default: false
-    },
-    roleList: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    }
-  },
-  watch: {
-    addShow() {
-      this.AdialogFormVisible = this.addShow;
-    },
-    AdialogFormVisible(val, oldVal) {
-      if (val === oldVal) {
-        return;
-      }
-      this.$emit("update:addShow", val);
-    }
-  },
-  mounted() {
-    numGetAccount("-1").then(res => {
-      if (res.data) {
-        this.userOptions = res.data;
-        this.userOptionsSave = res.data;
-      }
-    });
-  },
+  mounted() {},
   data() {
-    var employeeId = (rule, value, callback) => {
-      if (value === "") {
-        return callback(new Error("不能为空"));
-      }
-
-      if (value.length < 11) {
-        numGetAccount(value).then(res => {
-          if (res.data) {
-            if (res.data.SYS_User_Id) {
-              this.temp.employeeId = ""; //人员表ID
-              return callback(new Error("已存在"));
-            } else {
-              this.temp.employeeId = res.data.Id; //人员表ID
-              callback();
-            }
-          } else {
-            this.temp.employeeId = ""; //人员表ID
-            return callback(new Error("信息有误"));
-          }
-        });
-      } else {
-        return callback(new Error("最大长度为10位"));
-      }
-    };
     return {
-      timevalue: [],
-      rules: {
-        employeeId: [{ required: true, message: "不能为空", trigger: "blur" }],
-        roleId: [{ required: true, message: "不能为空", trigger: "blur" }],
-        loginName: [
-          { required: true, message: "不能为空", trigger: "blur" },
-          {
-            max: 20,
-            message: "最大长度为20位"
-          }
-        ],
-        loginPwdSave: [
-          { required: true, message: "不能为空", trigger: "blur" },
-          {
-            min: 6,
-            max: 18,
-            message: "密码长度为6-18位"
-          }
-        ]
+      temp: {
+        name: "这",
+        num: 0
       },
-      AdialogFormVisible: false,
-      passwordSave: "",
-      userOptions: [],
-      userOptionsSave: []
+      roleList: [{ Id: "1", Name: "为" }],
+      ladder:[{type:1,num:0,start:0,tot:20},{type:2,num:0,start:0,tot:20},{type:3,num:0,start:0,tot:20}]
     };
   },
   methods: {
-    userChange() {
-      let _this = this;
-      setTimeout(function() {
-        _this.userOptions = _this.userOptionsSave;
-      }, 500);
-    },
-    selectOption(query) {
-      if (query !== "" && query) {
-        this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-          this.userOptions = this.userOptionsSave.filter(item => {
-            return (
-              item.EmpName.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
-              item.EmpNo.indexOf(query.toLowerCase()) > -1
-            );
-          });
-        }, 200);
-      } else {
-        this.userOptions = this.userOptionsSave;
-      }
-    },
-    setNum() {
-      let value = this.temp.loginPwdSave;
-      if (value.length >= this.passwordSave.length) {
-        this.passwordSave += value.substr(
-          this.passwordSave.length,
-          value.length - this.passwordSave.length
-        );
-      } else {
-        this.passwordSave = this.passwordSave.substr(0, value.length);
-      }
-      this.temp.loginPwdSave = this.temp.loginPwdSave.replace(/./g, "*");
-    },
-    createData() {
-      this.$refs["dataFormAdd"].validate(valid => {
-        if (!valid) return false;
-        else {
-          this.temp.loginPwd = this.passwordSave;
-          this.$emit("createData", this.temp);
-        }
-      });
-    },
-    addDialogClose() {
-      this.$nextTick(() => {
-        this.userOptions = this.userOptionsSave;
-        this.$refs["dataFormAdd"].clearValidate();
-      });
+    handleFilter() {
+      console.log(typeof this.temp.name);
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.ladder-form-padding{
+  padding:40px 20px;
+}
+.ladder-box {
+  padding: 15px 0;
+  background: #f5f5f5;
+  margin:0 20px;
+  .ladder-item {
+    padding-left: 15px;
+  }
+
+  .table-input-y {
+    border: 1px solid rgba(216, 226, 231, 1);
+    border-top: none;
+    height: 32px;
+    background: #fff;
+    padding-right: 10px;
+
+    input {
+      border: none;
+      height: 100%;
+      text-align: center;
+      width: 120px;
+      &:focus {
+        outline: none;
+        // border-color:#00B3A1;
+      }
+    }
+  }
+  > .display-flex:first-child .table-input-y {
+    border-top: 1px solid rgba(216, 226, 231, 1);
+  }
+}
 </style>
 

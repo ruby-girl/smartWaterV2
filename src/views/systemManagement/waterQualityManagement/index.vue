@@ -229,7 +229,8 @@ export default {
         loginPwd: "",
         loginPwdSave:"",
         userId: "",
-        userNum: ""
+        userNum: "",
+        isLadder:1
       };
       this.addDialogFormVisible = true;
     },

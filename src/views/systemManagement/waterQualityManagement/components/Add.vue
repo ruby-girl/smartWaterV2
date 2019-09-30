@@ -3,8 +3,8 @@
   <el-dialog
     title="添加"
     :visible.sync="AdialogFormVisible"
-    top="30vh"
-    width="1000px"
+    top="20vh"
+    width="1020px"
     center
     custom-class="nopadding"
     @closed="addDialogClose"
@@ -26,14 +26,30 @@
         </el-radio-group>
       </el-form-item>
     </el-form>
-    <div>asdasdasdasd</div>
-     <div>asdasdasdasd</div>
-      <div>asdasdasdasd</div>
-       <div>asdasdasdasd</div>
+    <components :is="LadderComponents"></components>
+    <el-form
+      ref="dataFormAdd"
+      :rules="rules"
+      :model="temp"
+      :inline="true"
+      class="form-inline-small-input"
+      size="small"
+      label-width="130px"
+    >
+      <el-form-item label="开始执行日期：">
+        <el-date-picker v-model="value3" type="datetime" placeholder="选择日期时间"></el-date-picker>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button size="mini" type="primary" @click="updateData()">确认</el-button>
+      <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
+    </div>
   </el-dialog>
 </template>
 <script>
 import { numGetAccount } from "@/api/account";
+import LadderTrue from "./LadderTrue";
+import LadderFalse from "./LadderFalse";
 import { setTimeout } from "timers";
 export default {
   props: {
@@ -54,6 +70,10 @@ export default {
       }
     }
   },
+  components: {
+    LadderTrue,
+    LadderFalse
+  },
   watch: {
     addShow() {
       this.AdialogFormVisible = this.addShow;
@@ -63,6 +83,17 @@ export default {
         return;
       }
       this.$emit("update:addShow", val);
+    },
+    temp: {
+      isLadder(val, oldVal) {
+        if (val == 1) {
+          console.log("true");
+          this.LadderComponents = "LadderTrue";
+        } else {
+          console.log("false");
+          this.LadderComponents = "LadderFalse";
+        }
+      }
     }
   },
   mounted() {
@@ -99,7 +130,10 @@ export default {
       }
     };
     return {
+      value3: new Date(),
       timevalue: [],
+
+      LadderComponents: "LadderTrue",
       rules: {
         employeeId: [{ required: true, message: "不能为空", trigger: "blur" }],
         roleId: [{ required: true, message: "不能为空", trigger: "blur" }],
