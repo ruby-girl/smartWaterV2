@@ -116,25 +116,25 @@ export const asyncRoutes = [
         meta: { title: '水厂管理', roles: ['1'] }
       },
       {
-        path: '/organizationManage/areaManage',
+        path: 'areaManage',
         name: 'areaManage',
         component: () => import('@/views/organizationManage/areaManage/index'),
         meta: { title: '片区管理', roles: ['1'] }
       },
       {
-        path: '/organizationManage/department',
+        path: 'department',
         name: 'department',
         component: () => import('@/views/organizationManage/department/index'),
         meta: { title: '部门管理', roles: ['1'] }
       },
       {
-        path: '/organizationManage/postManage',
+        path: 'postManage',
         name: 'postManage',
         component: () => import('@/views/organizationManage/postManage/index'),
         meta: { title: '岗位管理', roles: ['1'] }
       },
       {
-        path: '/organizationManage/peopleManage',
+        path: 'peopleManage',
         name: 'peopleManage',
         component: () => import('@/views/organizationManage/peopleManage/index'),
         meta: { title: '人员管理', roles: ['1'] }
@@ -159,6 +159,15 @@ export const asyncRoutes = [
         name: 'MeterReadingPlan',
         meta: {
           title: '抄表计划',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'meterSetUp',
+        component: () => import('@/views/businessManagement/meterSetUp/index'),
+        name: 'MeterReadingPlan',
+        meta: {
+          title: '抄表设置',
           roles: ['1']
         }
       }
