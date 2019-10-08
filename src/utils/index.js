@@ -373,7 +373,53 @@ export function deepClone(source) {
   })
   return targetObj
 }
-
+export function updateMoney(value) {
+  value = value.replace(/[^\d.]/g, "");  //清除“数字”和“.”以外的字符
+  value = value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+  value = value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+  value = value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');//只能输入两个小数
+  if (value.indexOf(".") < 0 && value != "") {//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+      value = value.slice(0, 8)
+      value = parseFloat(value);
+  } else if (value.indexOf(".") > 0 && value != "") {
+      var attr = value.split(".")
+      if (attr[0].length > 8) {
+          var last = attr[0].slice(0, 8)
+          var n = attr[1].slice(0, 2)
+          console.log('n--'+n)
+          value = last + '.' + n
+      }
+  }
+  return value
+}
+//补齐 保留2位小数
+export function changeTwoDecimal(x) {
+  var f_x = parseFloat(x);
+  if (isNaN(f_x)) {
+      return 0;
+  }
+  var f_x = Math.round(x * 100) / 100;
+  var s_x = f_x.toString();
+  var pos_decimal = s_x.indexOf('.');
+  if (pos_decimal < 0) {
+      pos_decimal = s_x.length;
+      s_x += '.';
+  }
+  while (s_x.length <= pos_decimal + 2) {
+      s_x += '0';
+  }
+  return s_x;
+}
+// 不补齐，删除最后的小数点
+export function delDecimal(x) {
+  var f_x = parseFloat(x);
+  if (isNaN(f_x)) {
+      return 0;
+  }
+  var f_x = Math.round(x * 100) / 100;
+  var s_x = f_x.toString();
+  return s_x;
+}
 /**
  * @param {Array} arr
  * @returns {Array}

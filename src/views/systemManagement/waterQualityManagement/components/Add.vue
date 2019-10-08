@@ -13,24 +13,24 @@
     <el-form
       ref="dataFormAdd"
       :rules="rules"
-      :model="temp"
+      :model="tempSave"
       :inline="true"
       class="form-inline-small-input dialog-title-border-shadow"
       size="small"
       label-width="120px"
     >
       <el-form-item label="是否执行阶梯计价">
-        <el-radio-group v-model="temp.isLadder">
-          <el-radio label="是" value="1"></el-radio>
-          <el-radio label="否" value="0"></el-radio>
+        <el-radio-group v-model="tempSave.isLadder">
+          <el-radio label="1" >是</el-radio>
+          <el-radio label="2">否</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
-    <components :is="LadderComponents"></components>
+    <components :is="LadderComponents" :tempSave="tempSave"></components>
     <el-form
       ref="dataFormAdd"
       :rules="rules"
-      :model="temp"
+      :model="tempSave"
       :inline="true"
       class="form-inline-small-input"
       size="small"
@@ -84,16 +84,18 @@ export default {
       }
       this.$emit("update:addShow", val);
     },
-    temp: {
-      isLadder(val, oldVal) {
-        if (val == 1) {
-          console.log("true");
+    temp(val, oldVal) {
+      this.tempSave = Object.assign({}, val);
+    },
+    "tempSave.isLadder": {
+      handler(val, oldVal) {
+        if (val == '1') {
           this.LadderComponents = "LadderTrue";
         } else {
-          console.log("false");
           this.LadderComponents = "LadderFalse";
         }
-      }
+      },
+      immediate: true
     }
   },
   mounted() {
@@ -130,9 +132,11 @@ export default {
       }
     };
     return {
+      tempSave: {
+        isLadder:'1'
+      },
       value3: new Date(),
       timevalue: [],
-
       LadderComponents: "LadderTrue",
       rules: {
         employeeId: [{ required: true, message: "不能为空", trigger: "blur" }],

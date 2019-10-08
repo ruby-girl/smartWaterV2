@@ -134,7 +134,9 @@ export default {
         roleId: "",
         userId: "",
         loginName: "", //账号,
-        isLadder:1
+        isLadder:'1',
+        name:'羊',
+         num:11
       },
       restId: "", //重置行ID
       listQuery: {
@@ -230,7 +232,9 @@ export default {
         loginPwdSave:"",
         userId: "",
         userNum: "",
-        isLadder:1
+        num:11,
+        isLadder:'1',
+         name:'羊'
       };
       this.addDialogFormVisible = true;
     },
