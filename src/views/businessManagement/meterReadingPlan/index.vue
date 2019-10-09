@@ -9,7 +9,7 @@
           <i class="iconfont icontianjia"></i>新增抄表计划
         </el-button>
         <div>
-          <el-button type="success" size="mini" @click>
+          <el-button type="success" size="mini" @click="exportList">
             <i class="iconfont icondaochuexcel"></i>导出Excel
           </el-button>
           <el-button type="warning" size="mini" @click="setCustomData()">
@@ -18,7 +18,7 @@
         </div>
       </div>
       <customTable ref="myChild" />
-      <div class="main-padding-20-y">
+      <div class="main-padding-20-y" id="table">
         <el-table
           :key="tableKey"
           :data="tableData"
@@ -35,7 +35,7 @@
             <el-table-column
               v-if="item.IsFreeze"
               :key="index"
-              min-width="130px"
+              min-width="150px"
               sortable="custom"
               :prop="item.ColProp"
               :align="item.Position"
@@ -45,17 +45,28 @@
             <el-table-column
               v-else
               :key="index"
-              min-width="100px"
+              min-width="150px"
               sortable="custom"
               :prop="item.ColProp"
               :align="item.Position"
               :label="item.ColDesc"
             />
           </template>
-          <el-table-column label="操作" width="200px" align="center" fixed="right">
+          <el-table-column label="操作" width="300px" align="center" fixed="right">
             <template slot-scope="scope">
-              <a class="operation1">编辑</a>
-              <a class="operation2">删除</a>
+              <a class="operation1">生成账单</a>
+              <a
+                class="operation2"
+                @click="changeInput(scope.row.Id,false)"
+                v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
+              >数据补录</a>
+              <a
+                class="operation2-1"
+                @click="changeInput(scope.row.Id,true)"
+                v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
+              >数据绑定</a>
+              <a class="operation3">详情</a>
+              <a class="operation4">删除</a>
             </template>
           </el-table-column>
         </el-table>
@@ -64,7 +75,7 @@
           :total="total"
           :page.sync="selectHead.page"
           :limit.sync="selectHead.limit"
-          @pagination="setCustomData"
+          @pagination="searchTableList"
         />
       </div>
     </div>
@@ -74,7 +85,7 @@
 import SelectHead from "./components/SelectHead"; //查询条件组件
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
-import { searchPlanList } from "@api/plan"
+import { searchPlanList, exportPlanList, changeListState } from "@/api/plan"; //http 请求
 export default {
   name: "MeterReadingPlan",
   components: {
@@ -89,10 +100,10 @@ export default {
         // 查询条件
         page: 1,
         limit: 10,
-        SA_WaterFactory_Id: "", //水厂Id
-        StartPlanDate: "", //计划开始日期
-        EndPlanDate: "", //计划结束日期
-        enumPlanState: "", //抄表计划状态
+        SA_WaterFactory_Id: "-1", //水厂Id
+        createStartTime: "", //计划开始日期
+        createEndTime: "", //计划结束日期
+        enumPlanState: "-1", //抄表计划状态
         sort: "", //升序
         filed: "", //排序字段
         tableId: "0000008"
@@ -121,29 +132,26 @@ export default {
   },
   watch: {
     customHeight() {
+      console.log(this.customHeight);
       //获取自定义模块高度
       let that = this;
       that.$nextTick(() => {
         let formHeight = this.$refs.formHeight.offsetHeight;
-        that.tableHeight =
+        that.tableHeight = that.tableHeight =
           document.getElementsByClassName("section-container")[0].offsetHeight -
-          formHeight -
-          110 -
-          that.customHeight;
+          document.getElementById("table").offsetTop -
+          58;
       });
     }
   },
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
-      let formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      console.log(formHeight);
       that.tableHeight =
         document.getElementsByClassName("section-container")[0].offsetHeight -
-        formHeight -
-        110;
-      console.log(that.tableHeight);
+        document.getElementById("table").offsetTop -
+        58;
       this.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
     });
@@ -154,16 +162,80 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
     },
-    sortChanges() {
-      console.log(1);
+    sortChanges({ column, prop, order }) {
+      //排序
+      console.log(column, prop, order);
+      this.selectHead.page = 1;
+      this.selectHead.filed = prop;
+      this.selectHead.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      this.searchTableList();
     },
     searchTableList() {
+      //查询列表
+      const that = this;
       searchPlanList(this.selectHead).then(res => {
-        console.log(res)
+        if (res.code == 0) {
+          that.tableData = res.data;
+          that.total = res.count;
+        }
+      });
+    },
+    exportList() {
+      //导出
+      exportPlanList(this.selectHead).then(res => {
+        window.location.href = `${this.common.excelPath}${res.data}`;
+      });
+    },
+    changeInput(id, state) {
+      //数据绑定or 数据补录
+      let that = this;
+      let parm = {
+        SA_MeterReadPlan_Id: id,
+        newDataSupplementaryInput: Boolean(state)
+      };
+      changeListState(parm).then(res => {
+        if (res.code == 0) {
+          that.$message({
+            message: res.msg,
+            type: "success"
+          });
+          that.searchTableList()
+        } else {
+          that.$message({
+            message: res.msg,
+            type: "warning"
+          });
+        }
       });
     }
   }
 };
 </script>
-<style scoped>
+<style  scoped>
+.operation1 {
+  color: #ff3d3d;
+  font-size: 13px;
+  margin: 10px;
+}
+.operation2 {
+  color: #00b2a1;
+  font-size: 13px;
+  margin: 10px;
+}
+.operation2-1 {
+  color: ##46494c;
+  font-size: 13px;
+  margin: 10px;
+}
+.operation3 {
+  color: #b59200;
+  font-size: 13px;
+  margin: 10px;
+}
+.operation4 {
+  color: #ff5656;
+  font-size: 13px;
+  margin: 10px;
+}
 </style>

@@ -28,6 +28,13 @@ export function getDictionaryOption(value) {//获取具体的字典项
    let items=store.getters.dictionaryItem.filter(item=>{
       return item.Id==value
     })
+    // if(all==true){
+    //   let obj={
+    //     Id:"-1",
+    //     Name:"全部"
+    //   }
+    //   items[0].CboList.unshift(obj)
+    // }
     return items[0].CboList//这里是option数据
   }else{
     return false

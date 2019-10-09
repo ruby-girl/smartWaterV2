@@ -9,29 +9,31 @@
   >
     <el-form-item label="水厂：">
       <el-select
-        v-model="selectHead.company"
+        v-model="selectHead.SA_WaterFactory_Id"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
+      <el-option label="全部" value="-1"></el-option>
         <el-option
           v-for="item in companyOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
         ></el-option>
       </el-select>
     </el-form-item>
-     <el-form-item label="计划状态：">
+    <el-form-item label="计划状态：">
       <el-select
-        v-model="selectHead.planState"
+        v-model="selectHead.enumPlanState"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
+      <el-option label="全部" value="-1"></el-option>
         <el-option
           v-for="item in planStateOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
         ></el-option>
       </el-select>
     </el-form-item>
@@ -48,9 +50,10 @@
         format="yyyy-MM-dd HH:mm:ss"
         value-format="yyyy-MM-dd HH:mm:ss"
         @keydown.enter.native="handleFilter"
+        @change="getTime"
       />
     </el-form-item>
-   
+
     <el-form-item>
       <el-button type="primary" size="mini" @click="handleFilter">
         <i class="iconfont iconsousuo"></i>搜索
@@ -61,68 +64,48 @@
 <script>
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { getDictionaryOption } from "@/utils/permission";
+import { planConpanySelect } from "@/api/plan";
 export default {
   data() {
     return {
-      selectHead: {
-      },
+      selectHead: {},
       warterMeterPlanDate: [],
-      companyOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
-      planStateOptions: [
-        {
-          value: "",
-          label: "全部"
-        },
-        {
-          value: "1",
-          label: "已完成"
-        },
-        {
-          value: "2",
-          label: "未完成"
-        }
-      ]
+      companyOptions: [],
+      planStateOptions: []
     };
   },
   methods: {
     handleFilter() {
-      console.log("抄表计划");
+      this.$parent.searchTableList();
+    },
+    getCompany() {
+      //水厂下拉
+      let that = this;
+      planConpanySelect().then(res => {
+        if (res.code == 0) {
+          that.companyOptions = [];
+          that.companyOptions = res.data;
+        }
+      });
+    },
+    getTime() {
+      //时间格式化
+      const date = this.warterMeterPlanDate;
+      if (date) {
+        this.selectHead.createStartTime = date[0];
+        this.selectHead.createEndTime = date[1];
+      } else {
+        this.selectHead.createStartTime = "";
+        this.selectHead.createEndTime = "";
+      }
     }
-    // getTime(v) {
-    //   if (v) {
-    //     this.selectHead.editStartTime = v[0];
-    //     this.selectHead.editEndTime = v[1];
-    //   } else {
-    //     this.selectHead.editStartTime = "";
-    //     this.selectHead.editEndTime = "";
-    //   }
-    // }
   },
-  mounted(){
-    this.selectHead=this.$parent.selectHead
+  mounted() {
+    this.selectHead = this.$parent.selectHead;
+    this.getCompany();
+    this.planStateOptions = [];
+    this.planStateOptions = getDictionaryOption("抄表计划状态");
   }
-
 };
 </script>
 <style lang="scss" scoped>

@@ -104,7 +104,7 @@ export default {
   },
 
   methods: {
-    getTime(v) {
+    getTime(v) {//计划时间
       if (v) {
         this.selectHead.editStartTime = v[0];
         this.selectHead.editEndTime = v[1];
