@@ -21,8 +21,19 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="抄表计划：">
-      <el-input v-model="selectHead.warterMeterPlan" @keydown.enter.native="handleFilter"></el-input>
+     <el-form-item label="计划状态：">
+      <el-select
+        v-model="selectHead.planState"
+        placeholder="请选择"
+        @keydown.enter.native="handleFilter"
+      >
+        <el-option
+          v-for="item in planStateOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="计划抄表日期：">
       <el-date-picker
@@ -39,20 +50,7 @@
         @keydown.enter.native="handleFilter"
       />
     </el-form-item>
- <el-form-item label="计划状态：">
-      <el-select
-        v-model="selectHead.planState"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option
-          v-for="item in planStateOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-    </el-form-item>
+   
     <el-form-item>
       <el-button type="primary" size="mini" @click="handleFilter">
         <i class="iconfont iconsousuo"></i>搜索
@@ -67,11 +65,8 @@ export default {
   data() {
     return {
       selectHead: {
-        company: "",
-        warterMeterPlan: "",
-        planState:""
       },
-        warterMeterPlanDate: [],
+      warterMeterPlanDate: [],
       companyOptions: [
         {
           value: "选项1",
@@ -94,8 +89,8 @@ export default {
           label: "北京烤鸭"
         }
       ],
-      planStateOptions:[
-         {
+      planStateOptions: [
+        {
           value: "",
           label: "全部"
         },
@@ -103,18 +98,17 @@ export default {
           value: "1",
           label: "已完成"
         },
-         {
+        {
           value: "2",
           label: "未完成"
-        },
-      
+        }
       ]
     };
   },
   methods: {
     handleFilter() {
       console.log("抄表计划");
-    },
+    }
     // getTime(v) {
     //   if (v) {
     //     this.selectHead.editStartTime = v[0];
@@ -124,7 +118,11 @@ export default {
     //     this.selectHead.editEndTime = "";
     //   }
     // }
-  } 
+  },
+  mounted(){
+    this.selectHead=this.$parent.selectHead
+  }
+
 };
 </script>
 <style lang="scss" scoped>

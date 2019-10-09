@@ -12,13 +12,13 @@
           <el-button type="success" size="mini" @click>
             <i class="iconfont icondaochuexcel"></i>导出Excel
           </el-button>
-          <el-button type="warning" size="mini" @click>
+          <el-button type="warning" size="mini" @click="setCustomData()">
             <i class="iconfont iconbiaogezidingyi"></i>表格自定义
           </el-button>
         </div>
       </div>
-      <!-- <customTable ref="myChild" /> -->
-      <!-- <div class="main-padding-20-y">
+      <customTable ref="myChild" />
+      <div class="main-padding-20-y">
         <el-table
           :key="tableKey"
           :data="tableData"
@@ -26,125 +26,141 @@
           fit
           :height="tableHeight"
           style="width: 100%;"
-          :cell-class-name="cellClass"
           :header-cell-style="{'background-color': '#F0F2F5'}"
           :cell-style="{'padding':'7px 0'}"
           @sort-change="sortChanges"
         >
           <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
-          <template v-for="(item ,index) in tableHead">
+          <template v-for="(item ,index) in tableHeadData">
             <el-table-column
+              v-if="item.IsFreeze"
               :key="index"
-              :min-width="item.ColProp=='EditTime'?'160px':'110px'"
-              :prop="item.ColProp"
-              align="center"
+              min-width="130px"
               sortable="custom"
+              :prop="item.ColProp"
+              :align="item.Position"
               :label="item.ColDesc"
-            /> 
+              :fixed="item.Freeze"
+            />
+            <el-table-column
+              v-else
+              :key="index"
+              min-width="100px"
+              sortable="custom"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+            />
           </template>
-          <el-table-column
-            label="操作"
-            align="center"
-            class-name="small-padding"
-            min-width="150px"
-            fixed="right"
-          >
-            <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center" v-if="row.UserStatusCode=='ZC'">
-                <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']">
-                  <a>编辑</a>
-                </div>
-                <div class="main-color-red pl-15" @click="cancel(row)" v-permission="['1010105']">
-                  <a>注销</a>
-                </div>
-                <div class="main-color pl-15" @click="reset(row)" v-permission="['1010107']">
-                  <a>重置密码</a>
-                </div>
-              </div>
-              <div v-else class="display-flex justify-content-flex-center">
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color" v-permission="['1010106']">
-                    <a>编辑</a>
-                  </div>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color pl-15" v-permission="['1010105']">
-                    <a>注销</a>
-                  </div>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color pl-15" v-permission="['1010107']">
-                    <a>重置密码</a>
-                  </div>
-                </el-tooltip>
-              </div>
+          <el-table-column label="操作" width="200px" align="center" fixed="right">
+            <template slot-scope="scope">
+              <a class="operation1">编辑</a>
+              <a class="operation2">删除</a>
             </template>
           </el-table-column>
         </el-table>
         <pagination
           v-show="total>0"
           :total="total"
-          :page.sync="listQuery.page"
-          :limit.sync="listQuery.limit"
-          @pagination="getList"
+          :page.sync="selectHead.page"
+          :limit.sync="selectHead.limit"
+          @pagination="setCustomData"
         />
-         <add-dialog
-        :add-show.sync="addDialogFormVisible"
-        :temp="temp"
-        @createData="createData"
-        :role-list="roleList"
-      /> -->
       </div>
     </div>
   </div>
 </template>
 <script>
-import SelectHead from "./components/SelectHead";
-import customTable from "@/components/CustomTable/index";
+import SelectHead from "./components/SelectHead"; //查询条件组件
+import customTable from "@/components/CustomTable/index"; //自定义表格
+import Pagination from "@/components/Pagination/index"; //分页
+import { searchPlanList } from "@api/plan"
 export default {
   name: "MeterReadingPlan",
   components: {
     SelectHead,
-    customTable
+    customTable,
+    Pagination
   },
-  data(){
-      return {
-          listQuery: {
-            // 查询条件
-            page: 1,
-            limit: 10,
-            sort: "", //升序
-            filed: "", //排序字段
-            roldId: "-1", // 角色ID
-            userState: "-1", // 账号状态
-            empNo: "", // 人员编号
-            empName:"",//人员姓名
-            loginName:"",//账号
-            editUserId: "-1", // 操作人
-            editStartTime: "", // 操作时间起
-            editEndTime: "", // 操作时间止
-            tableId: "0000005"
-          },
+  data() {
+    return {
+      total: 0,
+      selectHead: {
+        // 查询条件
+        page: 1,
+        limit: 10,
+        SA_WaterFactory_Id: "", //水厂Id
+        StartPlanDate: "", //计划开始日期
+        EndPlanDate: "", //计划结束日期
+        enumPlanState: "", //抄表计划状态
+        sort: "", //升序
+        filed: "", //排序字段
+        tableId: "0000008"
+      },
+      checksData: [],
+      tableData: [],
+      total: 0,
+      tableKey: 0,
+      tableHeight: 0,
+      customHeight: "" //自定义高度
+    };
+  },
+  computed: {
+    tableHeadData: function() {
+      //获取表头信息
+      const arrayHead = [];
+      const data = this.checksData;
+      for (let i = 0; i < data.length; i++) {
+        // 过滤选中列
+        if (data[i].IsCheck) {
+          arrayHead.push(data[i]);
+        }
       }
+      return arrayHead;
+    }
+  },
+  watch: {
+    customHeight() {
+      //获取自定义模块高度
+      let that = this;
+      that.$nextTick(() => {
+        let formHeight = this.$refs.formHeight.offsetHeight;
+        that.tableHeight =
+          document.getElementsByClassName("section-container")[0].offsetHeight -
+          formHeight -
+          110 -
+          that.customHeight;
+      });
+    }
   },
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
-      var formHeight = this.$refs.formHeight.offsetHeight;
+      let formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 220;
-      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      console.log(formHeight);
+      that.tableHeight =
+        document.getElementsByClassName("section-container")[0].offsetHeight -
+        formHeight -
+        110;
+      console.log(that.tableHeight);
+      this.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-      getRoles().then(res => {
-        this.roleList = res.data;
-      });
     });
   },
   methods: {
     setCustomData() {
+      //表格自定义方法
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
-      if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;
-      else this.tableHeight = this.tableHeight + 80;
+      this.customHeight = this.$refs.myChild.isCustom;
+    },
+    sortChanges() {
+      console.log(1);
+    },
+    searchTableList() {
+      searchPlanList(this.selectHead).then(res => {
+        console.log(res)
+      });
     }
   }
 };
