@@ -187,20 +187,28 @@ export default {
     },
     delMeterReadingPlan(id) {
       //删除
-      let that=this
-      delPlanList({ SA_MeterReadPlan_Id: id }).then(res => {
-        if (res.code == 0) {
-          that.$message({
-            message: res.msg?res.msg:"删除成功",
-            type: "success"
-          });
-          that.searchTableList();
-        } else {
-          that.$message({
-            message: res.msg,
-            type: "warning"
-          });
-        }
+      let that = this;
+      this.$confirm("是否删除当前信息", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        customClass: "warningBox",
+        showClose: false
+      }).then(() => {
+        delPlanList({ SA_MeterReadPlan_Id: id }).then(res => {
+          if (res.code == 0) {
+            that.$message({
+              message: res.msg ? res.msg : "删除成功",
+              type: "success"
+            });
+            that.searchTableList();
+          } else {
+            that.$message({
+              message: res.msg,
+              type: "warning"
+            });
+          }
+        });
       });
     },
     sortChanges({ column, prop, order }) {
