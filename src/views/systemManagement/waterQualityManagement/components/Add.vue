@@ -12,7 +12,6 @@
   >
     <el-form
       ref="dataFormAdd"
-      :rules="rules"
       :model="temp"
       :inline="true"
       class="form-inline-small-input dialog-title-border-shadow"
@@ -26,7 +25,7 @@
         </el-radio-group>
       </el-form-item>
     </el-form>
-    <components :is="LadderComponents" :temp="temp" ref="childrenTemp"></components>
+    <components :is="LadderComponents" :temp="temp" ref="childrenTemp" :type-list="typeList"></components>
     <div slot="footer" class="dialog-footer">
       <el-button size="mini" type="primary" @click="updateData()">确认</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
@@ -48,6 +47,12 @@ export default {
     addShow: {
       type: Boolean,
       default: false
+    },
+    typeList: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   components: {
@@ -84,61 +89,22 @@ export default {
     });
   },
   data() {
-    var employeeId = (rule, value, callback) => {
-      if (value === "") {
-        return callback(new Error("不能为空"));
-      }
-
-      if (value.length < 11) {
-        numGetAccount(value).then(res => {
-          if (res.data) {
-            if (res.data.SYS_User_Id) {
-              this.temp.employeeId = ""; //人员表ID
-              return callback(new Error("已存在"));
-            } else {
-              this.temp.employeeId = res.data.Id; //人员表ID
-              callback();
-            }
-          } else {
-            this.temp.employeeId = ""; //人员表ID
-            return callback(new Error("信息有误"));
-          }
-        });
-      } else {
-        return callback(new Error("最大长度为10位"));
-      }
-    };
     return {
       timevalue: [],
       LadderComponents: "LadderTrue",
-      rules: {
-        employeeId: [{ required: true, message: "不能为空", trigger: "blur" }],
-        roleId: [{ required: true, message: "不能为空", trigger: "blur" }],
-        loginName: [
-          { required: true, message: "不能为空", trigger: "blur" },
-          {
-            max: 20,
-            message: "最大长度为20位"
-          }
-        ],
-        loginPwdSave: [
-          { required: true, message: "不能为空", trigger: "blur" },
-          {
-            min: 6,
-            max: 18,
-            message: "密码长度为6-18位"
-          }
-        ]
-      },
       AdialogFormVisible: false,
-      passwordSave: "",
       userOptions: [],
       userOptionsSave: []
     };
   },
   methods: {
     updateData() {
-      console.info(this.$refs.childrenTemp.temp);
+      this.$refs["dataFormAdd"].validate(valid => {
+        if (!valid) return false;
+        else {      
+          this.$emit("updateData", this.temp);
+        }
+      });
     },
     userChange() {
       let _this = this;

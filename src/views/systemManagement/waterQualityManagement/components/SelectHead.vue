@@ -10,7 +10,7 @@
     <el-form-item label="用水性质">
       <el-select v-model="selectHead.roldId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
-        <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="是否阶梯 ">
@@ -23,7 +23,7 @@
     <el-form-item label="用水性质类型 " label-width="100px">
       <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
-        <el-option v-for="item in stateType" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item>
@@ -42,7 +42,7 @@ export default {
         return {};
       }
     },
-    roleList: {
+    typeList: {
       type: Array,
       default: function() {
         return [];

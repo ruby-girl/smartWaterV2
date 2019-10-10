@@ -2,21 +2,19 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :select-head="listQuery" @handleFilter="handleFilter" :role-list="roleList" />
+        <select-head :select-head="listQuery" @handleFilter="handleFilter" :type-list="typeList" />
       </div>
       <div class="table-top-btn-padding display-flex justify-content-flex-justify">
-        <el-button type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
+        <el-button type="primary" size="mini" @click="addRole">
+          <i class="iconfont icontianjia"></i>添加
+        </el-button>
         <div>
-          <el-button
-          type="success"
-          size="mini"
-          @click="excel"
-        ><i class="iconfont icondaochuexcel"></i>导出Excel</el-button>
-        <el-button
-          type="warning"
-          size="mini"
-          @click="setCustomData()"
-        ><i class="iconfont iconbiaogezidingyi"></i>表格自定义</el-button>
+          <el-button type="success" size="mini" @click="excel">
+            <i class="iconfont icondaochuexcel"></i>导出Excel
+          </el-button>
+          <el-button type="warning" size="mini" @click="setCustomData()">
+            <i class="iconfont iconbiaogezidingyi"></i>表格自定义
+          </el-button>
         </div>
       </div>
       <customTable ref="myChild" />
@@ -42,7 +40,7 @@
               align="center"
               sortable="custom"
               :label="item.ColDesc"
-            /> 
+            />
           </template>
           <el-table-column
             label="操作"
@@ -66,7 +64,6 @@
                   <a>删除</a>
                 </div>
               </div>
-              
             </template>
           </el-table-column>
         </el-table>
@@ -77,21 +74,23 @@
           :limit.sync="listQuery.limit"
           @pagination="getList"
         />
-         <add-dialog
-        :add-show.sync="addDialogFormVisible"
-        :temp="temp"
-        @createData="createData"
-        :role-list="roleList"
-      />
+        <add-dialog
+          :add-show.sync="addDialogFormVisible"
+          :temp="temp"
+          @createData="createData"
+          @updateData="updateData"
+          :type-list="typeList"
+        />
       </div>
     </div>
   </div>
 </template>
 <script>
-import SelectHead from "./components/SelectHead"; 
+import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import AddDialog from "./components/Add";
+import { getDictionaryOption } from "@/utils/permission";
 import {
   getAccountList,
   getAccountDetail,
@@ -100,6 +99,7 @@ import {
   cancelAccount,
   exportExcel
 } from "@/api/account";
+import {parseStartTime} from "@/utils/index.js"
 import { getRoles } from "@/api/role"; //获取角色下拉框
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
@@ -117,13 +117,6 @@ export default {
       tableKey: 0,
       tableHeight: 0,
       temp: {
-        empNo: "", //用户编号，请求后端得到employeeId
-        roleId: "",
-        userId: "",
-        loginName: "", //账号,
-        isLadder:'1',
-        name:'羊',
-        num:11
       },
       restId: "", //重置行ID
       listQuery: {
@@ -135,14 +128,14 @@ export default {
         roldId: "-1", // 角色ID
         userState: "-1", // 账号状态
         empNo: "", // 人员编号
-        empName:"",//人员姓名
-        loginName:"",//账号
+        empName: "", //人员姓名
+        loginName: "", //账号
         editUserId: "-1", // 操作人
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
-        tableId: "0000005"
+        tableId: "00000012"
       },
-      roleList: [], //角色下拉框，传递给组件
+      typeList: [], //用水性质类型，传递给组件
       addDialogFormVisible: false, // 新增弹窗
       dialogFormVisible: false, // 编辑弹窗
       resetdialogFormVisible: false, // 重置弹窗
@@ -166,15 +159,14 @@ export default {
       that.tableHeight = document.body.clientHeight - formHeight - 220;
       this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-      getRoles().then(res => {
-        this.roleList = res.data;
-      });
+     this.typeList=getDictionaryOption('用水性质类型')
+     
     });
   },
   methods: {
-    cellClass({row, column, rowIndex, columnIndex}){
-      if(row.UserStatusCode=='ZX'&&column.property=='UserStatus'){
-        return 'main-color-red'
+    cellClass({ row, column, rowIndex, columnIndex }) {
+      if (row.UserStatusCode == "ZX" && column.property == "UserStatus") {
+        return "main-color-red";
       }
     },
     setCustomData() {
@@ -211,18 +203,44 @@ export default {
       this.dialogFormVisible = true;
     },
     addRole() {
-      this.temp = {
-        employeeId: "",
-        roleId: "",
-        loginName: "",
-        loginPwd: "",
-        loginPwdSave:"",
-        userId: "",
-        userNum: "",
-        num:11,
+      this.temp={
+       UseWaterTypeName: "",//用水性质名称
+        StartPlanDate:parseStartTime(new Date()),//开始执行日期
+        NewPriceUseDate: "",
+        IsLadder: true,//是否阶梯计价
         isLadder:'1',
-         name:'羊'
-      };
+        LadderResetTime: '1',//阶梯月数
+        LadderNumber: 3,//阶梯数
+        IsCanCancelWaterPriceChange: true,//是否可撤销
+        WaterPropertyType: '401',//用水性质类型-默认值-居民用水
+        OneLadderWaterNum: 0,
+        OneLadderPrice: 0,
+        OneTotalPrice: 0,
+        TwoLadderWaterNum: 0,
+        TwoLadderPrice: 0,
+        TwoTotalPrice: 0,
+        ThreeLadderWaterNum: 0,
+        ThreeLadderPrice: 0,
+        ThreeTotalPrice: 0,
+        FourLadderWaterNum: 0,
+        FourLadderPrice: 0,
+        FourTotalPrice: 0,
+        FiveLadderWaterNum: 0,
+        FiveLadderPrice: 0,
+        FiveTotalPrice: 0,
+        SewagePrice: 0,//污水费单价
+        OtherPrice1: 0,//其他费用1
+        OtherPrice2: 0,//其他费用2
+        OtherPrice3: 0,//其他费用3
+        TotalPrice: 0,//合计单价
+        ladder: [
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0},
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0},
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
+        ]
+      },
       this.addDialogFormVisible = true;
     },
     createData() {
@@ -237,15 +255,16 @@ export default {
       });
     },
     updateData() {
-      deitAccount(this.temp).then(res => {
-        this.dialogFormVisible = false;
-        this.$message({
-          message: res.message,
-          type: "success",
-          duration: 4000
-        });
-        this.getList();
-      });
+      console.log(this.temp)
+      // deitAccount(this.temp).then(res => {
+      //   this.dialogFormVisible = false;
+      //   this.$message({
+      //     message: res.message,
+      //     type: "success",
+      //     duration: 4000
+      //   });
+      //   this.getList();
+      // });
     },
     cancel(row) {
       this.$confirm("是否注销当前账号", "提示", {
