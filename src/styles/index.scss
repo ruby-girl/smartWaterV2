@@ -70,7 +70,13 @@ div:focus {
 .pl-15 {
   padding-left: 15px;
 }
+.pr-20 {
+  padding-right: 20px;
+}
 
+.pl-20 {
+  padding-left: 20px;
+}
 .block {
   display: block;
 }
@@ -279,6 +285,9 @@ aside {
 .main-color-red{
   color:$red;
 }
+.main-color-warn{
+  color:$warn;
+}
 .disable-color{
   color:#D8E2E7;
 }
@@ -329,4 +338,7 @@ button, input, optgroup, select, textarea{
 .dialog-title-border-shadow .el-form-item{
  padding:5px 10px;
  margin:0;
+}
+.method-font a{
+font-size: 13px;
 }
