@@ -42,7 +42,7 @@
               align="center"
               sortable="custom"
               :label="item.ColDesc"
-            /> 
+            />
           </template>
           <el-table-column
             label="操作"
@@ -65,7 +65,7 @@
                   </div>
                 </el-tooltip>
               </div>
-             
+
             </template>
           </el-table-column>
         </el-table>
@@ -89,7 +89,7 @@
   </div>
 </template>
 <script>
-import SelectHead from "./components/SelectHead"; 
+import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import Dialog from "./components/Dialog";
 import customTable from "@/components/CustomTable/index";
@@ -228,10 +228,10 @@ export default {
       this.$confirm("是否删除当前信息", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        iconClass:"el-icon-question questionIcon",
         customClass: "warningBox",
         showClose: false
-      }).then(() => {      
+      }).then(() => {
         waterFactoryDelete(row).then(res => {
           this.$message({
             message: res.message,

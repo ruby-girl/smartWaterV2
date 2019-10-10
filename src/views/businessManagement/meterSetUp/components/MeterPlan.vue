@@ -1,11 +1,11 @@
 <template>
   <div class="meter_modular" :gutter="20">
     <div class="plan_box">
-      <p class="plan_box1">
-        <a><span>抄表计划：</span>123333</a>
+      <p class="plan_box1 clearfix">
+        <a style="text-align: left"><span>抄表计划：</span>123333</a>
         <a><span>用户编码：</span>123333</a>
         <a><span>姓名：</span>123333</a>
-        <a style="font-size: 14px;"><span>水表类型：</span>机械表</a>
+        <a style="font-size: 14px;text-align: right"><span>水表类型：</span>机械表</a>
       </p>
       <div class="meter_nums clearfix">
           <div>
@@ -30,20 +30,18 @@
               <template slot="prepend">备注：</template>
           </el-input>
           <el-row style="width: 100%">
-            <el-col :span="10">
+            <el-col :span="20">
               <el-checkbox-group v-model="input">
-                <el-checkbox label="字轮是否翻页" name="type"></el-checkbox>
+                <el-checkbox label="字轮是否翻页" name="type"></el-checkbox>8
                 <el-checkbox label="自动载入下一户" name="type"></el-checkbox>
-                <el-checkbox label="异常倍率" name="type"></el-checkbox>
+                <el-checkbox label="异常倍率" name="type">
+                  异常倍率&nbsp;&nbsp;&nbsp;<el-select v-model="input1" placeholder="请选择" size="mini" @keyup.enter.native="searchFun">
+                    <el-option label="1.5" value="1.5"/>
+                    <el-option label="2" value="2"/>
+                    <el-option label="2.5" value="2.5"/>
+                  </el-select>
+                </el-checkbox>
               </el-checkbox-group>
-            </el-col>
-            <el-col :span="10">
-              <el-radio-group v-model="input1">
-                <el-radio label="1.5"></el-radio>
-                <el-radio label="2"></el-radio>
-                <el-radio label="2.5"></el-radio>
-                <el-radio label="3"></el-radio>
-              </el-radio-group>
             </el-col>
             <el-col :span="4">
               <el-button style="float: right" type="primary" size="small">确定</el-button>
@@ -52,12 +50,59 @@
       </div>
     </div>
     <div class="meter_forms">
-      <p class="plan_box1 plan_box2">
+      <p class="plan_box1 plan_box2 clearfix">
         <a>表册：<label style="color: #777C82">全部</label></a>
         <a>合计：<label style="color: #46494C">100</label></a>
         <a>已抄：<label style="color: #00B3A1">11</label></a>
-        <a>未抄：<lable style="color: #FF3D3D">sdf</lable></a>
+        <a>未抄：<label style="color: #FF3D3D">sdf</label></a>
       </p>
+      <div class="plan_box3">
+        <h2>水量水费预估</h2>
+        <el-row>
+          <el-col :span="8" class="unit">
+            1阶单价：<span>20</span> <label>元/吨</label>
+          </el-col>
+          <el-col :span="8" class="unit">
+            1阶水量：<label>20 吨</label>
+          </el-col>
+          <el-col :span="8" class="unit">
+            1阶水费：<i>20</i> <label>元</label>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8" class="unit">
+            1阶单价：<span>20</span> <label>元/吨</label>
+          </el-col>
+          <el-col :span="8" class="unit">
+            1阶水量：<label>20 吨</label>
+          </el-col>
+          <el-col :span="8" class="unit">
+            1阶水费：<i>20</i> <label>元</label>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8" class="unit">
+            1阶单价：<span>20</span> <label>元/吨</label>
+          </el-col>
+          <el-col :span="8" class="unit">
+            1阶水量：<label>20 吨</label>
+          </el-col>
+          <el-col :span="8" class="unit">
+            1阶水费：<i>20</i> <label>元</label>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8" class="unit">
+            1阶单价：<span>20</span> <label>元/吨</label>
+          </el-col>
+          <el-col :span="8" class="unit">
+            1阶水量：<label>20 吨</label>
+          </el-col>
+          <el-col :span="8" class="unit">
+            1阶水费：<i>20</i> <label>元</label>
+          </el-col>
+        </el-row>
+      </div>
     </div>
   </div>
 </template>
@@ -86,31 +131,23 @@
     }
     .meter_forms {
       width: 40%;
-      background: #fff;
     }
     .plan_box1 {
       background: #fff;
       margin: 0;
-      padding: 12px 0;
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-pack: justify;
-      -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-      justify-content: space-between;
+      padding: 12px 22px;
     }
     .plan_box1 a {
       span {
         color: #777C82;font-size: 13px;
       }
-      width: 20%;
+      width: 25%;
       display: block;
       text-align: center;
       font: normal 13px 'Microsoft YaHei';
       color: #46494C;
       text-decoration: none;
+      float: left;
     }
     .meter_nums {
       position: relative;
@@ -150,6 +187,17 @@
         label{font-size: 16px;color: #777C82}
       }
     }
+    .plan_box3{
+      background: #fff;padding: 0 18px 20px 18px;margin-top: 13px;height: 172px;overflow: auto;
+      h2{color: #777C82;font-size: 20px;padding: 16px 0 10px 0;margin: 0;}
+    }
+    .unit{color: #777C82;font: normal 14px/38px 'Microsoft YaHei' ;
+      span{color: #33B300}
+      label{color: #46494C}
+      i{color: #FF3D3D;font: normal 20px 'Microsoft YaHei'}
+    }
+    .unit:nth-child(2){text-align: center}
+    .unit:nth-child(3){text-align: right}
   }
 </style>
 

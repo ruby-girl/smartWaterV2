@@ -57,7 +57,8 @@
       </div>
 
       <!--抄表计划组建 s-->
-      <MeterPlan></MeterPlan>
+      <MeterPlan v-if="screeWidth>1400"></MeterPlan>
+      <MeterPlanSmall v-else></MeterPlanSmall>
       <!--抄表计划组建 e-->
     </div>
   </div>
@@ -68,13 +69,14 @@
   import customTable from '@/components/CustomTable/index'//自定义组建
   import SelectHead from './components/SelectHead'//查询条件组建
   import MeterPlan from './components/MeterPlan'//查询条件组建
+  import MeterPlanSmall from './components/MeterPlanSmall'//查询条件组建
   import Pagination from '@/components/Pagination/index'//分页
   import { BlockAreaGetList, BlockAreaUpDate, BlockAreaDelete, BlockAreaGetObjById } from "@/api/organize"//http 请求
   import { parseTime } from "@/utils/index"
 
   export default {
     name: 'meterSetUp',
-    components: { customTable, Pagination, SelectHead, MeterPlan },
+    components: { customTable, Pagination, SelectHead, MeterPlan, MeterPlanSmall },
     data() {
       return {
         ID:'',
@@ -95,7 +97,8 @@
         tableData: [],//表格数据
         checkAllData: [],
         checksData: [],
-        customHeight: ''//自定义高度
+        customHeight: '',//自定义高度
+        screeWidth:''
       }
     },
     computed: {
@@ -114,7 +117,11 @@
       customHeight() {//获取自定义模块高度
         let self = this
         self.$nextTick(() => {
-          self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 260
+          if(this.screeWidth>1400){
+            self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 260
+          }else{
+            self.tableHeight = 300
+          }
         })
       }
     },
@@ -139,7 +146,7 @@
         this.$confirm("是否删除当前信息", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          iconClass:"el-icon-question questionIcon",
           customClass: "warningBox",
           showClose: false
         }).then(() => {
@@ -185,9 +192,14 @@
       }
     },
     mounted() {
+      this.screeWidth = window.screen.width
       this.$refs.myChild.GetTable(this.sbap.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 260
+      if(window.screen.width>1400){
+        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 260
+      }else{
+        this.tableHeight = 300
+      }
     }
   }
 </script>
