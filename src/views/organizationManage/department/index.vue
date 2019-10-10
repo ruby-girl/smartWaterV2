@@ -175,7 +175,7 @@
         this.$confirm("是否删除当前信息", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          iconClass:"el-icon-question questionIcon",
           customClass: "warningBox",
           showClose: false
         }).then(() => {

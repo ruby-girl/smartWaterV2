@@ -165,9 +165,18 @@ export const asyncRoutes = [
       {
         path: 'meterSetUp',
         component: () => import('@/views/businessManagement/meterSetUp/index'),
-        name: 'MeterReadingPlan',
+        name: 'meterSetUp',
         meta: {
           title: '抄表设置',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'tableSeting',
+        component: () => import('@/views/businessManagement/tableSeting/index'),
+        name: 'tableSeting',
+        meta: {
+          title: '表册设置',
           roles: ['1']
         }
       }
