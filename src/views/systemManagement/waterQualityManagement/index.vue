@@ -48,38 +48,25 @@
             label="操作"
             align="center"
             class-name="small-padding"
-            min-width="150px"
+            width="313px"
             fixed="right"
           >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center" v-if="row.UserStatusCode=='ZC'">
-                <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']">
-                  <a>编辑</a>
+              <div class="display-flex justify-content-flex-center method-font">
+                <div class="main-color-warn" @click="handleUpdate(row)" v-permission="['1010106']">
+                  <a>水价构成</a>
                 </div>
-                <div class="main-color-red pl-15" @click="cancel(row)" v-permission="['1010105']">
-                  <a>注销</a>
+                <div class="pl-20" @click="cancel(row)" v-permission="['1010105']">
+                  <a>历史水价</a>
                 </div>
-                <div class="main-color pl-15" @click="reset(row)" v-permission="['1010107']">
-                  <a>重置密码</a>
+                <div class="main-color pl-20" @click="reset(row)" v-permission="['1010107']">
+                  <a>水价调整</a>
+                </div>
+                <div class="main-color-red pl-20" @click="cancel(row)" v-permission="['1010105']">
+                  <a>删除</a>
                 </div>
               </div>
-              <div v-else class="display-flex justify-content-flex-center">
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color" v-permission="['1010106']">
-                    <a>编辑</a>
-                  </div>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color pl-15" v-permission="['1010105']">
-                    <a>注销</a>
-                  </div>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color pl-15" v-permission="['1010107']">
-                    <a>重置密码</a>
-                  </div>
-                </el-tooltip>
-              </div>
+              
             </template>
           </el-table-column>
         </el-table>
@@ -136,7 +123,7 @@ export default {
         loginName: "", //账号,
         isLadder:'1',
         name:'羊',
-         num:11
+        num:11
       },
       restId: "", //重置行ID
       listQuery: {

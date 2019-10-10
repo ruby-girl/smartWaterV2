@@ -13,33 +13,20 @@
     <el-form
       ref="dataFormAdd"
       :rules="rules"
-      :model="tempSave"
+      :model="temp"
       :inline="true"
       class="form-inline-small-input dialog-title-border-shadow"
       size="small"
       label-width="120px"
     >
       <el-form-item label="是否执行阶梯计价">
-        <el-radio-group v-model="tempSave.isLadder">
-          <el-radio label="1" >是</el-radio>
+        <el-radio-group v-model="temp.isLadder">
+          <el-radio label="1">是</el-radio>
           <el-radio label="2">否</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
-    <components :is="LadderComponents" :tempSave="tempSave"></components>
-    <el-form
-      ref="dataFormAdd"
-      :rules="rules"
-      :model="tempSave"
-      :inline="true"
-      class="form-inline-small-input"
-      size="small"
-      label-width="130px"
-    >
-      <el-form-item label="开始执行日期：">
-        <el-date-picker v-model="value3" type="datetime" placeholder="选择日期时间"></el-date-picker>
-      </el-form-item>
-    </el-form>
+    <components :is="LadderComponents" :temp="temp" ref="childrenTemp"></components>
     <div slot="footer" class="dialog-footer">
       <el-button size="mini" type="primary" @click="updateData()">确认</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
@@ -50,7 +37,6 @@
 import { numGetAccount } from "@/api/account";
 import LadderTrue from "./LadderTrue";
 import LadderFalse from "./LadderFalse";
-import { setTimeout } from "timers";
 export default {
   props: {
     temp: {
@@ -62,12 +48,6 @@ export default {
     addShow: {
       type: Boolean,
       default: false
-    },
-    roleList: {
-      type: Array,
-      default: function() {
-        return [];
-      }
     }
   },
   components: {
@@ -83,13 +63,10 @@ export default {
         return;
       }
       this.$emit("update:addShow", val);
-    },
-    temp(val, oldVal) {
-      this.tempSave = Object.assign({}, val);
-    },
-    "tempSave.isLadder": {
+    }, 
+    "temp.isLadder": {
       handler(val, oldVal) {
-        if (val == '1') {
+        if (val == "1") {
           this.LadderComponents = "LadderTrue";
         } else {
           this.LadderComponents = "LadderFalse";
@@ -132,10 +109,6 @@ export default {
       }
     };
     return {
-      tempSave: {
-        isLadder:'1'
-      },
-      value3: new Date(),
       timevalue: [],
       LadderComponents: "LadderTrue",
       rules: {
@@ -164,6 +137,9 @@ export default {
     };
   },
   methods: {
+    updateData() {
+      console.info(this.$refs.childrenTemp.temp);
+    },
     userChange() {
       let _this = this;
       setTimeout(function() {
