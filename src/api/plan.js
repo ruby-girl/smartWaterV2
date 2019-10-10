@@ -25,14 +25,28 @@ export function planConpanySelect(data) {//抄表页面水厂下拉
   return request({
     url: '/SA_WaterFactory/ComboBoxListAuth',
     method: 'post',
-    data
+    params:data
   })
 }
-export function palnStateSelect(data) {//抄表状态下拉
+export function delPlanList(data) {//删除
   return request({
-    url: '/Dictionary/GetDictionaryListAll',
+    url: '/MeterReadPlan/DeleteMeterReadPlan',
+    method: 'post',
+    params:data
+  })
+}
+export function getCompanyPlanDate(data) {//增加计划根据水厂获取时间
+  return request({
+    url: '/MeterReadPlan/GetPlanStartTimeByFactory',
     method: 'get',
     params:data
   })
 }
-//POST /api/SA_WaterFactory/ComboBoxListAuthGET /api/Dictionary/GetDictionaryListAll
+export function addMeterReadingPlan(data) {//添加抄表计划
+  return request({
+    url: '/MeterReadPlan/ManualCreateMeterReadPlan',
+    method: 'post',
+    data
+  })
+}
+//POST /api/MeterReadPlan/ManualCreateMeterReadPlan

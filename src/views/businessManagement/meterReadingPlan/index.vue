@@ -2,10 +2,10 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head />
+        <select-head :companyOptions="companyParentOptions" />
       </div>
       <div class="table-top-btn-padding display-flex justify-content-flex-justify">
-        <el-button type="primary" size="mini" @click>
+        <el-button type="primary" size="mini" @click="addPlan">
           <i class="iconfont icontianjia"></i>新增抄表计划
         </el-button>
         <div>
@@ -66,7 +66,7 @@
                 v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
               >数据绑定</a>
               <a class="operation3">详情</a>
-              <a class="operation4">删除</a>
+              <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>
             </template>
           </el-table-column>
         </el-table>
@@ -78,6 +78,10 @@
           @pagination="searchTableList"
         />
       </div>
+      <Add-ReadingPlan
+        :add-show.sync="addDialogFormVisible"
+        :companyOptions="companyParentOptions"
+      />
     </div>
   </div>
 </template>
@@ -85,13 +89,21 @@
 import SelectHead from "./components/SelectHead"; //查询条件组件
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
-import { searchPlanList, exportPlanList, changeListState } from "@/api/plan"; //http 请求
+import AddReadingPlan from "./components/AddReadingPlan";
+import {
+  searchPlanList,
+  exportPlanList,
+  changeListState,
+  planConpanySelect,
+  delPlanList
+} from "@/api/plan"; //http 请求
 export default {
   name: "MeterReadingPlan",
   components: {
     SelectHead,
     customTable,
-    Pagination
+    Pagination,
+    AddReadingPlan
   },
   data() {
     return {
@@ -113,7 +125,9 @@ export default {
       total: 0,
       tableKey: 0,
       tableHeight: 0,
-      customHeight: "" //自定义高度
+      customHeight: "", //自定义高度
+      addDialogFormVisible: false,
+      companyParentOptions: []
     };
   },
   computed: {
@@ -132,7 +146,6 @@ export default {
   },
   watch: {
     customHeight() {
-      console.log(this.customHeight);
       //获取自定义模块高度
       let that = this;
       that.$nextTick(() => {
@@ -143,6 +156,16 @@ export default {
           58;
       });
     }
+  },
+  created() {
+    let that = this;
+    planConpanySelect().then(res => {
+      if (res.code == 0) {
+        that.companyParentOptions = [];
+        that.companyParentOptions = res.data;
+        console.log(that.companyParentOptions);
+      }
+    });
   },
   mounted: function() {
     this.$nextTick(function() {
@@ -162,9 +185,26 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
     },
+    delMeterReadingPlan(id) {
+      //删除
+      let that=this
+      delPlanList({ SA_MeterReadPlan_Id: id }).then(res => {
+        if (res.code == 0) {
+          that.$message({
+            message: res.msg?res.msg:"删除成功",
+            type: "success"
+          });
+          that.searchTableList();
+        } else {
+          that.$message({
+            message: res.msg,
+            type: "warning"
+          });
+        }
+      });
+    },
     sortChanges({ column, prop, order }) {
       //排序
-      console.log(column, prop, order);
       this.selectHead.page = 1;
       this.selectHead.filed = prop;
       this.selectHead.sort =
@@ -187,6 +227,11 @@ export default {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
+
+    //新增抄表计划
+    addPlan() {
+      this.addDialogFormVisible = true;
+    },
     changeInput(id, state) {
       //数据绑定or 数据补录
       let that = this;
@@ -200,7 +245,7 @@ export default {
             message: res.msg,
             type: "success"
           });
-          that.searchTableList()
+          that.searchTableList();
         } else {
           that.$message({
             message: res.msg,

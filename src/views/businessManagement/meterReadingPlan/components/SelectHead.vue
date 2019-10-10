@@ -13,7 +13,7 @@
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
-      <el-option label="全部" value="-1"></el-option>
+        <el-option label="全部" value="-1"></el-option>
         <el-option
           v-for="item in companyOptions"
           :key="item.Id"
@@ -28,7 +28,7 @@
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
-      <el-option label="全部" value="-1"></el-option>
+        <el-option label="全部" value="-1"></el-option>
         <el-option
           v-for="item in planStateOptions"
           :key="item.Id"
@@ -64,13 +64,18 @@
 <script>
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { getDictionaryOption } from "@/utils/permission";
-import { planConpanySelect } from "@/api/plan";
 export default {
+  props: {
+    companyOptions: {
+      type: Array,
+      default: []
+    }
+  },
   data() {
     return {
       selectHead: {},
       warterMeterPlanDate: [],
-      companyOptions: [],
+      //companyOptions: [],
       planStateOptions: []
     };
   },
@@ -78,16 +83,7 @@ export default {
     handleFilter() {
       this.$parent.searchTableList();
     },
-    getCompany() {
-      //水厂下拉
-      let that = this;
-      planConpanySelect().then(res => {
-        if (res.code == 0) {
-          that.companyOptions = [];
-          that.companyOptions = res.data;
-        }
-      });
-    },
+   
     getTime() {
       //时间格式化
       const date = this.warterMeterPlanDate;
@@ -102,7 +98,6 @@ export default {
   },
   mounted() {
     this.selectHead = this.$parent.selectHead;
-    this.getCompany();
     this.planStateOptions = [];
     this.planStateOptions = getDictionaryOption("抄表计划状态");
   }
