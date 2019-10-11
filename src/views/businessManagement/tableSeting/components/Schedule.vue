@@ -31,7 +31,7 @@
   import { WaterFactoryComboBoxList, BlockAreaUpDate, BlockAreaAdd  } from "@/api/organize"//http 请求
 
   export default {
-    name: "schedule",
+    name: "Schedule",
     data() {
       return {
         waterFactory:[],

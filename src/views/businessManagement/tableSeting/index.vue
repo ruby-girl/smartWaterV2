@@ -72,24 +72,28 @@
     <Dialog ref="childDialog"></Dialog>
     <!--编辑或新增窗口 e-->
     <!--表册移交 s-->
-    <schedule ref="childSchedule"></schedule>
+    <Schedule ref="childSchedule"></Schedule>
     <!--表册移交 e-->
+    <!--表册用户定位弹窗 s-->
+    <FormsDialog ref="formsDialog"></FormsDialog>
+    <!--表册用户定位弹窗 e-->
   </div>
 </template>
 
 <script>
   import '@/styles/organization.scss'
   import Dialog from './components/Dialog'//新增或添加组建
-  import schedule from './components/schedule'//表册
+  import Schedule from './components/Schedule'//表册
   import customTable from '@/components/CustomTable/index'//自定义组建
   import SelectHead from './components/SelectHead'//查询条件组建
+  import FormsDialog from './components/FormsDialog'//查询条件组建
   import Pagination from '@/components/Pagination/index'//分页
   import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"//http 请求
   import { parseTime } from "@/utils/index"
 
   export default {
     name: 'tableSeting',
-    components: { customTable, Pagination, SelectHead, Dialog, schedule },
+    components: { customTable, Pagination, SelectHead, Dialog, Schedule, FormsDialog },
     data() {
       return {
         ID:'',
@@ -110,7 +114,7 @@
         tableData: [],//表格数据
         checkAllData: [],
         checksData: [],
-        customHeight: ''//自定义高度
+        customHeight: '',//自定义高度
       }
     },
     computed: {
@@ -212,6 +216,9 @@
           this.sbap.page = 1
           this.searchFun()
         }
+      },
+      setChildFun(){//触发表册用户定位弹框
+        this.$refs.formsDialog.formsVisible = true
       }
     },
     mounted() {

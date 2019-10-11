@@ -49,7 +49,7 @@
         type="primary"
         style="width:100%;margin-top:12px;font-size:20px;font-weight:ormal;"
         @click.native.prevent="handleLogin"
-  
+
       >登&nbsp;&nbsp;录</el-button>
     </el-form>
      <transition name="fade">
@@ -68,7 +68,7 @@
             <!---->
             <li data-v-37dfd6fc class="el-select-dropdown__item" @click.stop.prevent="selectedUser(item)" v-for="item in optionList" style>
               <span>{{item}}</span>
-           
+
             </li>
           </ul>
         </div>
@@ -104,7 +104,7 @@ export default {
       setTimeout(function(){
         if (!_this.loginForm.username) {
         callback(new Error("不能为空"));
-   
+
       } else {
         callback();
       }
@@ -175,7 +175,7 @@ export default {
      setNum() {
       let value=this.loginForm.password
      if(value.length>=this.loginForm.passwordSave.length){
-       this.loginForm.passwordSave+=value.substr(this.loginForm.passwordSave.length,value.length-this.loginForm.passwordSave.length) 
+       this.loginForm.passwordSave+=value.substr(this.loginForm.passwordSave.length,value.length-this.loginForm.passwordSave.length)
      }else{
        this.loginForm.passwordSave=this.loginForm.passwordSave.substr(0,value.length)
      }
@@ -184,7 +184,7 @@ export default {
     selectedUser(val){
       if(this.loginForm.username!==val){
         this.loginForm.password=''
-      }  
+      }
       this.loginForm.username=val
 
       this.$refs.username.focus();

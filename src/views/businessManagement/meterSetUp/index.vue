@@ -39,7 +39,6 @@
           </template>
           <el-table-column label="操作" width="200px" align="center" fixed="right">
             <template slot-scope="scope">
-              <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
               <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDelete">删除</a>
               <el-tooltip v-else effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start">
                 <a style="color: #C0C8CC;margin: 10px;">删除</a>
@@ -88,11 +87,13 @@
           limit: 10,
           filed:'',
           sort:"",
-          BlockAreaName: '',//片区名称
-          editUserId: '-1',//操作者
-          editStartTime: '',//操作开始结束时间
-          editEndTime: '',
-          tableId: '0000007'
+          SA_MeterReadPlan_Id:'',//抄表计划ID
+          SA_MeterReader_Id:'',//抄表员ID
+          SA_RegisterBookInfo_Id:'',//表册ID
+          CustomerQueryType:'1',//用户类型
+          CustomerQueryValue:'',//用户类型数值
+          MeterReadState:'',//抄表状态
+          tableId: '0000014'
         },
         tableData: [],//表格数据
         checkAllData: [],
@@ -120,7 +121,9 @@
           if(this.screeWidth>1400){
             self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 260
           }else{
-            self.tableHeight = 300
+            self.tableHeight = 340
+            document.getElementsByClassName('cl-container')[0].style.overflow = 'auto'
+            document.getElementsByClassName('cl-container')[0].style.height = 'auto'
           }
         })
       }
@@ -195,10 +198,13 @@
       this.screeWidth = window.screen.width
       this.$refs.myChild.GetTable(this.sbap.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-      if(window.screen.width>1400){
+
+      if (window.screen.width > 1400) {
         this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 260
-      }else{
-        this.tableHeight = 300
+      } else {
+        this.tableHeight = 340
+        document.getElementsByClassName('cl-container')[0].style.overflow = 'auto'
+        document.getElementsByClassName('cl-container')[0].style.height = 'auto'
       }
     }
   }

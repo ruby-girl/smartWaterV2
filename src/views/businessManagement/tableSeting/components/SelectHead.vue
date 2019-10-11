@@ -48,7 +48,7 @@
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
             <el-form-item style="text-align: right;width: 100%">
-              <el-button style="margin-right: 17px;background: #75C200;border: solid 1px #75C200;" type="primary" size="mini" class="cl-search" @click="searchFun"><i class="el-icon-location-outline"></i>
+              <el-button @click="getListUser()" style="margin-right: 17px;background: #75C200;border: solid 1px #75C200;" type="primary" size="mini" class="cl-search"><i class="el-icon-location-outline"></i>
                 用户表册定位
               </el-button>
             </el-form-item>
@@ -101,6 +101,9 @@
             });
           }
         })
+      },
+      getListUser(){
+        this.$parent.setChildFun()
       },
     },
     mounted() {
