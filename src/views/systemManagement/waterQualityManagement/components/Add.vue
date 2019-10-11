@@ -27,7 +27,7 @@
     </el-form>
     <components :is="LadderComponents" :temp="temp" ref="childrenTemp" :type-list="typeList"></components>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="updateData()">确认</el-button>
+      <el-button size="mini" type="primary" @click="createData()">确认</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
@@ -36,6 +36,13 @@
 import { numGetAccount } from "@/api/account";
 import LadderTrue from "./LadderTrue";
 import LadderFalse from "./LadderFalse";
+const actions = {
+  '0': ['OneLadderWaterNum','OneLadderPrice','OneTotalPrice'],
+  '1': ['TwoLadderWaterNum','TwoLadderPrice','TwoTotalPrice'],
+  '2': ['ThreeLadderWaterNum','ThreeLadderPrice','ThreeTotalPrice'],
+  '3': ['FourLadderWaterNum','FourLadderPrice','FourTotalPrice'],
+  '4':['FiveLadderWaterNum','FiveLadderPrice','FiveTotalPrice'],
+}
 export default {
   props: {
     temp: {
@@ -68,7 +75,7 @@ export default {
         return;
       }
       this.$emit("update:addShow", val);
-    }, 
+    },
     "temp.isLadder": {
       handler(val, oldVal) {
         if (val == "1") {
@@ -99,34 +106,12 @@ export default {
   },
   methods: {
     updateData() {
-      this.$refs["dataFormAdd"].validate(valid => {
+      this.$refs["childrenTemp"].$refs["dataFormTrue"].validate(valid => {
         if (!valid) return false;
-        else {      
+        else {
           this.$emit("updateData", this.temp);
         }
       });
-    },
-    userChange() {
-      let _this = this;
-      setTimeout(function() {
-        _this.userOptions = _this.userOptionsSave;
-      }, 500);
-    },
-    selectOption(query) {
-      if (query !== "" && query) {
-        this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-          this.userOptions = this.userOptionsSave.filter(item => {
-            return (
-              item.EmpName.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
-              item.EmpNo.indexOf(query.toLowerCase()) > -1
-            );
-          });
-        }, 200);
-      } else {
-        this.userOptions = this.userOptionsSave;
-      }
     },
     setNum() {
       let value = this.temp.loginPwdSave;
@@ -140,14 +125,68 @@ export default {
       }
       this.temp.loginPwdSave = this.temp.loginPwdSave.replace(/./g, "*");
     },
+    // 新增
     createData() {
-      this.$refs["dataFormAdd"].validate(valid => {
+      let judge=this.temp.isLadder==1?"dataFormTrue":"dataFormFalse"
+      this.$refs["childrenTemp"].$refs[judge].validate(valid => {
         if (!valid) return false;
         else {
-          this.temp.loginPwd = this.passwordSave;
+          if(this.temp.isLadder==1){
+            if(!this.validateTrue()){
+              return false
+            }
+          }
+          this.temp.isLadder==1?this.temp.IsLadder=true:this.temp.IsLadder=false
           this.$emit("createData", this.temp);
         }
       });
+    },
+    // 验证为有阶梯时
+    validateTrue() {
+      // 去第一个阶段
+      let LadderNumber = this.temp.LadderNumber;
+      let arr = this.temp.ladder.filter(function(item, i) {
+        return i !== 0 && i < LadderNumber;
+      });
+      // 有为空的阶段
+      let notNum = arr.filter(item => {
+        return (
+          item.LadderPrice == 0 ||
+          item.LadderWaterNum == 0 ||
+          item.TotalPrice == 0
+        );
+      });
+      if (notNum.length > 0) {
+        this.$message({
+          message: "请正确填写已添加的阶段！",
+          type: "error",
+          duration: 4000
+        });
+        return false;
+      }
+      let arrFirst = this.temp.ladder.filter(function(item, i) {
+        return i == 0 && (item.LadderPrice == 0 || item.TotalPrice == 0);
+      });
+      if (arrFirst.length > 0) {
+        this.$message({
+          message: "请正确填写已添加的阶段！",
+          type: "error",
+          duration: 4000
+        });
+        return false;
+      } else {
+        // 阶梯数组赋值给对象
+        this.setLadder()
+        return true;
+      }
+    },
+    // 阶梯赋值
+    setLadder(){
+        this.temp.ladder.map(function(item,i){     
+          this.temp[actions[i][0]]=item.LadderWaterNum
+          this.temp[actions[i][1]]=item.LadderPrice
+          this.temp[actions[i][2]]=item.TotalPrice
+        },this)
     },
     addDialogClose() {
       this.$nextTick(() => {

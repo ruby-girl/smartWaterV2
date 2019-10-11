@@ -2,32 +2,33 @@
   <!-- 新增弹窗 -->
 
   <el-form
-    ref="dataFormAdd"
+    ref="dataFormFalse"
     :model="temp"
     :inline="true"
+    :rules="rules"
     class="form-inline-small-input ladder-form-padding"
     size="small"
-    label-width="100px"
+    label-width="110px"
   >
-    <el-form-item label="用水性质：">
+    <el-form-item label="用水性质：" prop="UseWaterTypeName">
       <el-input
         v-model="temp.UseWaterTypeName"
         placeholder="长度1-50"
         maxlength="50"
       />
     </el-form-item>
-    <el-form-item label="用水性质类型：">
+    <el-form-item label="用水性质类型：" prop="WaterPropertyType">
       <el-select v-model="temp.WaterPropertyType" placeholder="请选择">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="阶梯结算月数：">
+    <el-form-item label="阶梯结算月数：" prop="LadderResetTime">
       <el-select v-model="temp.LadderResetTime" placeholder="请选择">
         <el-option  v-for="item in 12" :key="item" :label="item" :value="item"/>     
       </el-select>
     </el-form-item>
-    <el-form-item label="污水费：">
+    <el-form-item label="污水费：" prop="SewagePrice">
       <el-input v-model="temp.SewagePrice" @blur="changeTwoDecimal_x($event)" @keyup.native="money($event)"
       />
     </el-form-item>
@@ -44,13 +45,13 @@
       />
     </el-form-item>
     <div class="ladder-box">
-     <el-form-item label="单价：" label-width="80px">
+     <el-form-item label="单价：" label-width="80px" prop="NotLadderPrice">
       <el-input
-        v-model="temp.num"
+        v-model="temp.NotLadderPrice"
         @blur="changeTwoDecimal_x($event)" @keyup.native="money($event)"
       />
     </el-form-item>
-    <el-form-item label="合计单价：" label-width="100px">
+    <el-form-item label="合计单价：" label-width="100px" prop="TotalPrice">
       <el-input
         v-model="temp.TotalPrice"
         @blur="changeTwoDecimal_x($event)" @keyup.native="money($event)"
@@ -83,7 +84,15 @@ export default {
   mounted() {},
   data() {
     return {
-      ladder:[{type:1,num:0,start:0,tot:20},{type:2,num:0,start:0,tot:20},{type:3,num:0,start:0,tot:20}]
+      ladder:[{type:1,num:0,start:0,tot:20},{type:2,num:0,start:0,tot:20},{type:3,num:0,start:0,tot:20}],
+      rules: {
+        UseWaterTypeName: [{ required: true, message: "不能为空", trigger: "blur" }],
+        WaterPropertyType: [{ required: true, message: "不能为空", trigger: "blur" }],
+        LadderResetTime: [{ required: true, message: "不能为空", trigger: "blur" }],
+        SewagePrice: [{ required: true, message: "不能为空", trigger: "blur" }],
+        NotLadderPrice: [{ required: true, message: "不能为空", trigger: "blur" }],
+        TotalPrice: [{ required: true, message: "不能为空", trigger: "blur" }]
+      },
     };
   },
   methods: {

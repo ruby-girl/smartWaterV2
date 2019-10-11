@@ -7,21 +7,22 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item label="用水性质">
-      <el-select v-model="selectHead.roldId" placeholder="请选择" @keydown.enter.native="handleFilter">
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
+    <el-form-item label="用水性质" label-width="58px">
+      <el-input
+        v-model="selectHead.WaterPropertyName"
+        placeholder="长度1-50"
+        maxlength="50"
+      />
     </el-form-item>
     <el-form-item label="是否阶梯 ">
-      <el-select v-model="selectHead.userState" placeholder="请选择" @keydown.enter.native="handleFilter">
+      <el-select v-model="selectHead.IsLadder" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
          <el-option label="是" value="1" />
           <el-option label="否" value="0" />
       </el-select>
     </el-form-item>
     <el-form-item label="用水性质类型 " label-width="100px">
-      <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
+      <el-select v-model="selectHead.WaterPropertyType" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>

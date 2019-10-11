@@ -26,7 +26,6 @@
           fit
           :height="tableHeight"
           style="width: 100%;"
-          :cell-class-name="cellClass"
           :header-cell-style="{'background-color': '#F0F2F5'}"
           :cell-style="{'padding':'7px 0'}"
           @sort-change="sortChanges"
@@ -35,11 +34,11 @@
           <template v-for="(item ,index) in tableHead">
             <el-table-column
               :key="index"
-              :min-width="item.ColProp=='EditTime'?'160px':'110px'"
+              min-width="160px"
               :prop="item.ColProp"
               align="center"
               sortable="custom"
-              :label="item.ColDesc"
+              :label="item.ColDesc"          
             />
           </template>
           <el-table-column
@@ -51,7 +50,7 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex justify-content-flex-center method-font">
-                <div class="main-color-warn" @click="handleUpdate(row)" v-permission="['1010106']">
+                <div class="main-color-warn" @click="constitute(row)" v-permission="['1010106']">
                   <a>水价构成</a>
                 </div>
                 <div class="pl-20" @click="cancel(row)" v-permission="['1010105']">
@@ -81,6 +80,10 @@
           @updateData="updateData"
           :type-list="typeList"
         />
+        <water-constitute
+          :constitute-show.sync="constituteShow"
+          :id="constituteId"
+        />
       </div>
     </div>
   </div>
@@ -90,17 +93,14 @@ import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import AddDialog from "./components/Add";
+import WaterConstitute from "./components/WaterConstitute";
 import { getDictionaryOption } from "@/utils/permission";
 import {
-  getAccountList,
-  getAccountDetail,
-  deitAccount,
-  addAccount,
-  cancelAccount,
-  exportExcel
-} from "@/api/account";
+  addWaterQuality,
+  delWaterQuality,
+  getWaterQualityList
+} from "@/api/system";
 import {parseStartTime} from "@/utils/index.js"
-import { getRoles } from "@/api/role"; //获取角色下拉框
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   name: "WaterQualityManagement",
@@ -109,7 +109,8 @@ export default {
     SelectHead,
     Pagination,
     customTable,
-    AddDialog
+    AddDialog,
+    WaterConstitute
   },
   data() {
     return {
@@ -125,20 +126,15 @@ export default {
         limit: 10,
         sort: "", //升序
         filed: "", //排序字段
-        roldId: "-1", // 角色ID
-        userState: "-1", // 账号状态
-        empNo: "", // 人员编号
-        empName: "", //人员姓名
-        loginName: "", //账号
-        editUserId: "-1", // 操作人
-        editStartTime: "", // 操作时间起
-        editEndTime: "", // 操作时间止
-        tableId: "00000012"
+        WaterPropertyName: "", // 用水性质名称
+        WaterPropertyType : "-1", // 用水性质类型
+        IsLadder:"-1",//是否阶梯
+        tableId: "0000012"
       },
       typeList: [], //用水性质类型，传递给组件
       addDialogFormVisible: false, // 新增弹窗
-      dialogFormVisible: false, // 编辑弹窗
-      resetdialogFormVisible: false, // 重置弹窗
+      constituteShow: false, // 水价构成弹窗
+      constituteId:'0',//水价构成行ID
       tableData: [],
       checksData: []
     };
@@ -164,10 +160,9 @@ export default {
     });
   },
   methods: {
-    cellClass({ row, column, rowIndex, columnIndex }) {
-      if (row.UserStatusCode == "ZX" && column.property == "UserStatus") {
-        return "main-color-red";
-      }
+    // 点击水价构成
+    constitute(r){
+      this.constituteShow=true
     },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
@@ -175,7 +170,7 @@ export default {
       else this.tableHeight = this.tableHeight + 80;
     },
     getList() {
-      getAccountList(this.listQuery).then(res => {
+      getWaterQualityList(this.listQuery).then(res => {
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -232,6 +227,7 @@ export default {
         OtherPrice1: 0,//其他费用1
         OtherPrice2: 0,//其他费用2
         OtherPrice3: 0,//其他费用3
+        NotLadderPrice:0,//单价
         TotalPrice: 0,//合计单价
         ladder: [
           { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
@@ -243,17 +239,19 @@ export default {
       },
       this.addDialogFormVisible = true;
     },
+    // 新增
     createData() {
-      addAccount(this.temp).then(res => {
+      addWaterQuality(this.temp).then(res => {
         this.addDialogFormVisible = false;
         this.$message({
-          message: res.message,
+          message: '添加成功！',
           type: "success",
           duration: 4000
         });
         this.getList();
       });
     },
+    // 编辑
     updateData() {
       console.log(this.temp)
       // deitAccount(this.temp).then(res => {
@@ -283,10 +281,6 @@ export default {
           this.getList();
         });
       });
-    },
-    reset(row) {
-      this.restId = row.Id;
-      this.resetdialogFormVisible = true;
     },
     excel() {
       //导出
