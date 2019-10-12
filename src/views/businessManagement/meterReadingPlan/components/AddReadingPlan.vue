@@ -36,9 +36,7 @@
         <el-date-picker v-model="addPlanData.EndPlanDate" type="datetime" default-time="23:59:59" placeholder="选择日期时间"></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-radio-group v-model="addPlanData.IsAutoGenerateOrder">
-          <el-radio label="true">抄表计划到期后自动生成订单</el-radio>
-        </el-radio-group>
+        <el-checkbox v-model="addPlanData.IsAutoGenerateOrder">抄表计划到期后自动生成订单</el-checkbox>
       </el-form-item>
     </el-form>
 
