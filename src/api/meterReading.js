@@ -18,7 +18,7 @@ export function LoadRegisterBookAndMeterReader(data) {
   return request({
     url: '/MeterReading/LoadRegisterBookAndMeterReader',
     method: 'post',
-    data: data
+    params: data
   })
 }
 
@@ -29,7 +29,7 @@ export function MeterReadingLocationQuery(data) {
   return request({
     url: '/MeterReading/MeterReadingLocationQuery',
     method: 'post',
-    data: data
+    params: data
   })
 }
 
@@ -51,7 +51,7 @@ export function MeterReadingProcessQuery(data) {
   return request({
     url: '/MeterReading/MeterReadingProcessQuery',
     method: 'post',
-    data: data
+    params: data
   })
 }
 
@@ -62,6 +62,17 @@ export function MeterReadingProcessQuery(data) {
 export function WaterYieldPricePredict(data) {
   return request({
     url: '/MeterReading/WaterYieldPricePredict',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ *机械表抄表
+ * */
+export function getReading(data) {
+  return request({
+    url: '/MeterReading/Reading',
     method: 'post',
     data: data
   })

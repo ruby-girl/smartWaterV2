@@ -11,7 +11,7 @@
           <!--自定义组建 e-->
         </div>
         <!--列表组建 s-->
-        <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
+        <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges" highlight-current-row ref="multipleTable" @row-click="getCurInfo">
           <el-table-column
             type="index"
             label="序号"
@@ -37,27 +37,23 @@
               :align="item.Position"
               :label="item.ColDesc"/>
           </template>
-          <el-table-column label="操作" width="200px" align="center" fixed="right">
+          <el-table-column label="操作" width="100px" align="center" fixed="right">
             <template slot-scope="scope">
-              <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDelete">删除</a>
-              <el-tooltip v-else effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start">
-                <a style="color: #C0C8CC;margin: 10px;">删除</a>
-              </el-tooltip>
+              <a class="operation2" @click="handleDelete(scope.$index, scope.row)">删除</a>
             </template>
           </el-table-column>
         </el-table>
         <pagination
-          v-show="total>0"
           :total="total"
-          :page.sync="sbap.page"
-          :limit.sync="sbap.limit"
+          :page.sync="param.page"
+          :limit.sync="param.limit"
           @pagination="searchFun"/>
         <!--列表组建 e-->
       </div>
 
       <!--抄表计划组建 s-->
-      <MeterPlan v-if="screeWidth>1400"></MeterPlan>
-      <MeterPlanSmall v-else></MeterPlanSmall>
+      <MeterPlan v-if="screeWidth>1400" ref="planchild1"></MeterPlan>
+      <MeterPlanSmall v-else ref="planchild2"></MeterPlanSmall>
       <!--抄表计划组建 e-->
     </div>
   </div>
@@ -71,6 +67,8 @@
   import MeterPlanSmall from './components/MeterPlanSmall'//查询条件组建
   import Pagination from '@/components/Pagination/index'//分页
   import { BlockAreaGetList, BlockAreaUpDate, BlockAreaDelete, BlockAreaGetObjById } from "@/api/organize"//http 请求
+
+  import { MeterReadingPageQuery, MeterReadingProcessQuery } from "@/api/meterReading"
   import { parseTime } from "@/utils/index"
 
   export default {
@@ -82,7 +80,7 @@
         waterFactory:[],//水厂数据集合
         tableHeight: null,//表格高度
         total: 0,
-        sbap: {//查询条件对象集
+        param: {//查询条件对象集
           page: 1,
           limit: 10,
           filed:'',
@@ -99,7 +97,7 @@
         checkAllData: [],
         checksData: [],
         customHeight: '',//自定义高度
-        screeWidth:''
+        screeWidth:'',
       }
     },
     computed: {
@@ -119,7 +117,7 @@
         let self = this
         self.$nextTick(() => {
           if(this.screeWidth>1400){
-            self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 260
+            self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 300
           }else{
             self.tableHeight = 340
             document.getElementsByClassName('cl-container')[0].style.overflow = 'auto'
@@ -137,8 +135,8 @@
         this.ID = row.Id
 /*        this.$refs.childDialog.dialogVisible = true
         this.$refs.childDialog.title = '编辑'*/
-        let sbap = {Id: row.Id}
-        BlockAreaGetObjById(sbap).then(res => {
+        let param = {Id: row.Id}
+        BlockAreaGetObjById(param).then(res => {
           if (res.code == 0) {
            /* this.$refs.childDialog.ruleForm.newAreaName = res.data.BlockAreaName
             this.$refs.childDialog.ruleForm.waterFactoryName = res.data.WfList*/
@@ -172,10 +170,40 @@
         })
       },
       searchFun() {//查询事件
-        BlockAreaGetList(this.sbap).then(res => {
+        let param = Object.assign({}, this.param);//赋值对象转换参数类型
+        param.CustomerQueryType !='' ? param.CustomerQueryType = parseInt(param.CustomerQueryType) : ''
+        param.MeterReadState !=''? param.MeterReadState = parseInt(param.MeterReadState) : ''
+        MeterReadingPageQuery(param).then(res => {
           if (res.code ==0 ) {
-            this.total = res.count;
-            this.tableData = res.data;
+            let _this = this,datas = res.data
+            _this.tableData = res.data.tableDatas;
+            _this.total = res.count;
+
+            if(res.count>0) {
+              let curNum = 0;
+              if (datas.IsLocation) {//判断是否需要定位
+                _this.param.page = datas.PageIndex//定位页数
+                curNum = datas.RowIndex//定为当前页行数
+              } else {
+                curNum = 0;
+              }
+              _this.$nextTick(() => {//选中默认行
+                _this.$refs.multipleTable.setCurrentRow(_this.$refs.multipleTable.data[curNum]);
+                _this.screeWidth>1400?_this.$refs.planchild1.currentContract = _this.$refs.multipleTable.data[curNum]:_this.$refs.planchild2.currentContract = _this.$refs.multipleTable.data[curNum]
+              })
+            }
+            MeterReadingProcessQuery({'SA_MeterReadPlan_Id':this.param.SA_MeterReadPlan_Id,'SA_RegisterBookInfo_Id':this.param.SA_RegisterBookInfo_Id}).then(res => {//抄表进度
+              if (res.code ==0 ) {
+                  this.screeWidth>1400 ? this.$refs.planchild1.meterData = res.data : this.$refs.planchild2.meterData = res.data
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: 'warning',
+                  duration: 4000
+                });
+              }
+            })
+
           } else {
             this.$message({
               message: res.message,
@@ -186,21 +214,24 @@
         })
       },
       sortChanges({prop, order }){//排序
-        this.sbap.filed = prop
-        this.sbap.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        this.param.filed = prop
+        this.param.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
         if(this.tableData.length>0){
-          this.sbap.page = 1
+          this.param.page = 1
           this.searchFun()
         }
+      },
+      getCurInfo(row){//表格选中事件
+        this.screeWidth>1400?this.$refs.planchild1.currentContract = row : this.$refs.planchild2.currentContract = row
       }
     },
     mounted() {
       this.screeWidth = window.screen.width
-      this.$refs.myChild.GetTable(this.sbap.tableId);
+      this.$refs.myChild.GetTable(this.param.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
 
       if (window.screen.width > 1400) {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 260
+        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 300
       } else {
         this.tableHeight = 340
         document.getElementsByClassName('cl-container')[0].style.overflow = 'auto'
