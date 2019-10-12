@@ -32,17 +32,66 @@
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
         @sort-change="sortChanges"
+        ref="cargoTable"
       >
-        <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
-        <template v-for="(item ,index) in tableHead">
-          <el-table-column
-            :key="index"
-            min-width="160px"
-            :prop="item.ColProp"
-            align="center"
-            sortable="custom"
-            :label="item.ColDesc"
-          />
+        <el-table-column type="expand" width="1" class="row-expand-cover">
+          <template slot-scope="props">
+            <div class="ladder-box display-flex justify-content-flex-justify align-items-center">
+              <div>
+                污水费：
+                <span class="color-more-black">20元/吨</span>
+              </div>
+              <div>
+                其他费用1：
+                <span class="color-more-black">20元/吨</span>
+              </div>
+              <div>
+                其他费用2：
+                <span class="color-more-black">20元/吨</span>
+              </div>
+            </div>
+            <div v-if="details.IsLadder">
+              <div v-for="(item,i) in details.ladder" class="ladder-bottom-box">
+                <div
+                  class="display-flex justify-content-flex-justify"
+                  v-if="details.LadderNumber>i"
+                >
+                  <div class="display-flex align-items-center ladder-item">
+                    <div class="circle-num">{{i+1}}</div>
+                    <span>{{i+1}}阶单价：</span>
+                    <div class="table-input-y">
+                      <span>{{item.LadderPrice}}元/吨</span>
+                    </div>
+                  </div>
+                  <div class="display-flex align-items-center ladder-item">
+                    <span>{{i+1}}阶起始量：</span>
+                    <div class="table-input-y">
+                      <span>{{item.LadderWaterNum}}吨</span>
+                    </div>
+                  </div>
+                  <div class="display-flex align-items-center ladder-item color-more-black">
+                    <span>{{i+1}}阶合计单价：</span>
+                    <div class="table-input-y">
+                      <span>{{item.TotalPrice}}元/吨</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column type="index" fixed="left" label="序号" width="50" align="center" />
+        <template>
+          <div v-for="(item ,index) in tableHead" :key="index">
+            <el-table-column
+              :key="index"
+              min-width="160px"
+              :prop="item.ColProp"
+              align="center"
+              sortable="custom"
+              :label="item.ColDesc"
+            />
+          </div>
         </template>
         <el-table-column
           label="操作"
@@ -53,7 +102,7 @@
         >
           <template slot-scope="{row}">
             <div class="display-flex justify-content-flex-center method-font">
-              <div class="main-color-warn" @click="constitute(row)" v-permission="['1010106']">
+              <div class="main-color-warn" @click="constitute(row)">
                 <a>水价构成</a>
               </div>
             </div>
@@ -73,7 +122,10 @@
 <script>
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
-import { GetWaterPropertyById } from "@/api/system";
+import {
+  GetWaterPropertyById,
+  SelectUpdateWaterPropertyBeforeInfo
+} from "@/api/system";
 const actions = {
   "0": ["OneLadderWaterNum", "OneLadderPrice", "OneTotalPrice"],
   "1": ["TwoLadderWaterNum", "TwoLadderPrice", "TwoTotalPrice"],
@@ -102,10 +154,11 @@ export default {
     historyShow() {
       this.AdialogFormVisible = this.historyShow;
       let _this = this;
+
+      if (!this.historyShow) return false; //如果监听ID，编辑行数据后，ID依然不会变，所以在弹窗显示再请求数据
       setTimeout(function() {
         _this.getTabel();
       }, 500);
-      if (!this.historyShow) return false; //如果监听ID，编辑行数据后，ID依然不会变，所以在弹窗显示再请求数据
       this.getList();
     },
     AdialogFormVisible(val, oldVal) {
@@ -129,7 +182,7 @@ export default {
       AdialogFormVisible: false,
       tableData: [],
       checksData: [],
-      
+      a: false,
       total: 0,
       listQuery: {
         // 查询条件
@@ -138,6 +191,15 @@ export default {
         sort: "", //升序
         filed: "", //排序字段
         tableId: "0000013"
+      },
+      details: {
+        ladder: [
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
+        ]
       }
     };
   },
@@ -153,10 +215,23 @@ export default {
         }
       );
     },
-    constitute() {},
+    // 点击水价构成
+    constitute(row) {
+      this.toogleExpandCargo(row);
+      SelectUpdateWaterPropertyBeforeInfo({ id: row.Id }).then(res => {
+        this.details = { ...res.data, ...this.details };
+        this.details.ladder.map(function(item, i) {
+          this.details.ladder[i].LadderWaterNum = this.details[actions[i][0]];
+          this.details.ladder[i].LadderPrice = this.details[actions[i][1]];
+          this.details.ladder[i].TotalPrice = this.details[actions[i][2]];
+        }, this);
+      });
+    },
     getList() {
-      //   GetWaterPropertyById({id:this.id},this.listQuery).then(res => {
-      //   });
+      GetWaterPropertyById({ id: this.id }, this.listQuery).then(res => {
+        this.total = res.count;
+        this.tableData = res.data;
+      });
     },
     sortChanges({ prop, order }) {
       //筛选
@@ -168,10 +243,25 @@ export default {
     },
     setCustomData() {
       this.$refs.historyPrice.isCustom = !this.$refs.historyPrice.isCustom;
+    },
+    toogleExpandCargo(row) {
+      let $table = this.$refs.cargoTable;
+      this.tableData.map(item => {
+        if (row.Id != item.Id) {
+          $table.toggleRowExpansion(item, false);
+        }
+      });
+      $table.toggleRowExpansion(row);
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+// /deep/ .el-table__expanded-cell{
+//     width:200px !important;
+// }
+/deep/ .el-table__expand-icon {
+  display: none;
+}
 </style>
 

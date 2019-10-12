@@ -31,8 +31,9 @@
           @sort-change="sortChanges"
         >
           <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
-          <template v-for="(item ,index) in tableHead">
-            <el-table-column
+          <template>
+            <div v-for="(item ,index) in tableHead" :key="index">
+              <el-table-column
               :key="index"
               min-width="160px"
               :prop="item.ColProp"
@@ -40,6 +41,7 @@
               sortable="custom"
               :label="item.ColDesc"          
             />
+            </div>
           </template>
           <el-table-column
             label="操作"
