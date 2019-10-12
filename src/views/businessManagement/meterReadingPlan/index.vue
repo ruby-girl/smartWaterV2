@@ -52,9 +52,15 @@
               :label="item.ColDesc"
             />
           </template>
-          <el-table-column label="操作" width="300px" align="center" fixed="right">
+          <el-table-column
+            label="操作"
+            width="300px"
+            align="center"
+            fixed="right"
+          >
             <template slot-scope="scope">
-              <a class="operation1">生成账单</a>
+            
+              <a v-if="scope.row.IsCanGenerateOrder" class="operation1" @click="generateOrder(scope.row.Id)">生成账单</a>
               <a
                 class="operation2"
                 @click="changeInput(scope.row.Id,false)"
@@ -65,7 +71,7 @@
                 @click="changeInput(scope.row.Id,true)"
                 v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
               >数据绑定</a>
-              <a class="operation3">详情</a>
+              <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
               <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>
             </template>
           </el-table-column>
@@ -95,7 +101,8 @@ import {
   exportPlanList,
   changeListState,
   planConpanySelect,
-  delPlanList
+  delPlanList,
+  GenerateOrder
 } from "@/api/plan"; //http 请求
 export default {
   name: "MeterReadingPlan",
@@ -184,6 +191,31 @@ export default {
       //表格自定义方法
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
+    },
+    generateOrder(id){
+      //数据绑定
+      GenerateOrder({ SA_MeterReadPlan_Id: id }).then(res => {
+        if(res.code==0){
+           that.$message({
+              message: res.msg ? res.msg : "操作成功",
+              type: "success"
+            });
+        }else{
+          that.$message({
+              message: res.msg? res.msg : "操作失败",
+              type: "warning"
+            });
+        }
+      })
+    },
+    meterReadingPlanDetail(id){
+      //详情 跳转到抄表设置
+      this.$router.push({  //核心语句
+        path:'/businessManagement/meterSetUp',   //跳转的路径
+        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+          id:id,  
+        }
+      })
     },
     delMeterReadingPlan(id) {
       //删除

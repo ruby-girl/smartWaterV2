@@ -33,7 +33,7 @@
           readonly
           placeholder="选择日期时间"
         ></el-date-picker>
-        <el-date-picker v-model="addPlanData.EndPlanDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+        <el-date-picker v-model="addPlanData.EndPlanDate" type="datetime" default-time="23:59:59" placeholder="选择日期时间"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-radio-group v-model="addPlanData.IsAutoGenerateOrder">

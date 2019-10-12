@@ -49,4 +49,11 @@ export function addMeterReadingPlan(data) {//添加抄表计划
     data
   })
 }
+export function GenerateOrder(data) {//生成订单
+  return request({
+    url: '/MeterReadPlan/GenerateOrder',
+    method: 'post',
+    params:data
+  })
+}
 //POST /api/MeterReadPlan/ManualCreateMeterReadPlan
