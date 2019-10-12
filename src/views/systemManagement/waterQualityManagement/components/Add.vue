@@ -33,7 +33,6 @@
   </el-dialog>
 </template>
 <script>
-import { numGetAccount } from "@/api/account";
 import LadderTrue from "./LadderTrue";
 import LadderFalse from "./LadderFalse";
 const actions = {
@@ -86,14 +85,6 @@ export default {
       },
       immediate: true
     }
-  },
-  mounted() {
-    numGetAccount("-1").then(res => {
-      if (res.data) {
-        this.userOptions = res.data;
-        this.userOptionsSave = res.data;
-      }
-    });
   },
   data() {
     return {

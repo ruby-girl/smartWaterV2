@@ -53,7 +53,7 @@
                 <div class="main-color-warn" @click="constitute(row)" v-permission="['1010106']">
                   <a>水价构成</a>
                 </div>
-                <div class="pl-20" @click="cancel(row)" v-permission="['1010105']">
+                <div class="pl-20" @click="history(row)" v-permission="['1010105']">
                   <a>历史水价</a>
                 </div>
                 <div class="main-color pl-20" @click="reset(row)" v-permission="['1010107']">
@@ -84,6 +84,10 @@
           :constitute-show.sync="constituteShow"
           :id="constituteId"
         />
+         <history-price
+          :history-show.sync="historyShow"
+          :id="historyId"
+        />
       </div>
     </div>
   </div>
@@ -93,6 +97,7 @@ import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import AddDialog from "./components/Add";
+import HistoryPrice from "./components/HistoryPrice";
 import WaterConstitute from "./components/WaterConstitute";
 import { getDictionaryOption } from "@/utils/permission";
 import {
@@ -110,7 +115,8 @@ export default {
     Pagination,
     customTable,
     AddDialog,
-    WaterConstitute
+    WaterConstitute,
+    HistoryPrice
   },
   data() {
     return {
@@ -134,7 +140,9 @@ export default {
       typeList: [], //用水性质类型，传递给组件
       addDialogFormVisible: false, // 新增弹窗
       constituteShow: false, // 水价构成弹窗
+      historyShow:false,//历史水价弹窗
       constituteId:'0',//水价构成行ID
+      historyId:'0',//历史水价行ID
       tableData: [],
       checksData: []
     };
@@ -153,6 +161,7 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 220;
+      console.info(this.$refs.myChild)
       this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
      this.typeList=getDictionaryOption('用水性质类型')
@@ -160,8 +169,14 @@ export default {
     });
   },
   methods: {
+    // 历史水价
+    history(row){
+      this.historyId=row.Id
+      this.historyShow=true
+    },
     // 点击水价构成
-    constitute(r){
+    constitute(row){
+      this.constituteId=row.Id
       this.constituteShow=true
     },
     setCustomData() {

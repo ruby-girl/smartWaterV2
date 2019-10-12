@@ -11,11 +11,7 @@
     label-width="110px"
   >
     <el-form-item label="用水性质：" prop="UseWaterTypeName">
-      <el-input
-        v-model="temp.UseWaterTypeName"
-        placeholder="长度1-50"
-        maxlength="50"
-      />
+      <el-input v-model="temp.UseWaterTypeName" placeholder="长度1-50" maxlength="50" />
     </el-form-item>
     <el-form-item label="用水性质类型：" prop="WaterPropertyType">
       <el-select v-model="temp.WaterPropertyType" placeholder="请选择">
@@ -25,49 +21,51 @@
     </el-form-item>
     <el-form-item label="阶梯结算月数：" prop="LadderResetTime">
       <el-select v-model="temp.LadderResetTime" placeholder="请选择">
-        <el-option  v-for="item in 12" :key="item" :label="item" :value="item"/>     
+        <el-option v-for="item in 12" :key="item" :label="item" :value="item" />
       </el-select>
     </el-form-item>
     <el-form-item label="污水费：" prop="SewagePrice">
-      <el-input v-model="temp.SewagePrice" @blur="changeTwoDecimal_x($event)" @keyup.native="money($event)"
+      <el-input
+        v-model="temp.SewagePrice"
+        @blur="changeTwoDecimal_x($event)"
+        @keyup.native="money($event)"
       />
     </el-form-item>
     <el-form-item label="其他费用1：">
       <el-input
         v-model="temp.OtherPrice1"
-        @blur="changeTwoDecimal_x($event)" @keyup.native="money($event)"
+        @blur="changeTwoDecimal_x($event)"
+        @keyup.native="money($event)"
       />
     </el-form-item>
     <el-form-item label="其他费用2：">
       <el-input
         v-model="temp.OtherPrice2"
-        @blur="changeTwoDecimal_x($event)" @keyup.native="money($event)"
+        @blur="changeTwoDecimal_x($event)"
+        @keyup.native="money($event)"
       />
     </el-form-item>
     <div class="ladder-box">
-     <el-form-item label="单价：" label-width="80px" prop="NotLadderPrice">
-      <el-input
-        v-model="temp.NotLadderPrice"
-        @blur="changeTwoDecimal_x($event)" @keyup.native="money($event)"
-      />
-    </el-form-item>
-    <el-form-item label="合计单价：" label-width="100px" prop="TotalPrice">
-      <el-input
-        v-model="temp.TotalPrice"
-        @blur="changeTwoDecimal_x($event)" @keyup.native="money($event)"
-      />
-    </el-form-item>
+      <el-form-item label="单价：" label-width="80px" prop="NotLadderPrice">
+        <el-input
+          v-model="temp.NotLadderPrice"
+          @blur="changeTwoDecimal_x($event,'all')"
+          @keyup.native="money($event)"
+        />
+      </el-form-item>
+      <el-form-item label="合计单价：" label-width="100px" prop="TotalPrice">
+        <el-input class="big-blue-color" v-model="temp.TotalPrice" readonly />
+      </el-form-item>
     </div>
     <el-form-item label="开始执行日期：">
-        <el-date-picker v-model="temp.StartPlanDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
-      </el-form-item>
+      <el-date-picker v-model="temp.StartPlanDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+    </el-form-item>
   </el-form>
-  
 </template>
 <script>
-import {updateMoney,delDecimal} from "@/utils/index.js"
+import { updateMoney, delDecimal } from "@/utils/index.js";
 export default {
-   props: {
+  props: {
     temp: {
       type: Object,
       default: function() {
@@ -84,38 +82,61 @@ export default {
   mounted() {},
   data() {
     return {
-      ladder:[{type:1,num:0,start:0,tot:20},{type:2,num:0,start:0,tot:20},{type:3,num:0,start:0,tot:20}],
+      ladder: [
+        { type: 1, num: 0, start: 0, tot: 20 },
+        { type: 2, num: 0, start: 0, tot: 20 },
+        { type: 3, num: 0, start: 0, tot: 20 }
+      ],
       rules: {
-        UseWaterTypeName: [{ required: true, message: "不能为空", trigger: "blur" }],
-        WaterPropertyType: [{ required: true, message: "不能为空", trigger: "blur" }],
-        LadderResetTime: [{ required: true, message: "不能为空", trigger: "blur" }],
+        UseWaterTypeName: [
+          { required: true, message: "不能为空", trigger: "blur" }
+        ],
+        WaterPropertyType: [
+          { required: true, message: "不能为空", trigger: "blur" }
+        ],
+        LadderResetTime: [
+          { required: true, message: "不能为空", trigger: "blur" }
+        ],
         SewagePrice: [{ required: true, message: "不能为空", trigger: "blur" }],
-        NotLadderPrice: [{ required: true, message: "不能为空", trigger: "blur" }],
+        NotLadderPrice: [
+          { required: true, message: "不能为空", trigger: "blur" }
+        ],
         TotalPrice: [{ required: true, message: "不能为空", trigger: "blur" }]
-      },
+      }
     };
   },
   methods: {
-     // 输入金额保留2位
-    money(e){
-       e.target.value=updateMoney(e.target.value)
+    // 输入金额保留2位
+    money(e) {
+      e.target.value = updateMoney(e.target.value);
     },
     // 补齐小数
-    changeTwoDecimal_x(e){
-      e.target.value=delDecimal(e.target.value)
+    changeTwoDecimal_x(e, n) {
+      e.target.value = delDecimal(e.target.value);
+      if (typeof n !== "undefined" && n == "all") {
+        let num =
+          parseFloat(this.temp.NotLadderPrice) +
+          parseFloat(this.temp.SewagePrice) +
+          parseFloat(this.temp.OtherPrice1) +
+          parseFloat(this.temp.OtherPrice2);
+        this.temp.TotalPrice = delDecimal(num);
+      }
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.ladder-form-padding{
-  padding:40px 20px;
+.ladder-form-padding {
+  padding: 40px 20px;
 }
 .ladder-box {
   padding: 15px 0;
   background: #f5f5f5;
-  margin:0 20px;
-  
+  margin: 0 20px;
+}
+.big-blue-color /deep/ .el-input__inner{
+  color: #33b300;
+  font-size: 20px;
 }
 </style>
 

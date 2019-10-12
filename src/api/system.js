@@ -28,3 +28,32 @@ export function getWaterQualityList(data){
     data:data
   })
 }
+
+//水价构成
+export function SelectUpdateWaterPropertyBeforeInfo(data){
+  return request({
+    url: '/WaterProperty/SelectUpdateWaterPropertyBeforeInfo',
+    method: 'post',
+    params:data
+  })
+}
+
+//历史水价
+export function GetWaterPropertyById(id,data){
+  return request({
+    url: '/WaterProperty/GetWaterPropertyById',
+    method: 'post',
+    data:data,
+    params:id,
+  })
+}
+
+//历史水价
+export function GetWaterPropertyHisList_OutExcel(id,data){
+  return request({
+    url: '/WaterProperty/GetWaterPropertyHisList_OutExcel',
+    method: 'post',  
+    data:data,
+    params:id,
+  })
+}

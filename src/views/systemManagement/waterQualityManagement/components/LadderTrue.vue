@@ -78,7 +78,7 @@
             <i class="main-color-red">*</i>
             <span>{{i+1}}阶合计单价：</span>
             <div class="table-input-y">
-              <input
+              <input class="big-blue-color"
                 type="text"
                 readonly
                 v-model="item.TotalPrice"
@@ -181,7 +181,10 @@ export default {
     height: 32px;
     background: #fff;
     padding-right: 10px;
-
+    .big-blue-color{
+      color:#33B300;
+      font-size: 20px;
+    }
     input {
       border: none;
       height: 100%;
