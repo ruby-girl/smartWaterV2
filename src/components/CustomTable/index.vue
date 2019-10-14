@@ -7,7 +7,7 @@
       </p>
         <span class="fl">自定义选项：</span>
         <div class="fl">
-          <el-checkbox v-for="check in checkData" :key="check.Id" v-show="check.IsShow" :disabled="check.ifDisable"  v-model="check.IsCheck" v-dragging="{ item: check, list: checkData, group: 'check' }">{{ check.ColDesc }}</el-checkbox>
+          <el-checkbox v-for="(check,i) in checkData" :key="i" v-show="check.IsShow" :disabled="check.ifDisable"  v-model="check.IsCheck" v-dragging="{ item: check, list: checkData, group: 'check' }">{{ check.ColDesc }}</el-checkbox>
         </div>
     </div>
   </div>

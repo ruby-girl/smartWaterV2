@@ -5,7 +5,7 @@
         <select-head :select-head="listQuery" @handleFilter="handleFilter" :type-list="typeList" />
       </div>
       <div class="table-top-btn-padding display-flex justify-content-flex-justify">
-        <el-button type="primary" size="mini" @click="addRole">
+        <el-button type="primary" size="mini" @click="add">
           <i class="iconfont icontianjia"></i>添加
         </el-button>
         <div>
@@ -31,8 +31,9 @@
           @sort-change="sortChanges"
         >
           <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
-          <template v-for="(item ,index) in tableHead">
-            <el-table-column
+          <template>
+            <div v-for="(item ,index) in tableHead" :key="index">
+              <el-table-column
               :key="index"
               min-width="160px"
               :prop="item.ColProp"
@@ -40,6 +41,7 @@
               sortable="custom"
               :label="item.ColDesc"          
             />
+            </div>
           </template>
           <el-table-column
             label="操作"
@@ -56,8 +58,11 @@
                 <div class="pl-20" @click="history(row)" v-permission="['1010105']">
                   <a>历史水价</a>
                 </div>
-                <div class="main-color pl-20" @click="reset(row)" v-permission="['1010107']">
+                <div class="main-color pl-20" @click="handleUpdate(row)" v-if="row.UseState=='801'" v-permission="['1010107']">
                   <a>水价调整</a>
+                </div>
+                 <div class="main-color pl-20" @click="handleUpdate(row)" v-if="row.UseState=='802'" v-permission="['1010107']">
+                  <a>撤销水价调整</a>
                 </div>
                 <div class="main-color-red pl-20" @click="cancel(row)" v-permission="['1010105']">
                   <a>删除</a>
@@ -76,6 +81,7 @@
         <add-dialog
           :add-show.sync="addDialogFormVisible"
           :temp="temp"
+          :dialogStatus="dialogStatus"
           @createData="createData"
           @updateData="updateData"
           :type-list="typeList"
@@ -103,9 +109,10 @@ import { getDictionaryOption } from "@/utils/permission";
 import {
   addWaterQuality,
   delWaterQuality,
-  getWaterQualityList
+  getWaterQualityList,
+  SelectUpdateWaterPropertyBeforeInfo
 } from "@/api/system";
-import {parseStartTime} from "@/utils/index.js"
+import {parseStartTime,ladderChangeArr} from "@/utils/index.js"
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   name: "WaterQualityManagement",
@@ -123,8 +130,7 @@ export default {
       total: 0,
       tableKey: 0,
       tableHeight: 0,
-      temp: {
-      },
+      temp: {},
       restId: "", //重置行ID
       listQuery: {
         // 查询条件
@@ -137,6 +143,7 @@ export default {
         IsLadder:"-1",//是否阶梯
         tableId: "0000012"
       },
+      dialogStatus:'',//标识添加编辑
       typeList: [], //用水性质类型，传递给组件
       addDialogFormVisible: false, // 新增弹窗
       constituteShow: false, // 水价构成弹窗
@@ -161,7 +168,6 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 220;
-      console.info(this.$refs.myChild)
       this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
      this.typeList=getDictionaryOption('用水性质类型')
@@ -201,18 +207,8 @@ export default {
     handleFilter() {
       this.listQuery.page = 1;
       this.getList();
-    },
-    handleUpdate(row) {
-      //获取详情
-      getAccountDetail(row.Id).then(res => {
-        this.temp.empNo = res.data.EmpNo; //人员编号
-        this.temp.roleId = res.data.SYS_Role_Id;
-        this.temp.userId = res.data.Id;
-        this.temp.loginName = res.data.LoginName;
-      });
-      this.dialogFormVisible = true;
-    },
-    addRole() {
+    },  
+    add() {
       this.temp={
        UseWaterTypeName: "",//用水性质名称
         StartPlanDate:parseStartTime(new Date()),//开始执行日期
@@ -252,7 +248,21 @@ export default {
           { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
         ]
       },
+      this.dialogStatus = "create";
       this.addDialogFormVisible = true;
+    },
+    // 水价调整-编辑
+    handleUpdate(row) {
+      SelectUpdateWaterPropertyBeforeInfo({id: row.Id}).then(res => {
+       let ladder={
+          isLadder:'1'
+       }
+        let obj=ladderChangeArr(res.data)//阶梯转换数组
+        ladder.isLadder=obj.IsLadder==true?'1':'2'
+        this.temp={...ladder,...obj}
+        this.dialogStatus = "update";
+         this.addDialogFormVisible = true;
+      });      
     },
     // 新增
     createData() {
