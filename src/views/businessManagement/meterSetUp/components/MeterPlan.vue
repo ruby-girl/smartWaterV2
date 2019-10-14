@@ -57,7 +57,7 @@
       </p>
       <div class="plan_box3">
         <h2>水量水费预估</h2>
-        <el-row>
+        <el-row v-show="ifLadder">
           <el-col :span="8" class="unit">
             1阶单价：<span>20</span> <label>元/吨</label>
           </el-col>
@@ -68,39 +68,19 @@
             1阶水费：<i>20</i> <label>元</label>
           </el-col>
         </el-row>
-        <el-row>
+
+        <el-row v-else>
           <el-col :span="8" class="unit">
-            1阶单价：<span>20</span> <label>元/吨</label>
+            合计单价：<span>{{ TotalPrice }}</span> <label>元/吨</label>
           </el-col>
           <el-col :span="8" class="unit">
-            1阶水量：<label>20 吨</label>
+            本次用水量：<label>{{ TotalWaterYield }} 吨</label>
           </el-col>
           <el-col :span="8" class="unit">
-            1阶水费：<i>20</i> <label>元</label>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8" class="unit">
-            1阶单价：<span>20</span> <label>元/吨</label>
-          </el-col>
-          <el-col :span="8" class="unit">
-            1阶水量：<label>20 吨</label>
-          </el-col>
-          <el-col :span="8" class="unit">
-            1阶水费：<i>20</i> <label>元</label>
+            总水费：<i>{{ TotalWaterPrice }}</i> <label>元</label>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="8" class="unit">
-            1阶单价：<span>20</span> <label>元/吨</label>
-          </el-col>
-          <el-col :span="8" class="unit">
-            1阶水量：<label>20 吨</label>
-          </el-col>
-          <el-col :span="8" class="unit">
-            1阶水费：<i>20</i> <label>元</label>
-          </el-col>
-        </el-row>
+
       </div>
     </div>
   </div>
@@ -109,6 +89,7 @@
 <script>
   import { getReading, WaterYieldPricePredict } from "@/api/meterReading"
   import Bus from '@/utils/bus'
+ /* import Bus from '@/utils/index'*/
 
   export default {
     name: "MeterPlan",
@@ -126,7 +107,13 @@
           IsPage : false
         },
         magnification:'1.5',//倍率,
-        waterPriceData:{}
+        waterPriceData:{},//启用阶梯时水量水费值
+        oneLadder:{//没有启用阶梯水量水费值
+          TotalPrice: 0,
+          TotalWaterYield: 0,
+          TotalWaterPrice: 0,
+        },
+        ifLadder: false
       }
     },
     methods:{
@@ -216,10 +203,20 @@
         }
       },
       getPrice(param){
-        alert('预估')
         WaterYieldPricePredict(param).then(res => {
           if (res.code ==0 ) {
-              this.waterPriceData = res.data
+            let oneData = {},datas =[]
+            this.ifLadder = res.data.IsLadder  //true 时为阶梯计价，需根据LadderNumber 字段计算到第几个阶梯
+            if(this.ifLadder){//启用阶梯
+              this.waterPriceData = datas
+            }else{//未启用阶梯
+              oneData = {
+                TotalPrice: res.data.TotalPrice,//合计单价
+                TotalWaterYield: res.data.TotalWaterYield,//本次用水量
+                TotalWaterPrice: res.data.TotalWaterPrice,//总水费
+              }
+              this.oneLadder = oneData
+            }
           } else {
             this.$message({
               message: res.message,
