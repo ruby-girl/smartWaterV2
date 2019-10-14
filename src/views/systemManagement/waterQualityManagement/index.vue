@@ -81,6 +81,7 @@
         <add-dialog
           :add-show.sync="addDialogFormVisible"
           :temp="temp"
+          :dialogStatus="dialogStatus"
           @createData="createData"
           @updateData="updateData"
           :type-list="typeList"
@@ -142,6 +143,7 @@ export default {
         IsLadder:"-1",//是否阶梯
         tableId: "0000012"
       },
+      dialogStatus:'',//标识添加编辑
       typeList: [], //用水性质类型，传递给组件
       addDialogFormVisible: false, // 新增弹窗
       constituteShow: false, // 水价构成弹窗
@@ -246,19 +248,21 @@ export default {
           { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
         ]
       },
+      this.dialogStatus = "create";
       this.addDialogFormVisible = true;
     },
     // 水价调整-编辑
     handleUpdate(row) {
       SelectUpdateWaterPropertyBeforeInfo({id: row.Id}).then(res => {
-       console.log(this.temp)
-       this.temp=ladderChangeArr(res.data)//阶梯转换数组
-        console.log(this.temp)
-        this.temp.isLadder=this.temp.IsLadder==true?'1':'2'
-        console.log(this.temp)
-        this.addDialogFormVisible = true;
-      });
-      
+       let ladder={
+          isLadder:'1'
+       }
+        let obj=ladderChangeArr(res.data)//阶梯转换数组
+        ladder.isLadder=obj.IsLadder==true?'1':'2'
+        this.temp={...ladder,...obj}
+        this.dialogStatus = "update";
+         this.addDialogFormVisible = true;
+      });      
     },
     // 新增
     createData() {

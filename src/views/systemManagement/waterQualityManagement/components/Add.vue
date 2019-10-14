@@ -44,6 +44,10 @@ export default {
         return {};
       }
     },
+    dialogStatus:{
+      type: String,
+      default: 'create'
+    },
     addShow: {
       type: Boolean,
       default: false
