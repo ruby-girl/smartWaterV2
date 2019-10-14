@@ -4,11 +4,14 @@
       <div ref="formHeight">
         <select-head :companyOptions="companyParentOptions" />
       </div>
-      <div class="table-top-btn-padding display-flex justify-content-flex-justify">
-        <el-button type="primary" size="mini" @click="addPlan">
+      <div
+        class="table-top-btn-padding display-flex justify-content-flex-justify"
+        :class="{'plan-table':isShowAdPlanClass }"
+      >
+        <el-button v-show="isShowAdPlan" type="primary" size="mini" @click="addPlan">
           <i class="iconfont icontianjia"></i>新增抄表计划
         </el-button>
-        <div>
+        <div :class="{'showPlan':isShowAdPlanClass }">
           <el-button type="success" size="mini" @click="exportList">
             <i class="iconfont icondaochuexcel"></i>导出Excel
           </el-button>
@@ -52,15 +55,13 @@
               :label="item.ColDesc"
             />
           </template>
-          <el-table-column
-            label="操作"
-            width="300px"
-            align="center"
-            fixed="right"
-          >
+          <el-table-column label="操作" width="300px" align="center" fixed="right">
             <template slot-scope="scope">
-            
-              <a v-if="scope.row.IsCanGenerateOrder" class="operation1" @click="generateOrder(scope.row.Id)">生成账单</a>
+              <a
+                v-if="scope.row.IsCanGenerateOrder"
+                class="operation1"
+                @click="generateOrder(scope.row.Id)"
+              >生成账单</a>
               <a
                 class="operation2"
                 @click="changeInput(scope.row.Id,false)"
@@ -102,7 +103,8 @@ import {
   changeListState,
   planConpanySelect,
   delPlanList,
-  GenerateOrder
+  GenerateOrder,
+  WhetherDisplay
 } from "@/api/plan"; //http 请求
 export default {
   name: "MeterReadingPlan",
@@ -134,7 +136,9 @@ export default {
       tableHeight: 0,
       customHeight: "", //自定义高度
       addDialogFormVisible: false,
-      companyParentOptions: []
+      companyParentOptions: [],
+      isShowAdPlan: false,
+      isShowAdPlanClass: !this.isShowAdPlan
     };
   },
   computed: {
@@ -166,11 +170,21 @@ export default {
   },
   created() {
     let that = this;
+    WhetherDisplay({ configkey: "IsAutoCreateReadPlan" }).then(res => {
+      //判断是否显示新增抄表计划
+      console.log(res);
+      if (res.data == "0") {
+        that.isShowAdPlan = true;
+      } else {
+        that.isShowAdPlan = false;
+      }
+      console.log(that.isShowAdPlan);
+    });
     planConpanySelect().then(res => {
+      //获取水厂李彪
       if (res.code == 0) {
         that.companyParentOptions = [];
         that.companyParentOptions = res.data;
-        console.log(that.companyParentOptions);
       }
     });
   },
@@ -178,6 +192,7 @@ export default {
     this.$nextTick(function() {
       // 自适应表格高度
       const that = this;
+
       that.tableHeight =
         document.getElementsByClassName("section-container")[0].offsetHeight -
         document.getElementById("table").offsetTop -
@@ -192,30 +207,32 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
     },
-    generateOrder(id){
+    generateOrder(id) {
       //数据绑定
       GenerateOrder({ SA_MeterReadPlan_Id: id }).then(res => {
-        if(res.code==0){
-           that.$message({
-              message: res.msg ? res.msg : "操作成功",
-              type: "success"
-            });
-        }else{
+        if (res.code == 0) {
           that.$message({
-              message: res.msg? res.msg : "操作失败",
-              type: "warning"
-            });
+            message: res.msg ? res.msg : "操作成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "操作失败",
+            type: "warning"
+          });
         }
-      })
+      });
     },
-    meterReadingPlanDetail(id){
+    meterReadingPlanDetail(id) {
       //详情 跳转到抄表设置
-      this.$router.push({  //核心语句
-        path:'/businessManagement/meterSetUp',   //跳转的路径
-        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-          id:id,  
+      this.$router.push({
+        //核心语句
+        path: "/businessManagement/meterSetUp", //跳转的路径
+        query: {
+          //路由传参时push和query搭配使用 ，作用时传递参数
+          id: id
         }
-      })
+      });
     },
     delMeterReadingPlan(id) {
       //删除
@@ -322,5 +339,14 @@ export default {
   color: #ff5656;
   font-size: 13px;
   margin: 10px;
+}
+.plan-table {
+  position: relative;
+  height: 52px;
+}
+.showPlan {
+  position: absolute;
+  right: 0px;
+  overflow: hidden;
 }
 </style>

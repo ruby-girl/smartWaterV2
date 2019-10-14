@@ -56,4 +56,11 @@ export function GenerateOrder(data) {//生成订单
     params:data
   })
 }
+export function WhetherDisplay(data) {//生成订单
+  return request({
+    url: '/GlobalConfig/GetConfigValueByKey',
+    method: 'get',
+    params:data
+  })
+}
 //POST /api/MeterReadPlan/ManualCreateMeterReadPlan
