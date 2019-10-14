@@ -57,7 +57,7 @@
       </p>
       <div class="plan_box3">
         <h2>水量水费预估</h2>
-        <el-row v-show="ifLadder">
+        <el-row v-if="ifLadder">
           <el-col :span="8" class="unit">
             1阶单价：<span>20</span> <label>元/吨</label>
           </el-col>
