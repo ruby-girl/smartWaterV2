@@ -33,7 +33,14 @@
           readonly
           placeholder="选择日期时间"
         ></el-date-picker>
-        <el-date-picker v-model="addPlanData.EndPlanDate" type="datetime" default-time="23:59:59" placeholder="选择日期时间"></el-date-picker>
+        <el-date-picker
+          v-model="addPlanData.EndPlanDate"
+          type="datetime"
+          default-time="23:59:59"
+          placeholder="选择日期时间"
+          format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-checkbox v-model="addPlanData.IsAutoGenerateOrder">抄表计划到期后自动生成订单</el-checkbox>
@@ -72,19 +79,9 @@ export default {
     }
   },
   methods: {
-    getTime() {
-      //时间格式化
-      const date = this.warterMeterPlanDate;
-      if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
-      } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
-      }
-    },
+   
     addMeterReadingPlan() {
-        let that=this
+      let that = this;
       addMeterReadingPlan(this.addPlanData).then(res => {
         if (res.code == 0) {
           this.AdialogFormVisible = false;
@@ -92,11 +89,11 @@ export default {
             message: res.msg ? res.msg : "添加成功",
             type: "success"
           });
-        }else {
-            that.$message({
+        } else {
+          that.$message({
             message: res.msg ? res.msg : "warning",
             type: "success"
-          }); 
+          });
         }
       });
     },
