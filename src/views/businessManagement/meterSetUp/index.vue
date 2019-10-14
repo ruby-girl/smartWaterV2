@@ -39,7 +39,7 @@
           </template>
           <el-table-column label="操作" width="100px" align="center" fixed="right">
             <template slot-scope="scope">
-              <a class="operation2" @click="handleDelete(scope.$index, scope.row)">删除</a>
+              <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if=" scope.row.MeterReadState != 1402 ">删除</a>
             </template>
           </el-table-column>
         </el-table>
@@ -50,10 +50,8 @@
           @pagination="searchFun"/>
         <!--列表组建 e-->
       </div>
-
       <!--抄表计划组建 s-->
-      <MeterPlan v-if="screeWidth>1400" ref="planchild1"></MeterPlan>
-      <MeterPlanSmall v-else ref="planchild2"></MeterPlanSmall>
+      <MeterPlan ref="planchild1"></MeterPlan>
       <!--抄表计划组建 e-->
     </div>
   </div>
@@ -64,16 +62,13 @@
   import customTable from '@/components/CustomTable/index'//自定义组建
   import SelectHead from './components/SelectHead'//查询条件组建
   import MeterPlan from './components/MeterPlan'//查询条件组建
-  import MeterPlanSmall from './components/MeterPlanSmall'//查询条件组建
   import Pagination from '@/components/Pagination/index'//分页
-  import { BlockAreaGetList, BlockAreaUpDate, BlockAreaDelete, BlockAreaGetObjById } from "@/api/organize"//http 请求
-
-  import { MeterReadingPageQuery, MeterReadingProcessQuery } from "@/api/meterReading"
+  import { MeterReadingPageQuery, MeterReadingProcessQuery, getReadDelete } from "@/api/meterReading"
   import { parseTime } from "@/utils/index"
 
   export default {
     name: 'meterSetUp',
-    components: { customTable, Pagination, SelectHead, MeterPlan, MeterPlanSmall },
+    components: { customTable, Pagination, SelectHead, MeterPlan },
     data() {
       return {
         ID:'',
@@ -131,18 +126,6 @@
         this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
         this.customHeight = this.$refs.myChild.isCustom
       },
-      handleEdit(scope,row) {//编辑方法
-        this.ID = row.Id
-/*        this.$refs.childDialog.dialogVisible = true
-        this.$refs.childDialog.title = '编辑'*/
-        let param = {Id: row.Id}
-        BlockAreaGetObjById(param).then(res => {
-          if (res.code == 0) {
-           /* this.$refs.childDialog.ruleForm.newAreaName = res.data.BlockAreaName
-            this.$refs.childDialog.ruleForm.waterFactoryName = res.data.WfList*/
-          }
-        })
-      },
       handleDelete(scope,row) {//删除方法
         this.$confirm("是否删除当前信息", "提示", {
           confirmButtonText: "确定",
@@ -151,7 +134,7 @@
           customClass: "warningBox",
           showClose: false
         }).then(() => {
-          BlockAreaDelete({Id: row.Id}).then(res => {
+          getReadDelete({MeterRecordId: row.Id}).then(res => {
             if (res.code == 0) {
               this.$message({
                 message: res.message,
@@ -189,12 +172,13 @@
               }
               _this.$nextTick(() => {//选中默认行
                 _this.$refs.multipleTable.setCurrentRow(_this.$refs.multipleTable.data[curNum]);
-                _this.screeWidth>1400?_this.$refs.planchild1.currentContract = _this.$refs.multipleTable.data[curNum]:_this.$refs.planchild2.currentContract = _this.$refs.multipleTable.data[curNum]
+                _this.$refs.planchild1.currentContract = _this.$refs.multipleTable.data[curNum]
+                _this.$refs.planchild1.$refs.ReadNumInput.$el.querySelector('input').focus()
               })
             }
             MeterReadingProcessQuery({'SA_MeterReadPlan_Id':this.param.SA_MeterReadPlan_Id,'SA_RegisterBookInfo_Id':this.param.SA_RegisterBookInfo_Id}).then(res => {//抄表进度
               if (res.code ==0 ) {
-                  this.screeWidth>1400 ? this.$refs.planchild1.meterData = res.data : this.$refs.planchild2.meterData = res.data
+                  this.$refs.planchild1.meterData = res.data
               } else {
                 this.$message({
                   message: res.message,
@@ -222,7 +206,7 @@
         }
       },
       getCurInfo(row){//表格选中事件
-        this.screeWidth>1400?this.$refs.planchild1.currentContract = row : this.$refs.planchild2.currentContract = row
+        this.$refs.planchild1.currentContract
       }
     },
     mounted() {

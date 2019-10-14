@@ -77,3 +77,14 @@ export function getReading(data) {
     data: data
   })
 }
+
+/**
+ *删除抄表
+ * */
+export function getReadDelete(data) {
+  return request({
+    url: '/MeterReading/DeleteMeterRecord',
+    method: 'post',
+    params: data
+  })
+}
