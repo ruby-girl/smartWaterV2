@@ -1,7 +1,7 @@
 <template>
   <!-- 新增弹窗 -->
   <el-dialog
-    title="添加"
+    :title="dialogStatus=='create'?'添加':'编辑'"
     :visible.sync="AdialogFormVisible"
     top="20vh"
     width="1020px"
@@ -25,10 +25,10 @@
         </el-radio-group>
       </el-form-item>
     </el-form>
-    <components :is="LadderComponents" :temp="temp" ref="childrenTemp" :type-list="typeList"></components>
+    <components :dialogStatus="dialogStatus" :is="LadderComponents" :temp="temp" ref="childrenTemp" :type-list="typeList"></components>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="createData()">确认</el-button>
-      <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
+      <el-button size="mini" type="primary" @click="createData">确认</el-button>
+      <el-button size="mini" @click="AdialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -75,7 +75,6 @@ export default {
     },
     "temp.isLadder": {    
       handler(val, oldVal) {
-       console.log()
         if (val == 1) {
           this.LadderComponents = "LadderTrue";
         } else {
@@ -103,22 +102,9 @@ export default {
         }
       });
     },
-    setNum() {
-      let value = this.temp.loginPwdSave;
-      if (value.length >= this.passwordSave.length) {
-        this.passwordSave += value.substr(
-          this.passwordSave.length,
-          value.length - this.passwordSave.length
-        );
-      } else {
-        this.passwordSave = this.passwordSave.substr(0, value.length);
-      }
-      this.temp.loginPwdSave = this.temp.loginPwdSave.replace(/./g, "*");
-    },
     // 新增
     createData() {   
       let judge=this.temp.isLadder==1?"dataFormTrue":"dataFormFalse"
-      return
       this.$refs["childrenTemp"].$refs[judge].validate(valid => {
         if (!valid) return false;
         else {
@@ -128,7 +114,11 @@ export default {
             }
           }
           this.temp.isLadder==1?this.temp.IsLadder=true:this.temp.IsLadder=false
-          this.$emit("createData", this.temp);
+         if(this.dialogStatus=='create'){
+            this.$emit("createData", this.temp);
+         }else{
+           this.$emit("updateData", this.temp);
+         }
         }
       });
     },

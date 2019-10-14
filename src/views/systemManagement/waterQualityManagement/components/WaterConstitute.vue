@@ -1,12 +1,11 @@
 <template>
   <!-- 新增弹窗 -->
   <el-dialog
-    title="添加"
+    title="水价构成"
     :visible.sync="AdialogFormVisible"
     top="20vh"
     width="710px"
     center
-    custom-class="nopadding"
     :close-on-click-modal="false"
   >
     <div class="ladder-box display-flex justify-content-flex-justify align-items-center">
@@ -95,7 +94,7 @@ export default {
 .ladder-box {
   padding: 15px 20px;
   background: #f5f5f5;
-  margin: 40px 20px 30px 20px;
+  margin: 10px 0 20px 0;
 }
 .ladder-bottom-box {
   padding: 5px 20px;

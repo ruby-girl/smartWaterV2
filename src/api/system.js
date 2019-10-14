@@ -38,6 +38,16 @@ export function SelectUpdateWaterPropertyBeforeInfo(data){
   })
 }
 
+
+//水价构成 编辑
+export function UpdateWaterPropertyInfo(id,data){
+  return request({
+    url: '/WaterProperty/UpdateWaterPropertyInfo',
+    method: 'post',
+    data:data,
+    params:id,
+  })
+}
 //历史水价
 export function GetWaterPropertyById(id,data){
   return request({
@@ -57,6 +67,15 @@ export function GetWaterPropertyHisList_OutExcel(id,data){
     params:id,
   })
 }
+
+//导出用水性质
+export function GetWaterPropertyList_OutExcel(data){
+  return request({
+    url: '/WaterProperty/GetWaterPropertyList_OutExcel',
+    method: 'post',  
+    data:data
+  })
+}
 //历史水价--水价构成
 export function SelectWaterPropertyHisInfo(id,data){
   return request({
@@ -67,3 +86,21 @@ export function SelectWaterPropertyHisInfo(id,data){
   })
 }
 
+//撤销用水性质
+export function ResetUpdateWaterPropertyInfo(data){
+  return request({
+    url: '/WaterProperty/ResetUpdateWaterPropertyInfo',
+    method: 'post',  
+    params:data,  
+  })
+}
+
+//删除用水性质
+export function DeleteWaterPropertyId(data){
+  return request({
+    url: '/WaterProperty/DeleteWaterPropertyId',
+    method: 'post',  
+    params:data,  
+  })
+}
+// 用水性质-end

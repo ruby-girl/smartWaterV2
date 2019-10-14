@@ -58,7 +58,25 @@
       </el-form-item>
     </div>
     <el-form-item label="开始执行日期：">
-      <el-date-picker v-model="temp.StartPlanDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+      <el-date-picker
+        v-model="temp.StartPlanDate"
+        format="yyyy-MM-dd HH:mm:ss"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        type="datetime"
+        placeholder="选择日期时间"
+        :picker-options="pickerOptions"
+        :disabled="dialogStatus=='update'"
+      ></el-date-picker>
+    </el-form-item>
+    <el-form-item label="新计价启用日期：" v-if="dialogStatus=='update'" label-width="150px">
+      <el-date-picker
+        v-model="temp.NewPriceUseDate"
+        format="yyyy-MM-dd HH:mm:ss"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        type="datetime"
+        placeholder="选择日期时间"
+        :picker-options="pickerOptions"
+      ></el-date-picker>
     </el-form-item>
   </el-form>
 </template>
@@ -72,6 +90,10 @@ export default {
         return {};
       }
     },
+    dialogStatus: {
+      type: String,
+      default: "create"
+    },
     typeList: {
       type: Array,
       default: function() {
@@ -82,6 +104,16 @@ export default {
   mounted() {},
   data() {
     return {
+      newPickerOptions:{
+        disabledDate(time) {
+          return time.getTime() <new Date(new Date().toLocaleDateString()).getTime();
+      }
+      },
+      pickerOptions: {
+      disabledDate(time) {
+          return time.getTime() > new Date(new Date().toLocaleDateString()).getTime();
+      }
+    },
       ladder: [
         { type: 1, num: 0, start: 0, tot: 20 },
         { type: 2, num: 0, start: 0, tot: 20 },
@@ -99,7 +131,7 @@ export default {
         ],
         SewagePrice: [{ required: true, message: "不能为空", trigger: "blur" }],
         NotLadderPrice: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: "不能为0", trigger: "blur" }
         ],
         TotalPrice: [{ required: true, message: "不能为空", trigger: "blur" }]
       }
@@ -131,10 +163,12 @@ export default {
 }
 .ladder-box {
   padding: 15px 0;
+  padding-bottom: 0;
   background: #f5f5f5;
   margin: 0 20px;
+  margin-bottom: 20px;
 }
-.big-blue-color /deep/ .el-input__inner{
+.big-blue-color /deep/ .el-input__inner {
   color: #33b300;
   font-size: 20px;
 }

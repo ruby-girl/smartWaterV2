@@ -7,6 +7,7 @@
     width="1020px"
     center
     :close-on-click-modal="false"
+    @open="getList"
   >
     <div class="table-top-btn-padding display-flex justify-content-flex-justify">
       <div></div>
@@ -36,26 +37,23 @@
       >
         <el-table-column type="expand" width="1" class="row-expand-cover">
           <template slot-scope="props">
-            <div class="ladder-box display-flex  align-items-center">
+            <div class="ladder-box display-flex align-items-center">
               <div class="ladder-item pl-30">
                 污水费：
                 <span>{{details.SewagePrice}}</span>
               </div>
               <div class="ladder-item ladder-center-box">
                 其他费用1：
-                 <span>{{details.OtherPrice1}}</span>
+                <span>{{details.OtherPrice1}}</span>
               </div>
               <div class="ladder-item ladder-center-box">
                 其他费用2：
-                 <span>{{details.OtherPrice2}}</span>
+                <span>{{details.OtherPrice2}}</span>
               </div>
             </div>
             <div v-if="details.IsLadder">
               <div v-for="(item,i) in details.ladder" class="ladder-bottom-box">
-                <div
-                  class="display-flex"
-                  v-if="details.LadderNumber>i"
-                >
+                <div class="display-flex" v-if="details.LadderNumber>i">
                   <div class="display-flex align-items-center ladder-item">
                     <div class="circle-num">{{i+1}}</div>
                     <span>{{i+1}}阶单价：</span>
@@ -69,7 +67,9 @@
                       <span>{{item.LadderWaterNum}}吨</span>
                     </div>
                   </div>
-                  <div class="display-flex align-items-center ladder-item color-more-black ladder-center-box">
+                  <div
+                    class="display-flex align-items-center ladder-item color-more-black ladder-center-box"
+                  >
                     <span>{{i+1}}阶合计单价：</span>
                     <div class="table-input-y">
                       <span class="big-blue-color">{{item.TotalPrice}}</span>元/吨
@@ -97,7 +97,7 @@
           label="操作"
           align="center"
           class-name="small-padding"
-          width="313px"
+          width="189px"
           fixed="right"
         >
           <template slot-scope="{row}">
@@ -124,9 +124,10 @@ import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import {
   GetWaterPropertyById,
-  SelectWaterPropertyHisInfo
+  SelectWaterPropertyHisInfo,
+  GetWaterPropertyHisList_OutExcel
 } from "@/api/system";
-import {ladderChangeArr} from "@/utils/index"
+import { ladderChangeArr } from "@/utils/index";
 export default {
   props: {
     id: {
@@ -147,13 +148,6 @@ export default {
   watch: {
     historyShow() {
       this.AdialogFormVisible = this.historyShow;
-      let _this = this;
-
-      if (!this.historyShow) return false; //如果监听ID，编辑行数据后，ID依然不会变，所以在弹窗显示再请求数据
-      setTimeout(function() {
-        _this.getTabel();
-      }, 500);
-      this.getList();
     },
     AdialogFormVisible(val, oldVal) {
       if (val === oldVal) {
@@ -190,10 +184,6 @@ export default {
     };
   },
   methods: {
-    getTabel() {
-      this.$refs.historyPrice.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.historyPrice.checkData; // 获取自定义字段中选中了字段
-    },
     excel() {
       GetWaterPropertyHisList_OutExcel({ id: this.id }, this.listQuery).then(
         res => {
@@ -205,13 +195,15 @@ export default {
     constitute(row) {
       this.toogleExpandCargo(row);
       SelectWaterPropertyHisInfo({ id: row.Id }).then(res => {
-         this.details=ladderChangeArr(res.data)//阶梯转换数组
+        this.details = ladderChangeArr(res.data); //阶梯转换数组
       });
     },
     getList() {
       GetWaterPropertyById({ id: this.id }, this.listQuery).then(res => {
         this.total = res.count;
         this.tableData = res.data;
+        this.$refs.historyPrice.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+        this.checksData = this.$refs.historyPrice.checkData; // 获取自定义字段中选中了字段
       });
     },
     sortChanges({ prop, order }) {
@@ -244,13 +236,13 @@ export default {
 /deep/ .el-table__expand-icon {
   display: none;
 }
-.ladder-item{
-  width:200px;
+.ladder-item {
+  width: 245px;
   line-height: 35px;
-  .big-blue-color{
-      color:#33B300;
-      font-size: 20px;
-    }
+  .big-blue-color {
+    color: #33b300;
+    font-size: 20px;
+  }
 }
 .circle-num {
   background: #00b2a1;
@@ -263,8 +255,8 @@ export default {
   margin-right: 8px;
   line-height: 16px;
 }
-.pl-30{
-  padding-left:26px;
+.pl-30 {
+  padding-left: 26px;
 }
 .color-more-black {
   color: #46494c;

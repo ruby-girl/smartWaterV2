@@ -34,13 +34,13 @@
           <template>
             <div v-for="(item ,index) in tableHead" :key="index">
               <el-table-column
-              :key="index"
-              min-width="160px"
-              :prop="item.ColProp"
-              align="center"
-              sortable="custom"
-              :label="item.ColDesc"          
-            />
+                :key="index"
+                min-width="160px"
+                :prop="item.ColProp"
+                align="center"
+                sortable="custom"
+                :label="item.ColDesc"
+              />
             </div>
           </template>
           <el-table-column
@@ -52,16 +52,26 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex justify-content-flex-center method-font">
-                <div class="main-color-warn" @click="constitute(row)" v-permission="['1010106']">
+                <div class="main-color-warn button-width" @click="constitute(row)" v-permission="['1010106']">
                   <a>水价构成</a>
                 </div>
-                <div class="pl-20" @click="history(row)" v-permission="['1010105']">
+                <div class="button-width" @click="history(row)" v-permission="['1010105']">
                   <a>历史水价</a>
                 </div>
-                <div class="main-color pl-20" @click="handleUpdate(row)" v-if="row.UseState=='801'" v-permission="['1010107']">
+                <div
+                  class="main-color button-width"
+                  @click="handleUpdate(row)"
+                  v-if="row.UseState=='801'"
+                  v-permission="['1010107']"
+                >
                   <a>水价调整</a>
                 </div>
-                 <div class="main-color pl-20" @click="handleUpdate(row)" v-if="row.UseState=='802'" v-permission="['1010107']">
+                <div
+                  class="color-more-black button-width"
+                  @click="reset(row)"
+                  v-if="row.UseState=='802'"
+                  v-permission="['1010107']"
+                >
                   <a>撤销水价调整</a>
                 </div>
                 <div class="main-color-red pl-20" @click="cancel(row)" v-permission="['1010105']">
@@ -81,19 +91,14 @@
         <add-dialog
           :add-show.sync="addDialogFormVisible"
           :temp="temp"
+          :id="updateId"
           :dialogStatus="dialogStatus"
           @createData="createData"
           @updateData="updateData"
           :type-list="typeList"
         />
-        <water-constitute
-          :constitute-show.sync="constituteShow"
-          :id="constituteId"
-        />
-         <history-price
-          :history-show.sync="historyShow"
-          :id="historyId"
-        />
+        <water-constitute :constitute-show.sync="constituteShow" :id="constituteId" />
+        <history-price :history-show.sync="historyShow" :id="historyId" />
       </div>
     </div>
   </div>
@@ -110,9 +115,17 @@ import {
   addWaterQuality,
   delWaterQuality,
   getWaterQualityList,
-  SelectUpdateWaterPropertyBeforeInfo
+  SelectUpdateWaterPropertyBeforeInfo,
+  UpdateWaterPropertyInfo,
+  ResetUpdateWaterPropertyInfo,
+  DeleteWaterPropertyId,
+  GetWaterPropertyList_OutExcel
 } from "@/api/system";
-import {parseStartTime,ladderChangeArr} from "@/utils/index.js"
+import {
+  parseStartTime,
+  ladderChangeArr,
+  parseTimeFiveEight
+} from "@/utils/index.js";
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   name: "WaterQualityManagement",
@@ -139,17 +152,18 @@ export default {
         sort: "", //升序
         filed: "", //排序字段
         WaterPropertyName: "", // 用水性质名称
-        WaterPropertyType : "-1", // 用水性质类型
-        IsLadder:"-1",//是否阶梯
+        WaterPropertyType: "-1", // 用水性质类型
+        IsLadder: "-1", //是否阶梯
         tableId: "0000012"
       },
-      dialogStatus:'',//标识添加编辑
+      dialogStatus: "", //标识添加编辑
+      updateId: "", //编辑行ID
       typeList: [], //用水性质类型，传递给组件
       addDialogFormVisible: false, // 新增弹窗
       constituteShow: false, // 水价构成弹窗
-      historyShow:false,//历史水价弹窗
-      constituteId:'0',//水价构成行ID
-      historyId:'0',//历史水价行ID
+      historyShow: false, //历史水价弹窗
+      constituteId: "", //水价构成行ID
+      historyId: "", //历史水价行ID
       tableData: [],
       checksData: []
     };
@@ -170,20 +184,19 @@ export default {
       that.tableHeight = document.body.clientHeight - formHeight - 220;
       this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-     this.typeList=getDictionaryOption('用水性质类型')
-     
+      this.typeList = getDictionaryOption("用水性质类型");
     });
   },
   methods: {
     // 历史水价
-    history(row){
-      this.historyId=row.Id
-      this.historyShow=true
+    history(row) {
+      this.historyId = row.Id;
+      this.historyShow = true;
     },
     // 点击水价构成
-    constitute(row){
-      this.constituteId=row.Id
-      this.constituteShow=true
+    constitute(row) {
+      this.constituteId = row.Id;
+      this.constituteShow = true;
     },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
@@ -207,18 +220,18 @@ export default {
     handleFilter() {
       this.listQuery.page = 1;
       this.getList();
-    },  
+    },
     add() {
-      this.temp={
-       UseWaterTypeName: "",//用水性质名称
-        StartPlanDate:parseStartTime(new Date()),//开始执行日期
+      (this.temp = {
+        UseWaterTypeName: "", //用水性质名称
+        StartPlanDate: parseStartTime(new Date()), //开始执行日期
         NewPriceUseDate: "",
-        IsLadder: true,//是否阶梯计价
-        isLadder:'1',
-        LadderResetTime: '1',//阶梯月数
-        LadderNumber: 3,//阶梯数
-        IsCanCancelWaterPriceChange: true,//是否可撤销
-        WaterPropertyType: '401',//用水性质类型-默认值-居民用水
+        IsLadder: true, //是否阶梯计价
+        isLadder: "1",
+        LadderResetTime: "1", //阶梯月数
+        LadderNumber: 3, //阶梯数
+        IsCanCancelWaterPriceChange: true, //是否可撤销
+        WaterPropertyType: "401", //用水性质类型-默认值-居民用水
         OneLadderWaterNum: 0,
         OneLadderPrice: 0,
         OneTotalPrice: 0,
@@ -234,42 +247,45 @@ export default {
         FiveLadderWaterNum: 0,
         FiveLadderPrice: 0,
         FiveTotalPrice: 0,
-        SewagePrice: 0,//污水费单价
-        OtherPrice1: 0,//其他费用1
-        OtherPrice2: 0,//其他费用2
-        OtherPrice3: 0,//其他费用3
-        NotLadderPrice:0,//单价
-        TotalPrice: 0,//合计单价
+        SewagePrice: 0, //污水费单价
+        OtherPrice1: 0, //其他费用1
+        OtherPrice2: 0, //其他费用2
+        OtherPrice3: 0, //其他费用3
+        NotLadderPrice: 0, //单价
+        TotalPrice: 0, //合计单价
         ladder: [
           { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0},
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0},
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
           { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
           { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
         ]
-      },
-      this.dialogStatus = "create";
+      }),
+        (this.dialogStatus = "create");
       this.addDialogFormVisible = true;
     },
     // 水价调整-编辑
     handleUpdate(row) {
-      SelectUpdateWaterPropertyBeforeInfo({id: row.Id}).then(res => {
-       let ladder={
-          isLadder:'1'
-       }
-        let obj=ladderChangeArr(res.data)//阶梯转换数组
-        ladder.isLadder=obj.IsLadder==true?'1':'2'
-        this.temp={...ladder,...obj}
+      SelectUpdateWaterPropertyBeforeInfo({ id: row.Id }).then(res => {
+        this.updateId = row.Id;
+        let ladder = {
+          isLadder: "1",
+          NewPriceUseDate: parseTimeFiveEight(new Date())
+        };
+        let obj = ladderChangeArr(res.data); //阶梯转换数组
+        ladder.isLadder = obj.IsLadder == true ? "1" : "2";
+        obj.WaterPropertyType = obj.WaterPropertyType.toString();
+        this.temp = { ...ladder, ...obj };
         this.dialogStatus = "update";
-         this.addDialogFormVisible = true;
-      });      
+        this.addDialogFormVisible = true;
+      });
     },
     // 新增
     createData() {
       addWaterQuality(this.temp).then(res => {
         this.addDialogFormVisible = false;
         this.$message({
-          message: '添加成功！',
+          message: "添加成功！",
           type: "success",
           duration: 4000
         });
@@ -278,28 +294,27 @@ export default {
     },
     // 编辑
     updateData() {
-      console.log(this.temp)
-      // deitAccount(this.temp).then(res => {
-      //   this.dialogFormVisible = false;
-      //   this.$message({
-      //     message: res.message,
-      //     type: "success",
-      //     duration: 4000
-      //   });
-      //   this.getList();
-      // });
+      UpdateWaterPropertyInfo({ id: this.updateId }, this.temp).then(res => {
+        this.addDialogFormVisible = false;
+        this.$message({
+          message: res.message,
+          type: "success",
+          duration: 4000
+        });
+        this.getList();
+      });
     },
     cancel(row) {
-      this.$confirm("是否注销当前账号", "提示", {
+      this.$confirm("是否确认删除该用水性质？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        cancelAccount(row.Id).then(res => {
+        DeleteWaterPropertyId({id:row.Id}).then(res => {
           this.$message({
-            message: res.message,
+            message: '删除成功',
             type: "success",
             duration: 4000
           });
@@ -307,13 +322,41 @@ export default {
         });
       });
     },
-    excel() {
-      //导出
-      exportExcel(this.listQuery).then(res => {
+     //导出
+    excel() {    
+      GetWaterPropertyList_OutExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
+      });
+    },
+    reset(row) {
+      this.$confirm("是否确认撤销新水价？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        customClass: "warningBox",
+        showClose: false
+      }).then(() => {
+        ResetUpdateWaterPropertyInfo({ id: row.Id }).then(res => {
+          this.$message({
+            message: "撤销成功！",
+            type: "success",
+            duration: 4000
+          });
+          this.getList();
+        });
       });
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.color-more-black {
+  color: #46494c;
+}
+.button-width {
+  width: 80px;
+  text-align: center;
+}
+</style>
+
 
