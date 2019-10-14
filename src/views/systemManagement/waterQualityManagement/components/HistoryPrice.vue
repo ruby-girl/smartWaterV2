@@ -1,7 +1,7 @@
 <template>
   <!-- 新增弹窗 -->
   <el-dialog
-    title="添加"
+    title="历史水价"
     :visible.sync="AdialogFormVisible"
     top="20vh"
     width="1020px"
@@ -36,24 +36,24 @@
       >
         <el-table-column type="expand" width="1" class="row-expand-cover">
           <template slot-scope="props">
-            <div class="ladder-box display-flex justify-content-flex-justify align-items-center">
-              <div>
+            <div class="ladder-box display-flex  align-items-center">
+              <div class="ladder-item pl-30">
                 污水费：
-                <span class="color-more-black">20元/吨</span>
+                <span>{{details.SewagePrice}}</span>
               </div>
-              <div>
+              <div class="ladder-item ladder-center-box">
                 其他费用1：
-                <span class="color-more-black">20元/吨</span>
+                 <span>{{details.OtherPrice1}}</span>
               </div>
-              <div>
+              <div class="ladder-item ladder-center-box">
                 其他费用2：
-                <span class="color-more-black">20元/吨</span>
+                 <span>{{details.OtherPrice2}}</span>
               </div>
             </div>
             <div v-if="details.IsLadder">
               <div v-for="(item,i) in details.ladder" class="ladder-bottom-box">
                 <div
-                  class="display-flex justify-content-flex-justify"
+                  class="display-flex"
                   v-if="details.LadderNumber>i"
                 >
                   <div class="display-flex align-items-center ladder-item">
@@ -63,16 +63,16 @@
                       <span>{{item.LadderPrice}}元/吨</span>
                     </div>
                   </div>
-                  <div class="display-flex align-items-center ladder-item">
+                  <div class="display-flex align-items-center ladder-item ladder-center-box">
                     <span>{{i+1}}阶起始量：</span>
                     <div class="table-input-y">
                       <span>{{item.LadderWaterNum}}吨</span>
                     </div>
                   </div>
-                  <div class="display-flex align-items-center ladder-item color-more-black">
+                  <div class="display-flex align-items-center ladder-item color-more-black ladder-center-box">
                     <span>{{i+1}}阶合计单价：</span>
                     <div class="table-input-y">
-                      <span>{{item.TotalPrice}}元/吨</span>
+                      <span class="big-blue-color">{{item.TotalPrice}}</span>元/吨
                     </div>
                   </div>
                 </div>
@@ -124,15 +124,9 @@ import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import {
   GetWaterPropertyById,
-  SelectUpdateWaterPropertyBeforeInfo
+  SelectWaterPropertyHisInfo
 } from "@/api/system";
-const actions = {
-  "0": ["OneLadderWaterNum", "OneLadderPrice", "OneTotalPrice"],
-  "1": ["TwoLadderWaterNum", "TwoLadderPrice", "TwoTotalPrice"],
-  "2": ["ThreeLadderWaterNum", "ThreeLadderPrice", "ThreeTotalPrice"],
-  "3": ["FourLadderWaterNum", "FourLadderPrice", "FourTotalPrice"],
-  "4": ["FiveLadderWaterNum", "FiveLadderPrice", "FiveTotalPrice"]
-};
+import {ladderChangeArr} from "@/utils/index"
 export default {
   props: {
     id: {
@@ -192,15 +186,7 @@ export default {
         filed: "", //排序字段
         tableId: "0000013"
       },
-      details: {
-        ladder: [
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
-        ]
-      }
+      details: {}
     };
   },
   methods: {
@@ -218,13 +204,8 @@ export default {
     // 点击水价构成
     constitute(row) {
       this.toogleExpandCargo(row);
-      SelectUpdateWaterPropertyBeforeInfo({ id: row.Id }).then(res => {
-        this.details = { ...res.data, ...this.details };
-        this.details.ladder.map(function(item, i) {
-          this.details.ladder[i].LadderWaterNum = this.details[actions[i][0]];
-          this.details.ladder[i].LadderPrice = this.details[actions[i][1]];
-          this.details.ladder[i].TotalPrice = this.details[actions[i][2]];
-        }, this);
+      SelectWaterPropertyHisInfo({ id: row.Id }).then(res => {
+         this.details=ladderChangeArr(res.data)//阶梯转换数组
       });
     },
     getList() {
@@ -262,6 +243,31 @@ export default {
 // }
 /deep/ .el-table__expand-icon {
   display: none;
+}
+.ladder-item{
+  width:200px;
+  line-height: 35px;
+  .big-blue-color{
+      color:#33B300;
+      font-size: 20px;
+    }
+}
+.circle-num {
+  background: #00b2a1;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-family: "Script MT", "Arial Narrow", Arial, sans-serif;
+  text-align: center;
+  color: #fff;
+  margin-right: 8px;
+  line-height: 16px;
+}
+.pl-30{
+  padding-left:26px;
+}
+.color-more-black {
+  color: #46494c;
 }
 </style>
 

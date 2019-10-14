@@ -20,8 +20,8 @@
     >
       <el-form-item label="是否执行阶梯计价">
         <el-radio-group v-model="temp.isLadder">
-          <el-radio label="1">是</el-radio>
-          <el-radio label="2">否</el-radio>
+          <el-radio :label="'1'">是</el-radio>
+          <el-radio :label="'2'">否</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -35,13 +35,7 @@
 <script>
 import LadderTrue from "./LadderTrue";
 import LadderFalse from "./LadderFalse";
-const actions = {
-  '0': ['OneLadderWaterNum','OneLadderPrice','OneTotalPrice'],
-  '1': ['TwoLadderWaterNum','TwoLadderPrice','TwoTotalPrice'],
-  '2': ['ThreeLadderWaterNum','ThreeLadderPrice','ThreeTotalPrice'],
-  '3': ['FourLadderWaterNum','FourLadderPrice','FourTotalPrice'],
-  '4':['FiveLadderWaterNum','FiveLadderPrice','FiveTotalPrice'],
-}
+import {ladderChangeObj} from "@/utils/index"
 export default {
   props: {
     temp: {
@@ -75,9 +69,10 @@ export default {
       }
       this.$emit("update:addShow", val);
     },
-    "temp.isLadder": {
+    "temp.isLadder": {    
       handler(val, oldVal) {
-        if (val == "1") {
+       console.log()
+        if (val == 1) {
           this.LadderComponents = "LadderTrue";
         } else {
           this.LadderComponents = "LadderFalse";
@@ -117,8 +112,9 @@ export default {
       this.temp.loginPwdSave = this.temp.loginPwdSave.replace(/./g, "*");
     },
     // 新增
-    createData() {
+    createData() {   
       let judge=this.temp.isLadder==1?"dataFormTrue":"dataFormFalse"
+      return
       this.$refs["childrenTemp"].$refs[judge].validate(valid => {
         if (!valid) return false;
         else {
@@ -167,17 +163,9 @@ export default {
         return false;
       } else {
         // 阶梯数组赋值给对象
-        this.setLadder()
+        this.temp=ladderChangeObj(this.temp)
         return true;
       }
-    },
-    // 阶梯赋值
-    setLadder(){
-        this.temp.ladder.map(function(item,i){     
-          this.temp[actions[i][0]]=item.LadderWaterNum
-          this.temp[actions[i][1]]=item.LadderPrice
-          this.temp[actions[i][2]]=item.TotalPrice
-        },this)
     },
     addDialogClose() {
       this.$nextTick(() => {
