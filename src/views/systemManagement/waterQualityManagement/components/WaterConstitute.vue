@@ -52,13 +52,7 @@
 </template>
 <script>
 import { SelectUpdateWaterPropertyBeforeInfo } from "@/api/system";
-const actions = {
-  "0": ["OneLadderWaterNum", "OneLadderPrice", "OneTotalPrice"],
-  "1": ["TwoLadderWaterNum", "TwoLadderPrice", "TwoTotalPrice"],
-  "2": ["ThreeLadderWaterNum", "ThreeLadderPrice", "ThreeTotalPrice"],
-  "3": ["FourLadderWaterNum", "FourLadderPrice", "FourTotalPrice"],
-  "4": ["FiveLadderWaterNum", "FiveLadderPrice", "FiveTotalPrice"]
-};
+import {ladderChangeArr} from "@/utils/index"
 export default {
   props: {
     id: {
@@ -74,12 +68,7 @@ export default {
       this.AdialogFormVisible = this.constituteShow;
       if (!this.constituteShow) return false;//如果监听ID，编辑行数据后，ID依然不会变，所以在弹窗显示再请求数据
       SelectUpdateWaterPropertyBeforeInfo({ id: this.id }).then(res => {
-        this.details = { ...res.data, ...this.details };
-        this.details.ladder.map(function(item, i) {
-          this.details.ladder[i].LadderWaterNum = this.details[actions[i][0]];
-          this.details.ladder[i].LadderPrice = this.details[actions[i][1]];
-          this.details.ladder[i].TotalPrice = this.details[actions[i][2]];
-        }, this);
+       this.details=ladderChangeArr(res.data)//阶梯转换数组
       });
     },
     AdialogFormVisible(val, oldVal) {
@@ -93,15 +82,7 @@ export default {
   data() {
     return {
       AdialogFormVisible: false,
-      details: {
-        ladder: [
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
-          { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
-        ]
-      }
+      details: {}
     };
   },
   methods: {}

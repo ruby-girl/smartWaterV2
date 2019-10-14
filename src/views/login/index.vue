@@ -47,7 +47,7 @@
       <el-button
         :loading="loading"
         type="primary"
-        style="width:100%;margin-top:12px;font-size:20px;font-weight:ormal;"
+        style="width:100%;margin-top:12px;font-size:20px;font-weight:normal;"
         @click.native.prevent="handleLogin"
 
       >登&nbsp;&nbsp;录</el-button>

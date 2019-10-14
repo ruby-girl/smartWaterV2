@@ -2,14 +2,13 @@
   <div class="meter_Small">
     <div class="meter_left">
       <ul>
-        <li><label>抄表计划</label><span>232323</span></li>
+        <li><label>抄表计划</label><span>{{ meterPlan.Name }}</span></li>
         <li><label>用户编号</label><span>232323</span></li>
         <li><label>姓名</label><span>232323</span></li>
-        <li><label>水表类型</label><span>机械水表</span></li>
-        <li><label>表册</label><span>全部</span></li>
-        <li><label>合计</label><span>232323</span></li>
-        <li><label>已抄</label><span style="color: #00B3A1">232323</span></li>
-        <li><label>未抄</label><span style="color: #FF3D3D">232323</span></li>
+        <li><label>表册</label><span>{{ meterData.BookName || '-'}}</span></li>
+        <li><label>合计</label><span>{{ meterData.TotalNum || '-'}}</span></li>
+        <li><label>已抄</label><span style="color: #00B3A1">{{ meterData.CompletedNum || '-'}}</span></li>
+        <li><label>未抄</label><span style="color: #FF3D3D">{{ meterData.UnCompletedNum || '-'}}</span></li>
       </ul>
 
       <div class="water_box">
@@ -57,31 +56,31 @@
         <div class="meter_box meter_box1">
           <p>抄表日期</p>
           <el-date-picker
-            v-model="input1"
-            type="date"
+            v-model="param.ReadDate"
+            type="datetime"
             placeholder="选择日期">
           </el-date-picker>
         </div>
         <div class="meter_box meter_box2">
           <p>上次读书</p>
-          <el-input v-model="input1" placeholder="按[enter]键确定"></el-input>
+          <el-input v-model="currentContract.LastReadNum" :disabled="true"></el-input>
         </div>
       </div>
       <div class="meter_box meter_box3">
         <p>本次读书</p>
-        <el-input v-model="input1" placeholder=""></el-input>
+        <el-input v-model="param.ReadNum" placeholder="按[enter]键确定" @keyup.enter.native="getWaterPredict()"></el-input>
       </div>
-      <el-input class="meter_remark" placeholder="请输入内容" v-model="input1">
+      <el-input class="meter_remark" placeholder="请输入内容" v-model="param.Remark">
         <template slot="prepend">备注：</template>
       </el-input>
       <el-row style="width: 100%">
         <el-col :span="20">
-          <el-checkbox-group v-model="input">
+          <el-checkbox-group v-model="checks">
             <el-checkbox label="字轮是否翻页" name="type"></el-checkbox>
             8
             <el-checkbox label="自动载入下一户" name="type"></el-checkbox>
             <el-checkbox label="异常倍率" name="type">
-              异常倍率&nbsp;&nbsp;&nbsp;<el-select v-model="input1" placeholder="请选择" size="mini"
+              异常倍率&nbsp;&nbsp;&nbsp;<el-select v-model="magnification" placeholder="请选择" size="mini"
                                                @keyup.enter.native="searchFun">
               <el-option label="1.5" value="1.5"/>
               <el-option label="2" value="2"/>
@@ -99,18 +98,53 @@
 </template>
 
 <script>
+  import { getReading, WaterYieldPricePredict } from "@/api/meterReading"
+  import Bus from '@/utils/bus'
+
   export default {
     name: "MeterPlanSmall",
     data(){
       return {
-        input1:'',
-        input:[]
+        checks:[],
+        meterData: {},
+        meterPlan:'',//抄表计划
+        currentContract:{},//当前选中信息
+        param:{//抄表参数
+          SA_MeterRecord_Id : '' ,
+          ReadDate : new Date() ,
+          ReadNum : '' ,
+          Remark : '' ,
+          IsPage : false
+        },
+        magnification:''//倍率
       }
     },
     methods: {
       getShrink(type){
         type==0? document.getElementById('water_hide').style.width = 575 +'px': document.getElementById('water_hide').style.width = 0 + 'px';
+      },
+      getCheck(){//抄表
+        getReading(this.param).then(res => {
+          if (res.code ==0 ) {
+            console.log(res)
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning',
+              duration: 4000
+            });
+          }
+        })
+      },
+      getWaterPredict(){//获取水量水费数据
+
       }
+    },
+    mounted() {
+      var _this = this;
+      Bus.$on('msg',(e) =>{//从兄弟组件接收抄表计划名称
+        _this.meterPlan = e
+      })
     }
   }
 </script>

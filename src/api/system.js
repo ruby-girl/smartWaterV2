@@ -29,7 +29,7 @@ export function getWaterQualityList(data){
   })
 }
 
-//水价构成
+//水价构成--or 编辑前获取详情
 export function SelectUpdateWaterPropertyBeforeInfo(data){
   return request({
     url: '/WaterProperty/SelectUpdateWaterPropertyBeforeInfo',
@@ -48,7 +48,7 @@ export function GetWaterPropertyById(id,data){
   })
 }
 
-//历史水价
+//导出历史水价
 export function GetWaterPropertyHisList_OutExcel(id,data){
   return request({
     url: '/WaterProperty/GetWaterPropertyHisList_OutExcel',
@@ -57,3 +57,13 @@ export function GetWaterPropertyHisList_OutExcel(id,data){
     params:id,
   })
 }
+//历史水价--水价构成
+export function SelectWaterPropertyHisInfo(id,data){
+  return request({
+    url: '/WaterProperty/SelectWaterPropertyHisInfo',
+    method: 'post',  
+    data:data,
+    params:id,
+  })
+}
+

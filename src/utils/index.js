@@ -37,13 +37,65 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
     return value || 0
   })
   return time_str
+}
+/**
+ * @param {object} res
+ * @returns {object}
+ */
+// 阶梯转换 后端返回的对象，将5个阶梯转换为数组
+export function ladderChangeArr(res) {
+  const actions = {
+    "0": ["OneLadderWaterNum", "OneLadderPrice", "OneTotalPrice"],
+    "1": ["TwoLadderWaterNum", "TwoLadderPrice", "TwoTotalPrice"],
+    "2": ["ThreeLadderWaterNum", "ThreeLadderPrice", "ThreeTotalPrice"],
+    "3": ["FourLadderWaterNum", "FourLadderPrice", "FourTotalPrice"],
+    "4": ["FiveLadderWaterNum", "FiveLadderPrice", "FiveTotalPrice"]
+  };
+  let ladder = {
+    ladder: [
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
+    ]
+  }
+  // 对象中 ladder就是阶梯值-可用来做循环
+ let details = { ...res, ...ladder};
+    details.ladder.map(function (item,i) {
+    details.ladder[i].LadderWaterNum = details[actions[i][0]];
+    details.ladder[i].LadderPrice = details[actions[i][1]];
+    details.ladder[i].TotalPrice = details[actions[i][2]];
+  });
+  return details
+}
+/**
+ * @param {object} details
+ * @returns {object}
+ */
+// 阶梯转换->数组中的值-赋值给需要传给后端的对象
+export function ladderChangeObj(details) {
+  const actions = {
+    "0": ["OneLadderWaterNum", "OneLadderPrice", "OneTotalPrice"],
+    "1": ["TwoLadderWaterNum", "TwoLadderPrice", "TwoTotalPrice"],
+    "2": ["ThreeLadderWaterNum", "ThreeLadderPrice", "ThreeTotalPrice"],
+    "3": ["FourLadderWaterNum", "FourLadderPrice", "FourTotalPrice"],
+    "4": ["FiveLadderWaterNum", "FiveLadderPrice", "FiveTotalPrice"]
+  };
+  
+  details.ladder.map(function(item,i){     
+    details[actions[i][0]]=item.LadderWaterNum
+    details[actions[i][1]]=item.LadderPrice
+    details[actions[i][2]]=item.TotalPrice
+  })
+  return details
 }
 export function parseStartTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -74,7 +126,7 @@ export function parseStartTime(time, cFormat) {
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
@@ -111,7 +163,7 @@ export function parseEndTime(time, cFormat) {
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
@@ -236,12 +288,12 @@ export function param2Obj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"')
+      .replace(/\+/g, ' ') +
+    '"}'
   )
 }
 
@@ -320,7 +372,7 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -337,7 +389,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -379,16 +431,16 @@ export function updateMoney(value) {
   value = value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
   value = value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');//只能输入两个小数
   if (value.indexOf(".") < 0 && value != "") {//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
-      value = value.slice(0, 8)
-      value = parseFloat(value);
+    value = value.slice(0, 8)
+    value = parseFloat(value);
   } else if (value.indexOf(".") > 0 && value != "") {
-      var attr = value.split(".")
-      if (attr[0].length > 8) {
-          var last = attr[0].slice(0, 8)
-          var n = attr[1].slice(0, 2)
-          console.log('n--'+n)
-          value = last + '.' + n
-      }
+    var attr = value.split(".")
+    if (attr[0].length > 8) {
+      var last = attr[0].slice(0, 8)
+      var n = attr[1].slice(0, 2)
+      console.log('n--' + n)
+      value = last + '.' + n
+    }
   }
   return value
 }
@@ -396,17 +448,17 @@ export function updateMoney(value) {
 export function changeTwoDecimal(x) {
   var f_x = parseFloat(x);
   if (isNaN(f_x)) {
-      return 0;
+    return 0;
   }
   var f_x = Math.round(x * 100) / 100;
   var s_x = f_x.toString();
   var pos_decimal = s_x.indexOf('.');
   if (pos_decimal < 0) {
-      pos_decimal = s_x.length;
-      s_x += '.';
+    pos_decimal = s_x.length;
+    s_x += '.';
   }
   while (s_x.length <= pos_decimal + 2) {
-      s_x += '0';
+    s_x += '0';
   }
   return s_x;
 }
@@ -414,7 +466,7 @@ export function changeTwoDecimal(x) {
 export function delDecimal(x) {
   var f_x = parseFloat(x);
   if (isNaN(f_x)) {
-      return 0;
+    return 0;
   }
   var f_x = Math.round(x * 100) / 100;
   var s_x = f_x.toString();
@@ -472,9 +524,9 @@ Date.prototype.Format = function (fmt) { //author: meizz
   var o = {
     "M+": this.getMonth() + 1, //月份
     "d+": this.getDate(), //日
- /*   "h+": this.getHours(), //小时
-    "m+": this.getMinutes(), //分
-    "s+": this.getSeconds(), //秒*/
+    /*   "h+": this.getHours(), //小时
+       "m+": this.getMinutes(), //分
+       "s+": this.getSeconds(), //秒*/
     "h+": 0, //小时
     "m+": 0, //分
     "s+": 0, //秒

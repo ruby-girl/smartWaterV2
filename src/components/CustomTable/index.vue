@@ -7,7 +7,7 @@
       </p>
         <span class="fl">自定义选项：</span>
         <div class="fl">
-          <el-checkbox v-for="check in checkData" :key="check.Id" v-show="check.IsShow" :disabled="check.ifDisable"  v-model="check.IsCheck" v-dragging="{ item: check, list: checkData, group: 'check' }">{{ check.ColDesc }}</el-checkbox>
+          <el-checkbox v-for="(check,i) in checkData" :key="i" v-show="check.IsShow" :disabled="check.ifDisable"  v-model="check.IsCheck" v-dragging="{ item: check, list: checkData, group: 'check' }">{{ check.ColDesc }}</el-checkbox>
         </div>
     </div>
   </div>
@@ -165,7 +165,7 @@ export default {
         label{font-size:14px;margin-left: 20px;color: #FF3D3D;cursor: pointer}
       }
         position: relative;
-        padding:28px 30px 0 30px;border: solid 1px #eee;margin-bottom: 16px;background: #ffffe7;border: solid 1px #fbdb14;line-height: 50px;overflow: auto;
+        padding:30px 30px 0 30px;border: solid 1px #eee;margin-bottom: 16px;background: #ffffe7;border: solid 1px #fbdb14;line-height: 50px;overflow: auto;
         color: #8b8c89;font-size: 14px;max-height: 100px;display: flex;
       >span{display: inline-block;width: 85px}
       >div{flex: 1}

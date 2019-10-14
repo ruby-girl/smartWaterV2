@@ -83,11 +83,11 @@
 <script>
   import '@/styles/organization.scss'
   import Dialog from './components/Dialog'//新增或添加组建
-  import Schedule from './components/Schedule'//表册
   import customTable from '@/components/CustomTable/index'//自定义组建
+  import Pagination from '@/components/Pagination/index'//分页
+  import Schedule from './components/Schedule'//表册
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
-  import Pagination from '@/components/Pagination/index'//分页
   import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"//http 请求
   import { parseTime } from "@/utils/index"
 
@@ -191,6 +191,7 @@
       },
       handleUser(){//表册移交
         this.$refs.childSchedule.dialogVisible = true
+        this.$refs.childSchedule.getTableInfo()
       },
       handleEmpty(){//清空
 
