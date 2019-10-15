@@ -9,7 +9,7 @@
         :class="{'plan-table':isShowAdPlanClass }"
       >
         <el-button v-show="isShowAdPlan" type="primary" size="mini" @click="addPlan">
-          <i class="iconfont icontianjia"></i>新增抄表计划
+          <i class="iconfont icontianjia"></i>添加
         </el-button>
         <div :class="{'showPlan':isShowAdPlanClass }">
           <el-button type="success" size="mini" @click="exportList">
