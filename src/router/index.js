@@ -163,6 +163,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'cashCharge',
+        component: () => import('@/views/businessManagement/cashCharge/index'),
+        name: 'cashCharge',
+        meta: {
+          title: '现金收费',
+          roles: ['1']
+        }
+      },
+      {
         path: 'meterSetUp',
         component: () => import('@/views/businessManagement/meterSetUp/index'),
         name: 'meterSetUp',

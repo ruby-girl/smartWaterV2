@@ -52,7 +52,7 @@
             fixed="right"
           >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center" v-if="row.UserStatusCode=='ZC'">
+              <div class="display-flex justify-content-flex-center" v-if="row.UserStatusCode=='101'">
                 <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']">
                   <a>编辑</a>
                 </div>
@@ -62,23 +62,6 @@
                 <div class="main-color pl-15" @click="reset(row)" v-permission="['1010107']">
                   <a>重置密码</a>
                 </div>
-              </div>
-              <div v-else class="display-flex justify-content-flex-center">
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color" v-permission="['1010106']">
-                    <a>编辑</a>
-                  </div>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color pl-15" v-permission="['1010105']">
-                    <a>注销</a>
-                  </div>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="账号已注销，不可进行操作" placement="bottom-start">
-                  <div class="disable-color pl-15" v-permission="['1010107']">
-                    <a>重置密码</a>
-                  </div>
-                </el-tooltip>
               </div>
             </template>
           </el-table-column>
