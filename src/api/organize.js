@@ -145,6 +145,14 @@ export function Employee_Execl(data) {
   })
 }
 
+export function MeterReaderList(data) {
+  return request({
+    url: '/Employee/MeterReaderList',
+    method: 'post',
+    params: data
+  })
+}
+
 /**
  * 获取操作员信息
  * */
@@ -217,6 +225,14 @@ export function waterFactoryExcel(data) {
 export function WaterFactoryComboBoxList(data) {
   return request({
     url: 'SA_WaterFactory/ComboBoxList',
+    method: 'post',
+    data: data
+  })
+}
+//获得具有权限水厂下拉数据
+export function WaterFactoryComboBoxListAuth(data) {
+  return request({
+    url: 'SA_WaterFactory/ComboBoxListAuth',
     method: 'post',
     data: data
   })

@@ -6,29 +6,29 @@
     :visible.sync="dialogVisible"
     :before-close="handleClose"
     width="800px">
-    <el-form :inline="true" ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="表册名称:" prop="newAreaName">
+    <el-form :inline="true" ref="ruleForm" :model="rb" :rules="rules" label-width="100px" class="demo-ruleForm">
+      <el-form-item label="表册名称:" prop="BookName">
         <el-input
-          v-model.trim="ruleForm.newAreaName"
+          v-model.trim="rb.BookName"
           placeholder="(长度1-20内)"
           maxlength="20"
           size="small"
           style="width: 250px"/>
       </el-form-item>
       <!--根据操作人员权限判断是否可以选择水厂-->
-      <el-form-item label="水厂:" prop="waterFactoryName">
-        <el-select :disabled="title=='编辑'" style="width: 250px" multiple v-model="ruleForm.waterFactoryName">
+      <el-form-item label="水厂:" prop="SA_WaterFactory_Id">
+        <el-select :disabled="title=='编辑'" style="width: 250px" v-model="rb.SA_WaterFactory_Id" @change="getMeterRead">
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="抄表员:" prop="waterFactoryName">
-        <el-select style="width: 250px" multiple v-model="ruleForm.waterFactoryName">
-          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
+      <el-form-item label="抄表员:" prop="MeterReaderId">
+        <el-select style="width: 250px" v-model="rb.MeterReaderId">
+          <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="表册类型:" prop="waterFactoryName">
-        <el-select :disabled="title=='编辑'" style="width: 250px" multiple v-model="ruleForm.waterFactoryName">
-          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
+      <el-form-item label="表册类型:" prop="BookTypeKey">
+        <el-select :disabled="title=='编辑'" style="width: 250px" v-model="rb.BookTypeKey">
+          <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <p class="footBox dialogFooter">
@@ -40,27 +40,39 @@
 </template>
 
 <script>
-  import { WaterFactoryComboBoxList, BlockAreaUpDate, BlockAreaAdd  } from "@/api/organize"//http 请求
+  import { registerAdd, registerUpDate } from "@/api/registerBook"
+  import { getDictionaryOption } from "@/utils/permission"
 
   export default {
     name: "Dialog",
     data() {
       return {
-        waterFactory:[],
         title:'',
         dialogVisible: false,
-        ruleForm: {//新增对象
-          newAreaName: '',
-          waterFactoryName:[]
+        rb:{
+          Id:'',//编辑表册ID
+          SA_WaterFactory_Id:'',//水厂ID
+          BookName:'',//表册名称
+          BookTypeKey:'601',//表册类型 '1机械', '2IC', '3远程', '4物联', '-1'
+          MeterReaderId:''//抄表员ID
         },
         rules: {
-          newAreaName: [
+          SA_WaterFactory_Id: [
             { required: true, message: '不能为空', trigger: 'change' }
           ],
-          waterFactoryName: [
+          BookName: [
+            { required: true, message: '不能为空', trigger: 'change' }
+          ],
+          BookTypeKey: [
+            { required: true, message: '不能为空', trigger: 'change' }
+          ],
+          MeterReaderId: [
             { required: true, message: '不能为空', trigger: 'change' }
           ]
         },
+        formArry:[],//表册类型
+        waterFactory:[],//具有权限水厂数据
+        meterArry:[]//抄表员
       }
     },
     methods: {
@@ -68,8 +80,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.title ==='编辑') {
-              let params = { Id: this.$parent.ID, BlockAreaName: this.ruleForm.newAreaName,List: this.ruleForm.waterFactoryName}
-              BlockAreaUpDate(params).then(res => {
+              registerUpDate(this.rb).then(res => {
                 if (res.code ==0 ) {
                   this.$message({
                     message: res.message,
@@ -88,11 +99,7 @@
                 }
               })
             } else {
-              let iba = {
-                BlockAreaName: this.ruleForm.newAreaName,List: this.ruleForm.waterFactoryName
-              }
-
-              BlockAreaAdd(iba).then(res => {
+              registerAdd(this.rb).then(res => {
                 if (res.code == 0) {
                   this.$message({
                     message: res.message,
@@ -118,28 +125,17 @@
       },
       resetForm(formName){//取消时初始化表单信息
         this.dialogVisible = false;
-        this.ruleForm.waterFactoryName = ''
         this.$refs[formName].resetFields();
       },
       handleClose(){//弹窗关闭初始化表单信息
         this.resetForm('ruleForm')
       },
-      getWaterFactoryList(){//获取水厂数据集合
-        WaterFactoryComboBoxList({SA_BlockArea_Id:''}).then(res => {
-          if (res.code ==0 ) {
-            this.waterFactory = res.data;
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
-          }
-        })
+      getMeterRead(id){
+        this.$parent.getMeterReaderList(2,id)
       }
     },
     mounted() {
-      this.getWaterFactoryList()//调用获取水厂数据集合方法
+      this.formArry = getDictionaryOption('表册类型')
     }
   }
 </script>

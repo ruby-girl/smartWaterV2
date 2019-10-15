@@ -17,8 +17,7 @@
              label-width="100px">
              <el-form-item label="水厂：">
                <el-select v-model="rbdp.SA_WaterFactory_Id" placeholder="请选择" size="small">
-                 <el-option label="全部" value="-1"></el-option>
-                 <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+                 <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" />
                </el-select>
              </el-form-item>
              <el-form-item label="所属区域：">
@@ -30,7 +29,7 @@
              <el-form-item label="水表类型：">
                <el-select v-model="rbdp.BookTypeKey" placeholder="请选择" size="small">
                  <el-option label="全部" value="-1"></el-option>
-                 <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+                 <el-option v-for="(item,index) in waterTypeArry" :key="index" :label="item.Name" :value="item.Id" />
                </el-select>
              </el-form-item>
              <el-form-item  label="用户：">
@@ -85,6 +84,24 @@
              :limit.sync="rbdp.limit"
              @pagination="searchFun"/>
            <!--列表组建 e-->
+           <div class="move_box" id="move_box1" @mouseover="getAnimate(1)">
+             <h3>移动用户至表册</h3>
+             <el-form>
+               <el-form-item label="移动至表册序号:" label-width="115px">
+                 <el-input v-model="dialogVisible" maxlength="20" style="width: 65px;" size="small"/>
+               </el-form-item>
+               <el-form-item label="">
+                 <el-radio-group v-model="dialogVisible">
+                   <el-radio label="前"></el-radio>
+                   <el-radio label="后"></el-radio>
+                 </el-radio-group>
+               </el-form-item>
+               <el-form-item style="text-align: center">
+                 <el-button type="primary" size="small" @click="submitFun(1)">确认</el-button>
+                 <el-button size="small" @click="cancelFun(1)">取消</el-button>
+               </el-form-item>
+             </el-form>
+           </div>
          </div>
       </el-col>
       <el-col :span="12">
@@ -99,8 +116,7 @@
             @submit.native.prevent>
             <el-form-item label="水厂：">
               <el-select v-model="rbdp.SA_WaterFactory_Id" placeholder="请选择" size="small"  @keyup.enter.native="">
-                <el-option label="全部" value="-1"></el-option>
-                <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+                <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </el-form-item>
             <el-form-item label="抄表员：">
@@ -167,16 +183,35 @@
             :limit.sync="rbdp.limit"
             @pagination="searchFun"/>
           <!--列表组建 e-->
+          <div class="move_box" id="move_box2" @mouseover="getAnimate(2)">
+            <h3>移动用户至临时表册</h3>
+            <el-form>
+              <el-form-item label="移动至表册序号:" label-width="115px">
+                <el-input v-model="dialogVisible" maxlength="20" style="width: 65px;" size="small"/>
+              </el-form-item>
+              <el-form-item label="">
+                <el-radio-group v-model="dialogVisible">
+                  <el-radio label="前"></el-radio>
+                  <el-radio label="后"></el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item style="text-align: center">
+                <el-button type="primary" size="small" @click="submitFun(2)">确认</el-button>
+                <el-button size="small" @click="cancelFun(2)">取消</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
         </div>
       </el-col>
     </el-row>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+      <el-button @click="dialogVisible = false" size="small">关 闭</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
+  import { RegisterDetailGetList } from "@/api/registerBook"
   import CustomTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
 
@@ -211,6 +246,8 @@
         tableHeight3:null,
         checksData: [],
         checksData2: [],
+        waterFactory:[],//水厂集合
+        waterTypeArry:[]
       }
     },
     methods: {
@@ -243,6 +280,15 @@
           this.tableHeight = document.documentElement.clientHeight - document.getElementById('table2').offsetTop - 200
           this.tableHeight3 = document.documentElement.clientHeight - document.getElementById('table3').offsetTop - 200
         })
+      },
+      getAnimate(type){//动画
+        type==1 ? document.getElementById('move_box1').classList.add('on') : document.getElementById('move_box2').classList.add('on')
+      },
+      submitFun(type){//确认移交
+        type==1 ? document.getElementById('move_box1').classList.remove('on') : document.getElementById('move_box2').classList.remove('on')
+      },
+      cancelFun(type){//取消移交
+        type==1 ? document.getElementById('move_box1').classList.remove('on') : document.getElementById('move_box2').classList.remove('on')
       }
     },
     watch: {
@@ -280,6 +326,9 @@
         }
         return arrayHead
       }
+    },
+    mounted() {
+      this.waterTypeArry = getDictionaryOption('水表类型')
     }
   }
 </script>
@@ -294,6 +343,27 @@
     .forms_box{
       .cl-color1{margin-left: 10px;}
       background: #fff;position: relative;padding: 25px 20px 0 20px;
+    }
+    .move_box{
+      background: #F5F5F5;width: 230px;position: absolute;top: -40px;left: 50%;margin-left: -115px;padding: 0 28px 15px 28px;box-shadow: 1px 1px 5px #ddd;border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;height: 48px;overflow: hidden;cursor: pointer;
+      h3{font: normal 16px/15px 'Microsoft YaHei';color: #46494C;text-align: center;}
+      .el-radio{display: block;margin-bottom: 13px;}
+      .el-form-item { margin-bottom: 0;}
+    }
+    .on{
+      animation:move .5s;
+      -webkit-animation:move .5s;
+      animation-fill-mode:forwards;
+      -webkit-animation-fill-mode:forwards
+    }
+    @keyframes move{
+      0%{height:48px;}
+      100%{height:192px;}
+    }
+    @-webkit-keyframes move{
+      0%{height:48px;}
+      100%{height:192px;}
     }
   }
 </style>
