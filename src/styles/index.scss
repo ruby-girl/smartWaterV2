@@ -110,7 +110,7 @@ aside {
   font-size: 16px;
   font-family:Microsoft YaHei, Arial, sans-serif, Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB;
   color: #2c3e50;
- 
+
   a {
     color: #337ab7;
     cursor: pointer;
@@ -341,4 +341,8 @@ button, input, optgroup, select, textarea{
 }
 .method-font a{
 font-size: 13px;
+}
+.el-input.is-disabled .el-input__inner {
+  background-color: #F0F0F0;
+  color: #9CA3A6;
 }

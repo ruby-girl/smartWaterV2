@@ -29,10 +29,10 @@
           <el-option label="姓名" value="2"></el-option>
           <el-option label="简码" value="3"></el-option>
         </el-select>
-        <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)" @keyup.enter.native="handleFilter" style="width: 180px;float: left"/>
+        <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)" style="width: 180px;float: left"/>
       </el-form-item><br/>
       <el-form-item label="抄表状态：">
-        <el-select v-model="param.MeterReadState" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+        <el-select v-model="param.MeterReadState" placeholder="请选择" size="small">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>

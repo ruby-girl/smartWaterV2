@@ -89,8 +89,8 @@
             </div>
           </div>
           <div class="display-flex align-items-center ladder-item" v-if="(i+1)==temp.LadderNumber">
-            <span class="main-color" v-if="temp.LadderNumber<5" @click="addLadderNumber">增加</span>&nbsp;&nbsp;&nbsp;
-            <span class="main-color-red" @click="delLadderNumber" v-if="temp.LadderNumber>2">删除</span>
+            <span class="main-color cursor" v-if="temp.LadderNumber<5" @click="addLadderNumber">增加</span>&nbsp;&nbsp;&nbsp;
+            <span class="main-color-red cursor" @click="delLadderNumber" v-if="temp.LadderNumber>2">删除</span>
           </div>
         </div>
         </div>
@@ -213,6 +213,9 @@ export default {
   > .display-flex:first-child .table-input-y {
     border-top: 1px solid rgba(216, 226, 231, 1);
   }
+}
+.cursor{
+  cursor: pointer;
 }
 </style>
 

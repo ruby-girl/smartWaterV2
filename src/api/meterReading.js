@@ -1,5 +1,6 @@
-import request from '@/utils/request'
 /*******抄表设置接口********/
+import request from '@/utils/request'
+
 /**
  * 抄表计划
  * */

@@ -56,16 +56,10 @@
                 <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']">
                   <a>编辑</a>
                 </div>
-                <div class="main-color-red pl-15" @click="deleteRow(row)" v-permission="['1010105']" v-if="row.isDelete==true">
+                <div class="main-color-red pl-15" @click="deleteRow(row)" v-permission="['1010105']">
                   <a>删除</a>
                 </div>
-               <el-tooltip effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start" v-else>
-                  <div class="disable-color pl-15" v-permission="['1010105']">
-                    <a>删除</a>
-                  </div>
-                </el-tooltip>
               </div>
-
             </template>
           </el-table-column>
         </el-table>

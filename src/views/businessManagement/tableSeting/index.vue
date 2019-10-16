@@ -41,31 +41,23 @@
             :align="item.Position"
             :label="item.ColDesc"/>
         </template>
-
         <el-table-column label="操作" width="300px" align="center" fixed="right">
           <template slot-scope="scope" v-show="scope=='临时表册'">
-            <a class="operation3" @click="handleUser(scope.$index, scope.row)">表册用户</a>
+            <a class="operation3" @click="handleUser(scope.row)">表册用户</a>
           </template>
           <template slot-scope="scope" v-show="scope!='临时表册'">
-            <a class="operation3" @click="handleUser(scope.$index, scope.row)">表册用户</a>
-            <a class="operation1" @click="handleEdit(scope.$index, scope.row)">表册编辑</a>
-            <a class="operation4" @click="" v-if="scope.row.isDelete" @click="handleEmpty(scope.$index, scope.row)">清空</a>
-            <el-tooltip v-else effect="dark" content="已产生抄表数据，不可清空" placement="bottom-start">
-              <a style="color: #C0C8CC;margin: 10px;">清空</a>
-            </el-tooltip>
-
-            <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDelete">删除</a>
-            <el-tooltip v-else effect="dark" content="该表册已应用，不可删除" placement="bottom-start">
-              <a style="color: #C0C8CC;margin: 10px;">删除</a>
-            </el-tooltip>
+            <a class="operation3" @click="handleUser(scope.row)">表册用户</a>
+            <a class="operation1" @click="handleEdit(scope.row)">表册编辑</a>
+            <a class="operation4" @click="" @click="handleEmpty(scope.row)">清空</a>
+            <a class="operation2" @click="handleDelete(scope.row)">删除</a>
           </template>
         </el-table-column>
       </el-table>
       <pagination
         v-show="total>0"
         :total="total"
-        :page.sync="sbap.page"
-        :limit.sync="sbap.limit"
+        :page.sync="rbp.page"
+        :limit.sync="rbp.limit"
         @pagination="searchFun"/>
       <!--列表组建 e-->
     </div>
@@ -88,28 +80,29 @@
   import Schedule from './components/Schedule'//表册
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
-  import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"//http 请求
+  import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl} from "@/api/registerBook"
   import { parseTime } from "@/utils/index"
+  import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
+
 
   export default {
     name: 'tableSeting',
     components: { customTable, Pagination, SelectHead, Dialog, Schedule, FormsDialog },
     data() {
       return {
-        ID:'',
-        waterFactory:[],//水厂数据集合
         tableHeight: null,//表格高度
         total: 0,
-        sbap: {//查询条件对象集
+        rbp: {//查询条件对象集
           page: 1,
           limit: 10,
           filed:'',
           sort:"",
-          BlockAreaName: '',//片区名称
-          editUserId: '-1',//操作者
-          editStartTime: '',//操作开始结束时间
-          editEndTime: '',
-          tableId: '0000007'
+          SA_WaterFactory_Id: "",
+          MeterReaderId: "-1",
+          BookTypeKey: "-1",
+          BookNo: "",
+          BookName: "",
+          tableId: "0000009"
         },
         tableData: [],//表格数据
         checkAllData: [],
@@ -143,27 +136,28 @@
         this.customHeight = this.$refs.myChild.isCustom
       },
       exportExcel() {//导出事件
-        BlockAreaExecl(this.sbap).then(res => {
+        GetRegisterList_Execl(this.rbp).then(res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         })
       },
-      handleEdit(scope,row) {//编辑方法
-        this.ID = row.Id
+      handleEdit(row) {//编辑方法
         this.$refs.childDialog.dialogVisible = true
         this.$refs.childDialog.title = '编辑'
-        let sbap = {Id: row.Id}
-        BlockAreaGetObjById(sbap).then(res => {
-          if (res.code == 0) {
-            this.$refs.childDialog.ruleForm.newAreaName = res.data.BlockAreaName
-            this.$refs.childDialog.ruleForm.waterFactoryName = res.data.WfList
-          }
+        GetObjById({'RegisterBookId':row.Id}).then(res => {
+           this.$refs.childDialog.rb = {
+               Id: res.data.Id,
+               SA_WaterFactory_Id: res.data.SA_WaterFactory_Id,
+               BookName: res.data.BookName,
+               BookTypeKey: JSON.stringify(res.data.BookTypeKey),
+               MeterReaderId: res.data.MeterReaderId
+           }
         })
       },
       addNewFun() {//新增方法
         this.$refs.childDialog.dialogVisible = true
         this.$refs.childDialog.title = '添加'
       },
-      handleDelete(scope,row) {//删除方法
+      handleDelete(row) {//删除方法
         this.$confirm("是否确认删除该表册？", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -171,7 +165,7 @@
           customClass: "warningBox",
           showClose: false
         }).then(() => {
-          BlockAreaDelete({Id: row.Id}).then(res => {
+          DeleteBlObj({'RegisterBookId': row.Id}).then(res => {
             if (res.code == 0) {
               this.$message({
                 message: res.message,
@@ -193,11 +187,25 @@
         this.$refs.childSchedule.dialogVisible = true
         this.$refs.childSchedule.getTableInfo()
       },
-      handleEmpty(){//清空
-
+      handleEmpty(row){//清空
+        ClearRegisterBook({'RegisterBookId':row.Id}).then(res => {
+          if (res.code ==0 ) {
+            this.$message({
+              message: res.message,
+              type: 'success',
+              duration: 4000
+            });
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning',
+              duration: 4000
+            });
+          }
+        })
       },
       searchFun() {//查询事件
-        BlockAreaGetList(this.sbap).then(res => {
+        GetRegisterList(this.rbp).then(res => {
           if (res.code ==0 ) {
             this.total = res.count;
             this.tableData = res.data;
@@ -211,21 +219,55 @@
         })
       },
       sortChanges({prop, order }){//排序
-        this.sbap.filed = prop
-        this.sbap.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        this.rbp.filed = prop
+        this.rbp.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
         if(this.tableData.length>0){
-          this.sbap.page = 1
+          this.rbp.page = 1
           this.searchFun()
         }
       },
       setChildFun(){//触发表册用户定位弹框
         this.$refs.formsDialog.formsVisible = true
+      },
+      getWaterFactoryList(){//获取具有权限的水厂数据集合
+        WaterFactoryComboBoxListAuth().then(res => {
+          if (res.code ==0 ) {
+              this.$refs.childDialog.waterFactory = res.data;
+              this.$refs.childSelect.waterFactory = res.data;
+              this.$refs.childSchedule.waterFactory = res.data;
+              this.rbp.SA_WaterFactory_Id = res.data[0].Id;//查询条件
+              this.$refs.childDialog.rb.SA_WaterFactory_Id = res.data[0].Id//增加弹窗默认选当前登录人员所在水厂
+              this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
+              this.getMeterReaderList(1,res.data[0].Id)//查询条件
+              this.getMeterReaderList(2,res.data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning',
+              duration: 4000
+            });
+          }
+        })
+      },
+      getMeterReaderList(type,id){//通过水厂获得抄表员
+        MeterReaderList({SA_WaterFactory_Id:id}).then(res => {
+          if (res.code ==0 ) {
+            type==2?this.$refs.childDialog.meterArry = res.data : this.$refs.childSelect.meterArry = res.data
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning',
+              duration: 4000
+            });
+          }
+        })
       }
     },
     mounted() {
-      this.$refs.myChild.GetTable(this.sbap.tableId);
+      this.$refs.myChild.GetTable(this.rbp.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      this.getWaterFactoryList()
     }
   }
 </script>
