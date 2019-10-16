@@ -39,13 +39,19 @@
             </el-button>
           </el-form-item>
       </div>
-      <div style="width: 270px;float: left">
+      <div style="width: 290px;float: left">
           <div style="background: #f5f5f5;padding-top: 12px;margin-bottom: 18px;">
-            <el-form-item label="用户:" label-width="70px">
-              <el-input v-model="rbp.BlockAreaName" maxlength="20" placeholder="姓名/编码/简码"/>
+            <el-form-item label="用户:" label-width="63px">
+              <el-select v-model="rbp2.ecqt" placeholder="请选择" style="width: 70px;float: left">
+                <el-option label="编号" value="1"></el-option>
+                <el-option label="姓名" value="2"></el-option>
+                <el-option label="简码" value="3"></el-option>
+              </el-select>
+              <el-input v-model="rbp2.Customer" ref="userInfoInput" maxlength="20" placeholder="(长度1-30)" style="width: 130px;float: left;margin-left: 8px"/>
             </el-form-item>
             <el-form-item style="text-align: right;width: 100%">
-              <el-button @click="getListUser()" style="margin-right: 17px;background: #75C200;border: solid 1px #75C200;" type="primary" size="mini" class="cl-search"><i class="el-icon-location-outline"></i>
+              <el-button @click="getListUser()" style="margin-right: 17px;background: #75C200;border: solid 1px #75C200;"
+                         type="primary" size="mini" class="cl-search"><i class="el-icon-location-outline"></i>
                 用户表册定位
               </el-button>
             </el-form-item>
@@ -56,7 +62,6 @@
 </template>
 
 <script>
-  import { registerAdd, registerUpDate } from "@/api/registerBook"
   import { getDictionaryOption } from "@/utils/permission"
 
   export default {
@@ -66,7 +71,17 @@
         rbp:{},
         formArry:[],//表册类型
         waterFactory:[],//具有权限水厂数据
-        meterArry:[]//抄表员
+        meterArry:[],//抄表员
+        rbp2: {
+          limit: 10,
+          page: 1,
+          sort: "",
+          filed: "",
+          tableId: "",
+          ecqt: '1',
+          Customer: "",
+          SA_Customer_Id: ""
+        }
       }
     },
     methods: {
@@ -77,7 +92,16 @@
         this.$parent.searchFun();
       },
       getListUser(){
-        this.$parent.setChildFun()
+        if(this.rbp2.Customer.trim()==''){
+          this.$message({
+            message: '用户信息不能为空',
+            type: 'warning',
+            duration: 4000
+          });
+          this.$refs.userInfoInput.$el.querySelector('input').focus();
+          return
+        }
+        this.$parent.setChildFun(this.rbp2)
       },
       getMeterRead(id){
         this.$parent.getMeterReaderList(1,id)

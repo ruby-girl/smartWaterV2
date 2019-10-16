@@ -6,22 +6,21 @@
       title="用户表册定位"
       :visible.sync="formsVisible"
       class="my_header"
-      width="1200px">
+      width="1000px">
       <el-table :data="gridData" border @sort-change="sortChanges" @row-click="getCurInfo" height="300">
-        <el-table-column property="date" align="center" label="序号" width="150" prop=""></el-table-column>
-        <el-table-column property="name" align="center" label="用户编号" width="200"></el-table-column>
-        <el-table-column property="address" align="center" label="用户名称"></el-table-column>
-        <el-table-column property="address" align="center" label="电话"></el-table-column>
-        <el-table-column property="address" align="center" label="所属区域"></el-table-column>
-        <el-table-column property="address" align="center" label="水表类型"></el-table-column>
-        <el-table-column property="address" align="center" label="地址"></el-table-column>
-        <el-table-column property="address" align="center" label="备注"></el-table-column>
+        <el-table-column type="index" label="序号" width="80" align="center" fixed="left"/>
+        <el-table-column property="CustomerNo" align="center" label="用户编号" sortable='custom' prop="CustomerNo"></el-table-column>
+        <el-table-column property="CustomerName" align="center" label="用户名称" sortable='custom' prop="CustomerName"></el-table-column>
+        <el-table-column property="Tel" align="center" label="电话"></el-table-column>
+        <el-table-column property="SA_UserArea" align="center" label="所属区域" sortable='custom' prop="SA_UserArea"></el-table-column>
+        <el-table-column property="WaterMeterType" align="center" label="水表类型" sortable='custom' prop="WaterMeterType"></el-table-column>
+        <el-table-column property="Address" align="center" label="地址" prop="Address" sortable='custom'></el-table-column>
       </el-table>
       <pagination
         v-show="total>0"
         :total="total"
-        :page.sync="page"
-        :limit.sync="limit"
+        :page.sync="rbp.page"
+        :limit.sync="rbp.limit"
         @pagination="searchFun"/>
     </el-dialog>
 
@@ -39,27 +38,29 @@
 </template>
 
 <script>
+  import { GetOrientationList } from "@/api/registerBook"
   import Pagination from '@/components/Pagination/index'//分页
+
   export default {
     name: "FormsDialog",
     components: { Pagination },
     data(){
       return{
+        rbp:{},
         formsVisible:false,
         formsDetailVisible:false,
-        gridData:[
-          {date:'1',name:'2',address:'2'},
-          {date:'2',name:'2',address:'2'},
-          {date:'2',name:'2',address:'2'}
-        ],
-        total:11,
-        page:1,
-        limit:5
+        gridData:[],//定位列表数据
+        total:0,
       }
     },
     methods:{
       sortChanges({prop, order }){//排序
-
+        this.rbp.filed = prop
+        this.rbp.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        if(this.tableData.length>0){
+          this.rbp.page = 1
+          this.searchFun()
+        }
       },
       getCurInfo(row){
         /*定位父级表册当前用户位置*/
@@ -69,7 +70,19 @@
           self.formsDetailVisible = true
         },200)
       },
-      searchFun(){}
+      searchFun(){
+        GetOrientationList(this.rbp).then(res => {
+          if (res.code == 0) {
+             console.log(res.data)
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning',
+              duration: 4000
+            });
+          }
+        })
+      }
     }
   }
 </script>

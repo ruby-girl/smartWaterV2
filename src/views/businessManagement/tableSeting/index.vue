@@ -42,10 +42,7 @@
             :label="item.ColDesc"/>
         </template>
         <el-table-column label="操作" width="300px" align="center" fixed="right">
-          <template slot-scope="scope" v-show="scope=='临时表册'">
-            <a class="operation3" @click="handleUser(scope.row)">表册用户</a>
-          </template>
-          <template slot-scope="scope" v-show="scope!='临时表册'">
+          <template slot-scope="scope">
             <a class="operation3" @click="handleUser(scope.row)">表册用户</a>
             <a class="operation1" @click="handleEdit(scope.row)">表册编辑</a>
             <a class="operation4" @click="" @click="handleEmpty(scope.row)">清空</a>
@@ -80,7 +77,7 @@
   import Schedule from './components/Schedule'//表册
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
-  import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl} from "@/api/registerBook"
+  import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl, GetOrientationList} from "@/api/registerBook"
   import { parseTime } from "@/utils/index"
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
 
@@ -183,9 +180,16 @@
           })
         })
       },
-      handleUser(){//表册移交
+      handleUser(row){//用户表册
         this.$refs.childSchedule.dialogVisible = true
-        this.$refs.childSchedule.getTableInfo()
+        this.$refs.childSchedule.getTableInfo()//获取用户表册自定义表头信息
+        if(row.Id==0){//初始化临时表册数据
+          this.$refs.childSchedule.rbdp1.ecqt = row.ecqt
+          this.$refs.childSchedule.searchFun1()
+        }else{//初始化正式表册数据
+          this.$refs.childSchedule.rbdp.ecqt = row.ecqt
+          this.$refs.childSchedule.searchFun()
+        }
       },
       handleEmpty(row){//清空
         ClearRegisterBook({'RegisterBookId':row.Id}).then(res => {
@@ -220,14 +224,37 @@
       },
       sortChanges({prop, order }){//排序
         this.rbp.filed = prop
-        this.rbp.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        this.rbp.sort = order=='ascending'?'ASC':(order=='descending'?'DESC':'')
         if(this.tableData.length>0){
           this.rbp.page = 1
           this.searchFun()
         }
       },
-      setChildFun(){//触发表册用户定位弹框
-        this.$refs.formsDialog.formsVisible = true
+      setChildFun(params){//触发表册用户定位弹框
+        this.$refs.formsDialog.rbp = params
+        GetOrientationList(params).then(res => {
+          if (res.code == 0) {
+            if(res.count>1){//当返回信息大于一条用户信息时候，需进行手动确认
+              this.$refs.formsDialog.gridData = res.data
+              this.$refs.formsDialog.formsVisible = true
+            }else if(res.count <= 0){
+              this.$message({
+                message: "暂无该用户信息！",
+                type: 'warning',
+                duration: 4000
+              });
+            }else {//有且仅有一条用户信息时直接跳转至用户表册
+              /*直接跳转*/
+              this.handleUser(res.data[0])
+            }
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning',
+              duration: 4000
+            });
+          }
+        })
       },
       getWaterFactoryList(){//获取具有权限的水厂数据集合
         WaterFactoryComboBoxListAuth().then(res => {
