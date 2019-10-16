@@ -71,10 +71,6 @@ export default {
       type: Number,
       default: 100
     },
-    formHeight: {
-      type: Number,
-      default: 100
-    },
     tableData: {
       type: Array,
       default: []

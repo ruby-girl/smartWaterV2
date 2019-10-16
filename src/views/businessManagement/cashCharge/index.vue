@@ -11,10 +11,17 @@
         <div class="cash-padding-bg flex-1">
           <div class="table-top-btn-padding display-flex justify-content-flex-justify">
             <div class="display-flex">
-              <div @click="type=1">表格</div>
-              <div @click="type=2">卡片</div>
+              <div
+                @click="type=2"
+                :class="{'change-tab':true,'iconfont':true,'iconzu':true,'tab-active': this.type==2}"
+              ></div>
+              <div
+                @click="type=1"
+                :class="{'change-tab':true,'iconfont':true,'iconzu1':true,'tab-active': this.type==1}"
+                style="border:none"
+              ></div>
             </div>
-            <div>
+            <div v-if="type==1">
               <el-button type="success" size="mini" @click="excel">
                 <i class="iconfont icondaochuexcel"></i>导出Excel
               </el-button>
@@ -30,11 +37,15 @@
             :tableHeight="tableHeight"
             ref="tableTypeCard"
             :tableData="tableData"
+            :saveTableHeight="saveTableHeight"
           ></components>
         </div>
         <!-- 左边表格end -->
         <!-- 右 -->
-        <div class="cash-padding-bg cash-right-box">阿萨德</div>
+        <div class="cash-padding-bg cash-right-box">
+          <right-box>
+          </right-box>
+        </div>
         <!-- 右 -->
       </div>
     </div>
@@ -44,6 +55,7 @@
 import SelectHead from "./components/SelectHead";
 import TableType from "./components/TableType";
 import CardType from "./components/CardType";
+import RightBox from "./components/RightBox";
 import {
   getRolesList,
   addRole,
@@ -53,7 +65,7 @@ import {
 } from "@/api/role";
 export default {
   name: "RolePermission",
-  components: { SelectHead, TableType, CardType },
+  components: { SelectHead, TableType, CardType,RightBox },
   data() {
     return {
       total: 0,
@@ -76,7 +88,8 @@ export default {
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableHeight: 0,
-      tableData:[]
+      tableData: [],
+      saveTableHeight:0
     };
   },
   mounted: function() {
@@ -84,21 +97,28 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 220;
+      that.tableHeight = document.body.clientHeight - formHeight - 240;
+      that.saveTableHeight=that.tableHeight
       window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight - 220;
+        that.tableHeight = document.body.clientHeight - formHeight - 240;
       };
     });
   },
   watch: {
     type(v, o) {
-      this.typeComponents = v == 1 ? "TableType" : "CardType";
+      this.typeComponents = v == 2 ? "CardType" : "TableType";
     }
   },
   methods: {
     getList() {
       getRolesList(this.listQuery).then(res => {
         this.total = res.count;
+        res.data.filter(item => {
+          if (item.Id == "ad0a3b59-f6c3-4a83-bca1-88a38b824e84") {
+            //demo
+            item.tooltip = "这是提示语句";
+          }
+        });
         this.tableData = res.data;
       });
     },
@@ -185,5 +205,21 @@ export default {
 }
 .cash-right-box {
   width: 347px;
+  border-left: 15px solid #eff1f4;
+}
+/deep/ .is-disabled .el-checkbox__inner {
+  background: #ddd !important;
+}
+.change-tab {
+  background: #f0f0f0;
+  font-size: 13px;
+  padding: 5px 20px 2px 20px;
+  line-height: 24px;
+  border-right: 1px solid #d9d9d9;
+  cursor: pointer;
+  color:#999999;
+}
+.tab-active{
+    color: #00b2a1;
 }
 </style>

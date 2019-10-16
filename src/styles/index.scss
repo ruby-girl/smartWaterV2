@@ -261,6 +261,9 @@ aside {
   -webkit-align-items: baseline;
   align-items: baseline;
 }
+.flex-wrap{
+  flex-wrap:wrap;
+}
 /*伸缩性*/
 .flex-auto{
   -webkit-box-flex: 1;
@@ -282,8 +285,17 @@ aside {
 .main-color-fff{
   color:#fff;
 }
-.main-color-red{
+.main-color-red{ 
   color:$red;
+}
+.main-color-orange{
+  color:$orange;
+}
+.main-color-tiffany{
+  color:$tiffany;
+}
+.main-color-pink{
+  color:$pink;
 }
 .main-color-warn{
   color:$warn;
@@ -341,6 +353,9 @@ button, input, optgroup, select, textarea{
 }
 .method-font a{
 font-size: 13px;
+}
+.font-14{
+  font-size: 14px;
 }
 .el-input.is-disabled .el-input__inner {
   background-color: #F0F0F0;
