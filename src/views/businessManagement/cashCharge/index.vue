@@ -6,9 +6,9 @@
       </div>
 
       <!-- 表格模式 -->
-      <div class="container-bottom-box display-flex">
+      <el-row :gutter="10" class="container-bottom-box display-flex">
         <!-- 左边表格 -->
-        <div class="cash-padding-bg flex-1">
+        <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg">
           <div class="table-top-btn-padding display-flex justify-content-flex-justify">
             <div class="display-flex">
               <div
@@ -29,6 +29,9 @@
                 <i class="iconfont iconbiaogezidingyi"></i>表格自定义
               </el-button>
             </div>
+            <div v-else>
+              <el-checkbox :indeterminate="isIndeterminateParent" v-model="checkedAllParent" @change="parentChange">全选</el-checkbox>
+            </div>
           </div>
           <components
             :is="typeComponents"
@@ -38,16 +41,17 @@
             ref="tableTypeCard"
             :tableData="tableData"
             :saveTableHeight="saveTableHeight"
+            :checkedAllParent.sync="checkedAllParent"
+            :isIndeterminateParent.sync="isIndeterminateParent"
           ></components>
-        </div>
+        </el-col>
         <!-- 左边表格end -->
         <!-- 右 -->
-        <div class="cash-padding-bg cash-right-box">
-          <right-box>
-          </right-box>
-        </div>
+        <el-col :md="10" :lg="8" :xl="8" class="cash-padding-bg cash-right-box">
+          <right-box></right-box>
+        </el-col>
         <!-- 右 -->
-      </div>
+      </el-row>
     </div>
   </div>
 </template>
@@ -64,8 +68,8 @@ import {
   exportExcel
 } from "@/api/role";
 export default {
-  name: "RolePermission",
-  components: { SelectHead, TableType, CardType,RightBox },
+  name: "cashCharge",
+  components: { SelectHead, TableType, CardType, RightBox },
   data() {
     return {
       total: 0,
@@ -89,7 +93,9 @@ export default {
       dialogFormVisible: false, // 弹窗
       tableHeight: 0,
       tableData: [],
-      saveTableHeight:0
+      saveTableHeight: 0,
+      checkedAllParent: false, //全选
+      isIndeterminateParent:false//复选框属性
     };
   },
   mounted: function() {
@@ -98,7 +104,7 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 240;
-      that.saveTableHeight=that.tableHeight
+      that.saveTableHeight = that.tableHeight;
       window.onresize = () => {
         that.tableHeight = document.body.clientHeight - formHeight - 240;
       };
@@ -191,6 +197,9 @@ export default {
       exportExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
+    },
+    parentChange(v){
+      this.isIndeterminateParent=false
     }
   }
 };
@@ -204,8 +213,8 @@ export default {
   background: #fff;
 }
 .cash-right-box {
-  width: 347px;
   border-left: 15px solid #eff1f4;
+  padding: 15px;
 }
 /deep/ .is-disabled .el-checkbox__inner {
   background: #ddd !important;
@@ -217,9 +226,9 @@ export default {
   line-height: 24px;
   border-right: 1px solid #d9d9d9;
   cursor: pointer;
-  color:#999999;
+  color: #999999;
 }
-.tab-active{
-    color: #00b2a1;
+.tab-active {
+  color: #00b2a1;
 }
 </style>

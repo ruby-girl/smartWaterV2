@@ -37,10 +37,10 @@
         </el-form-item>
       </el-form>
       <div class="payment-records">
-         查询缴费记录
+         查询缴费记录>>
       </div>
     </div>
-    <div class="head-bottom-box display-flex">
+    <div class="head-bottom-box display-flex main-more-black-color">
         <div class="pr-15">
             姓名:羊请问
         </div>
