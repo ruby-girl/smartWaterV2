@@ -121,6 +121,8 @@ aside {
   }
 }
 
+.el-select-dropdown {z-index: 2020 !important;}
+
 //main-container全局样式
 .app-container {
   padding: 20px;
@@ -285,7 +287,7 @@ aside {
 .main-color-fff{
   color:#fff;
 }
-.main-color-red{ 
+.main-color-red{
   color:$red;
 }
 .main-color-orange{

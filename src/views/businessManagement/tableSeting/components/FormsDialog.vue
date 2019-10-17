@@ -23,16 +23,16 @@
         :limit.sync="rbp.limit"
         @pagination="searchFun"/>
     </el-dialog>
-
     <el-dialog
       :close-on-click-modal="false"
       top="30vh"
       title="用户表册定位"
       :visible.sync="formsDetailVisible"
       class="my_header"
-      width="400px">
+      width="400px"
+      @close = getFormDetail>
       <p class="accurate"><i class="el-icon-location"></i>
-        用户<span> 张三 </span>位于表册<span> "xx" </span>中</p>
+        用户<span> {{ name }} </span>位于表册<span> "{{ formName }}" </span>中</p>
     </el-dialog>
   </div>
 </template>
@@ -46,18 +46,21 @@
     components: { Pagination },
     data(){
       return{
+        name:'',
+        formName:'',
         rbp:{},
         formsVisible:false,
         formsDetailVisible:false,
         gridData:[],//定位列表数据
         total:0,
+        curDetial:{},//筛选之后的用户数据
       }
     },
     methods:{
       sortChanges({prop, order }){//排序
         this.rbp.filed = prop
-        this.rbp.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
-        if(this.tableData.length>0){
+        this.rbp.sort = order =='ascending'?'ASC':(order=='descending'?'DESC':'')
+        if(this.gridData.length>0){
           this.rbp.page = 1
           this.searchFun()
         }
@@ -65,15 +68,18 @@
       getCurInfo(row){
         /*定位父级表册当前用户位置*/
         let self = this
+        this.curDetial = row
         this.formsVisible = false
         setTimeout(function () {
           self.formsDetailVisible = true
+          self.name = row.CustomerName
+          self.formName = row.BookName
         },200)
       },
-      searchFun(){
+      searchFun(){//列表查询，主要用于排序
         GetOrientationList(this.rbp).then(res => {
           if (res.code == 0) {
-             console.log(res.data)
+            this.gridData = res.data
           } else {
             this.$message({
               message: res.message,
@@ -82,6 +88,9 @@
             });
           }
         })
+      },
+      getFormDetail(){//调用父页面表册用户方法
+        this.$parent.handleUser(this.curDetial,2)
       }
     }
   }

@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     top="5vh"
     :visible.sync="dialogVisible"
-    width="95%">
+    width="90%">
     <el-row :gutter="18">
       <el-col :span="ifShow ? 12 : 0" >
         <h2>临时表册</h2>
@@ -76,22 +76,21 @@
              </template>
            </el-table>
            <pagination
-             v-show="total1>0"
              :total="total1"
              :page.sync="rbdp1.page"
              :limit.sync="rbdp1.limit"
              @pagination="searchFun1"/>
            <!--列表组建 e-->
-           <div class="move_box" id="move_box1" @mouseover="getAnimate(1)">
+           <div class="move_box" id="move_box1" @mouseover="getAnimate()">
              <h3>移动用户至表册</h3>
              <el-form>
                <el-form-item label="移动至表册序号:" label-width="115px">
-                 <el-input v-model="dialogVisible" maxlength="20" style="width: 65px;" size="small"/>
+                 <el-input v-model="movIn.MeterReaderOrderNum" maxlength="20" style="width: 65px;" size="small"/>
                </el-form-item>
                <el-form-item label="">
-                 <el-radio-group v-model="dialogVisible">
-                   <el-radio label="前"></el-radio>
-                   <el-radio label="后"></el-radio>
+                 <el-radio-group v-model="movIn.Sort">
+                   <el-radio label="前" value="T"></el-radio>
+                   <el-radio label="后" value="D"></el-radio>
                  </el-radio-group>
                </el-form-item>
                <el-form-item style="text-align: center">
@@ -111,17 +110,16 @@
             :model="rbdp"
             class="head-search-form form-inline-small-input"
             size="small"
-            label-width="100px"
-            @submit.native.prevent>
+            label-width="100px">
             <el-form-item label="水厂：">
-              <el-select v-model="rbdp.SA_WaterFactory_Id" placeholder="请选择" size="small"  @keyup.enter.native="">
+              <el-select v-model="rbdp.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getMeterRead">
                 <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </el-form-item>
             <el-form-item label="抄表员：">
-              <el-select v-model="rbdp.MeterReaderId" placeholder="请选择" size="small"  @keyup.enter.native="">
+              <el-select v-model="rbdp.MeterReaderId" placeholder="请选择" size="small" @change="getMeterForm">
                 <el-option label="全部" value="-1"></el-option>
-                <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+                <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </el-form-item>
             <el-form-item  label="用户：">
@@ -130,12 +128,12 @@
                 <el-option label="姓名" value="2"></el-option>
                 <el-option label="简码" value="3"></el-option>
               </el-select>
-              <el-input v-model="rbdp.Customer" maxlength="20" placeholder="(长度1-30)" @keyup.enter.native="" style="width: 180px;float: left"/>
+              <el-input v-model="rbdp.Customer" maxlength="20" placeholder="(长度1-30)" style="width: 180px;float: left"/>
             </el-form-item>
             <el-form-item label="表册：">
-              <el-select v-model="rbdp.SA_RegisterBookDetail_Id" placeholder="请选择" size="small"  @keyup.enter.native="">
+              <el-select v-model="rbdp.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" >
                 <el-option label="全部" value="-1"></el-option>
-                <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+                <el-option v-for="(item,index) in formsArry" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </el-form-item>
             <el-form-item label=""><el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
@@ -172,29 +170,13 @@
             </template>
           </el-table>
           <pagination
-            v-show="total>0"
             :total="total"
             :page.sync="rbdp.page"
             :limit.sync="rbdp.limit"
             @pagination="searchFun"/>
           <!--列表组建 e-->
-          <div class="move_box" id="move_box2" @mouseover="getAnimate(2)">
-            <h3>移动用户至临时表册</h3>
-            <el-form>
-              <el-form-item label="移动至表册序号:" label-width="115px">
-                <el-input v-model="dialogVisible" maxlength="20" style="width: 65px;" size="small"/>
-              </el-form-item>
-              <el-form-item label="">
-                <el-radio-group v-model="dialogVisible">
-                  <el-radio label="前"></el-radio>
-                  <el-radio label="后"></el-radio>
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item style="text-align: center">
-                <el-button type="primary" size="small" @click="submitFun(2)">确认</el-button>
-                <el-button size="small" @click="cancelFun(2)">取消</el-button>
-              </el-form-item>
-            </el-form>
+          <div class="move_box">
+            <h3 @click="submitFun(2)">移动用户至临时表册</h3>
           </div>
           <span class="telescopic telescopic2" @click="ifShow = true" v-show="!ifShow">展开</span>
         </div>
@@ -207,7 +189,7 @@
 </template>
 
 <script>
-  import { RegisterDetailGetList, GetOrientationList, GetDefaultList, RegisterMoveOut, RegisterMoveIn } from "@/api/registerBook"
+  import { RegisterDetailGetList, GetOrientationList, GetDefaultList, RegisterMoveOut, RegisterMoveIn, ComboBoxListByMeterReader } from "@/api/registerBook"
   import CustomTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
   import { getDictionaryOption } from "@/utils/permission"
@@ -217,13 +199,14 @@
     components: { CustomTable, Pagination },
     data() {
       return {
+        ceshi:'',
         dialogVisible: false,
         operatorArray:[],
-        rbdp:{
+        rbdp:{//表册
           SA_RegisterBookInfo_Id: "",
           SA_WaterFactory_Id: "",//水厂
           MeterReaderId: "-1",
-          BookTypeKey: '-1',//水表类型
+          BookTypeKey: '',//水表类型
           SA_UserArea_Id: "",//区域
           limit: 10,
           page: 1,
@@ -245,7 +228,7 @@
           SA_WaterFactory_Id: "",
           SA_RegisterBookInfo_Id: "0",
           MeterReaderId: "",
-          BookTypeKey: "601",
+          BookTypeKey: "",
           SA_UserArea_Id: ""
         },
         total:0,
@@ -259,8 +242,19 @@
         checksData: [],
         checksData2: [],
         waterFactory:[],//水厂集合
-        waterTypeArry:[],
+        meterArry:[],//抄表员集合
+        waterTypeArry:[],//水表类型
+        formsArry:[],//表册集合
         ifShow:true,
+        movIn: {//移入表册
+          rbdList: [],//移入数据集合
+          MeterReaderOrderNum: 0,//指定序号
+          RegisterBookInfo_Id: "",//移动到的表格
+          Sort: ""//前为T(上) 或后者 D(下)
+        },
+        movOut: {
+
+        }
       }
     },
     methods: {
@@ -285,15 +279,15 @@
         console.log(val)
       },
       handleSelectionChange1(val){//临时表册移交
-        console.log(val)
+        this.movIn.rbdList = val
       },
       exportExcel(){},
       searchFun(){//获取表册集合
-        alert('表册')
         RegisterDetailGetList(this.rbdp).then(res => {
           if (res.code ==0 ) {
+              this.movIn.RegisterBookInfo_Id = this.rbdp.SA_RegisterBookInfo_Id//确认查询之后再保存当前表册ID，供表册移交使用
               this.tableData2 = res.data.rbdList
-              this.total = res.data.count
+              this.total = res.count
           } else {
             this.$message({
               message: res.message,
@@ -304,12 +298,11 @@
         })
       },
       searchFun1(){//获取临时表册信息
-        alert('临时')
         let rbdp = this.rbdp1
         GetDefaultList(rbdp).then(res => {
           if (res.code ==0 ) {
-               this.tableData = res.data.rbdList
-               this.total1 = res.data.count
+               this.tableData = res.data
+               this.total1 = res.count
           } else {
             this.$message({
               message: res.message,
@@ -324,38 +317,68 @@
         _this.$nextTick(()=>{
           _this.$refs.formChilds.GetTable('0000010');//临时表册
           _this.checksData = this.$refs.formChilds.checkData//获取自定义字段中选中了字段
+
           _this.$refs.formChilds2.GetTable('0000011');//表册
           _this.checksData2 = this.$refs.formChilds2.checkData//获取自定义字段中选中了字段
-          this.tableHeight = document.documentElement.clientHeight - document.getElementById('table2').offsetTop - 200
-          this.tableHeight3 = document.documentElement.clientHeight - document.getElementById('table3').offsetTop - 200
+          this.tableHeight = document.documentElement.clientHeight - document.getElementById('table2').offsetTop - 235
+          this.tableHeight3 = document.documentElement.clientHeight - document.getElementById('table3').offsetTop - 235
         })
       },
-      getAnimate(type){//动画
-        type==1 ? document.getElementById('move_box1').classList.add('on') : document.getElementById('move_box2').classList.add('on')
+      getAnimate(){//动画
+        document.getElementById('move_box1').classList.add('on')
       },
       submitFun(type){//确认移交
-        type==1 ? document.getElementById('move_box1').classList.remove('on') : document.getElementById('move_box2').classList.remove('on')
+        if(type==1){//移动
+          document.getElementById('move_box1').classList.remove('on')
+          RegisterMoveIn(this.movIn).then(res => {
+            if (res.code ==0 ) {
+              this.$message({
+                message: res.message,
+                type: 'success',
+                duration: 4000
+              });
+            } else {
+              this.$message({
+                message: res.message,
+                type: 'warning',
+                duration: 4000
+              });
+            }
+          })
+        }else {
+          alert(2)
+        }
       },
       cancelFun(type){//取消移交
-        type==1 ? document.getElementById('move_box1').classList.remove('on') : document.getElementById('move_box2').classList.remove('on')
+        if(type==1)
+          document.getElementById('move_box1').classList.remove('on')
       },
       closeFun(){//弹窗关闭
         this.dialogVisible = false
         document.getElementById('move_box1').classList.remove('on')
-        document.getElementById('move_box2').classList.remove('on')
+      },
+      getMeterRead(id){//根据水厂获取抄表员
+        this.$parent.getMeterReaderList(3,id)
+      },
+      getMeterForm(id){//根据抄表员获取表册
+        ComboBoxListByMeterReader({'MeterReaderId':id}).then(res => {
+          if (res.code ==0 ) {
+              this.formsArry = res.data
+          }
+        })
       }
     },
     watch: {
       customHeight() {//获取自定义模块高度左侧
         let self = this
         self.$nextTick(() => {//左侧列表高度
-          this.tableHeight = document.documentElement.clientHeight - document.getElementById('table2').offsetTop - 200
+          this.tableHeight = document.documentElement.clientHeight - document.getElementById('table2').offsetTop - 235
         })
       },
       customHeight2() {//获取自定义模块高度右侧
         let self = this
         self.$nextTick(() => {//右侧列表高度
-          this.tableHeight3 = document.documentElement.clientHeight - document.getElementById('table3').offsetTop - 200
+          this.tableHeight3 = document.documentElement.clientHeight - document.getElementById('table3').offsetTop - 235
         })
       }
     },

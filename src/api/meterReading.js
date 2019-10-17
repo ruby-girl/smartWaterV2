@@ -89,3 +89,14 @@ export function getReadDelete(data) {
     params: data
   })
 }
+
+/**
+ *抄表员获取表册
+ * */
+export function ComboBoxListByMeterReader(data) {
+  return request({
+    url: '/RegisterBook/ComboBoxListByMeterReader',
+    method: 'post',
+    params: data
+  })
+}

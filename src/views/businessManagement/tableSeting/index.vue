@@ -58,14 +58,14 @@
         @pagination="searchFun"/>
       <!--列表组建 e-->
     </div>
+    <!--编辑或新增窗口 s-->
     <Dialog ref="childDialog"></Dialog>
-    <!--编辑或新增窗口 e-->
     <!--表册移交 s-->
     <Schedule ref="childSchedule"></Schedule>
-    <!--表册移交 e-->
     <!--表册用户定位弹窗 s-->
     <FormsDialog ref="formsDialog"></FormsDialog>
-    <!--表册用户定位弹窗 e-->
+    <!--用户定位-->
+    <Location ref="locationDialog"></Location>
   </div>
 </template>
 
@@ -75,16 +75,15 @@
   import customTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
   import Schedule from './components/Schedule'//表册
+  import Location from './components/Location'//用户定位
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
   import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl, GetOrientationList} from "@/api/registerBook"
   import { parseTime } from "@/utils/index"
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
-
-
   export default {
     name: 'tableSeting',
-    components: { customTable, Pagination, SelectHead, Dialog, Schedule, FormsDialog },
+    components: { customTable, Pagination, SelectHead, Dialog, Schedule, FormsDialog, Location },
     data() {
       return {
         tableHeight: null,//表格高度
@@ -180,15 +179,19 @@
           })
         })
       },
-      handleUser(row){//用户表册
+      handleUser(row,type){//用户表册,type==2时候为定位
         this.$refs.childSchedule.dialogVisible = true
         this.$refs.childSchedule.getTableInfo()//获取用户表册自定义表头信息
-        if(row.Id==0){//初始化临时表册数据
-          this.$refs.childSchedule.rbdp1.ecqt = row.ecqt
+        let formID = ''//区分是临时表册还是表册
+        type == 2 ? formID = row.SA_RegisterBookInfo_Id : row.Id
+        if(formID == 0){//初始化临时表册数据
           this.$refs.childSchedule.searchFun1()
         }else{//初始化正式表册数据
-          this.$refs.childSchedule.rbdp.ecqt = row.ecqt
-          this.$refs.childSchedule.searchFun()
+          this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = row.SA_WaterFactory_Id
+          this.$refs.childSchedule.rbdp.MeterReaderId = row.MeterReader_Id
+          type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.Id//从列表点击表册用户时候传SA_RegisterBookInfo_Id,定位时候传表册SA_RegisterBookDetail_Id
+          this.$refs.childSchedule.getMeterForm(row.MeterReader_Id)//手动选择当前抄表员加载当前表册信息
+          this.$refs.childSchedule.searchFun(row)
         }
       },
       handleEmpty(row){//清空
@@ -231,10 +234,11 @@
         }
       },
       setChildFun(params){//触发表册用户定位弹框
-        this.$refs.formsDialog.rbp = params
         GetOrientationList(params).then(res => {
           if (res.code == 0) {
             if(res.count>1){//当返回信息大于一条用户信息时候，需进行手动确认
+              this.$refs.formsDialog.rbp = params
+              this.$refs.formsDialog.total = res.count
               this.$refs.formsDialog.gridData = res.data
               this.$refs.formsDialog.formsVisible = true
             }else if(res.count <= 0){
@@ -245,7 +249,7 @@
               });
             }else {//有且仅有一条用户信息时直接跳转至用户表册
               /*直接跳转*/
-              this.handleUser(res.data[0])
+              this.handleUser(res.data[0],2)
             }
           } else {
             this.$message({
@@ -265,8 +269,10 @@
               this.rbp.SA_WaterFactory_Id = res.data[0].Id;//查询条件
               this.$refs.childDialog.rb.SA_WaterFactory_Id = res.data[0].Id//增加弹窗默认选当前登录人员所在水厂
               this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
+              this.$refs.childSchedule.rbdp1.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
               this.getMeterReaderList(1,res.data[0].Id)//查询条件
               this.getMeterReaderList(2,res.data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
+              this.getMeterReaderList(3,res.data[0].Id)//用户表相册弹窗根据选中水厂获取默认抄表员数据
           } else {
             this.$message({
               message: res.message,
@@ -279,7 +285,17 @@
       getMeterReaderList(type,id){//通过水厂获得抄表员
         MeterReaderList({SA_WaterFactory_Id:id}).then(res => {
           if (res.code ==0 ) {
-            type==2?this.$refs.childDialog.meterArry = res.data : this.$refs.childSelect.meterArry = res.data
+            switch (type) {//首页查询条件
+              case 1:
+                this.$refs.childSelect.meterArry = res.data
+                    break
+              case 2://新增或编辑条件
+                this.$refs.childDialog.meterArry = res.data
+                break
+              case 3://表册移交条件
+                this.$refs.childSchedule.meterArry = res.data
+                break
+            }
           } else {
             this.$message({
               message: res.message,
