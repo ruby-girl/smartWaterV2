@@ -56,6 +56,8 @@
       </el-row>
     </div>
     <water-details :waterDetailsShow.sync="waterDetailsShow"></water-details>
+    <over-details :overDetailsShow.sync="overDetailsShow"></over-details>
+    <select-user :selectUserShow.sync="selectUserShow"></select-user>
   </div>
 </template>
 <script>
@@ -64,6 +66,8 @@ import TableType from "./components/TableType";
 import CardType from "./components/CardType";
 import RightBox from "./components/RightBox";
 import WaterDetails from "./components/WaterDetails";
+import OverDetails from "./components/OverDetails";
+import SelectUser from "./components/SelectUser";
 import {
   getRolesList,
   addRole,
@@ -73,7 +77,7 @@ import {
 } from "@/api/role";
 export default {
   name: "cashCharge",
-  components: { SelectHead, TableType, CardType, RightBox,WaterDetails },
+  components: { SelectHead, TableType, CardType, RightBox,WaterDetails,OverDetails,SelectUser},
   data() {
     return {
       total: 0,
@@ -101,6 +105,8 @@ export default {
       checkedAllParent: false, //全选
       isIndeterminateParent:false,//复选框属性
       waterDetailsShow:false,//水费详情弹窗
+      overDetailsShow:false,//其它费用详情弹窗
+      selectUserShow:false,//多用户选择弹窗
     };
   },
   mounted: function() {
@@ -108,10 +114,10 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 240;
-      that.saveTableHeight = that.tableHeight;
+      that.tableHeight = document.body.clientHeight - formHeight - 205;
+      that.saveTableHeight = that.tableHeight+10;
       window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight - 240;
+        that.tableHeight = document.body.clientHeight - formHeight - 205;
       };
     });
   },
@@ -208,7 +214,7 @@ export default {
     },
     // 费用详情
     details(n){
-      this.waterDetailsShow=true
+      this.selectUserShow=true
     },
     // 费用撤回
     reset(){}
@@ -220,7 +226,7 @@ export default {
   border-top: 15px solid #eff1f4;
 }
 .cash-padding-bg {
-  padding: 20px;
+  padding: 20px !important;
   background: #fff;
 }
 .cash-right-box {

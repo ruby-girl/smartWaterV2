@@ -118,7 +118,10 @@ export default {
    },
    details(row){
      this.$emit("details",row.Id)
-   }
+   },
+   reset(){
+      this.$emit("reset",'1')
+    }
   }
 };
 </script>

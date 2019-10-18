@@ -3,7 +3,7 @@
   <div>
     <div class="main-padding-20-y card-container" :style="{'height':saveTableHeight+'px'}">
       <!-- 循环 -->
-      <div v-for="(item,i) in cardData" :key="i">
+      <div v-for="(item,i) in cardData" :key="i" class="set-first-margin">
         <div class="display-flex align-items-center justify-content-flex-justify card-head">
           <el-checkbox
             :indeterminate="item.isIndeterminate"
@@ -204,6 +204,12 @@ export default {
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", false);
       }
+    },
+    details(){
+      this.$emit("details",'1')
+    },
+    reset(){
+      this.$emit("reset",'1')
     }
   }
 };
@@ -215,10 +221,11 @@ export default {
 .card-sort {
   color: #fff;
 }
+.set-first-margin:first-child{
+  margin-top:8px;
+}
 .card-head {
-  padding: 6px 0;
-  margin-top: 15px;
-  margin-bottom: 10px;
+  padding: 4px 0;
   /deep/ .el-checkbox__label {
     color:#46494C;
     font-size: 16px;
@@ -258,6 +265,7 @@ export default {
       color: #777c82;
       padding: 2px 3px;
       border-radius: 4px;
+      cursor: pointer;
     }
   }
 }
