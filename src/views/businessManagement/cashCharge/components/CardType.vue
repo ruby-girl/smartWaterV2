@@ -24,13 +24,16 @@
               <div class="display-flex align-items-center flex-wrap">
                 <div v-for="(li,n) in item.arr" :key="n">
                   <div class="card-item">
-                    <el-checkbox-group
+                   
+                    <div class="card-item-bottom-box">
+                       <el-checkbox-group
                       v-model="item.checkedCardDate"
                       @change="handleCheckedCardChange(item.checkedCardDate,i)"
                     >
-                      <el-checkbox :label="li.id">{{li.itemTime}}</el-checkbox>
+                      <div class="item-time-head">
+                        <el-checkbox :label="li.id">{{li.itemTime}}</el-checkbox>
+                      </div>
                     </el-checkbox-group>
-                    <div class="card-item-bottom-box">
                       <div
                         class="card-item-mony-box display-flex align-items-center justify-content-flex-justify"
                       >
@@ -45,8 +48,8 @@
                       <div
                         class="card-item-btn-box display-flex justify-content-flex-center font-14"
                       >
-                        <div class="card-item-btn">详情</div>
-                        <div class="card-item-btn">票据打印</div>
+                        <div class="card-item-btn" @click="details">详情</div>
+                        <div class="card-item-btn" @click="reset">费用撤回</div>
                       </div>
                     </div>
                   </div>
@@ -213,12 +216,11 @@ export default {
   color: #fff;
 }
 .card-head {
-  background: #ad8b00;
-  padding: 6px 15px;
+  padding: 6px 0;
   margin-top: 15px;
   margin-bottom: 10px;
   /deep/ .el-checkbox__label {
-    color: #fff !important;
+    color:#46494C;
     font-size: 16px;
     font-weight: bold;
   }
@@ -227,23 +229,25 @@ export default {
   width: 100%;
 }
 .card-item-bottom-box {
-  border: 1px solid #d9d9d9;
+  border:1px solid rgba(230,235,240,1);
+  box-shadow:0px 2px 6px rgba(0,0,0,0.1);
   margin: 10px 0;
+   border-radius:4px;
 }
 .card-item {
   width: 178px;
   margin-right: 10px;
+ 
   /deep/ .el-checkbox-group {
     width: 100%；;
   }
   .card-item-mony-box {
-    background: #f5f5f5;
     height: 82px;
     padding: 0 15px;
   }
   .card-item-btn-box {
     text-align: center;
-    padding: 10px 0;
+    padding-bottom: 20px;
     :first-child {
       border: 1px solid #00b2a1 !important;
       color: #00b2a1 !important;
@@ -255,6 +259,14 @@ export default {
       padding: 2px 3px;
       border-radius: 4px;
     }
+  }
+}
+.item-time-head{
+  background: #9CB85C;
+  padding: 5px;
+  border-radius:4px 4px 0 0;
+  /deep/ .el-checkbox__label{
+    color:#fff;
   }
 }
 </style>

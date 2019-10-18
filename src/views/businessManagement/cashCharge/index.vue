@@ -43,6 +43,8 @@
             :saveTableHeight="saveTableHeight"
             :checkedAllParent.sync="checkedAllParent"
             :isIndeterminateParent.sync="isIndeterminateParent"
+            @details="details"
+            @reset="reset"
           ></components>
         </el-col>
         <!-- 左边表格end -->
@@ -53,6 +55,7 @@
         <!-- 右 -->
       </el-row>
     </div>
+    <water-details :waterDetailsShow.sync="waterDetailsShow"></water-details>
   </div>
 </template>
 <script>
@@ -60,6 +63,7 @@ import SelectHead from "./components/SelectHead";
 import TableType from "./components/TableType";
 import CardType from "./components/CardType";
 import RightBox from "./components/RightBox";
+import WaterDetails from "./components/WaterDetails";
 import {
   getRolesList,
   addRole,
@@ -69,7 +73,7 @@ import {
 } from "@/api/role";
 export default {
   name: "cashCharge",
-  components: { SelectHead, TableType, CardType, RightBox },
+  components: { SelectHead, TableType, CardType, RightBox,WaterDetails },
   data() {
     return {
       total: 0,
@@ -95,7 +99,8 @@ export default {
       tableData: [],
       saveTableHeight: 0,
       checkedAllParent: false, //全选
-      isIndeterminateParent:false//复选框属性
+      isIndeterminateParent:false,//复选框属性
+      waterDetailsShow:false,//水费详情弹窗
     };
   },
   mounted: function() {
@@ -200,7 +205,13 @@ export default {
     },
     parentChange(v){
       this.isIndeterminateParent=false
-    }
+    },
+    // 费用详情
+    details(n){
+      this.waterDetailsShow=true
+    },
+    // 费用撤回
+    reset(){}
   }
 };
 </script>

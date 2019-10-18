@@ -32,11 +32,11 @@
         <el-table-column label="操作" align="center" class-name="small-padding">
           <template slot-scope="{row}">
             <div class="display-flex justify-content-flex-center">
-              <div class="main-color" @click="handleUpdate(row)">
-                <a>编辑</a>
+              <div class="main-color-warn" @click="details(row)">
+                <a>费用详情</a>
               </div>
-              <div class="main-color-red pl-15" @click="delRow(row)">
-                <a>删除</a>
+              <div class="pl-15" @click="reset(row)">
+                <a>费用撤回</a>
               </div>
             </div>
           </template>
@@ -115,6 +115,9 @@ export default {
    },
    handleSelectionChange(val){
        console.info(val)
+   },
+   details(row){
+     this.$emit("details",row.Id)
    }
   }
 };
