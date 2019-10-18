@@ -40,6 +40,7 @@
 <script>
   import { GetOrientationList } from "@/api/registerBook"
   import Pagination from '@/components/Pagination/index'//分页
+  import { promptInfoFun } from "@/utils/index"
 
   export default {
     name: "FormsDialog",
@@ -81,11 +82,7 @@
           if (res.code == 0) {
             this.gridData = res.data
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },

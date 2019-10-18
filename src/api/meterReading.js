@@ -100,3 +100,25 @@ export function ComboBoxListByMeterReader(data) {
     params: data
   })
 }
+
+/**
+ *表册导出
+ * */
+export function GetList_Execl(data) {
+  return request({
+    url: '/RegisterBookDetail/GetList_Execl',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ *同表册移动
+ * */
+export function SortRegisterBookDetailMove(data) {
+  return request({
+    url: '/RegisterBookDetail/SortRegisterBookDetailMove',
+    method: 'post',
+    data: data
+  })
+}

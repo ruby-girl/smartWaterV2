@@ -6,106 +6,104 @@
     :visible.sync="dialogVisible"
     width="90%">
     <div class="schedule_sidebox clearfix">
-      <!--左侧表册-->
       <div :class="!ifShow ? 'schedule_box hide' : 'schedule_box'">
         <h2>临时表册</h2>
         <div class="forms_box" id="myform">
-          <el-form
-            id="form_ser"
-            :inline="true"
-            :model="rbdp1"
-            size="small"
-            label-width="100px">
-            <el-form-item label="水厂：">
-              <el-select v-model="rbdp1.SA_WaterFactory_Id" placeholder="请选择" size="small">
-                <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="所属区域：">
-              <el-select v-model="rbdp1.SA_UserArea_Id" placeholder="请选择" size="small">
-                <el-option label="全部" value="-1"></el-option>
-                <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="水表类型：">
-              <el-select v-model="rbdp1.BookTypeKey" placeholder="请选择" size="small">
-                <el-option label="全部" value="-1"></el-option>
-                <el-option v-for="(item,index) in waterTypeArry" :key="index" :label="item.Name" :value="item.Id" />
-              </el-select>
-            </el-form-item>
-            <el-form-item  label="用户：">
-              <el-select v-model="rbdp1.ecqt" placeholder="请选择" style="width: 80px;float: left">
-                <el-option label="编号" value="1"></el-option>
-                <el-option label="姓名" value="2"></el-option>
-                <el-option label="简码" value="3"></el-option>
-              </el-select>
-              <el-input v-model="rbdp1.Customer" maxlength="20" placeholder="(长度1-30)" style="width: 180px;float: left"/>
-            </el-form-item>
-            <el-form-item label=""><el-button type="primary" size="small" class="cl-search" @click="searchFun1"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
-          </el-form>
-          <div class="cl-operation1 clearfix">
-            <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData(1)"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
-            <el-button type="success" size="small" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
-          </div>
-          <!--自定义组建 s-->
-          <CustomTable ref="formChilds"></CustomTable>
-          <!--自定义组建 e-->
-          <!--列表组建 s-->
-          <el-table id="table2" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges" @selection-change="handleSelectionChange1">
-            <el-table-column
-              fixed="left"
-              type="selection"
-              align="center"
-              width="40">
-            </el-table-column>
-            <template v-for="(item ,index) in tableHead" >
-              <el-table-column
-                v-if="item.IsFreeze"
-                :key="index"
-                min-width="200px"
-                sortable='custom'
-                :prop="item.ColProp"
-                :align="item.Position"
-                :label="item.ColDesc"
-                :fixed= "item.Freeze"/>
-              <el-table-column
-                v-else
-                :key="index"
-                min-width="200px"
-                sortable='custom'
-                :prop="item.ColProp"
-                :align="item.Position"
-                :label="item.ColDesc"/>
-            </template>
-          </el-table>
-          <pagination
-            :total="total1"
-            :page.sync="rbdp1.page"
-            :limit.sync="rbdp1.limit"
-            @pagination="searchFun1"/>
-          <!--列表组建 e-->
-          <div class="move_box" id="move_box1" @mouseover="getAnimate()">
-            <h3>移动用户至表册</h3>
-            <el-form>
-              <el-form-item label="移动至表册序号:" label-width="115px">
-                <el-input v-model="movIn.MeterReaderOrderNum" maxlength="20" style="width: 65px;" size="small" onkeyup="value=value.replace(/\D/g,'')" ref="NumInput"/>
-              </el-form-item>
-              <el-form-item label="">
-                <el-radio-group v-model="movIn.Sort">
-                  <el-radio label="T">前</el-radio>
-                  <el-radio label="D">后</el-radio>
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item style="text-align: center">
-                <el-button type="primary" size="small" @click="submitFun(1)">确认</el-button>
-                <el-button size="small" @click="cancelFun(1)">取消</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-          <span class="telescopic telescopic1" @click="getUp">收起</span>
+           <el-form
+             id="form_ser"
+             :inline="true"
+             :model="rbdp1"
+             size="small"
+             label-width="100px">
+             <el-form-item label="水厂：">
+               <el-select v-model="rbdp1.SA_WaterFactory_Id" placeholder="请选择" size="small">
+                 <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" />
+               </el-select>
+             </el-form-item>
+             <el-form-item label="所属区域：">
+               <el-select v-model="rbdp1.SA_UserArea_Id" placeholder="请选择" size="small">
+                 <el-option label="全部" value="-1"></el-option>
+                 <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+               </el-select>
+             </el-form-item>
+             <el-form-item label="水表类型：">
+               <el-select v-model="rbdp1.BookTypeKey" placeholder="请选择" size="small">
+                 <el-option label="全部" value="-1"></el-option>
+                 <el-option v-for="(item,index) in waterTypeArry" :key="index" :label="item.Name" :value="item.Id" />
+               </el-select>
+             </el-form-item>
+             <el-form-item  label="用户：">
+               <el-select v-model="rbdp1.ecqt" placeholder="请选择" style="width: 80px;float: left">
+                 <el-option label="编号" value="1"></el-option>
+                 <el-option label="姓名" value="2"></el-option>
+                 <el-option label="简码" value="3"></el-option>
+               </el-select>
+               <el-input v-model="rbdp1.Customer" maxlength="20" placeholder="(长度1-30)" style="width: 180px;float: left"/>
+             </el-form-item>
+             <el-form-item label=""><el-button type="primary" size="small" class="cl-search" @click="searchFun1"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
+           </el-form>
+           <div class="cl-operation1 clearfix">
+             <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData(1)"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+             <el-button type="success" size="small" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
+           </div>
+           <!--自定义组建 s-->
+           <CustomTable ref="formChilds"></CustomTable>
+           <!--自定义组建 e-->
+           <!--列表组建 s-->
+           <el-table id="table2" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges" @selection-change="handleSelectionChange1">
+             <el-table-column
+               fixed="left"
+               type="selection"
+               align="center"
+               width="40">
+             </el-table-column>
+             <template v-for="(item ,index) in tableHead" >
+               <el-table-column
+                 v-if="item.IsFreeze"
+                 :key="index"
+                 min-width="200px"
+                 sortable='custom'
+                 :prop="item.ColProp"
+                 :align="item.Position"
+                 :label="item.ColDesc"
+                 :fixed= "item.Freeze"/>
+               <el-table-column
+                 v-else
+                 :key="index"
+                 min-width="200px"
+                 sortable='custom'
+                 :prop="item.ColProp"
+                 :align="item.Position"
+                 :label="item.ColDesc"/>
+             </template>
+           </el-table>
+           <pagination
+             :total="total1"
+             :page.sync="rbdp1.page"
+             :limit.sync="rbdp1.limit"
+             @pagination="searchFun1"/>
+           <!--列表组建 e-->
+           <div class="move_box" id="move_box1" @mouseover="getAnimate()">
+             <h3>移动用户至表册</h3>
+             <el-form>
+               <el-form-item label="移动至表册序号:" label-width="115px">
+                 <el-input v-model="movIn.MeterReaderOrderNum" maxlength="20" style="width: 65px;" size="small" onkeyup="value=value.replace(/\D/g,'')" ref="NumInput"/>
+               </el-form-item>
+               <el-form-item label="">
+                 <el-radio-group v-model="movIn.Sort">
+                   <el-radio label="T">前</el-radio>
+                   <el-radio label="D">后</el-radio>
+                 </el-radio-group>
+               </el-form-item>
+               <el-form-item style="text-align: center">
+                 <el-button type="primary" size="small" @click="submitFun(1)">确认</el-button>
+                 <el-button size="small" @click="cancelFun(1)">取消</el-button>
+               </el-form-item>
+             </el-form>
+           </div>
+           <span class="telescopic telescopic1" @click="getUp">收起</span>
         </div>
       </div>
-      <!--右侧表册-->
       <div :class="!ifShow ? 'schedule_box allWidth' : 'schedule_box'">
         <h2>表册</h2>
         <div class="forms_box">
@@ -302,9 +300,9 @@
       searchFun(){//获取表册集合
         RegisterDetailGetList(this.rbdp).then(res => {
           if (res.code ==0 ) {
-            this.movIn.RegisterBookInfo_Id = this.rbdp.SA_RegisterBookInfo_Id//确认查询之后再保存当前表册ID，供表册移交使用
-            this.tableData2 = res.data.rbdList
-            this.total = res.count
+              this.movIn.RegisterBookInfo_Id = this.rbdp.SA_RegisterBookInfo_Id//确认查询之后再保存当前表册ID，供表册移交使用
+              this.tableData2 = res.data.rbdList
+              this.total = res.count
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -314,8 +312,8 @@
         let rbdp = this.rbdp1
         GetDefaultList(rbdp).then(res => {
           if (res.code ==0 ) {
-            this.tableData = res.data
-            this.total1 = res.count
+               this.tableData = res.data
+               this.total1 = res.count
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -389,7 +387,7 @@
       getMeterForm(id){//根据抄表员获取表册
         ComboBoxListByMeterReader({'MeterReaderId':id,'IsShowDefault': false}).then(res => {
           if (res.code ==0 ) {
-            this.formsArry = res.data
+              this.formsArry = res.data
           }
         })
       }
@@ -457,7 +455,7 @@
     .telescopic{position: absolute;display: block;top:30%;color: #777C82;font: normal 16px 'Microsoft YaHei';width: 30px;margin: 0 auto;word-wrap: break-word;
       -webkit-box-shadow: 1px 1px 5px #cecece;background: #fff;padding: 15px 0;z-index: 999;text-align: center;cursor: pointer;
       box-shadow: 1px 1px 5px #cecece;
-    }
+   }
     #table3 th{padding: 9px 0;}
     .telescopic1{
       right: 0;

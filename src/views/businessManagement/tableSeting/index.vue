@@ -74,13 +74,14 @@
   import Dialog from './components/Dialog'//新增或添加组建
   import customTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
-  import Schedule from './components/Schedule'//表册
+  import Schedule from './components/Schedule2'//表册
   import Location from './components/Location'//用户定位
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
   import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl, GetOrientationList} from "@/api/registerBook"
-  import { parseTime } from "@/utils/index"
+  import { parseTime, promptInfoFun } from "@/utils/index"
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
+
   export default {
     name: 'tableSeting',
     components: { customTable, Pagination, SelectHead, Dialog, Schedule, FormsDialog, Location },
@@ -163,18 +164,10 @@
         }).then(() => {
           DeleteBlObj({'RegisterBookId': row.Id}).then(res => {
             if (res.code == 0) {
-              this.$message({
-                message: res.message,
-                type: 'success',
-                duration: 4000
-              });
+              promptInfoFun(this,2,res.message)
               this.searchFun()
             } else {
-              this.$message({
-                message: res.message,
-                type: 'warning',
-                duration: 4000
-              });
+              promptInfoFun(this,1,res.message)
             }
           })
         })
@@ -197,17 +190,9 @@
       handleEmpty(row){//清空
         ClearRegisterBook({'RegisterBookId':row.Id}).then(res => {
           if (res.code ==0 ) {
-            this.$message({
-              message: res.message,
-              type: 'success',
-              duration: 4000
-            });
+            promptInfoFun(this,2,res.message)
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -217,11 +202,7 @@
             this.total = res.count;
             this.tableData = res.data;
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -242,21 +223,13 @@
               this.$refs.formsDialog.gridData = res.data
               this.$refs.formsDialog.formsVisible = true
             }else if(res.count <= 0){
-              this.$message({
-                message: "暂无该用户信息！",
-                type: 'warning',
-                duration: 4000
-              });
+              promptInfoFun(this,1,'暂无该用户信息')
             }else {//有且仅有一条用户信息时直接跳转至用户表册
               /*直接跳转*/
               this.handleUser(res.data[0],2)
             }
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -274,11 +247,7 @@
               this.getMeterReaderList(2,res.data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
               this.getMeterReaderList(3,res.data[0].Id)//用户表相册弹窗根据选中水厂获取默认抄表员数据
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -297,11 +266,7 @@
                 break
             }
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       }

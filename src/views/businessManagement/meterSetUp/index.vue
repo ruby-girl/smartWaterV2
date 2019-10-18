@@ -64,7 +64,7 @@
   import MeterPlan from './components/MeterPlan'//查询条件组建
   import Pagination from '@/components/Pagination/index'//分页
   import { MeterReadingPageQuery, MeterReadingProcessQuery, getReadDelete } from "@/api/meterReading"
-  import { parseTime } from "@/utils/index"
+  import { parseTime, promptInfoFun  } from "@/utils/index"
 
   export default {
     name: 'meterSetUp',
@@ -136,18 +136,10 @@
         }).then(() => {
           getReadDelete({MeterRecordId: row.Id}).then(res => {
             if (res.code == 0) {
-              this.$message({
-                message: res.message,
-                type: 'success',
-                duration: 4000
-              });
+              promptInfoFun(this,2,res.message)
               this.searchFun()
             } else {
-              this.$message({
-                message: res.message,
-                type: 'warning',
-                duration: 4000
-              });
+              promptInfoFun(this,1,res.message)
             }
           })
         })
@@ -180,20 +172,12 @@
               if (res.code ==0 ) {
                   this.$refs.planchild1.meterData = res.data
               } else {
-                this.$message({
-                  message: res.message,
-                  type: 'warning',
-                  duration: 4000
-                });
+                promptInfoFun(this,1,res.message)
               }
             })
 
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },

@@ -42,6 +42,7 @@
 <script>
   import { registerAdd, registerUpDate } from "@/api/registerBook"
   import { getDictionaryOption } from "@/utils/permission"
+  import { promptInfoFun } from "@/utils/index"
 
   export default {
     name: "Dialog",
@@ -82,39 +83,23 @@
             if (this.title ==='编辑') {
               registerUpDate(this.rb).then(res => {
                 if (res.code ==0 ) {
-                  this.$message({
-                    message: res.message,
-                    type: 'success',
-                    duration: 4000
-                  });
+                  promptInfoFun(this,2,res.message)
                   this.dialogVisible = false
                   this.$refs[formName].resetFields();
                   this.$parent.searchFun()
                 } else {
-                  this.$message({
-                    message: res.message,
-                    type: 'warning',
-                    duration: 4000
-                  });
+                  promptInfoFun(this,1,res.message)
                 }
               })
             } else {
               registerAdd(this.rb).then(res => {
                 if (res.code == 0) {
-                  this.$message({
-                    message: res.message,
-                    type: 'success',
-                    duration: 4000
-                  });
+                  promptInfoFun(this,2,res.message)
                   this.dialogVisible = false
                   this.$refs[formName].resetFields();
                   this.$parent.searchFun()
                 } else {
-                  this.$message({
-                    message: res.message,
-                    type: 'warning',
-                    duration: 4000
-                  });
+                  promptInfoFun(this,1,res.message)
                 }
               })
             }
