@@ -49,7 +49,7 @@
                         class="card-item-btn-box display-flex justify-content-flex-center font-14"
                       >
                         <div class="card-item-btn" @click="details">详情</div>
-                        <div class="card-item-btn" @click="reset">费用撤回</div>
+                        <div class="card-item-btn" @click="reset">费用撤回2</div>
                       </div>
                     </div>
                   </div>
