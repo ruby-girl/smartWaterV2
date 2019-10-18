@@ -85,12 +85,12 @@
              <h3>移动用户至表册</h3>
              <el-form>
                <el-form-item label="移动至表册序号:" label-width="115px">
-                 <el-input v-model="movIn.MeterReaderOrderNum" maxlength="20" style="width: 65px;" size="small"/>
+                 <el-input v-model="movIn.MeterReaderOrderNum" maxlength="20" style="width: 65px;" size="small" onkeyup="value=value.replace(/\D/g,'')" ref="NumInput"/>
                </el-form-item>
                <el-form-item label="">
                  <el-radio-group v-model="movIn.Sort">
-                   <el-radio label="前" value="T"></el-radio>
-                   <el-radio label="后" value="D"></el-radio>
+                   <el-radio label="T">前</el-radio>
+                   <el-radio label="D">后</el-radio>
                  </el-radio-group>
                </el-form-item>
                <el-form-item style="text-align: center">
@@ -250,11 +250,9 @@
           rbdList: [],//移入数据集合
           MeterReaderOrderNum: 0,//指定序号
           RegisterBookInfo_Id: "",//移动到的表格
-          Sort: ""//前为T(上) 或后者 D(下)
+          Sort: "T"//前为T(上) 或后者 D(下)
         },
-        movOut: {
-
-        }
+        rbdList:[],//移出
       }
     },
     methods: {
@@ -276,7 +274,7 @@
         }
       },
       handleSelectionChange(val){//表册移交
-        console.log(val)
+        this.rbdList = val
       },
       handleSelectionChange1(val){//临时表册移交
         this.movIn.rbdList = val
@@ -328,7 +326,30 @@
         document.getElementById('move_box1').classList.add('on')
       },
       submitFun(type){//确认移交
-        if(type==1){//移动
+        if(type==1){//移入
+          if(this.movIn.RegisterBookInfo_Id == ''|| this.movIn.RegisterBookInfo_Id == '-1'){//判断是否选择右侧表册
+            this.$message({
+              message: '请选择右侧表册查询后操作！',
+              type: 'warning',
+              duration: 4000
+            });
+            return
+          }else if(this.movIn.rbdList.length<=0){
+            this.$message({
+              message: '请选择需要移入数据！',
+              type: 'warning',
+              duration: 4000
+            });
+            return
+          }else if(JSON.stringify(this.movIn.MeterReaderOrderNum) == ''){
+            this.$message({
+              message: '请填写移动至表册序号！',
+              type: 'warning',
+              duration: 4000
+            });
+            this.$refs.NumInput.$el.querySelector('input').focus();
+            return
+          }
           document.getElementById('move_box1').classList.remove('on')
           RegisterMoveIn(this.movIn).then(res => {
             if (res.code ==0 ) {
@@ -337,6 +358,7 @@
                 type: 'success',
                 duration: 4000
               });
+              this.searchFun()
             } else {
               this.$message({
                 message: res.message,
@@ -345,8 +367,31 @@
               });
             }
           })
-        }else {
-          alert(2)
+        }else {//移出
+          if(this.rbdList.length <=0){
+            this.$message({
+              message: "请选择需要移入数据",
+              type: 'warning',
+              duration: 4000
+            });
+          }else {
+            RegisterMoveOut(this.rbdList).then(res => {
+              if (res.code ==0 ) {
+                this.$message({
+                  message: res.message,
+                  type: 'success',
+                  duration: 4000
+                });
+                this.searchFun1()
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: 'warning',
+                  duration: 4000
+                });
+              }
+            })
+          }
         }
       },
       cancelFun(type){//取消移交
@@ -361,7 +406,7 @@
         this.$parent.getMeterReaderList(3,id)
       },
       getMeterForm(id){//根据抄表员获取表册
-        ComboBoxListByMeterReader({'MeterReaderId':id}).then(res => {
+        ComboBoxListByMeterReader({'MeterReaderId':id,'IsShowDefault': false}).then(res => {
           if (res.code ==0 ) {
               this.formsArry = res.data
           }
