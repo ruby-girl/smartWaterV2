@@ -74,7 +74,7 @@
   import Dialog from './components/Dialog'//新增或添加组建
   import customTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
-  import Schedule from './components/Schedule2'//表册
+  import Schedule from './components/Schedule'//表册
   import Location from './components/Location'//用户定位
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
@@ -175,9 +175,14 @@
       handleUser(row,type){//用户表册,type==2时候为定位
         this.$refs.childSchedule.dialogVisible = true
         this.$refs.childSchedule.getTableInfo()//获取用户表册自定义表头信息
-        let formID = ''//区分是临时表册还是表册
-        type == 2 ? formID = row.SA_RegisterBookInfo_Id : row.Id
-        if(formID == 0){//初始化临时表册数据
+        type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : ''
+        this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = row.SA_WaterFactory_Id//水厂
+        this.$refs.childSchedule.rbdp.MeterReaderId = row.MeterReader_Id//抄表员
+        this.$refs.childSchedule.getMeterForm(row.MeterReader_Id)//手动选择当前抄表员加载当前表册信息
+        type == 2? this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.SA_RegisterBookInfo_Id : this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.Id//表册ID
+        this.$refs.childSchedule.searchFun()
+
+     /*   if(formID == 0){//初始化临时表册数据
           this.$refs.childSchedule.searchFun1()
         }else{//初始化正式表册数据
           this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = row.SA_WaterFactory_Id
@@ -185,7 +190,7 @@
           type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.Id//从列表点击表册用户时候传SA_RegisterBookInfo_Id,定位时候传表册SA_RegisterBookDetail_Id
           this.$refs.childSchedule.getMeterForm(row.MeterReader_Id)//手动选择当前抄表员加载当前表册信息
           this.$refs.childSchedule.searchFun(row)
-        }
+        }*/
       },
       handleEmpty(row){//清空
         ClearRegisterBook({'RegisterBookId':row.Id}).then(res => {
@@ -242,10 +247,10 @@
               this.rbp.SA_WaterFactory_Id = res.data[0].Id;//查询条件
               this.$refs.childDialog.rb.SA_WaterFactory_Id = res.data[0].Id//增加弹窗默认选当前登录人员所在水厂
               this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
-              this.$refs.childSchedule.rbdp1.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
+              //this.$refs.childSchedule.rbdp1.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
               this.getMeterReaderList(1,res.data[0].Id)//查询条件
               this.getMeterReaderList(2,res.data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
-              this.getMeterReaderList(3,res.data[0].Id)//用户表相册弹窗根据选中水厂获取默认抄表员数据
+              this.getMeterReaderList(3,res.data[0].Id)//用户表册弹窗根据选中水厂获取默认抄表员数据
           } else {
             promptInfoFun(this,1,res.message)
           }
