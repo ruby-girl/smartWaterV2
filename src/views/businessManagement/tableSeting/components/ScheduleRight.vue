@@ -102,14 +102,14 @@
 </template>
 
 <script>
-  import { RegisterDetailGetList, GetOrientationList, RegisterMoveOut, RegisterMoveIn, ComboBoxListByMeterReader, SortRegisterBookDetailMove, GetList_Execl } from "@/api/registerBook"
+  import { RegisterDetailGetList, RegisterMoveIn, ComboBoxListByMeterReader, GetList_Execl } from "@/api/registerBook"
   import { promptInfoFun } from "@/utils/index"
   import CustomTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
 
   export default {
-    name: "Schedule2",
+    name: "ScheduleRight",
     components: { CustomTable, Pagination },
     data() {
       return {
@@ -224,7 +224,9 @@
         this.customHeight = this.$refs.formChilds.isCustom
       },
       exportExcel(){//导出
-        GetList_Execl().then(res => {})
+        GetList_Execl(this.rbdp).then(res => {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        })
       },
       getUp1(){
         this.tableHeight = document.documentElement.clientHeight - document.getElementById('table3').offsetTop - 235

@@ -49,7 +49,7 @@
           <CustomTable ref="formChilds"></CustomTable>
           <!--自定义组建 e-->
           <!--列表组建 s-->
-          <el-table ref="singleTable" id="table1" :data="tableData" :height="tableHeight" style="width: 100%" border @selection-change="handleSelectionChange1">
+          <el-table ref="singleTable" id="table1"  highlight-current-row :data="tableData" :height="tableHeight" style="width: 100%" border @selection-change="handleSelectionChange1">
             <el-table-column
               fixed="left"
               type="selection"
@@ -99,14 +99,14 @@
               </el-form-item>
             </el-form>
           </div>
-          <span class="telescopic telescopic2" @click="getUp" v-show="!ifShow">展开</span>
+          <span class="telescopic telescopic2" @click="getUp" v-show="!ifShow">展开 <i class="iconfont iconshouqi2" style="font-size: 12px;"></i></span>
         </div>
       </div>
       <!--右侧表册-->
       <div :class="!ifShow ? 'schedule_box hide' : 'schedule_box'">
         <h2>表册</h2>
-        <Schedule2 ref="childSchedule2" id="myform" class="none" v-on:searchFun="searchFun"></Schedule2>
-        <span class="telescopic telescopic1" @click="getUp">收起</span>
+        <ScheduleRight ref="childSchedule2" id="myform" class="none" v-on:searchFun="searchFun"></ScheduleRight>
+        <span class="telescopic telescopic1" @click="getUp"> 收起 <i class="iconfont iconshouqi1" style="font-size: 12px;"></i></span>
       </div>
     </div>
     <div slot="footer" class="dialog-footer">
@@ -116,15 +116,15 @@
 </template>
 
 <script>
-  import { RegisterDetailGetList, GetOrientationList, RegisterMoveOut, RegisterMoveIn, ComboBoxListByMeterReader, SortRegisterBookDetailMove, GetList_Execl } from "@/api/registerBook"
+  import { RegisterDetailGetList, RegisterMoveIn, ComboBoxListByMeterReader, GetList_Execl } from "@/api/registerBook"
   import CustomTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
-  import Schedule2 from './Schedule2'
+  import ScheduleRight from './ScheduleRight'
   import { promptInfoFun } from "@/utils/index"
 
   export default {
-    name: "Schedule",
-    components: { CustomTable, Pagination, Schedule2 },
+    name: "ScheduleLeft",
+    components: { CustomTable, Pagination, ScheduleRight },
     data() {
       return {
         curForm:false,//是否移动至本表册
@@ -196,19 +196,20 @@
         this.movIn.rbdList = val
       },
       exportExcel(){//导出
-        GetList_Execl().then(res => {})
+        GetList_Execl(this.rbdp).then(res => {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        })
       },
       searchFun(){//获取表册信息
         RegisterDetailGetList(this.rbdp).then(res => {
           if (res.code ==0 ) {
-            console.log(res)
-           // this.$refs.singleTable.setCurrentRow(row);
             this.$refs.childSchedule2.movIn.RegisterBookInfo_Id = this.rbdp.SA_RegisterBookInfo_Id//给右侧表册赋值表册ID
             if(res.data.IsIsLocation){
               this.page = res.data.page
             }
             this.tableData = res.data.rbdList
             this.total = res.data.count
+            this.$refs.singleTable.setCurrentRow(res.data.rbdList[res.data.index]);//高亮定位行
           } else {
             promptInfoFun(this,1,res.message)
           }

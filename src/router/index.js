@@ -154,6 +154,15 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'userSeting',
+        component: () => import('@/views/businessManagement/userSeting/index'),
+        name: 'userSeting',
+        meta: {
+          title: '用户设置',
+          roles: ['1']
+        }
+      },
+      {
         path: 'meterReadingPlan',
         component: () => import('@/views/businessManagement/meterReadingPlan/index'),
         name: 'MeterReadingPlan',

@@ -61,7 +61,7 @@
     <!--编辑或新增窗口 s-->
     <Dialog ref="childDialog"></Dialog>
     <!--表册移交 s-->
-    <Schedule ref="childSchedule"></Schedule>
+    <ScheduleLeft ref="childSchedule"></ScheduleLeft>
     <!--表册用户定位弹窗 s-->
     <FormsDialog ref="formsDialog"></FormsDialog>
     <!--用户定位-->
@@ -74,7 +74,7 @@
   import Dialog from './components/Dialog'//新增或添加组建
   import customTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
-  import Schedule from './components/Schedule'//表册
+  import ScheduleLeft from './components/ScheduleLeft'//表册
   import Location from './components/Location'//用户定位
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
@@ -84,7 +84,7 @@
 
   export default {
     name: 'tableSeting',
-    components: { customTable, Pagination, SelectHead, Dialog, Schedule, FormsDialog, Location },
+    components: { customTable, Pagination, SelectHead, Dialog, ScheduleLeft, FormsDialog, Location },
     data() {
       return {
         tableHeight: null,//表格高度
