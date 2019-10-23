@@ -40,6 +40,11 @@
   .el-table thead tr th{ background: #F0F2F5}
   .getUpDown{ font-size: 14px;color: #00B3A0;display: inline-block;margin-left: 20px;cursor: pointer}
   .dialogFooter{text-align: center;padding-top: 30px;}
+  .typeCheck{height: 42px;padding: 0 24px;box-shadow: 1px 1px 5px #cecece;-webkit-box-shadow: 1px 1px 5px #cecece;margin: -16px 0 43px -16px;line-height: 50px;
+    width: calc(100% + 32px);
+    .el-radio{
+      color: #777C82;
+    }}
 }
 
 .cl-container1{

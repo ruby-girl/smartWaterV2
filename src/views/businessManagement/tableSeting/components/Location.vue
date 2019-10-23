@@ -2,7 +2,7 @@
   <div class="position_conitoner">
     <p v-show="!location" class="position_icon" @click="location = ! location"><i class="iconfont iconjianqu" style="color: #33B300;font-size: 25px;"></i></p>
     <div :class="location? 'location_box moveOut': 'location_box'">
-      <h5>用户表册定位</h5>
+      <h5>用户表册定位 <i class="el-icon-close" @click="setForm"></i></h5>
       <el-form>
         <el-form-item label="用户:" label-width="63px">
           <el-select v-model="rbp.ecqt" placeholder="请选择" style="width: 70px;float: left" size="small">
@@ -44,7 +44,7 @@
       }
     },
     methods: {
-      getListUser() {
+      getListUser() {//定位
         let _this = this
         if (this.rbp.Customer.trim() == '') {
           this.$message({
@@ -63,6 +63,11 @@
           _this.rbp.Customer = ''
         },500)
       },
+      setForm(){//取消
+        this.location = false
+        this.rbp.ecqt = '1'
+        this.rbp.Customer = ''
+      }
     }
   }
 </script>
@@ -79,6 +84,7 @@
       margin: 0;
       width: 46px;height: 46px;border-radius: 50%;box-shadow: 1px 1px 5px #cecece; -webkit-box-shadow: 1px 1px 5px #cecece;text-align: center;background: #fff;line-height: 46px;
     }
+    .el-icon-close{float: right;cursor: pointer;margin-right: 15px;color: #333;}
     .location_box {
       background: #f5f5f5;
       padding-top: 12px;

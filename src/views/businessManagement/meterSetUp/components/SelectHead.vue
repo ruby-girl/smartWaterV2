@@ -115,7 +115,7 @@
         selectedWorkName = this.planArray.find((item)=>{
           return item.Id === val;
         });
-        Bus.$emit('msg', selectedWorkName)//给兄弟组件传值
+        Bus.$emit('planName', selectedWorkName)//给兄弟组件传值
 
         LoadRegisterBookAndMeterReader({'MeterReadPlanId':val}).then(res => {
           if (res.code ==0 ) {

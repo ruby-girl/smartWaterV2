@@ -181,6 +181,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'meterQuery',
+        component: () => import('@/views/businessManagement/meterQuery/index'),
+        name: 'meterQuery',
+        meta: {
+          title: '抄表查询',
+          roles: ['1']
+        }
+      },
+      {
         path: 'meterSetUp',
         component: () => import('@/views/businessManagement/meterSetUp/index'),
         name: 'meterSetUp',

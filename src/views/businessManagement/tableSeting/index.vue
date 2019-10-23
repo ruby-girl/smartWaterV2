@@ -277,10 +277,14 @@
       }
     },
     mounted() {
-      this.$refs.myChild.GetTable(this.rbp.tableId);
-      this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      this.getWaterFactoryList()
+      let _this = this
+      _this.$refs.myChild.GetTable(this.rbp.tableId);
+      _this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+      _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      _this.getWaterFactoryList()
+      window.onresize = () => {
+        _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      };
     }
   }
 </script>

@@ -37,8 +37,9 @@
               :align="item.Position"
               :label="item.ColDesc"/>
           </template>
-          <el-table-column label="操作" width="100px" align="center" fixed="right">
+          <el-table-column label="操作" width="200px" align="center" fixed="right">
             <template slot-scope="scope">
+              <a class="operation1" @click="handleHistory(scope.$index, scope.row)">查看历史记录</a>
               <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if=" scope.row.MeterReadState != 1402 ">删除</a>
             </template>
           </el-table-column>
@@ -65,6 +66,7 @@
   import Pagination from '@/components/Pagination/index'//分页
   import { MeterReadingPageQuery, MeterReadingProcessQuery, getReadDelete } from "@/api/meterReading"
   import { parseTime, promptInfoFun  } from "@/utils/index"
+  import Bus from '@/utils/bus.js'
 
   export default {
     name: 'meterSetUp',
@@ -88,7 +90,9 @@
           MeterReadState:'',//抄表状态
           tableId: '0000014'
         },
-        tableData: [],//表格数据
+        tableData: [
+          {},{},{}
+        ],//表格数据
         checkAllData: [],
         checksData: [],
         customHeight: '',//自定义高度
@@ -191,13 +195,15 @@
       },
       getCurInfo(row){//表格选中事件
         this.$refs.planchild1.currentContract
+      },
+      handleHistory(){// 查看历史数据，跳转表册设置
+        this.$router.push({path: '/businessManagement/meterQuery'})
       }
     },
     mounted() {
       this.screeWidth = window.screen.width
       this.$refs.myChild.GetTable(this.param.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-
       if (window.screen.width > 1400) {
         this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 300
       } else {

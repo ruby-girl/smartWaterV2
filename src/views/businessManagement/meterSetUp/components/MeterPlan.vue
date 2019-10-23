@@ -309,9 +309,13 @@
     mounted() {
       this.screeWidth = window.screen.width
       var _this = this;
-      Bus.$on('msg',(e) =>{//从兄弟组件接收抄表计划名称
+      Bus.$off('planName')
+      Bus.$on('planName',(e) =>{//从兄弟组件接收抄表计划名称
         _this.meterPlan = e
       })
+    },
+    beforeDestroy () {
+      Bus.$off("planName");
     }
   }
 </script>
