@@ -17,6 +17,8 @@ import './icons' // icon
 import './assets/icons/iconfont.css' //
 import './permission' // permission control
 import './utils/error-log' // error log
+import VDistpicker from 'v-distpicker'
+Vue.component('v-distpicker', VDistpicker)
 
 import * as filters from './filters' // global filters
 import VueDND from 'awe-dnd'

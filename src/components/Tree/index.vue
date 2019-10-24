@@ -32,16 +32,10 @@ export default {
       return (<span slot-scope='{ node, data }' style='margin-left:12px'> {node.label}</span>)
     },
     /**
-     * 当前选中需编辑或者新增信息
+     * 当前选中需编辑或者新增信息或删除
      * */
     setCurNode(data) {
-      this.curNode = data
-    },
-    /**
-     * 获取当前复选框选中数据
-     * */
-    getCheckedNodes() {
-      this.deleteIds = this.$refs.tree.getCheckedNodes()
+      this.curNode = data.Id
     }
   }
 }

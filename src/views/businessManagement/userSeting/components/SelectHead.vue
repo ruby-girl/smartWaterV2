@@ -28,9 +28,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i>搜索</el-button>
+        <el-button type="primary" size="small" @click="searchFun" style="padding: 7px 15px"><i class="icon iconfont">&#xe694;</i>搜索</el-button>
       </el-form-item>
-      <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
     </el-form>
   </div>
 </template>
@@ -71,9 +70,6 @@
       }
     },
     methods: {
-      setCustomData() {//表格自定义
-        this.$parent.setCustomData()
-      },
       /**
        * 触发父组建查询方法
        * */

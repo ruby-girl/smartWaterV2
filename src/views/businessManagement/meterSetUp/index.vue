@@ -66,7 +66,6 @@
   import Pagination from '@/components/Pagination/index'//分页
   import { MeterReadingPageQuery, MeterReadingProcessQuery, getReadDelete } from "@/api/meterReading"
   import { parseTime, promptInfoFun  } from "@/utils/index"
-  import Bus from '@/utils/bus.js'
 
   export default {
     name: 'meterSetUp',
