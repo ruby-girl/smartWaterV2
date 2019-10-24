@@ -196,11 +196,11 @@ export default {
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", true);
       }
-      let childFlase = this.cardData.filter(item => {
+      let childFalse = this.cardData.filter(item => {
         //全不选，“ ”
         return item.checkAll == false&&item.isIndeterminate==false;
       });
-      if (childFlase.length == this.cardData.length) {
+      if (childFalse.length == this.cardData.length) {
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", false);
       }
