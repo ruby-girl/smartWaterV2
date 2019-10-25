@@ -73,6 +73,7 @@
                 v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
               >数据绑定</a>
               <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
+              
               <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>
             </template>
           </el-table-column>
@@ -172,7 +173,6 @@ export default {
     let that = this;
     WhetherDisplay({ configkey: "IsAutoCreateReadPlan" }).then(res => {
       //判断是否显示新增抄表计划
-      console.log(res);
       if (res.data == "0") {
         that.isShowAdPlan = true;
       } else {
@@ -224,15 +224,17 @@ export default {
       });
     },
     meterReadingPlanDetail(id) {
+      // window.localtion.href=('businessManagement/meterQuery?id='+id);
       //详情 跳转到抄表设置
       this.$router.push({
         //核心语句
-        path: "/businessManagement/meterSetUp", //跳转的路径
+        path: "/businessManagement/meterQuery", //跳转的路径
         query: {
           //路由传参时push和query搭配使用 ，作用时传递参数
           id: id
         }
       });
+
     },
     delMeterReadingPlan(id) {
       //删除
@@ -271,6 +273,13 @@ export default {
     searchTableList() {
       //查询列表
       const that = this;
+      if(this.selectHead.createStartTime==""||this.selectHead.createEndTime==""){
+         that.$message({
+            message: "计划抄表日期不能为空，请选择!",
+            type: "warning"
+          });
+          return false
+      }
       searchPlanList(this.selectHead).then(res => {
         if (res.code == 0) {
           that.tableData = res.data;
@@ -326,7 +335,7 @@ export default {
   margin: 10px;
 }
 .operation2-1 {
-  color: ##46494c;
+  color: #46494c;
   font-size: 13px;
   margin: 10px;
 }

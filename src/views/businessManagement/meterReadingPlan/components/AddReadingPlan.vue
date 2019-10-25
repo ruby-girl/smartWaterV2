@@ -79,12 +79,19 @@ export default {
     }
   },
   methods: {
-   
     addMeterReadingPlan() {
       let that = this;
       addMeterReadingPlan(this.addPlanData).then(res => {
         if (res.code == 0) {
           this.AdialogFormVisible = false;
+          this.addPlanData = {
+            SA_WaterFactory_Id: "",
+            StartPlanDate: "",
+            EndPlanDate: "",
+            PlanName: "",
+            IsAutoGenerateOrder: "",
+            IsApplyOtherFactory: false
+          };
           that.$message({
             message: res.msg ? res.msg : "添加成功",
             type: "success"

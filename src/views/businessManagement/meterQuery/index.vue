@@ -100,6 +100,11 @@
         }
       }
     },
+    activated:function(){
+      let id= this.$route.query.id
+      this.param.SA_MeterReadPlan_Id=id
+      this.searchFun()
+    },
     methods:{
       sortChanges({prop, order }){//列排序
         this.param.filed = prop
@@ -153,7 +158,8 @@
         self.$nextTick(() => {
           self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
         })
-      }
+      },
+     
     },
     mounted() {
       let _this = this;
