@@ -39,24 +39,11 @@
             </el-button>
           </el-form-item>
       </div>
-      <div style="width: 270px;float: left">
-          <div style="background: #f5f5f5;padding-top: 12px;margin-bottom: 18px;">
-            <el-form-item label="用户:" label-width="70px">
-              <el-input v-model="rbp.BlockAreaName" maxlength="20" placeholder="姓名/编码/简码"/>
-            </el-form-item>
-            <el-form-item style="text-align: right;width: 100%">
-              <el-button @click="getListUser()" style="margin-right: 17px;background: #75C200;border: solid 1px #75C200;" type="primary" size="mini" class="cl-search"><i class="el-icon-location-outline"></i>
-                用户表册定位
-              </el-button>
-            </el-form-item>
-          </div>
-      </div>
     </div>
   </el-form>
 </template>
 
 <script>
-  import { registerAdd, registerUpDate } from "@/api/registerBook"
   import { getDictionaryOption } from "@/utils/permission"
 
   export default {
@@ -66,7 +53,7 @@
         rbp:{},
         formArry:[],//表册类型
         waterFactory:[],//具有权限水厂数据
-        meterArry:[]//抄表员
+        meterArry:[],//抄表员
       }
     },
     methods: {
@@ -75,9 +62,6 @@
        * */
       searchFun(){
         this.$parent.searchFun();
-      },
-      getListUser(){
-        this.$parent.setChildFun()
       },
       getMeterRead(id){
         this.$parent.getMeterReaderList(1,id)

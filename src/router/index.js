@@ -154,6 +154,15 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'userSeting',
+        component: () => import('@/views/businessManagement/userSeting/index'),
+        name: 'userSeting',
+        meta: {
+          title: '用户设置',
+          roles: ['1']
+        }
+      },
+      {
         path: 'meterReadingPlan',
         component: () => import('@/views/businessManagement/meterReadingPlan/index'),
         name: 'MeterReadingPlan',
@@ -168,6 +177,15 @@ export const asyncRoutes = [
         name: 'cashCharge',
         meta: {
           title: '现金收费',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'meterQuery',
+        component: () => import('@/views/businessManagement/meterQuery/index'),
+        name: 'meterQuery',
+        meta: {
+          title: '抄表查询',
           roles: ['1']
         }
       },

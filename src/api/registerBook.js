@@ -149,3 +149,14 @@ export function DeleteBlObj(data) {
     params: data
   })
 }
+
+/**
+ * 获取临时表册数据
+ * */
+export function GetDefaultList(data) {
+  return request({
+    url: '/RegisterBookDetail/GetDefaultList',
+    method: 'post',
+    data: data
+  })
+}

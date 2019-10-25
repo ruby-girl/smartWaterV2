@@ -63,4 +63,12 @@ export function WhetherDisplay(data) {//生成订单
     params:data
   })
 }
+
+export function QueryMeterReadPlanByFactoryId(data) {//生成订单
+  return request({
+    url: '/MeterReadPlan/QueryMeterReadPlanByFactoryId',
+    method: 'post',
+    params:data
+  })
+}
 //POST /api/MeterReadPlan/ManualCreateMeterReadPlan

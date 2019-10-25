@@ -89,3 +89,36 @@ export function getReadDelete(data) {
     params: data
   })
 }
+
+/**
+ *抄表员获取表册
+ * */
+export function ComboBoxListByMeterReader(data) {
+  return request({
+    url: '/RegisterBook/ComboBoxListByMeterReader',
+    method: 'post',
+    params: data
+  })
+}
+
+/**
+ *表册导出
+ * */
+export function GetList_Execl(data) {
+  return request({
+    url: '/RegisterBookDetail/GetList_Execl',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ *同表册移动
+ * */
+export function SortRegisterBookDetailMove(data) {
+  return request({
+    url: '/RegisterBookDetail/SortRegisterBookDetailMove',
+    method: 'post',
+    data: data
+  })
+}

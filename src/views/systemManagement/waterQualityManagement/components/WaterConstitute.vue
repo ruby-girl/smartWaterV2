@@ -1,7 +1,7 @@
 <template>
   <!-- 新增弹窗 -->
   <el-dialog
-    title="水价构成"
+    :title="type==1?'水价构成':'调整前水价信息'"
     :visible.sync="AdialogFormVisible"
     top="20vh"
     width="710px"
@@ -11,15 +11,15 @@
     <div class="ladder-box display-flex justify-content-flex-justify align-items-center">
       <div>
         污水费：
-        <span class="color-more-black">20元/吨</span>
+        <span class="color-more-black">{{details.SewagePrice}}元/吨</span>
       </div>
       <div>
         其他费用1：
-        <span class="color-more-black">20元/吨</span>
+        <span class="color-more-black">{{details.OtherPrice1}}元/吨</span>
       </div>
       <div>
         其他费用2：
-        <span class="color-more-black">20元/吨</span>
+        <span class="color-more-black">{{details.OtherPrice2}}元/吨</span>
       </div>
     </div>
     <div v-if="details.IsLadder">
@@ -47,6 +47,21 @@
       </div>
     </div>
     </div>
+    <div class="display-flex justify-content-flex-end align-items-center" v-if="!details.IsLadder">
+      <div>
+        单价：
+        <span class="color-more-black">{{details.NotLadderPrice}}元/吨</span>
+      </div>
+      <div style="margin-left:60px;">
+        合计单价：
+        <span class="color-more-black">{{details.TotalPrice}}元/吨</span>
+      </div>
+    </div>
+    <!-- 如果为撤销水价弹窗，显示footer -->
+    <div slot="footer" class="dialog-footer" v-if="type==2">
+      <el-button size="mini" type="primary" @click="reset()">确认撤销</el-button>
+      <el-button size="mini" @click="AdialogFormVisible = false">取消</el-button>
+    </div>
   </el-dialog>
 </template>
 <script>
@@ -60,6 +75,10 @@ export default {
     constituteShow: {
       type: Boolean,
       default: false
+    },
+    type:{
+      type: Number,
+      default: 0
     }
   },
   watch: {
@@ -84,7 +103,11 @@ export default {
       details: {}
     };
   },
-  methods: {}
+  methods: {
+    reset(){
+      this.$emit("reset", this.id);
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -3,7 +3,6 @@
       <div class="custom-tree-container">
         <el-tree
           :data="treeData"
-          show-checkbox
           node-key="id"
           ref="tree"
           highlight-current
@@ -30,19 +29,13 @@ export default {
     * 动态添加模板图标
     * */
     renderContent(h, { node, data, store }) {
-      return (<span class='icon iconfont' slot-scope='{ node, data }'><i class={data.icon}></i> {node.label}</span>)
+      return (<span slot-scope='{ node, data }' style='margin-left:12px'> {node.label}</span>)
     },
     /**
-     * 当前选中需编辑或者新增信息
+     * 当前选中需编辑或者新增信息或删除
      * */
     setCurNode(data) {
-      this.curNode = data
-    },
-    /**
-     * 获取当前复选框选中数据
-     * */
-    getCheckedNodes() {
-      this.deleteIds = this.$refs.tree.getCheckedNodes()
+      this.curNode = data.Id
     }
   }
 }
@@ -52,24 +45,21 @@ export default {
     height: calc(100vh - 20%);
     overflow: auto;
     .custom-tree-container{
-      width: 25%;
+      width: 100%;
+      border: solid 1px #CAD9E0;
+      border-bottom: none;
       .el-tree{
         color: #777C82;
-        .icongongsishu-yiji{color: #006663}
-        .icongongsishu-erji{color: #33B300}
-        .icongongsishu-sanji{color: #D8E2E7}
-      }
-      .el-checkbox__input.is-checked .el-checkbox__inner{
-        background-color: #FF3D3D;
-        border-color: #FF3D3D;}
-      .el-checkbox__input.is-indeterminate .el-checkbox__inner{
-        background-color: #FFFFFF;
-        border-color: #DCDFE6;}
-      .el-checkbox__input.is-focus .el-checkbox__inner, .el-checkbox__input:hover .el-checkbox__inner{
-        border-color: #DCDFE6;
       }
     }
+    .el-tree-node__content{height: 38px;font-size: 14px;color: #46494C;border-bottom: solid 1px #CAD9E0;position: relative;}
+    .el-tree-node__expand-icon{position: absolute;right: 6px;color: #46494C}
+    .el-tree-node__expand-icon.is-leaf { color: transparent !important;}
     .el-dialog__header{height: 40px;}
     .el-dialog__title{font-size: 14px;}
+    .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content{
+      background-color: #00B2A1;color: #fff;
+    }
+    .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content .el-tree-node__expand-icon {color: #fff;}
   }
 </style>

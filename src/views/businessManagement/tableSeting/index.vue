@@ -42,10 +42,7 @@
             :label="item.ColDesc"/>
         </template>
         <el-table-column label="操作" width="300px" align="center" fixed="right">
-          <template slot-scope="scope" v-show="scope=='临时表册'">
-            <a class="operation3" @click="handleUser(scope.row)">表册用户</a>
-          </template>
-          <template slot-scope="scope" v-show="scope!='临时表册'">
+          <template slot-scope="scope">
             <a class="operation3" @click="handleUser(scope.row)">表册用户</a>
             <a class="operation1" @click="handleEdit(scope.row)">表册编辑</a>
             <a class="operation4" @click="" @click="handleEmpty(scope.row)">清空</a>
@@ -61,14 +58,14 @@
         @pagination="searchFun"/>
       <!--列表组建 e-->
     </div>
+    <!--编辑或新增窗口 s-->
     <Dialog ref="childDialog"></Dialog>
-    <!--编辑或新增窗口 e-->
     <!--表册移交 s-->
-    <Schedule ref="childSchedule"></Schedule>
-    <!--表册移交 e-->
+    <ScheduleLeft ref="childSchedule"></ScheduleLeft>
     <!--表册用户定位弹窗 s-->
     <FormsDialog ref="formsDialog"></FormsDialog>
-    <!--表册用户定位弹窗 e-->
+    <!--用户定位-->
+    <Location ref="locationDialog"></Location>
   </div>
 </template>
 
@@ -77,17 +74,17 @@
   import Dialog from './components/Dialog'//新增或添加组建
   import customTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
-  import Schedule from './components/Schedule'//表册
+  import ScheduleLeft from './components/ScheduleLeft'//表册
+  import Location from './components/Location'//用户定位
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
-  import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl} from "@/api/registerBook"
-  import { parseTime } from "@/utils/index"
+  import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl, GetOrientationList} from "@/api/registerBook"
+  import { parseTime, promptInfoFun } from "@/utils/index"
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
-
 
   export default {
     name: 'tableSeting',
-    components: { customTable, Pagination, SelectHead, Dialog, Schedule, FormsDialog },
+    components: { customTable, Pagination, SelectHead, Dialog, ScheduleLeft, FormsDialog, Location },
     data() {
       return {
         tableHeight: null,//表格高度
@@ -167,40 +164,40 @@
         }).then(() => {
           DeleteBlObj({'RegisterBookId': row.Id}).then(res => {
             if (res.code == 0) {
-              this.$message({
-                message: res.message,
-                type: 'success',
-                duration: 4000
-              });
+              promptInfoFun(this,2,res.message)
               this.searchFun()
             } else {
-              this.$message({
-                message: res.message,
-                type: 'warning',
-                duration: 4000
-              });
+              promptInfoFun(this,1,res.message)
             }
           })
         })
       },
-      handleUser(){//表册移交
+      handleUser(row,type){//用户表册,type==2时候为定位
         this.$refs.childSchedule.dialogVisible = true
-        this.$refs.childSchedule.getTableInfo()
+        this.$refs.childSchedule.getTableInfo()//获取用户表册自定义表头信息
+        type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : ''
+        this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = row.SA_WaterFactory_Id//水厂
+        this.$refs.childSchedule.rbdp.MeterReaderId = row.MeterReader_Id//抄表员
+        this.$refs.childSchedule.getMeterForm(row.MeterReader_Id)//手动选择当前抄表员加载当前表册信息
+        type == 2? this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.SA_RegisterBookInfo_Id : this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.Id//表册ID
+        this.$refs.childSchedule.searchFun()
+
+     /*   if(formID == 0){//初始化临时表册数据
+          this.$refs.childSchedule.searchFun1()
+        }else{//初始化正式表册数据
+          this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = row.SA_WaterFactory_Id
+          this.$refs.childSchedule.rbdp.MeterReaderId = row.MeterReader_Id
+          type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.Id//从列表点击表册用户时候传SA_RegisterBookInfo_Id,定位时候传表册SA_RegisterBookDetail_Id
+          this.$refs.childSchedule.getMeterForm(row.MeterReader_Id)//手动选择当前抄表员加载当前表册信息
+          this.$refs.childSchedule.searchFun(row)
+        }*/
       },
       handleEmpty(row){//清空
         ClearRegisterBook({'RegisterBookId':row.Id}).then(res => {
           if (res.code ==0 ) {
-            this.$message({
-              message: res.message,
-              type: 'success',
-              duration: 4000
-            });
+            promptInfoFun(this,2,res.message)
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -210,24 +207,36 @@
             this.total = res.count;
             this.tableData = res.data;
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
       sortChanges({prop, order }){//排序
         this.rbp.filed = prop
-        this.rbp.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        this.rbp.sort = order=='ascending'?'ASC':(order=='descending'?'DESC':'')
         if(this.tableData.length>0){
           this.rbp.page = 1
           this.searchFun()
         }
       },
-      setChildFun(){//触发表册用户定位弹框
-        this.$refs.formsDialog.formsVisible = true
+      setChildFun(params){//触发表册用户定位弹框
+        GetOrientationList(params).then(res => {
+          if (res.code == 0) {
+            if(res.count>1){//当返回信息大于一条用户信息时候，需进行手动确认
+              this.$refs.formsDialog.rbp = params
+              this.$refs.formsDialog.total = res.count
+              this.$refs.formsDialog.gridData = res.data
+              this.$refs.formsDialog.formsVisible = true
+            }else if(res.count <= 0){
+              promptInfoFun(this,1,'暂无该用户信息')
+            }else {//有且仅有一条用户信息时直接跳转至用户表册
+              /*直接跳转*/
+              this.handleUser(res.data[0],2)
+            }
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
       },
       getWaterFactoryList(){//获取具有权限的水厂数据集合
         WaterFactoryComboBoxListAuth().then(res => {
@@ -238,36 +247,44 @@
               this.rbp.SA_WaterFactory_Id = res.data[0].Id;//查询条件
               this.$refs.childDialog.rb.SA_WaterFactory_Id = res.data[0].Id//增加弹窗默认选当前登录人员所在水厂
               this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
+              //this.$refs.childSchedule.rbdp1.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
               this.getMeterReaderList(1,res.data[0].Id)//查询条件
               this.getMeterReaderList(2,res.data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
+              this.getMeterReaderList(3,res.data[0].Id)//用户表册弹窗根据选中水厂获取默认抄表员数据
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
       getMeterReaderList(type,id){//通过水厂获得抄表员
         MeterReaderList({SA_WaterFactory_Id:id}).then(res => {
           if (res.code ==0 ) {
-            type==2?this.$refs.childDialog.meterArry = res.data : this.$refs.childSelect.meterArry = res.data
+            switch (type) {//首页查询条件
+              case 1:
+                this.$refs.childSelect.meterArry = res.data
+                    break
+              case 2://新增或编辑条件
+                this.$refs.childDialog.meterArry = res.data
+                break
+              case 3://表册移交条件
+                this.$refs.childSchedule.meterArry = res.data
+                break
+            }
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       }
     },
     mounted() {
-      this.$refs.myChild.GetTable(this.rbp.tableId);
-      this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
-      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      this.getWaterFactoryList()
+      let _this = this
+      _this.$refs.myChild.GetTable(this.rbp.tableId);
+      _this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+      _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      _this.getWaterFactoryList()
+      window.onresize = () => {
+        _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      };
     }
   }
 </script>

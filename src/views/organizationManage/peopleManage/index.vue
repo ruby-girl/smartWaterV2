@@ -1,6 +1,6 @@
 <template>
-  <div class="cl-container cl-container2" style="overflow: auto">
-    <div>
+  <div class="cl-container cl-container2">
+    <div style="overflow: auto">
       <div id="conditionBox">
         <!--查询条件组件 s-->
         <SelectHead ref="childSelect"></SelectHead>

@@ -52,7 +52,11 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex justify-content-flex-center method-font">
-                <div class="main-color-warn button-width" @click="constitute(row)" v-permission="['1010106']">
+                <div
+                  class="main-color-warn button-width"
+                  @click="constitute(row,1)"
+                  v-permission="['1010106']"
+                >
                   <a>水价构成</a>
                 </div>
                 <div class="button-width" @click="history(row)" v-permission="['1010105']">
@@ -68,7 +72,7 @@
                 </div>
                 <div
                   class="color-more-black button-width"
-                  @click="reset(row)"
+                  @click="constitute(row,2)"
                   v-if="row.UseState=='802'"
                   v-permission="['1010107']"
                 >
@@ -97,7 +101,12 @@
           @updateData="updateData"
           :type-list="typeList"
         />
-        <water-constitute :constitute-show.sync="constituteShow" :id="constituteId" />
+        <water-constitute
+          :constitute-show.sync="constituteShow"
+          :id="constituteId"
+          :type="constituteType"
+          @reset="reset"
+        />
         <history-price :history-show.sync="historyShow" :id="historyId" />
       </div>
     </div>
@@ -163,6 +172,7 @@ export default {
       constituteShow: false, // 水价构成弹窗
       historyShow: false, //历史水价弹窗
       constituteId: "", //水价构成行ID
+      constituteType: 1, //1：水价构成页面；2：撤销前确认页面
       historyId: "", //历史水价行ID
       tableData: [],
       checksData: []
@@ -194,8 +204,9 @@ export default {
       this.historyShow = true;
     },
     // 点击水价构成
-    constitute(row) {
+    constitute(row, t) {
       this.constituteId = row.Id;
+      this.constituteType = t;
       this.constituteShow = true;
     },
     setCustomData() {
@@ -222,7 +233,7 @@ export default {
       this.getList();
     },
     add() {
-      (this.temp = {
+      this.temp = {
         UseWaterTypeName: "", //用水性质名称
         StartPlanDate: parseStartTime(new Date()), //开始执行日期
         NewPriceUseDate: "",
@@ -260,8 +271,8 @@ export default {
           { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
           { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
         ]
-      }),
-        (this.dialogStatus = "create");
+      };
+      this.dialogStatus = "create";
       this.addDialogFormVisible = true;
     },
     // 水价调整-编辑
@@ -312,9 +323,9 @@ export default {
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        DeleteWaterPropertyId({id:row.Id}).then(res => {
+        DeleteWaterPropertyId({ id: row.Id }).then(res => {
           this.$message({
-            message: '删除成功',
+            message: "删除成功",
             type: "success",
             duration: 4000
           });
@@ -322,28 +333,21 @@ export default {
         });
       });
     },
-     //导出
-    excel() {    
+    //导出
+    excel() {
       GetWaterPropertyList_OutExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
-    reset(row) {
-      this.$confirm("是否确认撤销新水价？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        customClass: "warningBox",
-        showClose: false
-      }).then(() => {
-        ResetUpdateWaterPropertyInfo({ id: row.Id }).then(res => {
-          this.$message({
-            message: "撤销成功！",
-            type: "success",
-            duration: 4000
-          });
-          this.getList();
+    reset(id) {
+      ResetUpdateWaterPropertyInfo({ id: id }).then(res => {
+        this.constituteShow = false;
+        this.$message({
+          message: "撤销成功！",
+          type: "success",
+          duration: 4000
         });
+        this.getList();
       });
     }
   }

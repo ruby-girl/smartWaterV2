@@ -6,21 +6,31 @@
       </div>
 
       <!-- 表格模式 -->
-      <div class="container-bottom-box display-flex">
+      <el-row :gutter="10" class="container-bottom-box display-flex">
         <!-- 左边表格 -->
-        <div class="cash-padding-bg flex-1">
+        <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg">
           <div class="table-top-btn-padding display-flex justify-content-flex-justify">
             <div class="display-flex">
-              <div @click="type=1">表格</div>
-              <div @click="type=2">卡片</div>
+              <div
+                @click="type=2"
+                :class="{'change-tab':true,'iconfont':true,'iconzu':true,'tab-active': this.type==2}"
+              ></div>
+              <div
+                @click="type=1"
+                :class="{'change-tab':true,'iconfont':true,'iconzu1':true,'tab-active': this.type==1}"
+                style="border:none"
+              ></div>
             </div>
-            <div>
+            <div v-if="type==1">
               <el-button type="success" size="mini" @click="excel">
                 <i class="iconfont icondaochuexcel"></i>导出Excel
               </el-button>
               <el-button type="warning" size="mini" @click="setCustomData()">
                 <i class="iconfont iconbiaogezidingyi"></i>表格自定义
               </el-button>
+            </div>
+            <div v-else>
+              <el-checkbox :indeterminate="isIndeterminateParent" v-model="checkedAllParent" @change="parentChange">全选</el-checkbox>
             </div>
           </div>
           <components
@@ -30,20 +40,34 @@
             :tableHeight="tableHeight"
             ref="tableTypeCard"
             :tableData="tableData"
+            :saveTableHeight="saveTableHeight"
+            :checkedAllParent.sync="checkedAllParent"
+            :isIndeterminateParent.sync="isIndeterminateParent"
+            @details="details"
+            @reset="reset"
           ></components>
-        </div>
+        </el-col>
         <!-- 左边表格end -->
         <!-- 右 -->
-        <div class="cash-padding-bg cash-right-box">阿萨德</div>
+        <el-col :md="10" :lg="8" :xl="8" class="cash-padding-bg cash-right-box">
+          <right-box></right-box>
+        </el-col>
         <!-- 右 -->
-      </div>
+      </el-row>
     </div>
+    <water-details :waterDetailsShow.sync="waterDetailsShow"></water-details>
+    <over-details :overDetailsShow.sync="overDetailsShow"></over-details>
+    <select-user :selectUserShow.sync="selectUserShow"></select-user>
   </div>
 </template>
 <script>
 import SelectHead from "./components/SelectHead";
 import TableType from "./components/TableType";
 import CardType from "./components/CardType";
+import RightBox from "./components/RightBox";
+import WaterDetails from "./components/WaterDetails";
+import OverDetails from "./components/OverDetails";
+import SelectUser from "./components/SelectUser";
 import {
   getRolesList,
   addRole,
@@ -52,8 +76,8 @@ import {
   exportExcel
 } from "@/api/role";
 export default {
-  name: "RolePermission",
-  components: { SelectHead, TableType, CardType },
+  name: "cashCharge",
+  components: { SelectHead, TableType, CardType, RightBox,WaterDetails,OverDetails,SelectUser},
   data() {
     return {
       total: 0,
@@ -76,7 +100,13 @@ export default {
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableHeight: 0,
-      tableData:[]
+      tableData: [],
+      saveTableHeight: 0,
+      checkedAllParent: false, //全选
+      isIndeterminateParent:false,//复选框属性
+      waterDetailsShow:false,//水费详情弹窗
+      overDetailsShow:false,//其它费用详情弹窗
+      selectUserShow:false,//多用户选择弹窗
     };
   },
   mounted: function() {
@@ -84,21 +114,28 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 220;
+      that.tableHeight = document.body.clientHeight - formHeight - 205;
+      that.saveTableHeight = that.tableHeight+10;
       window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight - 220;
+        that.tableHeight = document.body.clientHeight - formHeight - 205;
       };
     });
   },
   watch: {
     type(v, o) {
-      this.typeComponents = v == 1 ? "TableType" : "CardType";
+      this.typeComponents = v == 2 ? "CardType" : "TableType";
     }
   },
   methods: {
     getList() {
       getRolesList(this.listQuery).then(res => {
         this.total = res.count;
+        res.data.filter(item => {
+          if (item.Id == "ad0a3b59-f6c3-4a83-bca1-88a38b824e84") {
+            //demo
+            item.tooltip = "这是提示语句";
+          }
+        });
         this.tableData = res.data;
       });
     },
@@ -171,7 +208,16 @@ export default {
       exportExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
-    }
+    },
+    parentChange(v){
+      this.isIndeterminateParent=false
+    },
+    // 费用详情
+    details(n){
+      this.selectUserShow=true
+    },
+    // 费用撤回
+    reset(){}
   }
 };
 </script>
@@ -180,10 +226,26 @@ export default {
   border-top: 15px solid #eff1f4;
 }
 .cash-padding-bg {
-  padding: 20px;
+  padding: 20px !important;
   background: #fff;
 }
 .cash-right-box {
-  width: 347px;
+  border-left: 15px solid #eff1f4;
+  padding: 15px;
+}
+/deep/ .is-disabled .el-checkbox__inner {
+  background: #ddd !important;
+}
+.change-tab {
+  background: #f0f0f0;
+  font-size: 13px;
+  padding: 5px 20px 2px 20px;
+  line-height: 24px;
+  border-right: 1px solid #d9d9d9;
+  cursor: pointer;
+  color: #999999;
+}
+.tab-active {
+  color: #00b2a1;
 }
 </style>

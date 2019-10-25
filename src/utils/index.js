@@ -89,8 +89,8 @@ export function ladderChangeObj(details) {
     "3": ["FourLadderWaterNum", "FourLadderPrice", "FourTotalPrice"],
     "4": ["FiveLadderWaterNum", "FiveLadderPrice", "FiveTotalPrice"]
   };
-  
-  details.ladder.map(function(item,i){     
+
+  details.ladder.map(function(item,i){
     details[actions[i][0]]=item.LadderWaterNum
     details[actions[i][1]]=item.LadderPrice
     details[actions[i][2]]=item.TotalPrice
@@ -554,6 +554,21 @@ export function removeClass(ele, cls) {
     const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
     ele.className = ele.className.replace(reg, ' ')
   }
+}
+/**
+ * Prompt information
+ * @params obj vue对象
+ * @params type 1警告 2成功
+ * @params msg 提示信息
+ * */
+export function promptInfoFun(obj,type,msg) {
+  let types =''
+  type == 1? types = 'warning' : types = 'success'
+  obj.$message({
+    message: msg,
+    type: types,
+    duration: 4000
+  });
 }
 
 Date.prototype.Format = function (fmt) { //author: meizz

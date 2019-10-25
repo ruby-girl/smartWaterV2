@@ -179,7 +179,7 @@
 <script>
   import { getReading, WaterYieldPricePredict } from "@/api/meterReading"
   import Bus from '@/utils/bus'
-  import { ladderChangeArr } from '@/utils/index'
+  import { ladderChangeArr, promptInfoFun } from '@/utils/index'
 
   export default {
     name: "MeterPlan",
@@ -221,11 +221,7 @@
       getCheck(param){//抄表
         getReading(param).then(res => {
           if (res.code ==0 ) {
-            this.$message({
-              message: res.message,
-              type: 'success',
-              duration: 4000
-            });
+            promptInfoFun(this,2,res.message)
             this.$parent.searchFun();
             /**
              * 待用户模块数据提供之后完善
@@ -236,11 +232,7 @@
               this.$refs.ReadNumInput.$el.querySelector('input').focus();
             }
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -254,11 +246,7 @@
             if(this.checks.indexOf('字轮是否翻页')=='-1'){//当未勾选字轮翻页,判断本次读书必须大于上次读书
               this.param.IsPage = false
               if(this.currentContract.LastReadNum >= curNum){
-                this.$message({
-                  message: '本次读书必须大于上次读书',
-                  type: 'warning',
-                  duration: 4000
-                });
+                promptInfoFun(this,1,'本次读数必须大于上次读数！')
               }else{
                 type===1? this.getPrice(params) : this.getCheck(params)
               }
@@ -287,26 +275,14 @@
                   }
                 }
               }else {
-                this.$message({
-                  message: '本次读书不能大于上次读书',
-                  type: 'warning',
-                  duration: 4000
-                });
+                promptInfoFun(this,1,'本次读数不能大于上次读数！')
               }
             }
           }else{
-            this.$message({
-              message: '本次读书不能为空！',
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,'本次读数不能为空！')
           }
         }else {
-          this.$message({
-            message: '请选择用户！',
-            type: 'warning',
-            duration: 4000
-          });
+          promptInfoFun(this,1,'请选择用户！')
         }
       },
       getPrice(param){//水费水量
@@ -325,11 +301,7 @@
               this.oneLadder = oneData
             }
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       }
@@ -337,9 +309,13 @@
     mounted() {
       this.screeWidth = window.screen.width
       var _this = this;
-      Bus.$on('msg',(e) =>{//从兄弟组件接收抄表计划名称
+      Bus.$off('planName')
+      Bus.$on('planName',(e) =>{//从兄弟组件接收抄表计划名称
         _this.meterPlan = e
       })
+    },
+    beforeDestroy () {
+      Bus.$off("planName");
     }
   }
 </script>

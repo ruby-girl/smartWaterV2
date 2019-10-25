@@ -8,7 +8,7 @@
       </el-select>
     </el-form-item>-->
 
-    <el-form-item label="附件:">
+    <el-form-item label="附件：">
       <el-select v-model="certificates" placeholder="请选择" size="small">
         <el-option label="身份证" value="1" />
         <el-option label="居住证" value="2" />

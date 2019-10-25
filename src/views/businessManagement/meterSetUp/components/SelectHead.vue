@@ -64,6 +64,7 @@
 <script>
   import { getPlan, LoadRegisterBookAndMeterReader, MeterReadingLocationQuery } from "@/api/meterReading"
   import { getDictionaryOption } from "@/utils/permission"
+  import { promptInfoFun } from "@/utils/index"
 
   import Bus from '@/utils/bus'
   export default {
@@ -105,11 +106,7 @@
             this.param.SA_MeterReadPlan_Id = res.data[0].Id;//默认选择第一个
             this.getUserInfo(res.data[0].Id)
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -118,7 +115,7 @@
         selectedWorkName = this.planArray.find((item)=>{
           return item.Id === val;
         });
-        Bus.$emit('msg', selectedWorkName)//给兄弟组件传值
+        Bus.$emit('planName', selectedWorkName)//给兄弟组件传值
 
         LoadRegisterBookAndMeterReader({'MeterReadPlanId':val}).then(res => {
           if (res.code ==0 ) {
@@ -127,11 +124,7 @@
             this.param.SA_MeterReader_Id = '-1'//默认选中第一个
             this.param.SA_RegisterBookInfo_Id = res.data.RegisterBooks[0].Id
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -149,11 +142,7 @@
           MeterReadingLocationQuery({'SA_MeterReadPlan_Id':id,'CustomerQueryType':type,'CustomerQueryValue':value}).then(res => {//先进行表册定位
             if (res.code == 0 ) {
               if(res.data.length <=0 ){//没有该人员信息
-                this.$message({
-                  message: '未查询到数据',
-                  type: 'warning',
-                  duration: 4000
-                });
+                promptInfoFun(this,1,'未查询到数据')
               }else if(res.data.length ==1){//此时有一条数据默认覆盖当前表册
                 //this.param.SA_RegisterBookInfo_Id = res.data[0].Id
                 this.param.SA_RegisterBookInfo_Id = this.meterData[0].Id
