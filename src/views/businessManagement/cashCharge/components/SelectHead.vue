@@ -31,7 +31,7 @@
           <el-button type="primary" size="mini" @click="handleFilter">
             <i class="iconfont iconsousuo"></i>搜索
           </el-button>
-          <el-button type="primary" size="mini" @click="handleFilter">
+          <el-button type="success" size="mini" @click="handleFilter">
             <i class="iconfont iconsousuo"></i>读卡
           </el-button>
         </el-form-item>
@@ -41,13 +41,16 @@
       </div>
     </div>
     <div class="head-bottom-box display-flex main-more-black-color">
-        <div class="pr-15">
+        <div class="head-user-details">
             姓名:羊请问
         </div>
-         <div class="pr-15">
+         <div class="head-user-details">
+           水表类型:机械表
+        </div>
+         <div class="head-user-details">
             电话:18190002838
         </div>
-         <div class="pr-15">
+         <div>
             地址:奥术大师大所大所大所多
         </div>
     </div>
@@ -93,13 +96,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .payment-records{
-    color:#EF8205;
+    color:#00B2A1;
     font-size: 13px;
     padding-bottom: 10px;
 }
 .head-bottom-box{
     background: #F5F5F5;
     padding:20px;
+}
+.head-user-details{
+  padding-right: 80px;
 }
 </style>
 
