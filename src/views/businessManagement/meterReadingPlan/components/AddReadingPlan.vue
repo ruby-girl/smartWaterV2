@@ -96,6 +96,7 @@ export default {
             message: res.msg ? res.msg : "添加成功",
             type: "success"
           });
+          this.$parent.searchTableList();
         } else {
           that.$message({
             message: res.msg ? res.msg : "warning",
