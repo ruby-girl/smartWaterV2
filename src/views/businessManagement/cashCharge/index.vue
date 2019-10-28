@@ -1,7 +1,7 @@
 <template>
   <div class="section-container">
     <div>
-      <div ref="formHeight" class="cash-padding-bg">
+      <div ref="formHeight" class="cash-padding-bg padding-20">
         <select-head :select-head="listQuery" @handleFilter="handleFilter" />
       </div>
 
@@ -11,15 +11,19 @@
         <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg">
           <div class="table-top-btn-padding display-flex justify-content-flex-justify">
             <div class="display-flex">
+              <el-tooltip popper-class="tooltip" content="卡片模式" placement="bottom" effect="light" :visible-arrow='false'>
               <div
                 @click="type=2"
                 :class="{'change-tab':true,'iconfont':true,'iconzu':true,'tab-active': this.type==2}"
               ></div>
+              </el-tooltip>
+              <el-tooltip  popper-class="tooltip" content="表格模式" placement="bottom" effect="light" :visible-arrow='false'>
               <div
                 @click="type=1"
                 :class="{'change-tab':true,'iconfont':true,'iconzu1':true,'tab-active': this.type==1}"
                 style="border:none"
               ></div>
+               </el-tooltip>
             </div>
             <div v-if="type==1">
               <el-button type="success" size="mini" @click="excel">
@@ -226,15 +230,21 @@ export default {
   border-top: 15px solid #eff1f4;
 }
 .cash-padding-bg {
-  padding: 20px !important;
+  padding:0 20px 20px 20px !important;
   background: #fff;
+}
+.padding-20{
+  padding: 20px !important;
 }
 .cash-right-box {
   border-left: 15px solid #eff1f4;
   padding: 15px;
 }
 /deep/ .is-disabled .el-checkbox__inner {
-  background: #ddd !important;
+  background: #B4BCC1 !important;
+}
+/deep/ .el-checkbox__input.is-disabled + span.el-checkbox__label{
+  color:#fff;
 }
 .change-tab {
   background: #f0f0f0;
@@ -248,4 +258,8 @@ export default {
 .tab-active {
   color: #00b2a1;
 }
+.tooltip{
+  color:#ddd;
+}
+
 </style>

@@ -1,12 +1,15 @@
 <template>
   <!-- 新增弹窗 -->
   <div>
+       <div class="display-flex justify-content-flex-end">
+      <div class="set-pint">设置打印机</div>
+    </div>
     <div class="right-detail-box">
       <div>应收金额：80元</div>
       <div class="display-flex align-items-center">
         <div class="main-color-pink">实收金额：</div>
         <div class="right-detail-input">
-          <input type="text" />
+          <input type="text" @keyup.enter="testCasha"/>
         </div>
         <span class="main-color-pink">元</span>
       </div>
@@ -22,11 +25,20 @@
       </div>
     </div>
     <div class="display-flex align-items-center main-more-black-color pint-type">
-      <span>选择打印方式：</span>
       <el-radio v-model="radio" :label="1">打印小票</el-radio>
       <el-radio v-model="radio" :label="2">打印发票</el-radio>
     </div>
-    <button class="pay-btn">结算</button>
+     <div class="display-flex align-items-center justify-content-flex-justify">
+      <div :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==1?true:false}" @click="paymentMethod(1)">
+        <i class="iconfont iconsousuo"></i>
+        <span>现金</span>
+      </div>
+      <div :class="{'cash-assets':true,'cash-assets-scan-active':paymentType==2?true:false}" @click="paymentMethod(2)">
+        <i class="iconfont iconsousuo"></i>
+        <span>扫码</span>
+      </div>
+    </div>
+    <button class="pay-btn" @click="testCasha">结算</button>
   </div>
 </template>
 <script>
@@ -34,11 +46,19 @@ export default {
   props: {},
   data() {
     return {
-      radio: 1
+      radio: 1,
+      paymentType:1
     };
   },
+
   methods: {
-    getList() {}
+    getList() {},
+    testCasha(){
+      alert('火烈鸟')
+    },
+    paymentMethod(i){
+      this.paymentType=i
+    }
   }
 };
 </script>
@@ -54,7 +74,7 @@ export default {
 .right-detail-input {
   > input {
     height: 50px;
-    width: 170px;
+    width: 156px;
     border: 1px solid #ff5656;
     margin-right: 5px;
     color: #ff5656;
@@ -85,7 +105,7 @@ export default {
   }
 }
 .pint-type {
-  padding: 20px 0 80px 0;
+  padding: 15px 0 15px 0;
 }
 .pay-btn {
   background: #ef8205;
@@ -102,6 +122,35 @@ export default {
   &:focus {
     background-color: #ff8c00;
   }
+}
+.set-pint{
+  font-size: 13px;
+  color:#777C82;
+  line-height: 40px;
+}
+.cash-assets{
+  width: 47%;
+  text-align: center;
+  padding: 15px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  &:first-child{
+     border:1px solid #00B2A1;
+     color: #00B2A1;
+  }
+  &:last-child{
+    border:1px solid #33B300;
+     color: #33B300;
+  }
+}
+.cash-assets-cash-active{
+  background: #00B2A1;
+  color:#fff !important;
+}
+.cash-assets-scan-active{
+  background: #33B300;
+  color:#fff !important;
 }
 </style>
 
