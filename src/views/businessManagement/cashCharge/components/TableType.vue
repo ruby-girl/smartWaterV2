@@ -117,7 +117,7 @@ export default {
        return true
    },
    handleSelectionChange(val){
-       console.info(val)
+       console.info(val) 
    },
    details(row){
      this.$emit("details",row.Id)
