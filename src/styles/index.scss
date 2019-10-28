@@ -374,3 +374,7 @@ font-size: 13px;
    padding:6px 10px;
    font-size: 14px;
  }
+.el-input.is-disabled .el-input__inner, .el-textarea.is-disabled .el-textarea__inner {
+  background-color: #F0F0F0;
+  color: #9CA3A6;
+}
