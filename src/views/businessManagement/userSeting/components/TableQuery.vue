@@ -1,11 +1,11 @@
 <template>
   <div class="tr_container">
     <div class="cl-operation1">
-      <el-button type="primary" size="small" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
+      <el-button type="primary" size="small" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
       <el-button type="primary" size="small" class="fr" @click="setCustomData()" style="background: #FADB14;border: solid 1px #FADB14;"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
       <el-button type="success" size="small" class="fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
-      <el-button type="primary" size="small" class="fr" @click="lowApplication" style="background: #E5A903;border: solid 1px #E5A903;"><i class="icon iconfont">&#xe683;</i> 低保户申请</el-button>
-      <el-button type="primary" size="small" class="fr" @click="makeCard" style="background: #75C200;border: solid 1px #75C200;"><i class="icon iconfont">&#xe683;</i> 制卡</el-button>
+      <el-button type="primary" size="small" class="fr" @click="lowApplication" style="background: #E5A903;border: solid 1px #E5A903;"><i class="icon iconfont">&#xe617;</i> 低保户申请</el-button>
+      <el-button type="primary" size="small" class="fr" @click="makeCard" style="background: #75C200;border: solid 1px #75C200;"><i class="icon iconfont" >&#xe61a;</i> 制卡</el-button>
     </div>
     <!--表格自定义组建 s-->
     <customTable ref="tableChild" />
@@ -38,8 +38,8 @@
       </template>
       <el-table-column label="操作" width="200px" align="center" fixed="right">
         <template slot-scope="scope">
-          <a style="margin: 10px;color: #B59200" @click="handleDetail(scope.$index, scope.row)">详情</a>
-          <a style="margin: 10px;color: #00B2A1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
+          <a style="margin: 10px;color: #B59200" @click="handleDetail(scope.row)">详情</a>
+          <a style="margin: 10px;color: #00B2A1" @click="handleEdit(scope.row)">编辑</a>
           <a style="margin: 10px;color: #FF3D3D" @click="handleDelete(scope.row)">删除</a>
         </template>
       </el-table-column>
@@ -54,6 +54,10 @@
 
     <!--新增弹窗-->
     <AddDialog ref="addDialog"></AddDialog>
+    <!--编辑弹窗-->
+    <EditDialog ref="editDialog"></EditDialog>
+    <!--详情弹窗-->
+    <DetailDialog ref="detailDialog"></DetailDialog>
   </div>
 </template>
 
@@ -62,10 +66,12 @@
   import customTable from '@/components/CustomTable/index'//自定义表格组建
   import Statistics from './Statistics'
   import AddDialog from './AddDialog'
+  import EditDialog from './EditDialog'
+  import DetailDialog from './DetailDialog'
 
   export default {
     name: "TableQuery",
-    components: {Pagination, customTable, Statistics, AddDialog},
+    components: {Pagination, customTable, Statistics, AddDialog, EditDialog, DetailDialog},
     data(){
       return {
         tableData:[],
@@ -101,10 +107,16 @@
     },
     methods:{
       exportExcel() {},
-      searchFun(){},
+      searchFun(){
+        alert(2)
+      },
       sortChanges(){},
-      handleEdit(){},
-      handleDetail(){},
+      handleEdit(row){//编辑
+        this.$refs.editDialog.dialogVisible = true;
+      },
+      handleDetail(row){//详情
+        this.$refs.detailDialog.dialogVisible = true;
+      },
       handleDelete(row) {//删除方法
         this.$confirm("是否确认删除该用户？", "提示", {
           confirmButtonText: "确定",

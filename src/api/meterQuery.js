@@ -28,7 +28,7 @@ export function QueryMeterReaderByFactoryId(data) {
  * */
 export function MeterReadPlanExport(data) {
   return request({
-    url: '/ReadingQuery/MeterReadPlanExport',
+    url: '/ReadingQuery/ReadingQueryPageExport',
     method: 'post',
     data: data
   })
