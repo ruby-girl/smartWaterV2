@@ -1,8 +1,8 @@
 <template>
-  <!-- 新增弹窗 -->
+  <!--右侧缴费操作 -->
   <div>
        <div class="display-flex justify-content-flex-end">
-      <div class="set-pint">设置打印机</div>
+      <div class="set-pint" @click="selectPint">设置打印机</div>
     </div>
     <div class="right-detail-box">
       <div>应收金额：80元</div>
@@ -16,7 +16,7 @@
       <div>&#12288;&#12288;找零：80元</div>
     </div>
     <div class="display-flex justify-content-flex-end">
-      <div class="save-account">存入账户</div>
+      <div :class="{'save-account':true,'save-account-active':isAccount==true}" @click="isAccount=!isAccount">{{isAccount==true?'已存入账户':'存入账户'}}</div>
     </div>
     <div class="right-detail-box account-height">
       <div>
@@ -43,11 +43,13 @@
 </template>
 <script>
 export default {
-  props: {},
+  props: {
+  },
   data() {
     return {
       radio: 1,
-      paymentType:1
+      paymentType:1,
+      isAccount:true
     };
   },
 
@@ -56,8 +58,13 @@ export default {
     testCasha(){
       alert('火烈鸟')
     },
+    // 选择支付方式
     paymentMethod(i){
       this.paymentType=i
+       this.$emit("selectPayment",i)
+    },
+    selectPint(){
+      this.$emit("selectPint",'')
     }
   }
 };
@@ -90,10 +97,15 @@ export default {
   color: #00b3a1;
   border: 1px solid #00b3a1;
   border-radius: 4px;
-  padding: 3px 8px;
+  padding: 6px 8px;
+  width:86px;
+  text-align: center;
   font-size: 13px;
   margin: 12px 0;
   cursor: pointer;
+  &:hover{
+    opacity: 0.9;
+  }
 }
 .account-height {
   height: 54px;
@@ -112,7 +124,7 @@ export default {
   text-align: center;
   color: #fff;
   width: 100%;
-  padding: 10px 0;
+  padding: 11px 0;
   outline: none;
   border: none;
   cursor: pointer;
@@ -143,6 +155,9 @@ export default {
     border:1px solid #33B300;
      color: #33B300;
   }
+  &:hover{
+    opacity: 0.9;
+  }
 }
 .cash-assets-cash-active{
   background: #00B2A1;
@@ -151,6 +166,10 @@ export default {
 .cash-assets-scan-active{
   background: #33B300;
   color:#fff !important;
+}
+.save-account-active{
+  background: #00B2A1;
+  color:#fff;
 }
 </style>
 

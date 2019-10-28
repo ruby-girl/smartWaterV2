@@ -49,12 +49,13 @@
             :isIndeterminateParent.sync="isIndeterminateParent"
             @details="details"
             @reset="reset"
+            @feeWaiver="feeWaiver"
           ></components>
         </el-col>
         <!-- 左边表格end -->
         <!-- 右 -->
         <el-col :md="10" :lg="8" :xl="8" class="cash-padding-bg cash-right-box">
-          <right-box></right-box>
+          <right-box @selectPint="selectPint" @selectPayment="selectPayment"></right-box>
         </el-col>
         <!-- 右 -->
       </el-row>
@@ -62,6 +63,10 @@
     <water-details :waterDetailsShow.sync="waterDetailsShow"></water-details>
     <over-details :overDetailsShow.sync="overDetailsShow"></over-details>
     <select-user :selectUserShow.sync="selectUserShow"></select-user>
+    <fee-waiver :feeWaiverShow.sync="feeWaiverShow"></fee-waiver>
+    <over-fee-waiver :overFeeWaiverShow.sync="overFeeWaiverShow"></over-fee-waiver>
+    <select-pint :selectPintShow.sync="selectPintShow"></select-pint>
+    <payment-code :paymentCodeShow.sync="paymentCodeShow"></payment-code>
   </div>
 </template>
 <script>
@@ -69,9 +74,13 @@ import SelectHead from "./components/SelectHead";
 import TableType from "./components/TableType";
 import CardType from "./components/CardType";
 import RightBox from "./components/RightBox";
-import WaterDetails from "./components/WaterDetails";
-import OverDetails from "./components/OverDetails";
+import WaterDetails from "./components/WaterDetails";//水费详情弹窗
+import OverDetails from "./components/OverDetails";//除水费外其它费用详情弹窗
 import SelectUser from "./components/SelectUser";
+import FeeWaiver from "./components/FeeWaiver";//水费减免弹窗
+import OverFeeWaiver from "./components/OverFeeWaiver";//除水费外其它费用减免弹窗
+import SelectPint from "./components/SelectPint";//选择打印机
+import PaymentCode from "./components/PaymentCode";//扫码支付
 import {
   getRolesList,
   addRole,
@@ -81,7 +90,7 @@ import {
 } from "@/api/role";
 export default {
   name: "cashCharge",
-  components: { SelectHead, TableType, CardType, RightBox,WaterDetails,OverDetails,SelectUser},
+  components: { SelectHead, TableType, CardType, RightBox,WaterDetails,OverDetails,SelectUser,FeeWaiver,OverFeeWaiver,SelectPint,PaymentCode},
   data() {
     return {
       total: 0,
@@ -111,6 +120,10 @@ export default {
       waterDetailsShow:false,//水费详情弹窗
       overDetailsShow:false,//其它费用详情弹窗
       selectUserShow:false,//多用户选择弹窗
+      feeWaiverShow:false,//费用减免弹窗
+      overFeeWaiverShow:false,
+      selectPintShow:false,//选择打印机
+      paymentCodeShow:false//扫码支付弹窗
     };
   },
   mounted: function() {
@@ -147,8 +160,8 @@ export default {
       this.$refs.tableTypeCard.$refs.myChild.isCustom = !this.$refs
         .tableTypeCard.$refs.myChild.isCustom;
       if (this.$refs.tableTypeCard.$refs.myChild.isCustom)
-        this.tableHeight = this.tableHeight - 80;
-      else this.tableHeight = this.tableHeight + 80;
+        this.tableHeight = this.tableHeight - 105;
+      else this.tableHeight = this.tableHeight + 105;
     },
     handleFilter() {
       this.listQuery.page = 1;
@@ -191,20 +204,13 @@ export default {
     },
     updateData(dialog) {
       updateRole(dialog.RoleName, dialog.Id).then(res => {
+       this.dialogFormVisible = false;
         this.$message({
           message: res.message,
           type: "success",
           duration: 4000
         });
-        this.dialogFormVisible = false;
-        for (const v of this.tableData) {
-          if (v.Id == this.temp.Id) {
-            const index = this.tableData.indexOf(v);
-            this.tableData.splice(index, 1, this.temp);
-            break;
-          }
-        }
-        this.dialogFormVisible = false;
+        this.getList();
       });
     },
     excel() {
@@ -218,16 +224,32 @@ export default {
     },
     // 费用详情
     details(n){
-      this.selectUserShow=true
+      this.waterDetailsShow=true
     },
     // 费用撤回
-    reset(){}
+    reset(){
+    },
+    // 费用减免
+    feeWaiver(){
+      this.overFeeWaiverShow=true
+    },
+    // 选择打印机
+    selectPint(){
+      this.selectPintShow=true
+    },
+    // 选择支付方式
+    selectPayment(i){
+      if(i==2){
+        this.paymentCodeShow=true
+      }     
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
 .container-bottom-box {
   border-top: 15px solid #eff1f4;
+  height:calc(100vh - 205px);
 }
 .cash-padding-bg {
   padding:0 20px 20px 20px !important;
