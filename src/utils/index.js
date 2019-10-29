@@ -68,8 +68,8 @@ export function ladderChangeArr(res) {
     ]
   }
   // 对象中 ladder就是阶梯值-可用来做循环
- let details = { ...res, ...ladder};
-    details.ladder.map(function (item,i) {
+  let details = { ...res, ...ladder };
+  details.ladder.map(function (item, i) {
     details.ladder[i].LadderWaterNum = details[actions[i][0]];
     details.ladder[i].LadderPrice = details[actions[i][1]];
     details.ladder[i].TotalPrice = details[actions[i][2]];
@@ -90,14 +90,14 @@ export function ladderChangeObj(details) {
     "4": ["FiveLadderWaterNum", "FiveLadderPrice", "FiveTotalPrice"]
   };
 
-  details.ladder.map(function(item,i){
-    details[actions[i][0]]=item.LadderWaterNum
-    details[actions[i][1]]=item.LadderPrice
-    details[actions[i][2]]=item.TotalPrice
+  details.ladder.map(function (item, i) {
+    details[actions[i][0]] = item.LadderWaterNum
+    details[actions[i][1]] = item.LadderPrice
+    details[actions[i][2]] = item.TotalPrice
   })
   return details
 }
-export function parseTimeFiveEight(time,cFormat){
+export function parseTimeFiveEight(time, cFormat) {
   if (arguments.length === 0) {
     return null
   }
@@ -561,16 +561,31 @@ export function removeClass(ele, cls) {
  * @params type 1警告 2成功
  * @params msg 提示信息
  * */
-export function promptInfoFun(obj,type,msg) {
-  let types =''
-  type == 1? types = 'warning' : types = 'success'
+export function promptInfoFun(obj, type, msg) {
+  let types = ''
+  type == 1 ? types = 'warning' : types = 'success'
   obj.$message({
     message: msg,
     type: types,
     duration: 4000
   });
 }
-
+/**
+ *判断是否合法的时间
+ * @param {String} time_str
+ * @returns {String} 
+ * */
+export function legalTime(time_str) {
+  if (!time_str) return ''
+  let timeYear = new Date(time_str).getFullYear()
+  if (timeYear == 1970) return ''
+  var reg = /^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/;
+  var r = time_str.match(reg);
+  if (r == null)
+    return ''
+  else
+    return time_str
+}
 Date.prototype.Format = function (fmt) { //author: meizz
   var o = {
     "M+": this.getMonth() + 1, //月份

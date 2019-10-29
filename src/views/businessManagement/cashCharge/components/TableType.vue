@@ -57,6 +57,7 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination";
+import {legalTime} from "@/utils/index"
 import customTable from "@/components/CustomTable/index";
 export default {
   props: {
@@ -83,6 +84,7 @@ export default {
   mounted() {
     this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+    console.info(legalTime('1971-13-11 00:00:00'))
   },
   computed: {
     tableHead: function() {

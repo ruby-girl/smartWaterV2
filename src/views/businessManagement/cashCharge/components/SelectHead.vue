@@ -32,7 +32,7 @@
             <i class="iconfont iconsousuo"></i>搜索
           </el-button>
           <el-button type="success" size="mini" @click="handleFilter">
-            <i class="iconfont iconsousuo"></i>读卡
+            <i class="iconfont iconduka"></i>读卡
           </el-button>
         </el-form-item>
       </el-form>
