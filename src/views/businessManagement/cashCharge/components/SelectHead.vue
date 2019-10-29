@@ -36,23 +36,20 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <div class="payment-records">
-         查询缴费记录>>
-      </div>
+      <div class="payment-records">查询缴费记录>></div>
     </div>
     <div class="head-bottom-box display-flex main-more-black-color">
-        <div class="head-user-details">
-            姓名:羊请问
-        </div>
-         <div class="head-user-details">
-           水表类型:机械表
-        </div>
-         <div class="head-user-details">
-            电话:18190002838
-        </div>
-         <div>
-            地址:奥术大师大所大所大所多
-        </div>
+      <div class="head-user-details">姓名:羊请问</div>
+      <div class="head-user-details">
+        <span class="head-label">水表类型:</span>机械表
+      </div>
+      <div class="head-user-details">
+        <span class="head-label">电话:</span>18190002838
+      </div>
+      <div class="text-wrap flex-1">
+        <span class="head-label">地址:</span>
+        <span>奥术大师大所大所大所多</span>
+      </div>
     </div>
   </div>
 </template>
@@ -95,17 +92,28 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.payment-records{
-    color:#00B2A1;
-    font-size: 13px;
-    padding-bottom: 10px;
+.payment-records {
+  color: #00b2a1;
+  font-size: 13px;
+  padding-bottom: 10px;
 }
-.head-bottom-box{
-    background: #F5F5F5;
-    padding:20px;
-}
-.head-user-details{
-  padding-right: 80px;
+.head-bottom-box {
+  background: #f5f5f5;
+  padding: 20px;
+  .head-user-details:first-child {
+    width: 120px;
+  }
+  .head-label {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+  }
+  .text-wrap {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 </style>
 

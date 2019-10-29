@@ -2,7 +2,7 @@
   <!--右侧缴费操作 -->
   <div>
        <div class="display-flex justify-content-flex-end">
-      <div class="set-pint" @click="selectPint">设置打印机</div>
+      <div class="set-pint" @click="selectPint"> <i class="iconfont icondayinji"></i> 设置打印机</div>
     </div>
     <div class="right-detail-box">
       <div>应收金额：80元</div>
@@ -30,11 +30,11 @@
     </div>
      <div class="display-flex align-items-center justify-content-flex-justify">
       <div :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==1?true:false}" @click="paymentMethod(1)">
-        <i class="iconfont iconsousuo"></i>
+        <i class="iconfont iconxianjin"></i>
         <span>现金</span>
       </div>
       <div :class="{'cash-assets':true,'cash-assets-scan-active':paymentType==2?true:false}" @click="paymentMethod(2)">
-        <i class="iconfont iconsousuo"></i>
+        <i class="iconfont iconsaoma"></i>
         <span>扫码</span>
       </div>
     </div>
@@ -43,8 +43,7 @@
 </template>
 <script>
 export default {
-  props: {
-  },
+  props: {},
   data() {
     return {
       radio: 1,
@@ -87,6 +86,7 @@ export default {
     color: #ff5656;
     font-size: 22px;
     font-weight: bold;
+    padding-left: 5px;
     &:focus {
       outline: none;
       border: 2px solid #ff5656;
@@ -139,11 +139,12 @@ export default {
   font-size: 13px;
   color:#777C82;
   line-height: 40px;
+  cursor: pointer;
 }
 .cash-assets{
   width: 47%;
   text-align: center;
-  padding: 15px 0;
+  padding: 10px 0;
   border-radius: 5px;
   cursor: pointer;
   margin-bottom: 20px;
@@ -157,6 +158,14 @@ export default {
   }
   &:hover{
     opacity: 0.9;
+  }
+  .iconfont {
+    font-size: 21px !important;
+  }
+  span{
+        position: relative;
+    top: -2px;
+    left: 5px;
   }
 }
 .cash-assets-cash-active{

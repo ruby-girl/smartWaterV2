@@ -48,7 +48,7 @@
                           <span class="main-color-pink font-weight">80</span>元
                         </span>
                       </div>
-                      <!-- 详情，票据打印按钮 -->
+                      <!-- 详情，费用减免。。按钮 -->
                       <div
                         class="card-item-btn-box display-flex justify-content-flex-center font-14"
                       >
@@ -109,11 +109,7 @@ export default {
           item.isIndeterminate = false;
           item.checkedCardDate = [];
         }
-      });
-      let _this = this;
-      setTimeout(() => {
-        console.info(this.cardData);
-      }, 1000);
+      });    
     }
   },
   data() {
@@ -217,7 +213,6 @@ export default {
         }
       });
       this.changeParent();
-      console.info(this.cardData);
     },
     handleCheckedCardChange(value, i) {
       let checkedCount = value.length;
@@ -229,7 +224,6 @@ export default {
         }
       });
       this.changeParent();
-      console.info(this.cardData);
     },
     // 选取不含有禁用状态的数据
     selectNoDisable() {

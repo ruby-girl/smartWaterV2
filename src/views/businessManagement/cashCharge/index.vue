@@ -54,7 +54,7 @@
         </el-col>
         <!-- 左边表格end -->
         <!-- 右 -->
-        <el-col :md="10" :lg="8" :xl="8" class="cash-padding-bg cash-right-box">
+        <el-col :md="10" :lg="8" :xl="8" class="cash-padding-bg cash-right-box" :style="{'minHeight':saveTableHeight+'px'}">
           <right-box @selectPint="selectPint" @selectPayment="selectPayment"></right-box>
         </el-col>
         <!-- 右 -->
@@ -132,7 +132,7 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 205;
-      that.saveTableHeight = that.tableHeight+10;
+      that.saveTableHeight = that.tableHeight+20;
       window.onresize = () => {
         that.tableHeight = document.body.clientHeight - formHeight - 205;
       };
@@ -228,6 +228,22 @@ export default {
     },
     // 费用撤回
     reset(){
+      this.$confirm("是否确认撤销欠费？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        customClass: "warningBox",
+        showClose: false
+      }).then(() => {
+        // deleteRole(r.Id).then((res)=>{
+        //   this.$message({
+        //     message: res.message,
+        //     type: "success",
+        //     duration: 4000
+        //   });
+        //   this.getList()
+        // })
+      });
     },
     // 费用减免
     feeWaiver(){
@@ -261,6 +277,7 @@ export default {
 .cash-right-box {
   border-left: 15px solid #eff1f4;
   padding: 15px;
+  overflow: auto;
 }
 /deep/ .is-disabled .el-checkbox__inner {
   background: #B4BCC1 !important;
