@@ -1,5 +1,5 @@
 <template>
-  <!-- 新增弹窗 -->
+  <!-- 卡片-->
   <div>
     <div class="main-padding-20-y card-container" :style="{'height':saveTableHeight+'px'}">
       <!-- 循环 -->
@@ -54,7 +54,7 @@
                       >
                         <div class="card-item-btn" @click="details">详情</div>
                         <div class="card-item-btn margin-samll" @click="reset">费用撤回</div>
-                        <div class="card-item-btn" @click="reset">费用减免</div>
+                        <div class="card-item-btn" @click="feeWaiver">费用减免</div>
                       </div>
                     </div>
                   </div>
@@ -272,6 +272,9 @@ export default {
     },
     reset() {
       this.$emit("reset", "1");
+    },
+    feeWaiver(){
+      this.$emit("feeWaiver", "1");
     }
   }
 };

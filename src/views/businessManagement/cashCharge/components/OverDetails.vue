@@ -1,5 +1,5 @@
 <template>
-  <!-- 水费详情弹窗 -->
+  <!-- 其它费用详情弹窗 -->
   <el-dialog
     title="费用详情"
     :visible.sync="dialogFormVisible"

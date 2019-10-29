@@ -1,5 +1,5 @@
 <template>
-  <!-- 新增弹窗 -->
+  <!-- 表格样式-费用展示 -->
   <div>
     <customTable ref="myChild" />
     <div class="main-padding-20-y">
@@ -29,7 +29,7 @@
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column label="操作" align="center" class-name="small-padding">
+        <el-table-column label="操作" min-width="190" align="center" class-name="small-padding">
           <template slot-scope="{row}">
             <div class="display-flex justify-content-flex-center">
               <div class="main-color-warn" @click="details(row)">
@@ -37,6 +37,9 @@
               </div>
               <div class="pl-15" @click="reset(row)">
                 <a>费用撤回</a>
+              </div>
+               <div class="main-color pl-15" @click="feeWaiver">
+                <a>费用减免</a>
               </div>
             </div>
           </template>
@@ -114,13 +117,16 @@ export default {
        return true
    },
    handleSelectionChange(val){
-       console.info(val)
+       console.info(val) 
    },
    details(row){
      this.$emit("details",row.Id)
    },
    reset(){
       this.$emit("reset",'1')
+    },
+    feeWaiver(){
+      this.$emit("feeWaiver",'1')
     }
   }
 };
