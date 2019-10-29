@@ -27,8 +27,8 @@
 
 <script>
   import { promptInfoFun } from "@/utils/index"
-  import MechanicalMeter from './addComponents/MechanicalMeter'
-  import RemoteMeter from './addComponents/RemoteMeter'
+  import MechanicalMeter from './AddComponents/MechanicalMeter'
+  import RemoteMeter from './AddComponents/RemoteMeter'
 
   export default {
     name: "AddDialog",

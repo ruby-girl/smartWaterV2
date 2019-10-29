@@ -3,7 +3,7 @@
     class="cl_DetailDialog"
     :close-on-click-modal="false"
     top="5vh"
-    title="添加"
+    title="详情"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
     :width = dialogWidth>
@@ -56,9 +56,18 @@
       </el-tab-pane>
       <!--历史业务-->
       <el-tab-pane label="历史业务" name="2">
+        <HistoryBusiness></HistoryBusiness>
       </el-tab-pane>
       <!--水表信息-->
       <el-tab-pane label="水表信息" name="3">
+        <!--机械表-->
+        <WaterMeter v-show="waterType == 1"></WaterMeter>
+        <!--IC水表-->
+        <ICWater v-show="waterType == 2"></ICWater>
+        <!--物联网-->
+        <WlwWaterMeter v-show="waterType == 3"></WlwWaterMeter>
+        <!--远传-->
+        <YcWaterMeter v-show="waterType == 4"></YcWaterMeter>
       </el-tab-pane>
     </el-tabs>
     <div v-show="ifImg" class="cl-image-viewer">
@@ -77,10 +86,18 @@
 
 <script>
   import { GetBlObjById } from "@/api/organize"
+  import HistoryBusiness from "./DetailComponents/HistoryBusiness"
+  import WaterMeter from "./DetailComponents/WaterMeter"
+  import ICWater from "./DetailComponents/ICWater"
+  import WlwWaterMeter from "./DetailComponents/WlwWaterMeter"
+  import YcWaterMeter from "./DetailComponents/YcWaterMeter"
+
   export default {
     name: 'DetailDialog',
+    components:{ HistoryBusiness, WaterMeter, ICWater, WlwWaterMeter, YcWaterMeter },
     data() {
       return {
+        waterType:1,//1 机械，2 IC，3 物联网，4 远传
         dialogWidth:'65%',
         activeName:'1',
         dialogVisible:false,//详情弹窗隐藏标识
@@ -150,11 +167,9 @@
                 url: this.baseUrl + (fileData[i].RelativePath).replace("~",""),
               }
               this.file.push(obj)
-              if(this.file.length>5){//根据文件个数动态设置，文件显示区域高度
-                this.maxHeight = true
-              }else{
-                this.maxHeight = false
-              }
+
+              //根据文件个数动态设置，文件显示区域高度
+              this.file.length>5 ?  this.maxHeight = true : this.maxHeight = false
             }
           }else {
             this.$message({

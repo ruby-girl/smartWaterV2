@@ -83,7 +83,7 @@
 <script>
   import {promptInfoFun} from "@/utils/index"
   import uploadBox from '@/components/Upload'
-  import AreaTree from './addComponents/AreaTree'
+  import AreaTree from './AddComponents/AreaTree'
 
   export default {
     name: "EditDialog",

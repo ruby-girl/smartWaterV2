@@ -35,6 +35,7 @@
   import tableQuery from './components/TableQuery'
   import Dialog from './components/Dialog'
   import { promptInfoFun } from "@/utils/index"
+  import { GetAreaList } from "@/api/userArea"//区域接口
 
   export default {
     name: 'userSeting',
@@ -52,7 +53,8 @@
           page: 1,
           limit: 10,
           tableId:'0000015'
-        }
+        },
+
       }
     },
     methods: {
@@ -113,36 +115,18 @@
         this.getTreeData()
       },
       /**
-       * 获取tree数据
+       * 获取左侧区域列表数据
        * */
       getTreeData() {
-        this.treeData = [{
-          id: 1,
-          label: '一级 1',
-          children: [{
-            id: 4,
-            label: '二级 1-1',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1',
-            }, {
-              id: 10,
-              label: '三级 1-1-2',
-            }
-            ]
-          }]
-        },{
-          id: 2,
-          label: '二级 1',
-          children: [{
-            id: 5,
-            label: '二级 1-1',
-            children: [{
-              id: 11,
-              label: '三级 1-1-1',
-            }]
-          }]
-        }]
+        GetAreaList().then(res => {
+          if (res.code ==0 ) {
+            let data = res.data
+            this.treeData.push(data)
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+
       },
 
     },
