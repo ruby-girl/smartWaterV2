@@ -132,13 +132,13 @@
             this.$refs.ycChild.differ = false
             this.$refs.ycChild.areaName = ''
             this.$refs.ycChild.$refs['ycData'].resetFields();
-            this.$refs.ycChild.$refs['ycData1'].resetFields();
+            this.$refs.ycChild.$refs.ycChilds.$refs['data'].resetFields();
             break;
           case '4'://物联
             this.$refs.wlwChild.differ = true
             this.$refs.wlwChild.areaName = ''
             this.$refs.wlwChild.$refs['ycData'].resetFields();
-            this.$refs.wlwChild.$refs['ycData1'].resetFields();
+            this.$refs.wlwChild.$refs.wlyChild.$refs['data'].resetFields();
             break;
         }
       },

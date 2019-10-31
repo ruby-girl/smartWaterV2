@@ -65,8 +65,8 @@
     <!--水表信息-->
     <div class="user_information">
       <h3 class="add_title"><i></i>水表信息</h3>
-      <el-form :inline="true" ref="ycData1" :model="ycData" :rules="rules" label-width="100px">
-        <!--远程水表 s-->
+      <!--<el-form :inline="true" ref="ycData1" :model="ycData" :rules="rules" label-width="100px">
+        &lt;!&ndash;远程水表 s&ndash;&gt;
         <el-form-item label="水表编号：" prop="WaterMeterNo" v-show="!differ">
           <el-input v-model="ycData.WaterMeterNo " size="small" placeholder="【按enter建查询水表信息】" @keyup.enter.native="GetYCWaterByWaterMeterNo"/>
         </el-form-item>
@@ -82,8 +82,8 @@
         <el-form-item label="透支金额：" prop="OverdraftMoney" v-show="!differ">
           <el-input :disabled="true" v-model="ycData.OverdraftMoney " size="small"/>
         </el-form-item>
-        <!--远程水表 e-->
-        <!--物联网 s -->
+        &lt;!&ndash;远程水表 e&ndash;&gt;
+        &lt;!&ndash;物联网 s &ndash;&gt;
         <el-form-item label="水表编号：" v-show="differ" prop="WaterMeterNo">
           <el-input v-model.trim="ycData.WaterMeterNo" size="small" placeholder="【按enter建查询水表信息】" @keyup.enter.native="GetYCWaterByWaterMeterNo"/>
         </el-form-item>
@@ -93,11 +93,11 @@
         <el-form-item label="透支量：" prop="OverdraftYield" v-show="differ" >
           <el-input  size="small" v-model="ycData.OverdraftYield"/>
         </el-form-item>
-        <!--远传网 不需存s-->
+        &lt;!&ndash;远传网 不需存s&ndash;&gt;
         <el-form-item label="当前读数：" v-show="!differ" prop="ReadNum">
           <el-input :disabled="true" v-model="waterInfo.ReadNum" size="small"/>
         </el-form-item>
-        <!--物联网 不需存e -->
+        &lt;!&ndash;物联网 不需存e &ndash;&gt;
         <el-form-item label="当前读数：" v-show="differ" prop="TotalCumulateWater">
           <el-input :disabled="true" v-model="waterInfo.TotalCumulateWater" size="small"/>
         </el-form-item>
@@ -119,7 +119,11 @@
           <el-input :disabled="true" type="textarea" v-model="ycData.WaterRemark" max-length="500" @input="descInput('WaterRemark')"></el-input>
           <span>{{WaterRemark}}/500</span>
         </el-form-item>
-      </el-form>
+      </el-form>-->
+      <!--物联-->
+      <WlwWaterInfo v-show="differ" ref="wlyChild"></WlwWaterInfo>
+      <!--远程-->
+      <YcWaterInfo v-show="!differ" ref="ycChilds"></YcWaterInfo>
     </div>
     <!--附件信息-->
     <div class="user_information">
@@ -139,21 +143,22 @@
 <script>
   import AreaTree from './AreaTree'
   import uploadBox from '@/components/Upload'
+  import YcWaterInfo from './YcWaterInfo'
+  import WlwWaterInfo from './WlwWaterInfo'
   import { promptInfoFun } from "@/utils/index"
   import { getDictionaryOption } from "@/utils/permission"
   import { convertToPinyinUpper } from "@/utils/convert"
   import {DeleteList} from "@/api/upload"
   import Bus from '@/utils/bus'
-  import { AddYCCustomer, AddWLWCustomer, GetWaterPropertyList, ReleaseCustomerNo, GetYCWaterMeterByWaterMeterNo, GetWLWWaterMeterByWaterMeterNo } from "@/api/userSetting"//区域接口
+  import { AddYCCustomer, AddWLWCustomer, GetWaterPropertyList, ReleaseCustomerNo} from "@/api/userSetting"//区域接口
   import { GetAreaListByWaterFactory } from "@/api/userArea"//区域接口
 
   export default {
     name: "RemoteMeter",
-    components: {AreaTree, uploadBox},
+    components: {AreaTree, uploadBox, YcWaterInfo, WlwWaterInfo},
     props:['ycData'],
     data() {
       return {
-        waterMeterStyles:[],//水表样式
         MeterDiameters:[],//水表口径
         waterFactory:[],//水厂集合
         userType:[],//用户类型
@@ -169,12 +174,6 @@
           UserType: [{required: true, message: '不能为空', trigger: 'change'}],
           SA_UserArea_Id: [{required: true, message: '不能为空', trigger: 'change'}],
           SA_UseWaterType_Id: [{required: true, message: '不能为空', trigger: 'change'}],
-          WaterMeterNo: [{required: true, message: '不能为空', trigger: 'change'}],
-          MeterDiameter: [{required: true, message: '不能为空', trigger: 'change'}],
-          AlarmMoney: [{required: true, message: '不能为空', trigger: 'change'}],
-          OverdraftMoney: [{required: true, message: '不能为空', trigger: 'change'}],
-          AlarmYield: [{required: true, message: '不能为空', trigger: 'change'}],
-          OverdraftYield: [{required: true, message: '不能为空', trigger: 'change'}],
           NameCode: [{required: true, message: '不能为空', trigger: 'change'}],
           Tel:[{
             pattern: /^[1][3,4,5,6,7,8,9][0-9]{9}$/,
@@ -240,7 +239,8 @@
         }
         this.$refs['ycData'].validate((valid) => {
           if (valid) {
-            _this.$refs['ycData1'].validate((valid) => {
+            let childName = this.differ ? childName = _this.$refs.wlyChild : childName = _this.$refs.ycChilds
+            childName.$refs['data'].validate((valid) => {
               if (valid) {
                 let functionName = _this.differ ? AddWLWCustomer : AddYCCustomer//true 物联网 false 远传
                 functionName(_this.ycData).then(res => {
@@ -249,7 +249,9 @@
                     _this.$refs.getFiles.certificates = '身份证'
                     _this.$refs.getFiles.fileList = []
                     _this.$refs['ycData'].resetFields();
-                    _this.$refs['ycData1'].resetFields();
+
+                    childName.$refs['data'].resetFields();
+
                     _this.areaName = ''
                     if(_this.ifGoOn){
                       _this.ifGoOn = false
@@ -269,12 +271,14 @@
 
       },
       /************************重置表单*************************/
-      resetForm(){
-        if(this.ycData.CustomerNo!='')
-          ReleaseCustomerNo({'CustomerNo':this.ycData.CustomerNo}).then(res => {})//清除未占用用户编码
-         this.$refs['ycData'].resetFields();
-         this.$refs['ycData1'].resetFields();
-         this.$parent.$parent.$parent.$parent.dialogVisible = false
+      resetForm() {
+        if (this.ycData.CustomerNo != '')
+          ReleaseCustomerNo({'CustomerNo': this.ycData.CustomerNo}).then(res => {
+          })//清除未占用用户编码
+        this.$refs['ycData'].resetFields();
+        let childName = this.differ ? childName = this.$refs.wlyChild : childName = this.$refs.ycChilds
+        childName.$refs['data'].resetFields()
+        this.$parent.$parent.$parent.$parent.dialogVisible = false
         let ids = []
         for (let i = 0; i < this.upload.file.length; i++) {
           ids.push(this.upload.file[i].id)
@@ -298,21 +302,6 @@
       getJMFun(){
         this.ycData.NameCode = convertToPinyinUpper(this.ycData.CustomerName)
       },
-      GetYCWaterByWaterMeterNo(){
-        if(this.ycData.WaterMeterNo==''){
-          promptInfoFun(this,1,"水表编号不能为空");
-          return
-        }
-        let funName = '';//true 为物联网，false 远传
-        this.differ ? funName = GetWLWWaterMeterByWaterMeterNo : funName = GetYCWaterMeterByWaterMeterNo
-        funName({'WaterMeterNo':this.ycData.WaterMeterNo}).then(res => {
-          if (res.code ==0 ) {
-             console.log(res)
-          } else {
-            promptInfoFun(this,1,res.message)
-          }
-        })
-      },
       /****************获取水厂获取数据**************************/
       getDataByWater(Id){
         this.getTreeData(Id)
@@ -331,7 +320,6 @@
     mounted() {
       this.waterFactory = this.$parent.$parent.$parent.$parent.waterFactory
       this.userType = getDictionaryOption('用户类型')
-      this.waterMeterStyles = getDictionaryOption('水表样式')
      // this.MeterDiameters = getDictionaryOption('水表口径')
       this.GetWaterProperty()
     }
