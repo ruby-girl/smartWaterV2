@@ -26,8 +26,7 @@
       <el-form-item  label="用户：">
         <el-select v-model="param.CustomerQueryType" placeholder="请选择" style="width: 80px;float: left">
           <el-option label="编号" value="1"></el-option>
-          <el-option label="姓名" value="2"></el-option>
-          <el-option label="简码" value="3"></el-option>
+          <el-option label="姓名/简码" value="2"></el-option>
         </el-select>
         <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)" style="width: 180px;float: left"/>
       </el-form-item><br/>

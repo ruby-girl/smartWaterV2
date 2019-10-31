@@ -6,22 +6,22 @@
     :visible.sync="dialogVisible"
     :before-close="handleClose"
     width="400px">
-    <el-form :inline="true" ref="ruleForm" :model="rb" :rules="rules" label-width="100px" class="demo-ruleForm">
+    <el-form :inline="true" ref="ruleForm" :model="param" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="上级目录：">
         <el-input
           :disabled="true"
-          v-model.trim="rb.BookName"
+          v-model.trim="param.pieName"
           size="small"/>
       </el-form-item>
       <el-form-item label="区域编号：">
         <el-input
           :disabled="true"
-          v-model.trim="rb.BookName"
+          v-model.trim="param.AreaNo"
           size="small"/>
       </el-form-item>
-      <el-form-item label="区域名称：" prop="BookName">
+      <el-form-item label="区域名称：" prop="AreaName">
         <el-input
-          v-model.trim="rb.BookName"
+          v-model.trim="param.AreaName"
           placeholder="(长度1-50内)"
           maxlength="50"
           size="small"/>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import { registerAdd, registerUpDate } from "@/api/registerBook"
+  import { AddArea, UpdateAreaName } from "@/api/userArea"//区域接口
   import { getDictionaryOption } from "@/utils/permission"
   import { promptInfoFun } from "@/utils/index"
 
@@ -45,24 +45,15 @@
       return {
         title:'',
         dialogVisible: false,
-        rb:{
-          Id:'',//编辑表册ID
-          SA_WaterFactory_Id:'',//水厂ID
-          BookName:'',//表册名称
-          BookTypeKey:'601',//表册类型 '1机械', '2IC', '3远程', '4物联', '-1'
-          MeterReaderId:''//抄表员ID
+        param:{
+          Id:'',
+          pieName:'',
+          AreaName: '',
+          Pid: '',
+          AreaNo: ''
         },
         rules: {
-          SA_WaterFactory_Id: [
-            { required: true, message: '不能为空', trigger: 'change' }
-          ],
-          BookName: [
-            { required: true, message: '不能为空', trigger: 'change' }
-          ],
-          BookTypeKey: [
-            { required: true, message: '不能为空', trigger: 'change' }
-          ],
-          MeterReaderId: [
+          AreaName: [
             { required: true, message: '不能为空', trigger: 'change' }
           ]
         },
@@ -73,26 +64,33 @@
     },
     methods: {
       submitForm(formName) {//编辑新增保存事件
+        let _this = this
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.title ==='编辑') {
-              registerUpDate(this.rb).then(res => {
+              UpdateAreaName({'areaId':this.param.Id,name:this.param.AreaName}).then(res => {
                 if (res.code ==0 ) {
                   promptInfoFun(this,2,res.message)
-                  this.dialogVisible = false
-                  this.$refs[formName].resetFields();
-                  this.$parent.searchFun()
+                  _this.dialogVisible = false
+                  _this.$parent.getTreeData()
+                  _this.handleClose()
                 } else {
                   promptInfoFun(this,1,res.message)
                 }
               })
-            } else {
-              registerAdd(this.rb).then(res => {
-                if (res.code == 0) {
+            } else {//新增区域
+              _this.param = {
+                Id: this.param.Id,
+                AreaName: this.param.AreaName,
+                Pid: this.param.Pid,
+                AreaNo: this.param.Pid
+              }
+              AddArea(this.param).then(res => {
+                if (res.code ==0 ) {
                   promptInfoFun(this,2,res.message)
-                  this.dialogVisible = false
-                  this.$refs[formName].resetFields();
-                  this.$parent.searchFun()
+                  _this.dialogVisible = false
+                  _this.$parent.getTreeData()
+                  _this.handleClose()
                 } else {
                   promptInfoFun(this,1,res.message)
                 }

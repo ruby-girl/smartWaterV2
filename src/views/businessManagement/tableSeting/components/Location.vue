@@ -7,8 +7,7 @@
         <el-form-item label="用户:" label-width="63px">
           <el-select v-model="rbp.ecqt" placeholder="请选择" style="width: 70px;float: left" size="small">
             <el-option label="编号" value="1"></el-option>
-            <el-option label="姓名" value="2"></el-option>
-            <el-option label="简码" value="3"></el-option>
+            <el-option label="姓名/简码" value="2"></el-option>
           </el-select>
           <el-input v-model="rbp.Customer" ref="userInfoInput" maxlength="20" placeholder="(长度1-30)"
                     style="width: 150px;float: left;margin-left: 8px" size="small"/>

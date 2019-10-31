@@ -1,25 +1,33 @@
 <template>
   <ul class="statistics">
-    <li :class="curNum==1 ? 'total':''" @click="tabChange(1)"><span>100</span><label>全部</label></li>
-    <li :class="curNum==2 ? 'total':''" @click="tabChange(2)"><span>100</span><label>机械水表</label></li>
-    <li :class="curNum==3 ? 'total':''" @click="tabChange(3)"><span>100</span><label>IC卡水表</label></li>
-    <li :class="curNum==4 ? 'total':''" @click="tabChange(4)"><span>100</span><label>远传水表</label></li>
-    <li :class="curNum==5 ? 'total':''" @click="tabChange(5)"><span>100</span><label>物联网水表</label></li>
+    <li :class="curNum==-1 ? 'total':''" @click="tabChange(-1)"><span>
+      {{(parseInt(StatisticsData.IC_WaterNum) + parseInt(StatisticsData.JX_WaterNum) + parseInt(StatisticsData.YC_WaterNum) + parseInt(StatisticsData.NB_WaterNum)) || 0}}
+    </span><label>全部</label></li>
+    <li :class="curNum==1101 ? 'total':''" @click="tabChange(1101)"><span>{{ StatisticsData.JX_WaterNum || 0 }}</span><label>机械水表</label></li>
+    <li :class="curNum==1102 ? 'total':''" @click="tabChange(1102)"><span>{{ StatisticsData.IC_WaterNum || 0 }}</span><label>IC卡水表</label></li>
+    <li :class="curNum==1103 ? 'total':''" @click="tabChange(1103)"><span>{{ StatisticsData.YC_WaterNum || 0 }}</span><label>远传水表</label></li>
+    <li :class="curNum==1104 ? 'total':''" @click="tabChange(1104)"><span>{{ StatisticsData.NB_WaterNum || 0 }}</span><label>物联网水表</label></li>
   </ul>
 </template>
 
 <script>
+  import { promptInfoFun } from "@/utils/index"
+
   export default {
     name: "Statistics",
     data() {
       return {
-        curNum:1
+        curNum:-1
       }
     },
+    props:['StatisticsData'],
     methods: {
+      /**
+      * 根据选项卡切换列表内容
+      * */
       tabChange(num) {//点击选项卡切换列表内容
         this.curNum = num
-        this.$parent.searchFun()
+        this.$parent.searchFun(num)
       }
     }
   }

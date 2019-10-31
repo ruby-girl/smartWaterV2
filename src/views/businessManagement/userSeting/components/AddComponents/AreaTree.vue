@@ -1,106 +1,140 @@
 <template>
-  <ul class="cl-areatreeBox clearfix">
-    <li>
-      <p>四川省 <i class="el-icon-caret-right"></i></p>
-    </li>
-    <li>
-      <p>成都市 <i class="el-icon-caret-right"></i></p>
-      <p>新的市 <i class="el-icon-caret-right"></i></p>
-    </li>
-    <li>
-      <p>花园 <i class="el-icon-caret-right"></i></p>
-      <p>小去 <i class="el-icon-caret-right"></i></p>
-    </li>
-    <li>
-      <p>此次 <i class="el-icon-caret-right"></i></p>
-      <p>哦哦 <i class="el-icon-caret-right"></i></p>
-    </li>
-    <li>
-      <p>小区 <i class="el-icon-caret-right"></i></p>
-      <p>小区1 <i class="el-icon-caret-right"></i></p>
-    </li>
-  </ul>
+  <div class="cl-areatreeBox">
+    <p><i></i><i></i><i></i><i></i></p>
+    <ul id="userTree">
+      <SubTree v-for="item in data" :treeData=item></SubTree>
+    </ul>
+  </div>
+
 </template>
 <script>
+  import SubTree from './SubTree'
+
   export default {
     name: 'AreaTree',
+    components: {SubTree},
     data() {
       return {
-        data: [{
-          id: 1,
-          label: '一级',
-          children: [{
-            id: 4,
-            label: '二级',
-            children: [{
-              id: 9,
-              label: '三级1',
-              children: [
-                {
-                  id: 11,
-                  label: '四级1',
-                  children: [
-                    {
-                      id: 12,
-                      label: '五及1',
-                    },
-                    {
-                      id: 13,
-                      label: '五及2',
-                    }
-                  ]
-                }, {
-                  id: 13,
-                  label: '4及2',
-                  children: [
-                    {
-                      id: 12,
-                      label: '五ee及1',
-                    },
-                    {
-                      id: 13,
-                      label: '五rr及2',
-                    }
-                  ]
-                }
-              ]
-            }, {
-              id: 13,
-              label: '3级1',
-              children: [
-                {
-                  id: 12,
-                  label: 'sssee及1',
-                },
-                {
-                  id: 13,
-                  label: 'jjrr及2',
-                }
-              ]
-            }
-            ]
-          }, {
-            id: 13,
-            label: '2级1',
-          }]
-        }]
+        data: [],
       }
     },
-    methods: {
-      setCurNode(e) {
+    methods:{
+      getParent(resultArry){
+         this.$emit('watchChild', resultArry);//传递选中ID及起所有父级ID给父组建
       }
     }
   }
 </script>
 <style lang="scss">
   .cl-areatreeBox {
-     width: 100%;margin: 8px 0 0 0;box-shadow: 1px 1px 5px #cecece;height: 180px;overflow: hidden;position: absolute;z-index: 9;background: #fff;
-    -webkit-box-shadow: 1px 1px 5px #cecece;padding: 0;
-    li{
-      width: 20%;list-style-type: none;float: left;cursor: pointer;text-align: left;padding: 0 15px 0 20px;border-right: solid 1px #ddedf5;height: 100%;
-      p{margin: 0}
-      i{float: right;margin-top: 11px;}
+    .none {
+      display: none
     }
-    p:hover, p.on {color: #00B3A1}
+
+    width: 100%;
+    margin: 8px 0 0 0;
+    box-shadow: 1px 1px 5px #cecece;
+    height: 180px;
+    overflow: hidden;
+    position: absolute;
+    z-index: 9;
+    background: #fff;
+    -webkit-box-shadow: 1px 1px 5px #cecece;
+    padding: 0;
+
+    #userTree {
+      width: 100%;
+      height: 180px;
+      overflow: auto;
+      position: relative;
+      padding: 10px 0;
+      margin: 0;
+
+      > li {
+        height: 30px;
+        position: relative;
+        width: 20%;
+        text-align: center;
+
+        > ul {
+          position: absolute;
+          left: 100%;
+          top: 0;
+          padding: 0;
+          width: 100%;
+
+          > li {
+            > ul {
+              position: absolute;
+              left: 100%;
+              top: 0;
+              padding: 0;
+              width: 100%;
+
+              > li {
+                > ul {
+                  position: absolute;
+                  left: 100%;
+                  top: 0;
+                  padding: 0;
+                  width: 100%;
+
+                  > li {
+                    > ul {
+                      position: absolute;
+                      left: 100%;
+                      top: 0;
+                      padding: 0;
+                      width: 100%;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+
+    p {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+
+      i {
+        height: 100%;
+        border-right: solid 1px #ebeeef;
+        display: inline-block;
+        float: left;
+        margin-left: 20%
+      }
+    }
+
+    li {
+      list-style-type: none;
+      color: #5B5B5B;
+      font: normal 14px/30px 'Microsoft YaHei';
+      cursor: pointer;
+      padding: 0 10px;
+
+      i {
+        float: right;
+        margin-top: 8px;
+      }
+    }
+
+    li.on {
+      color: #00B3A1;
+
+      > span {
+        > i {
+          color: #00B3A1;
+        }
+      }
+    }
   }
 </style>

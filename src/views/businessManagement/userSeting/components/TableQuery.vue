@@ -9,7 +9,7 @@
     </div>
     <!--表格自定义组建 s-->
     <customTable ref="tableChild" />
-    <Statistics></Statistics>
+    <Statistics :StatisticsData="StatisticsData"></Statistics>
     <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
       <el-table-column
         type="index"
@@ -47,8 +47,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="dp.page"
-      :limit.sync="dp.limit"
+      :page.sync="query.page"
+      :limit.sync="query.limit"
       @pagination="searchFun"/>
     <!--列表数据 e-->
 
@@ -64,6 +64,7 @@
 <script>
   import Pagination from '@/components/Pagination/index'//分页组建
   import customTable from '@/components/CustomTable/index'//自定义表格组建
+  import { promptInfoFun } from "@/utils/index"
   import Statistics from './Statistics'
   import AddDialog from './AddDialog'
   import EditDialog from './EditDialog'
@@ -74,15 +75,13 @@
     components: {Pagination, customTable, Statistics, AddDialog, EditDialog, DetailDialog},
     data(){
       return {
-        tableData:[],
+        tableData:[],//列表数据
+        StatisticsData:'',//统计数据
         tableHeight: null,//表格高度
         total:0,
         checksData:[],
-        dp:{},
-        tableData:[{}],
-        tableHeight: null,//表格高度
+        query:{},
         customHeight:'',
-        checksData:'',
       }
     },
     computed: {
@@ -106,18 +105,38 @@
       }
     },
     methods:{
-      exportExcel() {},
-      searchFun(){
-        alert(2)
+      /******************导出，触发父级方法**********************/
+      exportExcel() {
+        this.$parent.userInfoExcel()
       },
-      sortChanges(){},
-      handleEdit(row){//编辑
+      /******************查询，触发父级查询方法**********************/
+      searchFun(type){
+        if(type instanceof Object == false){//为false 则为区分水表类型条件查询，true 为普通分页查询
+          this.query.WaterTypeId = type//更改查询水表类型
+        }
+        this.$parent.searchTableFun()
+      },
+      /******************排序**********************/
+      sortChanges({prop, order }){//排序
+        this.query.filed = prop
+        this.query.sort = order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        if(this.tableData.length>0){
+          this.query.page = 1
+          this.$parent.searchTableFun()
+        }
+      },
+      /******************编辑**********************/
+      handleEdit(row){
         this.$refs.editDialog.dialogVisible = true;
+        this.$refs.editDialog.getInfo(row.id)
       },
+      /******************详情*********************/
       handleDetail(row){//详情
         this.$refs.detailDialog.dialogVisible = true;
+
       },
-      handleDelete(row) {//删除方法
+      /******************删除*********************/
+      handleDelete(row) {
         this.$confirm("是否确认删除该用户？", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -125,23 +144,25 @@
           customClass: "warningBox",
           showClose: false
         }).then(() => {
-
         })
       },
-      addNewFun(){//新增用户
+      /******************新增用户*********************/
+      addNewFun(){
         this.$refs.addDialog.dialogVisible = true;
+        this.$refs.addDialog.getUserCode()//创建用户编码
       },
       makeCard(){},
       lowApplication(){},
-      setCustomData() {//表格自定义
+      /*******************表格自定义***********************/
+      setCustomData() {
         this.$refs.tableChild.isCustom = !this.$refs.tableChild.isCustom//给子组件变量赋值
         this.customHeight = this.$refs.tableChild.isCustom
       },
     },
     mounted() {
       let _this = this
-      this.dp = this.$parent.dp
-      this.$refs.tableChild.GetTable(this.dp.tableId);//调用子组件方法获取表头信息
+      this.query = this.$parent.query
+      this.$refs.tableChild.GetTable(this.query.tableId);//调用子组件方法获取表头信息
       this.checksData = this.$refs.tableChild.checkData//获取自定义字段中选中了字段
       _this.$nextTick(() => {
         _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 50

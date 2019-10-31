@@ -8,18 +8,14 @@
             <el-button type="primary" size="mini" @click="getCheckedNodes(1)" class="btn_one"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
             <el-button size="mini" @click="getCheckedNodes(2)" class="btn_two"><i class="icon iconfont">&#xe618;</i> 编辑</el-button>
             <el-button size="mini" @click="getCheckedNodes(3)" class="btn_three"><i class="icon iconfont">&#xe68a;</i> 删除</el-button>
-            <el-input placeholder="请输入内容" v-model="searchText" size="small" style="margin: 18px 0">
-              <el-button slot="append" size="small" class="search_btn"><i class="icon iconfont">&#xe694;</i>搜索</el-button>
-            </el-input>
           </div>
-          <p>公司名称</p>
-          <myTree id="my_tree" ref="myChild" :treeData = treeData></myTree>
+          <myTree ref="myChild"></myTree>
           <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp"> 收起 <i class="iconfont iconshouqi2" style="font-size: 12px;"></i></span>
         </div>
         <!--右侧列表数据-->
         <div class="user_table">
           <SelectHead></SelectHead>
-          <tableQuery></tableQuery>
+          <tableQuery ref="tableChild"></tableQuery>
           <span v-show="ifShow" class="telescopic telescopic1" @click="getUp"> 展开 <i class="iconfont iconshouqi1" style="font-size: 12px;"></i></span>
         </div>
       </div>
@@ -35,7 +31,9 @@
   import tableQuery from './components/TableQuery'
   import Dialog from './components/Dialog'
   import { promptInfoFun } from "@/utils/index"
-  import { GetAreaList } from "@/api/userArea"//区域接口
+  import { GetAreaList, CreateAreaNo, DelCustomerArea } from "@/api/userArea"//区域接口
+  import { GetWaterTypeCustomerNum, GetCustomerDataList, GetCustomerDataList_ToExcel } from "@/api/userSetting"//区域接口
+  import Bus from '@/utils/bus'
 
   export default {
     name: 'userSeting',
@@ -43,18 +41,25 @@
     data() {
       return {
         ifShow:false,
-        searchText: '',
-        title: '添加',
-        addName: '',
-        dialogVisible: false,
-        treeData: [],
-        total:0,
-        dp:{
-          page: 1,
+        query: {//右侧用户列表查询条件
+          CustomerQueryType: "1",
+          CustomerQueryValue: "",
+          UserType: "-1",
+          UserState: "-1",
+          AreaId: "-1",
+          WaterTypeId: -1,
           limit: 10,
-          tableId:'0000015'
-        },
-
+          page: 0,
+          sort: "",
+          filed: "",
+          createUserId: "",
+          createStartTime: "",
+          createEndTime: "",
+          editUserId: "",
+          editStartTime: "",
+          editEndTime: "",
+          tableId: "0000016"
+        }
       }
     },
     methods: {
@@ -80,21 +85,39 @@
        * */
       getCheckedNodes(type) {
         const _this = this
-        const checkData = _this.$refs.myChild.curNode
-        if (checkData === '') {
-          promptInfoFun(this, 1, '请选择一条信息进行操作')
-          return
-        }
+        let selectNode =  _this.$refs.myChild.selectNode//当前选中数据节点
+        console.log(selectNode)
+        _this.$refs.editDialog.param.pieName = selectNode.text
+        _this.$refs.editDialog.param.Id = selectNode.Id
+        _this.$refs.editDialog.param.Pid = selectNode.Pid
         switch (type) {
           case 1:
-            _this.$refs.editDialog.dialogVisible = true
-            _this.$refs.editDialog.title = '添加'
+            if (selectNode.Id === undefined || selectNode.Id == 0) {//不能为且只能添加水厂以下数据
+              promptInfoFun(this, 1, '请选择公司！')
+              return
+            }
+            CreateAreaNo().then(res => {//自动生成区域编码
+              if (res.code ==0 ) {
+                _this.$refs.editDialog.param.AreaNo = res.data
+                _this.$refs.editDialog.dialogVisible = true
+                _this.$refs.editDialog.param.AreaName = ''
+                _this.$refs.editDialog.title = '添加'
+              } else {
+                promptInfoFun(this,1,res.message)
+              }
+            })
             break
           case 2:
-            _this.$refs.editDialog.dialogVisible = true
+            selectNode.Id === undefined || selectNode.Id == 0 || selectNode.Level <= 1 ? promptInfoFun(this, 1, '请选择需要编辑的区域！') : _this.$refs.editDialog.dialogVisible = true
+            _this.$refs.editDialog.param.AreaNo = selectNode.AreaNo
+            _this.$refs.editDialog.param.AreaName = selectNode.text
             _this.$refs.editDialog.title = '编辑'
             break
           case 3:
+            if(selectNode.Id === undefined || selectNode.Id == 0 || selectNode.Level <= 1) {
+              promptInfoFun(this, 1, '请选择需要编辑的区域！')
+              return
+            }
             this.$confirm("是否确认删除该区域？", "提示", {
               confirmButtonText: "确定",
               cancelButtonText: "取消",
@@ -102,17 +125,17 @@
               customClass: "warningBox",
               showClose: false
             }).then(() => {
-
+              DelCustomerArea({'areaId':selectNode.Id}).then(res => {//删除节点
+                if (res.code ==0 ) {
+                  promptInfoFun(this,2,res.message)
+                  this.getTreeData()
+                } else {
+                  promptInfoFun(this,1,res.message)
+                }
+              })
             })
             break
         }
-      },
-      /**
-       * 添加或编辑弹窗保存
-       * */
-      saveFun() {
-        this.dialogVisible = false
-        this.getTreeData()
       },
       /**
        * 获取左侧区域列表数据
@@ -120,30 +143,65 @@
       getTreeData() {
         GetAreaList().then(res => {
           if (res.code ==0 ) {
-            let data = res.data
-            this.treeData.push(data)
+            let datas = res.data,data = []
+            data.push(JSON.parse(JSON.stringify(datas).replace(/label/g,'text').replace(/children/g,'nodes')))
+            this.$refs.myChild.getTreeData(data)
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
+      /**
+       * 用户列表查询
+       * */
+      searchTableFun(){
+        this.query.AreaId =  this.$refs.myChild.areaId
+        let query = Object.assign({},this.query)
+        query.CustomerQueryType = parseInt(query.CustomerQueryType)
+        query.UserType = parseInt(query.UserType)
+        query.UserState = parseInt(query.UserState)
+        GetCustomerDataList(query).then(res => {//用户列表
+          if (res.code ==0 ) {
+            this.$refs.tableChild.total = res.count
+            this.$refs.tableChild.tableData = res.data
           } else {
             promptInfoFun(this,1,res.message)
           }
         })
 
+        GetWaterTypeCustomerNum(query).then(res => {//用户统计数据
+          if (res.code ==0 ) {
+            this.$refs.tableChild.StatisticsData = res.data
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
       },
-
+      /**
+       * 用户导出
+       * */
+      userInfoExcel(){
+        GetCustomerDataList_ToExcel(this.query).then(res => {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        })
+      },
     },
     mounted() {
+      let _this = this
       this.getTreeData()
-      let maxHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('my_tree').offsetTop - 50
-      document.getElementById('my_tree').style.height = maxHeight + 'px'
-      window.onresize = function () {
-        maxHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('my_tree').offsetTop - 50
-        document.getElementById('my_tree').style.height = maxHeight + 'px'
-      }
+      Bus.$off('queryData')
+      Bus.$on('queryData',() =>{//添加成功后调用查询方法
+        _this.searchTableFun()
+      })
+    },
+    beforeDestroy () {
+      Bus.$off("queryData");
     }
   }
 </script>
 <style lang="scss" scoped>
   .tree_container{
-    .icon{font-size: 14px;}
+    .icon{font-size: 14px;}background: #EFF1F4;
     .telescopic{position: absolute;display: block;top:39%;;color: #777C82;font: normal 16px 'Microsoft YaHei';width: 30px;margin: 0 auto;word-wrap: break-word;
       -webkit-box-shadow: 1px 1px 5px #cecece;background: #fff;padding: 15px 0;z-index: 999;text-align: center;cursor: pointer;
       box-shadow: 1px 1px 5px #cecece;
@@ -166,13 +224,11 @@
     .user_tree {
       width: 240px;position: relative;background: #fff;padding: 0 15px;
       h2 {font: bold 16px 'Microsoft YaHei';color: #46494C}
-      >p{background: #CAD9E0;font: bold 14px/38px 'Microsoft YaHei';color: #46494C;margin: 0;padding: 0 12px;width: 190px;}
       .btn_one{color: #fefefe}
       .btn_two{color: #00B2A1;border: solid 1px #00B2A1;}
       .btn_three{color: #FF5656;border: solid 1px #FF5656;}
       .btn_three:hover{background: #fef0f0}
       #my_tree{overflow: auto;width: 190px;}
-      .search_btn{background: #00B3A1;color: #FEFEFF;padding-left: 6px;padding-right: 6px;border-top-left-radius: 0;border-bottom-left-radius: 0;}
       margin-right: 16px;
     }
     .user_table{flex: 1;-webkit-flex: 1;background: #fff;padding: 16px;position: relative;overflow: hidden}

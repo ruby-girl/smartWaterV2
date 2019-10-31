@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+var webpack = require('webpack');
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -51,7 +52,8 @@ module.exports = {
     name: name,
     resolve: {
       alias: {
-        '@': resolve('src')
+        '@': resolve('src'),
+        jquery: "jquery/src/jquery"
       }
     }
   },
@@ -131,5 +133,13 @@ module.exports = {
           config.optimization.runtimeChunk('single')
         }
       )
-  }
+
+    config.plugin('provide').use(webpack.ProvidePlugin, [{
+      $: 'jquery',
+      jquery: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      Popper : ['popper.js' , 'default']
+    }])
+  },
 }

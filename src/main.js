@@ -19,6 +19,7 @@ import './permission' // permission control
 import './utils/error-log' // error log
 import VDistpicker from 'v-distpicker'
 Vue.component('v-distpicker', VDistpicker)
+import $ from 'jquery'
 
 import * as filters from './filters' // global filters
 import VueDND from 'awe-dnd'

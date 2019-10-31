@@ -70,7 +70,7 @@
 
 <script>
 import '../../styles/organization.scss'
-import myTree from '../../components/Tree/index'
+import myTree from '../../components/Tree/index1'
 
 export default {
   name: 'company',

@@ -9,8 +9,8 @@
     width="51%">
     <el-form :inline="true" ref="ruleForm" :model="formData" :rules="rules" label-width="100px">
       <el-form-item label="水厂：" prop="SA_WaterFactory_Id">
-        <el-select v-model="formData.SA_WaterFactory_Id" placeholder="请选择" size="small">
-          <el-option label="简码" value="3"></el-option>
+        <el-select v-model="formData.SA_WaterFactory_Id" placeholder=" " size="small" @change="getDataByWater">
+          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="用户编码：" prop="CustomerNo">
@@ -29,27 +29,27 @@
         <el-input v-model.number="formData.PeopleNo" size="small"/>
       </el-form-item>
       <el-form-item label="用户类型：" prop="UserType">
-        <el-select v-model="formData.UserType" placeholder="请选择" size="small" :disabled="true">
-          <el-option label="编号" value="1"></el-option>
+        <el-select v-model="formData.UserType" placeholder=" " size="small" :disabled="true">
+          <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="证件号：">
         <el-input v-model="formData.IdentityNo" size="small"/>
       </el-form-item>
       <el-form-item label="用水性质：" prop="UserType">
-        <el-select v-model="formData.UserType" placeholder="请选择" size="small" :disabled="true">
-          <el-option label="编号" value="1" ></el-option>
+        <el-select v-model="formData.UserType" placeholder=" " size="small" :disabled="true">
+          <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.SA_UseWaterType_Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="区域：" prop="SA_UserArea_Id" class="cl_allLine">
         <el-input v-model="formData.SA_UserArea_Id" style="display: none"></el-input>
-        <p v-model="areaName" @click="setAreaFun" class="areaInput"><i
+        <p @click="setAreaFun" class="areaInput">{{areaName}}<i
           :class="ifArea?'el-icon-arrow-up':'el-icon-arrow-down'"
           style="float: right; margin-top: 7px;color: #C0C4CC"></i></p>
-        <AreaTree :areaTreeData=areaTreeData v-show="ifArea" @click="getArea"></AreaTree>
+        <AreaTree ref="areaTree" v-show="ifArea" @click="getArea" @watchChild="getParent"></AreaTree>
       </el-form-item>
       <el-form-item label="表册：">
-        <el-select v-model="formData.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" :disabled="true">
+        <el-select v-model="formData.SA_RegisterBookInfo_Id" placeholder=" " size="small" :disabled="true">
           <el-option label="编号" value="1"></el-option>
         </el-select>
       </el-form-item>
@@ -84,18 +84,27 @@
   import {promptInfoFun} from "@/utils/index"
   import uploadBox from '@/components/Upload'
   import AreaTree from './AddComponents/AreaTree'
+  import { WaterFactoryComboBoxListAuth } from "@/api/organize"//具有权限的水厂
+  import { GetAreaListByWaterFactory } from "@/api/userArea"//区域接口
+  import { getDictionaryOption } from "@/utils/permission"
+  import { GetWaterPropertyList,GetBlObjById, UpdateCustomerInfo } from "@/api/userSetting"//区域接口
+  import {DeleteList} from "@/api/upload"
+  import Bus from '@/utils/bus'
 
   export default {
     name: "EditDialog",
     components: {uploadBox, AreaTree},
     data() {
       return {
+        waterFactory:[],//水厂
+        userType:[],//用户类型
+        userWater:[],//用水性质
         ifArea: false,
         dialogVisible: false,
         formData: {},
         Enclosure: {},
         areaTreeData: [],
-        areaName: [],
+        areaName: '',
         Address: 0,
         Remark: 0,
         rules: {
@@ -112,6 +121,50 @@
       }
     },
     methods: {
+      /**********************获得具有权限的水厂*******************/
+      getWater(){
+        WaterFactoryComboBoxListAuth().then(res => {
+          if (res.code ==0 ) {
+            this.waterFactory = res.data
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
+      /************************用水性质*************************/
+      GetWaterProperty(){
+        GetWaterPropertyList().then(res => {
+          if (res.code ==0 ) {
+            this.userWater = res.data
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
+      /****************获取水厂获取数据**************************/
+      getDataByWater(Id){
+        this.getTreeData(Id)
+      },
+      /****************获取水厂获取区域数据**********************/
+      getTreeData(Id) {
+        GetAreaListByWaterFactory({'waterFactoryId':Id}).then(res => {
+          if (res.code ==0 ) {
+            this.$refs.areaTree.data.push(res.data)
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
+      /*****************回填区域数据****************************/
+      getParent(data){
+        let _this = this
+        _this.areaName = ''//初始化区域地址
+        this.ifArea = false//关闭模拟下拉弹窗
+        data.forEach(item=>{
+          _this.areaName  += item[0].label + " "
+          item[1] ? _this.formData.SA_UserArea_Id = item[0].Id:''
+        })
+      },
       getFileFun(data) {//获取上传文件信息
         this.upload.file = data
       },
@@ -127,12 +180,58 @@
       handleClose() {//弹窗关闭
         this.dialogVisible = false
       },
-      submitForm(){//提交
-
+      /************************编辑保存提交*********************/
+      submitForm(formName){
+        let self = this
+        this.formData.Idarr = []//初始上传文件ID集合字段
+        for (let j = 0; j < this.upload.file.length; j++) {//获取上传文件ID集合
+          this.formData.Idarr.push(this.upload.file[j].id)
+        }
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            UpdateCustomerInfo(self.jp).then(res => {//更新保存
+              if (res.code == 0) {
+                promptInfoFun(this,2,res.message)
+                Bus.$emit('queryData')//触发父级列表查询
+              } else {
+                promptInfoFun(this,1,res.message)
+              }
+            })
+          } else {
+            return false
+          }
+        })
       },
-      resetForm(){//取消
-
+      /**********************取消操作**************************/
+      resetForm(){
+        this.dialogVisible = false
+        let ids = []
+        for (let i = 0; i < this.upload.file.length; i++) {
+          ids.push(this.upload.file[i].id)
+        }
+        if (ids.length <= 0)
+          return
+        DeleteList({idarr: ids}).then(res => {
+        })
+      },
+      /***********************获取详情*************************/
+      getInfo(id) {//根据id获取详情
+        return
+        GetBlObjById({id: id}).then(res => {
+          if (res.code == 0) {
+            this.formData = res.data
+            let fileList = res.data.saList//已经上传文件信息
+            this.$refs.getFiles.setFiles(fileList)
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
       }
+    },
+    mounted() {
+      this.userType = getDictionaryOption('用户类型')
+      this.getWater()
+      this.GetWaterProperty()
     }
 
   }

@@ -10,16 +10,16 @@
     <!--用户资料-->
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="机械水表" name="1">
-        <MechanicalMeter ref="jxChild"  :formData="formData"></MechanicalMeter>
+        <MechanicalMeter ref="jxChild" :formData="formData" ></MechanicalMeter>
       </el-tab-pane>
       <el-tab-pane label="IC卡水表" name="2">
-        <MechanicalMeter ref="icChild"  :formData="formData"></MechanicalMeter>
+        <MechanicalMeter ref="icChild" :formData="formData" ></MechanicalMeter>
       </el-tab-pane>
       <el-tab-pane label="远传水表" name="3">
-        <RemoteMeter ref="ycChild"  :ycData="ycData"></RemoteMeter>
+        <RemoteMeter ref="ycChild" :ycData="ycData" ></RemoteMeter>
       </el-tab-pane>
       <el-tab-pane label="物联网水表" name="4">
-        <RemoteMeter ref="wlwChild"  :ycData="ycData"></RemoteMeter>
+        <RemoteMeter ref="wlwChild" :ycData="ycData" ></RemoteMeter>
       </el-tab-pane>
     </el-tabs>
   </el-dialog>
@@ -29,6 +29,8 @@
   import { promptInfoFun } from "@/utils/index"
   import MechanicalMeter from './AddComponents/MechanicalMeter'
   import RemoteMeter from './AddComponents/RemoteMeter'
+  import { GetCustomerNo , ReleaseCustomerNo} from "@/api/userSetting"//区域接口
+  import { WaterFactoryComboBoxListAuth } from "@/api/organize"//具有权限的水厂
 
   export default {
     name: "AddDialog",
@@ -42,68 +44,117 @@
           CustomerNo: "",
           SA_UserArea_Id: "",
           CustomerName: "",
-          PeopleNo: 0,
+          PeopleNo: 1,
           SA_UseWaterType_Id: "",
           IdentityNo: "",
           Tel: "",
           Address: "",
-          UserType: 1201,
+          UserType: "",
           SA_RegisterBookInfo_Id: "",
           TaxpayerNumber: "",
           Remark: "",
           WaterRemark: "",
           WaterMeterNo: "",
-          WaterMeterStyle: 2101,
-          MeterDiameter: 15,
+          WaterMeterStyle: "",
+          MeterDiameter: "50",
           InstallAddress: "",
           StarReadNum: 0,
           AlarmMoney: 0,
-          Idarr: []
+          Idarr: [],
+          NameCode:''
         },
         ycData: {//远程物联网 ，MeterStyle 物联网
           SA_WaterFactory_Id: "",
           SA_UserArea_Id: "",
           CustomerName: "",
           CustomerNo: "",
-          PeopleNo: 0,
+          PeopleNo: 1,
           SA_UseWaterType_Id: "",
           IdentityNo: "",
           Tel: "",
           Address: "",
-          UserType: 1201,
+          UserType: "",
           TaxpayerNumber: "",
           UserRemark: "",
           WaterMeterNo: "",
           InstallAddress: "",
-          AlarmMoney: 0,
-          OverdraftMoney: 0,
+          AlarmMoney: 0,//远传
+          OverdraftMoney: 0,//远传
+          AlarmYield: 0,//物联
+          OverdraftYield: 0,//物联
           WaterRemark: "",
-          MeterStyle: 2101,
-          Idarr: []
-        }
+          MeterStyle: "",//物联
+          Idarr: [],
+          NameCode:'',
+          MeterDiameter:'50'
+        },
+        waterFactory:[]
       }
     },
     methods: {
+      /***********************生成用户编码**************************/
+      getUserCode(){
+        GetCustomerNo().then(res => {
+          if (res.code ==0 ) {
+            this.formData.CustomerNo = res.data
+            this.ycData.CustomerNo = res.data
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
+      /***********************弹窗关闭事件**************************/
       handleClose(){//弹窗关闭初始化表单信息
         this.dialogVisible = false
-        this.resetForm('ruleForm')
+        ReleaseCustomerNo({'CustomerNo':this.formData.CustomerNo}).then(res => {})//清除未占用用户编码
+        this.$refs.jxChild.$refs['formData'].resetFields();
+        this.$refs.jxChild.$refs['formData1'].resetFields();
+        this.$refs.ycChild.$refs['ycData'].resetFields();
+        this.$refs.ycChild.$refs['ycData1'].resetFields();
+
       },
+      /***********************选项卡切换事件************************/
       handleClick(){//水表切换
         switch (this.activeName) {
-          case '1':
+          case '1'://机械
             this.$refs.jxChild.differ = false
+            this.$refs.jxChild.areaName = ''
+            this.$refs.jxChild.$refs['formData'].resetFields();
+            this.$refs.jxChild.$refs['formData1'].resetFields();
             break;
-          case '2':
+          case '2'://IC
             this.$refs.icChild.differ = true
+            this.$refs.icChild.areaName = ''
+            this.$refs.icChild.$refs['formData'].resetFields();
+            this.$refs.icChild.$refs['formData1'].resetFields();
             break;
-          case '3':
+          case '3'://远传
             this.$refs.ycChild.differ = false
+            this.$refs.ycChild.areaName = ''
+            this.$refs.ycChild.$refs['ycData'].resetFields();
+            this.$refs.ycChild.$refs['ycData1'].resetFields();
             break;
-          case '4':
+          case '4'://物联
             this.$refs.wlwChild.differ = true
+            this.$refs.wlwChild.areaName = ''
+            this.$refs.wlwChild.$refs['ycData'].resetFields();
+            this.$refs.wlwChild.$refs['ycData1'].resetFields();
             break;
         }
+      },
+      /***********************获得具有权限的水厂*********************/
+      getWater(){
+        WaterFactoryComboBoxListAuth().then(res => {
+          if (res.code ==0 ) {
+              this.waterFactory = res.data
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
       }
+    },
+    mounted() {
+      this.getWater()
     }
   }
 </script>
@@ -114,7 +165,7 @@
   .cl_allLine {
     position: relative; width: 100%;
     .el-form-item__content { width: calc(100% - 140px);}
-    .areaInput{width: 100%;height: 32px;line-height: 32px;border: solid 1px #D8E2E7;border-radius: 5px;margin: 0;cursor: pointer;padding: 0 10px 0 15px;position: relative;}
+    .areaInput{width: 100%;height: 32px;line-height: 32px;border: solid 1px #D8E2E7;border-radius: 5px;margin: 3px 0 0 0;cursor: pointer;padding: 0 10px 0 15px;position: relative;}
   }
   .cl_allArea {
     width: 100%;

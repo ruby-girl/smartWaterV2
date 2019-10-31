@@ -60,6 +60,7 @@
 <script>
   import { getToken } from '@/utils/auth'
   import { FileDelete } from "@/api/upload"
+  import { getDictionaryOption } from "@/utils/permission"
 
  export default {
   name: 'Upload',
