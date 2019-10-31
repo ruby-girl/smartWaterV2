@@ -55,8 +55,8 @@
         </template>
         <el-table-column label="操作" width="200px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation1" @click="handleDetail(scope.$index, scope.row)">水量详情</a>
-            <a class="operation2" @click="handleDelete(scope.$index, scope.row)">删除</a>
+            <a class="operation1" @click="handleDetail(scope.row)" v-if="scope.LadderNumber>1">水量详情</a>
+            <a class="operation2" @click="handleDelete(scope.row)">删除</a>
           </template>
         </el-table-column>
       </el-table>
@@ -69,6 +69,8 @@
       />
       <!--列表组建 e-->
     </div>
+    <!--水量详情-->
+    <EditDialog ref="editDialog"></EditDialog>
   </div>
 </template>
 
@@ -76,20 +78,17 @@
 import "@/styles/organization.scss";
 import customTable from "@/components/CustomTable/index"; //自定义组建
 import SelectHead from "./components/SelectHead"; //查询条件组建
+import EditDialog from "./components/EditDialog"; //查询条件组建
 import Pagination from "@/components/Pagination/index"; //分页
-import {
-  MeterReadPlanExport,
-  ReadingQueryPageQuery,
-  QueryMeterReaderByFactoryId
-} from "@/api/meterQuery";
+import { MeterReadPlanExport, ReadingQueryPageQuery, QueryMeterReaderByFactoryId } from "@/api/meterQuery";
 import { promptInfoFun } from "@/utils/index";
 
 export default {
   name: "meterQuery",
-  components: { customTable, Pagination, SelectHead },
+  components: { customTable, Pagination, SelectHead, EditDialog },
   data() {
     return {
-      tableData: [], //表格数据
+      tableData: [{}], //表格数据
       checkAllData: [],
       checksData: [], //自定义选中字段
       customHeight: "", //自定义高度
@@ -133,8 +132,7 @@ export default {
     }
   },
   methods: {
-    sortChanges({ prop, order }) {
-      //列排序
+    sortChanges({ prop, order }) {//列排序
       this.param.filed = prop;
       this.param.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
@@ -143,8 +141,7 @@ export default {
         this.searchFun();
       }
     },
-    searchFun() {
-      //列表查询
+    searchFun() {//列表查询
       ReadingQueryPageQuery(this.param).then(res => {
         if (res.code == 0) {
           this.total = res.count;
@@ -154,27 +151,25 @@ export default {
         }
       });
     },
-    exportExcel() {
-      //导出
+    exportExcel() {//导出
       MeterReadPlanExport(this.param).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
-    handleDelete() {
-      //删除
+    handleDelete() {//删除
+
     },
-    handleDetail() {
-      //水量详情
+    handleDetail(row) {//水量详情
+      this.$refs.editDialog.dialogVisible = true
+      this.$refs.editDialog.getInfo(row)
     },
-    setCustomData() {
-      //表格自定义
+    setCustomData() {//表格自定义
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
     }
   },
   computed: {
-    tableHead: function() {
-      //获取表头信息
+    tableHead: function() {  //获取表头信息
       const arrayHead = [];
       const data = this.checksData;
       for (let i = 0; i < data.length; i++) {
@@ -187,8 +182,7 @@ export default {
     }
   },
   watch: {
-    customHeight() {
-      //获取自定义模块高度
+    customHeight() {   //获取自定义模块高度
       let self = this;
       self.$nextTick(() => {
         self.tableHeight =

@@ -1,5 +1,5 @@
 <template>
-  <ul class="statistics">
+  <ul class="statistics clearfix">
     <li :class="curNum==-1 ? 'total':''" @click="tabChange(-1)"><span>
       {{(parseInt(StatisticsData.IC_WaterNum) + parseInt(StatisticsData.JX_WaterNum) + parseInt(StatisticsData.YC_WaterNum) + parseInt(StatisticsData.NB_WaterNum)) || 0}}
     </span><label>全部</label></li>
@@ -35,7 +35,7 @@
 <style lang="scss">
   .statistics {
     width: 100%;
-
+    border-top: solid 1px #e6ebf5;border-left: solid 1px #e6ebf5;border-right: solid 1px #e6ebf5;margin-bottom: 0;padding:10px 0 5px 0;
     .total {
       color: #33B300;
 
