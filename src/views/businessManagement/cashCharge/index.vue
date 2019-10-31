@@ -1,65 +1,88 @@
 <template>
   <div class="section-container">
-    <div>
-      <div ref="formHeight" class="cash-padding-bg padding-20">
-        <select-head :select-head="listQuery" @handleFilter="handleFilter" />
-      </div>
-
-      <!-- 表格模式 -->
-      <el-row :gutter="10" class="container-bottom-box display-flex">
-        <!-- 左边表格 -->
-        <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg">
-          <div class="table-top-btn-padding display-flex justify-content-flex-justify">
-            <div class="display-flex">
-              <el-tooltip popper-class="tooltip" content="卡片模式" placement="bottom" effect="light" :visible-arrow='false'>
+    <div ref="formHeight" class="cash-padding-bg padding-20">
+      <select-head :select-head="listQuery" @handleFilter="handleFilter" />
+    </div>
+    <!-- 表格模式 -->
+    <el-row :gutter="10" class="container-bottom-box display-flex">
+      <!-- 左边表格 -->
+      <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg" v-if="!isIC">
+        <div class="table-top-btn-padding display-flex justify-content-flex-justify">
+          <div class="display-flex">
+            <el-tooltip
+              popper-class="tooltip"
+              content="卡片模式"
+              placement="bottom"
+              effect="light"
+              :visible-arrow="false"
+            >
               <div
                 @click="type=2"
                 :class="{'change-tab':true,'iconfont':true,'iconzu':true,'tab-active': this.type==2}"
               ></div>
-              </el-tooltip>
-              <el-tooltip  popper-class="tooltip" content="表格模式" placement="bottom" effect="light" :visible-arrow='false'>
+            </el-tooltip>
+            <el-tooltip
+              popper-class="tooltip"
+              content="表格模式"
+              placement="bottom"
+              effect="light"
+              :visible-arrow="false"
+            >
               <div
                 @click="type=1"
                 :class="{'change-tab':true,'iconfont':true,'iconzu1':true,'tab-active': this.type==1}"
                 style="border:none"
               ></div>
-               </el-tooltip>
-            </div>
-            <div v-if="type==1">
-              <el-button type="success" size="mini" @click="excel">
-                <i class="iconfont icondaochuexcel"></i>导出Excel
-              </el-button>
-              <el-button type="warning" size="mini" @click="setCustomData()">
-                <i class="iconfont iconbiaogezidingyi"></i>表格自定义
-              </el-button>
-            </div>
-            <div v-else>
-              <el-checkbox :indeterminate="isIndeterminateParent" v-model="checkedAllParent" @change="parentChange">全选</el-checkbox>
-            </div>
+            </el-tooltip>
           </div>
-          <components
-            :is="typeComponents"
-            :listQuery="listQuery"
-            :total="total"
-            :tableHeight="tableHeight"
-            ref="tableTypeCard"
-            :tableData="tableData"
-            :saveTableHeight="saveTableHeight"
-            :checkedAllParent.sync="checkedAllParent"
-            :isIndeterminateParent.sync="isIndeterminateParent"
-            @details="details"
-            @reset="reset"
-            @feeWaiver="feeWaiver"
-          ></components>
-        </el-col>
-        <!-- 左边表格end -->
-        <!-- 右 -->
-        <el-col :md="10" :lg="8" :xl="8" class="cash-padding-bg cash-right-box" :style="{'minHeight':saveTableHeight+'px'}">
-          <right-box @selectPint="selectPint" @selectPayment="selectPayment"></right-box>
-        </el-col>
-        <!-- 右 -->
-      </el-row>
-    </div>
+          <div v-if="type==1">
+            <el-button type="success" size="mini" @click="excel">
+              <i class="iconfont icondaochuexcel"></i>导出Excel
+            </el-button>
+            <el-button type="warning" size="mini" @click="setCustomData()">
+              <i class="iconfont iconbiaogezidingyi"></i>表格自定义
+            </el-button>
+          </div>
+          <div v-else>
+            <el-checkbox
+              :indeterminate="isIndeterminateParent"
+              v-model="checkedAllParent"
+              @change="parentChange"
+            >全选</el-checkbox>
+          </div>
+        </div>
+        <components
+          :is="typeComponents"
+          :listQuery="listQuery"
+          :total="total"
+          :tableHeight="tableHeight"
+          ref="tableTypeCard"
+          :tableData="tableData"
+          :saveTableHeight="saveTableHeight"
+          :checkedAllParent.sync="checkedAllParent"
+          :isIndeterminateParent.sync="isIndeterminateParent"
+          @details="details"
+          @reset="reset"
+          @feeWaiver="feeWaiver"
+        ></components>
+      </el-col>
+      <!-- IC卡展示内容 -->
+      <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg ic-container" v-if="isIC" :style="{'height':saveTableHeight+'px'}">
+        <components :is="icType" :tableData="tableData" :saveTableHeight="saveTableHeight"></components>
+      </el-col>
+      <!-- 左边表格end -->
+      <!-- 右 -->
+      <el-col
+        :md="10"
+        :lg="8"
+        :xl="8"
+        class="cash-padding-bg cash-right-box"
+        :style="{'height':saveTableHeight+'px'}"
+      >
+        <right-box @selectPint="selectPint" @selectPayment="selectPayment"></right-box>
+      </el-col>
+      <!-- 右 -->
+    </el-row>
     <water-details :waterDetailsShow.sync="waterDetailsShow"></water-details>
     <over-details :overDetailsShow.sync="overDetailsShow"></over-details>
     <select-user :selectUserShow.sync="selectUserShow"></select-user>
@@ -74,13 +97,15 @@ import SelectHead from "./components/SelectHead";
 import TableType from "./components/TableType";
 import CardType from "./components/CardType";
 import RightBox from "./components/RightBox";
-import WaterDetails from "./components/WaterDetails";//水费详情弹窗
-import OverDetails from "./components/OverDetails";//除水费外其它费用详情弹窗
+import WaterDetails from "./components/WaterDetails"; //水费详情弹窗
+import OverDetails from "./components/OverDetails"; //除水费外其它费用详情弹窗
 import SelectUser from "./components/SelectUser";
-import FeeWaiver from "./components/FeeWaiver";//水费减免弹窗
-import OverFeeWaiver from "./components/OverFeeWaiver";//除水费外其它费用减免弹窗
-import SelectPint from "./components/SelectPint";//选择打印机
-import PaymentCode from "./components/PaymentCode";//扫码支付
+import FeeWaiver from "./components/FeeWaiver"; //水费减免弹窗
+import OverFeeWaiver from "./components/OverFeeWaiver"; //除水费外其它费用减免弹窗
+import SelectPint from "./components/SelectPint"; //选择打印机
+import PaymentCode from "./components/PaymentCode"; //扫码支付
+import CreditCardAlready from "./components/IcType/CreditCardAlready"; //IC卡已刷卡
+import NoCreditCard from "./components/IcType/NoCreditCard"; //IC卡未刷卡
 import {
   getRolesList,
   addRole,
@@ -90,7 +115,21 @@ import {
 } from "@/api/role";
 export default {
   name: "cashCharge",
-  components: { SelectHead, TableType, CardType, RightBox,WaterDetails,OverDetails,SelectUser,FeeWaiver,OverFeeWaiver,SelectPint,PaymentCode},
+  components: {
+    SelectHead,
+    TableType,
+    CardType,
+    RightBox,
+    WaterDetails,
+    OverDetails,
+    SelectUser,
+    FeeWaiver,
+    OverFeeWaiver,
+    SelectPint,
+    PaymentCode,
+    NoCreditCard,
+    CreditCardAlready
+  },
   data() {
     return {
       total: 0,
@@ -116,14 +155,16 @@ export default {
       tableData: [],
       saveTableHeight: 0,
       checkedAllParent: false, //全选
-      isIndeterminateParent:false,//复选框属性
-      waterDetailsShow:false,//水费详情弹窗
-      overDetailsShow:false,//其它费用详情弹窗
-      selectUserShow:false,//多用户选择弹窗
-      feeWaiverShow:false,//费用减免弹窗
-      overFeeWaiverShow:false,
-      selectPintShow:false,//选择打印机
-      paymentCodeShow:false//扫码支付弹窗
+      isIndeterminateParent: false, //复选框属性
+      waterDetailsShow: false, //水费详情弹窗
+      overDetailsShow: false, //其它费用详情弹窗
+      selectUserShow: false, //多用户选择弹窗
+      feeWaiverShow: false, //费用减免弹窗
+      overFeeWaiverShow: false,
+      selectPintShow: false, //选择打印机
+      paymentCodeShow: false, //扫码支付弹窗
+      isIC: true,
+      icType: "NoCreditCard" //默认已刷卡
     };
   },
   mounted: function() {
@@ -131,10 +172,10 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 205;
-      that.saveTableHeight = that.tableHeight+20;
+      that.tableHeight = document.body.clientHeight - formHeight-208;
+      that.saveTableHeight = document.body.clientHeight - formHeight-100;
       window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight - 205;
+        that.tableHeight = document.body.clientHeight - formHeight;
       };
     });
   },
@@ -204,7 +245,7 @@ export default {
     },
     updateData(dialog) {
       updateRole(dialog.RoleName, dialog.Id).then(res => {
-       this.dialogFormVisible = false;
+        this.dialogFormVisible = false;
         this.$message({
           message: res.message,
           type: "success",
@@ -219,15 +260,15 @@ export default {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
-    parentChange(v){
-      this.isIndeterminateParent=false
+    parentChange(v) {
+      this.isIndeterminateParent = false;
     },
     // 费用详情
-    details(n){
-      this.waterDetailsShow=true
+    details(n) {
+      this.waterDetailsShow = true;
     },
     // 费用撤回
-    reset(){
+    reset() {
       this.$confirm("是否确认撤销欠费？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -246,18 +287,18 @@ export default {
       });
     },
     // 费用减免
-    feeWaiver(){
-      this.overFeeWaiverShow=true
+    feeWaiver() {
+      this.overFeeWaiverShow = true;
     },
     // 选择打印机
-    selectPint(){
-      this.selectPintShow=true
+    selectPint() {
+      this.selectPintShow = true;
     },
     // 选择支付方式
-    selectPayment(i){
-      if(i==2){
-        this.paymentCodeShow=true
-      }     
+    selectPayment(i) {
+      if (i == 2) {
+        this.paymentCodeShow = true;
+      }
     }
   }
 };
@@ -265,13 +306,13 @@ export default {
 <style lang="scss" scoped>
 .container-bottom-box {
   border-top: 15px solid #eff1f4;
-  height:calc(100vh - 205px);
+  height: calc(100vh - 205px);
 }
 .cash-padding-bg {
-  padding:0 20px 20px 20px !important;
+  padding: 0 20px 20px 20px !important;
   background: #fff;
 }
-.padding-20{
+.padding-20 {
   padding: 20px !important;
 }
 .cash-right-box {
@@ -280,10 +321,10 @@ export default {
   overflow: auto;
 }
 /deep/ .is-disabled .el-checkbox__inner {
-  background: #B4BCC1 !important;
+  background: #b4bcc1 !important;
 }
-/deep/ .el-checkbox__input.is-disabled + span.el-checkbox__label{
-  color:#fff;
+/deep/ .el-checkbox__input.is-disabled + span.el-checkbox__label {
+  color: #fff;
 }
 .change-tab {
   background: #f0f0f0;
@@ -297,8 +338,10 @@ export default {
 .tab-active {
   color: #00b2a1;
 }
-.tooltip{
-  color:#ddd;
+.tooltip {
+  color: #ddd;
 }
-
+.ic-container{
+  overflow: auto;
+}
 </style>

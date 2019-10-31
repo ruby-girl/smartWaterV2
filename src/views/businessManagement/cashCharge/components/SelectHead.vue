@@ -38,19 +38,14 @@
       </el-form>
       <div class="payment-records">查询缴费记录>></div>
     </div>
-    <div class="head-bottom-box display-flex main-more-black-color">
-      <div class="head-user-details">姓名:羊请问</div>
-      <div class="head-user-details">
-        <span class="head-label">水表类型:</span>机械表
-      </div>
-      <div class="head-user-details">
-        <span class="head-label">电话:</span>18190002838
-      </div>
-      <div class="text-wrap flex-1">
-        <span class="head-label">地址:</span>
-        <span>奥术大师大所大所大所多</span>
-      </div>
-    </div>
+
+    <el-row class="head-bottom-box">
+      <el-col :md="8" :lg="3" :xl="2">姓名:羊请问</el-col>
+      <el-col :md="8" :lg="4" :xl="3">水表类型:机械表</el-col>
+      <el-col :md="8" :lg="4" :xl="3">电话:18190002838</el-col>
+      <el-col :md="8" :lg="6" :xl="4">水表编号:18a3812312312312</el-col>
+      <el-col :md="12" :lg="7" :xl="12" class="text-wrap">地址:奥术asdasdasd大师大所大所大所多</el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -99,21 +94,13 @@ export default {
 }
 .head-bottom-box {
   background: #f5f5f5;
-  padding: 20px;
-  .head-user-details:first-child {
-    width: 120px;
-  }
-  .head-label {
-    display: inline-block;
-    width: 100px;
-    text-align: right;
-  }
-  .text-wrap {
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  padding: 15px;
+  line-height: 30px;
+}
+.text-wrap{
+  overflow: hidden;
+text-overflow:ellipsis;
+white-space: nowrap;
 }
 </style>
 

@@ -24,28 +24,28 @@
     </div>
     <div v-if="details.IsLadder">
       <div v-for="(item,i) in details.ladder" class="ladder-bottom-box">
-      <div class="display-flex justify-content-flex-justify" v-if="details.LadderNumber>i">
-        <div class="display-flex align-items-center ladder-item">
-          <div class="circle-num">{{i+1}}</div>
-          <span>{{i+1}}阶单价：</span>
-          <div class="table-input-y">
-            <span>{{item.LadderPrice}}元/吨</span>
+        <div class="display-flex justify-content-flex-justify" v-if="details.LadderNumber>i">
+          <div class="display-flex align-items-center ladder-item">
+            <div class="circle-num">{{i+1}}</div>
+            <span>{{i+1}}阶单价：</span>
+            <div class="table-input-y">
+              <span>{{item.LadderPrice}}元/吨</span>
+            </div>
           </div>
-        </div>
-        <div class="display-flex align-items-center ladder-item">
-          <span>{{i+1}}阶起始量：</span>
-          <div class="table-input-y">
-            <span>{{item.LadderWaterNum}}吨</span>
+          <div class="display-flex align-items-center ladder-item">
+            <span>{{i+1}}阶起始量：</span>
+            <div class="table-input-y">
+              <span>{{item.LadderWaterNum}}吨</span>
+            </div>
           </div>
-        </div>
-        <div class="display-flex align-items-center ladder-item color-more-black">
-          <span>{{i+1}}阶合计单价：</span>
-          <div class="table-input-y">
-            <span>{{item.TotalPrice}}元/吨</span>
+          <div class="display-flex align-items-center ladder-item color-more-black">
+            <span>{{i+1}}阶合计单价：</span>
+            <div class="table-input-y">
+              <span>{{item.TotalPrice}}元/吨</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
     <div class="display-flex justify-content-flex-end align-items-center" v-if="!details.IsLadder">
       <div>
@@ -66,7 +66,7 @@
 </template>
 <script>
 import { SelectUpdateWaterPropertyBeforeInfo } from "@/api/system";
-import {ladderChangeArr} from "@/utils/index"
+import { ladderChangeArr } from "@/utils/index";
 export default {
   props: {
     id: {
@@ -76,7 +76,7 @@ export default {
       type: Boolean,
       default: false
     },
-    type:{
+    type: {
       type: Number,
       default: 0
     }
@@ -84,9 +84,9 @@ export default {
   watch: {
     constituteShow() {
       this.AdialogFormVisible = this.constituteShow;
-      if (!this.constituteShow) return false;//如果监听ID，编辑行数据后，ID依然不会变，所以在弹窗显示再请求数据
+      if (!this.constituteShow) return false; //如果监听ID，编辑行数据后，ID依然不会变，所以在弹窗显示再请求数据
       SelectUpdateWaterPropertyBeforeInfo({ id: this.id }).then(res => {
-       this.details=ladderChangeArr(res.data)//阶梯转换数组
+        this.details = ladderChangeArr(res.data); //阶梯转换数组
       });
     },
     AdialogFormVisible(val, oldVal) {
@@ -104,7 +104,7 @@ export default {
     };
   },
   methods: {
-    reset(){
+    reset() {
       this.$emit("reset", this.id);
     }
   }
@@ -121,8 +121,8 @@ export default {
 }
 .ladder-bottom-box {
   padding: 5px 20px;
-  .ladder-item{
-    height:30px;
+  .ladder-item {
+    height: 30px;
   }
 }
 .circle-num {
