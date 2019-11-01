@@ -44,11 +44,6 @@
             <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.SA_UseWaterType_Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="表册：" v-show="differ" prop="SA_RegisterBookInfo_Id">
-          <el-select v-model="ycData.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
-            <el-option label="编号" value="1"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="纳税人识别号：" label-width="110px" prop="TaxpayerNumber">
           <el-input v-model.trim="ycData.TaxpayerNumber " size="small"/>
         </el-form-item>
@@ -65,61 +60,6 @@
     <!--水表信息-->
     <div class="user_information">
       <h3 class="add_title"><i></i>水表信息</h3>
-      <!--<el-form :inline="true" ref="ycData1" :model="ycData" :rules="rules" label-width="100px">
-        &lt;!&ndash;远程水表 s&ndash;&gt;
-        <el-form-item label="水表编号：" prop="WaterMeterNo" v-show="!differ">
-          <el-input v-model="ycData.WaterMeterNo " size="small" placeholder="【按enter建查询水表信息】" @keyup.enter.native="GetYCWaterByWaterMeterNo"/>
-        </el-form-item>
-        <el-form-item label="集中器号：" v-show="!differ" prop="ConcentratorNo">
-          <el-input :disabled="true" v-model="waterInfo.ConcentratorNo" size="small"/>
-        </el-form-item>
-        <el-form-item label="采集器号：" v-show="!differ" prop="CollectorNo">
-          <el-input :disabled="true" v-model="waterInfo.CollectorNo" size="small"/>
-        </el-form-item>
-        <el-form-item label="报警金额：" prop="AlarmMoney" v-show="!differ">
-          <el-input :disabled="true" v-model="ycData.AlarmMoney " size="small"/>
-        </el-form-item>
-        <el-form-item label="透支金额：" prop="OverdraftMoney" v-show="!differ">
-          <el-input :disabled="true" v-model="ycData.OverdraftMoney " size="small"/>
-        </el-form-item>
-        &lt;!&ndash;远程水表 e&ndash;&gt;
-        &lt;!&ndash;物联网 s &ndash;&gt;
-        <el-form-item label="水表编号：" v-show="differ" prop="WaterMeterNo">
-          <el-input v-model.trim="ycData.WaterMeterNo" size="small" placeholder="【按enter建查询水表信息】" @keyup.enter.native="GetYCWaterByWaterMeterNo"/>
-        </el-form-item>
-        <el-form-item label="报警量：" prop="AlarmYield" v-show="differ" >
-          <el-input size="small" v-model="ycData.AlarmYield"/>
-        </el-form-item>
-        <el-form-item label="透支量：" prop="OverdraftYield" v-show="differ" >
-          <el-input  size="small" v-model="ycData.OverdraftYield"/>
-        </el-form-item>
-        &lt;!&ndash;远传网 不需存s&ndash;&gt;
-        <el-form-item label="当前读数：" v-show="!differ" prop="ReadNum">
-          <el-input :disabled="true" v-model="waterInfo.ReadNum" size="small"/>
-        </el-form-item>
-        &lt;!&ndash;物联网 不需存e &ndash;&gt;
-        <el-form-item label="当前读数：" v-show="differ" prop="TotalCumulateWater">
-          <el-input :disabled="true" v-model="waterInfo.TotalCumulateWater" size="small"/>
-        </el-form-item>
-        <el-form-item label="水表样式：" prop="MeterStyle">
-          <el-select v-model="ycData.MeterStyle" placeholder="请选择" size="small" :disabled="true">
-            <el-option v-for="(item,index) in waterMeterStyles" :key="index" :label="item.Name" :value="item.Id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="水表口径：" prop="MeterDiameter">
-          <el-select v-model="ycData.MeterDiameter" placeholder="请选择" size="small" :disabled="true">
-            <el-option v-for="(item,index) in MeterDiameters" :key="index" :label="item.Name" :value="item.Id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="安装位置：" class="cl_allArea" prop="InstallAddress">
-          <el-input :disabled="true" type="textarea" v-model="ycData.InstallAddress" max-length="500" @input="descInput('InstallAddress')" rows="1"></el-input>
-          <span>{{InstallAddress}}/500</span>
-        </el-form-item>
-        <el-form-item label="备注：" class="cl_allArea" prop="WaterRemark">
-          <el-input :disabled="true" type="textarea" v-model="ycData.WaterRemark" max-length="500" @input="descInput('WaterRemark')"></el-input>
-          <span>{{WaterRemark}}/500</span>
-        </el-form-item>
-      </el-form>-->
       <!--物联-->
       <WlwWaterInfo v-show="differ" ref="wlyChild"></WlwWaterInfo>
       <!--远程-->
@@ -152,6 +92,7 @@
   import Bus from '@/utils/bus'
   import { AddYCCustomer, AddWLWCustomer, GetWaterPropertyList, ReleaseCustomerNo} from "@/api/userSetting"//区域接口
   import { GetAreaListByWaterFactory } from "@/api/userArea"//区域接口
+  import { ComboBoxListByWaterFactory } from "@/api/registerBook"//根据水厂获取表册
 
   export default {
     name: "RemoteMeter",
@@ -159,7 +100,7 @@
     props:['ycData'],
     data() {
       return {
-        MeterDiameters:[],//水表口径
+        SA_RegisterBookInfo_Id:'',//物联网单独使用表册ID
         waterFactory:[],//水厂集合
         userType:[],//用户类型
         userWater:[],//用水性质
@@ -186,33 +127,23 @@
             trigger: 'blur'
           }]
         },
-        areaName:'',
+        areaName:'',//暂存区域名称
         InstallAddress: 0,//剩余字数
         WaterRemark: 0,//剩余字数
-        Address: 0,
-        UserRemark: 0,
+        Address: 0,//剩余字数
+        UserRemark: 0,//剩余字数
         upload: {//上传文件集合
           file: []
         },
         Enclosure:{},
-        waterInfo:{//根据水表编号查询水表数据
-          ConcentratorNo:'',//集中器号
-          CollectorNo:'',//采集器号
-          ReadNum:'',//远传当前读书
-          TotalCumulateWater:'',//物联当前读书
-        }
       }
     },
     methods: {
       /**************获取区域下拉最后选择数据Id*******************/
       getCurAreaId(data){
-        let _this = this
-        _this.areaName = ''//初始化区域地址
-        this.ifArea = false//关闭模拟下拉弹窗
-        data.forEach(item=>{
-          _this.areaName  += item[0].label + " "
-          item[1] ? _this.ycData.SA_UserArea_Id = item[0].Id:''
-        })
+        this.ifArea = false
+        this.areaName = data.Name
+        this.ycData.SA_UserArea_Id = data.Id
       },
       /**********************选择区域数据回填********************/
       getArea() {
@@ -242,23 +173,28 @@
             let childName = this.differ ? childName = _this.$refs.wlyChild : childName = _this.$refs.ycChilds
             childName.$refs['data'].validate((valid) => {
               if (valid) {
-                let functionName = _this.differ ? AddWLWCustomer : AddYCCustomer//true 物联网 false 远传
-                functionName(_this.ycData).then(res => {
+                let functionName, params;
+                if(_this.differ){//true 物联网
+                  functionName = AddWLWCustomer
+                  params = Object.assign(this.ycData,childName.changeWordName())//整合参数
+                }else {//false 远传
+                  functionName = AddYCCustomer
+                  params = Object.assign(this.ycData,childName.changeWordName())
+                }
+                functionName(params).then(res => {
                   if (res.code == 0) {
                     promptInfoFun(_this,2,res.message)
                     _this.$refs.getFiles.certificates = '身份证'
                     _this.$refs.getFiles.fileList = []
                     _this.$refs['ycData'].resetFields();
-
-                    childName.$refs['data'].resetFields();
-
+                    childName.$refs['data'].resetFields();//重置子组件表单数据
                     _this.areaName = ''
                     if(_this.ifGoOn){
                       _this.ifGoOn = false
-                      _this.$parent.$parent.$parent.$parent.getUserCode()
+                      _this.$parent.$parent.$parent.$parent.getUserCode()//调用父组件获取新的用户编码
                     }else{
                       _this.$parent.$parent.$parent.$parent.dialogVisible = false
-                      Bus.$emit('queryData')//给兄弟组件传值
+                      Bus.$emit('queryData')//操作成功后重新执行列表查询
                     }
                   } else {
                     promptInfoFun(_this,1,res.message)
@@ -320,7 +256,6 @@
     mounted() {
       this.waterFactory = this.$parent.$parent.$parent.$parent.waterFactory
       this.userType = getDictionaryOption('用户类型')
-     // this.MeterDiameters = getDictionaryOption('水表口径')
       this.GetWaterProperty()
     }
   }

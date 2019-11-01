@@ -45,7 +45,7 @@
       return {
         title:'',
         dialogVisible: false,
-        param:{
+        param:{//新增或编辑区域对象
           Id:'',
           pieName:'',
           AreaName: '',

@@ -2,7 +2,7 @@
   <li :key="treeData.Id" :data-id="treeData.Id">
     <span>{{treeData.label}} <i :class="treeData.children.length>0?'el-icon-caret-right':''"></i></span>
     <ul class="none" v-if="treeData.children.length>0">
-      <SubTree v-for="item in treeData.children" :treeData = item ></SubTree>
+      <SubTree v-for="(item,index) in treeData.children" :treeData = item :key="index"></SubTree>
     </ul>
   </li>
 </template>
@@ -13,6 +13,8 @@
     methods: {
       /**
        * 遍历树状图数据，获取选中ID 及其所有父级ID
+       * String keyword 传入选中ID
+       * Object data 树对象
        * */
       getParentId(keyword, data) {
         let pidArr = []

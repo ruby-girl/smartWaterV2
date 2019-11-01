@@ -39,7 +39,7 @@
       return {
         activeName:'1',
         dialogVisible: false,
-        formData:{//抄表及IC表数据
+        formData:{//添加抄表及IC表对象
           SA_WaterFactory_Id: "",
           CustomerNo: "",
           SA_UserArea_Id: "",
@@ -63,32 +63,23 @@
           Idarr: [],
           NameCode:''
         },
-        ycData: {//远程物联网 ，MeterStyle 物联网
+        ycData: {//添加远传及物联网，用户信息数据，水表信息由下层提供
           SA_WaterFactory_Id: "",
-          SA_UserArea_Id: "",
-          CustomerName: "",
           CustomerNo: "",
-          PeopleNo: 1,
-          SA_UseWaterType_Id: "",
-          IdentityNo: "",
-          Tel: "",
-          Address: "",
-          UserType: "",
-          TaxpayerNumber: "",
-          UserRemark: "",
-          WaterMeterNo: "",
-          InstallAddress: "",
-          AlarmMoney: 0,//远传
-          OverdraftMoney: 0,//远传
-          AlarmYield: 0,//物联
-          OverdraftYield: 0,//物联
-          WaterRemark: "",
-          MeterStyle: "",//物联
-          Idarr: [],
+          CustomerName: "",
           NameCode:'',
-          MeterDiameter:'50'
+          Tel: "",
+          PeopleNo: 1,
+          UserType: "",
+          IdentityNo: "",
+          SA_UserArea_Id: "",
+          SA_UseWaterType_Id: "",
+          TaxpayerNumber: "",
+          Address: "",
+          UserRemark: "",
+          Idarr: [],
         },
-        waterFactory:[]
+        waterFactory:[]//水厂集合
       }
     },
     methods: {
@@ -109,9 +100,8 @@
         ReleaseCustomerNo({'CustomerNo':this.formData.CustomerNo}).then(res => {})//清除未占用用户编码
         this.$refs.jxChild.$refs['formData'].resetFields();
         this.$refs.jxChild.$refs['formData1'].resetFields();
-        this.$refs.ycChild.$refs['ycData'].resetFields();
-        this.$refs.ycChild.$refs['ycData1'].resetFields();
-
+        this.$refs.ycChild.$refs.ycChilds.$refs['data'].resetFields();
+        this.$refs.wlwChild.$refs.wlyChild.$refs['data'].resetFields();
       },
       /***********************选项卡切换事件************************/
       handleClick(){//水表切换

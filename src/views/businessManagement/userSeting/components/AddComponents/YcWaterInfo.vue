@@ -51,19 +51,18 @@
     name: "YcWaterInfo",
     data() {
       return {
-        waterMeterStyles:[],
-        MeterDiameters:[],
+        waterMeterStyles:[],//水表样式
+        MeterDiameters:[],//水表口径
         data: {
-          WaterMeterNo:"",//水表编号
+          WaterMeterNo:"",//水表编号 （存）
           ConcentratorNo:"",//:集中器编号
           CollectorNo:"",//:采集器编号
-          AlarmMoney :"",//报警金额
-          OverdraftMoney  :"",//透支金额
+          AlarmMoney :"",//报警金额 （存）
+          OverdraftMoney  :"",//透支金额 （存）
           ReadNum:"",//当前读书
           WaterMeterStyle:"",//水表样式
-          MeterDiameter:"",//水表口径
-          InstallAddress:"",//地址
-          Remark:"",//备注
+          InstallAddress:"",//地址 （存）
+          Remark:"",//备注 （存 WaterRemark）
         },
         rules: {
           WaterMeterNo: [{required: true, message: '不能为空', trigger: 'change'}],
@@ -81,17 +80,28 @@
         }
         GetYCWaterMeterByWaterMeterNo({'WaterMeterNo':this.data.WaterMeterNo}).then(res => {
           if (res.code ==0 ) {
-            console.log(res)
-            console.log("远程水表")
             this.data = res.data
           } else {
             promptInfoFun(this,1,res.message)
           }
         })
+      },
+      /**********************转换保存字段名称**************/
+      changeWordName(){
+        let params = {
+          WaterMeterNo: this.data.WaterMeterNo,
+          AlarmMoney: this.data.AlarmMoney,
+          OverdraftMoney: this.data.OverdraftMoney,
+          InstallAddress: this.data.InstallAddress,
+          WaterRemark: this.data.Remark,
+
+        }
+        return params
       }
      },
     mounted() {
       this.waterMeterStyles = getDictionaryOption('水表样式')
+      this.MeterDiameters = getDictionaryOption('水表口径')
     }
   }
 </script>

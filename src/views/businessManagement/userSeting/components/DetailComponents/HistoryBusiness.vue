@@ -1,52 +1,52 @@
 <template>
   <ul class="history_box">
-    <p class="search_btn">按日期： <span :class="!asce? 'on':''" @click="sortFun(1)">降序</span> <span :class="asce? 'on':''" @click="sortFun(2)">升序</span></p>
-    <li class="open_account">
-      <span class="title">开户</span>
-      <i class="icon iconfont">&#xe628;</i>
+    <p class="search_btn">按日期： <span :class="asce=='asc'? 'on':''" @click="sortFun(1)">降序</span> <span :class="asce=='desc'? 'on':''" @click="sortFun(2)">升序</span></p>
+     <!--类型判断  开户：2101，充值：2102，换表：2103，水表升级：2104，编辑：2015-->
+    <li v-for="(item,index) in data" :key="index">
+      <span class="title open_account" v-if="item.BussinessType===2101">{{ item.BussinessTypeName }}</span>
+      <i class="icon iconfont iconjianqu1 open_account" v-if="item.BussinessType===2101"></i>
+      <span class="title recharge" v-else-if="item.BussinessType===2102">{{ item.BussinessTypeName }}</span>
+      <i class="icon iconfont iconzu3 recharge" v-else-if="item.BussinessType===2102"></i>
+      <span class="title change_table" v-else-if="item.BussinessType===2103">{{ item.BussinessTypeName }}</span>
+      <i class="icon iconfont iconhuanbiao change_table" v-else-if="item.BussinessType===2103"></i>
+      <span class="title upgrade" v-else>{{ item.BussinessTypeName }}</span>
+      <i class="icon iconfont iconjianqu2 upgrade" v-else></i>
       <div class="content">
-        <span>2017-08-12 09:05:14</span>
-        <label>由XX开户。</label>
-      </div>
-    </li>
-    <li class="recharge">
-      <span class="title">充值</span>
-      <i class="icon iconfont">&#xe629;</i>
-      <div class="content">
-        <span>2017-08-12 09:05:14</span>
-        <label>由XX开户。</label>
-      </div>
-    </li>
-    <li class="change_table">
-      <span class="title">换表</span>
-      <i class="icon iconfont">&#xe639;</i>
-      <div class="content">
-        <span>2017-08-12 09:05:14</span>
-        <label>由XX开户。</label>
-      </div>
-    </li>
-    <li class="upgrade">
-      <span class="title">水表升级</span>
-      <i class="icon iconfont">&#xe62e;</i>
-      <div class="content">
-        <span>2017-08-12 09:05:14</span>
-        <label>由XX开户。</label>
+        <span>{{item.EditTime}}</span>
+        <label>{{item.BussinessContent}}</label>
       </div>
     </li>
   </ul>
 </template>
 
 <script>
+  import { promptInfoFun } from "@/utils/index"
+  import { GetBusinessLogByCustomerId } from "@/api/userSetting"//区域接口
+
   export default {
     name: "HistoryBusiness",
     data() {
       return {
-        asce: true
+        asce: 'asc',
+        Id:'',
+        data:''
       }
     },
     methods:{
       sortFun(type){//排序，1降序，2升序
         this.asce = !this.asce
+        type != 1? this.asce = 'asc' : this.asce = 'desc'
+        this.getHistoryInfo(this.Id)
+      },
+      getHistoryInfo(Id){//详情历史业务数据
+        this.Id = Id
+        GetBusinessLogByCustomerId({'CustomerId':this.Id,'sort': this.asce}).then(res => {//获取用户信息
+          if(res.code==0){
+            this.data = res.data
+          }else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
       }
     }
   }
@@ -59,6 +59,8 @@
     padding: 1px 130px 70px 110px;
     position: relative;
     width: 100%;
+    height: 60vh;
+    overflow: auto;
 
     li {
       list-style-type: none;
@@ -85,37 +87,25 @@
       height: calc(100% - 50px);
     }
 
-    .open_account {
+    .open_account{
       color: #02B19F;
-
-      .icon {
-        background: #02B19F;
-      }
     }
+    .open_account.icon{ background: #02B19F;}
 
     .recharge {
       color: #FA9806;
-
-      .icon {
-        background: #FA9806;
-      }
     }
+    .recharge.icon{  background: #FA9806;}
 
     .change_table {
       color: #01B09E;
-
-      .icon {
-        background: #01B09E;
-      }
     }
+    .change_table.icon{  background: #01B09E;}
 
     .upgrade {
       color: #46BE56;
-
-      .icon {
-        background: #46BE56;
-      }
     }
+    .upgrade.icon{background: #46BE56;}
 
     .icon {
       position: absolute;

@@ -46,7 +46,7 @@
         </el-form-item>
         <el-form-item label="表册：" prop="SA_RegisterBookInfo_Id">
           <el-select v-model="formData.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
-            <el-option label="编号" value="1"></el-option>
+            <el-option v-for="(item,index) in RegisterBookInfo" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="纳税人识别号：" label-width="110px" prop="TaxpayerNumber">
@@ -124,6 +124,7 @@
   import { AddJXCustomer, AddICCustomer, GetWaterPropertyList, ReleaseCustomerNo } from "@/api/userSetting"//区域接口
   import Bus from '@/utils/bus'
   import { GetAreaListByWaterFactory } from "@/api/userArea"//区域接口
+  import { ComboBoxListByWaterFactory } from "@/api/registerBook"//根据水厂获取表册
 
   export default {
     name: "MechanicalMeter",
@@ -131,6 +132,7 @@
     props:['formData','dialogVisible'],
     data() {
       return {
+        RegisterBookInfo:[],//表册集合
         waterMeterStyles:[],//水表样式
         MeterDiameters:[],//水表口径
         waterFactory:[],//水厂集合
@@ -162,11 +164,11 @@
             trigger: 'blur'
           }]
         },
-        areaName:'',//区域名称
+        areaName:'',//暂存区域名称
         InstallAddress: 0,//剩余字数
         WaterRemark: 0,//剩余字数
-        Address: 0,
-        Remark: 0,
+        Address: 0,//剩余字数
+        Remark: 0,//剩余字数
         upload: {//上传文件集合
           file: []
         },
@@ -176,13 +178,9 @@
     methods: {
       /**************获取区域下拉最后选择数据Id*******************/
       getCurAreaId(data){
-        let _this = this
-            _this.areaName = ''//初始化区域地址
-        this.ifArea = false//关闭模拟下拉弹窗
-        data.forEach(item=>{
-          _this.areaName  += item[0].label + " "
-          item[1] ? _this.formData.SA_UserArea_Id = item[0].Id:''
-        })
+        this.ifArea = false
+        this.areaName = data.Name
+        this.formData.SA_UserArea_Id = data.Id
       },
       /**********************选择区域数据回填********************/
       getArea() {
@@ -271,6 +269,17 @@
       /****************获取水厂获取数据**************************/
       getDataByWater(Id){
         this.getTreeData(Id)
+        this.getRegister(Id)
+      },
+      /************************获取表册*************************/
+      getRegister(Id){
+        ComboBoxListByWaterFactory({'SA_WaterFactory_Id':Id}).then(res => {
+          if (res.code ==0 ) {
+            this.RegisterBookInfo = res.data
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
       },
       /****************获取水厂获取区域数据**********************/
       getTreeData(Id) {
@@ -287,7 +296,7 @@
       this.waterFactory = this.$parent.$parent.$parent.$parent.waterFactory
       this.userType = getDictionaryOption('用户类型')
       this.waterMeterStyles = getDictionaryOption('水表样式')
-     // this.MeterDiameters = getDictionaryOption('水表口径')
+      this.MeterDiameters = getDictionaryOption('水表口径')
       this.GetWaterProperty()
 
     }

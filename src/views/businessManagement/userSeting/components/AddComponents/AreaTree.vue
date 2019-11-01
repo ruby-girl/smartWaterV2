@@ -2,7 +2,7 @@
   <div class="cl-areatreeBox">
     <p><i></i><i></i><i></i><i></i></p>
     <ul id="userTree">
-      <SubTree v-for="item in data" :treeData=item></SubTree>
+      <SubTree ref="subTreeChild" v-for="(item,index) in data" :treeData=item :key="index"></SubTree>
     </ul>
   </div>
 
@@ -15,12 +15,31 @@
     components: {SubTree},
     data() {
       return {
-        data: [],
+        data: [],//树对象
+        Id:'',//当前选中节点ID 用户数据回填
+      }
+    },
+    watch:{
+      data(){
+        this.$nextTick(()=>{
+          if(this.$refs.subTreeChild)
+          this.$refs.subTreeChild[0].getParentId(this.Id,this.data[0])
+        })
       }
     },
     methods:{
+      /**
+       * 获取选中节点数据
+       * String Id: 选中节点ID
+       * String Name: 选中节点及其所有父节点Name
+       * */
       getParent(resultArry){
-         this.$emit('watchChild', resultArry);//传递选中ID及起所有父级ID给父组建
+        let Obj = { Name:'', Id:'' }
+        resultArry.forEach(item=>{
+          Obj.Name  += item[0].label + " "
+          item[1] ? Obj.Id = item[0].Id:''
+        })
+        this.$emit('watchChild', Obj)
       }
     }
   }

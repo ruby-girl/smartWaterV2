@@ -56,7 +56,7 @@ const actions = {
   setDictionary({ commit }) {//set字典项
       getDictionaryItem().then(response => {
         const { data } = response
-        commit('SET_DICTIONARY', data)      
+        commit('SET_DICTIONARY', data)
       })
   },
 }

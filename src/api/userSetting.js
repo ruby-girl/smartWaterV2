@@ -78,6 +78,28 @@ export function GetWLWWaterMeterByWaterMeterNo(data) {
 }
 
 /**
+ *根据用户ID获取机械表水表信息
+ * */
+export function GetJXInfoByCustomerId(data) {
+  return request({
+    url: '/Customer/GetJXInfoByCustomerId',
+    method: 'get',
+    params: data
+  })
+}
+
+/**
+ *根据用户ID获取IC水表信息
+ * */
+export function GetICInfoByCustomerId(data) {
+  return request({
+    url: '/Customer/GetICInfoByCustomerId',
+    method: 'get',
+    params: data
+  })
+}
+
+/**
  *物联网开户，开户申请
  * */
 export function AddWLWCustomer(data) {

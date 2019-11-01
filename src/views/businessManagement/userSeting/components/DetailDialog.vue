@@ -13,28 +13,28 @@
           <div class="user_info">
             <ul>
               <li class="user_line clearfix">
-                <p>水厂 <span>痒安水厂</span></p>
-                <p>用户编号 <span>2222</span></p>
-                <p>姓名 <span>单独</span></p>
-                <p>简码 <span>we</span></p>
+                <p>水厂 <span> {{formData.SA_WaterFactoryName}}</span></p>
+                <p>用户编号 <span>{{formData.CustomerNo}}</span></p>
+                <p>姓名 <span>{{formData.CustomerName}}</span></p>
+                <p>简码 <span>{{formData.NameCode}}</span></p>
               </li>
               <li class="user_line clearfix">
-                <p>电话 <span>18385454552</span></p>
-                <p>人口 <span>2015-08-01</span></p>
-                <p>用户类型 <span>普通用户</span></p>
-                <p>用水性质 <span>居民用水</span></p>
+                <p>电话 <span>{{formData.Tel}}</span></p>
+                <p>人口 <span>{{formData.PeopleNo}}</span></p>
+                <p>用户类型 <span>{{formData.UserType}}</span></p>
+                <p>用水性质 <span>{{formData.SA_UseWaterType}}</span></p>
               </li>
               <li class="user_line clearfix">
-                <p class="half">证件号 <span>1838545455218385454552</span></p>
-                <p>表册 <span>表册1</span></p>
-                <p class="money">账号余额 <span>100</span></p>
+                <p class="half">证件号 <span>{{formData.IdentityNo}}</span></p>
+                <p>表册 <span>{{formData.RegisterBookInfoName}}</span></p>
+                <p class="money">账号余额 <span>{{formData.Balance}}</span></p>
               </li>
               <li class="user_line clearfix">
-                <p class="half">区域 <span>四川省成都市高新区</span></p>
-                <p class="half">纳税人识别号 <span>1838545455218385454552</span></p>
+                <p class="half">区域 <span>{{formData.SA_UserAreaName}}</span></p>
+                <p class="half">纳税人识别号 <span>{{formData.TaxpayerNumber}}</span></p>
               </li>
               <li class="user_line clearfix">
-                <p class="all">地址 <span>四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新</span></p>
+                <p class="all">地址 <span>{{formData.Address}}</span></p>
               </li>
               <li v-show="file.length>0" class="user_file">
                 <p>附件</p>
@@ -49,14 +49,14 @@
                 </ul>
               </li>
               <li class="user_remak clearfix">
-                <p class="all">备注 <span>四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新区四川省成都市高新</span></p>
+                <p class="all">备注 <span>{{formData.Remark}}</span></p>
               </li>
             </ul>
           </div>
       </el-tab-pane>
       <!--历史业务-->
       <el-tab-pane label="历史业务" name="2">
-        <HistoryBusiness></HistoryBusiness>
+        <HistoryBusiness ref="historyBusiness"></HistoryBusiness>
       </el-tab-pane>
       <!--水表信息-->
       <el-tab-pane label="水表信息" name="3">
@@ -85,12 +85,13 @@
 </template>
 
 <script>
-  import { GetBlObjById } from "@/api/organize"
+  import { promptInfoFun } from "@/utils/index"
   import HistoryBusiness from "./DetailComponents/HistoryBusiness"
   import WaterMeter from "./DetailComponents/WaterMeter"
   import ICWater from "./DetailComponents/ICWater"
   import WlwWaterMeter from "./DetailComponents/WlwWaterMeter"
   import YcWaterMeter from "./DetailComponents/YcWaterMeter"
+  import { GetYCWaterMeterByWaterMeterNo,GetWLWWaterMeterByWaterMeterNo, GetJXInfoByCustomerId, GetICInfoByCustomerId, GetBlObjById } from "@/api/userSetting"//区域接口
 
   export default {
     name: 'DetailDialog',
@@ -102,12 +103,13 @@
         activeName:'1',
         dialogVisible:false,//详情弹窗隐藏标识
         maxHeight:false,//上传文件区域最大高度
-        file: [{type:2}],//上传文件集合
+        file: [],//上传文件集合
         curSrc: '',//当前图片路径
         ifImg: false,//是否显示图片标识
         imgVisible: false,//弹窗标识
         iframeUrl: '',//预览图片路径
         clientHeight: '',//预览图片高度
+        formData:''
       }
     },
     methods: {
@@ -135,17 +137,34 @@
             break
         }
       },
-      getInfo(id) {//根据ID 获取当前数据详情信息
-        GetBlObjById({id:id}).then(res => {
+      /**
+       * 根据ID 获取当前数据详情信息
+       * id 用户id
+       * type 水表类型
+       * */
+      getInfo(id) {
+        /*let funName;
+        switch (type) {
+          case 1101://机械
+            funName = GetJXInfoByCustomerId;
+            break
+          case 1102://IC
+            funName = GetICInfoByCustomerId;
+            break
+          case 1103://远传
+            funName = GetYCWaterMeterByWaterMeterNo;
+            break
+          case 1104://物联网
+            funName = GetWLWWaterMeterByWaterMeterNo;
+            break
+        }*/
+        this.$nextTick(()=>{
+          this.$refs.historyBusiness.getHistoryInfo(id)
+        })
+        GetBlObjById({'CusId':id}).then(res => {//获取用户信息
           if(res.code==0){
             this.file = []
-            if(res.data.Birthday!=null){
-              res.data.Birthday = res.data.Birthday.split(' ')[0]
-            }
-            if(res.data.EnrollingTime!=null){
-              res.data.EnrollingTime = res.data.EnrollingTime.split(' ')[0]
-            }
-            this.form = res.data
+            this.formData = res.data
             let fileData = res.data.saList
             let obj = {}
             for(let i=0;i<fileData.length;i++){//区分不同文件类型设置不同展示样式
@@ -172,11 +191,7 @@
               this.file.length>5 ?  this.maxHeight = true : this.maxHeight = false
             }
           }else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this,1,res.message)
           }
         })
       },
@@ -251,5 +266,6 @@
       }
     }
     .user_file{padding: 0 12px;}
+
   }
 </style>

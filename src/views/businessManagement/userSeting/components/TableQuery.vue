@@ -128,11 +128,12 @@
       /******************编辑**********************/
       handleEdit(row){
         this.$refs.editDialog.dialogVisible = true;
-        this.$refs.editDialog.getInfo(row.id)
+        this.$refs.editDialog.getInfo(row.Id)
       },
       /******************详情*********************/
-      handleDetail(row){//详情
+      handleDetail(row){
         this.$refs.detailDialog.dialogVisible = true;
+        this.$refs.detailDialog.getInfo(row.Id)//用户ID，表类型
 
       },
       /******************删除*********************/
