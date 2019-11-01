@@ -164,7 +164,7 @@ export default {
       selectPintShow: false, //选择打印机
       paymentCodeShow: false, //扫码支付弹窗
       isIC: true,
-      icType: "NoCreditCard" //默认已刷卡
+      icType: "CreditCardAlready" //默认已刷卡
     };
   },
   mounted: function() {
@@ -307,6 +307,7 @@ export default {
 .container-bottom-box {
   border-top: 15px solid #eff1f4;
   height: calc(100vh - 205px);
+  margin: 0 !important;
 }
 .cash-padding-bg {
   padding: 0 20px 20px 20px !important;

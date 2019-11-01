@@ -24,9 +24,9 @@
         <span class="main-color-pink">20</span>元
       </div>
     </div>
-    <div class="display-flex align-items-center main-more-black-color pint-type">
-      <el-radio v-model="radio" :label="1">打印小票</el-radio>
-      <el-radio v-model="radio" :label="2">打印发票</el-radio>
+    <div class="display-flex align-items-center justify-content-flex-justify main-more-black-color pint-type">
+      <el-radio v-model="radio" :label="1">打印小票 <i class="iconfont icondayinji"></i></el-radio>
+      <el-radio v-model="radio" :label="2">打印发票 <i class="iconfont icondayinji"></i></el-radio>
     </div>
      <div class="display-flex align-items-center justify-content-flex-justify">
       <div :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==1?true:false}" @click="paymentMethod(1)">

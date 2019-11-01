@@ -181,6 +181,16 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'paymentQuery',
+        component: () => import('@/views/businessManagement/paymentQuery/index'),
+        name: 'paymentQuery',
+        hidden: true,
+        meta: {
+          title: '收费查询',
+          roles: ['1']
+        }
+      },
+      {
         path: 'meterQuery',
         component: () => import('@/views/businessManagement/meterQuery/index'),
         name: 'meterQuery',

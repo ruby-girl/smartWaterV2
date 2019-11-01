@@ -36,7 +36,11 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <div class="payment-records">查询缴费记录>></div>
+      <div class="payment-records" @click="toPaymentQuery">
+        <div class="payment-num-more" v-show="paymentNum>99">{{paymentNum}}</div>
+        <div class="payment-num" v-show="paymentNum<100">{{paymentNum}}</div>
+        <span>查询缴费记录>></span>
+      </div>
     </div>
 
     <el-row class="head-bottom-box">
@@ -62,7 +66,8 @@ export default {
   data() {
     return {
       timevalue: [],
-      editUserList: []
+      editUserList: [],
+      paymentNum:88
     };
   },
   created() {
@@ -82,8 +87,15 @@ export default {
     },
     handleFilter() {
       this.$emit("handleFilter", this.selectHead);
-    }
-  }
+    },
+    toPaymentQuery(){
+      this.$router.push({  //核心语句
+        path:'/businessManagement/paymentQuery',   //跳转的路径
+        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+          id:'qwe',  
+        }    
+    })
+  }}
 };
 </script>
 <style lang="scss" scoped>
@@ -91,6 +103,34 @@ export default {
   color: #00b2a1;
   font-size: 13px;
   padding-bottom: 10px;
+  cursor: pointer;
+  position: relative;
+  .payment-num{
+    position: absolute;
+    background: #FF5656;
+    border-radius: 50%;
+    width: 18px;
+    height:18px;
+    line-height: 12px;
+    font-size: 12px;
+    top:-20px;
+    right:15px;
+    color:#fff;
+    text-align: center;
+  }
+  .payment-num{
+    position: absolute;
+    background: #FF5656;
+    border-radius: 50%;
+    width: 18px;
+    height:18px;
+    line-height: 18px;
+    font-size: 12px;
+    top:-20px;
+    right:15px;
+    color:#fff;
+    text-align: center;
+  }
 }
 .head-bottom-box {
   background: #f5f5f5;
