@@ -93,8 +93,8 @@
       <el-button type="primary" size="mini" @click="handleFilter">
         <i class="iconfont iconsousuo"></i>搜索
       </el-button>
-      <i v-show="ifMore" class="icon iconfont getUpDown" @click="toggleShow(false)">收起 &#xe692;</i>
-      <i v-show="!ifMore" class="icon iconfont getUpDown" @click="toggleShow(true)">展开 &#xe68f;</i>
+      <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
+      <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
     </el-form-item>
   </el-form>
 </template>
@@ -133,10 +133,6 @@ export default {
     },
     handleFilter() {
       this.$emit("handleFilter", this.selectHead);
-    },
-    toggleShow(type){
-      this.ifMore=type
-      this.$emit("toggleShow", type);
     }
   }
 };

@@ -49,22 +49,20 @@ export function UpdateWaterPropertyInfo(id,data){
   })
 }
 //历史水价
-export function GetWaterPropertyById(id,data){
+export function GetWaterPropertyById(data){
   return request({
     url: '/WaterProperty/GetWaterPropertyById',
     method: 'post',
-    data:data,
-    params:id,
+    data:data
   })
 }
 
 //导出历史水价
-export function GetWaterPropertyHisList_OutExcel(id,data){
+export function GetWaterPropertyHisList_OutExcel(data){
   return request({
     url: '/WaterProperty/GetWaterPropertyHisList_OutExcel',
     method: 'post',  
     data:data,
-    params:id,
   })
 }
 

@@ -14,7 +14,7 @@
         @sort-change="sortChanges"    
         @selection-change="handleSelectionChange"
       >
-        <el-table-column label="as" type="selection" width="55" :selectable="checkboxT">
+        <el-table-column label="as"  fixed="left" type="selection" width="55" :selectable="checkboxT">
           
         </el-table-column>
 
@@ -29,7 +29,7 @@
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column label="操作" min-width="220" align="center" class-name="small-padding">
+        <el-table-column label="操作" fixed="right" min-width="220" align="center" class-name="small-padding">
           <template slot-scope="{row}">
             <div class="display-flex justify-content-flex-center">
               <div class="main-color-warn" @click="details(row)">

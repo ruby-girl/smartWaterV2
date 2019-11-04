@@ -1,9 +1,9 @@
 <template>
-  <!-- 收费查询 -->
+  <!-- 账单详情-->
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :select-head="listQuery" @handleFilter="handleFilter" @toggleShow="toggleShow"/>
+        <select-head :select-head="listQuery" @handleFilter="handleFilter" />
       </div>
       <div class="table-top-btn-padding display-flex justify-content-flex-justify">
        <div></div>
@@ -126,7 +126,6 @@ export default {
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 290;
       window.onresize = () => {
-        console.log( that.tableHeight)
         that.tableHeight = document.body.clientHeight - formHeight - 290;
       };
       this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
@@ -185,15 +184,7 @@ export default {
       exportExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
-    },
-    // 点击展开收起搜索条件时，处理表格高度
-    // toggleShow(type){
-    //   console.log(type)
-    //    var formHeight = this.$refs.formHeight.offsetHeight;
-    //   //  console.log(formHeight)
-    //   const that = this;
-    //   that.tableHeight = document.body.clientHeight - formHeight - 290;
-    // }
+    }
   }
 };
 </script>

@@ -16,7 +16,7 @@
       <div>&#12288;&#12288;找零：80元</div>
     </div>
     <div class="display-flex justify-content-flex-end">
-      <div :class="{'save-account':true,'save-account-active':isAccount==true}" @click="isAccount=!isAccount">{{isAccount==true?'已存入账户':'存入账户'}}</div>
+      <div :class="{'save-account':true,'save-account-active':isAccount==true}" @click="isAccount=!isAccount">{{isAccount==true?'转出账户':'存入账户'}}</div>
     </div>
     <div class="right-detail-box account-height">
       <div>

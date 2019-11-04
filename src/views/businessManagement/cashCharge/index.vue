@@ -163,7 +163,7 @@ export default {
       overFeeWaiverShow: false,
       selectPintShow: false, //选择打印机
       paymentCodeShow: false, //扫码支付弹窗
-      isIC: true,
+      isIC: false,
       icType: "CreditCardAlready" //默认已刷卡
     };
   },

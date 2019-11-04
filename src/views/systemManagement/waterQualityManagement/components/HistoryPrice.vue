@@ -7,7 +7,7 @@
     width="1020px"
     center
     :close-on-click-modal="false"
-    @open="getList"
+    @opened="opened"
   >
     <div class="table-top-btn-padding display-flex justify-content-flex-justify">
       <div></div>
@@ -178,14 +178,15 @@ export default {
         limit: 10,
         sort: "", //升序
         filed: "", //排序字段
-        tableId: "0000013"
+        tableId: "0000013",
+        UseWaterTypeId:''
       },
       details: {}
     };
   },
   methods: {
     excel() {
-      GetWaterPropertyHisList_OutExcel({ id: this.id }, this.listQuery).then(
+      GetWaterPropertyHisList_OutExcel(this.listQuery).then(
         res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         }
@@ -198,13 +199,17 @@ export default {
         this.details = ladderChangeArr(res.data); //阶梯转换数组
       });
     },
-    getList() {
-      GetWaterPropertyById({ id: this.id }, this.listQuery).then(res => {
+    getList() {   
+      GetWaterPropertyById(this.listQuery).then(res => {
         this.total = res.count;
         this.tableData = res.data;
+      });
+    },
+    opened(){ 
         this.$refs.historyPrice.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
         this.checksData = this.$refs.historyPrice.checkData; // 获取自定义字段中选中了字段
-      });
+        this.listQuery.UseWaterTypeId=this.id
+        this.getList()
     },
     sortChanges({ prop, order }) {
       //筛选
