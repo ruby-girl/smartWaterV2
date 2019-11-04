@@ -178,7 +178,6 @@ export default {
       } else {
         that.isShowAdPlan = false;
       }
-      console.log(that.isShowAdPlan);
     });
     planConpanySelect().then(res => {
       //获取水厂李彪
