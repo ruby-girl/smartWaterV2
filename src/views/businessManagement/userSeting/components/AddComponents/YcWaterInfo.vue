@@ -101,7 +101,7 @@
      },
     mounted() {
       this.waterMeterStyles = getDictionaryOption('水表样式')
-      this.MeterDiameters = getDictionaryOption('水表口径')
+      this.MeterDiameters = getDictionaryOption('口径类型')
     }
   }
 </script>

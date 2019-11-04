@@ -59,7 +59,7 @@
     padding: 1px 130px 70px 110px;
     position: relative;
     width: 100%;
-    height: 60vh;
+    height: 580px;
     overflow: auto;
 
     li {

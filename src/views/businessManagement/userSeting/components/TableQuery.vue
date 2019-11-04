@@ -133,7 +133,7 @@
       /******************详情*********************/
       handleDetail(row){
         this.$refs.detailDialog.dialogVisible = true;
-        this.$refs.detailDialog.getInfo(row.Id)//用户ID，表类型
+        this.$refs.detailDialog.getInfo(row.Id,row.WaterMeterTypeId)//用户ID，表类型
 
       },
       /******************删除*********************/

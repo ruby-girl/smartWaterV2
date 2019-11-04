@@ -231,6 +231,7 @@
                 promptInfoFun(this,2,res.message)
                 Bus.$emit('queryData')//触发父级列表查询
                 _this.$refs[formName].resetFields()
+                _this.dialogVisible = false
               } else {
                 promptInfoFun(this,1,res.message)
               }

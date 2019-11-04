@@ -3,12 +3,7 @@
     <p class="number">No.1010701140027</p>
     <div class="water_num">
       <p>
-        <span>1</span>
-        <span>2</span>
-        <span>3</span>
-        <span>4</span>
-        <span>5</span>
-        <span>6</span>
+        <span v-for="(item,index) in ReadNum" :key="index">{{item}}</span>
       </p>
       <label>m³</label>
     </div>
@@ -18,7 +13,8 @@
 
 <script>
   export default {
-    name: "JxWater"
+    name: "JxWater",
+    props:['ReadNum']
   }
 </script>
 
@@ -57,6 +53,10 @@
         display: inline-block;
         border: solid 1px #CCCCCC;
         padding: 0 3px;
+        border-right: 0;
+      }
+      span:last-child{
+        border-right: solid 1px #CCCCCC;
       }
     }
     .number {

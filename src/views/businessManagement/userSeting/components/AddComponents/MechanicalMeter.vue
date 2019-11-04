@@ -296,7 +296,7 @@
       this.waterFactory = this.$parent.$parent.$parent.$parent.waterFactory
       this.userType = getDictionaryOption('用户类型')
       this.waterMeterStyles = getDictionaryOption('水表样式')
-      this.MeterDiameters = getDictionaryOption('水表口径')
+      this.MeterDiameters = getDictionaryOption('口径类型')
       this.GetWaterProperty()
 
     }

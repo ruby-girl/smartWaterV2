@@ -89,9 +89,7 @@
           MeterReadState:'',//抄表状态
           tableId: '0000014'
         },
-        tableData: [
-          {},{},{}
-        ],//表格数据
+        tableData: [],//表格数据
         checkAllData: [],
         checksData: [],
         customHeight: '',//自定义高度

@@ -88,7 +88,7 @@ export default {
   components: { customTable, Pagination, SelectHead, EditDialog },
   data() {
     return {
-      tableData: [{}], //表格数据
+      tableData: [], //表格数据
       checkAllData: [],
       checksData: [], //自定义选中字段
       customHeight: "", //自定义高度

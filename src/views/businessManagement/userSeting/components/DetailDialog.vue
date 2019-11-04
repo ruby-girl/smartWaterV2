@@ -61,13 +61,13 @@
       <!--水表信息-->
       <el-tab-pane label="水表信息" name="3">
         <!--机械表-->
-        <WaterMeter v-show="waterType == 1"></WaterMeter>
+        <WaterMeter v-show="waterType == 1101" ref="myJxWaterChild"></WaterMeter>
         <!--IC水表-->
-        <ICWater v-show="waterType == 2"></ICWater>
+        <ICWater v-show="waterType == 1102" ref="myIcWaterChild"></ICWater>
         <!--物联网-->
-        <WlwWaterMeter v-show="waterType == 3"></WlwWaterMeter>
+        <WlwWaterMeter v-show="waterType == 1104" ref="myWlWaterChild"></WlwWaterMeter>
         <!--远传-->
-        <YcWaterMeter v-show="waterType == 4"></YcWaterMeter>
+        <YcWaterMeter v-show="waterType == 1103" ref="myYcWaterChild"></YcWaterMeter>
       </el-tab-pane>
     </el-tabs>
     <div v-show="ifImg" class="cl-image-viewer">
@@ -91,16 +91,16 @@
   import ICWater from "./DetailComponents/ICWater"
   import WlwWaterMeter from "./DetailComponents/WlwWaterMeter"
   import YcWaterMeter from "./DetailComponents/YcWaterMeter"
-  import { GetYCWaterMeterByWaterMeterNo,GetWLWWaterMeterByWaterMeterNo, GetJXInfoByCustomerId, GetICInfoByCustomerId, GetBlObjById } from "@/api/userSetting"//区域接口
+  import { GetBlObjById } from "@/api/userSetting"//区域接口
 
   export default {
     name: 'DetailDialog',
     components:{ HistoryBusiness, WaterMeter, ICWater, WlwWaterMeter, YcWaterMeter },
     data() {
       return {
-        waterType:1,//1 机械，2 IC，3 物联网，4 远传
+        waterType:1101,//1 机械，2 IC，3 物联网，4 远传
         dialogWidth:'65%',
-        activeName:'1',
+        activeName:'1',//当前选项卡位置
         dialogVisible:false,//详情弹窗隐藏标识
         maxHeight:false,//上传文件区域最大高度
         file: [],//上传文件集合
@@ -115,6 +115,7 @@
     methods: {
       handleClose(){//弹窗关闭事件
         this.dialogVisible = false
+        this.activeName = '1'
       },
       handlePreview(file) { // 点击文件列表中已上传的文件时的事件
         const type = file.type
@@ -142,25 +143,9 @@
        * id 用户id
        * type 水表类型
        * */
-      getInfo(id) {
-        /*let funName;
-        switch (type) {
-          case 1101://机械
-            funName = GetJXInfoByCustomerId;
-            break
-          case 1102://IC
-            funName = GetICInfoByCustomerId;
-            break
-          case 1103://远传
-            funName = GetYCWaterMeterByWaterMeterNo;
-            break
-          case 1104://物联网
-            funName = GetWLWWaterMeterByWaterMeterNo;
-            break
-        }*/
-        this.$nextTick(()=>{
-          this.$refs.historyBusiness.getHistoryInfo(id)
-        })
+      getInfo(id,type) {
+        this.waterType = type
+        /*用户信息*/
         GetBlObjById({'CusId':id}).then(res => {//获取用户信息
           if(res.code==0){
             this.file = []
@@ -194,10 +179,29 @@
             promptInfoFun(this,1,res.message)
           }
         })
+        /*历史业务及水表信息*/
+        this.$nextTick(()=>{
+          this.$refs.historyBusiness.getHistoryInfo(id)
+          switch (type) {
+            case 1101://机械
+              this.$refs.myJxWaterChild.getDetialInfo(id)
+              break
+            case 1102://IC
+              this.$refs.myIcWaterChild.getDetialInfo(id)
+              break
+            case 1103://远传
+              this.$refs.myYcWaterChild.getDetialInfo(id)
+              break
+            case 1104://物联网
+              this.$refs.myWlWaterChild.getDetialInfo(id)
+              break
+          }
+        })
       },
       resetForm(formName) {//重置清空避免点击下次信息页面显示错乱
         this.$refs[formName].resetFields()
         this.file = []
+        this.activeName = 1
       },
       handleClick(){}
     },
@@ -223,7 +227,8 @@
 <style lang="scss">
   .cl_DetailDialog{
     .el-dialog__body{background: #f5f5f5;}
-    .user_info{padding: 36px 100px;background: #fff;}
+    .user_info{padding: 36px 100px;background: #fff;height: 580px;overflow: auto}
+    .user_water_info{height: 474px;}
     .el-tabs__header { margin: 0;
       .el-tabs__item{font-size: 13px;color: #5B5B5B}
       .el-tabs__item.is-active{color: #5B5B5B;font-size: 14px;font-weight: bold;}
@@ -266,6 +271,39 @@
       }
     }
     .user_file{padding: 0 12px;}
-
+    .cl-image-viewer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      height: 100%;
+      text-align: center;
+      .el-image-viewer__canvas{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      img{
+        max-height: 100%; max-width: 100%;
+        position:absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    .cl-image-viewer__mask{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: .5;
+      background: #000;
+      cursor: pointer;
+    }
   }
 </style>
