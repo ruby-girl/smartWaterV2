@@ -39,7 +39,7 @@
               v-if="item.IsFreeze"
               :key="index"
               min-width="150px"
-              sortable="custom"
+              :sortable="item.IsSortBol?'custom':null"
               :prop="item.ColProp"
               :align="item.Position"
               :label="item.ColDesc"
