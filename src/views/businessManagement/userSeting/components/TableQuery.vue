@@ -10,6 +10,7 @@
     <!--表格自定义组建 s-->
     <customTable ref="tableChild" />
     <Statistics :StatisticsData="StatisticsData"></Statistics>
+
     <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
       <el-table-column
         type="index"
@@ -22,7 +23,7 @@
           v-if="item.IsFreeze"
           :key="index"
           min-width="200px"
-          sortable='custom'
+          :sortable="item.IsSortBol ? 'custom' : null"
           :prop="item.ColProp"
           :align="item.Position"
           :label="item.ColDesc"
@@ -31,7 +32,7 @@
           v-else
           :key="index"
           min-width="200px"
-          sortable='custom'
+          :sortable="item.IsSortBol ? 'custom' : null"
           :prop="item.ColProp"
           :align="item.Position"
           :label="item.ColDesc"/>

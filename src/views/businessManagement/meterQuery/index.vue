@@ -37,7 +37,7 @@
             v-if="item.IsFreeze"
             :key="index"
             min-width="200px"
-            sortable="custom"
+            :sortable="item.IsSortBol ? 'custom' : null"
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
@@ -47,7 +47,7 @@
             v-else
             :key="index"
             min-width="200px"
-            sortable="custom"
+            :sortable="item.IsSortBol ? 'custom' : null"
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
@@ -124,7 +124,7 @@ export default {
     this.searchFun();
   },
   created: function() {
-    
+
   },
   methods: {
     sortChanges({ prop, order }) {//列排序
