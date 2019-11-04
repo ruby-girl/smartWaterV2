@@ -23,7 +23,7 @@
               v-if="item.IsFreeze"
               :key="index"
               min-width="200px"
-              sortable='custom'
+              :sortable="item.IsSortBol ? 'custom' : null"
               :prop="item.ColProp"
               :align="item.Position"
               :label="item.ColDesc"
@@ -32,15 +32,15 @@
               v-else
               :key="index"
               min-width="200px"
-              sortable='custom'
+              :sortable="item.IsSortBol ? 'custom' : null"
               :prop="item.ColProp"
               :align="item.Position"
               :label="item.ColDesc"/>
           </template>
           <el-table-column label="操作" width="200px" align="center" fixed="right">
             <template slot-scope="scope">
-              <a class="operation1" @click="handleHistory(scope.$index, scope.row)">查看历史记录</a>
-              <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if=" scope.row.MeterReadState != 1402 ">删除</a>
+              <a class="operation1" @click="handleHistory(scope.row)">查看历史记录</a>
+              <a class="operation2" @click="handleDelete(scope.row)" v-if=" scope.row.MeterReadState != 1402 ">删除</a>
             </template>
           </el-table-column>
         </el-table>
@@ -86,7 +86,7 @@
           SA_RegisterBookInfo_Id:'',//表册ID
           CustomerQueryType:'1',//用户类型
           CustomerQueryValue:'',//用户类型数值
-          MeterReadState:'',//抄表状态
+          MeterReadState:'-1',//抄表状态
           tableId: '0000014'
         },
         tableData: [],//表格数据
@@ -193,8 +193,8 @@
       getCurInfo(row){//表格选中事件
         this.$refs.planchild1.currentContract
       },
-      handleHistory(){// 查看历史数据，跳转表册设置
-        this.$router.push({path: '/businessManagement/meterQuery'})
+      handleHistory(row){// 查看历史数据，跳转表册设置
+        this.$router.push({path: '/businessManagement/meterQuery',query: { CustomerNo: row.CustomerNo }})
       }
     },
     mounted() {

@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-radio-group v-model="typeCheck" class="typeCheck" @change="setparams">
-      <el-radio :label="1">按抄表计划查询</el-radio>
-      <el-radio :label="2">按抄表日期查询</el-radio>
+      <el-radio :label="1">按抄表计划搜索</el-radio>
+      <el-radio :label="2">按抄表日期搜索</el-radio>
     </el-radio-group>
     <el-form
       :inline="true"
@@ -106,7 +106,7 @@
   import { QueryMeterReadPlanByFactoryId } from "@/api/plan"
   import { WaterFactoryComboBoxListAuth } from "@/api/organize"//具有权限的水厂
   import { QueryMeterReaderByFactoryId } from "@/api/meterQuery" //抄表时间条件下，获取抄表员信息接口
-  import { LoadRegisterBookAndMeterReader } from "@/api/meterReading"//抄表计划查询条件下，获取表册及抄表员接口
+  import { LoadRegisterBookAndMeterReader } from "@/api/meterReading"//抄表计划搜索条件下，获取表册及抄表员接口
   import { promptInfoFun } from "@/utils/index"
 
   export default {
@@ -128,7 +128,7 @@
     },
     methods: {
       /**
-       * 触发父组建查询方法
+       * 触发父组建搜索方法
        * */
       searchFun() {
         this.ifMore ? this.InputData = this.InputData : this.InputData = []
@@ -136,6 +136,8 @@
         this.param.InputEmpName = this.ifMore ? this.param.InputEmpName : ''
         this.param.InputTimeStart = this.ifMore ? this.param.InputTimeStart : ''
         this.param.InputTimeEnd = this.ifMore ? this.param.InputTimeEnd : ''
+        console.log(this.meterData)
+        console.log("--------------------")
         if(this.typeCheck==2&&this.meterData.length<=0){//当选择抄表日期类型时候，抄表日期为必填项
           promptInfoFun(this,1,'请选择抄表日期！')
           return
@@ -144,6 +146,7 @@
       },
       getTime() {
         const date = this.meterData;
+        console.log(date)
         if (date) {
           this.param.ReadDateStart = date[0];
           this.param.ReadDateEnd = date[1];
@@ -178,7 +181,7 @@
             if (res.code ==0 ) {
               this.planArry = res.data;
               this.param.SA_MeterReadPlan_Id = res.data[0].Id
-              this.getCbyInfo(res.data[0].Id)//查询默认抄表计划
+              this.getCbyInfo(res.data[0].Id)//搜索默认抄表计划
             } else {
               promptInfoFun(this,1,res.message)
             }
@@ -204,7 +207,7 @@
           }
         })
       },
-      setparams(val){//根据查询方向判断查询条件值
+      setparams(val){//根据搜索方向判断搜索条件值
         if(val == 1){
           this.meterData = ''
           this.param.ReadDateStart = ''
@@ -218,11 +221,21 @@
       }
     },
     mounted() {
-      this.param = this.$parent.param;//从父组件获取初始化查询参数
+      this.param = this.$parent.param;//从父组件获取初始化搜索参数
       this.formArry = getDictionaryOption('表册类型')
       this.meterState = getDictionaryOption('抄表状态')
       this.userArry = getDictionaryOption('用户类型')
       this.getWaterFactoryList()
+
+      if(this.$route.query.CustomerNo){
+          this.typeCheck = 2
+          this.meterData =  [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)]
+          this.param.ReadDateStart =  this.typeCheck[0];
+          this.param.ReadDateEnd =  this.typeCheck[1];
+          this.searchFun()
+
+      }
+
     }
   }
 </script>

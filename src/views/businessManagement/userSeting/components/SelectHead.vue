@@ -57,7 +57,7 @@
     },
     methods: {
       /**
-       * 触发父组建查询方法
+       * 触发父组建搜索方法
        * */
       searchFun(){
         this.$parent.searchTableFun()

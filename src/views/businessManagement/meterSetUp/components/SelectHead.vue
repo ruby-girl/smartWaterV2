@@ -75,7 +75,7 @@
         peopleArray:[],//抄表员
         formsArray:[],//表册
         meterState:[],//抄表状态
-        param:{//分页查询条件
+        param:{//分页搜索条件
           SA_MeterReadPlan_Id:'',//抄表计划ID
           SA_MeterReader_Id:'',//抄表员ID
           SA_RegisterBookInfo_Id:'',//表册ID
@@ -109,7 +109,7 @@
           }
         })
       },
-      getUserInfo(val){//表册抄表员与抄表计划联动查询
+      getUserInfo(val){//表册抄表员与抄表计划联动搜索
         let selectedWorkName = {}
         selectedWorkName = this.planArray.find((item)=>{
           return item.Id === val;
@@ -131,7 +131,7 @@
         this.$parent.setCustomData()
       },
       /**
-       * 触发父组建查询方法
+       * 触发父组建搜索方法
        * */
       searchFun(){
         let id = this.param.SA_MeterReadPlan_Id,
@@ -141,7 +141,7 @@
           MeterReadingLocationQuery({'SA_MeterReadPlan_Id':id,'CustomerQueryType':type,'CustomerQueryValue':value}).then(res => {//先进行表册定位
             if (res.code == 0 ) {
               if(res.data.length <=0 ){//没有该人员信息
-                promptInfoFun(this,1,'未查询到数据')
+                promptInfoFun(this,1,'未搜索到数据')
               }else if(res.data.length ==1){//此时有一条数据默认覆盖当前表册
                 //this.param.SA_RegisterBookInfo_Id = res.data[0].Id
                 this.param.SA_RegisterBookInfo_Id = this.meterData[0].Id
@@ -163,7 +163,7 @@
       }
     },
     mounted() {
-      this.param = this.$parent.param;//从父组件获取初始化查询参数
+      this.param = this.$parent.param;//从父组件获取初始化搜索参数
       this.getplanArray()
       this.meterState = getDictionaryOption('抄表状态')
     }

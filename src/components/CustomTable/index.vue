@@ -7,7 +7,7 @@
       </p>
         <span class="fl">自定义选项：</span>
         <div class="fl">
-          <el-checkbox v-for="(check,i) in checkData" :key="i" v-show="check.IsShow" :disabled="check.ifDisable"  v-model="check.IsCheck" v-dragging="{ item: check, list: checkData, group: 'check' }">{{ check.ColDesc }}</el-checkbox>
+          <el-checkbox v-for="(check,i) in checkData" :key="i" v-show="check.IsShow" :disabled="check.IsCompelShowBol"  v-model="check.IsCheck" v-dragging="{ item: check, list: checkData, group: 'check' }">{{ check.ColDesc }}</el-checkbox>
         </div>
     </div>
   </div>
@@ -159,6 +159,7 @@ export default {
 </script>
 <style lang="scss">
   .customTableBox{
+    .el-checkbox__input.is-disabled + span.el-checkbox__label{color: #00B3A1 !important;}
     margin-top: 10px;
     .customOption {
       >p{position: absolute;color: #D4B106;font-size: 12px;top: 0px;margin: 0;width: calc(100% - 60px);

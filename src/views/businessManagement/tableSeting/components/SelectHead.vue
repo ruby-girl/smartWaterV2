@@ -58,7 +58,7 @@
     },
     methods: {
       /**
-       * 触发父组建查询方法
+       * 触发父组建搜索方法
        * */
       searchFun(){
         this.$parent.searchFun();
@@ -69,7 +69,7 @@
     },
     mounted() {
       this.formArry = getDictionaryOption('表册类型')
-      this.rbp = this.$parent.rbp;//从父组件获取初始化查询参数
+      this.rbp = this.$parent.rbp;//从父组件获取初始化搜索参数
     }
   }
 </script>
