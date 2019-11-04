@@ -124,12 +124,7 @@ export default {
     this.searchFun();
   },
   created: function() {
-    let id = this.$route.query.id;
-    if(id){
-      this.param.SA_MeterReadPlan_Id = id;
-      this.searchFun();
-
-    }
+    
   },
   methods: {
     sortChanges({ prop, order }) {//列排序
@@ -194,6 +189,12 @@ export default {
   },
   mounted() {
     let _this = this;
+    let id = _this.$route.query.id;
+    if(id){
+      _this.param.SA_MeterReadPlan_Id = id;
+      _this.searchFun();
+
+    }
     _this.$refs.myChild.GetTable(this.param.tableId);
     _this.checksData = this.$refs.myChild.checkData; //获取自定义字段中选中了字段
     _this.tableHeight =
