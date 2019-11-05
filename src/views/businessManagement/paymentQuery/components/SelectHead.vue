@@ -57,38 +57,55 @@
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-
-    <el-form-item label="缴费方式：" v-show="ifMore">
-      <el-select
-        v-model="selectHead.editUserId"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="缴费状态：" v-show="ifMore">
-      <el-select
-        v-model="selectHead.editUserId"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="水表类型：" v-show="ifMore">
-      <el-select
-        v-model="selectHead.editUserId"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-
+    <transition-group name="fade">
+     
+        <el-form-item label="缴费方式：" v-show="ifMore" key="type">
+          <el-select
+            v-model="selectHead.editUserId"
+            placeholder="请选择"
+            @keydown.enter.native="handleFilter"
+          >
+            <el-option label="全部" value="-1" />
+            <el-option
+              v-for="item in editUserList"
+              :key="item.Id"
+              :label="item.Name"
+              :value="item.Id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="缴费状态：" v-show="ifMore" key="state">
+          <el-select
+            v-model="selectHead.editUserId"
+            placeholder="请选择"
+            @keydown.enter.native="handleFilter"
+          >
+            <el-option label="全部" value="-1" />
+            <el-option
+              v-for="item in editUserList"
+              :key="item.Id"
+              :label="item.Name"
+              :value="item.Id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="水表类型：" v-show="ifMore" key="waterType">
+          <el-select
+            v-model="selectHead.editUserId"
+            placeholder="请选择"
+            @keydown.enter.native="handleFilter"
+          >
+            <el-option label="全部" value="-1" />
+            <el-option
+              v-for="item in editUserList"
+              :key="item.Id"
+              :label="item.Name"
+              :value="item.Id"
+            />
+          </el-select>
+        </el-form-item>
+     
+    </transition-group>
     <el-form-item>
       <el-button type="primary" size="mini" @click="handleFilter">
         <i class="iconfont iconsousuo"></i>搜索
@@ -134,14 +151,23 @@ export default {
     handleFilter() {
       this.$emit("handleFilter", this.selectHead);
     },
-    toggleShow(type){
-      this.ifMore=type
+    toggleShow(type) {
+      this.ifMore = type;
       this.$emit("toggleShow", type);
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.getUpDown{ font-size: 14px;color: #00B3A0;display: inline-block;margin-left: 20px;cursor: pointer}
+.getUpDown {
+  font-size: 14px;
+  color: #00b3a0;
+  display: inline-block;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.inline{
+  display: inline-block;
+}
 </style>
 

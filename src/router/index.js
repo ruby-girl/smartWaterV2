@@ -190,6 +190,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'billDetails',
+        component: () => import('@/views/businessManagement/billDetails/index'),
+        name: 'billDetails',
+        meta: {
+          title: '账单详情',
+          roles: ['1']
+        }
+      },
+      {
         path: 'meterQuery',
         component: () => import('@/views/businessManagement/meterQuery/index'),
         name: 'meterQuery',

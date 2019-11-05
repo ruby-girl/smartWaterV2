@@ -57,8 +57,8 @@
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-
-    <el-form-item label="缴费方式：" v-show="ifMore">
+ <transition-group name="fade">
+    <el-form-item label="缴费方式：" v-show="ifMore" key="type">
       <el-select
         v-model="selectHead.editUserId"
         placeholder="请选择"
@@ -68,7 +68,7 @@
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="缴费状态：" v-show="ifMore">
+    <el-form-item label="费用状态：" v-show="ifMore" key="state">
       <el-select
         v-model="selectHead.editUserId"
         placeholder="请选择"
@@ -78,7 +78,7 @@
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="水表类型：" v-show="ifMore">
+    <el-form-item label="水表类型：" v-show="ifMore" key="waterType">
       <el-select
         v-model="selectHead.editUserId"
         placeholder="请选择"
@@ -88,13 +88,23 @@
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-
+     <el-form-item label="费用类型：" v-show="ifMore" key="detailsType">
+      <el-select
+        v-model="selectHead.editUserId"
+        placeholder="请选择"
+        @keydown.enter.native="handleFilter"
+      >
+        <el-option label="全部" value="-1" />
+        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
+      </el-select>
+    </el-form-item>
+</transition-group>
     <el-form-item>
       <el-button type="primary" size="mini" @click="handleFilter">
         <i class="iconfont iconsousuo"></i>搜索
       </el-button>
-      <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
-      <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
+      <i v-show="ifMore" class="icon iconfont getUpDown" @click="toggleShow(false)">收起 &#xe692;</i>
+      <i v-show="!ifMore" class="icon iconfont getUpDown" @click="toggleShow(true)">展开 &#xe68f;</i>
     </el-form-item>
   </el-form>
 </template>
@@ -133,6 +143,10 @@ export default {
     },
     handleFilter() {
       this.$emit("handleFilter", this.selectHead);
+    },
+    toggleShow(type) {
+      this.ifMore = type;
+      this.$emit("toggleShow", type);
     }
   }
 };

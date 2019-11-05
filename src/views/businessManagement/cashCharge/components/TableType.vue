@@ -25,7 +25,7 @@
             min-width="120px"
             :prop="item.ColProp"
             align="center"
-            sortable="custom"
+            :sortable="item.IsSortBol?'custom':null"
             :label="item.ColDesc"
           />
         </template>

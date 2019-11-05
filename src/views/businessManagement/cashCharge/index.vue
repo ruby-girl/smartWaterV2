@@ -83,13 +83,13 @@
       </el-col>
       <!-- 右 -->
     </el-row>
-    <water-details :waterDetailsShow.sync="waterDetailsShow"></water-details>
-    <over-details :overDetailsShow.sync="overDetailsShow"></over-details>
-    <select-user :selectUserShow.sync="selectUserShow"></select-user>
-    <fee-waiver :feeWaiverShow.sync="feeWaiverShow"></fee-waiver>
-    <over-fee-waiver :overFeeWaiverShow.sync="overFeeWaiverShow"></over-fee-waiver>
-    <select-pint :selectPintShow.sync="selectPintShow"></select-pint>
-    <payment-code :paymentCodeShow.sync="paymentCodeShow"></payment-code>
+    <charges-details :chargesDetailsShow.sync="chargesDetailsShow" />
+    <over-details :overDetailsShow.sync="overDetailsShow" />
+    <select-user :selectUserShow.sync="selectUserShow" />
+    <fee-waiver :feeWaiverShow.sync="feeWaiverShow" />
+    <over-fee-waiver :overFeeWaiverShow.sync="overFeeWaiverShow" />
+    <select-pint :selectPintShow.sync="selectPintShow" />
+    <payment-code :paymentCodeShow.sync="paymentCodeShow" />
   </div>
 </template>
 <script>
@@ -97,7 +97,7 @@ import SelectHead from "./components/SelectHead";
 import TableType from "./components/TableType";
 import CardType from "./components/CardType";
 import RightBox from "./components/RightBox";
-import WaterDetails from "./components/WaterDetails"; //水费详情弹窗
+import ChargesDetails from "./components/ChargesDetails"; //水费详情弹窗
 import OverDetails from "./components/OverDetails"; //除水费外其它费用详情弹窗
 import SelectUser from "./components/SelectUser";
 import FeeWaiver from "./components/FeeWaiver"; //水费减免弹窗
@@ -120,7 +120,7 @@ export default {
     TableType,
     CardType,
     RightBox,
-    WaterDetails,
+    ChargesDetails,
     OverDetails,
     SelectUser,
     FeeWaiver,
@@ -156,7 +156,7 @@ export default {
       saveTableHeight: 0,
       checkedAllParent: false, //全选
       isIndeterminateParent: false, //复选框属性
-      waterDetailsShow: false, //水费详情弹窗
+      chargesDetailsShow: false, //水费详情弹窗
       overDetailsShow: false, //其它费用详情弹窗
       selectUserShow: false, //多用户选择弹窗
       feeWaiverShow: false, //费用减免弹窗
@@ -174,9 +174,6 @@ export default {
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight-208;
       that.saveTableHeight = document.body.clientHeight - formHeight-100;
-      window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight;
-      };
     });
   },
   watch: {
@@ -265,7 +262,7 @@ export default {
     },
     // 费用详情
     details(n) {
-      this.waterDetailsShow = true;
+      this.chargesDetailsShow = true;
     },
     // 费用撤回
     reset() {
@@ -310,7 +307,7 @@ export default {
   margin: 0 !important;
 }
 .cash-padding-bg {
-  padding: 0 20px 20px 20px !important;
+  padding: 20px !important;
   background: #fff;
 }
 .padding-20 {

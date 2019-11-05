@@ -1,12 +1,16 @@
 <template>
-  <!-- 账单详情-->
+  <!-- 账单详情 -->
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :select-head="listQuery" @handleFilter="handleFilter" />
+        <select-head
+          :select-head="listQuery"
+          @handleFilter="handleFilter"
+          @toggleShow="toggleShow"
+        />
       </div>
       <div class="table-top-btn-padding display-flex justify-content-flex-justify">
-       <div></div>
+        <div></div>
         <div>
           <el-button type="success" size="mini" @click="excel">
             <i class="iconfont icondaochuexcel"></i>导出Excel
@@ -18,7 +22,6 @@
       </div>
       <customTable ref="myChild" />
       <div class="main-padding-20-y">
-        <table-total :list="tableTotal"></table-total>
         <el-table
           :key="tableKey"
           :data="tableData"
@@ -36,22 +39,25 @@
               min-width="100px"
               :prop="item.ColProp"
               align="center"
-              sortable="custom"
+              :sortable="item.IsSortBol?'custom':null"
               :label="item.ColDesc"
             />
           </template>
-          <el-table-column label="操作" min-width="220" align="center" fixed="right" class-name="small-padding">
+          <el-table-column
+            label="操作"
+            width="200"
+            align="center"
+            fixed="right"
+            class-name="small-padding"
+          >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center">
-                <div class="main-color-warn" @click="handleDetails(row)">
-                  <a>账单详情</a>
+              <div class="display-flex">
+                <div class="main-color-warn pl-15" @click="chargesDetails(row)">
+                  <a>费用详情</a>
                 </div>
-                <div class="main-color-red pl-15 pr-15" @click="delRow(row)">
-                  <a>数据冲红</a>
-                </div>
-                <div>
-                  <a>票据打印</a>
-                </div>
+                <div class="pl-15" @click="delRow(row)">
+                  <a>费用撤销</a>
+                </div>             
               </div>
             </template>
           </el-table-column>
@@ -64,7 +70,7 @@
           @pagination="getList"
         />
       </div>
-      <!-- 账单详情弹窗 -->
+      <charges-details :chargesDetailsShow.sync="chargesDetailsShow"/>
     </div>
   </div>
 </template>
@@ -72,7 +78,7 @@
 import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
-import TableTotal from "@/components/TableTotal/index";
+import ChargesDetails from "../cashCharge/components/ChargesDetails"; //水费详情弹窗-共用现金收费的费用详情
 import {
   getRolesList,
   addRole,
@@ -81,8 +87,8 @@ import {
   exportExcel
 } from "@/api/role";
 export default {
-  name: "paymentQuery",
-  components: { SelectHead, Pagination, customTable, TableTotal },
+  name: "billDetails",
+  components: { SelectHead, Pagination, customTable,ChargesDetails},
   data() {
     return {
       total: 0,
@@ -103,12 +109,7 @@ export default {
       },
       tableData: [],
       checksData: [],
-      tableTotal: [
-        { num: 10, txt: "交易次数" },
-        { num: 10000000, txt: "缴费金额" },
-        { num: 1000000000, txt: "预存金额" },
-        { num: 10, txt: "实收金额" }
-      ]
+      chargesDetailsShow:false//费用弹窗
     };
   },
   computed: {
@@ -122,12 +123,7 @@ export default {
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
-      var formHeight = this.$refs.formHeight.offsetHeight;
-      const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 290;
-      window.onresize = () => {
-        that.tableHeight = document.body.clientHeight - formHeight - 290;
-      };
+      this.toggleShow();
       this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
     });
@@ -176,14 +172,23 @@ export default {
         });
       });
     },
-    handleDetails() {
-      
-    },
     excel() {
       //导出
       exportExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
+    },
+    // 点击展开收起搜索条件时，处理表格高度
+    toggleShow() {
+      const that = this;
+      setTimeout(function() {
+        var formHeight = that.$refs.formHeight.offsetHeight;
+        that.tableHeight = document.body.clientHeight - formHeight - 220;
+      }, 300);
+    },
+    // 费用详情
+    chargesDetails(){
+      this.chargesDetailsShow=true
     }
   }
 };

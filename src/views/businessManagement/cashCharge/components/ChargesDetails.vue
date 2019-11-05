@@ -96,20 +96,20 @@
 <script>
 export default {
   props: {
-    waterDetailsShow: {
+    chargesDetailsShow: {
       type: Boolean,
       default: false
     }
   },
   watch: {
-    waterDetailsShow() {
-      this.dialogFormVisible = this.waterDetailsShow;
+    chargesDetailsShow() {
+      this.dialogFormVisible = this.chargesDetailsShow;
     },
     dialogFormVisible(val, oldVal) {
       if (val === oldVal) {
         return;
       }
-      this.$emit("update:waterDetailsShow", val);
+      this.$emit("update:chargesDetailsShow", val);
     }
   },
   data() {

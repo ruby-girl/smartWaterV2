@@ -38,7 +38,7 @@
                 min-width="160px"
                 :prop="item.ColProp"
                 align="center"
-                sortable="custom"
+                :sortable="item.IsSortBol?'custom':null"
                 :label="item.ColDesc"
               />
             </div>

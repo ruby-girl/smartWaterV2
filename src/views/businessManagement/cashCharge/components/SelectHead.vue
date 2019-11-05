@@ -89,9 +89,9 @@ export default {
       this.$emit("handleFilter", this.selectHead);
     },
     toPaymentQuery(){
-      this.$router.push({  //核心语句
-        path:'/businessManagement/paymentQuery',   //跳转的路径
-        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+      this.$router.push({
+        path:'/businessManagement/paymentQuery',
+        query:{
           id:'qwe',  
         }    
     })

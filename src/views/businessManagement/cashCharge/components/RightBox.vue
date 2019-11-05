@@ -1,9 +1,6 @@
 <template>
   <!--右侧缴费操作 -->
   <div>
-       <div class="display-flex justify-content-flex-end">
-      <div class="set-pint" @click="selectPint"> <i class="iconfont icondayinji"></i> 设置打印机</div>
-    </div>
     <div class="right-detail-box">
       <div>应收金额：80元</div>
       <div class="display-flex align-items-center">
@@ -16,7 +13,7 @@
       <div>&#12288;&#12288;找零：80元</div>
     </div>
     <div class="display-flex justify-content-flex-end">
-      <div :class="{'save-account':true,'save-account-active':isAccount==true}" @click="isAccount=!isAccount">{{isAccount==true?'转出账户':'存入账户'}}</div>
+      <div :class="{'save-account':true,'save-account-active':isAccount==true}" @click="isAccount=!isAccount">{{isAccount==true?'账户转出':'存入账户'}}</div>
     </div>
     <div class="right-detail-box account-height">
       <div>
@@ -24,9 +21,13 @@
         <span class="main-color-pink">20</span>元
       </div>
     </div>
-    <div class="display-flex align-items-center justify-content-flex-justify main-more-black-color pint-type">
-      <el-radio v-model="radio" :label="1">打印小票 <i class="iconfont icondayinji"></i></el-radio>
-      <el-radio v-model="radio" :label="2">打印发票 <i class="iconfont icondayinji"></i></el-radio>
+    <div class="main-more-black-color pint-type">
+      <div>
+        <el-radio v-model="radio" :label="1">打印小票</el-radio><span @click="selectPint"><i class="iconfont icondayinji"></i>&ensp;设置打印机</span>
+      </div>
+      <div>
+        <el-radio v-model="radio" :label="2">打印发票</el-radio><span @click="selectPint"><i class="iconfont icondayinji"></i>&ensp;设置打印机</span>
+      </div>
     </div>
      <div class="display-flex align-items-center justify-content-flex-justify">
       <div :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==1?true:false}" @click="paymentMethod(1)">
@@ -118,6 +119,8 @@ export default {
 }
 .pint-type {
   padding: 15px 0 15px 0;
+  line-height: 30px;
+  font-size: 13px;
 }
 .pay-btn {
   background: #ef8205;

@@ -3,10 +3,14 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :select-head="listQuery" @handleFilter="handleFilter" @toggleShow="toggleShow"/>
+        <select-head
+          :select-head="listQuery"
+          @handleFilter="handleFilter"
+          @toggleShow="toggleShow"
+        />
       </div>
       <div class="table-top-btn-padding display-flex justify-content-flex-justify">
-       <div></div>
+        <div></div>
         <div>
           <el-button type="success" size="mini" @click="excel">
             <i class="iconfont icondaochuexcel"></i>导出Excel
@@ -36,20 +40,26 @@
               min-width="100px"
               :prop="item.ColProp"
               align="center"
-              sortable="custom"
+              :sortable="item.IsSortBol?'custom':null"
               :label="item.ColDesc"
             />
           </template>
-          <el-table-column label="操作" min-width="220" align="center" fixed="right" class-name="small-padding">
+          <el-table-column
+            label="操作"
+            min-width="200"
+            align="center"
+            fixed="right"
+            class-name="small-padding"
+          >
             <template slot-scope="{row}">
               <div class="display-flex justify-content-flex-center">
-                <div class="main-color-warn" @click="handleDetails(row)">
+                <div class="main-color-warn" @click="billDetails(row)">
                   <a>账单详情</a>
                 </div>
-                <div class="main-color-red pl-15 pr-15" @click="delRow(row)">
+                <div class="main-color-red pl-15 pr-15" @click="invoice(row)">
                   <a>数据冲红</a>
                 </div>
-                <div>
+                <div @click="pint(row)">
                   <a>票据打印</a>
                 </div>
               </div>
@@ -64,12 +74,14 @@
           @pagination="getList"
         />
       </div>
+      <select-pint :selectPintShow.sync="selectPintShow"/>
       <!-- 账单详情弹窗 -->
     </div>
   </div>
 </template>
 <script>
 import SelectHead from "./components/SelectHead";
+import SelectPint from "./components/SelectPint";
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import TableTotal from "@/components/TableTotal/index";
@@ -82,7 +94,7 @@ import {
 } from "@/api/role";
 export default {
   name: "paymentQuery",
-  components: { SelectHead, Pagination, customTable, TableTotal },
+  components: { SelectHead, Pagination, customTable, TableTotal,SelectPint },
   data() {
     return {
       total: 0,
@@ -101,6 +113,7 @@ export default {
         editEndTime: "", // 操作时间止
         tableId: "0000004"
       },
+      selectPintShow:false,//票据打印弹窗
       tableData: [],
       checksData: [],
       tableTotal: [
@@ -122,13 +135,7 @@ export default {
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
-      var formHeight = this.$refs.formHeight.offsetHeight;
-      const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 290;
-      window.onresize = () => {
-        console.log( that.tableHeight)
-        that.tableHeight = document.body.clientHeight - formHeight - 290;
-      };
+      this.toggleShow();
       this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
     });
@@ -159,26 +166,23 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
-    delRow(r) {
-      this.$confirm("是否删除当前信息", "提示", {
+    invoice(r) {
+      this.$confirm("是否确认冲红该账单？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        deleteRole(r.Id).then(res => {
-          this.$message({
-            message: res.message,
-            type: "success",
-            duration: 4000
-          });
-          this.getList();
-        });
+        // deleteRole(r.Id).then(res => {
+        //   this.$message({
+        //     message: res.message,
+        //     type: "success",
+        //     duration: 4000
+        //   });
+        //   this.getList();
+        // });
       });
-    },
-    handleDetails() {
-      
     },
     excel() {
       //导出
@@ -187,13 +191,25 @@ export default {
       });
     },
     // 点击展开收起搜索条件时，处理表格高度
-    // toggleShow(type){
-    //   console.log(type)
-    //    var formHeight = this.$refs.formHeight.offsetHeight;
-    //   //  console.log(formHeight)
-    //   const that = this;
-    //   that.tableHeight = document.body.clientHeight - formHeight - 290;
-    // }
+    toggleShow() {
+      const that = this;
+      setTimeout(function() {
+        var formHeight = that.$refs.formHeight.offsetHeight;
+        that.tableHeight = document.body.clientHeight - formHeight - 290;
+      }, 300);
+    },
+    // 行票据打印
+    pint(r){
+      this.selectPintShow=true
+    },
+    billDetails(){
+      this.$router.push({
+        path:'/businessManagement/billDetails',
+        query:{
+          id:'qwe',  
+        }    
+    })
+    }
   }
 };
 </script>

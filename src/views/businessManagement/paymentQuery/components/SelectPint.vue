@@ -3,25 +3,22 @@
   <el-dialog
     title="打印发票"
     :visible.sync="dialogFormVisible"
-    top="25vh"
-    width="540px"
+    top="35vh"
+    width="370px"
     center
     custom-class="dialog-background"
     :close-on-click-modal="false"
   >
-    <!-- 其它费用 -->
-      <el-select v-model="pintType" placeholder="选择打印机">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-       <el-button type="primary" size="mini" @click="handleFilter">
-           确定
-        </el-button>
-    
+     <div class="radio-item">
+          <el-radio v-model="radio" label="1">打印小票</el-radio>
+     </div>
+     <div class="radio-item">
+          <el-radio v-model="radio" label="2">打印发票</el-radio>
+     </div>
+     <div slot="footer" class="dialog-footer">
+      <el-button size="mini" type="primary" @click="reset()">确认</el-button>
+      <el-button size="mini" @click="AdialogFormVisible = false">取消</el-button>
+    </div>
   </el-dialog>
 </template>
 <script>
@@ -45,9 +42,8 @@ export default {
   },
   data() {
     return {
-      radio: 1,
+      radio: '1',
       dialogFormVisible: false,
-      options:[{label:'打印机1',value:1},{label:'打印机2',value:2}],
       pintType:1
     };
   },
@@ -59,7 +55,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 /deep/ .dialog-background .el-dialog__body {
-  padding: 50px 0 200px 130px;
+  padding: 15px 0 45px 50px;
+}
+.radio-item{
+    padding-top:20px;
 }
 </style>
 
