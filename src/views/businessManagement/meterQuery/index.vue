@@ -123,9 +123,6 @@ export default {
     this.param.SA_MeterReadPlan_Id = id;
     this.searchFun();
   },
-  created: function() {
-
-  },
   methods: {
     sortChanges({ prop, order }) {//列排序
       this.param.filed = prop;

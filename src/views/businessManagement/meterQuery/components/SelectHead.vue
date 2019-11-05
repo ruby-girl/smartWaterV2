@@ -64,31 +64,37 @@
             <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
                       style="width: 180px;float: left"/>
           </el-form-item>
-          <el-form-item label="用户类型：" v-show="ifMore">
-            <el-select v-model="param.UserType" placeholder="请选择" size="small">
-              <el-option label="全部" value="-1"></el-option>
-              <el-option v-for="(item,index) in userArry" :key="index" :label="item.Name" :value="item.Id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="录入人：" v-show="ifMore">
-            <el-input v-model="param.InputEmpName" maxlength="20" placeholder="请输入录入人"/>
-          </el-form-item>
-          <el-form-item label="录入日期：" v-show="ifMore">
-            <el-date-picker
-              v-model="InputData"
-              type="datetimerange"
-              :editable="false"
-              :unlink-panels="true"
-              range-separator="~"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :default-time="['00:00:00', '23:59:59']"
-              format="yyyy-MM-dd HH:mm:ss"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              @keydown.enter.native="handleFilter"
-              @change="getTime1"
-            />
-          </el-form-item>
+          <transition name="fade">
+            <el-form-item label="用户类型：" v-show="ifMore">
+              <el-select v-model="param.UserType" placeholder="请选择" size="small">
+                <el-option label="全部" value="-1"></el-option>
+                <el-option v-for="(item,index) in userArry" :key="index" :label="item.Name" :value="item.Id"/>
+              </el-select>
+            </el-form-item>
+          </transition>
+          <transition name="fade">
+            <el-form-item label="录入人：" v-show="ifMore">
+              <el-input v-model="param.InputEmpName" maxlength="20" placeholder="请输入录入人"/>
+            </el-form-item>
+          </transition>
+          <transition name="fade">
+            <el-form-item label="录入日期：" v-show="ifMore">
+              <el-date-picker
+                v-model="InputData"
+                type="datetimerange"
+                :editable="false"
+                :unlink-panels="true"
+                range-separator="~"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :default-time="['00:00:00', '23:59:59']"
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @keydown.enter.native="handleFilter"
+                @change="getTime1"
+              />
+            </el-form-item>
+          </transition>
           <el-form-item label="">
             <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i
               class="icon iconfont">&#xe694;</i>
@@ -136,9 +142,7 @@
         this.param.InputEmpName = this.ifMore ? this.param.InputEmpName : ''
         this.param.InputTimeStart = this.ifMore ? this.param.InputTimeStart : ''
         this.param.InputTimeEnd = this.ifMore ? this.param.InputTimeEnd : ''
-        console.log(this.meterData)
-        console.log("--------------------")
-        if(this.typeCheck==2&&this.meterData.length<=0){//当选择抄表日期类型时候，抄表日期为必填项
+        if( this.typeCheck==2 && this.meterData.length<=0 ){//当选择抄表日期类型时候，抄表日期为必填项
           promptInfoFun(this,1,'请选择抄表日期！')
           return
         }
@@ -146,7 +150,6 @@
       },
       getTime() {
         const date = this.meterData;
-        console.log(date)
         if (date) {
           this.param.ReadDateStart = date[0];
           this.param.ReadDateEnd = date[1];
@@ -208,6 +211,7 @@
         })
       },
       setparams(val){//根据搜索方向判断搜索条件值
+        this.ifMore = false
         if(val == 1){
           this.meterData = ''
           this.param.ReadDateStart = ''
@@ -229,9 +233,16 @@
 
       if(this.$route.query.CustomerNo){
           this.typeCheck = 2
-          this.meterData =  [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)]
-          this.param.ReadDateStart =  this.typeCheck[0];
-          this.param.ReadDateEnd =  this.typeCheck[1];
+          this.param.ReadingQueryType = '2'
+          this.param.CustomerQueryValue = this.$route.query.CustomerNo
+          let date=new Date;
+          let year =date.getFullYear();
+          let month =date.getMonth()+1;
+          let day =date.getDate();
+
+          this.meterData =  [new Date(year, month, day, 0, 0), new Date(year, month-6, day, 23, 59, 59)]//默认近半年时间
+          this.param.ReadDateStart = new Date(year, month, day, 0, 0)
+          this.param.ReadDateEnd = new Date(year, month-6, day, 23, 59, 59)
           this.searchFun()
 
       }

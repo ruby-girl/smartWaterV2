@@ -573,7 +573,7 @@ export function promptInfoFun(obj, type, msg) {
 /**
  *判断是否合法的时间
  * @param {String} time_str
- * @returns {String} 
+ * @returns {String}
  * */
 export function legalTime(time_str) {
   if (!time_str) return ''
@@ -586,6 +586,7 @@ export function legalTime(time_str) {
   else
     return time_str
 }
+
 Date.prototype.Format = function (fmt) { //author: meizz
   var o = {
     "M+": this.getMonth() + 1, //月份

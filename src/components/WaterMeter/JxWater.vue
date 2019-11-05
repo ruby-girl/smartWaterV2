@@ -1,5 +1,8 @@
 <template>
   <div class="water_instrument">
+
+    <p id="num"></p>
+
     <p class="number">No.1010701140027</p>
     <div class="water_num">
       <p>
@@ -12,9 +15,14 @@
 </template>
 
 <script>
+  import { numberGrow } from '@/utils/index'
+
   export default {
     name: "JxWater",
-    props:['ReadNum']
+    props:['ReadNum'],
+    computed: {
+
+    }
   }
 </script>
 
