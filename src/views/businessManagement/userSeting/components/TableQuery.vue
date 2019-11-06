@@ -168,10 +168,10 @@
       this.checksData = this.$refs.tableChild.checkData//获取自定义字段中选中了字段
       _this.$nextTick(() => {
         _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+        window.onresize = function () {
+          _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+        }
       })
-      window.onresize = function () {
-        _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      }
     }
   }
 </script>

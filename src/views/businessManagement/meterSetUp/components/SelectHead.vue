@@ -51,15 +51,13 @@
       class="my_header"
       width="600px">
       <el-table :data="meterData" border @row-click="getCurMeter" height="300">
+        <el-table-column type="index" width="150" align="center" label="序号"></el-table-column>
         <el-table-column property="Name" align="center" label="表册名称"></el-table-column>
-        <el-table-column property="Id" align="center" label="用户编号"></el-table-column>
-        <el-table-column property="UserName" align="center" label="姓名"></el-table-column>
       </el-table>
     </el-dialog>
     <!--多用户弹窗 e-->
   </div>
 </template>
-
 <script>
   import { getPlan, LoadRegisterBookAndMeterReader, MeterReadingLocationQuery } from "@/api/meterReading"
   import { getDictionaryOption } from "@/utils/permission"
@@ -83,18 +81,7 @@
           CustomerQueryValue:'',//用户类型数值
           MeterReadState:'-1',//抄表状态
         },
-        meterData:[//表册定位模拟数据
-          {
-            Name: '测试2',
-            Id: 'b1a89723-89f4-4b5b-a8b3-0b5f566e9b6b',
-            UserName: '小李1'
-          },
-          {
-            Name: '机械表水表-X片区',
-            Id: '7ba39783-3403-4209-b1ae-6724856f43a0',
-            UserName: '小李'
-          }
-        ]
+        meterData:[]//表册定位模拟数据
       }
     },
     methods: {
@@ -143,11 +130,10 @@
               if(res.data.length <=0 ){//没有该人员信息
                 promptInfoFun(this,1,'未搜索到数据')
               }else if(res.data.length ==1){//此时有一条数据默认覆盖当前表册
-                //this.param.SA_RegisterBookInfo_Id = res.data[0].Id
-                this.param.SA_RegisterBookInfo_Id = this.meterData[0].Id
+                this.param.SA_RegisterBookInfo_Id = res.data[0].Id
                 this.$parent.searchFun();
               }else{//此时有一条以上数据，需手动选择后确认表册信息
-                //this.meterData = res.data
+                this.meterData = res.data
                 this.meterVisible = true
               }
             }

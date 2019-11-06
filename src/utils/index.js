@@ -587,6 +587,65 @@ export function legalTime(time_str) {
     return time_str
 }
 
+
+/**
+ * scroNum 数字滚动方法
+ //* @param scroID 选择器名字
+ //* @param number 数字大小
+ //* @param h 单个数字高度
+ * return null
+ */
+export function scroNum(scroID, number ,h = 32) {//数字滚动
+  let $num_item = document.getElementById(scroID).querySelectorAll('.dataOne>div')
+  $num_item.forEach((item,i)=>{
+    item.style.top = 0 + 'px'//清空上次top值再计算本次top值
+  })
+
+  $num_item.forEach(item=>{
+    item.style.transition = 'all 1s ease-in-out'
+  })
+
+  let numberStr = number.toString();
+  if (numberStr.length <= $num_item.length - 1) {
+    let tempStr = "";
+    for (let a = 0; a < $num_item.length - numberStr.length; a++) {
+      tempStr += "0";
+    }
+    numberStr = tempStr + numberStr;
+  }
+  let numberArr = numberStr.split("");
+  $num_item.forEach((item,i)=>{
+    setTimeout(function () {
+      item.style.top = - parseInt(numberArr[i]) * h - h * 10 + 'px'
+    }, i * 50)
+  })
+
+}
+/**
+ * 数字逐渐增加显示
+ * @param scroID 选择器
+ * @param maxsNum 数字大小
+ * */
+export function numRunFun(obj, maxsNum) {
+  let num = 0;
+  let maxNum = maxsNum;
+ // let numId = document.getElementById(scroID);
+
+  // 利用setTimeout模拟Interval
+  function numSlideFun(){
+    num++; // 调节速度 可以小数
+    if(num >= maxNum){
+      obj.innerHTML = maxNum;
+      return;
+    }else{
+      obj.innerHTML = ~~(num);
+      setTimeout(function(){	// 利用setTimeout模拟setInterval
+        return numSlideFun();
+      },10);// 也可以调节速度
+    }
+  }
+  numSlideFun();
+}
 Date.prototype.Format = function (fmt) { //author: meizz
   var o = {
     "M+": this.getMonth() + 1, //月份

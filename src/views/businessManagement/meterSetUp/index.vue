@@ -163,7 +163,13 @@
               let curNum = 0;
               if (datas.IsLocation) {//判断是否需要定位
                 _this.param.page = datas.PageIndex//定位页数
-                curNum = datas.RowIndex//定为当前页行数
+                curNum = datas.RowIndex -1//定为当前页行数
+                this.$refs.childSelect.param.CustomerQueryValue = ''
+                //动态设置滚动条位置
+                let curRowHeight = curNum * 44
+                let seeHeight = document.getElementById('table').offsetHeight - 90
+                if (curRowHeight > seeHeight)
+                  this.$refs.multipleTable.bodyWrapper.scrollTop = curRowHeight
               } else {
                 curNum = 0;
               }

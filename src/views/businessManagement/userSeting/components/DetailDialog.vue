@@ -36,7 +36,7 @@
               <li class="user_line clearfix">
                 <p class="all">地址 <span>{{formData.Address}}</span></p>
               </li>
-              <li v-show="file.length>0" class="user_file">
+              <li class="user_file">
                 <p>附件</p>
                 <ul :class="maxHeight? 'fileBox clearfix fileBoxHeight':'fileBox clearfix'">
                   <li v-for="(item,index) in file" :key="index" class="detailFile">
@@ -203,7 +203,27 @@
         this.file = []
         this.activeName = 1
       },
-      handleClick(){}
+      /**
+       * 选项卡切换
+       * */
+      handleClick(){
+        if(this.activeName == '3'){
+          switch (this.waterType) {//1 机械，2 IC，3 物联网，4 远传
+            case 1101:
+              this.$refs.myJxWaterChild.setMeterNum()
+              break
+            case 1102:
+              this.$refs.myIcWaterChild.setMeterNum()
+              break
+            case 1103:
+              this.$refs.myYcWaterChild.setMeterNum()
+              break
+            case 1104:
+              this.$refs.myWlWaterChild.setMeterNum()
+              break
+          }
+        }
+      }
     },
     mounted() {
       let _this = this
@@ -263,6 +283,7 @@
     .fileBoxHeight{height: 320px;overflow:auto;}
     .fileBox {
       padding: 0;
+      min-height: 160px;
       li{
         img{width: 100%;height: 100%}
         width: 130px;height: 130px;list-style: none;float: left;border: solid 1px #D8E2E7;margin-right: 24px;position: relative;margin-bottom: 30px;

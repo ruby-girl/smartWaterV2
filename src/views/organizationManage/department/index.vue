@@ -285,9 +285,7 @@
       this.$refs.myChild.GetTable(this.dp.tableId);//调用子组件方法获取表头信息
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      window.onresize = () => {
-        _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-      };
+
     }
   }
 </script>

@@ -198,12 +198,7 @@ export default {
       document.getElementsByClassName("cl-container")[0].offsetHeight -
       document.getElementById("table").offsetTop -
       50;
-    window.onresize = () => {
-      _this.tableHeight =
-        document.getElementsByClassName("cl-container")[0].offsetHeight -
-        document.getElementById("table").offsetTop -
-        50;
-    };
+
   }
 };
 </script>

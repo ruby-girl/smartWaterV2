@@ -14,7 +14,6 @@
         :headers="headers"
         :before-upload="beforeAvatarUpload"
         :on-success="uploadSuccess"
-        :limit="10"
         :show-file-list="false"
         :on-exceed="handleExceed"
         accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.JPG,.JPEG,.PDF,.DOC,.DOCX,.XLS,.XLSX"

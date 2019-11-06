@@ -1,7 +1,7 @@
 <template>
   <div class="water_meter clearfix">
     <!--左侧远传水表-->
-    <JxWater :ReadNum = ReadNum></JxWater>
+    <JxWater ref="meterChild"></JxWater>
     <div class="user_info user_water_info">
       <h2>远传水表</h2>
       <ul>
@@ -47,7 +47,7 @@
     data(){
       return {
         data:{},
-        ReadNum:[]
+        ReadNum:''
       }
     },
     methods:{
@@ -55,22 +55,14 @@
         GetYCInfoByCustomerId({'CustomerId': Id}).then(res => {//获取用户信息
           if (res.code == 0) {
               this.data = res.data
-              let str = JSON.stringify(res.data.JXReadNum)
-              let n = 3;
-              for (var i = 0; i < str.length; i++) {
-                var a = str.slice(n*i, n*(i+1));
-                this.ReadNum.push(a);
-              }
-              if(this.ReadNum.length>=6)
-                return false
-              let curLenth =  this.ReadNum.length
-              for(let i  = 1;i <= 6 - curLenth;i++){
-                this.ReadNum.unshift ('0')
-              }
+              this.ReadNum = res.data.JXReadNum
           } else {
             promptInfoFun(this, 1, res.message)
           }
         })
+      },
+      setMeterNum(){
+        this.$refs.meterChild.setNumber(this.ReadNum)
       }
     }
   }
@@ -78,7 +70,7 @@
 
 <style scoped lang="scss">
   .water_meter {
-    padding: 50px 0 56px 0;
+    padding: 50px 0 6px 0;
     background: #fff;
     position: relative;
 
