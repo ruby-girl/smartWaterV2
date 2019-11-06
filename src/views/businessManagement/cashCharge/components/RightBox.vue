@@ -121,6 +121,9 @@ export default {
   padding: 15px 0 15px 0;
   line-height: 30px;
   font-size: 13px;
+  span{
+    cursor: pointer;
+  }
 }
 .pay-btn {
   background: #ef8205;

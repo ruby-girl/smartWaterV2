@@ -195,8 +195,9 @@ export default {
       const that = this;
       setTimeout(function() {
         var formHeight = that.$refs.formHeight.offsetHeight;
+        console.log("123")
         that.tableHeight = document.body.clientHeight - formHeight - 290;
-      }, 300);
+      }, 350);
     },
     // 行票据打印
     pint(r){

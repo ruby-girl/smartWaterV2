@@ -55,7 +55,7 @@
                 <div class="main-color-warn pl-15" @click="chargesDetails(row)">
                   <a>费用详情</a>
                 </div>
-                <div class="pl-15" @click="delRow(row)">
+                <div class="pl-15" @click="reset(row)">
                   <a>费用撤销</a>
                 </div>             
               </div>
@@ -154,22 +154,22 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
-    delRow(r) {
-      this.$confirm("是否删除当前信息", "提示", {
+    reset(r) {
+      this.$confirm("是否确认撤销费用？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        deleteRole(r.Id).then(res => {
-          this.$message({
-            message: res.message,
-            type: "success",
-            duration: 4000
-          });
-          this.getList();
-        });
+        // deleteRole(r.Id).then(res => {
+        //   this.$message({
+        //     message: res.message,
+        //     type: "success",
+        //     duration: 4000
+        //   });
+        //   this.getList();
+        // });
       });
     },
     excel() {
@@ -184,7 +184,7 @@ export default {
       setTimeout(function() {
         var formHeight = that.$refs.formHeight.offsetHeight;
         that.tableHeight = document.body.clientHeight - formHeight - 220;
-      }, 300);
+      }, 350);
     },
     // 费用详情
     chargesDetails(){
