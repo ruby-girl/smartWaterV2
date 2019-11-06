@@ -46,7 +46,7 @@
           </template>
           <el-table-column
             label="操作"
-            min-width="200"
+           width="280"
             align="center"
             fixed="right"
             class-name="small-padding"
@@ -195,7 +195,6 @@ export default {
       const that = this;
       setTimeout(function() {
         var formHeight = that.$refs.formHeight.offsetHeight;
-        console.log("123")
         that.tableHeight = document.body.clientHeight - formHeight - 290;
       }, 350);
     },

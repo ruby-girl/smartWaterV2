@@ -9,6 +9,10 @@
     custom-class="dialog-background"
     :close-on-click-modal="false"
   >
+  <!-- 这里需要显示的费用类型有：“未缴费 审核中 已撤销”  现金缴费仅需展示 审核中-->
+    <div class="charges-state">
+      审核中
+    </div>
     <div class="details-box-item display-flex align-items-center justify-content-flex-justify">
       <div class="details-left">
         <div>2019-09</div>
@@ -115,7 +119,8 @@ export default {
   data() {
     return {
       radio: 1,
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      chargesState:1001//已缴费
     };
   },
   methods: {
@@ -126,7 +131,7 @@ export default {
 <style lang="scss" scoped>
 /deep/ .dialog-background .el-dialog__body {
   background: #f5f5f5;
-  padding: 25px 20px 0 20px;
+  padding: 15px 20px 0 20px;
 }
 .ladder-left {
   padding-right: 60px;
@@ -183,6 +188,10 @@ export default {
 .padding-tb-10 {
   padding-top: 8px;
   padding-bottom: 8px;
+}
+.charges-state{
+  font-size: 16px;
+ padding-bottom: 15px;
 }
 </style>
 
