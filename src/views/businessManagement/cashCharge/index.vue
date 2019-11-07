@@ -172,7 +172,7 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight-208;
+      that.tableHeight = document.body.clientHeight - formHeight-228;
       that.saveTableHeight = document.body.clientHeight - formHeight-100;
     });
   },
@@ -211,24 +211,6 @@ export default {
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
     },
-    delRow(r) {
-      this.$confirm("是否删除当前信息", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        customClass: "warningBox",
-        showClose: false
-      }).then(() => {
-        deleteRole(r.Id).then(res => {
-          this.$message({
-            message: res.message,
-            type: "success",
-            duration: 4000
-          });
-          this.getList();
-        });
-      });
-    },
     createData(dialog) {
       addRole(dialog.RoleName).then(res => {
         this.$message({
@@ -238,17 +220,6 @@ export default {
         });
         this.dialogFormVisible = false;
         this.handleFilter();
-      });
-    },
-    updateData(dialog) {
-      updateRole(dialog.RoleName, dialog.Id).then(res => {
-        this.dialogFormVisible = false;
-        this.$message({
-          message: res.message,
-          type: "success",
-          duration: 4000
-        });
-        this.getList();
       });
     },
     excel() {

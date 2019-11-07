@@ -12,8 +12,8 @@
           >{{item.time}}</el-checkbox>
           <div class="card-sort font-14">
             <span>按日期：</span>
-            <span>降序</span>
-            <span>升序</span>
+            <span @click="sortChanges">降序</span>
+            <span @click="sortChanges">升序</span>
           </div>
         </div>
         <!-- 具体 -->
@@ -87,8 +87,8 @@ export default {
       type: Number,
       default: 100
     },
+     //父元素全选
     checkedAllParent: {
-      //父元素全选
       type: Boolean,
       default: false
     },
