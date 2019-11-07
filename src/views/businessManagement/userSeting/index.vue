@@ -9,7 +9,7 @@
             <el-button size="mini" @click="getCheckedNodes(2)" class="btn_two"><i class="icon iconfont">&#xe618;</i> 编辑</el-button>
             <el-button size="mini" @click="getCheckedNodes(3)" class="btn_three"><i class="icon iconfont">&#xe68a;</i> 删除</el-button>
           </div>
-          <myTree ref="myChild"></myTree>
+          <myTree ref="myChild" :treeData="oldTreeData"></myTree>
           <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp"> 收起 <i class="iconfont iconshouqi2" style="font-size: 12px;"></i></span>
         </div>
         <!--右侧列表数据-->
@@ -59,7 +59,8 @@
           editStartTime: "",
           editEndTime: "",
           tableId: "0000016"
-        }
+        },
+        oldTreeData:[]
       }
     },
     methods: {
@@ -86,8 +87,7 @@
       getCheckedNodes(type) {
         const _this = this
         let selectNode =  _this.$refs.myChild.selectNode//当前选中数据节点
-        console.log(selectNode)
-        _this.$refs.editDialog.param.pieName = selectNode.text
+        _this.$refs.editDialog.param.pieName = selectNode.label
         _this.$refs.editDialog.param.Id = selectNode.Id
         _this.$refs.editDialog.param.Pid = selectNode.Pid
         switch (type) {
@@ -110,7 +110,8 @@
           case 2:
             selectNode.Id === undefined || selectNode.Id == 0 || selectNode.Level <= 1 ? promptInfoFun(this, 1, '请选择需要编辑的区域！') : _this.$refs.editDialog.dialogVisible = true
             _this.$refs.editDialog.param.AreaNo = selectNode.AreaNo
-            _this.$refs.editDialog.param.AreaName = selectNode.text
+            /*_this.$refs.editDialog.param.AreaName = selectNode.text*///老树
+            _this.$refs.editDialog.param.AreaName = selectNode.label
             _this.$refs.editDialog.title = '编辑'
             break
           case 3:
@@ -142,10 +143,9 @@
        * */
       getTreeData() {
         GetAreaList().then(res => {
+          this.oldTreeData = []
           if (res.code ==0 ) {
-            let datas = res.data,data = []
-            data.push(JSON.parse(JSON.stringify(datas).replace(/label/g,'text').replace(/children/g,'nodes')))
-            this.$refs.myChild.getTreeData(data)
+            this.oldTreeData.push(res.data)
           } else {
             promptInfoFun(this,1,res.message)
           }
