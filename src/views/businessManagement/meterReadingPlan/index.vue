@@ -61,7 +61,7 @@
                 v-if="scope.row.IsCanGenerateOrder"
                 class="operation1"
                 @click="generateOrder(scope.row.Id)"
-              >生成账单</a>
+              >生成费用</a>
               <a
                 class="operation2"
                 @click="changeInput(scope.row.Id,false)"
