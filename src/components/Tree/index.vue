@@ -25,8 +25,6 @@
 </template>
 <script>
   import {promptInfoFun} from "@/utils/index"
-  import {treeClickChecked} from "@/utils/tree"
-
   let count;//暂存遍历二级节点个数
 
   export default {
@@ -68,7 +66,7 @@
        * Object data 树对象
        * */
       getParentId(keyword, data) {
-        count = 0
+        count = 0//暂存遍历二级节点个数
         this.idsArry = []
         let pidArr = []
         let flagArr = []
