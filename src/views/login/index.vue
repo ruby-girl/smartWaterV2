@@ -139,7 +139,8 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      mac:''
     };
   },
   watch: {
@@ -158,6 +159,7 @@ export default {
    let optionList=[]
    try {
      optionList=window.FXYB_WEB_CS_Account.GetAccount()
+     this.mac=window.FXYB_WEB_CS_Account.mac
    } catch (error) {
      console.log('请在CS端操作')
    }
@@ -196,7 +198,8 @@ export default {
           let postData = {
             LoginName: this.loginForm.username,
             LoginPwd: "",
-            privateKeyId: ""
+            privateKeyId: "",
+            mac:this.mac
           };
           getKey().then(res => {
             RSA.setMaxDigits(129);

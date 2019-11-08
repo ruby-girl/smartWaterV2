@@ -2,15 +2,20 @@
   <!--右侧缴费操作 -->
   <div>
     <div class="right-detail-box">
-      <div>应收金额：80元</div>
+      <div>应收金额：{{needMoney}}元</div>
       <div class="display-flex align-items-center">
         <div class="main-color-pink">实收金额：</div>
         <div class="right-detail-input">
-          <input type="text" v-model="num" @keyup.enter="mydebounce()"  @blur="mydebounce()"/>
+          <input
+            type="text"
+            v-model="num"
+            @blur="changeTwoDecimal_x()"
+            @keyup="money($event)"
+          />
         </div>
         <span class="main-color-pink">元</span>
       </div>
-      <div v-show="isAccount==false" style="height:28px;">&#12288;&#12288;找零：80元</div>
+      <div v-show="isAccount==false" style="height:28px;">&#12288;&#12288;找零：{{surplus}}元</div>
     </div>
     <div class="display-flex justify-content-flex-end">
       <div
@@ -21,7 +26,7 @@
     <div class="right-detail-box account-height">
       <div>
         账户金额：
-        <span class="main-color-pink">20</span>元
+        <span class="main-color-pink">{{account}}</span>元
       </div>
     </div>
     <div class="main-more-black-color pint-type">
@@ -58,7 +63,7 @@
   </div>
 </template>
 <script>
-import { debounce } from "@/utils/index";
+import { debounce, updateMoney, changeTwoDecimal } from "@/utils/index";
 export default {
   props: {},
   data() {
@@ -66,34 +71,76 @@ export default {
       radio: 1,
       paymentType: 1,
       isAccount: false,
-      num:22
+      num: "",
+      needMoney: 33.33, //应缴金额
+      surplus: 0, //找零
+      account: 22.33, //账户金额
+      saveAccount: 22.33
     };
   },
-mounted(){
-  this.mydebounce= debounce(this.test, 1000);
-},
+  mounted() {
+    this.mydebounce = debounce(this.test, 600);
+  },
   methods: {
-    getList() {},   
+    getList() {},
     // 选择支付方式
     paymentMethod(i) {
       this.paymentType = i;
       this.$emit("selectPayment", i);
+    },
+    // 输入金额保留2位
+    money(e) {
+      e.target.value = updateMoney(e.target.value);
     },
     selectPint() {
       this.$emit("selectPint", "");
     },
     toggleIsAccount() {
       this.isAccount = !this.isAccount;
+       if(!this.testMoney()) return false
+      this.surplusFunc();
     },
-    // 验证实收金额不能小于应收金额
+    //点击结算-验证
     test() {
-      console.log('这里是先验证')
-     this.testCasha()
+      this.changeTwoDecimal_x();
+      this.pay();
     },
     // 结算
-    testCasha() {
-      console.log("准备结算咯");     
+    pay() {
+      console.log("准备结算咯");
     },
+    // 补齐小数-
+    changeTwoDecimal_x() {
+     this.num= changeTwoDecimal(this.num);
+      if(!this.testMoney()) return false
+     this.surplusFunc()
+    },
+    // 判断输入金额不能小于应缴金额
+    testMoney() {
+      if (parseFloat(this.num) < parseFloat(this.needMoney)) {
+        this.$message({
+          message: "实收金额不能小于应收金额",
+          type: "error",
+          duration: 4000
+        });
+         this.surplus=0
+        return false;
+      }
+    },
+    // 计算找零or+账户
+    surplusFunc() {
+      let surplus =
+        (parseFloat(this.num) * 1000 - parseFloat(this.needMoney) * 1000) /
+        1000;
+      if (this.isAccount) {
+        this.account =
+          (surplus * 1000 + parseFloat(this.account) * 1000) / 1000;
+          this.surplus=0
+      } else {
+        this.surplus = surplus;
+        this.account = this.saveAccount;
+      }
+    }
   }
 };
 </script>

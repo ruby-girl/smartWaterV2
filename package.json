@@ -45,8 +45,6 @@
   "dependencies": {
     "awe-dnd": "^0.3.4",
     "axios": "0.18.1",
-    "bootstrap": "^4.3.1",
-    "bootstrap-treeview": "^1.2.0",
     "clipboard": "2.0.4",
     "codemirror": "5.45.0",
     "driver.js": "0.9.5",
