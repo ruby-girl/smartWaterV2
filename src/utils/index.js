@@ -97,6 +97,37 @@ export function ladderChangeObj(details) {
   })
   return details
 }
+
+
+
+// 阶梯转换 后端返回的对象，将5个阶梯转换为数组(单价水量水费)
+export function ladderChangeArrs(res) {
+  const actions = {
+    "0": [ "OneLadderPrice", "WaterYield1","TotalPrice1"],
+    "1": [ "TwoLadderPrice", "WaterYield2","TotalPrice2"],
+    "2": [ "ThreeLadderPrice", "WaterYield3","TotalPrice3"],
+    "3": [ "FourLadderPrice", "WaterYield4","TotalPrice4"],
+    "4": [ "FiveLadderPrice", "WaterYield5","TotalPrice5"]
+  };
+  let ladder = {
+    ladder: [
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 },
+      { LadderPrice: 0, LadderWaterNum: 0, TotalPrice: 0 }
+    ]
+  }
+  // 对象中 ladder就是阶梯值-可用来做循环
+  let details = { ...res, ...ladder };
+  details.ladder.map(function (item, i) {
+    details.ladder[i].LadderWaterNum = details[actions[i][1]];//水量
+    details.ladder[i].LadderPrice = details[actions[i][0]];//单价
+    details.ladder[i].TotalPrice = details[actions[i][2]];//水费
+  });
+  return details
+}
+
 export function parseTimeFiveEight(time, cFormat) {
   if (arguments.length === 0) {
     return null

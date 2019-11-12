@@ -62,7 +62,7 @@
         </p>
         <div class="plan_box3">
           <h2>水量水费预估</h2>
-          <el-row v-for="(item,index) in temp.ladder.slice(0,temp.LadderNumber)" :key="index" v-if="ifLadder">
+          <el-row v-for="(item,index) in temp.ladder.slice(0,temp.LadderNumber)" :key="index" v-show="ifLadder">
             <el-col :span="8" class="unit">
               {{index + 1}}阶单价：<span>{{ item.LadderPrice || 0}}</span> <label>元/吨</label>
             </el-col>
@@ -74,7 +74,7 @@
             </el-col>
           </el-row>
 
-          <el-row v-else>
+          <el-row v-show="!ifLadder">
             <el-col :span="8" class="unit">
               单价：<span>{{ oneLadder.TotalPrice || 0}}</span> <label>元/吨</label>
             </el-col>
@@ -182,7 +182,7 @@
 <script>
   import {getReading, WaterYieldPricePredict} from "@/api/meterReading"
   import Bus from '@/utils/bus'
-  import {ladderChangeArr, promptInfoFun} from '@/utils/index'
+  import {ladderChangeArrs, promptInfoFun} from '@/utils/index'
 
   export default {
     name: "MeterPlan",
@@ -286,7 +286,7 @@
             let oneData = {}
             this.ifLadder = res.data.IsLadder  //true 时为阶梯计价，需根据LadderNumber 字段计算到第几个阶梯
             if (this.ifLadder) {//启用阶梯
-              this.temp = ladderChangeArr(res.data)//阶梯转换数组
+              this.temp = ladderChangeArrs(res.data)//阶梯转换数组
             } else {//未启用阶梯
               oneData = {
                 TotalPrice: res.data.TotalPrice,//合计单价
