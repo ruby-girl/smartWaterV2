@@ -13,14 +13,14 @@
           <el-select
             v-model="selectHead.CustomerQueryType"
             placeholder="请选择"
-            style="width: 80px;float: left"
+            style="width: 100px;float: left"
           >
-            <el-option label="编号" value="1"></el-option>
-            <el-option label="姓名" value="2"></el-option>
-            <el-option label="简码" value="3"></el-option>
+            <el-option label="用户编号" value="1"></el-option>
+            <el-option label="姓名/简码" value="2"></el-option>
+            <el-option label="水表编号" value="6"></el-option>
           </el-select>
           <el-input
-            v-model="selectHead.CustomerQueryType"
+            v-model="selectHead.CustomerQueryValue"
             maxlength="20"
             placeholder="(长度1-30)"
             @keyup.enter.native="handleFilter"
@@ -44,16 +44,16 @@
     </div>
 
     <el-row class="head-bottom-box">
-      <el-col :md="8" :lg="3" :xl="2">姓名:羊请问</el-col>
-      <el-col :md="8" :lg="4" :xl="3">水表类型:机械表</el-col>
-      <el-col :md="8" :lg="4" :xl="3">电话:18190002838</el-col>
-      <el-col :md="8" :lg="6" :xl="4">水表编号:18a3812312312312</el-col>
-      <el-col :md="12" :lg="7" :xl="12" class="text-wrap">地址:奥术asdasdasd大师大所大所大所多</el-col>
+      <el-col :md="8" :lg="3" :xl="2">姓名:<span>{{user.CustomerName}}</span></el-col>
+      <el-col :md="8" :lg="4" :xl="3">水表类型:<span>{{user.WaterMeterTypeName}}</span></el-col>
+      <el-col :md="8" :lg="4" :xl="3">电话:<span>{{user.Tel}}</span></el-col>
+      <el-col :md="8" :lg="6" :xl="4">水表编号:<span>{{user.SA_WaterMeterNo}}</span></el-col>
+      <el-col :md="12" :lg="7" :xl="12" class="text-wrap">地址:<span>{{user.Address}}</span></el-col>
     </el-row>
   </div>
 </template>
 <script>
-import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import {GetCustomerDataList} from "@/api/userSetting"////模糊查询用户
 export default {
   props: {
     selectHead: {
@@ -61,32 +61,48 @@ export default {
       default: function() {
         return {};
       }
+    },
+    headUser:{
+      type: Object
+    }
+  },
+  watch:{
+    headUser(val){
+      this.user=val
     }
   },
   data() {
     return {
       timevalue: [],
       editUserList: [],
-      paymentNum:88
+      paymentNum:88,
+      user:{}
     };
   },
-  created() {
-    getSelectUser().then(res => {
-      this.editUserList = res.data;
-    });
-  },
   methods: {
-    getTime(v) {
-      if (v) {
-        this.selectHead.editStartTime = v[0];
-        this.selectHead.editEndTime = v[1];
-      } else {
-        this.selectHead.editStartTime = "";
-        this.selectHead.editEndTime = "";
-      }
-    },
     handleFilter() {
-      this.$emit("handleFilter", this.selectHead);
+      if(!this.selectHead.CustomerQueryValue){
+        this.$message({
+          message:'请输入要查询的用户！',
+          type: "error",
+          duration: 4000
+        });
+       return
+      }
+       GetCustomerDataList(this.selectHead).then(res=>{
+        if(res.data.length==0){
+          this.$message({
+          message:'未查询到用户！',
+          type: "error",
+          duration: 4000
+        });
+        }else if(res.data.length==1){
+          this.user=res.data[0]
+          this.$emit("handleFilter", res.data[0]);
+        }else{
+          this.$parent.selectUserShow=true//查找出多个，弹出用户列表，进行选择
+        }       
+      })
     },
     toPaymentQuery(){
       this.$router.push({

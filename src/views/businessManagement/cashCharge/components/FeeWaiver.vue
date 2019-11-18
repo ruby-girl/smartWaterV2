@@ -12,31 +12,15 @@
     <div class="feewaiver-box">
       <el-form
         :inline="true"
-        :model="feeWaiverData"
+        
         class="head-search-form form-inline-small-input"
         size="small"
         label-width="60px"
         @submit.native.prevent
       >
         <el-row>
-          <el-form-item label="水费：">
-            <el-input v-model="feeWaiverData.num" disabled />
-          </el-form-item>
-          <div class="inline-box">
-            <div>减免为</div>
-            <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
-          </div>
-          <el-form-item>
-            <el-input
-              v-model="feeWaiverData.num"
-              @blur="changeTwoDecimal_x($event)"
-              @keyup.native="money($event)"
-            />
-          </el-form-item>
-        </el-row>
-        <el-row>
           <el-form-item label="违约金：">
-            <el-input v-model="feeWaiverData.num" disabled />
+            <el-input v-model="orderMoney" disabled />
           </el-form-item>
           <div class="inline-box">
             <div>减免为</div>
@@ -44,7 +28,7 @@
           </div>
           <el-form-item>
             <el-input
-              v-model="feeWaiverData.num"
+              v-model="inputValue"
               @blur="changeTwoDecimal_x($event)"
               @keyup.native="money($event)"
             />
@@ -60,12 +44,16 @@
 </template>
 <script>
 import { updateMoney, changeTwoDecimal } from "@/utils/index.js";
+ import {OrderFeeWaiver} from "@/api/cashCharge";
 export default {
   props: {
-    //   减免类型
-    feeType: {
-      type: Number,
-      default: 1
+    //   减免Id
+    orderId: {
+      type: String
+    },
+    // 减免前金额
+    orderMoney:{
+      type: Number
     },
     feeWaiverShow: {
       type: Boolean,
@@ -87,15 +75,22 @@ export default {
     return {
       radio: 1,
       dialogFormVisible: false,
-      feeWaiverData: {
-        num: 1,
-        inputValue: 0
-      }
+      inputValue:''
     };
   },
   methods: {
     //   减免请求
-    feeWaiver() {},
+    feeWaiver() {
+      OrderFeeWaiver({SA_Order_Id:this.orderId,AfterFee:this.inputValue}).then(res=>{
+         this.$message({
+            message: '减免成功',
+            type: "success",
+            duration: 4000
+          });
+          this.dialogFormVisible=false
+          this.$emit("getList");
+      })
+    },
     // 输入金额保留2位
     money(e) {
       e.target.value = updateMoney(e.target.value);
