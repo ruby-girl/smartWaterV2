@@ -22,7 +22,7 @@ Vue.component('v-distpicker', VDistpicker)
 import $ from 'jquery'
 
 import * as filters from './filters' // global filters
-import VueDND from 'awe-dnd'
+import VueDND from 'awe-dnd'//拖动
 Vue.prototype.baseUrl='http://192.168.2.216:10002'
 /**
  * If you don't want to use mock-server
