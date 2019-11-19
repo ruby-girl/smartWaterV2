@@ -31,7 +31,7 @@
           <el-button type="primary" size="mini" @click="handleFilter">
             <i class="iconfont iconsousuo"></i>搜索
           </el-button>
-          <el-button type="success" size="mini" @click="handleFilter">
+          <el-button type="success" size="mini" @click="handleFilterIC">
             <i class="iconfont iconduka"></i>读卡
           </el-button>
         </el-form-item>
@@ -54,6 +54,7 @@
 </template>
 <script>
 import {GetCustomerDataList} from "@/api/userSetting"////模糊查询用户
+import {GetICReadCardInfo} from "@/api/userSetting"//IC卡读卡
 export default {
   props: {
     selectHead: {
@@ -102,6 +103,11 @@ export default {
         }else{
           this.$parent.selectUserShow=true//查找出多个，弹出用户列表，进行选择
         }       
+      })
+    },
+    handleFilterIC(){
+      GetICReadCardInfo().then(res=>{
+        
       })
     },
     toPaymentQuery(){

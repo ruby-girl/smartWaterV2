@@ -106,13 +106,13 @@ export default {
           item.checkAll = true;
           item.isIndeterminate = false;
           item.checkedCardDate = item.tableListId;
-        } else {        
+        } else {
           item.checkAll = false;
           item.isIndeterminate = false;
           item.checkedCardDate = [];
         }
       });
-      this.selectCheckedItem()
+      this.selectCheckedItem();
     }
   },
   data() {
@@ -143,27 +143,27 @@ export default {
           checkedCardDate: [], //行已选中的数据
           tableListId: [], //行所有数据的ID
           isIndeterminate: false,
-          YearStr:''
+          YearStr: ""
         };
         res.data.forEach(item => {
-          obj.YearStr=item.YearStr
+          obj.YearStr = item.YearStr;
           obj.arr = item.vdlist;
           this.cardData.push(obj);
         });
-        this.IsDisable()
+        this.IsDisable();
       });
     },
-  // 处理能勾选的数据
-  IsDisable(){
-       this.cardData.forEach((item, i) => {
-          item.arr.forEach(m => {
-            if (m.ChargeFlag!==1003) {
-              //筛选不是禁用状态的数据，处理勾选状态
-              item.tableListId.push(m.Id);
-            }
-          });
+    // 处理能勾选的数据
+    IsDisable() {
+      this.cardData.forEach((item, i) => {
+        item.arr.forEach(m => {
+          if (m.ChargeFlag !== 1003) {
+            //筛选不是禁用状态的数据，处理勾选状态
+            item.tableListId.push(m.Id);
+          }
         });
-  },
+      });
+    },
     // 全选
     handleCheckAllChange(val, i) {
       this.cardData.forEach((item, a) => {
@@ -246,10 +246,10 @@ export default {
     },
     // 撤回
     reset(id) {
-      this.$emit("reset",id);
+      this.$emit("reset", id);
     },
-    feeWaiver(id,num) {
-      this.$emit("feeWaiver",id,num);
+    feeWaiver(id, num) {
+      this.$emit("feeWaiver", id, num);
     }
   }
 };

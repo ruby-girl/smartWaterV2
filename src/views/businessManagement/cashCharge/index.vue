@@ -59,6 +59,7 @@
           :cardQuery="cardQuery"
           :checkedAllParent.sync="checkedAllParent"
           :isIndeterminateParent.sync="isIndeterminateParent"
+          :totalLength.sync="totalLength"
           @details="details"
           @reset="reset"
           @feeWaiver="feeWaiverFunc"
@@ -90,6 +91,10 @@
           @selectPayment="selectPayment"
           :unpaidMoney="unpaidMoney"
           :accountMoney="accountMoney"
+          :customerId="listQuery.CustomerId"
+          :payOrderId="payOrderId"
+          :totalLength="totalLength"
+          @getList="getList"
         ></right-box>
       </el-col>
       <!-- 右 -->
@@ -134,9 +139,10 @@ export default {
   },
   data() {
     return {
-      total: 0,
+      totalLength: 0,
       tableHeight: 0,
       orderId:'',//需要减免的费用单ID
+      payOrderId:[],
       orderMoney:0,//减免前金额
       accountMoney:0,//账户余额
       headQuery: {
@@ -245,10 +251,14 @@ export default {
     // 勾选操作计算剩余未缴
     calculatedAmount(data) {
       this.unpaidMoney = 0;
+      this.payOrderId=[]
       data.forEach(item => {
+        console.log(item.Id)
+        this.payOrderId.push(item.Id)
         this.unpaidMoney =
           (this.unpaidMoney * 1000 + parseFloat(item.PriceSurplus) * 1000) / 1000;
       });
+      console.log(this.payOrderId)
     },
     // 费用详情
     details(item) {

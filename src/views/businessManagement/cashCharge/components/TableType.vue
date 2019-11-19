@@ -80,19 +80,13 @@ export default {
     tableHeight: {
       type: Number,
       default: 100
-    }
+    },
+    totalLength:{}
   },
   components: { Pagination, customTable },
   mounted() {
     this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-  },
-  watch: {
-    // "listQuery.CustomerId": {
-    //   handler(val, oldVal) {
-    //     this.getList();
-    //   }
-    // }
   },
   computed: {
     tableHead: function() {
@@ -125,11 +119,16 @@ export default {
       //表格
       GetOrder(this.listQuery).then(res => {
         this.total = res.count;
-        res.data.filter(item => {
+        res.data.forEach(item => {
           if (item.ChargeFlag == 1003) {
             item.tooltip = "费用审核中，暂不能缴费";
           }
         });
+      // 筛选可以选择的数据，需求（当用户有未缴纳的费用时，不可单独进行预存操作）
+        let canChecked=res.data.filter(item => {
+           return item.ChargeFlag !== 1003      
+        });
+        this.$emit("update:totalLength",canChecked.length);
         this.tableData = res.data;
       });
     },

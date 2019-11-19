@@ -37,6 +37,15 @@ export function SelectFeeDetail(data){
     params: data
   })
 }
+// 结算
+export function Settlement(data){
+  return request({
+    url: '/PayMent/Settlement',
+    method: 'post',
+    data: data
+  })
+}
+
 // 收费查询
 
 //列表
