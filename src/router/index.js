@@ -247,6 +247,15 @@ export const asyncRoutes = [
           title: '用水性质设置',
           roles: ['1']
         }
+      },
+      {
+        path: 'businessManagement',
+        component: () => import('@/views/systemManagement/businessManagement'),
+        name: 'businessManagement',
+        meta: {
+          title: '业务流程管理',
+          roles: ['1']
+        }
       }
     ]
   },
