@@ -80,7 +80,6 @@ export default {
   },
   watch:{
     unpaidMoney(v){
-      console.log('勾选后计算')
        this.calculationReceivable()
     }
   },
@@ -90,9 +89,7 @@ export default {
       paymentType: 1,
       isAccount: false,
       num: "",
-      //unpaidMoney:33.99,//剩余未缴
-      needMoney: 0, //应缴金额
-     
+      needMoney: 0, //应缴金额    
       surplus: 0, //找零
       saveAccount:0//zanshi
     };
@@ -109,15 +106,13 @@ export default {
     },
     // 计算应收
     calculationReceivable(){
-      // 应缴金额=账户余额-剩余未缴
-      
+      // 应缴金额=账户余额-剩余未缴     
       let needMoney=(parseFloat(this.accountMoney)*1000-parseFloat(this.unpaidMoney)*1000)/1000
       if(needMoney>0){
         this.needMoney=0
       }else{
         this.needMoney=Math.abs(needMoney).toFixed(2)
-      }
-      
+      }     
     },
     // 输入金额保留2位
     money(e) {

@@ -143,7 +143,7 @@ export default {
       this.$emit("calculatedAmount", val);
     },
     details(row) {
-      this.$emit("details", row.Id);
+      this.$emit("details", row);
     },
     reset(row) {
       this.$emit("reset",row.Id);

@@ -49,16 +49,16 @@
                           :class="{'main-color-tiffany':li.OrderType==2001,'main-color-warn':li.OrderType==2002,'main-color-orange':li.OrderType==2003}"
                         >{{li.OrderTypeStr}}</span>
                         <span>
-                          <span class="main-color-pink font-weight">{{li.OrderType}}</span>元
+                          <span class="main-color-pink font-weight">{{li.PriceSurplus}}</span>元
                         </span>
                       </div>
                       <!-- 详情，费用减免。。按钮 -->
                       <div
                         class="card-item-btn-box display-flex justify-content-flex-center font-14"
                       >
-                        <div class="card-item-btn" @click="details(li.Id)">详情</div>
+                        <div class="card-item-btn" @click="details(li)">详情</div>
                         <div class="card-item-btn margin-samll" @click="reset(li.Id)">费用撤回</div>
-                        <div class="card-item-btn" @click="feeWaiver(li.Id,li.OrderType)">费用减免</div>
+                        <div class="card-item-btn" @click="feeWaiver(li.Id,li.PriceSurplus)">费用减免</div>
                       </div>
                     </div>
                   </div>
@@ -106,12 +106,13 @@ export default {
           item.checkAll = true;
           item.isIndeterminate = false;
           item.checkedCardDate = item.tableListId;
-        } else {
+        } else {        
           item.checkAll = false;
           item.isIndeterminate = false;
           item.checkedCardDate = [];
         }
       });
+      this.selectCheckedItem()
     }
   },
   data() {

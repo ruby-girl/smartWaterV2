@@ -8,9 +8,10 @@
     center
     custom-class="dialog-background"
     :close-on-click-modal="false"
+    @open="getDetail"
   >
   <!-- 这里需要显示的费用类型有：“未缴费 审核中 已撤销”  现金缴费仅需展示 审核中-->
-    <div class="charges-state">
+    <div class="charges-state" v-if="temp.ChargeFlag==1003">
       审核中
     </div>
     <div class="details-box-item display-flex align-items-center justify-content-flex-justify">
@@ -21,19 +22,19 @@
       <div class="details-left-box">
         <div class="display-flex align-items-center">
           <span>水费：</span>
-          <span class="font-weight main-color-red">60.00元</span>
+          <span class="font-weight main-color-red">{{detail.TotalWaterPrice}}元</span>
         </div>
       </div>
       <div class="ladder-box flex-1">
         <!-- 循环阶梯 -->
-        <div class="display-flex align-items-center ladder-item" v-for="item in 3">
+        <div class="display-flex align-items-center ladder-item" v-for="(item,i) in detail.ladder">
           <div class="display-flex ladder-left">
-            <div class="circle-num">{{item}}</div>
-            <span>{{item}}阶用水量：20吨</span>
+            <div class="circle-num">{{i+1}}</div>
+            <span>{{i+1}}阶用水量：{{item.LadderWaterNum}}吨</span>
           </div>
           <div>
-            {{item}}阶水费：
-            <span class="color-more-black">{{item+1}}.00</span>元
+            {{i+1}}阶水费：
+            <span class="color-more-black">{{item.TotalPrice}}</span>元
           </div>
         </div>
       </div>
@@ -47,14 +48,14 @@
       <div class="details-left-box padding-tb-10">
         <div class="display-flex align-items-center">
           <span>违约金：</span>
-          <span class="font-weight main-color-red">60.00元</span>
+          <span class="font-weight main-color-red">{{detail.olf.LeteFee}}元</span>
         </div>
       </div>
       <div class="ladder-box flex-1">
         <div class="display-flex align-items-center ladder-item">
           <div>
             欠费金额&nbsp;*&nbsp;逾期
-            <span class="color-more-black">10</span>
+            <span class="color-more-black">{{detail.olf.LeteFee}}</span>
 天&nbsp;*&nbsp;‰5&nbsp;=&nbsp;违约金
           </div>
         </div>
@@ -68,11 +69,11 @@
       <div class="ladder-box flex-1 border-left">
         <div class="ladder-item">
           账户扣减：
-          <span class="font-weight main-color">10.00</span>元
+          <span class="font-weight main-color">{{detail.orr.PricePaid}}</span>元
         </div>
         <div class="ladder-item">
           违约金减免：
-          <span class="font-weight main-color">10.00</span>元
+          <span class="font-weight main-color">{{detail.orr.LeteFeeFree}}</span>元
         </div>
         <div class="ladder-item">
           水费减免：
@@ -98,11 +99,16 @@
   </el-dialog>
 </template>
 <script>
+import {SelectFeeDetail} from "@/api/cashCharge"
+import { ladderChangeArrs } from "@/utils/index";
 export default {
   props: {
     chargesDetailsShow: {
       type: Boolean,
       default: false
+    },
+    temp:{
+       type: Object
     }
   },
   watch: {
@@ -120,11 +126,22 @@ export default {
     return {
       radio: 1,
       dialogFormVisible: false,
-      chargesState:1001//已缴费
+      chargesState:1001,//已缴费
+      detail:{
+        olf:{},
+        orr:{}
+      }
     };
   },
   methods: {
-    getList() {}
+    getDetail() {
+      SelectFeeDetail({billId:this.temp.Id}).then(res=>{
+        let detail = ladderChangeArrs(res.data.mrod); //阶梯转换数组
+       
+        this.detail={...detail,...res.data}
+         console.log(this.detail)
+      })
+    }
   }
 };
 </script>
