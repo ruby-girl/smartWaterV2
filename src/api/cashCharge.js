@@ -19,12 +19,39 @@ export function OrderFeeCancel(data) {//费用撤销
   return request({
     url: '/Order/OrderFeeCancel',
     method: 'post',
-    data: data
+    params: data
   })
 }
 export function OrderFeeWaiver(data) {//费用减免
   return request({
     url: '/Order/OrderFeeWaiver',
+    method: 'post',
+    params: data
+  })
+}
+// 费用详情
+export function SelectFeeDetail(data){
+  return request({
+    url: '/PayMent/SelectFeeDetail',
+    method: 'post',
+    params: data
+  })
+}
+// 结算
+export function Settlement(data){
+  return request({
+    url: '/PayMent/Settlement',
+    method: 'post',
+    data: data
+  })
+}
+
+// 收费查询
+
+//列表
+export function SelectPayMentDataList(data){
+  return request({
+    url: '/PayMent/SelectPayMentDataList',
     method: 'post',
     params: data
   })

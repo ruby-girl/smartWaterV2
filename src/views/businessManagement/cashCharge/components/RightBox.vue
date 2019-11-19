@@ -20,11 +20,14 @@
       </div>
       <div v-show="isAccount==false" style="height:28px;">&#12288;&#12288;找零：{{surplus}}元</div>
     </div>
-    <div class="display-flex justify-content-flex-end">
-      <div
-        :class="{'save-account':true,'save-account-active':isAccount==true}"
-        @click="toggleIsAccount"
-      >{{isAccount==true?'账户转出':'存入账户'}}</div>
+    <div class="display-flex save-account">
+      <span>
+        是否存入账户:&emsp;
+      </span>
+      <el-radio-group v-model="isAccount">
+      <el-radio :label="true">是</el-radio>
+      <el-radio :label="false">否</el-radio>
+    </el-radio-group>
     </div>
     <!-- <div class="right-detail-box account-height">
       <div>
@@ -48,8 +51,8 @@
     </div>
     <div class="display-flex align-items-center justify-content-flex-justify">
       <div
-        :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==1?true:false}"
-        @click="paymentMethod(1)"
+        :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==2701?true:false}"
+        @click="paymentMethod(2701)"
       >
         <i class="iconfont iconxianjin"></i>
         <span>现金</span>
@@ -67,12 +70,16 @@
 </template>
 <script>
 import { debounce, updateMoney, changeTwoDecimal } from "@/utils/index";
+import {Settlement} from "@/api/cashCharge"
 export default {
   props: {
-    unpaidMoney: {
+    unpaidMoney: {//剩余未缴
       type: Number,
       default: 0
     },
+    totalLength:{},//用户所有未缴费状态的数据个数-需求（当用户有未缴纳的费用时，不可单独进行预存操作）
+    payOrderId:{},//结算的费用单ID
+    customerId:{},//用户ID
      accountMoney:{
        type: Number,
       default: 0
@@ -80,20 +87,23 @@ export default {
   },
   watch:{
     unpaidMoney(v){
-      console.log('勾选后计算')
        this.calculationReceivable()
+    },
+    isAccount(v){
+      //  this.isAccount =v;
+       if(!this.testMoney()) return false
+      this.surplusFunc();
     }
   },
   data() {
     return {
       radio: 1,
-      paymentType: 1,
+      paymentType: 2701,
       isAccount: false,
       num: "",
-      //unpaidMoney:33.99,//剩余未缴
-      needMoney: 0, //应缴金额
-     
+      needMoney: 0, //应缴金额    
       surplus: 0, //找零
+      balanceDeduction:0,//账户抵扣
       saveAccount:0//zanshi
     };
   },
@@ -109,15 +119,15 @@ export default {
     },
     // 计算应收
     calculationReceivable(){
-      // 应缴金额=账户余额-剩余未缴
-      
+      // 应缴金额=账户余额-剩余未缴     
       let needMoney=(parseFloat(this.accountMoney)*1000-parseFloat(this.unpaidMoney)*1000)/1000
       if(needMoney>0){
         this.needMoney=0
+        this.balanceDeduction=this.unpaidMoney//计算账户抵扣了多少钱
       }else{
         this.needMoney=Math.abs(needMoney).toFixed(2)
-      }
-      
+        this.balanceDeduction=this.accountMoney
+      }     
     },
     // 输入金额保留2位
     money(e) {
@@ -126,19 +136,50 @@ export default {
     selectPint() {
       this.$emit("selectPint", "");
     },
-    toggleIsAccount() {
-      this.isAccount = !this.isAccount;
-       if(!this.testMoney()) return false
-      this.surplusFunc();
-    },
     //点击结算-验证
     test() {
-      this.changeTwoDecimal_x();
-      this.pay();
+      this.changeTwoDecimal_x();//补齐小数-
+      if(!this.customerId){
+        this.$message({
+          message: "请查询需要缴费的用户！",
+          type: "error",
+          duration: 4000
+        });
+        return false
+      }
+      if(this.payOrderId.length==0&&this.totalLength>0){
+        this.$message({
+          message: "请勾选需要缴纳的费用！",
+          type: "error",
+          duration: 4000
+        });
+        return false
+      }
+      if(!this.testMoney()) return false//验证金额
+      this.pay();//结算
     },
     // 结算
     pay() {
-      console.log("准备结算咯");
+      if(this.paymentType==2){
+         this.$message({
+          message: "扫码支付暂未开通，敬请期待！",
+          type: "error",
+          duration: 4000
+        });
+        return false
+      }
+      let obj={
+        customerId:this.customerId,
+        orderId:this.payOrderId,
+        receivable:this.unpaidMoney,//剩余未缴
+        receipts:this.num,//实收
+        balanceDeduction:this.balanceDeduction,//账户抵扣
+        isAccount:this.isAccount,
+        payType:this.paymentType
+      }
+      Settlement(obj).then(res=>{
+        this.$emit("getList");        
+      })
     },
     // 补齐小数-
     changeTwoDecimal_x() {
@@ -161,7 +202,7 @@ export default {
     },
     // 计算找零
     surplusFunc() {   
-      if (this.isAccount) 
+      if (this.isAccount||!this.num) 
       this.surplus=0
       else
       this.surplus = (parseFloat(this.num) * 1000 - parseFloat(this.needMoney) * 1000) /1000
@@ -196,18 +237,10 @@ export default {
   }
 }
 .save-account {
-  color: #00b3a1;
-  border: 1px solid #00b3a1;
-  border-radius: 4px;
-  padding: 6px 8px;
-  width: 86px;
-  text-align: center;
+  padding: 8px 0;
   font-size: 13px;
-  margin: 12px 0;
-  cursor: pointer;
-  &:hover {
-    opacity: 0.9;
-  }
+  margin: 8px 0;
+  color:#46494c;
 }
 .account-height {
   height: 54px;
@@ -284,10 +317,6 @@ export default {
 .cash-assets-scan-active {
   background: #33b300;
   color: #fff !important;
-}
-.save-account-active {
-  background: #00b2a1;
-  color: #fff;
 }
 </style>
 

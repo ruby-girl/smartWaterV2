@@ -59,6 +59,7 @@
           :cardQuery="cardQuery"
           :checkedAllParent.sync="checkedAllParent"
           :isIndeterminateParent.sync="isIndeterminateParent"
+          :totalLength.sync="totalLength"
           @details="details"
           @reset="reset"
           @feeWaiver="feeWaiverFunc"
@@ -90,12 +91,16 @@
           @selectPayment="selectPayment"
           :unpaidMoney="unpaidMoney"
           :accountMoney="accountMoney"
+          :customerId="listQuery.CustomerId"
+          :payOrderId="payOrderId"
+          :totalLength="totalLength"
+          @getList="getList"
         ></right-box>
       </el-col>
       <!-- 右 -->
     </el-row>
-    <charges-details :chargesDetailsShow.sync="chargesDetailsShow" />
-    <over-details :overDetailsShow.sync="overDetailsShow" />
+    <charges-details :chargesDetailsShow.sync="chargesDetailsShow" :temp="temp"/>
+    <over-details :overDetailsShow.sync="overDetailsShow" :orderId="orderId"/>
     <select-user :selectUserShow.sync="selectUserShow" :headQuery="headQuery" @handleFilter="handleFilter"/>
     <fee-waiver :feeWaiverShow.sync="feeWaiverShow" :orderId="orderId" :orderMoney="orderMoney" @getList="getList"/>
     <select-pint :selectPintShow.sync="selectPintShow" />
@@ -134,17 +139,15 @@ export default {
   },
   data() {
     return {
-      total: 0,
+      totalLength: 0,
       tableHeight: 0,
       orderId:'',//需要减免的费用单ID
+      payOrderId:[],
       orderMoney:0,//减免前金额
       accountMoney:0,//账户余额
       headQuery: {
         CustomerQueryValue: "",
         CustomerQueryType: '1',
-        UserState: -1,//冗余字段-后端
-        UserType: -1,//冗余字段-后端
-        WaterTypeId: -1,//冗余字段-后端
         page: 1,
         limit: 10,
         tableId: "0000018"
@@ -158,6 +161,7 @@ export default {
         CustomerId:"",
         tableId: "0000018"//
       },
+      temp:{},
       cardQuery:{
          filed: "",
         sort: "",
@@ -187,6 +191,7 @@ export default {
   },
   mounted: function() {
     this.$nextTick(function() {
+     
       // 自适应表格高度 getBoundingClientRect().height比dom.offsetHeight性能更好
       var formHeight = this.$refs.formHeight.getBoundingClientRect().height;
       this.tableHeight = document.body.clientHeight - formHeight - 230;
@@ -246,14 +251,18 @@ export default {
     // 勾选操作计算剩余未缴
     calculatedAmount(data) {
       this.unpaidMoney = 0;
+      this.payOrderId=[]
       data.forEach(item => {
+        console.log(item.Id)
+        this.payOrderId.push(item.Id)
         this.unpaidMoney =
-          (this.unpaidMoney * 1000 + parseFloat(item.OrderType) * 1000) / 1000;
+          (this.unpaidMoney * 1000 + parseFloat(item.PriceSurplus) * 1000) / 1000;
       });
+      console.log(this.payOrderId)
     },
     // 费用详情
-    details(id) {
-       this.orderId=id
+    details(item) {
+       this.temp=item
       this.chargesDetailsShow = true;
     },
     // 费用撤回

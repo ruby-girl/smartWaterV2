@@ -210,8 +210,15 @@ export function GetWaterPropertyList(data) {
   })
 }
 
-
-
+// IC卡读卡
+// IC卡读卡
+export function GetICReadCardInfo(data){
+  return request({
+    url: '/Customer/GetICReadCardInfo',
+    method: 'post',
+    data: data
+  })
+}
 
 
 

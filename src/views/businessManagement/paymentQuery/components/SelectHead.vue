@@ -8,10 +8,11 @@
     @submit.native.prevent
   >
     <el-form-item label="用户：" label-width="65px">
-      <el-select v-model="selectHead.editUserId" placeholder="请选择" style="width: 80px;float: left">
-        <el-option label="编号" value="1"></el-option>
-        <el-option label="姓名" value="2"></el-option>
-        <el-option label="简码" value="3"></el-option>
+      <el-select v-model="selectHead.editUserId" placeholder="请选择" style="width: 100px;float: left">
+        <el-option label="用户编号" value="1"></el-option>
+        <el-option label="姓名/简码" value="2"></el-option>
+        <el-option label="水表编号" value="3"></el-option>
+        <el-option label="交易流水号" value="4"></el-option>
       </el-select>
       <el-input
         v-model="selectHead.editUserId"

@@ -86,11 +86,7 @@ import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import TableTotal from "@/components/TableTotal/index";
 import {
-  getRolesList,
-  addRole,
-  updateRole,
-  deleteRole,
-  exportExcel
+  SelectPayMentDataList
 } from "@/api/role";
 export default {
   name: "paymentQuery",
@@ -147,7 +143,7 @@ export default {
       else this.tableHeight = this.tableHeight + 80;
     },
     getList() {
-      getRolesList(this.listQuery).then(res => {
+      SelectPayMentDataList(this.listQuery).then(res => {
         this.total = res.count;
         this.tableData = res.data;
       });
