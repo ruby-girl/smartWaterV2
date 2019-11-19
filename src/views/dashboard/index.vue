@@ -7,7 +7,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import adminDashboard from './admin'
-
+import { planConpanySelect } from '@/api/plan'
 export default {
   name: 'Dashboard',
   components: { adminDashboard },
@@ -26,6 +26,11 @@ export default {
             return false;
         }
     };
+    planConpanySelect().then(res => {
+       this.$store.state.app.companyArr=res.data
+    })
+    
+  
   },
   computed: {
     ...mapGetters([

@@ -2,7 +2,7 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :companyOptions="companyParentOptions" />
+        <select-head :companyOptions="companyParentOptions" ref="child1"/>
       </div>
       <div
         class="table-top-btn-padding display-flex justify-content-flex-justify"
@@ -98,6 +98,7 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import AddReadingPlan from "./components/AddReadingPlan";
+import {getCompany} from "@/utils/companyArry";
 import {
   searchPlanList,
   exportPlanList,
@@ -179,13 +180,18 @@ export default {
         that.isShowAdPlan = false;
       }
     });
-    planConpanySelect().then(res => {
+    //planConpanySelect().then(res => {
       //获取水厂李彪
-      if (res.code == 0) {
-        that.companyParentOptions = [];
-        that.companyParentOptions = res.data;
+      if(getCompany()){
+        that.companyParentOptions=getCompany()
+      }else {
+        that.companyParentOptions=[]
       }
-    });
+      // if (res.code == 0) {
+      //   that.companyParentOptions = [];
+      //   that.companyParentOptions = res.data;
+      // }
+    //});
   },
   mounted: function() {
     this.$nextTick(function() {
@@ -271,6 +277,7 @@ export default {
     },
     searchTableList() {
       //查询列表
+      this.$refs.child1.getTime()
       const that = this;
       if(this.selectHead.createStartTime==""||this.selectHead.createEndTime==""){
          that.$message({

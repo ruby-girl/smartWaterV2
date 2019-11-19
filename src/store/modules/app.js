@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie'
 import { getDictionaryItem } from '@/api/index'
+import { planConpanySelect } from '@/api/plan'
 const state = {
   sidebar: {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
@@ -7,7 +8,8 @@ const state = {
   },
   device: 'desktop',
   size: Cookies.get('size') || 'medium',
-  dictionaryItem:[]//字典项
+  dictionaryItem: [],//字典项
+  companyArr: []//字典项
 }
 
 const mutations = {
@@ -34,6 +36,9 @@ const mutations = {
   },
   SET_DICTIONARY: (state, dictionary) => {
     state.dictionaryItem = dictionary
+  },
+  SET_companyarr: (state, company) => {
+    state.companyArr = company
   }
 }
 
@@ -50,20 +55,33 @@ const actions = {
   setSize({ commit }, size) {
     commit('SET_SIZE', size)
   },
-  setDictionary({commit},dictionary){
+  setDictionary({ commit }, dictionary) {
     commit('SET_DICTIONARY', dictionary)
   },
   setDictionary({ commit }) {//set字典项
-      getDictionaryItem().then(response => {
-        const { data } = response
-        commit('SET_DICTIONARY', data)
-      })
+    getDictionaryItem().then(response => {
+      const { data } = response
+      commit('SET_DICTIONARY', data)
+    })
   },
+  setDCompany({ commit }, state) {
+    return new Promise((resolve, reject) => {
+      planConpanySelect(state.token).then(response => {
+        const { data } = response.data
+        commit('SET_companyarr', data)
+        //setToken(data)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+
+  }
 }
 
 export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
-}
+    namespaced: true,
+    state,
+    mutations,
+    actions
+  }

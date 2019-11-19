@@ -79,11 +79,49 @@ export default {
       planStateOptions: []
     };
   },
+  created() {
+    const time = new Date();
+    let y = time.getFullYear();
+    let m = time.getMonth() + 1;
+    let d = time.getDate();
+    let lm, ly;
+    let nm, ny;
+
+    if (m - 6 < 0) {
+      lm = m + 12 - 6;
+      ly = y - 1;
+    } else {
+      lm = m - 6;
+      ly = y;
+    }
+    if (m + 6 > 12) {
+      nm = m + 6 - 12;
+      ny = y + 1;
+    } else {
+      nm = m + 6;
+      ny = y;
+    }
+    if (lm < 10) {
+      lm = "0" + lm;
+    }
+    if (nm < 10) {
+      nm = "0" + nm;
+    }
+     if (d < 10) {
+      d = "0" + d;
+    }
+    let lastTime = ly + "-" + lm + "-" + d+" "+"00:00:00";
+    let newTime = ny + "-" + nm + "-" + d+" "+"23:59:59";
+    this.warterMeterPlanDate.push(lastTime)
+    this.warterMeterPlanDate.push(newTime)
+  
+  },
   methods: {
     handleFilter() {
+      
       this.$parent.searchTableList();
     },
-   
+
     getTime() {
       //时间格式化
       const date = this.warterMeterPlanDate;

@@ -2,6 +2,7 @@ const getters = {
   sidebar: state => state.app.sidebar,
   size: state => state.app.size,
   dictionaryItem: state => state.app.dictionaryItem,//字典项
+  companyArr: state => state.app.companyArr,//字典项
   device: state => state.app.device,
   visitedViews: state => state.tagsView.visitedViews,
   cachedViews: state => state.tagsView.cachedViews,

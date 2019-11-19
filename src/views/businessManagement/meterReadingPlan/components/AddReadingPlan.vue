@@ -29,17 +29,17 @@
       <el-form-item label="计划抄表日期：">
         <el-date-picker
           v-model="addPlanData.StartPlanDate"
-          type="datetime"
+          type="date"
           readonly
           placeholder="选择日期时间"
         ></el-date-picker>
         <el-date-picker
           v-model="addPlanData.EndPlanDate"
-          type="datetime"
-          default-time="23:59:59"
+          type="date"
           placeholder="选择日期时间"
-          format="yyyy-MM-dd HH:mm:ss"
-          value-format="yyyy-MM-dd HH:mm:ss"
+          :picker-options="endDateLimit"
+          format="yyyy-MM-dd "
+          value-format="yyyy-MM-dd "
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -81,6 +81,23 @@ export default {
   methods: {
     addMeterReadingPlan() {
       let that = this;
+      if (!this.addPlanData.SA_WaterFactory_Id) {
+        that.$message({
+          message: "请选择水厂",
+          type: "warning"
+        });
+        return false;
+      }
+      if (!this.addPlanData.EndPlanDate) {
+        that.$message({
+          message: "请选择抄表结束时间",
+          type: "warning"
+        });
+        return false;
+      }
+      this.addPlanData.EndPlanDate = this.addPlanData.EndPlanDate + "23:59:59";
+      // this.addPlanData.StartPlanDate =this.addPlanData.StartPlanDate + " 00:00:00";
+        
       addMeterReadingPlan(this.addPlanData).then(res => {
         if (res.code == 0) {
           this.AdialogFormVisible = false;
@@ -99,8 +116,8 @@ export default {
           this.$parent.searchTableList();
         } else {
           that.$message({
-            message: res.msg ? res.msg : "warning",
-            type: "success"
+            message: res.msg ? res.msg : "添加失败",
+            type: "warning"
           });
         }
       });
@@ -112,6 +129,11 @@ export default {
       }).then(res => {
         if (res.code == 0) {
           that.addPlanData.StartPlanDate = res.data;
+          that.endDateLimit = {
+            disabledDate(time) {
+              return time.getTime()<new Date(res.data)
+            }
+          };
         }
       });
     }
@@ -127,7 +149,8 @@ export default {
         IsAutoGenerateOrder: "",
         IsApplyOtherFactory: false
       },
-      warterMeterPlanDate: []
+      warterMeterPlanDate: [],
+      endDateLimit: null
     };
   }
 };
