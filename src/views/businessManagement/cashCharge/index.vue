@@ -1,7 +1,7 @@
 <template>
   <div class="section-container">
     <div ref="formHeight" class="cash-padding-bg padding-20">
-      <select-head :select-head="listQuery" @handleFilter="handleFilter" />
+      <select-head :select-head="headQuery" @handleFilter="handleFilter" :headUser="headUser"/>
     </div>
     <!-- 表格模式 -->
     <el-row :gutter="10" class="container-bottom-box display-flex">
@@ -17,7 +17,7 @@
               :visible-arrow="false"
             >
               <div
-                @click="type=2"
+                @click="toggle(2)"
                 :class="{'change-tab':true,'iconfont':true,'iconzu':true,'tab-active': this.type==2}"
               ></div>
             </el-tooltip>
@@ -29,7 +29,7 @@
               :visible-arrow="false"
             >
               <div
-                @click="type=1"
+                @click="toggle(1)"
                 :class="{'change-tab':true,'iconfont':true,'iconzu1':true,'tab-active': this.type==1}"
                 style="border:none"
               ></div>
@@ -54,21 +54,27 @@
         <components
           :is="typeComponents"
           :listQuery="listQuery"
-          :total="total"
           :tableHeight="tableHeight"
           ref="tableTypeCard"
-          :tableData="tableData"
-          :saveTableHeight="saveTableHeight"
+          :cardQuery="cardQuery"
           :checkedAllParent.sync="checkedAllParent"
           :isIndeterminateParent.sync="isIndeterminateParent"
           @details="details"
           @reset="reset"
-          @feeWaiver="feeWaiver"
+          @feeWaiver="feeWaiverFunc"
+          @calculatedAmount="calculatedAmount"
         ></components>
       </el-col>
       <!-- IC卡展示内容 -->
-      <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg ic-container" v-if="isIC" :style="{'height':saveTableHeight+'px'}">
-        <components :is="icType" :tableData="tableData" :saveTableHeight="saveTableHeight"></components>
+      <el-col
+        :md="14"
+        :lg="16"
+        :xl="16"
+        class="cash-padding-bg ic-container"
+        v-if="isIC"
+        :style="{'height':saveTableHeight+'px'}"
+      >
+        <components :is="icType" :tableData="tableData" :tableHeight="tableHeight"></components>
       </el-col>
       <!-- 左边表格end -->
       <!-- 右 -->
@@ -79,15 +85,19 @@
         class="cash-padding-bg cash-right-box"
         :style="{'height':saveTableHeight+'px'}"
       >
-        <right-box @selectPint="selectPint" @selectPayment="selectPayment"></right-box>
+        <right-box
+          @selectPint="selectPint"
+          @selectPayment="selectPayment"
+          :unpaidMoney="unpaidMoney"
+          :accountMoney="accountMoney"
+        ></right-box>
       </el-col>
       <!-- 右 -->
     </el-row>
     <charges-details :chargesDetailsShow.sync="chargesDetailsShow" />
     <over-details :overDetailsShow.sync="overDetailsShow" />
-    <select-user :selectUserShow.sync="selectUserShow" />
-    <fee-waiver :feeWaiverShow.sync="feeWaiverShow" />
-    <over-fee-waiver :overFeeWaiverShow.sync="overFeeWaiverShow" />
+    <select-user :selectUserShow.sync="selectUserShow" :headQuery="headQuery" @handleFilter="handleFilter"/>
+    <fee-waiver :feeWaiverShow.sync="feeWaiverShow" :orderId="orderId" :orderMoney="orderMoney" @getList="getList"/>
     <select-pint :selectPintShow.sync="selectPintShow" />
     <payment-code :paymentCodeShow.sync="paymentCodeShow" />
   </div>
@@ -99,20 +109,13 @@ import CardType from "./components/CardType";
 import RightBox from "./components/RightBox";
 import ChargesDetails from "./components/ChargesDetails"; //水费详情弹窗
 import OverDetails from "./components/OverDetails"; //除水费外其它费用详情弹窗
-import SelectUser from "./components/SelectUser";
+import SelectUser from "@/components/SelectUser";
 import FeeWaiver from "./components/FeeWaiver"; //水费减免弹窗
-import OverFeeWaiver from "./components/OverFeeWaiver"; //除水费外其它费用减免弹窗
 import SelectPint from "./components/SelectPint"; //选择打印机
 import PaymentCode from "./components/PaymentCode"; //扫码支付
 import CreditCardAlready from "./components/IcType/CreditCardAlready"; //IC卡已刷卡
 import NoCreditCard from "./components/IcType/NoCreditCard"; //IC卡未刷卡
-import {
-  getRolesList,
-  addRole,
-  updateRole,
-  deleteRole,
-  exportExcel
-} from "@/api/role";
+ import {OrderFeeCancel} from "@/api/cashCharge";
 export default {
   name: "cashCharge",
   components: {
@@ -124,7 +127,6 @@ export default {
     OverDetails,
     SelectUser,
     FeeWaiver,
-    OverFeeWaiver,
     SelectPint,
     PaymentCode,
     NoCreditCard,
@@ -134,65 +136,95 @@ export default {
     return {
       total: 0,
       tableHeight: 0,
-      temp: {},
+      orderId:'',//需要减免的费用单ID
+      orderMoney:0,//减免前金额
+      accountMoney:0,//账户余额
+      headQuery: {
+        CustomerQueryValue: "",
+        CustomerQueryType: '1',
+        UserState: -1,//冗余字段-后端
+        UserType: -1,//冗余字段-后端
+        WaterTypeId: -1,//冗余字段-后端
+        page: 1,
+        limit: 10,
+        tableId: "0000018"
+      },
       listQuery: {
-        // 查询条件
+        // 表格查询条件
         page: 1,
         limit: 10,
         filed: "",
         sort: "",
-        roleName: "", // 角色名称
-        editUserId: "-1", // 操作人
-        editStartTime: "", // 操作时间起
-        editEndTime: "", // 操作时间止
-        tableId: "0000004"
+        CustomerId:"",
+        tableId: "0000018"//
       },
+      cardQuery:{
+         filed: "",
+        sort: "",
+        CustomerId:"",
+        tableId: "0000018"//
+      },
+      headUser:{},//展示的用户基本信息
       type: 1, //左侧展示模式 1：表格 2：卡片
       typeComponents: "TableType", //默认表格模式
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableHeight: 0,
-      tableData: [],
       saveTableHeight: 0,
+      tableData: [],
       checkedAllParent: false, //全选
       isIndeterminateParent: false, //复选框属性
       chargesDetailsShow: false, //水费详情弹窗
       overDetailsShow: false, //其它费用详情弹窗
       selectUserShow: false, //多用户选择弹窗
       feeWaiverShow: false, //费用减免弹窗
-      overFeeWaiverShow: false,
       selectPintShow: false, //选择打印机
       paymentCodeShow: false, //扫码支付弹窗
       isIC: false,
-      icType: "CreditCardAlready" //默认已刷卡
+      icType: "CreditCardAlready", //默认已刷卡
+      unpaidMoney: 0 //剩余未缴
     };
   },
   mounted: function() {
     this.$nextTick(function() {
-      // 自适应表格高度
-      var formHeight = this.$refs.formHeight.offsetHeight;
-      const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight-228;
-      that.saveTableHeight = document.body.clientHeight - formHeight-100;
+      // 自适应表格高度 getBoundingClientRect().height比dom.offsetHeight性能更好
+      var formHeight = this.$refs.formHeight.getBoundingClientRect().height;
+      this.tableHeight = document.body.clientHeight - formHeight - 230;
+      this.saveTableHeight = document.body.clientHeight - formHeight - 100;
     });
   },
   watch: {
     type(v, o) {
-      this.typeComponents = v == 2 ? "CardType" : "TableType";
+      this.typeComponents = v == 2 ? "CardType" : "TableType";   
+      let _this=this
+      // 组件切换后，拿不到方法，无法在卡片形式结算后，更新表格数据-所以每点击切换就重新获取
+      setTimeout(function(){
+       if(_this.listQuery.CustomerId)_this.getList()
+      },300)
     }
   },
   methods: {
-    getList() {
-      getRolesList(this.listQuery).then(res => {
-        this.total = res.count;
-        res.data.filter(item => {
-          if (item.Id == "ad0a3b59-f6c3-4a83-bca1-88a38b824e84") {
-            //demo
-            item.tooltip = "这是提示语句";
-          }
-        });
-        this.tableData = res.data;
-      });
+     getList(){
+        if(this.type==1)
+        this.$refs.tableTypeCard.getList()
+        else
+        this.$refs.tableTypeCard.getCardList()       
+     },
+     // 查询用户-仅有一条数据id---表格
+    handleFilter(user) {
+      // user-当前选择/查询的用户信息
+      this.headUser=user
+      this.accountMoney=user.Balance
+      this.listQuery.CustomerId=user.Id
+      this.cardQuery.CustomerId=user.Id
+      this.listQuery.page = 1;   
+       this.getList();
+    },
+    toggle(n) {
+      this.type = n;
+      this.unpaidMoney = 0;
+      this.checkedAllParent = false;
+      this.isIndeterminateParent = false;
     },
     setCustomData() {
       this.$refs.tableTypeCard.$refs.myChild.isCustom = !this.$refs
@@ -200,27 +232,6 @@ export default {
       if (this.$refs.tableTypeCard.$refs.myChild.isCustom)
         this.tableHeight = this.tableHeight - 105;
       else this.tableHeight = this.tableHeight + 105;
-    },
-    handleFilter() {
-      this.listQuery.page = 1;
-      this.getList();
-    },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row);
-      this.temp.timestamp = new Date(this.temp.timestamp);
-      this.dialogStatus = "update";
-      this.dialogFormVisible = true;
-    },
-    createData(dialog) {
-      addRole(dialog.RoleName).then(res => {
-        this.$message({
-          message: res.message,
-          type: "success",
-          duration: 4000
-        });
-        this.dialogFormVisible = false;
-        this.handleFilter();
-      });
     },
     excel() {
       //导出
@@ -230,13 +241,23 @@ export default {
     },
     parentChange(v) {
       this.isIndeterminateParent = false;
+      this.$refs.tableTypeCard.$refs.myCard.changeParent();
+    },
+    // 勾选操作计算剩余未缴
+    calculatedAmount(data) {
+      this.unpaidMoney = 0;
+      data.forEach(item => {
+        this.unpaidMoney =
+          (this.unpaidMoney * 1000 + parseFloat(item.OrderType) * 1000) / 1000;
+      });
     },
     // 费用详情
-    details(n) {
+    details(id) {
+       this.orderId=id
       this.chargesDetailsShow = true;
     },
     // 费用撤回
-    reset() {
+    reset(id) {
       this.$confirm("是否确认撤销欠费？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -244,19 +265,21 @@ export default {
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        // deleteRole(r.Id).then((res)=>{
-        //   this.$message({
-        //     message: res.message,
-        //     type: "success",
-        //     duration: 4000
-        //   });
-        //   this.getList()
-        // })
+         OrderFeeCancel({SA_Order_Id:id}).then((res)=>{
+          this.$message({
+            message: res.message,
+            type: "success",
+            duration: 4000
+          });
+          this.getList()
+        })
       });
     },
     // 费用减免
-    feeWaiver() {
-      this.overFeeWaiverShow = true;
+    feeWaiverFunc(id,num){
+      this.orderId=id
+      this.orderMoney=num
+      this.feeWaiverShow = true;
     },
     // 选择打印机
     selectPint() {
@@ -310,7 +333,7 @@ export default {
 .tooltip {
   color: #ddd;
 }
-.ic-container{
+.ic-container {
   overflow: auto;
 }
 </style>

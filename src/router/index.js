@@ -259,6 +259,29 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/waterMetermangments',
+    component: Layout,
+    redirect: '/waterMetermangments/page',
+    alwaysShow: true, // will always show the root menu
+    name: 'waterMetermangments',
+    meta: {
+      title: '水表管理',
+      icon: 'iconfont iconcaidan-yewuguanli',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: 'waterMeterSetting',
+        component: () => import('@/views/waterMetermangments/waterMeterSetting/index'),
+        name: 'waterMeterSetting',
+        meta: {
+          title: '水表设置',
+          roles: ['1']
+        }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

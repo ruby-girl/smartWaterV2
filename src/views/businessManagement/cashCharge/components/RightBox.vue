@@ -2,8 +2,10 @@
   <!--右侧缴费操作 -->
   <div>
     <div class="right-detail-box">
-      <div>应收金额：{{needMoney}}元</div>
-      <div class="display-flex align-items-center">
+      <div>剩余未缴：{{unpaidMoney}}元</div>
+      <div>账户余额：<span class="main-color font-weight">{{accountMoney}}</span>元</div>
+      <div class="filter-container">应收金额：{{needMoney}}元</div>
+      <div class="display-flex align-items-center filter-container flex-wrap">
         <div class="main-color-pink">实收金额：</div>
         <div class="right-detail-input">
           <input
@@ -12,8 +14,9 @@
             @blur="changeTwoDecimal_x()"
             @keyup="money($event)"
           />
+           <span class="main-color-pink">元</span>
         </div>
-        <span class="main-color-pink">元</span>
+       
       </div>
       <div v-show="isAccount==false" style="height:28px;">&#12288;&#12288;找零：{{surplus}}元</div>
     </div>
@@ -23,12 +26,12 @@
         @click="toggleIsAccount"
       >{{isAccount==true?'账户转出':'存入账户'}}</div>
     </div>
-    <div class="right-detail-box account-height">
+    <!-- <div class="right-detail-box account-height">
       <div>
         账户金额：
         <span class="main-color-pink">{{account}}</span>元
       </div>
-    </div>
+    </div> -->
     <div class="main-more-black-color pint-type">
       <div>
         <el-radio v-model="radio" :label="1">打印小票</el-radio>
@@ -65,17 +68,33 @@
 <script>
 import { debounce, updateMoney, changeTwoDecimal } from "@/utils/index";
 export default {
-  props: {},
+  props: {
+    unpaidMoney: {
+      type: Number,
+      default: 0
+    },
+     accountMoney:{
+       type: Number,
+      default: 0
+     }//账户余额
+  },
+  watch:{
+    unpaidMoney(v){
+      console.log('勾选后计算')
+       this.calculationReceivable()
+    }
+  },
   data() {
     return {
       radio: 1,
       paymentType: 1,
       isAccount: false,
       num: "",
-      needMoney: 33.33, //应缴金额
+      //unpaidMoney:33.99,//剩余未缴
+      needMoney: 0, //应缴金额
+     
       surplus: 0, //找零
-      account: 22.33, //账户金额
-      saveAccount: 22.33
+      saveAccount:0//zanshi
     };
   },
   mounted() {
@@ -87,6 +106,18 @@ export default {
     paymentMethod(i) {
       this.paymentType = i;
       this.$emit("selectPayment", i);
+    },
+    // 计算应收
+    calculationReceivable(){
+      // 应缴金额=账户余额-剩余未缴
+      
+      let needMoney=(parseFloat(this.accountMoney)*1000-parseFloat(this.unpaidMoney)*1000)/1000
+      if(needMoney>0){
+        this.needMoney=0
+      }else{
+        this.needMoney=Math.abs(needMoney).toFixed(2)
+      }
+      
     },
     // 输入金额保留2位
     money(e) {
@@ -126,20 +157,14 @@ export default {
          this.surplus=0
         return false;
       }
+      return true
     },
-    // 计算找零or+账户
-    surplusFunc() {
-      let surplus =
-        (parseFloat(this.num) * 1000 - parseFloat(this.needMoney) * 1000) /
-        1000;
-      if (this.isAccount) {
-        this.account =
-          (surplus * 1000 + parseFloat(this.account) * 1000) / 1000;
-          this.surplus=0
-      } else {
-        this.surplus = surplus;
-        this.account = this.saveAccount;
-      }
+    // 计算找零
+    surplusFunc() {   
+      if (this.isAccount) 
+      this.surplus=0
+      else
+      this.surplus = (parseFloat(this.num) * 1000 - parseFloat(this.needMoney) * 1000) /1000
     }
   }
 };
@@ -147,10 +172,10 @@ export default {
 <style lang="scss" scoped>
 .right-detail-box {
   background: #f5f5f5;
-  padding: 0 10px;
+  padding: 0 17px;
   padding-bottom: 15px;
   > div {
-    line-height: 40px;
+    line-height: 33px;
     color: #46494c;
   }
 }
@@ -194,9 +219,10 @@ export default {
   }
 }
 .pint-type {
-  padding: 15px 0 15px 0;
+  padding: 10px 0 10px 17px;
   line-height: 30px;
   font-size: 13px;
+  background: #f5f5f5;
   span {
     cursor: pointer;
   }
@@ -230,6 +256,7 @@ export default {
   border-radius: 5px;
   cursor: pointer;
   margin-bottom: 20px;
+  margin-top: 18px;
   &:first-child {
     border: 1px solid #00b2a1;
     color: #00b2a1;

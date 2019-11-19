@@ -11,13 +11,16 @@
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
-        @sort-change="sortChanges"    
+        @sort-change="sortChanges"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column label="as"  fixed="left" type="selection" width="55" :selectable="checkboxT">
-          
-        </el-table-column>
-
+        <el-table-column
+          label="as"
+          fixed="left"
+          type="selection"
+          width="55"
+          :selectable="checkboxT"
+        ></el-table-column>
         <el-table-column type="index" label="序号" width="80" align="center" />
         <template v-for="(item ,index) in tableHead">
           <el-table-column
@@ -29,7 +32,13 @@
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column label="操作" fixed="right" min-width="220" align="center" class-name="small-padding">
+        <el-table-column
+          label="操作"
+          fixed="right"
+          min-width="220"
+          align="center"
+          class-name="small-padding"
+        >
           <template slot-scope="{row}">
             <div class="display-flex justify-content-flex-center">
               <div class="main-color-warn" @click="details(row)">
@@ -38,7 +47,7 @@
               <div class="pl-15" @click="reset(row)">
                 <a>费用撤回</a>
               </div>
-               <div class="main-color pl-15" @click="feeWaiver">
+              <div class="main-color pl-15" @click="feeWaiver(row)">
                 <a>费用减免</a>
               </div>
             </div>
@@ -57,8 +66,9 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination";
-import {legalTime} from "@/utils/index"
+import { legalTime } from "@/utils/index";
 import customTable from "@/components/CustomTable/index";
+import { GetOrder } from "@/api/cashCharge";
 export default {
   props: {
     listQuery: {
@@ -67,23 +77,22 @@ export default {
         return {};
       }
     },
-    total: {
-      type: Number,
-      default: 0
-    },
     tableHeight: {
       type: Number,
       default: 100
-    },
-    tableData: {
-      type: Array,
-      default: []
     }
   },
   components: { Pagination, customTable },
   mounted() {
     this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+  },
+  watch: {
+    // "listQuery.CustomerId": {
+    //   handler(val, oldVal) {
+    //     this.getList();
+    //   }
+    // }
   },
   computed: {
     tableHead: function() {
@@ -96,7 +105,9 @@ export default {
   data() {
     return {
       tableKey: 1,
-      checksData: []
+      tableData: [],
+      checksData: [],
+      total: 0
     };
   },
   methods: {
@@ -110,24 +121,35 @@ export default {
         this.getList();
       }
     },
-    getList() {},
-   checkboxT(row,index){
-      if(row.Id=='ad0a3b59-f6c3-4a83-bca1-88a38b824e84'){        
-          return false
-      }  
-       return true
-   },
-   handleSelectionChange(val){
-       console.info(val) 
-   },
-   details(row){
-     this.$emit("details",row.Id)
-   },
-   reset(){
-      this.$emit("reset",'1')
+    getList() {
+      //表格
+      GetOrder(this.listQuery).then(res => {
+        this.total = res.count;
+        res.data.filter(item => {
+          if (item.ChargeFlag == 1003) {
+            item.tooltip = "费用审核中，暂不能缴费";
+          }
+        });
+        this.tableData = res.data;
+      });
     },
-    feeWaiver(){
-      this.$emit("feeWaiver",'1')
+    checkboxT(row, index) {//勾选禁用
+      if (row.ChargeFlag==1003) {
+        return false;
+      }
+      return true;
+    },
+    handleSelectionChange(val) {
+      this.$emit("calculatedAmount", val);
+    },
+    details(row) {
+      this.$emit("details", row.Id);
+    },
+    reset(row) {
+      this.$emit("reset",row.Id);
+    },
+    feeWaiver(row) {
+      this.$emit("feeWaiver", row.Id,row.PricePaid);
     }
   }
 };
@@ -140,7 +162,7 @@ export default {
   .disable-checkbox-small {
     width: 10px;
     height: 10px;
-    margin:1px;
+    margin: 1px;
     background: #aaa;
   }
 }

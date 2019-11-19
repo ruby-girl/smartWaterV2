@@ -8,6 +8,7 @@
     center
     custom-class="nopadding dialog-head-lv"
     :close-on-click-modal="false"
+    @open="getList"
   >
     <div class="main-padding-20-y">
       <el-table
@@ -19,20 +20,21 @@
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'7px 0'}"
         @sort-change="sortChanges"
+        @row-dblclick="rowDblclick"
       >
         <el-table-column type="index" label="序号" width="80" align="center" />
-        <el-table-column prop="name" label="用户编号" width="120"></el-table-column>
-        <el-table-column prop="name" label="用户名称" width="120"></el-table-column>
-        <el-table-column prop="name" label="电话" width="120"></el-table-column>
-        <el-table-column prop="name" label="所属区域" width="120"></el-table-column>
-        <el-table-column prop="name" label="水表类型" width="120"></el-table-column>
-        <el-table-column prop="name" label="地址" width="180"></el-table-column>
+        <el-table-column prop="CustomerNo" label="用户编号" width="120"></el-table-column>
+        <el-table-column prop="CustomerName" label="用户名称" width="120"></el-table-column>
+        <el-table-column prop="Tel" label="电话" width="120"></el-table-column>
+        <el-table-column prop="AreaName" label="所属区域" width="120"></el-table-column>
+        <el-table-column prop="WaterMeterTypeName" label="水表类型" width="120"></el-table-column>
+        <el-table-column prop="Address" label="地址" width="180"></el-table-column>
       </el-table>
       <pagination
         v-show="total>0"
         :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
+        :page.sync="headQuery.page"
+        :limit.sync="headQuery.limit"
         @pagination="getList"
       />
     </div>
@@ -40,12 +42,16 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination";
+import {GetCustomerDataList} from "@/api/userSetting"
 export default {
   props: {
     selectUserShow: {
       type: Boolean,
       default: false
-    }
+    },
+   headQuery:{
+       type:Object
+   }
   },
   components: { Pagination },
   watch: {
@@ -65,31 +71,30 @@ export default {
       dialogFormVisible: false,
       total: 1,
       tableKey: 9,
-      listQuery: {
-        // 查询条件
-        page: 1,
-        limit: 10,
-        filed: "",
-        sort: ""
-      },
-      tableData: [
-        { id: 1, name: "yang", addr: "成都市" },
-        { id: 2, name: "yang", addr: "成都市" }
-      ]
+      tableData:[]
     };
   },
   methods: {
     sortChanges({ prop, order }) {
       //筛选
-      this.listQuery.filed = prop;
-      this.listQuery.sort =
+      this.headQuery.filed = prop;
+      this.headQuery.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       if (this.tableData.length > 0) {
-        this.listQuery.page = 1;
+        this.headQuery.page = 1;
         this.getList();
       }
     },
-    getList() {}
+    getList() {
+        GetCustomerDataList(this.headQuery).then(res=>{
+             this.total = res.count;
+             this.tableData = res.data;
+        })
+    },
+    rowDblclick(row){
+       this.dialogFormVisible=false
+       this.$emit("handleFilter", row);
+    } 
   }
 };
 </script>
@@ -101,4 +106,3 @@ export default {
     padding: 25px;
 }
 </style>
-

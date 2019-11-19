@@ -1,7 +1,11 @@
 <template>
   <!-- 卡片-->
-  <div>
-    <div class="main-padding-20-y card-container" :style="{'height':saveTableHeight+'px'}">
+  <div ref="myCard">
+    <div
+      class="main-padding-20-y card-container"
+      :style="{'height':tableHeight+'px'}"
+      v-if="cardData.length>0"
+    >
       <!-- 循环 -->
       <div v-for="(item,i) in cardData" :key="i" class="set-first-margin">
         <div class="display-flex align-items-center justify-content-flex-justify card-head">
@@ -9,11 +13,11 @@
             :indeterminate="item.isIndeterminate"
             v-model="item.checkAll"
             @change="handleCheckAllChange(item.checkAll,i)"
-          >{{item.time}}</el-checkbox>
+          >{{item.YearStr}}</el-checkbox>
           <div class="card-sort font-14">
             <span>按日期：</span>
-            <span @click="sortChanges">降序</span>
-            <span @click="sortChanges">升序</span>
+            <span class="pointer" @click="sortChanges">降序</span>
+            <span class="pointer" @click="sortChanges">升序</span>
           </div>
         </div>
         <!-- 具体 -->
@@ -33,28 +37,28 @@
                           @change="handleCheckedCardChange(item.checkedCardDate,i)"
                         >
                           <div>
-                            <el-checkbox :label="li.id" :disabled="li.isDisable">{{li.itemTime}}</el-checkbox>
+                            <el-checkbox :label="li.Id" :disabled="li.isDisable">{{li.YearMonth}}</el-checkbox>
                           </div>
                         </el-checkbox-group>
-                        <div v-if="li.isDisable">审核中...</div>
+                        <div v-if="li.ChargeFlag==1003">审核中...</div>
                       </div>
                       <div
                         class="card-item-mony-box display-flex align-items-center justify-content-flex-justify"
                       >
                         <span
-                          :class="{'main-color-tiffany':li.type==2,'main-color-warn':li.type==4,'main-color-orange':li.type==3}"
-                        >{{li.type==1?'水费':li.type==2?'制卡费':li.type==3?'安装费':'维修费'}}</span>
+                          :class="{'main-color-tiffany':li.OrderType==2001,'main-color-warn':li.OrderType==2002,'main-color-orange':li.OrderType==2003}"
+                        >{{li.OrderTypeStr}}</span>
                         <span>
-                          <span class="main-color-pink font-weight">80</span>元
+                          <span class="main-color-pink font-weight">{{li.OrderType}}</span>元
                         </span>
                       </div>
                       <!-- 详情，费用减免。。按钮 -->
                       <div
                         class="card-item-btn-box display-flex justify-content-flex-center font-14"
                       >
-                        <div class="card-item-btn" @click="details">详情</div>
-                        <div class="card-item-btn margin-samll" @click="reset">费用撤回</div>
-                        <div class="card-item-btn" @click="feeWaiver">费用减免</div>
+                        <div class="card-item-btn" @click="details(li.Id)">详情</div>
+                        <div class="card-item-btn margin-samll" @click="reset(li.Id)">费用撤回</div>
+                        <div class="card-item-btn" @click="feeWaiver(li.Id,li.OrderType)">费用减免</div>
                       </div>
                     </div>
                   </div>
@@ -67,27 +71,25 @@
       </div>
       <!-- 循环end -->
     </div>
+    <div class="no-data text-center" v-else>暂无数据</div>
   </div>
 </template>
 <script>
 import { deepClone } from "@/utils/index";
+import { GetOrderView } from "@/api/cashCharge";
 export default {
   props: {
-    listQuery: {
+    cardQuery: {
       type: Object,
       default: function() {
         return {};
       }
     },
-    total: {
-      type: Number,
-      default: 0
-    },
-    saveTableHeight: {
+    tableHeight: {
       type: Number,
       default: 100
     },
-     //父元素全选
+    //父元素全选
     checkedAllParent: {
       type: Boolean,
       default: false
@@ -109,104 +111,61 @@ export default {
           item.isIndeterminate = false;
           item.checkedCardDate = [];
         }
-      });    
+      });
     }
   },
   data() {
     return {
       tableKey: 1,
-      tableData: [],
       checksData: [],
-      cardData: [
-        {
-          time: "2019年费用",
-          checkAll: false,
-          checkedCardDate: [], //行已选中的数据
-          tableListId: [], //行所有数据的ID
-          isIndeterminate: false,
-          arr: [
-            {
-              itemTime: "2019-04",
-              money: "80.00",
-              id: "11",
-              type: 2,
-              isDisable: true
-            },
-            {
-              itemTime: "2019-03",
-              money: "80.00",
-              id: "22",
-              type: 1,
-              isDisable: true
-            },
-            {
-              itemTime: "2019-02",
-              money: "80.00",
-              id: "33",
-              type: 3,
-              isDisable: false
-            }
-          ]
-        },
-        {
-          time: "2018年费用",
-          checkAll: false,
-          checkedCardDate: [], //行已选中的数据
-          tableListId: [], //行所有数据的ID
-          isIndeterminate: false,
-          arr: [
-            {
-              itemTime: "2018-04",
-              money: "80.00",
-              id: "44",
-              type: 4,
-              isDisable: false
-            },
-            {
-              itemTime: "2018-03",
-              money: "80.00",
-              id: "55",
-              type: 1,
-              isDisable: false
-            },
-            {
-              itemTime: "2018-02",
-              money: "80.00",
-              id: "66",
-              type: 1,
-              isDisable: false
-            }
-          ]
-        }
-      ],
+      cardData: [],
       saveCardData: [] //不含禁用状态的数据
     };
   },
-  mounted() {
-    this.cardData.map((item, i) => {
-      item.arr.map(m => {
-        if (!m.isDisable) {
-          //筛选不是禁用状态的数据，处理勾选状态
-          item.tableListId.push(m.id);
-        }
-      });
-    });
-  },
+  mounted() {},
   methods: {
     sortChanges({ prop, order }) {
       //筛选
-      this.listQuery.filed = prop;
-      this.listQuery.sort =
+      this.cardQuery.filed = prop;
+      this.cardQuery.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       if (this.tableData.length > 0) {
-        this.listQuery.page = 1;
-        this.getList();
+        this.cardQuery.page = 1;
+        this.getCardList();
       }
     },
-    getList() {},
+    getCardList() {
+      GetOrderView(this.cardQuery).then(res => {
+        this.cardData = [];
+        let obj = {
+          checkAll: false,
+          checkedCardDate: [], //行已选中的数据
+          tableListId: [], //行所有数据的ID
+          isIndeterminate: false,
+          YearStr:''
+        };
+        res.data.forEach(item => {
+          obj.YearStr=item.YearStr
+          obj.arr = item.vdlist;
+          this.cardData.push(obj);
+        });
+        this.IsDisable()
+      });
+    },
+  // 处理能勾选的数据
+  IsDisable(){
+       this.cardData.forEach((item, i) => {
+          item.arr.forEach(m => {
+            if (m.ChargeFlag!==1003) {
+              //筛选不是禁用状态的数据，处理勾选状态
+              item.tableListId.push(m.Id);
+            }
+          });
+        });
+  },
     // 全选
     handleCheckAllChange(val, i) {
-      this.cardData.map((item, a) => {
+      this.cardData.forEach((item, a) => {
         if (a == i) {
           item.isIndeterminate = false;
           item.checkedCardDate = val ? item.tableListId : [];
@@ -216,7 +175,7 @@ export default {
     },
     handleCheckedCardChange(value, i) {
       let checkedCount = value.length;
-      this.cardData.map((item, a) => {
+      this.cardData.forEach((item, a) => {
         if (a == i) {
           item.checkAll = checkedCount === item.tableListId.length;
           item.isIndeterminate =
@@ -229,7 +188,7 @@ export default {
     selectNoDisable() {
       let _this = this;
       this.saveCardData = deepClone(this.cardData);
-      this.saveCardData.map((item, a) => {
+      this.saveCardData.forEach((item, a) => {
         item.arr = item.arr.filter((li, n) => {
           return !li.isDisable;
         });
@@ -260,15 +219,36 @@ export default {
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", false);
       }
+      this.selectCheckedItem();
     },
-    details() {
-      this.$emit("details", "1");
+    // 通过ID获取数据，传递给父级
+    selectCheckedItem() {
+      // 有数据的行
+      let childIsIndeterminate = this.cardData.filter(item => {
+        return item.checkedCardDate.length > 0;
+      });
+      let data = [];
+      // 选择的行ID筛选数据
+      childIsIndeterminate.forEach(item => {
+        item.arr.forEach(li => {
+          item.checkedCardDate.forEach(i => {
+            if (li.Id == i) {
+              data.push(li);
+            }
+          });
+        });
+      });
+      this.$emit("calculatedAmount", data);
     },
-    reset() {
-      this.$emit("reset", "1");
+    details(id) {
+      this.$emit("details", id);
     },
-    feeWaiver(){
-      this.$emit("feeWaiver", "1");
+    // 撤回
+    reset(id) {
+      this.$emit("reset",id);
+    },
+    feeWaiver(id,num) {
+      this.$emit("feeWaiver",id,num);
     }
   }
 };
@@ -278,7 +258,7 @@ export default {
   overflow: auto;
 }
 .card-sort {
-  color: #fff;
+  color: #46494c;
 }
 .set-first-margin:first-child {
   margin-top: 8px;
@@ -340,6 +320,10 @@ export default {
       }
     }
   }
+}
+.no-data {
+  color: #46494c;
+  padding-top: 40px;
 }
 .item-time-head {
   background: #9cb85c;
