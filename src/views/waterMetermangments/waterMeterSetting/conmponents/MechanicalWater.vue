@@ -134,7 +134,6 @@ export default {
       document.getElementsByClassName("el-form")[0].offsetHeight -
       document.getElementsByClassName("cl-operation1")[0].offsetHeight -
       54;
-    console.log(this.tableHeight);
     //   document.getElementsByClassName("section-container")[0].offsetHeight -
     //   document.getElementById("table").offsetTop -
     //   58;
@@ -144,7 +143,6 @@ export default {
   watch: {
     customHeight() {
       //获取自定义模块高度
-      console.log(1);
       let that = this;
       that.$nextTick(() => {
         let formHeight = document.getElementsByClassName("customOption")[0]
@@ -156,8 +154,6 @@ export default {
           document.getElementsByClassName("cl-operation1")[0].offsetHeight -
           54 -
           formHeight;
-        console.log(formHeight);
-        console.log(that.tableHeight);
       });
     }
   },
@@ -183,7 +179,6 @@ export default {
       //表格自定义方法
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
-      console.log(this.customHeight);
     }
   }
 };

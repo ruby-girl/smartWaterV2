@@ -129,6 +129,7 @@ export default {
       }).then(res => {
         if (res.code == 0) {
           that.addPlanData.StartPlanDate = res.data;
+           that.addPlanData.EndPlanDate=res.data
           that.endDateLimit = {
             disabledDate(time) {
               return time.getTime()<new Date(res.data)
