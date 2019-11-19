@@ -120,8 +120,11 @@ export default {
   },
   activated: function() {
     let id = this.$route.query.id;
-    this.param.SA_MeterReadPlan_Id = id;
-    this.searchFun();
+   if(id){
+      this.param.SA_MeterReadPlan_Id = id;
+      this.searchFun();
+
+    }
   },
   methods: {
     sortChanges({ prop, order }) {//列排序
