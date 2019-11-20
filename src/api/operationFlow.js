@@ -77,3 +77,36 @@ export function AddProcessModuleInfo(data) {
     data: data
   })
 }
+
+/**
+ * 根据部门获取岗位
+ * */
+export function CacheComboBoxByPIdZhuanYong(data) {
+  return request({
+    url: '/Job/CacheComboBoxByPIdZhuanYong',
+    method: 'post',
+    params: data
+  })
+}
+
+/**
+ * 根据岗位获取人员信息
+ * */
+export function ComboBoxListZhuanYong(data) {
+  return request({
+    url: '/Employee/ComboBoxListZhuanYong',
+    method: 'post',
+    params: data
+  })
+}
+
+/**
+ * 根据角色获取人员信息
+ * */
+export function ComboBoxListByRoseZhuanYong(data) {
+  return request({
+    url: '/Employee/ComboBoxListByRoseZhuanYong',
+    method: 'post',
+    params: data
+  })
+}

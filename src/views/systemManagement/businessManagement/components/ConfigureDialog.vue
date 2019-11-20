@@ -31,40 +31,42 @@
       <el-tabs type="border-card">
         <!--按人员选择-->
         <el-tab-pane label="按人员选择">
-          <el-form :inline="true" :model="form" class="condition_form">
+          <el-form :inline="true" :model="personForm" class="condition_form">
             <el-form-item label="部门：">
-              <el-select v-model="form.region" placeholder="结束"  size="small">
+              <el-select v-model="personForm.department" placeholder="请选择" size="small" @change="getPostInfo">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in department" :label="item.Name" :value="item.Id" :key="index"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="岗位：">
-              <el-select v-model="form.region" placeholder="结束"  size="small">
-                <el-option label="6" value="shanghai"></el-option>
+              <el-select v-model="personForm.post" placeholder="请选择" size="small" @change="getPostPeopleInfo">
+                <el-option v-for="(item,index) in post" :label="item.Name" :value="item.Id" :key="index"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="姓名：">
-              <el-select v-model="form.region" placeholder="结束"  size="small">
-                <el-option label="6" value="shanghai"></el-option>
+              <el-select v-model="personForm.person" placeholder="请选择"  size="small">
+                <el-option v-for="(item,index) in person1" :label="item.Name" :value="item.Id" :key="index"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
-          <check-nodes></check-nodes>
+          <check-nodes ref="peopleChild"></check-nodes>
         </el-tab-pane>
         <!--按角色选择-->
         <el-tab-pane label="按角色选择">
-          <el-form :inline="true" :model="form" class="condition_form">
+          <el-form :inline="true" :model="roleForm" class="condition_form">
             <el-form-item label="角色：">
-              <el-select v-model="form.region" placeholder="结束"  size="small">
+              <el-select v-model="roleForm.role" placeholder="请选择"  size="small" @change="getRolePeopleInfo">
+                <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in getRoles" :label="item.Name" :value="item.Id" :key="index"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="姓名：" style="margin-left: 75px">
-              <el-select v-model="form.region" placeholder="结束"  size="small">
-                <el-option label="6" value="shanghai"></el-option>
+              <el-select v-model="roleForm.person" placeholder="请选择"  size="small">
+                <el-option v-for="(item,index) in person2" :label="item.Name" :value="item.Id" :key="index"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
-          <check-nodes></check-nodes>
+          <check-nodes ref="roleChild"></check-nodes>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -78,7 +80,7 @@
 <script>
   import Bus from '@/utils/bus'
   import CheckNodes from './CheckNodes'
-  import { UpdateProcessModuleInfo } from "@/api/operationFlow"
+  import { UpdateProcessModuleInfo, CacheComboBoxByPIdZhuanYong, ComboBoxListByRoseZhuanYong, ComboBoxListZhuanYong } from "@/api/operationFlow"
   import { getRoles } from "@/api/role"
   import { ComboBoxList } from "@/api/organize"
   import { promptInfoFun } from "@/utils/index"
@@ -105,13 +107,60 @@
         },
         department:[],//部门下拉
         getRoles:[],//角色下拉
+        post:[],//岗位下拉
+        person1:[],//岗位姓名下拉
+        person2:[],//角色姓名下拉
+        personForm:{//按人员查
+          department:'',
+          post:'',
+          person:''
+        },
+        roleForm:{//按角色查
+          role:'',
+          person:''
+        }
       }
     },
     methods: {
-      getSelectData(funName,type){//获取下拉选项数据
-        funName().then(res => {//删除节点
+      getSelectData(funName,type){//获取部门，角色下拉选项数据
+        funName().then(res => {
           if (res.code ==0 ) {
             type == 1 ? this.getRoles = res.data : this.department = res.data
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
+      getPostInfo(val){//根据部门获取岗位
+        CacheComboBoxByPIdZhuanYong({SYS_Department_Id:val}).then(res => {
+          if (res.code ==0 ) {
+            this.post = res.data
+            val == -1 ? this.post.unshift({Name:'全部',Id:'-1'}) : ''
+            this.personForm.post = ''
+            this.personForm.person = ''
+            this.person1 = []
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
+      getPostPeopleInfo(val){//根据岗位获取姓名
+        ComboBoxListZhuanYong({PId:val}).then(res => {
+          if (res.code ==0 ) {
+            this.person1 = res.data
+            val == -1 ? this.person1.unshift({Name:'全部',Id:'-1'}) : ''
+            this.personForm.person1 = ''
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
+      getRolePeopleInfo(val){//根据角色获取姓名
+        ComboBoxListByRoseZhuanYong({PId:val}).then(res => {
+          if (res.code ==0 ) {
+            this.person2 = res.data
+            val == -1 ? this.person2.unshift({Name:'全部',Id:'-1'}) : ''
+            this.roleForm.person = ''
           } else {
             promptInfoFun(this,1,res.message)
           }

@@ -3,17 +3,17 @@
     <div>
       <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
       <el-checkbox-group v-model="checkList" @change="handlecheckListChange">
-        <el-checkbox v-for="(item,index) in data" :label="item.id" :key="index">{{item.name}}</el-checkbox>
+        <el-checkbox v-for="(item,index) in data" :label="item.Id" :key="index">{{item.Name}}</el-checkbox>
       </el-checkbox-group>
     </div>
     <div class="result_box">
       <p v-for="(item,index) in persons" :key="index">
-        <i class="iconfont iconrenyuan" v-if="item.type===1"></i>
-        <i class="iconfont icongangwei" v-else-if="item.type===2"></i>
-        <i class="iconfont iconlujing" v-else-if="item.type===3"></i>
+        <i class="iconfont iconrenyuan" v-if="item.ProcessMemberType===3004"></i>
+        <i class="iconfont icongangwei" v-else-if="item.ProcessMemberType===3001"></i>
+        <i class="iconfont iconlujing" v-else-if="item.ProcessMemberType===3002"></i>
         <i class="iconfont iconlujing" v-else></i>
-        <span>{{ item.name }}</span>
-        <label class="iconfont iconguanbi fr" @click="removeFun(item.id)"></label>
+        <span>{{ item.Name }}</span>
+        <label class="iconfont iconguanbi fr" @click="removeFun(item.Id)"></label>
       </p>
     </div>
   </div>
@@ -32,24 +32,10 @@
         cities: cityOptions,
         data:[
           {
-            type:1,
-            name:'人员',
-            id:'1002'
-          },
-          {
-            type:2,
-            name:'研发',
-            id:'1003'
-          },
-          {
-            type:3,
-            name:'钢厂',
-            id:'1005'
-          },
-          {
-            type:4,
-            name:'财务',
-            id:'1006'
+            ProcessMemberType:3003,//3003 角色 3001 部门  3002 岗位 3004 人员
+            Name:'人员',
+            Id:'1002',
+            Pid:'',
           }
         ],//复选框数据源
         persons:[]//右侧选中信息
@@ -94,7 +80,7 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    .el-checkbox{display: block;font-size: 14px;color: #777C82;margin-bottom: 12px;}
+    .el-checkbox{font-size: 14px;color: #777C82;margin-bottom: 12px;display: block}
     .result_box {
       padding: 18px;
       p{

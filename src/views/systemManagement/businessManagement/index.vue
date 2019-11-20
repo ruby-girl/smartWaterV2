@@ -226,7 +226,8 @@
         }
       }
       .node_box{height: calc(100% - 100px);position: relative}
-      .submit_btn{text-align: center;margin-top: 25px;}
+      .disablepointer{ pointer-events: none;cursor: default;}
+      .onPointer{color: #00B3A1 !important;cursor: pointer;pointer-events:auto}
     }
   }
 </style>

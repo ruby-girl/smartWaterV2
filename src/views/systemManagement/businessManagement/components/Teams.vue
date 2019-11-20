@@ -80,7 +80,6 @@
       getMenuData(){//获取审核组信息
         GetProcessModuleInfo().then(res => {//删除节点
           if (res.code ==0 ) {
-            console.log(res.data)
             this.teams = res.data
             this.getWidth('teamWidth',160)
           } else {
