@@ -38,7 +38,7 @@
             <el-table-column
               v-if="item.IsFreeze"
               :key="index"
-              min-width="150px"
+              min-width="230px"
               :sortable="item.IsSortBol?'custom':null"
               :prop="item.ColProp"
               :align="item.Position"
@@ -48,7 +48,7 @@
             <el-table-column
               v-else
               :key="index"
-              min-width="150px"
+              min-width="230px"
               sortable="custom"
               :prop="item.ColProp"
               :align="item.Position"

@@ -3,7 +3,7 @@
     <div>
       <div class="left_box">
         <!--左侧栏目-->
-        <MenuTree></MenuTree>
+        <MenuTree ref="treeChild"></MenuTree>
       </div>
       <div class="right_box">
         <!--公用节点组-->
@@ -19,10 +19,15 @@
   import MenuTree from './components/MenuTree'
   import Teams from './components/Teams'
   import Nodes from './components/Nodes'
+  import { promptInfoFun } from "@/utils/index"
 
   export default {
     name: "businessManagement",
     components: {MenuTree: MenuTree, Teams: Teams, Nodes: Nodes},
+    data(){
+      return{
+      }
+    }
   }
 </script>
 
@@ -167,7 +172,7 @@
         width: 100%;
         overflow: auto;
         > div{position: relative; background: #F7F7F7;
-          padding: 20px 18px 0 18px;margin-bottom: 10px;
+          padding: 20px 18px 0 18px;margin-bottom: 10px;border: dashed 1px #99cac5;
         }
         > div > div {
           position: relative;
@@ -221,6 +226,7 @@
         }
       }
       .node_box{height: calc(100% - 100px);position: relative}
+      .submit_btn{text-align: center;margin-top: 25px;}
     }
   }
 </style>
