@@ -19,12 +19,12 @@
               </el-date-picker>
             </div>
             <div class="meter_box meter_box2">
-              <p>上次读书</p>
+              <p>上次读数</p>
               <el-input v-model="currentContract.LastReadNum" :disabled="true"></el-input>
             </div>
           </div>
           <div class="meter_box meter_box3">
-            <p>本次读书</p>
+            <p>本次读数</p>
             <el-input v-model="param.ReadNum" placeholder="按[enter]键确定" ref="ReadNumInput"
                       @keyup.enter.native="getWaterPredict(1)" onkeyup="value=value.replace(/\D/g,'')"></el-input>
           </div>
@@ -142,12 +142,12 @@
             </el-date-picker>
           </div>
           <div class="meter_box meter_box2">
-            <p>上次读书</p>
+            <p>上次读数</p>
             <el-input v-model="currentContract.LastReadNum" :disabled="true"></el-input>
           </div>
         </div>
         <div class="meter_box meter_box3">
-          <p>本次读书</p>
+          <p>本次读数</p>
           <el-input v-model="param.ReadNum" ref="ReadNumInput" placeholder="按[enter]键确定"
                     @keyup.enter.native="getWaterPredict(1)"></el-input>
         </div>
@@ -195,7 +195,7 @@
         param: {//抄表及水量水费参数
           SA_MeterRecord_Id: '',//抄表记录ID
           ReadDate: new Date(),//抄表时间
-          ReadNum: '',//本次读书
+          ReadNum: '',//本次读数
           Remark: '',
           IsPage: false
         },
@@ -236,16 +236,16 @@
         this.param.SA_MeterRecord_Id = this.currentContract.Id
         let lastWater = this.currentContract.LastYield, curWater = 0 //上次水量
         if (typeof (this.currentContract.CustomerNo) != "undefined" && this.currentContract.CustomerNo != '') {
-          let curNum = this.param.ReadNum//本次读书
+          let curNum = this.param.ReadNum//本次读数
           if (curNum != '') {
             let params = Object.assign({}, this.param);//赋值对象转换参数类型
             params.ReadNum != '' ? params.ReadNum = parseInt(params.ReadNum) : ''
-            if (this.checks.indexOf('字轮是否翻页') == '-1') {//当未勾选字轮翻页,判断本次读书必须大于上次读书
+            if (this.checks.indexOf('字轮是否翻页') == '-1') {//当未勾选字轮翻页,判断本次读数必须大于上次读数
               this.param.IsPage = false
               if (this.currentContract.LastReadNum >= curNum) {
                 promptInfoFun(this, 1, '本次读数必须大于上次读数！')
               } else {
-                curWater = this.param.ReadNum - this.currentContract.LastReadNum//本次水量= 本次读书-上次读书
+                curWater = this.param.ReadNum - this.currentContract.LastReadNum//本次水量= 本次读数-上次读数
                 let magnificate = curWater / lastWater //公式（本次水量/上次水量）
                 if (type === 2) {
                   this.getMagnificate(magnificate,curWater,lastWater,params)//抄表
@@ -256,13 +256,13 @@
             } else {//当选择字轮翻页时，上次读数一定比本次读数大，若上次读数为0，第一次就不予处理
               this.param.IsPage = true
               let totalNum = '';//根据上次读数位数计算totalNum，本次水量
-              let lastRead = this.currentContract.LastReadNum//上次读书
+              let lastRead = this.currentContract.LastReadNum//上次读数
               for (let i = 0; i < JSON.stringify(lastRead).length; i++) {
                 totalNum += "9"
               }
               if (lastRead > 0 && lastRead > curNum) {
 
-                curWater = parseInt(totalNum) - lastRead + parseInt(curNum) + 1 //本次水量 = 总数 - 上次读书 + 本次读书 + 1;例：上次读数12345，本次读数为10，则本次水量为99999 – 12345 + 10 + 1
+                curWater = parseInt(totalNum) - lastRead + parseInt(curNum) + 1 //本次水量 = 总数 - 上次读数 + 本次读数 + 1;例：上次读数12345，本次读数为10，则本次水量为99999 – 12345 + 10 + 1
                 let magnificate = curWater / lastWater //公式（本次水量/上次水量）
                 if (type === 2) {
                   this.getMagnificate(magnificate,curWater,lastWater,params)//抄表

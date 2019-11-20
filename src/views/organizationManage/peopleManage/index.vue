@@ -65,7 +65,7 @@
             <a class="operation1" @click="handleEdit(scope.row,1)">编辑</a>
             <a class="operation1" @click="handleEdit(scope.row,2)">详情</a>
             <a class="operation2" @click="handleDelete(scope.row)" v-if="scope.row.SYS_User_Id.length <= 0">删除</a>
-            <el-tooltip v-else effect="dark" content="人员已关联账号，不可删除" placement="bottom-start">
+            <el-tooltip v-else effect="dark" content="人员已留有数据，不可删除" placement="bottom-start">
               <a style="color: #C0C8CC;margin: 10px;">删除</a>
             </el-tooltip>
           </template>
