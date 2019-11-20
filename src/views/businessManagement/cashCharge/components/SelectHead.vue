@@ -38,23 +38,38 @@
       </el-form>
       <div class="payment-records" @click="toPaymentQuery">
         <div class="payment-num-more" v-show="paymentNum>99">{{paymentNum}}</div>
-        <div class="payment-num" v-show="paymentNum<100">{{paymentNum}}</div>
+        <div class="payment-num" v-show="paymentNum<100&&paymentNum>0">{{paymentNum}}</div>
         <span>查询缴费记录>></span>
       </div>
     </div>
 
     <el-row class="head-bottom-box">
-      <el-col :md="8" :lg="3" :xl="2">姓名:<span>{{user.CustomerName}}</span></el-col>
-      <el-col :md="8" :lg="4" :xl="3">水表类型:<span>{{user.WaterMeterTypeName}}</span></el-col>
-      <el-col :md="8" :lg="4" :xl="3">电话:<span>{{user.Tel}}</span></el-col>
-      <el-col :md="8" :lg="6" :xl="4">水表编号:<span>{{user.SA_WaterMeterNo}}</span></el-col>
-      <el-col :md="12" :lg="7" :xl="12" class="text-wrap">地址:<span>{{user.Address}}</span></el-col>
+      <el-col :md="8" :lg="3" :xl="2">
+        姓名:
+        <span>{{user.CustomerName}}</span>
+      </el-col>
+      <el-col :md="8" :lg="4" :xl="3">
+        水表类型:
+        <span>{{user.WaterMeterTypeName}}</span>
+      </el-col>
+      <el-col :md="8" :lg="4" :xl="3">
+        电话:
+        <span>{{user.Tel}}</span>
+      </el-col>
+      <el-col :md="8" :lg="6" :xl="4">
+        水表编号:
+        <span>{{user.SA_WaterMeterNo}}</span>
+      </el-col>
+      <el-col :md="12" :lg="7" :xl="12" class="text-wrap">
+        地址:
+        <span>{{user.Address}}</span>
+      </el-col>
     </el-row>
   </div>
 </template>
 <script>
-import {GetCustomerDataList} from "@/api/userSetting"////模糊查询用户
-import {GetICReadCardInfo} from "@/api/userSetting"//IC卡读卡
+import { GetCustomerDataList } from "@/api/userSetting"; ////模糊查询用户
+import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 export default {
   props: {
     selectHead: {
@@ -63,61 +78,76 @@ export default {
         return {};
       }
     },
-    headUser:{
+    headUser: {
       type: Object
-    }
+    },
+    paymentNum:{}
   },
-  watch:{
-    headUser(val){
-      this.user=val
+  watch: {
+    headUser(val) {
+      this.user = val;
     }
   },
   data() {
     return {
       timevalue: [],
       editUserList: [],
-      paymentNum:88,
-      user:{}
+      user: {}
     };
   },
   methods: {
     handleFilter() {
-      if(!this.selectHead.CustomerQueryValue){
+      if (!this.selectHead.CustomerQueryValue) {
         this.$message({
-          message:'请输入要查询的用户！',
+          message: "请输入要查询的用户！",
           type: "error",
           duration: 4000
         });
-       return
+        return;
       }
-       GetCustomerDataList(this.selectHead).then(res=>{
-        if(res.data.length==0){
+      GetCustomerDataList(this.selectHead).then(res => {
+        if (res.data.length == 0) {
           this.$message({
-          message:'未查询到用户！',
-          type: "error",
-          duration: 4000
-        });
-        }else if(res.data.length==1){
-          this.user=res.data[0]
+            message: "未查询到用户！",
+            type: "error",
+            duration: 4000
+          });
+        } else if (res.data.length == 1) {
+          this.user = res.data[0];
           this.$emit("handleFilter", res.data[0]);
-        }else{
-          this.$parent.selectUserShow=true//查找出多个，弹出用户列表，进行选择
-        }       
-      })
+        } else {
+          this.$parent.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
+        }
+      });
     },
-    handleFilterIC(){
-      GetICReadCardInfo().then(res=>{
-        
-      })
+    handleFilterIC() {
+      try {
+        // resInfo用户信息  resData卡片信息
+        // ICReadCardInfo((resInfo,resData)=>{
+        //   console.log('头部咯')
+        //   console.log(resData)
+        //this.$emit("handleFilterIcParent", resInfo,resData) 
+        // })
+        // 读卡
+          ICReadCardInfo((resData)=>{
+          console.log('头部咯')
+          console.log(resData)
+          this.$emit("handleFilterIcParent", resData)      
+        })
+      } catch (error) {
+        console.log("请在CS端操作1");
+      }
     },
-    toPaymentQuery(){
+    toPaymentQuery() {
+      this.paymentNum=''
       this.$router.push({
-        path:'/businessManagement/paymentQuery',
-        query:{
-          id:'qwe',  
-        }    
-    })
-  }}
+        path: "/businessManagement/paymentQuery",
+        query: {
+          id: "qwe"
+        }
+      });
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -127,30 +157,30 @@ export default {
   padding-bottom: 10px;
   cursor: pointer;
   position: relative;
-  .payment-num{
+  .payment-num {
     position: absolute;
-    background: #FF5656;
+    background: #ff5656;
     border-radius: 50%;
     width: 18px;
-    height:18px;
+    height: 18px;
     line-height: 12px;
     font-size: 12px;
-    top:-20px;
-    right:15px;
-    color:#fff;
+    top: -20px;
+    right: 15px;
+    color: #fff;
     text-align: center;
   }
-  .payment-num{
+  .payment-num {
     position: absolute;
-    background: #FF5656;
+    background: #ff5656;
     border-radius: 50%;
     width: 18px;
-    height:18px;
+    height: 18px;
     line-height: 18px;
     font-size: 12px;
-    top:-20px;
-    right:15px;
-    color:#fff;
+    top: -20px;
+    right: 15px;
+    color: #fff;
     text-align: center;
   }
 }
@@ -159,10 +189,10 @@ export default {
   padding: 15px;
   line-height: 30px;
 }
-.text-wrap{
+.text-wrap {
   overflow: hidden;
-text-overflow:ellipsis;
-white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
 

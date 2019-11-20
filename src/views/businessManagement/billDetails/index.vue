@@ -36,7 +36,7 @@
           <template v-for="(item ,index) in tableHead">
             <el-table-column
               :key="index"
-              min-width="100px"
+              min-width="130px"
               :prop="item.ColProp"
               align="center"
               :sortable="item.IsSortBol?'custom':null"
@@ -52,7 +52,7 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex">
-                <div class="main-color-warn pl-15" @click="chargesDetails(row)">
+                <div class="main-color-warn pl-15" @click="details(row)">
                   <a>费用详情</a>
                 </div>
                 <div class="pl-15" @click="reset(row)">
@@ -70,7 +70,7 @@
           @pagination="getList"
         />
       </div>
-      <charges-details :chargesDetailsShow.sync="chargesDetailsShow"/>
+      <charges-details :chargesDetailsShow.sync="chargesDetailsShow" :temp="temp"/>
     </div>
   </div>
 </template>
@@ -80,12 +80,8 @@ import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import ChargesDetails from "../cashCharge/components/ChargesDetails"; //水费详情弹窗-共用现金收费的费用详情
 import {
-  getRolesList,
-  addRole,
-  updateRole,
-  deleteRole,
-  exportExcel
-} from "@/api/role";
+  SelectBillDataList,SelectBillDataListToExcel,OrderFeeCancel
+} from "@/api/cashCharge";
 export default {
   name: "billDetails",
   components: { SelectHead, Pagination, customTable,ChargesDetails},
@@ -101,11 +97,20 @@ export default {
         limit: 10,
         filed: "",
         sort: "",
-        roleName: "", // 角色名称
-        editUserId: "-1", // 操作人
+        CustomerQueryType: "1", //用户类型
+        CustomerQueryValue: '', // input值
+        WaterMeterTypeId:"-1",//水表类型
+        // PayMentState:"-1",//缴费状态
+        PayMentType:"-1",//缴费方式
+        FeeType:"-1",//费用类型
+        FeeState:"-1",//费用状态
+        StartPayMentDate:'',//缴费时间起
+        EndPayMentDate:'',//缴费时间止
+        ReceiveMoneyUser:"-1",//收款人
+        WaterFactory:"-1",//水厂
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
-        tableId: "0000004"
+        tableId: "0000020"
       },
       tableData: [],
       checksData: [],
@@ -135,7 +140,7 @@ export default {
       else this.tableHeight = this.tableHeight + 80;
     },
     getList() {
-      getRolesList(this.listQuery).then(res => {
+      SelectBillDataList(this.listQuery).then(res => {
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -162,19 +167,19 @@ export default {
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        // deleteRole(r.Id).then(res => {
-        //   this.$message({
-        //     message: res.message,
-        //     type: "success",
-        //     duration: 4000
-        //   });
-        //   this.getList();
-        // });
+        OrderFeeCancel({SA_Order_Id:r.Id}).then(res => {
+          this.$message({
+            message: res.message,
+            type: "success",
+            duration: 4000
+          });
+          this.getList();
+        });
       });
     },
     excel() {
       //导出
-      exportExcel(this.listQuery).then(res => {
+      SelectBillDataListToExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
@@ -187,7 +192,8 @@ export default {
       }, 350);
     },
     // 费用详情
-    chargesDetails(){
+    details(item){
+      this.temp=item
       this.chargesDetailsShow=true
     }
   }

@@ -37,7 +37,7 @@
           <template v-for="(item ,index) in tableHead">
             <el-table-column
               :key="index"
-              min-width="100px"
+              min-width="150px"
               :prop="item.ColProp"
               align="center"
               :sortable="item.IsSortBol?'custom':null"
@@ -86,8 +86,8 @@ import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import TableTotal from "@/components/TableTotal/index";
 import {
-  SelectPayMentDataList
-} from "@/api/role";
+  SelectPayMentDataList,GetWaterTypeCustomerNum,RedPayMentDataByPayMentId,SelectPayMentDataListToExcel
+} from "@/api/cashCharge";
 export default {
   name: "paymentQuery",
   components: { SelectHead, Pagination, customTable, TableTotal,SelectPint },
@@ -103,20 +103,27 @@ export default {
         limit: 10,
         filed: "",
         sort: "",
-        roleName: "", // 角色名称
-        editUserId: "-1", // 操作人
+        CustomerQueryType: "1", //用户类型
+        CustomerQueryValue: '', // input值
+        WaterMeterTypeId:"-1",//水表类型
+        PayMentState:"-1",//缴费状态
+        PayMentType:"-1",//缴费方式
+        StartPayMentDate:'',//缴费时间起
+        EndPayMentDate:'',//缴费时间止
+        ReceiveMoneyUser:"-1",//收款人
+        WaterFactory:"-1",//水厂
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
-        tableId: "0000004"
+        tableId: "0000019"
       },
       selectPintShow:false,//票据打印弹窗
       tableData: [],
       checksData: [],
       tableTotal: [
-        { num: 10, txt: "交易次数" },
-        { num: 10000000, txt: "缴费金额" },
-        { num: 1000000000, txt: "预存金额" },
-        { num: 10, txt: "实收金额" }
+        { num: 0, txt: "交易次数" },
+        { num: 0, txt: "缴费金额" },
+        { num: 0, txt: "预存金额" },
+        { num: 0, txt: "实收金额" }
       ]
     };
   },
@@ -147,6 +154,12 @@ export default {
         this.total = res.count;
         this.tableData = res.data;
       });
+      GetWaterTypeCustomerNum(this.listQuery).then(res=>{
+        this.tableTotal[0].num=res.data.NumberOfTrades
+        this.tableTotal[1].num=res.data.PayMentMoney
+        this.tableTotal[2].num=res.data.PrestoreMoney
+        this.tableTotal[3].num=res.data.ReceiptsMoney
+      })
     },
     sortChanges({ prop, order }) {
       //筛选
@@ -170,19 +183,19 @@ export default {
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        // deleteRole(r.Id).then(res => {
-        //   this.$message({
-        //     message: res.message,
-        //     type: "success",
-        //     duration: 4000
-        //   });
-        //   this.getList();
-        // });
+        RedPayMentDataByPayMentId({SA_Payment_Id:r.Id,Remark:''}).then(res => {
+          this.$message({
+            message: res.message,
+            type: "success",
+            duration: 4000
+          });
+          this.getList();
+        });
       });
     },
     excel() {
       //导出
-      exportExcel(this.listQuery).then(res => {
+      SelectPayMentDataListToExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },

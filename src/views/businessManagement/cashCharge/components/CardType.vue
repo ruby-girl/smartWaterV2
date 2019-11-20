@@ -14,10 +14,10 @@
             v-model="item.checkAll"
             @change="handleCheckAllChange(item.checkAll,i)"
           >{{item.YearStr}}</el-checkbox>
-          <div class="card-sort font-14">
+          <div class="card-sort font-14" v-if="i==0">
             <span>按日期：</span>
-            <span class="pointer" @click="sortChanges">降序</span>
-            <span class="pointer" @click="sortChanges">升序</span>
+            <span :class="{'sort-active':cardQuery.sort=='DESC','pointer':true}" @click="sortChanges('ASC')">降序</span>
+            <span  :class="{'sort-active':cardQuery.sort=='ASC','pointer':true}" @click="sortChanges('DESC')">升序</span>
           </div>
         </div>
         <!-- 具体 -->
@@ -125,12 +125,11 @@ export default {
   },
   mounted() {},
   methods: {
-    sortChanges({ prop, order }) {
+    sortChanges(sort) {
       //筛选
-      this.cardQuery.filed = prop;
-      this.cardQuery.sort =
-        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
-      if (this.tableData.length > 0) {
+      this.cardQuery.filed = 'ArrearsDate';
+      this.cardQuery.sort =sort
+      if (this.cardData.length > 0) {
         this.cardQuery.page = 1;
         this.getCardList();
       }
@@ -164,6 +163,7 @@ export default {
         });
       });
     },
+    
     // 全选
     handleCheckAllChange(val, i) {
       this.cardData.forEach((item, a) => {
@@ -260,6 +260,9 @@ export default {
 }
 .card-sort {
   color: #46494c;
+  .sort-active{
+    opacity: 0.3;
+  }
 }
 .set-first-margin:first-child {
   margin-top: 8px;
