@@ -58,7 +58,7 @@
                       >
                         <div class="card-item-btn" @click="details(li)">详情</div>
                         <div class="card-item-btn margin-samll" @click="reset(li.Id)">费用撤回</div>
-                        <div class="card-item-btn" @click="feeWaiver(li.Id,li.PriceSurplus)">费用减免</div>
+                        <div class="card-item-btn" @click="feeWaiver(li.Id,li.PriceSurplus,row.OrderTypeStr)">费用减免</div>
                       </div>
                     </div>
                   </div>
@@ -89,8 +89,7 @@ export default {
       type: Number,
       default: 100
     },
-    //父元素全选
-    checkedAllParent: {
+    checkedAllParent: { //父元素全选
       type: Boolean,
       default: false
     },
@@ -101,18 +100,7 @@ export default {
   },
   watch: {
     checkedAllParent(v, o) {
-      this.cardData.map(item => {
-        if (v) {
-          item.checkAll = true;
-          item.isIndeterminate = false;
-          item.checkedCardDate = item.tableListId;
-        } else {
-          item.checkAll = false;
-          item.isIndeterminate = false;
-          item.checkedCardDate = [];
-        }
-      });
-      this.selectCheckedItem();
+     this.checkedAllParentFunc(v)
     }
   },
   data() {
@@ -125,6 +113,21 @@ export default {
   },
   mounted() {},
   methods: {
+    // 父元素触发全选
+    checkedAllParentFunc(boolean){
+       this.cardData.map(item => {
+        if (boolean) {
+          item.checkAll = true;
+          item.isIndeterminate = false;
+          item.checkedCardDate = item.tableListId;
+        } else {
+          item.checkAll = false;
+          item.isIndeterminate = false;
+          item.checkedCardDate = [];
+        }
+      });
+      this.selectCheckedItem();
+    },
     sortChanges(sort) {
       //筛选
       this.cardQuery.filed = 'ArrearsDate';
@@ -162,6 +165,8 @@ export default {
           }
         });
       });
+      this.$emit("update:isIndeterminateParent", false);
+      this.$emit("update:checkedAllParent", true);//初始化全选
     },
     
     // 全选
@@ -196,7 +201,7 @@ export default {
       });
     },
     changeParent() {
-      // 判断是否都选中了，然后更新父组件的选项框
+      // 判断是否都选中，然后更新父组件的选项框
       let childIsIndeterminate = this.cardData.filter(item => {
         return item.checkedCardDate.length > 0;
       });
@@ -248,8 +253,9 @@ export default {
     reset(id) {
       this.$emit("reset", id);
     },
-    feeWaiver(id, num) {
-      this.$emit("feeWaiver", id, num);
+    // id:费用ID，num:减免前金额 type：费用类型
+    feeWaiver(id, num,type) {
+      this.$emit("feeWaiver", id,num,type);
     }
   }
 };

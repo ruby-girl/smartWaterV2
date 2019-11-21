@@ -8,6 +8,7 @@
         :icInfo.sync="icInfo"
         :paymentNum="paymentNum"
         @handleFilterIcParent="handleFilterIc"
+        @clearData="clearData"
       />
     </div>
     <!-- 表格模式 -->
@@ -43,9 +44,6 @@
             </el-tooltip>
           </div>
           <div v-if="type==1">
-            <el-button type="success" size="mini" @click="excel">
-              <i class="iconfont icondaochuexcel"></i>导出Excel
-            </el-button>
             <el-button type="warning" size="mini" @click="setCustomData()">
               <i class="iconfont iconbiaogezidingyi"></i>表格自定义
             </el-button>
@@ -54,7 +52,6 @@
             <el-checkbox
               :indeterminate="isIndeterminateParent"
               v-model="checkedAllParent"
-              @change="parentChange"
             >全选</el-checkbox>
           </div>
         </div>
@@ -96,7 +93,7 @@
         <right-box
           @selectPint="selectPint"
           @selectPayment="selectPayment"
-          :unpaidMoney="unpaidMoney"
+          :unpaidMoney.sync="unpaidMoney"
           :accountMoney="accountMoney"
           :customerId="listQuery.CustomerId"
           :payOrderId="payOrderId"
@@ -117,6 +114,7 @@
       :feeWaiverShow.sync="feeWaiverShow"
       :orderId="orderId"
       :orderMoney="orderMoney"
+      :orderType="orderType"
       @getList="getList"
     />
     <select-pint :selectPintShow.sync="selectPintShow" />
@@ -162,6 +160,7 @@ export default {
       orderId: "", //需要减免的费用单ID
       payOrderId: [],
       orderMoney: 0, //减免前金额
+      orderType:'',//费用类型
       accountMoney: 0, //账户余额
       customerNo: "", //用户编号-结算后，用户编号获取账户余额
       icInfo: {}, //IC卡 卡片详情
@@ -206,7 +205,8 @@ export default {
       paymentCodeShow: false, //扫码支付弹窗
       isIC: false,
       icType: "CreditCardAlready", //默认已刷卡
-      unpaidMoney: 0 //剩余未缴
+      unpaidMoney: 0, //剩余未缴
+      isNull:true
     };
   },
   mounted: function() {
@@ -217,20 +217,10 @@ export default {
       this.saveTableHeight = document.body.clientHeight - formHeight - 100;
     });
   },
-  watch: {
-    type(v, o) {
-      this.typeComponents = v == 2 ? "CardType" : "TableType";
-      let _this = this;
-      // 组件切换后，拿不到方法，无法在卡片形式结算后，更新表格数据-所以每点击切换就重新获取
-      setTimeout(function() {
-        if (_this.listQuery.CustomerId) _this.getList();
-      }, 300);
-    }
-  },
   methods: {
     getList() {
       if (this.type == 1) this.$refs.tableTypeCard.getList();
-      else this.$refs.tableTypeCard.getCardList();
+      else this.$refs.tableTypeCard.getCardList()
     },
     // 查询用户缴费单 ---非IC卡
     handleFilter(user) {
@@ -242,6 +232,7 @@ export default {
       this.listQuery.CustomerId = user.Id;
       this.cardQuery.CustomerId = user.Id;
       this.listQuery.page = 1;
+      this.checkedAllParent = false;
       this.getList();
     },
     // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息
@@ -268,6 +259,14 @@ export default {
     },
     toggle(n) {
       this.type = n;
+      this.typeComponents = n == 2 ? "CardType" : "TableType";
+      let _this = this;
+      // 组件切换后，拿不到方法，无法在卡片形式结算后，更新表格数据-所以每点击切换就重新获取
+      setTimeout(function() {
+        if (_this.listQuery.CustomerId){
+           _this.getList();
+        }
+      }, 300);
       this.unpaidMoney = 0;
       this.checkedAllParent = false;
       this.isIndeterminateParent = false;
@@ -279,28 +278,20 @@ export default {
         this.tableHeight = this.tableHeight - 105;
       else this.tableHeight = this.tableHeight + 105;
     },
-    excel() {
-      //导出
-      exportExcel(this.listQuery).then(res => {
-        window.location.href = `${this.common.excelPath}${res.data}`;
-      });
-    },
-    parentChange(v) {
-      this.isIndeterminateParent = false;
-      this.$refs.tableTypeCard.$refs.myCard.changeParent();
-    },
+    // parentChange(v) {
+    //   this.isIndeterminateParent = false;
+    //   // this.$refs.tableTypeCard.$refs.myCard.changeParent();
+    // },
     // 勾选操作计算剩余未缴
     calculatedAmount(data) {
       this.unpaidMoney = 0;
       this.payOrderId = [];
       data.forEach(item => {
-        console.log(item.Id);
         this.payOrderId.push(item.Id);
         this.unpaidMoney =
           (this.unpaidMoney * 1000 + parseFloat(item.PriceSurplus) * 1000) /
           1000;
       });
-      console.log(this.payOrderId);
     },
     // 费用详情
     details(item) {
@@ -327,9 +318,10 @@ export default {
       });
     },
     // 费用减免
-    feeWaiverFunc(id, num) {
+    feeWaiverFunc(id, num,type) {
       this.orderId = id;
       this.orderMoney = num;
+      this.orderType=type
       this.feeWaiverShow = true;
     },
     // 选择打印机
@@ -341,6 +333,14 @@ export default {
       if (i == 2) {
         this.paymentCodeShow = true;
       }
+    },
+    // 未查询到用户
+    clearData(){
+      this.isNull=true
+      this.accountMoney=0
+      this.listQuery.CustomerId=''
+       if (this.type == 1) this.$refs.tableTypeCard.tableData=[];
+      else this.$refs.tableTypeCard.cardData=[]
     }
   }
 };

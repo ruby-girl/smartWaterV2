@@ -13,6 +13,7 @@
             v-model="num"
             @blur="changeTwoDecimal_x()"
             @keyup="money($event)"
+            ref="myInput"
           />
            <span class="main-color-pink">元</span>
         </div>
@@ -115,6 +116,15 @@ export default {
     // 选择支付方式
     paymentMethod(i) {
       this.paymentType = i;
+      if(i==2){
+         this.$message({
+          message: "扫码支付暂未开通，敬请期待！",
+          type: "error",
+          duration: 4000
+        });
+        this.paymentType=2701
+        return false
+      }
       this.$emit("selectPayment", i);
     },
     // 计算应收
@@ -123,11 +133,19 @@ export default {
       let needMoney=(parseFloat(this.accountMoney)*1000-parseFloat(this.unpaidMoney)*1000)/1000
       if(needMoney>0){
         this.needMoney=0
+        this.num=''
         this.balanceDeduction=this.unpaidMoney//计算账户抵扣了多少钱
       }else{
         this.needMoney=Math.abs(needMoney).toFixed(2)
+        this.num=Math.abs(needMoney).toFixed(2)
+        
         this.balanceDeduction=this.accountMoney
-      }     
+      }
+      let _this=this
+      setTimeout(function(){
+        _this.$refs.myInput.select()
+      },200)
+     
     },
     // 输入金额保留2位
     money(e) {
@@ -160,26 +178,39 @@ export default {
     },
     // 结算
     pay() {
-      if(this.paymentType==2){
-         this.$message({
-          message: "扫码支付暂未开通，敬请期待！",
-          type: "error",
-          duration: 4000
-        });
-        return false
-      }
+      // if(this.paymentType==2){
+      //    this.$message({
+      //     message: "扫码支付暂未开通，敬请期待！",
+      //     type: "error",
+      //     duration: 4000
+      //   });
+      //   return false
+      // }
+      let receipts=parseFloat(this.num)
       let obj={
         customerId:this.customerId,
         orderId:this.payOrderId,
         receivable:this.unpaidMoney,//剩余未缴
-        receipts:this.num,//实收
+        receipts:receipts,//实收
         balanceDeduction:this.balanceDeduction,//账户抵扣
         isAccount:this.isAccount,
         payType:this.paymentType
       }
        
       Settlement(obj).then(res=>{
-        this.num=''
+         this.$message({
+          message: "操作成功",
+          type: "success",
+          duration: 4000
+        });
+        // 金额清零--s
+         this.num=''
+         this.surplus=0
+         this.$emit("update:unpaidMoney", 0)
+         this.needMoney=0
+          // 金额清零--e
+        this.$emit("update:isIndeterminateParent", false);
+        this.$emit("update:checkedAllParent", false);//结算完成后，父元素全选置为false，卡片获取列表再设置全选
         this.$emit("getCustomer"); //重新获取列表数据和账户余额        
       })
     },

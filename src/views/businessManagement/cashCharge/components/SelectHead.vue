@@ -112,6 +112,8 @@ export default {
             type: "error",
             duration: 4000
           });
+          this.user={}
+          this.$emit("clearData");
         } else if (res.data.length == 1) {
           this.user = res.data[0];
           this.$emit("handleFilter", res.data[0]);

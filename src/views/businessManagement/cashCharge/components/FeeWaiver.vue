@@ -19,7 +19,7 @@
         @submit.native.prevent
       >
         <el-row>
-          <el-form-item label="违约金：">
+          <el-form-item :label="orderType+'：'">
             <el-input v-model="orderMoney" disabled />
           </el-form-item>
           <div class="inline-box">
@@ -31,6 +31,7 @@
               v-model="inputValue"
               @blur="changeTwoDecimal_x($event)"
               @keyup.native="money($event)"
+              maxlength="8"
             />
           </el-form-item>
         </el-row>
@@ -58,7 +59,8 @@ export default {
     feeWaiverShow: {
       type: Boolean,
       default: false
-    }
+    },
+    orderType:{}
   },
   watch: {
     feeWaiverShow() {
@@ -81,6 +83,14 @@ export default {
   methods: {
     //   减免请求
     feeWaiver() {
+      if(parseFloat(this.inputValue)>parseFloat(this.orderMoney)){
+         this.$message({
+            message: '减免后金额不能大于总费用',
+            type: "error",
+            duration: 4000
+          });
+          return
+      }
       OrderFeeWaiver({SA_Order_Id:this.orderId,AfterFee:this.inputValue}).then(res=>{
          this.$message({
             message: '减免成功',

@@ -10,9 +10,9 @@
     :close-on-click-modal="false"
     @open="getDetail"
   >
-  <!-- 这里需要显示的费用类型有：“未缴费 审核中 已撤销”  现金缴费仅需展示 审核中-->
-    <div class="charges-state" v-if="temp.ChargeFlag==1003">
-      审核中
+  <!-- 这里需要显示的费用类型有：“未缴费 审核中 已撤销”  1003审核中1004已撤销-->
+    <div class="charges-state" v-if="temp.ChargeFlag==1003||temp.ChargeFlag==1004">
+     {{temp.ChargeFlag==1003?'审核中':temp.ChargeFlag==1004?'已撤销':''}}
     </div>
     <div class="details-box-item display-flex align-items-center justify-content-flex-justify">
       <div class="details-left">
@@ -51,12 +51,12 @@
           <span class="font-weight main-color-red">{{detail.olf.LeteFee}}元</span>
         </div>
       </div>
-      <div class="ladder-box flex-1">
+      <div class="ladder-box flex-1" v-if="detail.olf.LeteFee>0">
         <div class="display-flex align-items-center ladder-item">
           <div>
             欠费金额&nbsp;*&nbsp;逾期
             <span class="color-more-black">{{detail.olf.LeteFee}}</span>
-天&nbsp;*&nbsp;‰5&nbsp;=&nbsp;违约金
+天&nbsp;*&nbsp;{{detail.olf.InterestRate}}‰&nbsp;=&nbsp;违约金
           </div>
         </div>
       </div>
@@ -77,9 +77,12 @@
         </div>
         <div class="ladder-item">
           水费减免：
-          <span class="font-weight main-color">10.00</span>（固定减免）+
-          <span class="font-weight main-color">20.00</span>(协议减免)=
-          <span class="font-weight main-color">20.00</span>元
+          <span>
+            <span class="font-weight main-color">10.00</span>（固定减免）+
+            <span class="font-weight main-color">20.00</span>(协议减免)=
+            <span class="font-weight main-color">20.00</span>元
+          </span>
+          <!-- <span class="font-weight main-color">0</span> -->
         </div>
       </div>
     </div>
