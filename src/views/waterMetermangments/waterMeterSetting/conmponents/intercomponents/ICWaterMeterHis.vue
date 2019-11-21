@@ -6,21 +6,21 @@
     style="width: 100%;"
     :header-cell-style="{'background-color': '#F0F2F5'}"
     :cell-style="rowClsass"
+    :cell-class-name="moneyStyle"
     @sort-change="sortChanges"
   >
     <el-table-column type="index" width="50"></el-table-column>
     <el-table-column prop="CustomerName" :sortable="true" label="姓名" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterNo" label="水表编号" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterStyleStr" label="水表样式" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="MeterDiameter" label="口径" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="StarReadNum" label="起始读数" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="ReadNum" label="当前读数" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="ReadDate" label="最近一次抄表日期" :sortable="true" width="200"></el-table-column>
+    <el-table-column prop="WaterMeterStyleStr" :sortable="true" label="水表样式" width="150"></el-table-column>
+    <el-table-column prop="AlarmMoney" :sortable="true" label="报警金额（元）" width="150"></el-table-column>
+    <el-table-column prop="PrepaidNum" :sortable="true" label="充值次数" width="150"></el-table-column>
+    <el-table-column prop="GuaranteedAmount" :sortable="true" label="保底量（吨）" width="150"></el-table-column>
+    <el-table-column prop="ReadDate" :sortable="true" label="最近一次数据采集" width="200"></el-table-column>
   </el-table>
 </template>
 <script>
 export default {
-  name: "WaterMeterHis",
+  name: "ICWaterMeterHis",
   props: {
     hisData: {
       default: [],
@@ -38,6 +38,9 @@ export default {
   methods: {
     rowClsass() {
       return "text-align: center;padding:7px 0";
+    },
+    moneyStyle() {
+      return "text-align: right;";
     },
     sortChanges({ column, prop, order }) {
       let that = this;

@@ -105,7 +105,7 @@
       center
       :close-on-click-modal="false"
     >
-      <water-meterHis :hisData="hisData" :viewWaterHistory="viewWaterHistory" />
+      <water-meterHis :hisData="hisData"  @sortProp="sortProp"/>
 
       <pagination
         v-show="histotal>0"
@@ -175,7 +175,7 @@ export default {
       histotal: 0,
       editId:"",//获取行信息id
       editShow: false,//编辑
-      editInfo:{}
+      editInfo:{},
     };
   },
   mounted() {
@@ -213,6 +213,15 @@ export default {
     }
   },
   methods: {
+    sortProp(data){
+      let that = this;
+      that.meterReadListParam.sort = data.sort;
+      that.meterReadListParam.filed = data.filed;
+      searJXHisWater(that.meterReadListParam).then(res => {
+        that.hisData = res.data;
+        that.histotal = res.count;
+      });
+    },
     searchWatetJX() {
       //查询
       let that = this;

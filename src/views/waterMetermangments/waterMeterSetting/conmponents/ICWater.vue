@@ -2,28 +2,28 @@
   <div class="mac-contianer">
     <el-form
       :inline="true"
-      :model="wachMeterData"
+      :model="IcwachMeterData"
       class="head-search-form form-inline-small-input"
       size="small"
       label-width="100px"
       @submit.native.prevent
     >
       <el-form-item label="姓名：">
-        <el-input v-model="wachMeterData.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)" />
+        <el-input v-model="IcwachMeterData.CustomerName" maxlength="20" placeholder="(长度1-30)" />
       </el-form-item>
       <el-form-item label="水表编号：">
-        <el-input v-model="wachMeterData.waterNum" maxlength="20" />
+        <el-input v-model="IcwachMeterData.WaterMeterNo" maxlength="20" />
       </el-form-item>
       <el-form-item label="水表样式：">
-        <el-select v-model="wachMeterData.waterType" placeholder="请选择">
+        <el-select v-model="IcwachMeterData.wms" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="item in waterMeterList"  :label="item.Name" :value="item.Id"></el-option>
+          <el-option v-for="item in waterMeterList" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="开户状态：">
-        <el-select v-model="wachMeterData.openStatus" placeholder="请选择">
+        <el-select v-model="IcwachMeterData.cs" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-           <el-option v-for="item in openStatus"  :label="item.Name" :value="item.Id"></el-option>
+          <el-option v-for="item in openStatus" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label>
@@ -81,73 +81,97 @@
           />
         </template>
         <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
-        <el-table-column label="操作" width="300px" align="center" fixed="right">
+        <el-table-column label="操作" width="150px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
-
-            <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>
+            <a class="viewHis" @click="waterMeterICDetail(scope.row.Id)">查看历史详情</a>
           </template>
         </el-table-column>
       </el-table>
       <pagination
         v-show="total>0"
         :total="total"
-        :page.sync="selectHead.page"
-        :limit.sync="selectHead.limit"
+        :page.sync="IcwachMeterData.page"
+        :limit.sync="IcwachMeterData.limit"
       />
     </div>
+    <el-dialog
+      title="历史详情"
+      :visible.sync="viewWaterHistory"
+      top="30vh"
+      width="836px"
+      hight="432px"
+      center
+      :close-on-click-modal="false"
+    >
+      <iC-water-meterHis :hisData="hisData" @sortProp="sortProp" />
+
+      <pagination
+        v-show="histotal>0"
+        :total="histotal"
+        :page.sync="meterReadListParam.page"
+        :limit.sync="meterReadListParam.limit"
+        @pagination="waterMeterJxDetail(meterReadListParam.WaterMeterId)"
+      />
+    </el-dialog>
   </div>
 </template>
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
+import { searICMeterWater,searICHisWater } from "@/api/waterMeterMang";
+import ICWaterMeterHis from "./intercomponents/ICWaterMeterHis";
 export default {
   //机械表
   name: "ICWater",
-  components: { customTable, Pagination },
-  props:{
-    waterMeterList:{
+  components: { customTable, Pagination, ICWaterMeterHis },
+  props: {
+    waterMeterList: {
       type: Array,
       default: []
     },
-    openStatus:{
+    openStatus: {
       type: Array,
       default: []
     }
   },
   data() {
     return {
-      wachMeterData: {
-        CustomerQueryValue: "",
-        waterNum: "",
-        waterType: "-1",
-        openStatus: "-1"
+      IcwachMeterData: {
+        page: 1,
+        limit: 10,
+        CustomerName: "", // 用户名 ,
+        WaterMeterNo: "", //水表编号 ,
+        wms: "-1", //水表样式
+        cs: "-1", //开户状态
+        sort: "", //升序
+        filed: "", //排序字段
+        tableId: "0000023"
+      },
+      meterReadListParam: {
+        WaterMeterId: "", //水表Id ,
+        limit: 10, //表格每页数据条数 ,
+        page: 1, //表格当前页面 从1开始 ,
+        sort: "", // 排序方式 ASC或DESC ,
+        filed: "", // 排序字段 ,
+        tableId: "" // 表格Id 用于导出
       },
       tableKey: 1,
       tableData: [],
+      hisData: [],
+      histotal:0,
       tableHeight: null, //表格高度
       customHeight: "", //自定义高度
       checksData: [],
       total: 0,
-
-      selectHead: {
-        // 查询条件
-        page: 1,
-        limit: 10,
-        SA_WaterFactory_Id: "-1", //水厂Id
-        createStartTime: "", //计划开始日期
-        createEndTime: "", //计划结束日期
-        enumPlanState: "-1", //抄表计划状态
-        sort: "", //升序
-        filed: "", //排序字段
-        tableId: "0000008"
-      }
+      viewWaterHistory:false
     };
   },
   mounted() {
-    this.tableHeight = document.getElementsByClassName("section-container")[0].offsetHeight -
-        document.getElementById("table").offsetTop -58
-    this.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
+    this.tableHeight =
+      document.getElementsByClassName("section-container")[0].offsetHeight -
+      document.getElementById("table").offsetTop -
+      58;
+    this.$refs.myChild.GetTable(this.IcwachMeterData.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
   },
   watch: {
@@ -156,8 +180,9 @@ export default {
       let that = this;
       that.$nextTick(() => {
         that.tableHeight =
-           document.getElementsByClassName("section-container")[0].offsetHeight -
-        document.getElementById("table").offsetTop -58
+          document.getElementsByClassName("section-container")[0].offsetHeight -
+          document.getElementById("table").offsetTop -
+          58;
       });
     }
   },
@@ -177,13 +202,42 @@ export default {
   },
   methods: {
     searchFun() {
-      alert("搜索");
+      let that = this;
+      searICMeterWater(that.IcwachMeterData).then(res => {
+        if (res.code == 0) {
+          that.tableData = res.data;
+          that.total = res.count;
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "查询失败",
+            type: "warning"
+          });
+        }
+      });
     },
     setCustomData() {
       //表格自定义方法
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
-    }
+    },
+    waterMeterICDetail(id) {
+      let that = this;
+      that.viewWaterHistory = true;
+      that.meterReadListParam.WaterMeterId = id;
+      searICHisWater(that.meterReadListParam).then(res => {
+        that.hisData = res.data;
+        that.histotal = res.count;
+      });
+    },
+      sortProp(data){
+      let that = this;
+      that.meterReadListParam.sort = data.sort;
+      that.meterReadListParam.filed = data.filed;
+      searICHisWater(that.meterReadListParam).then(res => {
+        that.hisData = res.data;
+        that.histotal = res.count;
+      });
+    },
   }
 };
 </script>
