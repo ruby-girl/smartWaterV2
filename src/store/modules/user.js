@@ -127,7 +127,6 @@ const actions = {
   },
   // 操作员可操作水厂
   getWaterWorks({ commit }) { 
-    console.log('asdasdasdasd')
       planConpanySelect().then(response => {
         const { data } = response
         commit('SET_WaterWorks', data)      
