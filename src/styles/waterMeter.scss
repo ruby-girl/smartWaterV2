@@ -2,7 +2,31 @@
     height: 42px;padding: 0 24px;box-shadow: 1px 1px 5px #cecece;-webkit-box-shadow: 1px 1px 5px #cecece;margin: -16px 0 28px -16px;line-height: 50px;
     width: calc(100% + 32px);
     .el-radio{
-        width: 20%;color: #777C82;
+        width: 15%;color: #777C82;
     }
   
+}
+.int_static{
+    border:1px solid rgba(216,226,231,1);
+    padding: 10px 20px;
+    background:rgba(252,252,252,1);
+    font-size: 14px;
+    div{
+        text-align: center;
+        font-family:Microsoft YaHei;
+        font-weight:400;
+        line-height:17px;
+        color:rgba(70,73,76,1);
+    }
+    .num{
+        font-size:16px;
+        font-family:Microsoft YaHei;
+        font-weight:bold;
+        line-height:17px;
+        padding-bottom: 5px;
+    }
+}
+.operation4{
+    color: #00B3A1;
+    padding-left: 45px;
 }

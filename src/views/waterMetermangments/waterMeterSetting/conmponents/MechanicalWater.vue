@@ -9,7 +9,7 @@
       @submit.native.prevent
     >
       <el-form-item label="姓名：">
-        <el-input v-model="wachMeterData.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)" />
+        <el-input v-model="wachMeterData.CustomerName" maxlength="20" placeholder="(长度1-30)" />
       </el-form-item>
       <el-form-item label="水表编号：">
         <el-input v-model="wachMeterData.waterNum" maxlength="20" />
@@ -17,19 +17,17 @@
       <el-form-item label="水表样式：">
         <el-select v-model="wachMeterData.waterType" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-          <el-option label="立式" value="1"></el-option>
-          <el-option label="卧式" value="2"></el-option>
+          <el-option v-for="item in waterMeterList" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="开户状态：">
         <el-select v-model="wachMeterData.openStatus" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-          <el-option label="已开户" value="1"></el-option>
-          <el-option label="销户" value="2"></el-option>
+          <el-option v-for="item in openStatus" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label>
-        <el-button type="primary" size="small" class="cl-search" @click="searchFun">
+        <el-button type="primary" size="small" class="cl-search" @click="searchWatetJX">
           <i class="icon iconfont">&#xe694;</i>
           搜索
         </el-button>
@@ -85,59 +83,73 @@
         <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
         <el-table-column label="操作" width="300px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
-
-            <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>
+            <a class="operation3" @click="waterMeterJxDetail(scope.row.Id)">查看历史详情</a>
+            <a class="operation4" @click="editwaterMeterJx(scope.row.Id)">编辑</a>
           </template>
         </el-table-column>
       </el-table>
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="wachMeterData.page"
+        :limit.sync="wachMeterData.limit"
+      />
     </div>
   </div>
 </template>
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
+import Pagination from "@/components/Pagination/index"; //分页
+import { searJXMeterWater,searJXHisWater } from "@/api/waterMeterMang";
 export default {
   //机械表
   name: "MechanicalWater",
-  components: { customTable },
+  components: { customTable, Pagination },
+  props: {
+    waterMeterList: {
+      type: Array,
+      default: []
+    },
+    openStatus: {
+      type: Array,
+      default: []
+    }
+  },
   data() {
     return {
       wachMeterData: {
-        CustomerQueryValue: "",
-        waterNum: "",
-        waterType: "-1",
-        openStatus: "-1"
+        page: 1,
+        limit: 10,
+        CustomerName: "", // 用户名 ,
+        WaterMeterNo: "", //水表编号 ,
+        wms: "-1", //水表样式
+        cs: "-1", //开户状态
+        sort: "", //升序
+        filed: "", //排序字段
+        tableId: "0000021"
       },
       tableKey: 1,
       tableData: [],
-      tableHeight: null,//表格高度
+      tableHeight: null, //表格高度
       customHeight: "", //自定义高度
-      checksData:[],
-      selectHead: {
-        // 查询条件
-        page: 1,
-        limit: 10,
-        SA_WaterFactory_Id: "-1", //水厂Id
-        createStartTime: "", //计划开始日期
-        createEndTime: "", //计划结束日期
-        enumPlanState: "-1", //抄表计划状态
-        sort: "", //升序
-        filed: "", //排序字段
-        tableId: "0000008"
+      checksData: [],
+      total: 0,
+      meterReadListParam: {
+        WaterMeterId: "", //水表Id ,
+        limit: "", //表格每页数据条数 ,
+        page: "", //表格当前页面 从1开始 ,
+        sort: "", // 排序方式 ASC或DESC ,
+        filed: "", // 排序字段 ,
+        tableId: "" // 表格Id 用于导出
       }
     };
   },
   mounted() {
     this.tableHeight =
-      document.getElementsByClassName("section-full-container")[0]
-        .offsetHeight -
-      document.getElementsByClassName("el-form")[0].offsetHeight -
-      document.getElementsByClassName("cl-operation1")[0].offsetHeight -
-      54;
-    //   document.getElementsByClassName("section-container")[0].offsetHeight -
-    //   document.getElementById("table").offsetTop -
-    //   58;
-    this.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
+      document.getElementsByClassName("section-container")[0].offsetHeight -
+      document.getElementById("table").offsetTop -
+      58;
+    this.$refs.myChild.GetTable(this.wachMeterData.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
   },
   watch: {
@@ -145,15 +157,10 @@ export default {
       //获取自定义模块高度
       let that = this;
       that.$nextTick(() => {
-        let formHeight = document.getElementsByClassName("customOption")[0]
-          .offsetHeight;
         that.tableHeight =
-          document.getElementsByClassName("section-full-container")[0]
-            .offsetHeight -
-          document.getElementsByClassName("el-form")[0].offsetHeight -
-          document.getElementsByClassName("cl-operation1")[0].offsetHeight -
-          54 -
-          formHeight;
+          document.getElementsByClassName("section-container")[0].offsetHeight -
+          document.getElementById("table").offsetTop -
+          58;
       });
     }
   },
@@ -172,14 +179,33 @@ export default {
     }
   },
   methods: {
-    searchFun() {
-      alert("搜索");
+    searchWatetJX() {
+      //查询
+      let that = this;
+      searJXMeterWater(that.wachMeterData).then(res => {
+        if (res.code == 0) {
+          that.tableData = res.data;
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "查询失败",
+            type: "warning"
+          });
+        }
+      });
     },
     setCustomData() {
       //表格自定义方法
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
-    }
+    },
+    waterMeterJxDetail(id) {
+      let that=this
+      that.meterReadListParam.WaterMeterId=id
+      searJXHisWater(that.meterReadListParam).then(res=>{
+        console.log(res)
+      })
+    },
+    editwaterMeterJx() {}
   }
 };
 </script>

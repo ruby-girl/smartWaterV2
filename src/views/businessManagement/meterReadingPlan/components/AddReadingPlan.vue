@@ -95,7 +95,7 @@ export default {
         });
         return false;
       }
-      this.addPlanData.EndPlanDate = this.addPlanData.EndPlanDate + "23:59:59";
+      this.addPlanData.EndPlanDate = this.addPlanData.EndPlanDate + " 23:59:59";
       // this.addPlanData.StartPlanDate =this.addPlanData.StartPlanDate + " 00:00:00";
         
       addMeterReadingPlan(this.addPlanData).then(res => {
@@ -129,7 +129,8 @@ export default {
       }).then(res => {
         if (res.code == 0) {
           that.addPlanData.StartPlanDate = res.data;
-           that.addPlanData.EndPlanDate=res.data
+          const ETime=res.data.split(" ")[0]
+           that.addPlanData.EndPlanDate=ETime
           that.endDateLimit = {
             disabledDate(time) {
               return time.getTime()<new Date(res.data)

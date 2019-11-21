@@ -162,7 +162,6 @@ export default {
       //获取自定义模块高度
       let that = this;
       that.$nextTick(() => {
-        let formHeight = this.$refs.formHeight.offsetHeight;
         that.tableHeight = that.tableHeight =
           document.getElementsByClassName("section-container")[0].offsetHeight -
           document.getElementById("table").offsetTop -
