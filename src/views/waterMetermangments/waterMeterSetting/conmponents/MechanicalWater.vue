@@ -12,16 +12,16 @@
         <el-input v-model="wachMeterData.CustomerName" maxlength="20" placeholder="(长度1-30)" />
       </el-form-item>
       <el-form-item label="水表编号：">
-        <el-input v-model="wachMeterData.waterNum" maxlength="20" />
+        <el-input v-model="wachMeterData.WaterMeterNo" maxlength="20" />
       </el-form-item>
       <el-form-item label="水表样式：">
-        <el-select v-model="wachMeterData.waterType" placeholder="请选择">
+        <el-select v-model="wachMeterData.wms" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="item in waterMeterList" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="开户状态：">
-        <el-select v-model="wachMeterData.openStatus" placeholder="请选择">
+        <el-select v-model="wachMeterData.cs" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="item in openStatus" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
@@ -83,8 +83,8 @@
         <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
         <el-table-column label="操作" width="300px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation3" @click="waterMeterJxDetail(scope.row.Id)">查看历史详情</a>
-            <a class="operation4" @click="editwaterMeterJx(scope.row.Id)">编辑</a>
+            <a class="viewHis" @click="waterMeterJxDetail(scope.row.Id)">查看历史详情</a>
+            <a class="editJxWater" @click="editwaterMeterJx(scope.row.Id)">编辑</a>
           </template>
         </el-table-column>
       </el-table>
@@ -93,18 +93,46 @@
         :total="total"
         :page.sync="wachMeterData.page"
         :limit.sync="wachMeterData.limit"
+        @pagination="searchWatetJX"
       />
     </div>
+    <el-dialog
+      title="历史详情"
+      :visible.sync="viewWaterHistory"
+      top="30vh"
+      width="836px"
+      hight="432px"
+      center
+      :close-on-click-modal="false"
+    >
+      <water-meterHis :hisData="hisData" :viewWaterHistory="viewWaterHistory" />
+
+      <pagination
+        v-show="histotal>0"
+        :total="histotal"
+        :page.sync="meterReadListParam.page"
+        :limit.sync="meterReadListParam.limit"
+        @pagination="waterMeterJxDetail(meterReadListParam.WaterMeterId)"
+      />
+    </el-dialog>
+    <editJX-waterMeter
+      :edit-show.sync="editShow"
+      :editopenStatus="openStatus"
+      :editwaterMeterList="waterMeterList"
+      :editInfo="editInfo"
+    />
   </div>
 </template>
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
-import { searJXMeterWater,searJXHisWater } from "@/api/waterMeterMang";
+import { searJXMeterWater, searJXHisWater,editJXHisWater } from "@/api/waterMeterMang";
+import WaterMeterHis from "./intercomponents/WaterMeterHis";
+import EditJXWaterMeter from "./intercomponents/EditJXWaterMeter";
 export default {
   //机械表
   name: "MechanicalWater",
-  components: { customTable, Pagination },
+  components: { customTable, Pagination, WaterMeterHis, EditJXWaterMeter },
   props: {
     waterMeterList: {
       type: Array,
@@ -117,6 +145,7 @@ export default {
   },
   data() {
     return {
+      viewWaterHistory: false, //历史
       wachMeterData: {
         page: 1,
         limit: 10,
@@ -128,6 +157,7 @@ export default {
         filed: "", //排序字段
         tableId: "0000021"
       },
+      hisData: [],
       tableKey: 1,
       tableData: [],
       tableHeight: null, //表格高度
@@ -136,12 +166,16 @@ export default {
       total: 0,
       meterReadListParam: {
         WaterMeterId: "", //水表Id ,
-        limit: "", //表格每页数据条数 ,
-        page: "", //表格当前页面 从1开始 ,
+        limit: 10, //表格每页数据条数 ,
+        page: 1, //表格当前页面 从1开始 ,
         sort: "", // 排序方式 ASC或DESC ,
         filed: "", // 排序字段 ,
         tableId: "" // 表格Id 用于导出
-      }
+      },
+      histotal: 0,
+      editId:"",//获取行信息id
+      editShow: false,//编辑
+      editInfo:{}
     };
   },
   mounted() {
@@ -185,6 +219,7 @@ export default {
       searJXMeterWater(that.wachMeterData).then(res => {
         if (res.code == 0) {
           that.tableData = res.data;
+          that.total = res.count;
         } else {
           that.$message({
             message: res.msg ? res.msg : "查询失败",
@@ -199,13 +234,21 @@ export default {
       this.customHeight = this.$refs.myChild.isCustom;
     },
     waterMeterJxDetail(id) {
-      let that=this
-      that.meterReadListParam.WaterMeterId=id
-      searJXHisWater(that.meterReadListParam).then(res=>{
-        console.log(res)
-      })
+      let that = this;
+      that.viewWaterHistory = true;
+      that.meterReadListParam.WaterMeterId = id;
+      searJXHisWater(that.meterReadListParam).then(res => {
+        that.hisData = res.data;
+        that.histotal = res.count;
+      });
     },
-    editwaterMeterJx() {}
+    editwaterMeterJx(id) {
+      this.editShow = true;
+      editJXHisWater({WaterMeterId:id}).then(res=>{
+        this.editInfo=res.data
+      })
+
+    }
   }
 };
 </script>

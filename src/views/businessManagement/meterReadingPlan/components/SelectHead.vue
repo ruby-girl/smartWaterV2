@@ -7,7 +7,7 @@
     label-width="100px"
     @submit.native.prevent
   >
-    <el-form-item label="水厂：">
+    <el-form-item v-if="companyOptions.length==1" label="水厂：">
       <el-select
         v-model="selectHead.SA_WaterFactory_Id"
         placeholder="请选择"
@@ -80,6 +80,10 @@ export default {
     };
   },
   created() {
+    if(this.companyOptions==1){
+      this.selectHead.SA_WaterFactory_Id=this.companyOptions[0].Id
+    }
+    
     const time = new Date();
     let y = time.getFullYear();
     let m = time.getMonth() + 1;
