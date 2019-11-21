@@ -22,14 +22,14 @@
         style="width: 180px;float: left"
       />
     </el-form-item>
-    <el-form-item label="水厂：">
+    <el-form-item label="水厂：" v-if="this.waterWorks.length>1">
       <el-select
         v-model="selectHead.WaterFactory"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
         <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="缴费日期：">
@@ -135,6 +135,7 @@ export default {
       payMentType:[],//缴费方式
       payMentState:[],//缴费状态
       editUserList:[],//收款人
+      waterWorks:[],//水厂
       ifMore: false
     };
   },
@@ -142,9 +143,14 @@ export default {
     getSelectUser().then(res => {
       this.editUserList = res.data;
     });
+     this.waterWorks=this.$store.state.user.waterWorks
+    if(this.waterWorks.length==1){
+      this.selectHead.WaterFactory=this.waterWorks[0].Id
+    }
     this.waterMeterType=getDictionaryOption('水表类型')
-    this.payMentState=getDictionaryOption('缴费状态')
+    this.payMentState=getDictionaryOption('缴费单缴费状态')
     this.payMentType=getDictionaryOption('缴费方式')
+   
   },
   methods: {
     getTime(v) {
