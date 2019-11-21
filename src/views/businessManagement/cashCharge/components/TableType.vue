@@ -7,6 +7,7 @@
         :key="tableKey"
         :data="tableData"
         border
+        ref="cashTable"
         :height="tableHeight"
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
@@ -129,7 +130,8 @@ export default {
            return item.ChargeFlag !== 1003      
         });
         this.$emit("update:totalLength",canChecked.length);
-        this.tableData = res.data;
+        this.tableData = res.data;      
+        this.$refs.cashTable.toggleAllSelection(true)//默认选择
       });
     },
     checkboxT(row, index) {//勾选禁用

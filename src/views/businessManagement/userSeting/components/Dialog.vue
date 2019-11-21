@@ -83,7 +83,7 @@
                 Id: this.param.Id,
                 AreaName: this.param.AreaName,
                 Pid: this.param.Pid,
-                AreaNo: this.param.Pid
+                AreaNo: this.param.AreaNo
               }
               AddArea(this.param).then(res => {
                 if (res.code ==0 ) {

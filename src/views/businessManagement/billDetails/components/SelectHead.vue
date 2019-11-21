@@ -8,13 +8,17 @@
     @submit.native.prevent
   >
     <el-form-item label="用户：" label-width="65px">
-      <el-select v-model="selectHead.editUserId" placeholder="请选择" style="width: 80px;float: left">
+      <el-select
+        v-model="selectHead.CustomerQueryType"
+        placeholder="请选择"
+        style="width: 80px;float: left"
+      >
         <el-option label="编号" value="1"></el-option>
         <el-option label="姓名" value="2"></el-option>
         <el-option label="简码" value="3"></el-option>
       </el-select>
       <el-input
-        v-model="selectHead.editUserId"
+        v-model="selectHead.CustomerQueryValue"
         maxlength="20"
         placeholder="(长度1-30)"
         @keyup.enter.native="handleFilter"
@@ -23,7 +27,7 @@
     </el-form-item>
     <el-form-item label="水厂：">
       <el-select
-        v-model="selectHead.editUserId"
+        v-model="selectHead.WaterFactory"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
@@ -49,7 +53,7 @@
     </el-form-item>
     <el-form-item label="收款人：">
       <el-select
-        v-model="selectHead.editUserId"
+        v-model="selectHead.ReceiveMoneyUser"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
@@ -57,48 +61,58 @@
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
- <transition-group name="fade">
-    <el-form-item label="缴费方式：" v-show="ifMore" key="type">
-      <el-select
-        v-model="selectHead.editUserId"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="费用状态：" v-show="ifMore" key="state">
-      <el-select
-        v-model="selectHead.editUserId"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="水表类型：" v-show="ifMore" key="waterType">
-      <el-select
-        v-model="selectHead.editUserId"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-     <el-form-item label="费用类型：" v-show="ifMore" key="detailsType">
-      <el-select
-        v-model="selectHead.editUserId"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-</transition-group>
+    <transition-group name="fade">
+      <el-form-item label="缴费方式：" v-show="ifMore" key="type">
+        <el-select
+          v-model="selectHead.PayMentType"
+          placeholder="请选择"
+          @keydown.enter.native="handleFilter"
+        >
+          <el-option label="全部" value="-1" />
+          <el-option
+            v-for="item in payMentType"
+            :key="item.Id"
+            :label="item.Name"
+            :value="item.Id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="费用状态：" v-show="ifMore" key="state">
+        <el-select
+          v-model="selectHead.FeeState"
+          placeholder="请选择"
+          @keydown.enter.native="handleFilter"
+        >
+          <el-option label="全部" value="-1" />
+          <el-option v-for="item in FeeState" :key="item.Id" :label="item.Name" :value="item.Id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="水表类型：" v-show="ifMore" key="waterType">
+        <el-select
+          v-model="selectHead.WaterMeterTypeId"
+          placeholder="请选择"
+          @keydown.enter.native="handleFilter"
+        >
+          <el-option label="全部" value="-1" />
+          <el-option
+            v-for="item in waterMeterType"
+            :key="item.Id"
+            :label="item.Name"
+            :value="item.Id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="费用类型：" v-show="ifMore" key="detailsType">
+        <el-select
+          v-model="selectHead.FeeType"
+          placeholder="请选择"
+          @keydown.enter.native="handleFilter"
+        >
+          <el-option label="全部" value="-1" />
+          <el-option v-for="item in FeeType" :key="item.Id" :label="item.Name" :value="item.Id" />
+        </el-select>
+      </el-form-item>
+    </transition-group>
     <el-form-item>
       <el-button type="primary" size="mini" @click="handleFilter">
         <i class="iconfont iconsousuo"></i>搜索
@@ -110,6 +124,7 @@
 </template>
 <script>
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import {getDictionaryOption} from "@/utils/permission"//字典-水表类型等
 export default {
   props: {
     selectHead: {
@@ -122,7 +137,11 @@ export default {
   data() {
     return {
       timevalue: [],
-      editUserList: [],
+      waterMeterType: [], //水表类型
+      payMentType: [], //缴费方式
+      FeeState: [], //费用状态
+      FeeType: [], //费用类型
+      editUserList: [], //收款人
       ifMore: false
     };
   },
@@ -130,6 +149,10 @@ export default {
     getSelectUser().then(res => {
       this.editUserList = res.data;
     });
+     this.waterMeterType=getDictionaryOption('水表类型')
+    this.FeeState=getDictionaryOption('费用状态')
+    this.FeeType=getDictionaryOption('费用类型')
+    this.payMentType=getDictionaryOption('缴费方式')
   },
   methods: {
     getTime(v) {
@@ -152,6 +175,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.getUpDown{ font-size: 14px;color: #00B3A0;display: inline-block;margin-left: 20px;cursor: pointer}
+.getUpDown {
+  font-size: 14px;
+  color: #00b3a0;
+  display: inline-block;
+  margin-left: 20px;
+  cursor: pointer;
+}
 </style>
 

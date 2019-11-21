@@ -138,7 +138,6 @@ export default {
     },
     //点击结算-验证
     test() {
-      this.changeTwoDecimal_x();//补齐小数-
       if(!this.customerId){
         this.$message({
           message: "请查询需要缴费的用户！",
@@ -146,7 +145,7 @@ export default {
           duration: 4000
         });
         return false
-      }
+      }     
       if(this.payOrderId.length==0&&this.totalLength>0){
         this.$message({
           message: "请勾选需要缴纳的费用！",
@@ -155,6 +154,7 @@ export default {
         });
         return false
       }
+       this.changeTwoDecimal_x();//补齐小数-   
       if(!this.testMoney()) return false//验证金额
       this.pay();//结算
     },
@@ -177,8 +177,10 @@ export default {
         isAccount:this.isAccount,
         payType:this.paymentType
       }
+       
       Settlement(obj).then(res=>{
-        this.$emit("getList");        
+        this.num=''
+        this.$emit("getCustomer"); //重新获取列表数据和账户余额        
       })
     },
     // 补齐小数-

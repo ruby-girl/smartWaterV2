@@ -215,8 +215,8 @@ export function GetWaterPropertyList(data) {
 export function GetICReadCardInfo(data){
   return request({
     url: '/Customer/GetICReadCardInfo',
-    method: 'post',
-    data: data
+    method: 'get',
+    params: data
   })
 }
 

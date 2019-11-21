@@ -24,8 +24,8 @@
           <template v-for="(item ,index) in tableHead">
             <el-table-column
               v-if="item.IsFreeze"
+              min-width="110"
               :key="index"
-              min-width="200px"
               :sortable="item.IsSortBol ? 'custom' : null"
               :prop="item.ColProp"
               :align="item.Position"
@@ -33,8 +33,8 @@
               :fixed="item.Freeze"/>
             <el-table-column
               v-else
+              min-width="110"
               :key="index"
-              min-width="200px"
               :sortable="item.IsSortBol ? 'custom' : null"
               :prop="item.ColProp"
               :align="item.Position"
@@ -69,6 +69,7 @@
   import Pagination from '@/components/Pagination/index'//分页
   import {MeterReadingPageQuery, MeterReadingProcessQuery, getReadDelete} from "@/api/meterReading"
   import {parseTime, promptInfoFun} from "@/utils/index"
+  import { legalTime } from "@/utils/index";
 
   export default {
     name: 'meterSetUp',
@@ -158,6 +159,12 @@
           if (res.code == 0) {
             let _this = this, datas = res.data
             _this.tableData = res.data.tableDatas;
+            let timeObj = res.data.tableDatas//过滤不合法时间
+            timeObj.forEach((item,index)=>{
+              for(let i in item){
+                i=='ReadDate' ? item[i] = legalTime(item[i]) :''
+              }
+            })
             _this.total = res.count;
             if (res.count > 0) {
               let curNum = 0;

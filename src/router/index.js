@@ -224,7 +224,7 @@ export const asyncRoutes = [
           title: '表册设置',
           roles: ['1']
         }
-      }
+      },
     ]
   },
   {
