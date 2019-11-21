@@ -1,4 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
+import {planConpanySelect} from "@/api/plan"
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -7,7 +8,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  waterWorks:[]
 }
 
 const mutations = {
@@ -25,6 +27,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_WaterWorks: (state, waterWorks) => {
+    state.waterWorks = waterWorks
   }
 }
 
@@ -118,6 +123,14 @@ const actions = {
       dispatch('tagsView/delAllViews', null, { root: true })
 
       resolve()
+    })
+  },
+  // 操作员可操作水厂
+  getWaterWorks({ commit }) { 
+    console.log('asdasdasdasd')
+      planConpanySelect().then(response => {
+        const { data } = response
+        commit('SET_WaterWorks', data)      
     })
   }
 }

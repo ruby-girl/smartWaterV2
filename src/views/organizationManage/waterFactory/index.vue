@@ -154,6 +154,7 @@ export default {
       getRoles().then(res => {
         this.roleList = res.data;
       });
+      console.info(this.$store.state.user.waterWorks)
     });
   },
   methods: {

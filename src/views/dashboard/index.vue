@@ -7,7 +7,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import adminDashboard from './admin'
-import { planConpanySelect } from '@/api/plan'
 export default {
   name: 'Dashboard',
   components: { adminDashboard },
@@ -26,11 +25,7 @@ export default {
             return false;
         }
     };
-    planConpanySelect().then(res => {
-       this.$store.state.app.companyArr=res.data
-    })
-    
-  
+    this.$store.dispatch("user/getWaterWorks")//获取全局该操作人有权限操作的水厂
   },
   computed: {
     ...mapGetters([

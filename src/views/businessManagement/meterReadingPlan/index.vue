@@ -98,7 +98,6 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import AddReadingPlan from "./components/AddReadingPlan";
-import {getCompany} from "@/utils/companyArry";
 import {
   searchPlanList,
   exportPlanList,
@@ -179,18 +178,7 @@ export default {
         that.isShowAdPlan = false;
       }
     });
-    //planConpanySelect().then(res => {
-      //获取水厂李彪
-      if(getCompany()){
-        that.companyParentOptions=getCompany()
-      }else {
-        that.companyParentOptions=[]
-      }
-      // if (res.code == 0) {
-      //   that.companyParentOptions = [];
-      //   that.companyParentOptions = res.data;
-      // }
-    //});
+    that.companyParentOptions=this.$store.state.user.waterWorks
   },
   mounted: function() {
     this.$nextTick(function() {

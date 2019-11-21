@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie'
 import { getDictionaryItem } from '@/api/index'
-import { planConpanySelect } from '@/api/plan'
 const state = {
   sidebar: {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
@@ -55,28 +54,13 @@ const actions = {
   setSize({ commit }, size) {
     commit('SET_SIZE', size)
   },
-  setDictionary({ commit }, dictionary) {
-    commit('SET_DICTIONARY', dictionary)
-  },
   setDictionary({ commit }) {//set字典项
     getDictionaryItem().then(response => {
       const { data } = response
       commit('SET_DICTIONARY', data)
     })
   },
-  setDCompany({ commit }, state) {
-    return new Promise((resolve, reject) => {
-      planConpanySelect(state.token).then(response => {
-        const { data } = response.data
-        commit('SET_companyarr', data)
-        //setToken(data)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
 
-  }
 }
 
 export default {
