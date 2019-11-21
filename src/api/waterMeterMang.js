@@ -28,3 +28,17 @@ export function saveJXHisWater(data) {//编辑机械编辑信息
     data
   })
 }
+export function searICMeterWater(data) {//ic表查询
+  return request({
+    url: "/WaterMeter/GetWaterMeter2List",
+    method: 'post',
+    data
+  })
+}
+export function searICHisWater(data) {//ic表历史
+  return request({
+    url: "/WaterMeter/GetWaterMeter2MeterReadList",
+    method: 'post',
+    data
+  })
+}
