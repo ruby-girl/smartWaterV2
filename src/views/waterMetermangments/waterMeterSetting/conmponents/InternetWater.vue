@@ -2,34 +2,49 @@
   <div class="mac-contianer">
     <el-form
       :inline="true"
-      :model="wachMeterData"
+      :model="WLWQueryParam"
       class="head-search-form form-inline-small-input"
       size="small"
       label-width="100px"
       @submit.native.prevent
     >
-      <el-form-item label="姓名：">
-        <el-input v-model="wachMeterData.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)" />
+      <el-form-item label="用户编号：">
+        <el-input v-model="WLWQueryParam.CustomerNo" maxlength="20" />
       </el-form-item>
       <el-form-item label="水表编号：">
-        <el-input v-model="wachMeterData.waterNum" maxlength="20" />
+        <el-input v-model="WLWQueryParam.WaterMeterNo" maxlength="20" />
       </el-form-item>
-      <el-form-item label="水表样式：">
-        <el-select v-model="wachMeterData.waterType" placeholder="请选择">
+
+      <el-form-item label="用户状态：">
+        <el-select v-model="WLWQueryParam.CustomerMeterState" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-          <el-option label="立式" value="1"></el-option>
-          <el-option label="卧式" value="2"></el-option>
+          <el-option label="已开户" value="1"></el-option>
+          <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="开户状态：">
-        <el-select v-model="wachMeterData.openStatus" placeholder="请选择">
+        <el-select v-model="WLWQueryParam.CustomerOpenAccountState" placeholder="请选择">
+          <el-option label="全部" value="-1"></el-option>
+          <el-option label="已开户" value="1"></el-option>
+          <el-option label="销户" value="2"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="阀门状态：">
+        <el-select v-model="WLWQueryParam.ValveState" placeholder="请选择">
+          <el-option label="全部" value="-1"></el-option>
+          <el-option label="已开户" value="1"></el-option>
+          <el-option label="销户" value="2"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="水表状态：">
+        <el-select v-model="WLWQueryParam.MeterState" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
           <el-option label="已开户" value="1"></el-option>
           <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label>
-        <el-button type="primary" size="small" class="cl-search" @click="searchFun">
+        <el-button type="primary" size="small" class="cl-search" @click="searchWLWMeterInfo">
           <i class="icon iconfont">&#xe694;</i>
           搜索
         </el-button>
@@ -39,18 +54,18 @@
       <el-button
         type="warning"
         size="small"
-        class="fr c"
+        class="fr"
         style="margin-left: 10px;"
         @click="setCustomData()"
       >
         <i class="icon iconfont">&#xe678;</i> 表格自定义
       </el-button>
-      <el-button type="success" size="small" class="fr">
+      <el-button type="success" size="small" class="fr" @click="ExcelWLWInfo">
         <i class="icon iconfont">&#xe683;</i> 导出Excel
       </el-button>
     </div>
     <customTable ref="myChild" />
-   <Static/>
+    <Static />
     <div class="main-padding-20-y" id="table">
       <el-table
         :key="tableKey"
@@ -60,7 +75,7 @@
         :height="tableHeight"
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
-        :cell-style="{'padding':'7px 0'}"
+        :cell-style="{'padding':'5px 0'}"
       >
         <template v-for="(item ,index) in tableHeadData">
           <el-table-column
@@ -95,8 +110,8 @@
       <pagination
         v-show="total>0"
         :total="total"
-        :page.sync="selectHead.page"
-        :limit.sync="selectHead.limit"
+        :page.sync="WLWQueryParam.page"
+        :limit.sync="WLWQueryParam.limit"
       />
     </div>
   </div>
@@ -105,45 +120,45 @@
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import Static from "./intercomponents/Static"; //异常统计
+import { getDictionaryOption } from "@/utils/permission";
+import { getWLWWaterInfo, excelWLWWaterInfo } from "@/api/waterMeterMang";
 export default {
   //机械表
   name: "InternetWater",
-  components: { customTable, Pagination,Static },
+  components: { customTable, Pagination, Static },
   data() {
     return {
-      wachMeterData: {
-        CustomerQueryValue: "",
-        waterNum: "",
-        waterType: "-1",
-        openStatus: "-1"
+      WLWQueryParam: {
+        page: 1,
+        limit: 10,
+        CustomerNo: "", //用户编号
+        WaterMeterNo: "", //水表编号
+        CustomerMeterState: "-1", //用户水表状态
+        CustomerOpenAccountState: "-1", //用户开户状态
+        ValveState: "-1", //阀门状态
+        MeterState: "-1", //水表状态
+        sort: "", //升序
+        filed: "", //排序字段
+        tableId: "0000024"
       },
       tableKey: 1,
       tableData: [],
       tableHeight: null, //表格高度
       customHeight: "", //自定义高度
       checksData: [],
-      total: 0,
-
-      selectHead: {
-        // 查询条件
-        page: 1,
-        limit: 10,
-        SA_WaterFactory_Id: "-1", //水厂Id
-        createStartTime: "", //计划开始日期
-        createEndTime: "", //计划结束日期
-        enumPlanState: "-1", //抄表计划状态
-        sort: "", //升序
-        filed: "", //排序字段
-        tableId: "0000008"
-      }
+      total: 0
     };
+  },
+  created() {
+    this.CustomerMeterStateList = getDictionaryOption("用户状态");
+    this.TrafficStatusList = getDictionaryOption("远传表通讯状态");
   },
   mounted() {
     this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
       document.getElementById("table").offsetTop -
       58;
-    this.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
+    this.$refs.myChild.GetTable(this.WLWQueryParam.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
   },
   watch: {
@@ -173,13 +188,42 @@ export default {
     }
   },
   methods: {
-    searchFun() {
-      alert("搜索");
+    searchWLWMeterInfo() {
+      let that = this;
+      getWLWWaterInfo(that.WLWQueryParam).then(res => {
+        if (res.code == 0) {
+          that.tableData = res.data;
+          that.total = res.count;
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "查询失败",
+            type: "warning"
+          });
+        }
+      });
     },
     setCustomData() {
       //表格自定义方法
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
+    },
+    ExcelWLWInfo() {
+      //导出
+      let that = this;
+      excelWLWWaterInfo(that.WLWQueryParam).then(res => {
+        if (res.code == 0) {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+          that.$message({
+            message: res.msg ? res.msg : "导出成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "导出失败",
+            type: "warning"
+          });
+        }
+      });
     }
   }
 };

@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     rowClsass() {
-      return "text-align: center;padding:7px 0";
+      return "text-align: center;padding:5px 0";
     },
     sortChanges({ column, prop, order }) {
       let that = this;

@@ -42,3 +42,65 @@ export function searICHisWater(data) {//ic表历史
     data
   })
 }
+export function searYCMeterWater(data) {//远传表查询
+  return request({
+    url: "/WaterMeter/SelectWaterMeter3DataList",
+    method: 'post',
+    data
+  })
+}
+export function exportYCWaterINfo(data) {//远传表导出
+  return request({
+    url: "/WaterMeter/SelectWaterMeter3DataListToExcel",
+    method: 'post',
+    data
+  })
+}
+export function searYCHisWater(data) {//远传表历史
+  return request({
+    url: "/WaterMeter/MeterReadingDetail",
+    method: 'post',
+    data
+  })
+}
+export function readYCWaterinfo (data) {//抄表
+  return request({
+    url: "/WaterMeter/MeterReading",
+    method: 'post',
+    data
+  })
+}
+export function lockYCChange (data) {//远传表阀门锁定开关
+  return request({
+    url: "/WaterMeter/LockSwitchingValve",
+    method: 'post',
+    data
+  })
+}
+export function  unLockYCChange(data) {//解锁
+  return request({
+    url: "/WaterMeter/Unlock",
+    method: 'post',
+    data
+  })
+}
+
+//物联网
+
+export function  getWLWWaterInfo(data) {//查询
+  return request({
+    url: "/WaterMeter/SelectWaterMeter4DataList",
+    method: 'post',
+    data
+  })
+}
+export function  excelWLWWaterInfo(data) {//导出
+  return request({
+    url: "/WaterMeter/SelectWaterMeter4DataListToExcel",
+    method: 'post',
+    data
+  })
+}
+
+
+

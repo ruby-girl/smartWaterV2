@@ -17,13 +17,13 @@
       <el-form-item label="水表样式：">
         <el-select v-model="wachMeterData.wms" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="item in waterMeterList" :label="item.Name" :value="item.Id"></el-option>
+          <el-option v-for="item in waterMeterList" :label="item.Name" :value="item.Id"   :key="item.Name"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="开户状态：">
         <el-select v-model="wachMeterData.cs" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="item in openStatus" :label="item.Name" :value="item.Id"></el-option>
+          <el-option v-for="item in openStatus" :label="item.Name" :value="item.Id"   :key="item.Name"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label>
@@ -57,7 +57,7 @@
         :height="tableHeight"
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
-        :cell-style="{'padding':'7px 0'}"
+        :cell-style="{'padding':'5px 0'}"
       >
         <template v-for="(item ,index) in tableHeadData">
           <el-table-column
