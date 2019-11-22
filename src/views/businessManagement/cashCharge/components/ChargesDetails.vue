@@ -45,14 +45,14 @@
       <div class="details-left">
         <div>附加费用</div>
       </div>
-      <div class="details-left-box padding-tb-10">
+      <div class="details-left-box padding-tb-10" :style="{'borderRight':detail.olf.LeteFee>0?'1px solid #d9d9d9':'none'}">
         <div class="display-flex align-items-center">
           <span>违约金：</span>
           <span class="font-weight main-color-red">{{detail.olf.LeteFee}}元</span>
         </div>
       </div>
-      <div class="ladder-box flex-1" v-if="detail.olf.LeteFee>0">
-        <div class="display-flex align-items-center ladder-item">
+      <div class="ladder-box flex-1">
+        <div class="display-flex align-items-center ladder-item" v-if="detail.olf.LeteFee>0">
           <div>
             欠费金额&nbsp;*&nbsp;逾期
             <span class="color-more-black">{{detail.olf.LeteFee}}</span>
@@ -135,6 +135,9 @@ export default {
         orr:{}
       }
     };
+  },
+  created(){
+  //  this. getDetail()
   },
   methods: {
     getDetail() {

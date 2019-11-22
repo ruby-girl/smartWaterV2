@@ -12,15 +12,14 @@
     <div class="feewaiver-box">
       <el-form
         :inline="true"
-        
         class="head-search-form form-inline-small-input"
         size="small"
         label-width="60px"
         @submit.native.prevent
       >
         <el-row>
-          <el-form-item :label="orderType+'：'">
-            <el-input v-model="orderMoney" disabled />
+          <el-form-item :label="feeWaiverItem.OrderTypeStr">
+            <el-input v-model="feeWaiverItem.PriceSurplus" disabled />
           </el-form-item>
           <div class="inline-box">
             <div>减免为</div>
@@ -29,6 +28,23 @@
           <el-form-item>
             <el-input
               v-model="inputValue"
+              @blur="changeTwoDecimal_x($event)"
+              @keyup.native="money($event)"
+              maxlength="8"
+            />
+          </el-form-item>
+        </el-row>
+        <el-row v-if="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee>0">
+          <el-form-item label="违约金：">
+            <el-input v-model="feeWaiverItem.LateFee" disabled />
+          </el-form-item>
+          <div class="inline-box">
+            <div>减免为</div>
+            <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
+          </div>
+          <el-form-item>
+            <el-input
+              v-model="lateFeeValue"
               @blur="changeTwoDecimal_x($event)"
               @keyup.native="money($event)"
               maxlength="8"
@@ -45,22 +61,17 @@
 </template>
 <script>
 import { updateMoney, changeTwoDecimal } from "@/utils/index.js";
- import {OrderFeeWaiver} from "@/api/cashCharge";
+import { OrderFeeWaiver, OrderAfterOverdueFeeWaiver } from "@/api/cashCharge";
 export default {
   props: {
     //   减免Id
-    orderId: {
-      type: String
-    },
-    // 减免前金额
-    orderMoney:{
-      type: Number
+    feeWaiverItem: {
+      type: Object
     },
     feeWaiverShow: {
       type: Boolean,
       default: false
-    },
-    orderType:{}
+    }
   },
   watch: {
     feeWaiverShow() {
@@ -75,31 +86,59 @@ export default {
   },
   data() {
     return {
-      radio: 1,
       dialogFormVisible: false,
-      inputValue:''
+      inputValue: "",
+      lateFeeValue: "" //违约金金额
     };
   },
   methods: {
     //   减免请求
     feeWaiver() {
-      if(parseFloat(this.inputValue)>parseFloat(this.orderMoney)){
-         this.$message({
-            message: '减免后金额不能大于总费用',
-            type: "error",
-            duration: 4000
-          });
-          return
+      if (parseFloat(this.inputValue) >parseFloat(this.feeWaiverItem.PriceSurplus)) {
+        this.$message({
+          message: "减免后金额不能大于总费用",
+          type: "error",
+          duration: 4000
+        });
+        return;
       }
-      OrderFeeWaiver({SA_Order_Id:this.orderId,AfterFee:this.inputValue}).then(res=>{
-         this.$message({
-            message: '减免成功',
+      this.OrderFeeWaiverFunc();
+      // 减免违约金
+    },
+    async OrderFeeWaiverFunc() {
+      let water = await OrderFeeWaiver({
+        SA_Order_Id: this.feeWaiverItem.Id,
+        AfterFee: this.inputValue
+      }).then(res => {
+        return true;
+      });
+      // 如果有违约金
+      if (this.feeWaiverItem.OrderType == 2001 &&this.feeWaiverItem.LateFee > 0 && water) {
+        OrderAfterOverdueFeeWaiver({
+        SA_Order_Id: this.feeWaiverItem.Id,
+        AfterOverdueFee: this.lateFeeValue
+      }).then(res => {
+          this.$message({
+            message: "减免成功",
             type: "success",
             duration: 4000
           });
-          this.dialogFormVisible=false
+          this.inputValue=''
+          this.lateFeeValue=''
+          this.dialogFormVisible = false;
           this.$emit("getList");
-      })
+        });
+      } else {
+        this.$message({
+          message: "减免成功",
+          type: "success",
+          duration: 4000
+        });
+        this.inputValue=''
+        this.lateFeeValue=''
+        this.dialogFormVisible = false;
+        this.$emit("getList");
+      }
     },
     // 输入金额保留2位
     money(e) {

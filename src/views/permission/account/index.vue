@@ -4,7 +4,7 @@
       <div ref="formHeight">
         <select-head :select-head="listQuery" @handleFilter="handleFilter" :role-list="roleList" />
       </div>
-      <div class="table-top-btn-padding display-flex justify-content-flex-justify">
+      <div class="display-flex justify-content-flex-justify">
         <el-button type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
         <div>
           <el-button

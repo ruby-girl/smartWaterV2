@@ -58,7 +58,7 @@
                       >
                         <div class="card-item-btn" @click="details(li)">详情</div>
                         <div class="card-item-btn margin-samll" @click="reset(li.Id)">费用撤回</div>
-                        <div class="card-item-btn" @click="feeWaiver(li.Id,li.PriceSurplus,row.OrderTypeStr)">费用减免</div>
+                        <div class="card-item-btn" @click="feeWaiver(li)">费用减免</div>
                       </div>
                     </div>
                   </div>
@@ -254,8 +254,8 @@ export default {
       this.$emit("reset", id);
     },
     // id:费用ID，num:减免前金额 type：费用类型
-    feeWaiver(id, num,type) {
-      this.$emit("feeWaiver", id,num,type);
+    feeWaiver(row) {
+      this.$emit("feeWaiver", row);
     }
   }
 };

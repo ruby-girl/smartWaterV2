@@ -1,7 +1,7 @@
+
 <template>
-  <!-- 账单详情 -->
+  <!-- 收费查询 -->
   <div class="section-container">
-    <div class="section-full-container">
       <div ref="formHeight">
         <select-head
           :select-head="listQuery"
@@ -9,6 +9,7 @@
           @toggleShow="toggleShow"
         />
       </div>
+    <div class="section-full-container" style="padding-top:0;">     
       <div class="display-flex justify-content-flex-justify">
         <div></div>
         <div>
@@ -22,6 +23,7 @@
       </div>
       <customTable ref="myChild" />
       <div class="main-padding-20-y">
+        <table-total :list="tableTotal"></table-total>
         <el-table
           :key="tableKey"
           :data="tableData"
@@ -36,7 +38,7 @@
           <template v-for="(item ,index) in tableHead">
             <el-table-column
               :key="index"
-              min-width="130px"
+              min-width="150px"
               :prop="item.ColProp"
               align="center"
               :sortable="item.IsSortBol?'custom':null"
@@ -45,19 +47,22 @@
           </template>
           <el-table-column
             label="操作"
-            width="200"
+           width="280"
             align="center"
             fixed="right"
             class-name="small-padding"
           >
             <template slot-scope="{row}">
-              <div class="display-flex">
-                <div class="main-color-warn pl-15" @click="details(row)">
-                  <a>费用详情</a>
+              <div class="display-flex justify-content-flex-center">
+                <div class="main-color-warn" @click="billDetails(row)">
+                  <a>账单详情</a>
                 </div>
-                <div class="pl-15" @click="reset(row)">
-                  <a>费用撤销</a>
-                </div>             
+                <div class="main-color-red pl-15 pr-15" @click="invoice(row)">
+                  <a>数据冲红</a>
+                </div>
+                <div @click="pint(row)">
+                  <a>票据打印</a>
+                </div>
               </div>
             </template>
           </el-table-column>
@@ -70,7 +75,7 @@
           @pagination="getList"
         />
       </div>
-      <charges-details :chargesDetailsShow.sync="chargesDetailsShow" :temp="temp"/>
+      <!-- 账单详情弹窗 -->
     </div>
   </div>
 </template>
@@ -78,13 +83,13 @@
 import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
-import ChargesDetails from "../cashCharge/components/ChargesDetails"; //水费详情弹窗-共用现金收费的费用详情
+import TableTotal from "@/components/TableTotal/index";
 import {
-  SelectBillDataList,SelectBillDataListToExcel,OrderFeeCancel
+  GetList
 } from "@/api/cashCharge";
 export default {
-  name: "billDetails",
-  components: { SelectHead, Pagination, customTable,ChargesDetails},
+  name: "arrearsManagement",
+  components: { SelectHead, Pagination, customTable, TableTotal},
   data() {
     return {
       total: 0,
@@ -97,24 +102,30 @@ export default {
         limit: 10,
         filed: "",
         sort: "",
-        CustomerQueryType: "1", //用户类型
-        CustomerQueryValue: '', // input值
-        WaterMeterTypeId:"-1",//水表类型
-        // PayMentState:"-1",//缴费状态
-        PayMentType:"-1",//缴费方式
-        FeeType:"-1",//费用类型
-        FeeState:"-1",//费用状态
-        StartPayMentDate:'',//缴费时间起
-        EndPayMentDate:'',//缴费时间止
-        ReceiveMoneyUser:"-1",//收款人
-        WaterFactory:"-1",//水厂
-        editStartTime: "", // 操作时间起
-        editEndTime: "", // 操作时间止
-        tableId: "0000020"
+        selectType:'1',//查询方式
+        Enumcqt:'1',//用户条件下拉
+        Customer:'',//输入框
+        SA_WaterFactory_Id:'-1',//水厂
+        SA_UserArea_Id:'-1',//区域
+        Star_TotalPrice:'',//欠费费用起
+        End_TotalPrice:'',//欠费费用起
+        Enumut:'-1',//用户类型
+        Enumwm:'-1',//水表类型
+        Enumcf:'-1',//费用状态
+        Enumot:'-1',//费用类型
+        Star_ArrearsDate: "", // 操作时间起
+        End_ArrearsDate: "", // 操作时间止
+        tableId: "0000019"
       },
+      selectPintShow:false,//票据打印弹窗
       tableData: [],
       checksData: [],
-      chargesDetailsShow:false//费用弹窗
+      tableTotal: [
+        { num: 0, txt: "交易次数" },
+        { num: 0, txt: "缴费金额" },
+        { num: 0, txt: "预存金额" },
+        { num: 0, txt: "实收金额" }
+      ]
     };
   },
   computed: {
@@ -140,9 +151,9 @@ export default {
       else this.tableHeight = this.tableHeight + 80;
     },
     getList() {
-      SelectBillDataList(this.listQuery).then(res => {
+      GetList(this.listQuery).then(res => {
         this.total = res.count;
-        this.tableData = res.data;
+        // this.tableData = res.data;
       });
     },
     sortChanges({ prop, order }) {
@@ -159,15 +170,15 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
-    reset(r) {
-      this.$confirm("是否确认撤销费用？", "提示", {
+    invoice(r) {
+      this.$confirm("是否确认冲红该账单？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        OrderFeeCancel({SA_Order_Id:r.Id}).then(res => {
+        RedPayMentDataByPayMentId({SA_Payment_Id:r.Id,Remark:''}).then(res => {
           this.$message({
             message: res.message,
             type: "success",
@@ -179,7 +190,7 @@ export default {
     },
     excel() {
       //导出
-      SelectBillDataListToExcel(this.listQuery).then(res => {
+      SelectPayMentDataListToExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
@@ -188,13 +199,20 @@ export default {
       const that = this;
       setTimeout(function() {
         var formHeight = that.$refs.formHeight.offsetHeight;
-        that.tableHeight = document.body.clientHeight - formHeight - 220;
+        that.tableHeight = document.body.clientHeight - formHeight - 290;
       }, 350);
     },
-    // 费用详情
-    details(item){
-      this.temp=item
-      this.chargesDetailsShow=true
+    // 行票据打印
+    pint(r){
+      this.selectPintShow=true
+    },
+    billDetails(){
+      this.$router.push({
+        path:'/businessManagement/billDetails',
+        query:{
+          id:'qwe',  
+        }    
+    })
     }
   }
 };

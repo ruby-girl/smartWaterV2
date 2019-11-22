@@ -4,7 +4,7 @@
       <div ref="formHeight">
         <select-head :select-head="listQuery" @handleFilter="handleFilter" :role-list="roleList" />
       </div>
-      <div class="table-top-btn-padding display-flex justify-content-flex-justify">
+      <div class="display-flex justify-content-flex-justify">
         <el-button type="primary" size="mini"  @click="addWaterFactory"><i class="iconfont icontianjia"></i>添加</el-button>
         <div>
           <el-button
@@ -30,7 +30,7 @@
           style="width: 100%;"
           :cell-class-name="cellClass"
           :header-cell-style="{'background-color': '#F0F2F5'}"
-          :cell-style="{'padding':'7px 0'}"
+          :cell-style="{'padding':'5px 0'}"
           @sort-change="sortChanges"
         >
           <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />

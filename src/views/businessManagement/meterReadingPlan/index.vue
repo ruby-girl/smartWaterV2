@@ -5,7 +5,7 @@
         <select-head :companyOptions="companyParentOptions" ref="child1"/>
       </div>
       <div
-        class="table-top-btn-padding display-flex justify-content-flex-justify"
+        class="display-flex justify-content-flex-justify"
         :class="{'plan-table':isShowAdPlanClass }"
       >
         <el-button v-show="isShowAdPlan" type="primary" size="mini" @click="addPlan">

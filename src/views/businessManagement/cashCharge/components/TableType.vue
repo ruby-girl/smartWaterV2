@@ -150,7 +150,7 @@ export default {
       this.$emit("reset",row.Id);
     },
     feeWaiver(row) {
-      this.$emit("feeWaiver", row.Id,row.PriceSurplus,row.OrderTypeStr);
+      this.$emit("feeWaiver",row);
     }
   }
 };
