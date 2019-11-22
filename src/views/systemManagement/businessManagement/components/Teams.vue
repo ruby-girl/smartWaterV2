@@ -26,7 +26,7 @@
   import Sortable from 'sortablejs'
   import Bus from '@/utils/bus'
   import { promptInfoFun } from "@/utils/index"
-  import configureDialog from './ConfigureDialog'
+  import configureDialog from './ConfigureDialog1'
   import { GetProcessModuleInfo, DeleteProcessModuleInfo, AddProcessModuleInfo } from "@/api/operationFlow"
 
   export default {

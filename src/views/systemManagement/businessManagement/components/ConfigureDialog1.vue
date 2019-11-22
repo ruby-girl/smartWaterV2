@@ -129,27 +129,27 @@
       getPostInfo(val){//根据部门获取岗位
         CacheComboBoxByPIdZhuanYong({SYS_Department_Id:val}).then(res => {
           if (res.code ==0 ) {
-            if(val == -1){
-              res.data.forEach(i=>{
-                i.hide = true
-              })
-              this.$refs.postChild.data = res.data
-            }else {
-              this.$refs.postChild.data.forEach(item=>{//模拟模糊查询,过滤不显示的复选框
-                if(res.data.length==0){
-                  item.hide = false
-                }else {
-                  for(let i=0;i<res.data.length;i++){
-                    if(item.Id == res.data[i].Id){
-                      item.hide = true
-                      break
-                    }else {
+             if(val == -1){
+               res.data.forEach(i=>{
+                 i.hide = true
+               })
+               this.$refs.postChild.data = res.data
+             }else {
+               this.$refs.postChild.data.forEach(item=>{//模拟模糊查询,过滤不显示的复选框
+                    if(res.data.length==0){
                       item.hide = false
+                    }else {
+                    for(let i=0;i<res.data.length;i++){
+                      if(item.Id == res.data[i].Id){
+                          item.hide = true
+                          break
+                      }else {
+                          item.hide = false
+                      }
                     }
-                  }
-                }
-              })
-            }
+                    }
+               })
+             }
           } else {
             promptInfoFun(this,1,res.message)
           }

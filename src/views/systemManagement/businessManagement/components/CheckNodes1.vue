@@ -41,7 +41,7 @@
         data.forEach(item=>{
           total.forEach(items=>{
             if(item == items.Id){
-              this.persons.push(items)
+                this.persons.push(items)
             }
           })
         })
@@ -68,7 +68,7 @@
         this.checkList.forEach((item,index)=>{
           if(item === id)
             this.checkList.splice(index,1);
-          this.handlecheckListChange(this.checkList)
+            this.handlecheckListChange(this.checkList)
         })
       }
     },

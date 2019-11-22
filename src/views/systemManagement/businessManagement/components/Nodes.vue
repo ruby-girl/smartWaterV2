@@ -64,7 +64,7 @@
   import Bus from '@/utils/bus'
   import { promptInfoFun } from "@/utils/index"
   import copyDialog from './CopyDialog'
-  import configureDialog from './ConfigureDialog'
+  import configureDialog from './ConfigureDialog1'
   import { GetProcessConfigId, SetProcessMenuState } from "@/api/operationFlow"
 
   export default {
