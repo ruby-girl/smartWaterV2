@@ -158,7 +158,6 @@ export default {
       this.editInfo.WaterMeterStyle = String(this.editInfo.WaterMeterStyle);
       this.editInfo.MeterDiameter = String(this.editInfo.MeterDiameter);
       this.EditJxData = this.editInfo;
-      console.log(this.EditJxData)
     }
   },
   created() {
@@ -167,7 +166,6 @@ export default {
   methods: {
     saveWaterInfo() {
       let that = this;
-      console.log(this.EditJxData)
       this.EditJxData.CustomerState = Number(this.EditJxData.CustomerState);
       this.EditJxData.WaterMeterStyle = Number(this.EditJxData.WaterMeterStyle);
       this.EditJxData.MeterDiameter = Number(this.EditJxData.MeterDiameter);

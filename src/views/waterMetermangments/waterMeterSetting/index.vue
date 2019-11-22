@@ -34,7 +34,6 @@ export default {
   created(){
       this.waterMeterList = getDictionaryOption("水表样式");
       this.openStatus = getDictionaryOption("用水用户状态");
-      console.log(this.waterMeterList,this.openStatus)
   }
 };
 </script>   
