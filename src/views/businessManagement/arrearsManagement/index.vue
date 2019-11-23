@@ -106,7 +106,7 @@ export default {
         Enumcqt:'1',//用户条件下拉
         Customer:'',//输入框
         SA_WaterFactory_Id:'-1',//水厂
-        SA_UserArea_Id:'-1',//区域
+        SA_UserArea_Id:'0',//区域
         Star_TotalPrice:'',//欠费费用起
         End_TotalPrice:'',//欠费费用起
         Enumut:'-1',//用户类型
@@ -121,10 +121,8 @@ export default {
       tableData: [],
       checksData: [],
       tableTotal: [
-        { num: 0, txt: "交易次数" },
-        { num: 0, txt: "缴费金额" },
-        { num: 0, txt: "预存金额" },
-        { num: 0, txt: "实收金额" }
+        { num: 0, txt: "费用笔数" },
+        { num: 0, txt: "剩余未缴（元）" }
       ]
     };
   },
@@ -153,6 +151,8 @@ export default {
     getList() {
       GetList(this.listQuery).then(res => {
         this.total = res.count;
+        this.tableTotal[0].num=res.data.ot.OrderCount
+        this.tableTotal[1].num=res.data.ot.PriceSurplus
         // this.tableData = res.data;
       });
     },
