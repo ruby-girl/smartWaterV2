@@ -344,7 +344,6 @@ export default {
 }
 .plan-table {
   position: relative;
-  height: 52px;
 }
 .showPlan {
   position: absolute;

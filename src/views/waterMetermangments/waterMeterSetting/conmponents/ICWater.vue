@@ -53,7 +53,7 @@
       >
         <i class="icon iconfont">&#xe678;</i> 表格自定义
       </el-button>
-      <el-button type="success" size="small" class="fr">
+      <el-button type="success" size="small" class="fr" @click="excelWaterMeter">
         <i class="icon iconfont">&#xe683;</i> 导出Excel
       </el-button>
     </div>
@@ -128,7 +128,11 @@
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
-import { searICMeterWater, searICHisWater } from "@/api/waterMeterMang";
+import {
+  searICMeterWater,
+  searICHisWater,
+  excelICMeterWater
+} from "@/api/waterMeterMang";
 import ICWaterMeterHis from "./intercomponents/ICWaterMeterHis";
 export default {
   //机械表
@@ -146,7 +150,8 @@ export default {
   },
   data() {
     return {
-      IcwachMeterData: {//查询
+      IcwachMeterData: {
+        //查询
         page: 1,
         limit: 10,
         CustomerName: "", // 用户名 ,
@@ -157,7 +162,8 @@ export default {
         filed: "", //排序字段
         tableId: "0000023"
       },
-      meterReadListParam: {//历史数据
+      meterReadListParam: {
+        //历史数据
         WaterMeterId: "", //水表Id ,
         limit: 10, //表格每页数据条数 ,
         page: 1, //表格当前页面 从1开始 ,
@@ -220,6 +226,23 @@ export default {
         } else {
           that.$message({
             message: res.msg ? res.msg : "查询失败",
+            type: "warning"
+          });
+        }
+      });
+    },
+    excelWaterMeter() {
+      let that = this;
+      excelICMeterWater(that.IcwachMeterData).then(res => {
+        if (res.code == 0) {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+          that.$message({
+            message: res.msg ? res.msg : "导出成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "导出失败",
             type: "warning"
           });
         }

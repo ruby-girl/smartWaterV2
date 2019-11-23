@@ -108,8 +108,9 @@
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'5px 0'}"
-        @selection-change="selectionChange">
+        @selection-change="selectionChange"
       >
+        >
         <el-table-column type="selection" fixed="left" width="55"></el-table-column>
         <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
 
@@ -155,7 +156,7 @@
       title="历史详情"
       :visible.sync="viewWaterHistory"
       top="30vh"
-      width="836px"
+      width="1000px"
       hight="432px"
       center
       :close-on-click-modal="false"
@@ -186,15 +187,9 @@ import {
 } from "@/api/waterMeterMang";
 import YCWaterMeterHis from "./intercomponents/YCWaterMeterHis"; //历史
 export default {
-  // props: {
-  //   openStatus: {
-  //     type: Array,
-  //     default: []
-  //   }
-  // },
   //机械表
   name: "MechanicalWater",
-  components: { customTable, Pagination },
+  components: { customTable, Pagination, YCWaterMeterHis },
   data() {
     return {
       YCMeterQueryParam: {
@@ -228,7 +223,8 @@ export default {
       total: 0,
       hisData: [],
       histotal: 0,
-      viewWaterHistory: false
+      viewWaterHistory: false,
+      SelectionList: []
     };
   },
   created() {
@@ -312,13 +308,14 @@ export default {
       //历史
       let that = this;
       that.viewWaterHistory = true;
-      that.meterReadListParam.WaterMeterId = id;
+      that.meterReadListParam.customerId = id;
       searYCHisWater(that.meterReadListParam).then(res => {
         that.hisData = res.data;
         that.histotal = res.count;
       });
     },
-    sortProp(data) {//历史记录排序
+    sortProp(data) {
+      //历史记录排序
       let that = this;
       that.meterReadListParam.sort = data.sort;
       that.meterReadListParam.filed = data.filed;
@@ -327,26 +324,77 @@ export default {
         that.histotal = res.count;
       });
     },
-    selectionChange(val){//多选框数据
-      console.log(val)
+    selectionChange(val) {
+      //多选框数据
+      let that = this;
+      that.SelectionList=[]
+      val.forEach(function(data) {
+        that.SelectionList.push(data.Id);
+      });
     },
     meterRedingYC() {
-      console.log(1)
-      // readYCWaterinfo(){
-
-      // }
+      let that = this;
+      console.log(1);
+      readYCWaterinfo(that.SelectionList).then(res => {
+        console.log(res);
+        if (res.code == 0) {
+          that.searYCMeterWater();
+          that.$message({
+            message: res.msg ? res.msg : "抄表成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "抄表失败",
+            type: "warning"
+          });
+        }
+      });
     },
-    orderLockYC(num){
-      if(num){
-
-        alert("阀门锁定开")
-      }else {
-        alert("阀门锁定关")
-
+    orderLockYC(num) {
+      let IsOpen;
+      let that = this;
+      if (num) {
+        IsOpen = true;
+        alert("阀门锁定开");
+      } else {
+        alert("阀门锁定关");
+        IsOpen = false;
       }
+      lockYCChange({ isOpen: IsOpen, waterMeterId: that.SelectionList }).then(
+        res => {
+          if (res.code == 0) {
+            that.searYCMeterWater();
+            that.$message({
+              message: res.msg ? res.msg : "操作成功",
+              type: "success"
+            });
+          } else {
+            that.$message({
+              message: res.msg ? res.msg : "操作失败",
+              type: "warning"
+            });
+          }
+        }
+      );
     },
-    orderUnockYC(){
-      alert("解锁")
+    orderUnockYC() {
+      let that = this;
+      unLockYCChange(that.SelectionList).then(res => {
+        console.log(res);
+        if (res.code == 0) {
+          that.searYCMeterWater();
+          that.$message({
+            message: res.msg ? res.msg : "操作成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "操作失败",
+            type: "warning"
+          });
+        }
+      });
     }
   }
 };

@@ -17,13 +17,23 @@
       <el-form-item label="水表样式：">
         <el-select v-model="wachMeterData.wms" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="item in waterMeterList" :label="item.Name" :value="item.Id"   :key="item.Name"></el-option>
+          <el-option
+            v-for="item in waterMeterList"
+            :label="item.Name"
+            :value="item.Id"
+            :key="item.Name"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="开户状态：">
         <el-select v-model="wachMeterData.cs" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="item in openStatus" :label="item.Name" :value="item.Id"   :key="item.Name"></el-option>
+          <el-option
+            v-for="item in openStatus"
+            :label="item.Name"
+            :value="item.Id"
+            :key="item.Name"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label>
@@ -43,7 +53,7 @@
       >
         <i class="icon iconfont">&#xe678;</i> 表格自定义
       </el-button>
-      <el-button type="success" size="small" class="fr">
+      <el-button type="success" size="small" class="fr" @click="excelWaterMeter">
         <i class="icon iconfont">&#xe683;</i> 导出Excel
       </el-button>
     </div>
@@ -105,7 +115,7 @@
       center
       :close-on-click-modal="false"
     >
-      <water-meterHis :hisData="hisData"  @sortProp="sortProp"/>
+      <water-meterHis :hisData="hisData" @sortProp="sortProp" />
 
       <pagination
         v-show="histotal>0"
@@ -126,7 +136,12 @@
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
-import { searJXMeterWater, searJXHisWater,editJXHisWater } from "@/api/waterMeterMang";
+import {
+  searJXMeterWater,
+  searJXHisWater,
+  editJXHisWater,
+  excelJXMeterWater
+} from "@/api/waterMeterMang";
 import WaterMeterHis from "./intercomponents/WaterMeterHis";
 import EditJXWaterMeter from "./intercomponents/EditJXWaterMeter";
 export default {
@@ -173,9 +188,9 @@ export default {
         tableId: "" // 表格Id 用于导出
       },
       histotal: 0,
-      editId:"",//获取行信息id
-      editShow: false,//编辑
-      editInfo:{},
+      editId: "", //获取行信息id
+      editShow: false, //编辑
+      editInfo: {}
     };
   },
   mounted() {
@@ -213,7 +228,8 @@ export default {
     }
   },
   methods: {
-    sortProp(data){
+    sortProp(data) {
+      //历史列表排序
       let that = this;
       that.meterReadListParam.sort = data.sort;
       that.meterReadListParam.filed = data.filed;
@@ -243,6 +259,7 @@ export default {
       this.customHeight = this.$refs.myChild.isCustom;
     },
     waterMeterJxDetail(id) {
+      //历史列表
       let that = this;
       that.viewWaterHistory = true;
       that.meterReadListParam.WaterMeterId = id;
@@ -252,11 +269,28 @@ export default {
       });
     },
     editwaterMeterJx(id) {
+      //编辑
       this.editShow = true;
-      editJXHisWater({WaterMeterId:id}).then(res=>{
-        this.editInfo=res.data
-      })
-
+      editJXHisWater({ WaterMeterId: id }).then(res => {
+        this.editInfo = res.data;
+      });
+    },
+    excelWaterMeter() {
+      let that=this
+      excelJXMeterWater(that.wachMeterData).then(res=>{
+          if (res.code == 0) {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+          that.$message({
+            message: res.msg ? res.msg : "导出成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "导出失败",
+            type: "warning"
+          });
+        }
+      });
     }
   }
 };

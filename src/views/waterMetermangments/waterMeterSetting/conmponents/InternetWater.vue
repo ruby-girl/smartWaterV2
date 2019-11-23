@@ -65,7 +65,7 @@
       </el-button>
     </div>
     <customTable ref="myChild" />
-    <Static />
+    <Static :ErrorList="ErrorList" />
     <div class="main-padding-20-y" id="table">
       <el-table
         :key="tableKey"
@@ -101,9 +101,11 @@
         <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
         <el-table-column label="操作" width="300px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
-
-            <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>
+            <a
+              class="viewHis"
+              v-if="scope.row.SA_Customer_Id!=''"
+              @click="waterMeterWLWDetail(scope.row.IMSI)"
+            >查看历史详情</a>
           </template>
         </el-table-column>
       </el-table>
@@ -121,7 +123,12 @@ import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import Static from "./intercomponents/Static"; //异常统计
 import { getDictionaryOption } from "@/utils/permission";
-import { getWLWWaterInfo, excelWLWWaterInfo } from "@/api/waterMeterMang";
+import {
+  getWLWWaterInfo,
+  excelWLWWaterInfo,
+  GetMeter4ErrorTypeNum,
+  searWLWHisWater
+} from "@/api/waterMeterMang";
 export default {
   //机械表
   name: "InternetWater",
@@ -146,7 +153,16 @@ export default {
       tableHeight: null, //表格高度
       customHeight: "", //自定义高度
       checksData: [],
-      total: 0
+      total: 0,
+      ErrorList: {}, //异常统计
+      Bl_WaterMeter4His: {
+        Meter4IMSI: "",
+        limit: 10,
+        page: 1,
+        sort: "",
+        filed: "",
+        tableId: ""
+      }
     };
   },
   created() {
@@ -201,6 +217,10 @@ export default {
           });
         }
       });
+      GetMeter4ErrorTypeNum().then(res => {
+        //统计
+        that.ErrorList = res.data;
+      });
     },
     setCustomData() {
       //表格自定义方法
@@ -224,6 +244,15 @@ export default {
           });
         }
       });
+    },
+    waterMeterWLWDetail(imsi) {
+      let that = this;
+      that.viewWaterHistory = true;
+      that.Bl_WaterMeter4His.Meter4IMSI  = id;
+      searYCHisWater(that.Bl_WaterMeter4His).then(res => {
+        that.hisData = res.data;
+        that.histotal = res.count;
+      })
     }
   }
 };
