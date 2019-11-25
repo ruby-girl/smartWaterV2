@@ -118,7 +118,7 @@
           <el-table-column
             v-if="item.IsFreeze"
             :key="index"
-            min-width="150px"
+            min-width="170px"
             :sortable="item.IsSortBol?'custom':null"
             :prop="item.ColProp"
             :align="item.Position"
@@ -128,7 +128,7 @@
           <el-table-column
             v-else
             :key="index"
-            min-width="150px"
+            min-width="170px"
             sortable="custom"
             :prop="item.ColProp"
             :align="item.Position"
@@ -327,18 +327,23 @@ export default {
     selectionChange(val) {
       //多选框数据
       let that = this;
-      that.SelectionList=[]
+      that.SelectionList = [];
       val.forEach(function(data) {
         that.SelectionList.push(data.Id);
       });
     },
     meterRedingYC() {
       let that = this;
-      console.log(1);
+      if (that.SelectionList.length == 0) {
+        that.$message({
+          message: "请选择数据后在进行操作",
+          type: "warning"
+        });
+        return false;
+      }
       readYCWaterinfo(that.SelectionList).then(res => {
-        console.log(res);
         if (res.code == 0) {
-          that.searYCMeterWater();
+          that.searchYCWaterList();
           that.$message({
             message: res.msg ? res.msg : "抄表成功",
             type: "success"
@@ -354,15 +359,22 @@ export default {
     orderLockYC(num) {
       let IsOpen;
       let that = this;
+      if (that.SelectionList.length == 0) {
+        that.$message({
+          message: "请选择数据后在进行操作",
+          type: "warning"
+        });
+        return false;
+      }
       if (num) {
         IsOpen = true;
       } else {
         IsOpen = false;
       }
-      lockYCChange({ isOpen: IsOpen, waterMeterId: that.SelectionList }).then(
+      lockYCChange({ waterMeterId: that.SelectionList, isOpen: IsOpen }).then(
         res => {
           if (res.code == 0) {
-            that.searYCMeterWater();
+            that.searchYCWaterList();
             that.$message({
               message: res.msg ? res.msg : "操作成功",
               type: "success"
@@ -378,10 +390,16 @@ export default {
     },
     orderUnockYC() {
       let that = this;
+      if (that.SelectionList.length == 0) {
+        that.$message({
+          message: "请选择数据后在进行操作",
+          type: "warning"
+        });
+        return false;
+      }
       unLockYCChange(that.SelectionList).then(res => {
-        console.log(res);
         if (res.code == 0) {
-          that.searYCMeterWater();
+          that.searchYCWaterList();
           that.$message({
             message: res.msg ? res.msg : "操作成功",
             type: "success"

@@ -9,13 +9,13 @@
     @sort-change="sortChanges"
   >
     <el-table-column type="index" width="50"></el-table-column>
-    <el-table-column prop="CustomerName" :sortable="true" label="姓名" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterNo" label="水表编号" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterStyleStr" label="水表样式" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="MeterDiameter" label="口径" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="StarReadNum" label="起始读数" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="ReadNum" label="当前读数" :sortable="true" width="150"></el-table-column>
-    <el-table-column prop="ReadDate" label="最近一次抄表日期" :sortable="true" width="200"></el-table-column>
+    <el-table-column prop="CustomerName" label="姓名" width="150"></el-table-column>
+    <el-table-column prop="WaterMeterNo" label="水表编号" width="150"></el-table-column>
+    <el-table-column prop="WaterMeterStyleStr" label="水表样式" width="150"></el-table-column>
+    <el-table-column prop="MeterDiameter" label="口径" width="150"></el-table-column>
+    <el-table-column prop="StarReadNum" label="起始读数" width="150"></el-table-column>
+    <el-table-column prop="ReadNum" label="当前读数" width="150"></el-table-column>
+    <el-table-column prop="ReadDate" label="最近一次抄表日期" width="200"></el-table-column>
   </el-table>
 </template>
 <script>

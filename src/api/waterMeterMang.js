@@ -86,9 +86,9 @@ export function readYCWaterinfo (data) {//抄表
 }
 export function lockYCChange (data) {//远传表阀门锁定开关
   return request({
-    url: "/WaterMeter/LockSwitchingValve3",
+    url: "/WaterMeter/LockSwitchingValve3?isOpen="+data.isOpen,
     method: 'post',
-    data
+    data:data.waterMeterId
   })
 }
 export function  unLockYCChange(data) {//解锁
@@ -98,6 +98,14 @@ export function  unLockYCChange(data) {//解锁
     data
   })
 }
+export function  DeleteMeterReading(data) {//删除抄表记录
+  return request({
+    url: "/WaterMeter/DeleteMeterReading3ById",
+    method: 'GET',
+    params:data
+  })
+}
+
 
 //物联网
 

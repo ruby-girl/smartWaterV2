@@ -10,20 +10,19 @@
     @sort-change="sortChanges"
   >
     <el-table-column type="index" width="50"></el-table-column>
-    <el-table-column prop="SA_UseWaterTypeHis_Id" :sortable="true" label="用户性质" width="150"></el-table-column>
-    <el-table-column prop="LastReadNum" :sortable="true" label="水表起数" width="150"></el-table-column>
-    <el-table-column prop="ReadNum" :sortable="true" label="水表止数" width="150"></el-table-column>
-    <el-table-column prop="TotalWaterYield" :sortable="true" label="水量" width="150"></el-table-column>
-    <el-table-column prop="TotalWaterPrice" :sortable="true" label="水费" width="150"></el-table-column>
-    <el-table-column prop="PollutionDischarge" :sortable="true" label="污水费" width="150"></el-table-column>
-    <el-table-column prop="PricePaid" :sortable="true" label="扣减金额" width="150"></el-table-column>
-    <el-table-column prop="WaterAllowance" :sortable="true" label="固定减免量" width="200"></el-table-column>
-    <el-table-column prop="Balance" :sortable="true" label="账户余额" width="200"></el-table-column>
-    <el-table-column prop="WaterAllowance" :sortable="true" label="固定减免量" width="200"></el-table-column>
-    <el-table-column prop="OrderTime" :sortable="true" label="最近一次抄表日期" width="200"></el-table-column>
+    <el-table-column prop="UseWaterTypeName" label="用户性质" width="150"></el-table-column>
+    <el-table-column prop="LastReadNum" label="水表起数" width="150"></el-table-column>
+    <el-table-column prop="ReadNum" label="水表止数" width="150"></el-table-column>
+    <el-table-column prop="TotalWaterYield" label="水量" width="150"></el-table-column>
+    <el-table-column prop="TotalWaterPrice" label="水费" width="150"></el-table-column>
+    <el-table-column prop="PollutionDischarge" label="污水费" width="150"></el-table-column>
+    <el-table-column prop="PricePaid" label="扣减金额" width="150"></el-table-column>
+    <el-table-column prop="WaterAllowance" label="账户余额" width="200"></el-table-column>
+    <el-table-column prop="WaterAllowance" label="固定减免量" width="200"></el-table-column>
+    <el-table-column prop="OrderTime" label="最近一次抄表日期" width="200"></el-table-column>
     <el-table-column label="操作" width="200" fixed="right">
       <template slot-scope="scope">
-        <span class="tbTextButton" @click="toogleExpand(scope.row)">
+        <span class="tbTextButton" v-if="scope.row.TotalPrice1" @click="toogleExpand(scope.row)">
           水价构成
           <i :class="[rotate?'el-icon-caret-right':'el-icon-caret-bottom']" class></i>
         </span>
@@ -33,7 +32,7 @@
     <el-table-column type="expand" fixed="right" width="1">
       <template slot-scope="props">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="10">
             <i class="numberTo">1</i>
             <span>
               1阶单价：
@@ -53,11 +52,11 @@
         </el-row>
 
         <el-row>
-          <el-col :span="8">
+          <el-col :span="10" v-if="props.row.TotalPrice2">
             <i class="numberTo">2</i>
             <span>
               2阶单价：
-              <em>{{props.row.OneTotalPrice }}</em>元
+              <em>{{props.row.TwoTotalPrice }}</em>元
             </span>
             <span class="waterMa100">
               2阶水量：
@@ -71,12 +70,12 @@
             </span>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="8">
+        <el-row v-if="props.row.TotalPrice3">
+          <el-col :span="10">
             <i class="numberTo">3</i>
             <span>
               3阶单价：
-              <em>{{props.row.OneTotalPrice }}</em>元
+              <em>{{props.row.ThreeTotalPrice }}</em>元
             </span>
             <span class="waterMa100">
               3阶水量：
@@ -90,12 +89,12 @@
             </span>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="8">
+        <el-row v-if="props.row.TotalPrice4">
+          <el-col :span="10">
             <i class="numberTo">4</i>
             <span>
               4阶单价：
-              <em>{{props.row.OneTotalPrice }}</em>元
+              <em>{{props.row.FourTotalPrice }}</em>元
             </span>
             <span class="waterMa100">
               4阶水量：
@@ -110,12 +109,12 @@
           </el-col>
         </el-row>
 
-        <el-row>
-          <el-col :span="8">
+        <el-row v-if="props.row.TotalPrice5">
+          <el-col :span="10">
             <i class="numberTo">5</i>
             <span>
               5阶单价：
-              <em>{{props.row.OneTotalPrice }}</em>元
+              <em>{{props.row.FiveTotalPrice }}</em>元
             </span>
             <span class="waterMa100">
               5阶水量：
@@ -134,6 +133,7 @@
   </el-table>
 </template>
 <script>
+import { DeleteMeterReading } from "@/api/waterMeterMang";
 export default {
   name: "YCWaterMeterHis",
   props: {
@@ -166,8 +166,27 @@ export default {
     rowClsass() {
       return "text-align: center;padding:5px 0";
     },
-    delRecord() {
-      console.log("删除抄表记录");
+    delRecord(row) {
+      let that = this;
+      console.log(row);
+      let parms = {
+        meterReadId: row.Id,
+        custometId: row.SA_Customer_Id
+      };
+      DeleteMeterReading(parms).then(res => {
+        if (res.code == 0) {
+          that.$parent.searYCMeterWater();
+          that.$message({
+            message: res.msg ? res.msg : "删除成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "删除失败",
+            type: "warning"
+          });
+        }
+      });
     },
     sortChanges({ column, prop, order }) {
       let that = this;
@@ -222,7 +241,9 @@ strong {
   color: rgba(255, 61, 61, 1);
   opacity: 1;
 }
-
+strong>em{
+  width:auto
+}
 .tbTextButton {
   font-size: 13px;
   font-family: Microsoft YaHei;
