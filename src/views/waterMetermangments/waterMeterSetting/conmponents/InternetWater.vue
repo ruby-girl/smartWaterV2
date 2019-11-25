@@ -185,7 +185,7 @@ import {
 export default {
   //机械表
   name: "InternetWater",
-  components: { customTable, Pagination, Static,WLWWaterMeterHis },
+  components: { customTable, Pagination, Static, WLWWaterMeterHis },
   data() {
     return {
       WLWQueryParam: {
@@ -302,7 +302,8 @@ export default {
         }
       });
     },
-    waterMeterWLWDetail(imsi) {//历史详情
+    waterMeterWLWDetail(imsi) {
+      //历史详情
       let that = this;
       that.viewWaterHistory = true;
       that.Bl_WaterMeter4His.Meter4IMSI = imsi;
@@ -313,13 +314,19 @@ export default {
     },
     handleCurrentChange(val) {
       //选中行数据
-      console.log(val);
       this.SelectionList = val.Id;
     },
     orderLockWLWOpen() {
       //开
       //阀门锁定
       const that = this;
+      if (that.SelectionList == "") {
+        that.$message({
+          message: "请选择数据后在进行操作",
+          type: "warning"
+        });
+        return false;
+      }
       ValveLockOpen({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
         if (res.code == 0) {
           that.searchWLWMeterInfo();
@@ -339,6 +346,13 @@ export default {
       //关
       //阀门锁定
       const that = this;
+      if (that.SelectionList == "") {
+        that.$message({
+          message: "请选择数据后在进行操作",
+          type: "warning"
+        });
+        return false;
+      }
       ValveLockClose({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
         if (res.code == 0) {
           that.searchWLWMeterInfo();
@@ -357,8 +371,14 @@ export default {
     orderUnockWLW() {
       //阀门解锁
       let that = this;
+      if (that.SelectionList == "") {
+        that.$message({
+          message: "请选择数据后在进行操作",
+          type: "warning"
+        });
+        return false;
+      }
       ValveUnLock({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
-        console.log(res);
         if (res.code == 0) {
           that.searchWLWMeterInfo();
           that.$message({
