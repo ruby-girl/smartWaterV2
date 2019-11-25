@@ -52,6 +52,33 @@
     </el-form>
     <div class="cl-operation1 clearfix">
       <el-button
+        type="success"
+        size="small"
+        class="fl"
+        style="background:rgba(0,178,161,1);border-color:rgba(0,178,161,1)"
+        @click="orderLockWLWOpen(1)"
+      >
+        <i class="icon iconfont" style="font-size:12px">&#xe646;</i> 阀门锁定开
+      </el-button>
+      <el-button
+        type="success"
+        size="small"
+        class="fl"
+        style="background:rgba(229,169,3,1);border-color:rgba(229,169,3,1)"
+        @click="orderLockWLWClose(0)"
+      >
+        <i class="icon iconfont" style="font-size:12px">&#xe643;</i> 阀门锁定关
+      </el-button>
+      <el-button
+        type="success"
+        size="small"
+        class="fl"
+        style="background:rgba(117,194,0,1);border-color:rgba(117,194,0,1)"
+        @click="orderUnockWLW"
+      >
+        <i class="icon iconfont" style="font-size:12px">&#xe645;</i> 解锁
+      </el-button>
+      <el-button
         type="warning"
         size="small"
         class="fr"
@@ -76,7 +103,10 @@
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'5px 0'}"
+        highlight-current-row
+        @current-change="handleCurrentChange"
       >
+        <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
         <template v-for="(item ,index) in tableHeadData">
           <el-table-column
             v-if="item.IsFreeze"
@@ -98,7 +128,7 @@
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
+
         <el-table-column label="操作" width="300px" align="center" fixed="right">
           <template slot-scope="scope">
             <a
@@ -116,23 +146,46 @@
         :limit.sync="WLWQueryParam.limit"
       />
     </div>
+    <el-dialog
+      title="历史详情"
+      :visible.sync="viewWaterHistory"
+      top="30vh"
+      width="836px"
+      hight="432px"
+      center
+      :close-on-click-modal="false"
+    >
+      <wLW-water-meterHis :hisData="hisData" />
+
+      <pagination
+        v-show="histotal>0"
+        :total="histotal"
+        :page.sync="Bl_WaterMeter4His.page"
+        :limit.sync="Bl_WaterMeter4His.limit"
+        @pagination="waterMeterJxDetail(Bl_WaterMeter4His.Bl_WaterMeter4His)"
+      />
+    </el-dialog>
   </div>
 </template>
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import Static from "./intercomponents/Static"; //异常统计
+import WLWWaterMeterHis from "./intercomponents/WLWWaterMeterHis"; //历史
 import { getDictionaryOption } from "@/utils/permission";
 import {
-  getWLWWaterInfo,
-  excelWLWWaterInfo,
-  GetMeter4ErrorTypeNum,
-  searWLWHisWater
+  getWLWWaterInfo, //查询
+  excelWLWWaterInfo, //导出
+  GetMeter4ErrorTypeNum, //异常统计
+  searWLWHisWater, //历史
+  ValveUnLock, //解锁，
+  ValveLockOpen, //开
+  ValveLockClose //关
 } from "@/api/waterMeterMang";
 export default {
   //机械表
   name: "InternetWater",
-  components: { customTable, Pagination, Static },
+  components: { customTable, Pagination, Static,WLWWaterMeterHis },
   data() {
     return {
       WLWQueryParam: {
@@ -162,7 +215,11 @@ export default {
         sort: "",
         filed: "",
         tableId: ""
-      }
+      },
+      SelectionList: "",
+      hisData: [],
+      histotal: 0,
+      viewWaterHistory: false
     };
   },
   created() {
@@ -245,14 +302,76 @@ export default {
         }
       });
     },
-    waterMeterWLWDetail(imsi) {
+    waterMeterWLWDetail(imsi) {//历史详情
       let that = this;
       that.viewWaterHistory = true;
-      that.Bl_WaterMeter4His.Meter4IMSI  = id;
-      searYCHisWater(that.Bl_WaterMeter4His).then(res => {
+      that.Bl_WaterMeter4His.Meter4IMSI = imsi;
+      searWLWHisWater(that.Bl_WaterMeter4His).then(res => {
         that.hisData = res.data;
         that.histotal = res.count;
-      })
+      });
+    },
+    handleCurrentChange(val) {
+      //选中行数据
+      console.log(val);
+      this.SelectionList = val.Id;
+    },
+    orderLockWLWOpen() {
+      //开
+      //阀门锁定
+      const that = this;
+      ValveLockOpen({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
+        if (res.code == 0) {
+          that.searchWLWMeterInfo();
+          that.$message({
+            message: res.msg ? res.msg : "操作成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "操作失败",
+            type: "warning"
+          });
+        }
+      });
+    },
+    orderLockWLWClose() {
+      //关
+      //阀门锁定
+      const that = this;
+      ValveLockClose({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
+        if (res.code == 0) {
+          that.searchWLWMeterInfo();
+          that.$message({
+            message: res.msg ? res.msg : "操作成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "操作失败",
+            type: "warning"
+          });
+        }
+      });
+    },
+    orderUnockWLW() {
+      //阀门解锁
+      let that = this;
+      ValveUnLock({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
+        console.log(res);
+        if (res.code == 0) {
+          that.searchWLWMeterInfo();
+          that.$message({
+            message: res.msg ? res.msg : "操作成功",
+            type: "success"
+          });
+        } else {
+          that.$message({
+            message: res.msg ? res.msg : "操作失败",
+            type: "warning"
+          });
+        }
+      });
     }
   }
 };

@@ -162,6 +162,7 @@ export default {
         filed: "", //排序字段
         tableId: "0000023"
       },
+      
       meterReadListParam: {
         //历史数据
         WaterMeterId: "", //水表Id ,

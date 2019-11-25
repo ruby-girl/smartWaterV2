@@ -164,3 +164,7 @@ tbody .hover-row>td{
 .el-table th{
   text-align: center;
 }
+//表格选中样式
+.el-table__body tr.current-row>td{
+  background: #E6ECFA;
+}

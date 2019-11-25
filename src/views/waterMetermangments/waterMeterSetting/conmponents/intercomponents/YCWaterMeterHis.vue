@@ -25,7 +25,7 @@
       <template slot-scope="scope">
         <span class="tbTextButton" @click="toogleExpand(scope.row)">
           水价构成
-          <i :class="[rotate?'el-icon-caret-bottom aa':'el-icon-caret-bottom go']" class></i>
+          <i :class="[rotate?'el-icon-caret-right':'el-icon-caret-bottom']" class></i>
         </span>
         <span class="tbTextButton" @click="delRecord(scope.row)">删除</span>
       </template>
@@ -155,7 +155,6 @@ export default {
     toogleExpand(row) {
       const _this = this;
       let $table = _this.$refs.table;
-      console.log($table);
       _this.hisData.map((item, index) => {
         if (row.id != item.id) {
           $table.toggleRowExpansion(item, false);
@@ -223,13 +222,7 @@ strong {
   color: rgba(255, 61, 61, 1);
   opacity: 1;
 }
-.go {
-  transform: rotate(-180deg);
-  transition: all 1s;
-}
-.aa {
-  transition: all 1s;
-}
+
 .tbTextButton {
   font-size: 13px;
   font-family: Microsoft YaHei;

@@ -125,7 +125,28 @@ export function  GetMeter4ErrorTypeNum(data) {//异常统计
 export function  searWLWHisWater(data) {//历史
   return request({
     url: "/WaterMeter/GetMeter4ReportedDetail",
-    method: 'GET',
+    method: 'POST',
+    data
+  })
+}
+export function  ValveLockOpen(data) {//锁定开
+  return request({
+    url: "/WaterMeter/ValveLockOpen",
+    method: 'POST',
+    params:data
+  })
+}
+export function  ValveLockClose(data) {//锁定关
+  return request({
+    url: "/WaterMeter/ValveLockClose",
+    method: 'POST',
+    params:data
+  })
+}
+export function  ValveUnLock(data) {//解锁
+  return request({
+    url: "/WaterMeter/ValveUnLock",
+    method: 'POST',
     params:data
   })
 }
