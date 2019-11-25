@@ -86,9 +86,9 @@ export function readYCWaterinfo (data) {//抄表
 }
 export function lockYCChange (data) {//远传表阀门锁定开关
   return request({
-    url: "/WaterMeter/LockSwitchingValve3?",
+    url: "/WaterMeter/LockSwitchingValve3",
     method: 'post',
-    params:data
+    data
   })
 }
 export function  unLockYCChange(data) {//解锁

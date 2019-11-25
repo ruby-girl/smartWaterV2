@@ -356,9 +356,7 @@ export default {
       let that = this;
       if (num) {
         IsOpen = true;
-        alert("阀门锁定开");
       } else {
-        alert("阀门锁定关");
         IsOpen = false;
       }
       lockYCChange({ isOpen: IsOpen, waterMeterId: that.SelectionList }).then(
