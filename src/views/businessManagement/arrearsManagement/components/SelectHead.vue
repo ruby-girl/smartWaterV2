@@ -69,12 +69,12 @@
         </el-form-item>
         <el-form-item label="欠费金额："  v-show="ifMore" key="TotalPrice ">
           <el-input
-          v-model="selectHead.Customer"
+          v-model="selectHead.Star_TotalPrice"
           maxlength="20"
           @keyup.enter.native="handleFilter"
           style="width: 80px;float: left"
         />~<el-input
-          v-model="selectHead.Customer"
+          v-model="selectHead.End_TotalPrice"
           maxlength="20"
           @keyup.enter.native="handleFilter"
           style="width: 80px;float: right"
@@ -210,9 +210,7 @@ export default {
         return {};
       }
     },
-    selectType: {
-      default: "1"
-    },
+    selectType: {},
     factoryQuery: {
       //按水厂查询条件
       type: Object,
@@ -230,13 +228,16 @@ export default {
   watch: {
     "selectHead.SA_WaterFactory_Id": {//选择水厂动态获取区域
       handler(val, oldVal) {
+       
        this.getArea(val)
       },
       immediate: true
     },
     selectType(val) {
       this.type = val;
-      this.$emit("update:selectType", val);
+    },
+    type(val){
+       this.$emit("update:selectType", val);  
     }
   },
   components: { Treeselect },
@@ -261,6 +262,8 @@ export default {
     let end = parseEndTimeFunc(new Date());
     this.timevalue.push(new Date(start));
     this.timevalue.push(new Date(end));
+     this.timevalueFactory.push(new Date(start));
+    this.timevalueFactory.push(new Date(end));
     this.selectHead.editStartTime = start;
     this.selectHead.editEndTime = end;
     this.factoryQuery.editStartTime = start;
@@ -278,7 +281,7 @@ export default {
   },
   mounted() {
     // 获取区域
-   this.getArea('-1')
+  //  this.getArea('-1')
   },
   methods: {
     getArea(id){
