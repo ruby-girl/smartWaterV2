@@ -25,7 +25,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="开户状态：">
+      <el-form-item label="用户状态：">
         <el-select v-model="IcwachMeterData.cs" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
           <el-option

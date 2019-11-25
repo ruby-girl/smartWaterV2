@@ -32,7 +32,7 @@
     <el-table-column type="expand" fixed="right" width="1">
       <template slot-scope="props">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="10">
             <i class="numberTo">1</i>
             <span>
               1阶单价：
@@ -52,7 +52,7 @@
         </el-row>
 
         <el-row>
-          <el-col :span="8" v-if="props.row.TotalPrice2">
+          <el-col :span="10" v-if="props.row.TotalPrice2">
             <i class="numberTo">2</i>
             <span>
               2阶单价：
@@ -71,7 +71,7 @@
           </el-col>
         </el-row>
         <el-row v-if="props.row.TotalPrice3">
-          <el-col :span="8">
+          <el-col :span="10">
             <i class="numberTo">3</i>
             <span>
               3阶单价：
@@ -90,7 +90,7 @@
           </el-col>
         </el-row>
         <el-row v-if="props.row.TotalPrice4">
-          <el-col :span="8">
+          <el-col :span="10">
             <i class="numberTo">4</i>
             <span>
               4阶单价：
@@ -110,7 +110,7 @@
         </el-row>
 
         <el-row v-if="props.row.TotalPrice5">
-          <el-col :span="8">
+          <el-col :span="10">
             <i class="numberTo">5</i>
             <span>
               5阶单价：
@@ -241,7 +241,9 @@ strong {
   color: rgba(255, 61, 61, 1);
   opacity: 1;
 }
-
+strong>em{
+  width:auto
+}
 .tbTextButton {
   font-size: 13px;
   font-family: Microsoft YaHei;
