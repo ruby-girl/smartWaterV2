@@ -112,10 +112,19 @@ export function SelectBillDataListToExcel(data){
 }
 
 // 欠费管理-----------
-// 欠费管理列表
+// 欠费管理列表--按用户查询
 export function GetList(data){
   return request({
     url: '/Order/GetList',
+    method: 'post',
+    data: data    
+  })
+}
+// 欠费管理列表--按用户查询
+
+export function GetListByWaterFactory(data){
+  return request({
+    url: '/Order/GetListByWaterFactory',
     method: 'post',
     data: data    
   })

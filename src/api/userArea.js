@@ -91,3 +91,13 @@ export function GetAreaStrByCustomerId(data) {
     params: data
   })
 }
+
+
+// 欠费管理-按水厂/全部，查询区域列表
+export function GetAreaListNotPNode(data) {
+  return request({
+    url: '/UserArea/GetAreaListNotPNode',
+    method: 'get',
+    params: data
+  })
+}

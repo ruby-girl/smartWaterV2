@@ -5,7 +5,7 @@
  */
 // IC卡读卡
 import { GetICReadCardInfo } from "@/api/userSetting"; //IC卡读卡
-import { GetAreaList } from "@/api/userArea"; //区域列表
+import { GetAreaListNotPNode } from "@/api/userArea"; //区域列表
 export function ICReadCardInfo(callback) {
   let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo();
   if (res != undefined && res != "") {
@@ -48,18 +48,20 @@ function mapTree(org) {
     }
   }
 }
-export function getOrgTree(callback) {
-  let orgTree = [
+export function getOrgTree(callback,id) {
+  let orgTreeAll = 
     {
-      id: 0,
-      label: ''
+      id: '-1',
+      label: '全部'
     }
-  ]
-  GetAreaList().then(res => {
-    let resResult = [res.data]
-    orgTree[0].id = resResult[0].Id
-    orgTree[0].label = resResult[0].label
-    orgTree[0].children = resResult[0].children.map(org => mapTree(org));
+  GetAreaListNotPNode({pid:id}).then(res => {
+    let resResult =res.data
+    // orgTree[0].id = resResult[0].Id
+    // orgTree[0].label = resResult[0].label
+     let orgTree= resResult.map(org => mapTree(org));
+     orgTree.unshift(orgTreeAll)
+    //  console.log(orgTree)
+    //  orgTreeAll.push(orgTree)
     return callback(orgTree)
   });
 }

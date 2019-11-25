@@ -2,14 +2,17 @@
 <template>
   <!-- 收费查询 -->
   <div class="section-container">
-      <div ref="formHeight">
-        <select-head
-          :select-head="listQuery"
-          @handleFilter="handleFilter"
-          @toggleShow="toggleShow"
-        />
-      </div>
-    <div class="section-full-container" style="padding-top:0;">     
+    <div ref="formHeight">
+      <select-head
+        :select-type.sync="selectType"
+        :select-head="listQuery"
+        :factory-query="factoryQuery"
+        @handleFilter="handleFilter"
+        @handleFilterFactory="handleFilterFactory"
+        @toggleShow="toggleShow"
+      />
+    </div>
+    <div class="section-full-container" style="padding-top:0;">
       <div class="display-flex justify-content-flex-justify">
         <div></div>
         <div>
@@ -47,7 +50,7 @@
           </template>
           <el-table-column
             label="操作"
-           width="280"
+            width="280"
             align="center"
             fixed="right"
             class-name="small-padding"
@@ -70,9 +73,9 @@
         <pagination
           v-show="total>0"
           :total="total"
-          :page.sync="listQuery.page"
-          :limit.sync="listQuery.limit"
-          @pagination="getList"
+          :page.sync="page"
+          :limit.sync="limit"
+          @pagination="selectType==1?getList:getListFactory"
         />
       </div>
       <!-- 账单详情弹窗 -->
@@ -84,40 +87,59 @@ import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import TableTotal from "@/components/TableTotal/index";
-import {
-  GetList
-} from "@/api/cashCharge";
+import { GetList,GetListByWaterFactory } from "@/api/cashCharge";
 export default {
   name: "arrearsManagement",
-  components: { SelectHead, Pagination, customTable, TableTotal},
+  components: { SelectHead, Pagination, customTable, TableTotal },
   data() {
     return {
       total: 0,
       tableKey: 0,
       tableHeight: 0,
       temp: {},
+      page: 1,
+      limit: 10,
+      selectType: "1", //查询方式
       listQuery: {
         // 查询条件
         page: 1,
         limit: 10,
         filed: "",
         sort: "",
-        selectType:'1',//查询方式
-        Enumcqt:'1',//用户条件下拉
-        Customer:'',//输入框
-        SA_WaterFactory_Id:'-1',//水厂
-        SA_UserArea_Id:'0',//区域
-        Star_TotalPrice:'',//欠费费用起
-        End_TotalPrice:'',//欠费费用起
-        Enumut:'-1',//用户类型
-        Enumwm:'-1',//水表类型
-        Enumcf:'-1',//费用状态
-        Enumot:'-1',//费用类型
+
+        Enumcqt: "1", //用户条件下拉
+        Customer: "", //输入框
+        SA_WaterFactory_Id: "-1", //水厂
+        SA_UserArea_Id: "-1", //区域
+        Star_TotalPrice: "", //欠费费用起
+        End_TotalPrice: "", //欠费费用起
+        Enumut: "-1", //用户类型
+        Enumwm: "-1", //水表类型
+        Enumcf: "-1", //费用状态
+        Enumot: "-1", //费用类型
         Star_ArrearsDate: "", // 操作时间起
         End_ArrearsDate: "", // 操作时间止
         tableId: "0000019"
       },
-      selectPintShow:false,//票据打印弹窗
+      factoryQuery: {
+        // 查询条件
+        page: 1,
+        limit: 10,
+        filed: "",
+        sort: "",
+        SA_WaterFactory_Id: "-1", //水厂
+        SA_UserArea_Id: "-1", //区域
+        Star_TotalPrice: "", //欠费费用起
+        End_TotalPrice: "", //欠费费用起
+        Enumut: "-1", //用户类型
+        Enumwm: "-1", //水表类型
+        Enumcf: "-1", //费用状态
+        Enumot: "-1", //费用类型
+        Star_ArrearsDate: "", // 操作时间起
+        End_ArrearsDate: "", // 操作时间止
+        tableId: "0000025"
+      },
+      selectPintShow: false, //票据打印弹窗
       tableData: [],
       checksData: [],
       tableTotal: [
@@ -125,6 +147,19 @@ export default {
         { num: 0, txt: "剩余未缴（元）" }
       ]
     };
+  },
+  watch: {
+    selectType(v, o) {
+      if (v == 1) {
+        this.page = this.listQuery.page;
+        this.limit = this.listQuery.limit;
+        
+      } else {
+        this.page = this.factoryQuery.page;
+        this.limit = this.factoryQuery.limit;
+      }
+      this.getTableHead()
+    }    
   },
   computed: {
     tableHead: function() {
@@ -138,8 +173,7 @@ export default {
     this.$nextTick(function() {
       // 自适应表格高度
       this.toggleShow();
-      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+      this.getTableHead()
     });
   },
   methods: {
@@ -149,11 +183,12 @@ export default {
       else this.tableHeight = this.tableHeight + 80;
     },
     getList() {
+      //按用户查询列表
       GetList(this.listQuery).then(res => {
         this.total = res.count;
-        this.tableTotal[0].num=res.data.ot.OrderCount
-        this.tableTotal[1].num=res.data.ot.PriceSurplus
-        // this.tableData = res.data;
+        this.tableTotal[0].num = res.data.ot.OrderCount;
+        this.tableTotal[1].num = res.data.ot.PriceSurplus;
+        this.tableData = res.data.list;
       });
     },
     sortChanges({ prop, order }) {
@@ -170,6 +205,32 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
+    handleFilterFactory() {
+      this.factoryQuery.page = 1;
+      this.getListFactory();
+    },
+    getTableHead(){//获取表头自定义
+      let id;
+      if(this.selectType==1)
+        id=this.listQuery.tableId
+      else id=this.factoryQuery.tableId
+      this.$refs.myChild.GetTable(id); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+    },
+    clearData(){
+      
+    },
+    getListFactory() {
+      //水厂查询列表
+      GetListByWaterFactory(this.factoryQuery).then(res => {
+        this.total = res.count;
+        this.tableData = res.data.list;
+        console.info(this.tableData)
+        this.tableTotal[0].num = res.data.ot.OrderCount;
+        this.tableTotal[1].num = res.data.ot.PriceSurplus;
+        
+      });
+    },
     invoice(r) {
       this.$confirm("是否确认冲红该账单？", "提示", {
         confirmButtonText: "确定",
@@ -178,14 +239,16 @@ export default {
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        RedPayMentDataByPayMentId({SA_Payment_Id:r.Id,Remark:''}).then(res => {
-          this.$message({
-            message: res.message,
-            type: "success",
-            duration: 4000
-          });
-          this.getList();
-        });
+        RedPayMentDataByPayMentId({ SA_Payment_Id: r.Id, Remark: "" }).then(
+          res => {
+            this.$message({
+              message: res.message,
+              type: "success",
+              duration: 4000
+            });
+            this.getList();
+          }
+        );
       });
     },
     excel() {
@@ -199,20 +262,20 @@ export default {
       const that = this;
       setTimeout(function() {
         var formHeight = that.$refs.formHeight.offsetHeight;
-        that.tableHeight = document.body.clientHeight - formHeight - 290;
+        that.tableHeight = document.body.clientHeight - formHeight - 250;
       }, 350);
     },
     // 行票据打印
-    pint(r){
-      this.selectPintShow=true
+    pint(r) {
+      this.selectPintShow = true;
     },
-    billDetails(){
+    billDetails() {
       this.$router.push({
-        path:'/businessManagement/billDetails',
-        query:{
-          id:'qwe',  
-        }    
-    })
+        path: "/businessManagement/billDetails",
+        query: {
+          id: "qwe"
+        }
+      });
     }
   }
 };
