@@ -7,7 +7,7 @@
     label-width="100px"
     @submit.native.prevent
   >
-    <el-form-item v-if="companyOptions.length==1" label="水厂：">
+    <el-form-item v-if="companyShow" label="水厂：">
       <el-select
         v-model="selectHead.SA_WaterFactory_Id"
         placeholder="请选择"
@@ -76,14 +76,20 @@ export default {
       selectHead: {},
       warterMeterPlanDate: [],
       //companyOptions: [],
-      planStateOptions: []
+      planStateOptions: [],
+      companyShow:true
     };
   },
-  created() {
-    if(this.companyOptions==1){
-      this.selectHead.SA_WaterFactory_Id=this.companyOptions[0].Id
+  wacj: {
+    companyOptions() {
+      this.companyShow=true
+      if (this.companyOptions.length == 1) {
+        this.selectHead.SA_WaterFactory_Id = this.companyOptions[0].Id;
+        this.companyShow=false
+      }
     }
-    
+  },
+  created() {
     const time = new Date();
     let y = time.getFullYear();
     let m = time.getMonth() + 1;
@@ -111,18 +117,16 @@ export default {
     if (nm < 10) {
       nm = "0" + nm;
     }
-     if (d < 10) {
+    if (d < 10) {
       d = "0" + d;
     }
-    let lastTime = ly + "-" + lm + "-" + d+" "+"00:00:00";
-    let newTime = ny + "-" + nm + "-" + d+" "+"23:59:59";
-    this.warterMeterPlanDate.push(lastTime)
-    this.warterMeterPlanDate.push(newTime)
-  
+    let lastTime = ly + "-" + lm + "-" + d + " " + "00:00:00";
+    let newTime = ny + "-" + nm + "-" + d + " " + "23:59:59";
+    this.warterMeterPlanDate.push(lastTime);
+    this.warterMeterPlanDate.push(newTime);
   },
   methods: {
     handleFilter() {
-      
       this.$parent.searchTableList();
     },
 

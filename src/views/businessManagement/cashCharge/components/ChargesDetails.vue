@@ -10,10 +10,11 @@
     :close-on-click-modal="false"
     @open="getDetail"
   >
-  <!-- 这里需要显示的费用类型有：“未缴费 审核中 已撤销”  1003审核中1004已撤销-->
-    <div class="charges-state" v-if="temp.ChargeFlag==1003||temp.ChargeFlag==1004">
-     {{temp.ChargeFlag==1003?'审核中':temp.ChargeFlag==1004?'已撤销':''}}
-    </div>
+    <!-- 这里需要显示的费用类型有：“未缴费 审核中 已撤销”  1003审核中1004已撤销-->
+    <div
+      class="charges-state"
+      v-if="temp.ChargeFlag==1003||temp.ChargeFlag==1004"
+    >{{temp.ChargeFlag==1003?'审核中':temp.ChargeFlag==1004?'已撤销':''}}</div>
     <div class="details-box-item display-flex align-items-center justify-content-flex-justify">
       <div class="details-left">
         <div>2019-09</div>
@@ -45,18 +46,21 @@
       <div class="details-left">
         <div>附加费用</div>
       </div>
-      <div class="details-left-box padding-tb-10">
+      <div
+        class="details-left-box padding-tb-10"
+        :style="{'borderRight':detail.olf.LeteFee>0?'1px solid #d9d9d9':'none'}"
+      >
         <div class="display-flex align-items-center">
           <span>违约金：</span>
           <span class="font-weight main-color-red">{{detail.olf.LeteFee}}元</span>
         </div>
       </div>
-      <div class="ladder-box flex-1" v-if="detail.olf.LeteFee>0">
-        <div class="display-flex align-items-center ladder-item">
+      <div class="ladder-box flex-1">
+        <div class="display-flex align-items-center ladder-item" v-if="detail.olf.LeteFee>0">
           <div>
             欠费金额&nbsp;*&nbsp;逾期
             <span class="color-more-black">{{detail.olf.LeteFee}}</span>
-天&nbsp;*&nbsp;{{detail.olf.InterestRate}}‰&nbsp;=&nbsp;违约金
+            天&nbsp;*&nbsp;{{detail.olf.InterestRate}}‰&nbsp;=&nbsp;违约金
           </div>
         </div>
       </div>
@@ -77,32 +81,34 @@
         </div>
         <div class="ladder-item">
           水费减免：
-          <span>
-            <span class="font-weight main-color">10.00</span>（固定减免）+
-            <span class="font-weight main-color">20.00</span>(协议减免)=
-            <span class="font-weight main-color">20.00</span>元
+          <span v-if="detail.orr.WaterAllowanceMoeny&&detail.orr.FreePrice">
+            <span class="font-weight main-color">{{detail.orr.WaterAllowanceMoeny}}</span>
+            <span>（固定减免)+</span>
+            <span class="font-weight main-color">{{detail.orr.FreePrice}}</span>
+            <span>(协议减免)=</span>
           </span>
+          <span class="font-weight main-color">{{detail.orr.waterTotal}}</span>元
           <!-- <span class="font-weight main-color">0</span> -->
         </div>
       </div>
     </div>
     <div class="totle-box">
       <span class="color-more-black">合计应收：</span>
-      <span class="font-weight main-color-red">60.00元</span>
+      <span class="font-weight main-color-red">{{detail.TotalWaterPrice}}元</span>
       <span>(水费)</span>
       <span class="color-more-black">+</span>
-      <span class="font-weight main-color-red">10.00元</span>
+      <span class="font-weight main-color-red">{{detail.olf.LeteFee}}元</span>
       <span>(附加费用)</span>
       <span class="color-more-black">-</span>
-      <span class="font-weight main-color">20.00</span>
+      <span class="font-weight main-color">{{detail.orr.total}}</span>
       <span>(扣减项)</span>
       <span>=</span>
-      <span class="font-weight main-color-red totle-num">50.00元</span>
+      <span class="font-weight main-color-red totle-num">{{resultNum}}元</span>
     </div>
   </el-dialog>
 </template>
 <script>
-import {SelectFeeDetail} from "@/api/cashCharge"
+import { SelectFeeDetail } from "@/api/cashCharge";
 import { ladderChangeArrs } from "@/utils/index";
 export default {
   props: {
@@ -110,8 +116,8 @@ export default {
       type: Boolean,
       default: false
     },
-    temp:{
-       type: Object
+    temp: {
+      type: Object
     }
   },
   watch: {
@@ -129,21 +135,40 @@ export default {
     return {
       radio: 1,
       dialogFormVisible: false,
-      chargesState:1001,//已缴费
-      detail:{
-        olf:{},
-        orr:{}
-      }
+      chargesState: 1001, //已缴费
+      detail: {
+        olf: {},
+        orr: {
+          total: 0
+        }
+      },
+      resultNum: 0
     };
+  },
+  created() {
+    //  this. getDetail()
   },
   methods: {
     getDetail() {
-      SelectFeeDetail({billId:this.temp.Id}).then(res=>{
+      SelectFeeDetail({ billId: this.temp.Id }).then(res => {
         let detail = ladderChangeArrs(res.data.mrod); //阶梯转换数组
-       
-        this.detail={...detail,...res.data}
-         console.log(this.detail)
-      })
+        this.detail = { ...detail, ...res.data };
+        this.detail.orr.waterTotal =
+          (parseFloat(this.detail.orr.WaterAllowanceMoeny) * 1000 +
+            parseFloat(this.detail.orr.FreePrice) * 1000) /
+          1000; //所有的水费减免
+        this.detail.orr.total =
+          (parseFloat(this.detail.orr.PricePaid) * 1000 +
+            parseFloat(this.detail.orr.LeteFeeFree) * 1000 +
+            parseFloat(this.detail.orr.waterTotal) * 1000) /
+          1000; //所有的减免
+        //  计算应收
+        this.resultNum =
+          (parseFloat(this.detail.TotalWaterPrice) * 1000 +
+            parseFloat(this.detail.olf.LeteFee) * 1000 -
+            parseFloat(this.detail.orr.total) * 1000) /
+          1000;
+      });
     }
   }
 };
@@ -209,9 +234,9 @@ export default {
   padding-top: 8px;
   padding-bottom: 8px;
 }
-.charges-state{
+.charges-state {
   font-size: 16px;
- padding-bottom: 15px;
+  padding-bottom: 15px;
 }
 </style>
 

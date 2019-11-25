@@ -383,3 +383,12 @@ font-size: 13px;
   color: #9CA3A6;
 }
 .questionIcon{ color:#AD8B00 !important;}
+.vue-treeselect {
+  width: 278px;
+}
+.vue-treeselect .vue-treeselect__x-container{
+  display: none;
+}
+.vue-treeselect__menu-container div{
+  line-height: 35px;
+}

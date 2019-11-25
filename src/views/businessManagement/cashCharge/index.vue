@@ -15,7 +15,7 @@
     <el-row :gutter="10" class="container-bottom-box display-flex">
       <!-- 左边表格 -->
       <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg" v-if="!isIC">
-        <div class="table-top-btn-padding display-flex justify-content-flex-justify">
+        <div class="display-flex justify-content-flex-justify">
           <div class="display-flex">
             <el-tooltip
               popper-class="tooltip"
@@ -104,7 +104,7 @@
       <!-- 右 -->
     </el-row>
     <charges-details :chargesDetailsShow.sync="chargesDetailsShow" :temp="temp" />
-    <over-details :overDetailsShow.sync="overDetailsShow" :orderId="orderId" />
+    <over-details :overDetailsShow.sync="overDetailsShow" :temp="temp"/>
     <select-user
       :selectUserShow.sync="selectUserShow"
       :headQuery="headQuery"
@@ -112,9 +112,7 @@
     />
     <fee-waiver
       :feeWaiverShow.sync="feeWaiverShow"
-      :orderId="orderId"
-      :orderMoney="orderMoney"
-      :orderType="orderType"
+      :feeWaiverItem="feeWaiverItem"
       @getList="getList"
     />
     <select-pint :selectPintShow.sync="selectPintShow" />
@@ -157,10 +155,11 @@ export default {
       totalLength: 0,
       paymentNum:0,//圆圆数字
       tableHeight: 0,
-      orderId: "", //需要减免的费用单ID
+      // orderId: "", //需要减免的费用单ID
+      feeWaiverItem:{},
       payOrderId: [],
-      orderMoney: 0, //减免前金额
-      orderType:'',//费用类型
+      // orderMoney: 0, //减免前金额
+      // orderType:'',//费用类型
       accountMoney: 0, //账户余额
       customerNo: "", //用户编号-结算后，用户编号获取账户余额
       icInfo: {}, //IC卡 卡片详情
@@ -293,10 +292,14 @@ export default {
           1000;
       });
     },
-    // 费用详情
+    // 费用详情- 根据费用类型展示不通的详情页面-水费or其它费用
     details(item) {
       this.temp = item;
-      this.chargesDetailsShow = true;
+      if(item.OrderType==2001){
+        this.chargesDetailsShow = true;
+      }else{
+        this.overDetailsShow = true;
+      }
     },
     // 费用撤回
     reset(id) {
@@ -318,10 +321,11 @@ export default {
       });
     },
     // 费用减免
-    feeWaiverFunc(id, num,type) {
-      this.orderId = id;
-      this.orderMoney = num;
-      this.orderType=type
+    feeWaiverFunc(item) {
+      this.feeWaiverItem=item
+      // this.orderId = id;
+      // this.orderMoney = num;
+      // this.orderType=type
       this.feeWaiverShow = true;
     },
     // 选择打印机

@@ -29,6 +29,14 @@ export function OrderFeeWaiver(data) {//费用减免
     params: data
   })
 }
+
+export function OrderAfterOverdueFeeWaiver(data) {//违约金减免
+  return request({
+    url: '/Order/OrderAfterOverdueFeeWaiver',
+    method: 'post',
+    params: data
+  })
+}
 // 费用详情
 export function SelectFeeDetail(data){
   return request({
@@ -98,6 +106,25 @@ export function SelectBillDataList(data){
 export function SelectBillDataListToExcel(data){
   return request({
     url: '/PayMent/SelectBillDataListToExcel',
+    method: 'post',
+    data: data    
+  })
+}
+
+// 欠费管理-----------
+// 欠费管理列表--按用户查询
+export function GetList(data){
+  return request({
+    url: '/Order/GetList',
+    method: 'post',
+    data: data    
+  })
+}
+// 欠费管理列表--按用户查询
+
+export function GetListByWaterFactory(data){
+  return request({
+    url: '/Order/GetListByWaterFactory',
     method: 'post',
     data: data    
   })

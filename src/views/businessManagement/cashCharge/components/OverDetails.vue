@@ -12,7 +12,7 @@
     <!-- 其它费用 -->
     <div class="details-box-item display-flex align-items-center justify-content-flex-justify">
       <div class="details-left">
-        <div>2019-09</div>
+        <div>2019</div>
         <div>其它费用</div>
       </div>
       <div class="ladder-box display-flex flex-1">      
@@ -41,6 +41,9 @@ export default {
     overDetailsShow: {
       type: Boolean,
       default: false
+    },
+    temp:{
+       type: Object
     }
   },
   watch: {
@@ -56,7 +59,6 @@ export default {
   },
   data() {
     return {
-      radio: 1,
       dialogFormVisible: false
     };
   },

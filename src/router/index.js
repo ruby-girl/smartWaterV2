@@ -199,6 +199,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'arrearsManagement',
+        component: () => import('@/views/businessManagement/arrearsManagement/index'),
+        name: 'arrearsManagement',
+        meta: {
+          title: '欠费管理',
+          roles: ['1']
+        }
+      },
+      {
         path: 'meterQuery',
         component: () => import('@/views/businessManagement/meterQuery/index'),
         name: 'meterQuery',

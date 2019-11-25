@@ -9,7 +9,7 @@
         </el-radio-group>
         <mechanical-water v-if="typeCheck==1" :waterMeterList="waterMeterList" :openStatus="openStatus"/>
         <ic-water v-if="typeCheck==2" :waterMeterList="waterMeterList" :openStatus="openStatus"/>
-        <remoter-water v-if="typeCheck==3"/>
+        <remoter-water v-if="typeCheck==3" :openStatus="openStatus"/>
         <internet-water v-if="typeCheck==4"/>
     </div>
   </div>

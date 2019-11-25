@@ -5,7 +5,7 @@
         <select-head :companyOptions="companyParentOptions" ref="child1"/>
       </div>
       <div
-        class="table-top-btn-padding display-flex justify-content-flex-justify"
+        class="display-flex justify-content-flex-justify"
         :class="{'plan-table':isShowAdPlanClass }"
       >
         <el-button v-show="isShowAdPlan" type="primary" size="mini" @click="addPlan">
@@ -30,7 +30,7 @@
           :height="tableHeight"
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
-          :cell-style="{'padding':'7px 0'}"
+          :cell-style="{'padding':'5px 0'}"
           @sort-change="sortChanges"
         >
           <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
@@ -344,7 +344,6 @@ export default {
 }
 .plan-table {
   position: relative;
-  height: 52px;
 }
 .showPlan {
   position: absolute;

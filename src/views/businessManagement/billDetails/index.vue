@@ -9,7 +9,7 @@
           @toggleShow="toggleShow"
         />
       </div>
-      <div class="table-top-btn-padding display-flex justify-content-flex-justify">
+      <div class="display-flex justify-content-flex-justify">
         <div></div>
         <div>
           <el-button type="success" size="mini" @click="excel">
