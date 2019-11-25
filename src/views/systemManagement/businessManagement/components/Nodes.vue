@@ -21,8 +21,8 @@
             <li class="item_cont" v-for="(items,indexs) in item.ProcessConfigNode" :key="indexs">
               <div class="item_cont_box">
                 <p>{{ items.Name }}</p>
-                <span class="btnSpan btnSpanLeft" @click="setFun(items.Id)">
-                      <!--{{items.Members >0 ?'配置':'未配置'}}-->配置
+                <span class="btnSpan btnSpanLeft" @click="setFun(items,indexs)">
+                  <!--{{items.Members.length >0 ?'配置':'未配置'}}-->
                 </span>
                 <span class="btnSpan btnSpanRight" v-show=" indexs > 0">删除</span>
               </div>
@@ -64,8 +64,8 @@
   import Bus from '@/utils/bus'
   import { promptInfoFun } from "@/utils/index"
   import copyDialog from './CopyDialog'
-  import configureDialog from './ConfigureDialog1'
-  import { GetProcessConfigId, SetProcessMenuState } from "@/api/operationFlow"
+  import configureDialog from './ConfigureDialog'
+  import { GetProcessConfigId, SetProcessMenuState, GetProcessConfig, DeleteProcessConfig } from "@/api/operationFlow"
 
   export default {
     name: "Nodes",
@@ -78,6 +78,8 @@
         ifExamine: true,
         data: [],
         prohibit:false,//是否禁用审核权限开关
+        ProcessConfigNode:[],
+        ProcessConfigLine:[],
       }
     },
     watch: {
@@ -98,77 +100,37 @@
     },
     methods: {
       getInfo() {//获取数据，动态计算每个流程宽度
-        let data = [{
-          ProcessConfigStart: [//操作人
-            {
-              ConfigType: 0,
-              ObjectId: "",
-              ObjectName: ""
-            }
-          ],
-          ProcessConfigNode: [//节点
-            {
-              Id: "1",
-              Name: "节点1",
-              Index: 0
-            },
-            {
-              Id: "2",
-              Name: "节点2",
-              Index: 0
-            }
-          ],
-          ProcessConfigLine: [//回归线
-            {
-              FromId: "2",
-              ToId: "1"
-            }
-          ],
-          ProcessConfigNodeMember: [//节点成员memebr
-            {
-              Member: [
-                {
-                  ConfigType: 0,
-                  ObjectId: "1",
-                  ObjectName: "成员"
-                }
-              ],
-              Id: ""
-            },
-            {
-              Member: [
-                {
-                  ConfigType: 0,
-                  ObjectId: "1",
-                  ObjectName: "成员1"
-                }
-              ],
-              Id: ""
-            }
-          ],
-          Id: "1",
-          SYS_ProMenu_Id: "",
-          ProcessMenuCode: 0,
-          SYS_Pro_HashCode: "",
-          BusinessProcessName: ""
-        }]
-        this.data = data
-        data.forEach((item, index) => {
-          let className = 'teams_node' + (index + 1)
-          let curData = item.ProcessConfigNode//当前node节点数据
-          this.getWidth(className, 195, curData)//动态计算流程模块实际宽度
-          this.getSort(className)
-          let curLine = item.ProcessConfigLine
-          curLine.forEach((i, j) => {//回归线对象
-            let curLineItem = i
-            for (let k in curLineItem) {//节点对象遍历
-              curData.forEach((s, m) => {//node节点
-                if (s.Id === curLineItem[k]) {//配备ID替换节点位置
-                  curLineItem[k] = m + 2 //跳过操作员模块，所有在下标的基础上+1再+1
+        GetProcessConfig({code:localStorage.getItem('menuId')}).then(res => {
+          if(res.code==0){
+            res.data.forEach((item, index) => {
+              item.ProcessConfigNode.forEach(is=>{//获取对应节点成员数量
+                item.ProcessConfigNodeMember.forEach(items=>{
+                  if(items.Id==is.Id){
+                    is.Members = items.Member
+                    is.ModuleName = is.Name
+                  }
+                })
+              })
+              this.data = res.data
+              let className = 'teams_node' + (index + 1)
+              let curData = item.ProcessConfigNode//当前node节点数据
+              this.getWidth(className, 195, curData)//动态计算流程模块实际宽度
+              this.getSort(className)
+              let curLine = item.ProcessConfigLine
+              curLine.forEach((i, j) => {//回归线对象
+                let curLineItem = i
+                for (let k in curLineItem) {//节点对象遍历
+                  curData.forEach((s, m) => {//node节点
+                    if (s.Id === curLineItem[k]) {//配备ID替换节点位置
+                      curLineItem[k] = m + 2 //跳过操作员模块，所有在下标的基础上+1再+1
+                    }
+                  })
                 }
               })
-            }
-          })
+            })
+          }else{
+            promptInfoFun(this,1,res.message)
+          }
         })
       },
       getWidth(id, width, curData) {//计算宽度
@@ -202,7 +164,7 @@
       addNode(obj,type,num){//新增节点,obj node数组；type,1为手动添加，2为拖动添加；num 手动添加容器标识
         if (type === 1) {//手动
           GetProcessConfigId().then(res => {
-            obj.push({Id: res.data, Name: '审核组' + parseInt(obj.length + 1),Index:''})
+            obj.push({Id: res.data, Name: '审核人组' + parseInt(obj.length + 1),Index:''})
             this.getWidth('teams_node' + num, 195, obj)//动态计算流程模块实际宽度
           })
           this.$nextTick(() => {
@@ -273,8 +235,9 @@
           })
         })
       },
-      setFun(id){//流程节点配置
-        let obj = {id: id, type: 1}
+      setFun(item,index){//流程审核配置
+        item.Name.trim() == '' ?  item.Name = '审核人组'+ (index + 1) : item.Name = item.Name
+        let obj = {item: item, type: 1}
         Bus.$emit('NodesSetFun',obj)
       },
       peopleFun(){//操作员配置
@@ -292,7 +255,14 @@
           customClass: "warningBox",
           showClose: false
         }).then(() => {
-
+          DeleteProcessConfig({proId:id}).then(res => {
+            if(res.code == 0){
+              promptInfoFun(this,2,res.message)
+              this.getInfo()
+            }else{
+              promptInfoFun(this,1,res.message)
+            }
+          })
         })
       },
       saveNode(id){//流程保存

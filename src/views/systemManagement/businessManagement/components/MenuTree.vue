@@ -34,14 +34,19 @@
           if (res.code ==0 ) {
             this.data = res.data
             res.data[0].Children ? (this.openeds.push(res.data[0].Id), this.activeNum = res.data[0].Children[0].Id) : this.activeNum = res.data[0].Id
-            res.data[0].Children ? localStorage.setItem('menuId',res.data[0].Children[0].Id) : localStorage.setItem('menuId',res.data[0].Id)
+            res.data[0].Children ? localStorage.setItem('menuId',res.data[0].Children[0].ProcessMenuCode) : localStorage.setItem('menuId',res.data[0].ProcessMenuCode)
           } else {
             promptInfoFun(this,1,res.message)
           }
         })
       },
-      setTreeId(index){//点击选中切换当前节点
+      setTreeId(index,path){//点击选中切换当前节点
         this.activeNum = index
+        let data = this.data[path[0]].Children
+        data.forEach(item=>{
+          if(item.Id == index)
+            localStorage.setItem('menuId',item.ProcessMenuCode)
+        })
       }
     },
     mounted() {

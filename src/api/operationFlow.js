@@ -68,6 +68,28 @@ export function GetProcessConfigId(data) {
 }
 
 /**
+ * 根据流程编码获取所有流程
+ * */
+export function GetProcessConfig(data) {
+  return request({
+    url: '/ProcessConfig/GetProcessConfig',
+    method: 'post',
+    params: data
+  })
+}
+
+/**
+ * 删除流程
+ * */
+export function DeleteProcessConfig(data) {
+  return request({
+    url: '/ProcessConfig/DeleteProcessConfig',
+    method: 'post',
+    params: data
+  })
+}
+
+/**
  * 新增模组
  * */
 export function AddProcessModuleInfo(data) {

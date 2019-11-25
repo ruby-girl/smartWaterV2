@@ -12,13 +12,13 @@
         <el-select v-model="copyId" placeholder="请选择">
           <el-option-group
             v-for="group in options"
-            :key="group.label"
-            :label="group.label">
+            :key="group.ProcessMenuCode"
+            :label="group.MenuCNName">
             <el-option
-              v-for="item in group.options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in group.Children"
+              :key="item.ProcessMenuCode"
+              :label="item.MenuCNName"
+              :value="item.ProcessMenuCode">
             </el-option>
           </el-option-group>
         </el-select>
@@ -31,40 +31,32 @@
   </el-dialog>
 </template>
 <script>
-  import {promptInfoFun} from "@/utils/index"
+  import { GetProcessMenu } from "@/api/operationFlow"
+  import { promptInfoFun } from "@/utils/index"
 
   export default {
     data() {
       return {
         copyVisible: false,//复制弹窗
         copyId: '',//复制至栏目ID
-        options: [{
-          label: '热门城市',
-          options: [{
-            value: 'Shanghai',
-            label: '上海'
-          }, {
-            value: 'Beijing',
-            label: '北京'
-          }]
-        }, {
-          label: '城市名',
-          options: [{
-            value: 'Chengdu',
-            label: '成都'
-          }, {
-            value: 'Shenzhen',
-            label: '深圳'
-          }, {
-            value: 'Guangzhou',
-            label: '广州'
-          }, {
-            value: 'Dalian',
-            label: '大连'
-          }]
-        }],
+        options: [],
       };
     },
-    methods: {}
+    methods: {
+      getData(){//获取树形结构数据
+        GetProcessMenu().then(res => {//删除节点
+          if (res.code ==0 ) {
+            res.data.forEach(item=>{
+              this.options.push(item)
+            })
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      }
+    },
+    mounted() {
+      this.getData()
+    }
   };
 </script>

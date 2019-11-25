@@ -26,7 +26,7 @@
   import Sortable from 'sortablejs'
   import Bus from '@/utils/bus'
   import { promptInfoFun } from "@/utils/index"
-  import configureDialog from './ConfigureDialog1'
+  import configureDialog from './ConfigureDialog'
   import { GetProcessModuleInfo, DeleteProcessModuleInfo, AddProcessModuleInfo } from "@/api/operationFlow"
 
   export default {
@@ -73,12 +73,12 @@
         })
       },
       setFun(item,index){//审核人详情配置
-        item.Members.length > 0 ? item.ModuleName = item.ModuleName : item.ModuleName = '审核组'+ (index + 1)
+        item.ModuleName.trim() == '' ?  item.ModuleName = '审核组'+ (index + 1) : item.ModuleName = item.ModuleName
         let obj = {item: item, type: 2}
         Bus.$emit('NodesSetFun',obj)
       },
       getMenuData(){//获取审核组信息
-        GetProcessModuleInfo().then(res => {//删除节点
+        GetProcessModuleInfo().then(res => {
           if (res.code ==0 ) {
             this.teams = res.data
             this.getWidth('teamWidth',160)
@@ -107,8 +107,13 @@
         onEnd: function (evt) {//移入结束时触发手动添加节点事件
           Bus.$emit('moveNode')
         },
-
     });
+
+      Bus.$on('getNewInfo', () => {//接受当前子元素所选中的内容
+        this.$nextTick(()=>{
+          this.getMenuData()
+        })
+      })
     }
   }
 </script>

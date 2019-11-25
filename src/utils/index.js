@@ -695,3 +695,14 @@ Date.prototype.Format = function (fmt) { //author: meizz
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
   return fmt;
 }
+
+/**
+ * 数组去重
+ * */
+export function onlyArr(array) {
+  var n = []; //一个新的临时数组
+  for (var i = 0; i < array.length; i++) {
+    if (n.indexOf(array[i]) == -1) n.push(array[i]);
+  }
+  return n;
+}
