@@ -291,6 +291,30 @@ export const asyncRoutes = [
       }
     ]
   },
+  //用户管理
+  {
+    path: '/userManageMent',
+    component: Layout,
+    redirect: '/userManageMent/page',
+    alwaysShow: true, // will always show the root menu
+    name: 'userManageMent',
+    meta: {
+      title: '用户管理',
+      icon: 'iconfont iconcaidan-yewuguanli',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: 'userAccount',
+        component: () => import('@/views/userManageMent/userAccount/index'),
+        name: 'userAccount',
+        meta: {
+          title: '用户销户',
+          roles: ['1']
+        }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
