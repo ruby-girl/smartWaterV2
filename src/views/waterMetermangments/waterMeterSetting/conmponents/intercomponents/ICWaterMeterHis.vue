@@ -8,7 +8,11 @@
     :cell-style="rowClsass"
     @sort-change="sortChanges"
   >
-    <el-table-column type="index" width="50"></el-table-column>
+    <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+      <template slot-scope="scope">
+        <span>{{(parms.page - 1) * parms.limit+ scope.$index + 1}}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="CustomerName" label="姓名" width="150"></el-table-column>
     <el-table-column prop="WaterMeterStyleStr" label="水表样式" width="150"></el-table-column>
     <el-table-column prop="AlarmMoney" label="报警金额（元）" width="150"></el-table-column>
@@ -24,6 +28,19 @@ export default {
     hisData: {
       default: [],
       type: Array
+    },
+    meterReadListParam: {
+      default: {},
+      type: Object
+    }
+  },
+  watch: {
+    meterReadListParam: {
+      handler() {
+        this.parms.page = this.meterReadListParam.page;
+        this.parms.limit = this.meterReadListParam.limit;
+      },
+      deep: true
     }
   },
   data() {
@@ -31,6 +48,10 @@ export default {
       sortdata: {
         sort: "", // 排序方式 ASC或DESC ,
         filed: "" // 排序字段 ,
+      },
+      parms: {
+        page: 1,
+        limit: 10
       }
     };
   },

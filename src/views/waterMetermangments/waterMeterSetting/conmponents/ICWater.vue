@@ -90,7 +90,11 @@
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
+       <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+          <template slot-scope="scope">
+            <span>{{(IcwachMeterData.page - 1) * IcwachMeterData.limit+ scope.$index + 1}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="150px" align="center" fixed="right">
           <template slot-scope="scope">
             <a class="viewHis" @click="waterMeterICDetail(scope.row.Id)">查看历史详情</a>
@@ -113,14 +117,14 @@
       center
       :close-on-click-modal="false"
     >
-      <iC-water-meterHis :hisData="hisData" @sortProp="sortProp" />
+      <iC-water-meterHis :hisData="hisData" @sortProp="sortProp" :meterReadListParam="meterReadListParam" />
 
       <pagination
         v-show="histotal>0"
         :total="histotal"
         :page.sync="meterReadListParam.page"
         :limit.sync="meterReadListParam.limit"
-        @pagination="waterMeterJxDetail(meterReadListParam.WaterMeterId)"
+        @pagination="waterMeterJxDetail(waterMeterICDetail.WaterMeterId)"
       />
     </el-dialog>
   </div>

@@ -7,7 +7,11 @@
     :header-cell-style="{'background-color': '#F0F2F5'}"
     :cell-style="rowClsass"
   >
-    <el-table-column type="index" width="50"></el-table-column>
+    <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+      <template slot-scope="scope">
+        <span>{{(parms.page - 1) * parms.limit+ scope.$index + 1}}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="CustomerName" label="姓名" width="150"></el-table-column>
     <el-table-column prop="IMSI" label="IMSI" width="150"></el-table-column>
     <el-table-column prop="SignalStrength" label="信号强度" width="150"></el-table-column>
@@ -25,6 +29,19 @@ export default {
     hisData: {
       default: [],
       type: Array
+    },
+    meterReadListParam: {
+      default: {},
+      type: Object
+    }
+  },
+  watch: {
+    meterReadListParam: {
+      handler() {
+        this.parms.page = this.meterReadListParam.page;
+        this.parms.limit = this.meterReadListParam.limit;
+      },
+      deep: true
     }
   },
   data() {
@@ -32,6 +49,10 @@ export default {
       sortdata: {
         sort: "", // 排序方式 ASC或DESC ,
         filed: "" // 排序字段 ,
+      },
+      parms: {
+        page: 1,
+        limit: 10
       }
     };
   },

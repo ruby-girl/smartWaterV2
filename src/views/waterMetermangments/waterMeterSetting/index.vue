@@ -33,7 +33,17 @@ export default {
   },
   created(){
       this.waterMeterList = getDictionaryOption("水表样式");
-      this.openStatus = getDictionaryOption("用水用户状态");
+      if(getDictionaryOption("水表样式")){
+         this.waterMeterList = getDictionaryOption("水表样式");
+      }else {
+        this.waterMeterList = []
+      }
+         if(getDictionaryOption("用水用户状态")){
+         this.openStatus = getDictionaryOption("用水用户状态");
+      }else {
+        this.openStatus = []
+      }
+     
   }
 };
 </script>   

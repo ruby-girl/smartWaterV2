@@ -90,7 +90,11 @@
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
+        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+          <template slot-scope="scope">
+            <span>{{(wachMeterData.page - 1) * wachMeterData.limit+ scope.$index + 1}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="300px" align="center" fixed="right">
           <template slot-scope="scope">
             <a class="viewHis" @click="waterMeterJxDetail(scope.row.Id)">查看历史详情</a>
@@ -115,7 +119,7 @@
       center
       :close-on-click-modal="false"
     >
-      <water-meterHis :hisData="hisData" @sortProp="sortProp" />
+      <water-meterHis :hisData="hisData" @sortProp="sortProp" :meterReadListParam="meterReadListParam" />
 
       <pagination
         v-show="histotal>0"
@@ -190,7 +194,8 @@ export default {
       histotal: 0,
       editId: "", //获取行信息id
       editShow: false, //编辑
-      editInfo: {}
+      editInfo: {},
+   
     };
   },
   mounted() {
@@ -276,9 +281,9 @@ export default {
       });
     },
     excelWaterMeter() {
-      let that=this
-      excelJXMeterWater(that.wachMeterData).then(res=>{
-          if (res.code == 0) {
+      let that = this;
+      excelJXMeterWater(that.wachMeterData).then(res => {
+        if (res.code == 0) {
           window.location.href = `${this.common.excelPath}${res.data}`;
           that.$message({
             message: res.msg ? res.msg : "导出成功",

@@ -9,7 +9,11 @@
     :cell-style="rowClsass"
     @sort-change="sortChanges"
   >
-    <el-table-column type="index" width="50"></el-table-column>
+    <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+      <template slot-scope="scope">
+        <span>{{(parms.page - 1) * parms.limit+ scope.$index + 1}}</span>
+      </template>
+    </el-table-column>
     <el-table-column prop="UseWaterTypeName" label="用水性质" width="150"></el-table-column>
     <el-table-column prop="LastReadNum" label="水表起数" width="150"></el-table-column>
     <el-table-column prop="ReadNum" label="水表止数" width="150"></el-table-column>
@@ -22,9 +26,9 @@
     <el-table-column prop="OrderTime" label="最近一次抄表日期" width="200"></el-table-column>
     <el-table-column label="操作" width="200" fixed="right">
       <template slot-scope="scope">
-        <span class="tbTextButton"  @click="toogleExpand(scope.row)">
+        <span class="tbTextButton" @click="toogleExpand(scope.row)">
           水价构成
-          <i :class="[rotate?'el-icon-caret-right':'el-icon-caret-bottom']" class></i>
+          <i :class="[rotate==scope.row.Id?'el-icon-caret-bottom':'el-icon-caret-right']" class></i>
         </span>
         <span class="tbTextButton" @click="delRecord(scope.row)">删除</span>
       </template>
@@ -52,7 +56,7 @@
         </el-row>
 
         <el-row>
-          <el-col :span="10" >
+          <el-col :span="10">
             <i class="numberTo">2</i>
             <span>
               2阶单价：
@@ -70,7 +74,7 @@
             </span>
           </el-col>
         </el-row>
-        <el-row >
+        <el-row>
           <el-col :span="10">
             <i class="numberTo">3</i>
             <span>
@@ -89,7 +93,7 @@
             </span>
           </el-col>
         </el-row>
-        <el-row >
+        <el-row>
           <el-col :span="10">
             <i class="numberTo">4</i>
             <span>
@@ -109,7 +113,7 @@
           </el-col>
         </el-row>
 
-        <el-row >
+        <el-row>
           <el-col :span="10">
             <i class="numberTo">5</i>
             <span>
@@ -140,6 +144,19 @@ export default {
     hisData: {
       default: [{ SA_UseWaterTypeHis_Id: "居民用水" }],
       type: Array
+    },
+    meterReadListParam: {
+      default: {},
+      type: Object
+    }
+  },
+  watch: {
+    meterReadListParam: {
+      handler() {
+        this.parms.page = this.meterReadListParam.page;
+        this.parms.limit = this.meterReadListParam.limit;
+      },
+      deep: true
     }
   },
   data() {
@@ -148,34 +165,42 @@ export default {
         sort: "", // 排序方式 ASC或DESC ,
         filed: "" // 排序字段 ,
       },
-      rotate: true
+      rotate: "",
+      parms: {
+        page: 1,
+        limit: 10
+      }
     };
   },
   methods: {
     toogleExpand(row) {
       const _this = this;
       let $table = _this.$refs.table;
+
       _this.hisData.map((item, index) => {
-        if (row.id != item.id) {
-          $table.toggleRowExpansion(item, false);
-        }
+        $table.toggleRowExpansion(item, false);
       });
-      _this.rotate = !_this.rotate;
-      $table.toggleRowExpansion(row);
+      if (this.rotate == row.Id) {
+        this.rotate = "";
+        $table.toggleRowExpansion(row, false);
+      } else {
+        this.rotate = row.Id;
+        $table.toggleRowExpansion(row);
+      }
     },
     rowClsass() {
       return "text-align: center;padding:5px 0";
     },
     delRecord(row) {
       let that = this;
-      console.log(row);
       let parms = {
         meterReadId: row.Id,
         custometId: row.SA_Customer_Id
       };
+
       DeleteMeterReading(parms).then(res => {
         if (res.code == 0) {
-          that.$parent.searYCMeterWater();
+          that.$emit("childrenSearch");
           that.$message({
             message: res.msg ? res.msg : "删除成功",
             type: "success"
@@ -241,8 +266,8 @@ strong {
   color: rgba(255, 61, 61, 1);
   opacity: 1;
 }
-strong>em{
-  width:auto
+strong > em {
+  width: auto;
 }
 .tbTextButton {
   font-size: 13px;

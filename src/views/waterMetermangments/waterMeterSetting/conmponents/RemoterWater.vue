@@ -110,9 +110,12 @@
         :cell-style="{'padding':'5px 0'}"
         @selection-change="selectionChange"
       >
-        >
         <el-table-column type="selection" fixed="left" width="55"></el-table-column>
-        <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
+        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+          <template slot-scope="scope">
+            <span>{{(YCMeterQueryParam.page - 1) * YCMeterQueryParam.limit+ scope.$index + 1}}</span>
+          </template>
+        </el-table-column>
 
         <template v-for="(item ,index) in tableHeadData">
           <el-table-column
@@ -161,14 +164,19 @@
       center
       :close-on-click-modal="false"
     >
-      <yC-water-meterHis :hisData="hisData" @sortProp="sortProp" />
+      <yC-water-meterHis
+        :hisData="hisData"
+        @sortProp="sortProp"
+        :meterReadListParam="meterReadListParam"
+        @childrenSearch="childrenSearch"
+      />
 
       <pagination
         v-show="histotal>0"
         :total="histotal"
         :page.sync="meterReadListParam.page"
         :limit.sync="meterReadListParam.limit"
-        @pagination="waterMeterJxDetail(meterReadListParam.WaterMeterId)"
+        @pagination="waterMeterYCDetail(meterReadListParam.customerId)"
       />
     </el-dialog>
   </div>
@@ -266,6 +274,13 @@ export default {
     }
   },
   methods: {
+    //删除操作成功后
+    childrenSearch() {
+      searYCHisWater(this.meterReadListParam).then(res => {
+        this.hisData = res.data;
+        this.histotal = res.count;
+      });
+    },
     searchYCWaterList() {
       //查询
       let that = this;
