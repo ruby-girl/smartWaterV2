@@ -27,7 +27,7 @@
       * */
       tabChange(num) {//点击选项卡切换列表内容
         this.curNum = num
-        this.$parent.searchFun(num)
+        this.$parent.searchFun(-1)
       }
     }
   }

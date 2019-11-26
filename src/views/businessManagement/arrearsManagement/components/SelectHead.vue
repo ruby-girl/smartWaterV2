@@ -109,7 +109,9 @@
             @keydown.enter.native="handleFilter"
           >
             <el-option label="全部" value="-1" />
-            <el-option v-for="item in Enumcf" :key="item.Id" :label="item.Name" :value="item.Id" />
+            <el-option label="未缴费" value="1002" />
+            <el-option label="审批中" value="1003" />
+            <el-option label="已撤销" value="1003" />
           </el-select>
         </el-form-item>
       </transition-group>
@@ -185,7 +187,6 @@
           placeholder="请选择"
           @keydown.enter.native="handleFilterFactory"
         >
-          <el-option label="全部" value="-1" />
           <el-option v-for="item in Enumcf" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
@@ -275,7 +276,7 @@ export default {
     this.Enumwm = getDictionaryOption("水表类型");
     this.Enumut = getDictionaryOption("用户类型");
     this.Enumot = getDictionaryOption("费用类型");
-    this.Enumcf = getDictionaryOption("费用状态");
+    this.Enumcf=getDictionaryOption("缴费单缴费状态");
     this.waterWorks = this.$store.state.user.waterWorks;
     if (this.waterWorks.length == 1) {
       this.selectHead.SA_WaterFactory_Id = this.waterWorks[0].Id;
@@ -357,7 +358,7 @@ export default {
     },
     // 批量撤销
     OrdersFeeCancels(){
-      this.$emit("toggleShow");
+      this.$emit("OrdersFeeCancels");
     }
   }
 };

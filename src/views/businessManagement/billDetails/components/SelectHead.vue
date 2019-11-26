@@ -68,13 +68,13 @@
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
         >
-          <el-option label="全部" value="-1" />
-          <el-option
-            v-for="item in payMentType"
-            :key="item.Id"
-            :label="item.Name"
-            :value="item.Id"
-          />
+           <el-option label="全部" value="-1" />
+            <el-option label="现金" value="2701" />
+            <el-option label="微信" value="2702" />
+            <el-option label="支付宝" value="2703" :disabled="true"/>
+            <el-option label="银行代扣" value="2704" />
+            <el-option label="转账" value="2705" :disabled="true"/>
+            <el-option label="自动扣减" value="2706"/>
         </el-select>
       </el-form-item>
       <el-form-item label="费用状态：" v-show="ifMore" key="state">
@@ -155,7 +155,7 @@ export default {
       this.selectHead.WaterFactory=this.waterWorks[0].Id
     }
      this.waterMeterType=getDictionaryOption('水表类型')
-    this.FeeState=getDictionaryOption('费用状态')
+    this.FeeState=getDictionaryOption("缴费单缴费状态");
     this.FeeType=getDictionaryOption('费用类型')
     this.payMentType=getDictionaryOption('缴费方式')
   },

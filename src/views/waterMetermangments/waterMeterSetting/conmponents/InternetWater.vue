@@ -106,7 +106,11 @@
         highlight-current-row
         @current-change="handleCurrentChange"
       >
-        <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
+         <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+          <template slot-scope="scope">
+            <span>{{(WLWQueryParam.page - 1) * WLWQueryParam.limit+ scope.$index + 1}}</span>
+          </template>
+        </el-table-column>
         <template v-for="(item ,index) in tableHeadData">
           <el-table-column
             v-if="item.IsFreeze"
@@ -155,14 +159,14 @@
       center
       :close-on-click-modal="false"
     >
-      <wLW-water-meterHis :hisData="hisData" />
+      <wLW-water-meterHis :hisData="hisData" :meterReadListParam="Bl_WaterMeter4His" />
 
       <pagination
         v-show="histotal>0"
         :total="histotal"
         :page.sync="Bl_WaterMeter4His.page"
         :limit.sync="Bl_WaterMeter4His.limit"
-        @pagination="waterMeterJxDetail(Bl_WaterMeter4His.Bl_WaterMeter4His)"
+        @pagination="waterMeterWLWDetail(Bl_WaterMeter4His.Meter4IMSI)"
       />
     </el-dialog>
   </div>

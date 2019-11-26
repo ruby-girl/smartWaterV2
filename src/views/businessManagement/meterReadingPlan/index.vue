@@ -2,7 +2,7 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :companyOptions="companyParentOptions" ref="child1"/>
+        <select-head :companyOptions="companyParentOptions" ref="child1" />
       </div>
       <div
         class="display-flex justify-content-flex-justify"
@@ -33,7 +33,11 @@
           :cell-style="{'padding':'5px 0'}"
           @sort-change="sortChanges"
         >
-          <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
+          <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
           <template v-for="(item ,index) in tableHeadData">
             <el-table-column
               v-if="item.IsFreeze"
@@ -73,7 +77,7 @@
                 v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
               >数据绑定</a>
               <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
-              
+
               <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>
             </template>
           </el-table-column>
@@ -161,7 +165,7 @@ export default {
       //获取自定义模块高度
       let that = this;
       that.$nextTick(() => {
-        that.tableHeight = that.tableHeight =
+        that.tableHeight = 
           document.getElementsByClassName("section-container")[0].offsetHeight -
           document.getElementById("table").offsetTop -
           58;
@@ -178,17 +182,18 @@ export default {
         that.isShowAdPlan = false;
       }
     });
-    that.companyParentOptions=this.$store.state.user.waterWorks
+    that.companyParentOptions = this.$store.state.user.waterWorks;
   },
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
       const that = this;
-
+      // console.log(document.getElementsByClassName("section-full-container")[0].offsetHeight)
+      // console.log(document.getElementById("table").offsetTop)
       that.tableHeight =
-        document.getElementsByClassName("section-container")[0].offsetHeight -
+        document.getElementsByClassName("section-full-container")[0].offsetHeight -
         document.getElementById("table").offsetTop -
-        58;
+        73;
       this.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
     });
@@ -226,7 +231,6 @@ export default {
           id: id
         }
       });
-
     },
     delMeterReadingPlan(id) {
       //删除
@@ -264,14 +268,17 @@ export default {
     },
     searchTableList() {
       //查询列表
-      this.$refs.child1.getTime()
+      this.$refs.child1.getTime();
       const that = this;
-      if(this.selectHead.createStartTime==""||this.selectHead.createEndTime==""){
-         that.$message({
-            message: "计划抄表日期不能为空，请选择!",
-            type: "warning"
-          });
-          return false
+      if (
+        this.selectHead.createStartTime == "" ||
+        this.selectHead.createEndTime == ""
+      ) {
+        that.$message({
+          message: "计划抄表日期不能为空，请选择!",
+          type: "warning"
+        });
+        return false;
       }
       searchPlanList(this.selectHead).then(res => {
         if (res.code == 0) {

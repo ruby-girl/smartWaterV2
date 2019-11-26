@@ -1,73 +1,6 @@
 <template>
   <div class="tree_container">
     <div class="user_box">
-      <!--左侧树形菜单-->
-      <!-- <div class="user_tree">
-        <h4 style="color:#777777;">用户过户</h4>
-        <div class="transfer-container">
-          <div class="display-flex align-items-center justify-content-flex-justify">
-            <div class="font-weight" style="color:#535353">原用户信息</div>
-            <el-button type="success" size="mini" @click="addRole">
-              <i class="iconfont icontianjia"></i>读卡
-            </el-button>
-          </div>
-          <el-form ref="form" label-width="70px" style="margin-top:13px;">
-            <el-form-item label="姓名：">
-              <el-input v-model="name"></el-input>
-            </el-form-item>
-            <el-form-item label="电话：">
-              <el-input v-model="name"></el-input>
-            </el-form-item>
-            <el-form-item label="用户编号：">
-              <el-input v-model="name"></el-input>
-            </el-form-item>
-            <el-form-item label="证件号：">
-              <el-input v-model="name"></el-input>
-            </el-form-item>
-            <el-form-item label="地址：">
-              <el-input v-model="name"></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="transfer-container" style="margin-top:13px;">
-          <div class="display-flex align-items-center justify-content-flex-justify">
-            <div class="font-weight" style="color:#535353;line-height:38px;">新用户信息</div>
-          </div>
-          <el-form ref="form" label-width="70px">
-            <div class="display-flex align-items-center justify-content-flex-justify">
-              <el-form-item label="姓名：">
-                <el-input v-model="name"></el-input>
-              </el-form-item>
-              <el-form-item label="人口：" label-width="45px">
-                <el-input v-model="name" style="width:40px;"></el-input>
-              </el-form-item>
-            </div>
-            <el-form-item label="电话：">
-              <el-input v-model="name"></el-input>
-            </el-form-item>
-            <el-form-item label="证件号：">
-              <el-input v-model="name"></el-input>
-            </el-form-item>
-            <el-form-item label="备注：">
-              <el-input type="textarea" v-model="name"></el-input>
-            </el-form-item>
-          </el-form>
-          <el-form
-            :inline="true"
-            ref="Enclosure"
-            :model="Enclosure"
-            :rules="rules"
-            label-width="100px"
-          >
-            <uploadBox @getFileFun="getFileFun" ref="getFiles"></uploadBox>
-          </el-form>
-        </div>
-        <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp">
-          收起
-          <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
-        </span>
-      </div> -->
-      <!--右侧列表数据-->
       <left-box></left-box>
       <div class="user_table">
         <div class="section-full-container">
@@ -75,9 +8,7 @@
             <select-head :select-head="listQuery" @handleFilter="handleFilter" />
           </div>
           <div class="display-flex justify-content-flex-justify">
-            <el-button type="primary" size="mini" @click="addRole">
-              <i class="iconfont icontianjia"></i>添加
-            </el-button>
+           <div></div>
             <div>
               <el-button type="success" size="mini" @click="excel">
                 <i class="iconfont icondaochuexcel"></i>导出Excel

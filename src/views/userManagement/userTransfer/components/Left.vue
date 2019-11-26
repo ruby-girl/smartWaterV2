@@ -51,15 +51,7 @@
               <el-input type="textarea" v-model="name"></el-input>
             </el-form-item>
           </el-form>
-          <el-form
-            :inline="true"
-            ref="Enclosure"
-            :model="Enclosure"
-            :rules="rules"
-            label-width="100px"
-          >
-            <uploadBox @getFileFun="getFileFun" ref="getFiles"></uploadBox>
-          </el-form>
+        
         </div>
         <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp">
           收起
@@ -68,11 +60,10 @@
       </div>
 </template>
 <script>
-import uploadBox from '@/components/Upload'
 import "@/styles/organization.scss";
 export default {
   name: "userSeting",
-  components: {uploadBox},
+  components: {},
   data() {
     return {
       ifShow: false,

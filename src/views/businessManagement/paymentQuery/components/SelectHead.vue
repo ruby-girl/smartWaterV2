@@ -65,14 +65,13 @@
             v-model="selectHead.PayMentType"
             placeholder="请选择"
             @keydown.enter.native="handleFilter"
-          >
+          >         
             <el-option label="全部" value="-1" />
-            <el-option
-              v-for="item in payMentType"
-              :key="item.Id"
-              :label="item.Name"
-              :value="item.Id"
-            />
+            <el-option label="现金" value="2701" />
+            <el-option label="微信" value="2702" />
+            <el-option label="支付宝" value="2703" :disabled="true"/>
+            <el-option label="银行代扣" value="2704" />
+            <el-option label="转账" value="2705" :disabled="true"/>
           </el-select>
         </el-form-item>
         <el-form-item label="缴费状态：" v-show="ifMore" key="state">
@@ -149,8 +148,6 @@ export default {
     }
     this.waterMeterType=getDictionaryOption('水表类型')
     this.payMentState=getDictionaryOption('缴费单缴费状态')
-    this.payMentType=getDictionaryOption('缴费方式')
-   
   },
   methods: {
     getTime(v) {

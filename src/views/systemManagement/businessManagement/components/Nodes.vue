@@ -2,6 +2,7 @@
   <div class="node_box">
     <div class="ifExamine">
       <el-button icon="el-icon-plus" type="primary" size="small" @click="addProcess">新增流程</el-button>
+      <span class="tips">提示：审核人组可拖动至流程进行操作。</span>
       <p>是否开启审核 &nbsp;<el-switch v-model="ifExamine" :disabled="prohibit"></el-switch>
       </p>
     </div>
@@ -22,7 +23,7 @@
               <div class="item_cont_box">
                 <p>{{ items.Name }}</p>
                 <span class="btnSpan btnSpanLeft" @click="setFun(items,indexs)">
-                  <!--{{items.Members.length >0 ?'配置':'未配置'}}-->
+                  {{items.Members.length >0 ?'配置':'未配置'}}
                 </span>
                 <span class="btnSpan btnSpanRight" v-show=" indexs > 0">删除</span>
               </div>
@@ -45,7 +46,7 @@
         <p class="team_btn">
           <i :class="'iconfont iconbaocun disablepointer contralSee' + (index+1)" title="保存" @click="saveNode(item.Id)"></i>
           <i :class="'iconfont iconchexiao disablepointer contralSee' + (index+1)" title="撤销" @click="resetNode(item.Id)"></i>
-          <i class="iconfont iconfuzhi onPointer" title="复制" @click="copyFun(item.Id)"></i>
+          <i class="iconfont iconfuzhi onPointer" title="复制" @click="copyFun(item)"></i>
           <i class="iconfont iconlajitong onPointer" title="删除" @click="deleteProcess(item.Id)"></i>
         </p>
       </div>
@@ -75,7 +76,7 @@
         moveTarget:{},//移入节点
         moveObj:[],//正再移入NODE集合
         moveId:'',//移入流程dom ID
-        ifExamine: true,
+        ifExamine: true,//权限开关冷却标识
         data: [],
         prohibit:false,//是否禁用审核权限开关
         ProcessConfigNode:[],
@@ -102,21 +103,41 @@
       getInfo() {//获取数据，动态计算每个流程宽度
         GetProcessConfig({code:localStorage.getItem('menuId')}).then(res => {
           if(res.code==0){
-            res.data.forEach((item, index) => {
+            let obj = {//默认流程审核人组空对象
+              Member: [
+                {
+                  ConfigType: 0,
+                  ObjectId: "",
+                  ObjectName: ""
+                }
+              ],
+              Id: "",
+              Name: "审核人组1",
+              Index: 0
+            }
+            let obj2 = {//默认流程操作员空对象
+              ConfigType: 0,
+              ObjectId: "",
+              ObjectName: ""
+            }
+            if(res.data.length==0)//该栏目下无流程时清空
+              this.data = res.data
+            res.data.forEach((item, index) => {//该栏目下有流程时，判断流程是否为空，为空需添加默认数据
+              item.ProcessConfigNode = []
+              item.ProcessConfigStart = []
+              item.ProcessConfigLine = []
+              item.ProcessConfigStart.length == 0 ? item.ProcessConfigStart.push(obj2) : item.ProcessConfigStart = item.ProcessConfigStart
+              item.ProcessConfigNode.length == 0 ? item.ProcessConfigNode.push(obj) : item.ProcessConfigNode = item.ProcessConfigNode
               item.ProcessConfigNode.forEach(is=>{//获取对应节点成员数量
-                item.ProcessConfigNodeMember.forEach(items=>{
-                  if(items.Id==is.Id){
-                    is.Members = items.Member
-                    is.ModuleName = is.Name
-                  }
-                })
+                is.Members = is.Member
+                is.ModuleName = is.Name
               })
               this.data = res.data
               let className = 'teams_node' + (index + 1)
               let curData = item.ProcessConfigNode//当前node节点数据
               this.getWidth(className, 195, curData)//动态计算流程模块实际宽度
               this.getSort(className)
-              let curLine = item.ProcessConfigLine
+              let curLine = item.ProcessConfigLine//获取该流程下所有，回归线并绘制
               curLine.forEach((i, j) => {//回归线对象
                 let curLineItem = i
                 for (let k in curLineItem) {//节点对象遍历
@@ -148,7 +169,9 @@
               pull: 'clone',
               put:function(evt){//移入时候阻止默认移入添加事件
                 event.stopPropagation();
-                _this.moveTarget = JSON.parse(localStorage.getItem('curObj'))//移入前原对象
+                _this.moveTarget = JSON.parse(localStorage.getItem('curObj').replace(/Id/g,'id'))//移入前原对象
+                _this.moveTarget.Name = _this.moveTarget.ModuleName
+                _this.moveTarget.Id = ''//转换原有审核组Id,添加新的审核组人Id
                 _this.moveObj = _this.data[evt.el.id.replace('teams_node','') - 1].ProcessConfigNode || []//获取正移入对象集合
                 _this.moveId = evt.el.id//移入流程ID
                 return false
@@ -162,6 +185,7 @@
         })
       },
       addNode(obj,type,num){//新增节点,obj node数组；type,1为手动添加，2为拖动添加；num 手动添加容器标识
+        let repeat = true
         if (type === 1) {//手动
           GetProcessConfigId().then(res => {
             obj.push({Id: res.data, Name: '审核人组' + parseInt(obj.length + 1),Index:''})
@@ -176,8 +200,17 @@
           if (this.moveObj.length <= 0)//大于0时 证明有拖动对象容器
             return false
           obj = this.moveObj
-          obj.push(this.moveTarget)
-          this.getWidth(this.moveId, 195, obj)//动态计算流程模块实际宽度
+          obj.forEach(item=>{//根据唯一Id判断是否重复添加
+              if(this.moveTarget.id === item.id){
+                repeat = false
+              }
+          })
+          repeat ? obj.push(this.moveTarget): this.$message({
+            message: '不能重复添加',
+            type: 'warning'
+          });
+
+            this.getWidth(this.moveId, 195, obj)//动态计算流程模块实际宽度
           document.getElementsByClassName('contralSee'+ this.moveId.replace('teams_node', ''))[0].classList.add('onPointer')//修改保存撤销按钮状态
           document.getElementsByClassName('contralSee'+ this.moveId.replace('teams_node', ''))[1].classList.add('onPointer')
           this.$nextTick(() => {
@@ -186,53 +219,12 @@
         }
       },
       addProcess(){//新增流程
-        let _this = this
-        let obj = {
-          ProcessConfigStart: [//操作人
-            {
-              ConfigType: 0,
-              ObjectId: "",
-              ObjectName: ""
-            }
-          ],
-          ProcessConfigNode: [//节点
-            {
-              Id: "",
-              Name: "审核组1",
-              Index: 0
-            }
-          ],
-          ProcessConfigLine: [//回归线
-            {
-              FromId: "",
-              ToId: ""
-            }
-          ],
-          ProcessConfigNodeMember: [//节点成员memebr
-            {
-              Member: [
-                {
-                  ConfigType: 0,
-                  ObjectId: "",
-                  ObjectName: ""
-                }
-              ],
-              Id: ""
-            }
-          ],
-          Id: "",
-          SYS_ProMenu_Id: "",
-          ProcessMenuCode: 0,
-          SYS_Pro_HashCode: "",
-          BusinessProcessName: ""
-        }
-        GetProcessConfigId().then(res => {
-          obj.ProcessConfigNode[0].Id = res.data//赋值流程默认第一个节点的ID
-          _this.data.push(obj)
-          _this.data.forEach((item, index) => {//初始化流程拖动事件
-            let className = 'teams_node' + (index + 1)
-            _this.getSort(className)
-          })
+        GetProcessConfigId({code:localStorage.getItem('menuId'),menuId:localStorage.getItem('menuCode')}).then(res => {
+          if(res.code==0){
+            this.getInfo()
+          }else{
+            promptInfoFun(this,1,res.message)
+          }
         })
       },
       setFun(item,index){//流程审核配置
@@ -244,8 +236,11 @@
         let obj = {id: 1, type: 3}
         Bus.$emit('NodesSetFun',obj)
       },
-      copyFun(id){//复制流程
+      copyFun(item){//复制流程
         this.$refs.copyChild.copyVisible = true
+        this.$refs.copyChild.data = item
+        this.$refs.copyChild.copyId = ''
+        this.$refs.copyChild.curId = localStorage.getItem('menuCode')
       },
       deleteProcess(id){//删除流程，本地删除
         this.$confirm("是否确认删除该流程？", "提示", {
@@ -273,9 +268,9 @@
       },
     },
     mounted() {
-      this.getInfo()//初始化节点数据
       Bus.$off('moveNode')
       Bus.$off('moveNodeEmpty')
+      Bus.$off('getNewNodes')
       Bus.$on('moveNode', () => {//触发手动添加节点事件
         this.addNode('',2)
       })
@@ -283,6 +278,9 @@
         this.moveTarget = {}
         this.moveObj = []
         this.moveId = ''
+      })
+      Bus.$on('getNewNodes', () => {//切换左侧栏目更新右侧节点数据
+        this.getInfo()
       })
     }
   }

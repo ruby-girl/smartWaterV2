@@ -227,7 +227,7 @@ export default {
     OrdersFeeCancelsFunc(){
       OrdersFeeCancels({SA_Order_Ids:this.checkedDataId}).then(res=>{
         this.$message({
-          message: res.msg,
+          message: res.message,
           type: "success",
           duration: 4000
         });
