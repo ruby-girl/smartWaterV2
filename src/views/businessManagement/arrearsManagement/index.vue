@@ -11,6 +11,7 @@
         @handleFilter="handleFilter"
         @handleFilterFactory="handleFilterFactory"
         @toggleShow="toggleShow"
+        @OrdersFeeCancels="OrdersFeeCancelsFunc"
       />
     </div>
     <div>
@@ -23,8 +24,9 @@
         :is="selectTypeComponents"
         :factoryQuery="factoryQuery" 
         :listQuery="listQuery" 
-        :tableHeightUser="tableHeightUser" 
-        :tableHeightSave="tableHeightSave"
+        :tableHeightUser.sync="tableHeightUser" 
+        :tableHeightSave.sync="tableHeightSave"
+        :checkedDataId.sync="checkedDataId"
         @handleFilterFactory="handleFilterFactory"
         @handleFilter="handleFilter"
         @factoryToUser="factoryToUser"
@@ -37,7 +39,7 @@
 import SelectHead from "./components/SelectHead";
 import UserType from "./components/UserType"
 import FactoryType from "./components/FactoryType"
-import { GetList,GetListByWaterFactory } from "@/api/cashCharge";
+import { GetList,GetListByWaterFactory,OrdersFeeCancels } from "@/api/cashCharge";
 export default {
   name: "arrearsManagement",
   components: { SelectHead,UserType,FactoryType },
@@ -101,6 +103,7 @@ export default {
       selectTypeComponents:'UserType',
       tableHeightSave:0,
       tableHeightUser:0,
+      checkedDataId:[]//批量撤销ID
     };
   },
   watch: {
@@ -121,7 +124,7 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;      
         this.tableHeightUser = document.body.clientHeight - formHeight - 250;
-        this.tableHeightSave = document.body.clientHeight - formHeight - 120; 
+        this.tableHeightSave = document.body.clientHeight - formHeight - 180; 
     });
   },
   methods: {
@@ -135,16 +138,6 @@ export default {
          this.tableTotal[1].num = res.data.ot.PriceSurplus;
          this.tableDataUser = res.data.list;
       });
-    },
-    sortChanges({ prop, order }) {
-      //筛选
-      this.listQuery.filed = prop;
-      this.listQuery.sort =
-        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
-      if (this.tableData.length > 0) {
-        this.listQuery.page = 1;
-        this.getList();
-      }
     },
     handleFilter() {
       this.listQuery.page = 1;
@@ -209,7 +202,6 @@ export default {
       });
     },
     factoryToUser(query,factoryId){
-      console.info(query)
       this.selectType='1'
       this.listQuery={  
         page: 1,
@@ -231,6 +223,16 @@ export default {
         tableId: "0000019"
       }
       this.getList();
+    },
+    OrdersFeeCancelsFunc(){
+      OrdersFeeCancels({SA_Order_Ids:this.checkedDataId}).then(res=>{
+        this.$message({
+          message: res.msg,
+          type: "success",
+          duration: 4000
+        });
+        this.handleFilter();
+      })
     }
   }
 };

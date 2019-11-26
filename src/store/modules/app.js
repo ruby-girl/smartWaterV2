@@ -8,7 +8,7 @@ const state = {
   device: 'desktop',
   size: Cookies.get('size') || 'medium',
   dictionaryItem: [],//字典项
-  companyArr: []//字典项
+  companyArr: []//水厂
 }
 
 const mutations = {

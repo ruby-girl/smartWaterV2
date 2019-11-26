@@ -37,7 +37,7 @@
           <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="操作时间：">
+      <el-form-item label="欠费日期：">
         <el-date-picker
           v-model="timevalue"
           type="datetimerange"
@@ -70,13 +70,15 @@
         <el-form-item label="欠费金额："  v-show="ifMore" key="TotalPrice ">
           <el-input
           v-model="selectHead.Star_TotalPrice"
-          maxlength="20"
-          @keyup.enter.native="handleFilter"
+          maxlength="20"      
+          @blur="testMoney()"
+          @keyup.native="money($event)"
           style="width: 80px;float: left"
         />~<el-input
           v-model="selectHead.End_TotalPrice"
           maxlength="20"
-          @keyup.enter.native="handleFilter"
+          @blur="testMoney()"
+          @keyup.native="money($event)"      
           style="width: 80px;float: right"
         />
       </el-form-item>
@@ -115,7 +117,7 @@
         <el-button type="primary" size="mini" @click="handleFilter">
           <i class="iconfont iconsousuo"></i>搜索
         </el-button>
-        <el-button type="success" size="mini" @click="handleFilter">撤销所选欠费</el-button>
+        <el-button type="success" size="mini" @click="OrdersFeeCancels()">撤销所选欠费</el-button>
         <i v-show="ifMore" class="icon iconfont getUpDown" @click="toggleShow(false)">收起 &#xe692;</i>
         <i v-show="!ifMore" class="icon iconfont getUpDown" @click="toggleShow(true)">展开 &#xe68f;</i>
       </el-form-item>
@@ -199,6 +201,7 @@
 import { parseStartTimeFunc, parseEndTimeFunc } from "@/utils/index";
 import { getDictionaryOption } from "@/utils/permission";
 import { getOrgTree } from "@/utils/projectLogic";
+import { updateMoney, changeTwoDecimal } from "@/utils/index";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
@@ -264,10 +267,10 @@ export default {
     this.timevalue.push(new Date(end));
      this.timevalueFactory.push(new Date(start));
     this.timevalueFactory.push(new Date(end));
-    this.selectHead.editStartTime = start;
-    this.selectHead.editEndTime = end;
-    this.factoryQuery.editStartTime = start;
-    this.factoryQuery.editEndTime = end;
+    this.selectHead.Star_ArrearsDate  = start;
+    this.selectHead.End_ArrearsDate = end;
+    this.factoryQuery.Star_ArrearsDate  = start;
+    this.factoryQuery.End_ArrearsDate = end;
     // 填充默认时间--e
     this.Enumwm = getDictionaryOption("水表类型");
     this.Enumut = getDictionaryOption("用户类型");
@@ -322,6 +325,39 @@ export default {
     toggleShow(type) {
       this.ifMore = type;
       this.$emit("toggleShow", type);
+    },
+    // 补齐小数-
+    testMoney() {
+    //  this.num= changeTwoDecimal(this.num);
+      if(parseFloat(this.selectHead.Star_TotalPrice)>parseFloat(this.selectHead.End_TotalPrice)){
+         this.$message({
+            message: '请规范填写欠费金额！',
+            type: "error",
+            duration: 4000
+          });
+          this.selectHead.End_TotalPrice=''
+          this.selectHead.Star_TotalPrice=''
+      }
+      if(parseFloat(this.selectHead.Star_TotalPrice)!==''&&parseFloat(this.selectHead.End_TotalPrice)!==''){
+        if(parseFloat(this.selectHead.Star_TotalPrice)==parseFloat(this.selectHead.End_TotalPrice)){
+           this.$message({
+            message: '请规范填写欠费金额！',
+            type: "error",
+            duration: 4000
+          });
+           this.selectHead.End_TotalPrice=''
+          this.selectHead.Star_TotalPrice=''
+        }
+      }
+
+    },
+     // 输入金额保留2位
+    money(e) {
+      e.target.value = updateMoney(e.target.value);
+    },
+    // 批量撤销
+    OrdersFeeCancels(){
+      this.$emit("toggleShow");
     }
   }
 };

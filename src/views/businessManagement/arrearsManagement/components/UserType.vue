@@ -22,12 +22,26 @@
           :data="tableDataUser"
           border
           :height="tableHeightUser"
+          
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
           :cell-style="{'padding':'7px 0'}"
           @sort-change="sortChanges"
+          @selection-change="handleSelectionChange"
         >
-          <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
+        <el-table-column
+          label="as"
+          fixed="left"
+          type="selection"
+          width="55"
+          :selectable="checkboxT"
+        ></el-table-column>
+          <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+            <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
+          </template>
+          </el-table-column>
+          
           <template v-for="(item ,index) in tableHead">
             <el-table-column
               :key="index"
@@ -65,7 +79,7 @@
           :total="totalUser"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
-          @pagination="getListFactory"
+          @pagination="getList"
         />
       </div>
       <!-- 费用详情弹窗 -->
@@ -84,7 +98,7 @@ import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import MytableTotal from "@/components/TableTotal/index";
 import ChargesDetails from "../../cashCharge/components/ChargesDetails"; //水费详情弹窗-共用现金收费的费用详情
-import { OrderFeeCancel } from "@/api/cashCharge";//费用撤销
+import { OrderFeeCancel,GetList_execl} from "@/api/cashCharge";//费用撤销
 import FeeWaiver from "../../cashCharge/components/FeeWaiver"; //水费减免弹窗
 export default {
  props: {
@@ -98,7 +112,8 @@ export default {
     tableTotal:{},
     tableDataUser:{},
     totalUser:0,
-    tableHeightUser:{}
+    tableHeightUser:{},
+    checkedDataId:{}
   },
   components: {Pagination, customTable, MytableTotal,ChargesDetails,FeeWaiver},
   data() {
@@ -107,13 +122,11 @@ export default {
       temp: {},
       selectPintShow: false, //票据打印弹窗
       tableData: [],
-      // tableHeightUser:0,
       checksData: [],
       chargesDetailsShow:false,
       feeWaiverItem:{},
       feeWaiverShow:false
-    }
-      
+    }    
   },
   mounted: function() {
     this.getTableHead()
@@ -129,14 +142,26 @@ export default {
   methods: {
         setCustomData() {
       this.$refs.myChildUser.isCustom = !this.$refs.myChildUser.isCustom;
-      if (this.$refs.myChildUser.isCustom) this.tableHeightUser = this.tableHeightUser - 80;
-      else this.tableHeightUser = this.tableHeightUser + 80;
+      let height=this.tableHeightUser
+      if (this.$refs.myChildUser.isCustom) this.$emit("update:tableHeightUser", height - 100);
+      else this.$emit("update:tableHeightUser", height + 100);
     },
-    excel(){
-        
+      //导出
+    excel() {
+      GetList_execl(this.listQuery).then(res => {
+        window.location.href = `${this.common.excelPath}${res.data}`;
+      });
     },
-    sortChanges(){},
-    getListFactory(){},
+    sortChanges({ prop, order }){
+       //筛选
+      this.listQuery.filed = prop;
+      this.listQuery.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      if (this.tableDataUser.length > 0) {
+        this.listQuery.page = 1;
+        this.getList();
+      }
+    },
       getTableHead(){//获取表头自定义
       this.$refs.myChildUser.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChildUser.checkData; // 获取自定义字段中选中了字段
@@ -171,6 +196,18 @@ export default {
     feeWaiverFunc(item) {
       this.feeWaiverItem=item
       this.feeWaiverShow = true;
+    },
+    handleSelectionChange(val){
+     let checkedDataId=val.map(item=>{
+       return item.Id
+     })
+     this.$emit("update:checkedDataId", checkedDataId); 
+    },
+    checkboxT(row, index) {//勾选禁用
+      if (row.ChargeFlag==1003) {
+        return false;
+      }
+      return true;
     },
   }
 };

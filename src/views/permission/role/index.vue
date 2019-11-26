@@ -27,7 +27,11 @@
         :cell-style="{'padding':'7px 0'}"
         @sort-change="sortChanges"
       >
-        <el-table-column type="index" label="序号" width="80" align="center"/>
+         <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+            <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
+          </template>
+          </el-table-column>
         <template v-for="(item ,index) in tableHead">
           <el-table-column
             :key="index"

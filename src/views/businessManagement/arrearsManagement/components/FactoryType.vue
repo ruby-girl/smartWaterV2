@@ -26,7 +26,11 @@
           :cell-style="{'padding':'7px 0'}"
           @sort-change="sortChanges"
         >
-          <el-table-column type="index" fixed="left" label="序号" width="80" align="center" />
+          <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+            <span>{{(factoryQuery.page - 1) *factoryQuery.limit+ scope.$index + 1}}</span>
+          </template>
+          </el-table-column>
           <template v-for="(item ,index) in tableHead">
             <el-table-column
               :key="index"
@@ -59,7 +63,7 @@
           :total="totalFactory"
           :page.sync="factoryQuery.page"
           :limit.sync="factoryQuery.limit"
-          @pagination="getListFactory"
+          @pagination="getList"
         />
       </div>
       <!-- 账单详情弹窗 -->
@@ -70,6 +74,7 @@
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import TableTotal from "@/components/TableTotal/index";
+import { GetListByWaterFactory_Execl} from "@/api/cashCharge";//费用撤销
 export default {
  props: {
     factoryQuery: {
@@ -113,21 +118,37 @@ export default {
   },
   methods: {
     setCustomData() {
+       let height=this.tableHeightSave
       this.$refs.myChildFactory.isCustom = !this.$refs.myChildFactory.isCustom;
-      if (this.$refs.myChildFactory.isCustom) this.tableHeightSave = this.tableHeightSave - 80;
-      else this.tableHeightSave = this.tableHeightSave + 80;
+      if (this.$refs.myChildFactory.isCustom) this.$emit("update:tableHeightSave", height - 100);
+      else this.$emit("update:tableHeightSave", height +100);
     },
-     
-    excel(){},
-    sortChanges(){},
-    getListFactory(){},
+       //导出
+    excel() {
+      GetList_execl(this.listQuery).then(res => {
+        window.location.href = `${this.common.excelPath}${res.data}`;
+      });
+    },
+    sortChanges({ prop, order }){
+       //筛选
+      this.factoryQuery.filed = prop;
+      this.factoryQuery.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      if (this.tableDataFactory.length > 0) {
+        this.factoryQuery.page = 1;
+        this.getList();
+      }
+    },
     getTableHead(){//获取表头自定义
       this.$refs.myChildFactory.GetTable(this.factoryQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChildFactory.checkData; // 获取自定义字段中选中了字段
     },
     toUser(rowId){
       this.$emit("factoryToUser", this.factoryQuery,rowId);
-    }
+    },
+     getList(){
+      this.$emit("handleFilterFactory", this.listQuery);
+    },
   }
 };
 </script>

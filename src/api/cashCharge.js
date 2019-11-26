@@ -22,6 +22,13 @@ export function OrderFeeCancel(data) {//费用撤销
     params: data
   })
 }
+export function OrdersFeeCancels(data) {//费用撤销批量
+  return request({
+    url: '/Order/OrdersFeeCancels',
+    method: 'post',
+    params: data
+  })
+}
 export function OrderFeeWaiver(data) {//费用减免
   return request({
     url: '/Order/OrderFeeWaiver',
@@ -125,6 +132,22 @@ export function GetList(data){
 export function GetListByWaterFactory(data){
   return request({
     url: '/Order/GetListByWaterFactory',
+    method: 'post',
+    data: data    
+  })
+}
+// 欠费-用户type导出
+export function GetList_execl(data){
+  return request({
+    url: '/Order/GetList_execl',
+    method: 'post',
+    data: data    
+  })
+}
+// 欠费-水厂type导出
+export function GetListByWaterFactory_Execl(data){
+  return request({
+    url: '/Order/GetListByWaterFactory_Execl',
     method: 'post',
     data: data    
   })

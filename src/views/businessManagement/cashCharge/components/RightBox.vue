@@ -100,7 +100,7 @@ export default {
     return {
       radio: 1,
       paymentType: 2701,
-      isAccount: false,
+      isAccount: true,
       num: "",
       needMoney: 0, //应缴金额    
       surplus: 0, //找零
