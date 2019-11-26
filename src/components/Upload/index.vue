@@ -2,8 +2,7 @@
   <div class="uploadBox">
     <el-form-item label="附件类型：">
       <el-select v-model="certificates" placeholder="请选择" size="small">
-        <el-option label="身份证" value="1" />
-        <el-option label="居住证" value="2" />
+        <el-option v-for="(item,index) in option" :key="index" :label="item.label" :value="item.value" />
       </el-select>
     </el-form-item>
     <div class="uploadPart" style="margin: 0 100px 20px 100px">
@@ -17,8 +16,7 @@
         :show-file-list="false"
         :on-exceed="handleExceed"
         accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.JPG,.JPEG,.PDF,.DOC,.DOCX,.XLS,.XLSX"
-        :file-list="fileList"
-      >
+        :file-list="fileList">
         <el-button size="small" type="success"><i class="icon iconfont">&#xe688;</i> 添加附件</el-button>
         <div slot="tip" class="el-upload__tip">可选择jpg/png/word/excel/pdf格式，每张图片大小限制为10M内</div>
       </el-upload>
@@ -37,7 +35,6 @@
             <i class="el-icon-close" @click="handleRemove(item.id)" />
           </div>
           <img v-show="(item.type === 0&&item.active)?true:false" class="smallImg" :src="item.url" alt="">
-
         </li>
       </ul>
     </div>
@@ -49,8 +46,7 @@
 
     <el-dialog
       :visible.sync="dialogVisible"
-      :fullscreen="dialogVisible"
-    >
+      :fullscreen="dialogVisible">
       <iframe :src="iframeUrl" width="100%" frameborder="0" :height="clientHeight-100" />
     </el-dialog>
   </div>
@@ -65,8 +61,12 @@
   name: 'Upload',
   data() {
     return {
+      option:[
+        {label:'身份证',value:'1'},
+        {label:'居住证',value:'2'}
+      ],
+      certificates:'1',
       upUrl: '',
-      certificates:'身份证',
       dialogVisible: false,
       iframeUrl: '',
       clientHeight: '',

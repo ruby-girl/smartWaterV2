@@ -3,7 +3,7 @@
     <ul class="clearfix" id="teamWidth">
       <li v-for="(item,index) in teams" :key="index" :data-id="index">
         <h3 class="team_name">
-          {{ item.ModuleName.trim() == '' ? '审核组'+ (index+1) : item.ModuleName }}
+          {{ item.ModuleName }}
           <i></i>
         </h3>
         <p>
@@ -80,6 +80,9 @@
       getMenuData(){//获取审核组信息
         GetProcessModuleInfo().then(res => {
           if (res.code ==0 ) {
+            res.data.forEach((item,index)=>{
+              item.ModuleName.trim() == '' ? item.ModuleName = '审核组'+ (index+1) : item.ModuleName = item.ModuleName
+            })
             this.teams = res.data
             this.getWidth('teamWidth',160)
           } else {

@@ -33,6 +33,7 @@
 
 <style lang="scss">
   .business_box {
+    .tips{color: #46494C;font: normal 14px 'Microsoft YaHei';margin-left: 10px;}
     .btnSpan {
       cursor: pointer;
       font-size: 14px;

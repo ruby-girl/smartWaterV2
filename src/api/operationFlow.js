@@ -132,3 +132,28 @@ export function ComboBoxListByRoseZhuanYong(data) {
     params: data
   })
 }
+
+
+/**
+ * 获取所有流程子集
+ * */
+export function GetProcessMenuChildren(data) {
+  return request({
+    url: '/ProcessMenu/GetProcessMenuChildren',
+    method: 'post',
+    params: data
+  })
+}
+
+/**
+ * 流程复制
+ * */
+export function ProcessCopy(data) {
+  return request({
+    url: '/ProcessConfig/ProcessCopy',
+    method: 'post',
+    params: data
+  })
+}
+
+

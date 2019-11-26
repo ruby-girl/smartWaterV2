@@ -7,7 +7,7 @@
       <template slot="title">
         <span>{{ item.MenuCNName }}</span>
       </template>
-      <el-menu-item v-for="(i,s) in item.Children" :index="i.Id">{{ i.MenuCNName }}</el-menu-item>
+      <el-menu-item v-for="(i,s) in item.Children" :index="i.Id" :key="s">{{ i.MenuCNName }}</el-menu-item>
     </el-submenu>
     <el-menu-item v-for="(item,index) in data" v-else :key="index" :index="item.Id">
       <span slot="title">{{ item.MenuCNName }}</span>
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+  import Bus from '@/utils/bus'
   import { GetProcessMenu } from "@/api/operationFlow"
   import { promptInfoFun } from "@/utils/index"
 
@@ -35,6 +36,8 @@
             this.data = res.data
             res.data[0].Children ? (this.openeds.push(res.data[0].Id), this.activeNum = res.data[0].Children[0].Id) : this.activeNum = res.data[0].Id
             res.data[0].Children ? localStorage.setItem('menuId',res.data[0].Children[0].ProcessMenuCode) : localStorage.setItem('menuId',res.data[0].ProcessMenuCode)
+            res.data[0].Children ? localStorage.setItem('menuCode',res.data[0].Children[0].Id) : localStorage.setItem('menuId',res.data[0].Id)
+            Bus.$emit('getNewNodes')
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -44,8 +47,11 @@
         this.activeNum = index
         let data = this.data[path[0]].Children
         data.forEach(item=>{
-          if(item.Id == index)
-            localStorage.setItem('menuId',item.ProcessMenuCode)
+          if(item.Id == index){
+            localStorage.setItem('menuId',item.ProcessMenuCode)//实际栏目code
+            localStorage.setItem('menuCode',item.Id)//实际栏目ID
+            Bus.$emit('getNewNodes')
+          }
         })
       }
     },
