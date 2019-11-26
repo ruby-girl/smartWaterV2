@@ -10,7 +10,7 @@
     @sort-change="sortChanges"
   >
     <el-table-column type="index" width="50"></el-table-column>
-    <el-table-column prop="UseWaterTypeName" label="用户性质" width="150"></el-table-column>
+    <el-table-column prop="UseWaterTypeName" label="用水性质" width="150"></el-table-column>
     <el-table-column prop="LastReadNum" label="水表起数" width="150"></el-table-column>
     <el-table-column prop="ReadNum" label="水表止数" width="150"></el-table-column>
     <el-table-column prop="TotalWaterYield" label="水量" width="150"></el-table-column>
@@ -22,7 +22,7 @@
     <el-table-column prop="OrderTime" label="最近一次抄表日期" width="200"></el-table-column>
     <el-table-column label="操作" width="200" fixed="right">
       <template slot-scope="scope">
-        <span class="tbTextButton" v-if="scope.row.TotalPrice1" @click="toogleExpand(scope.row)">
+        <span class="tbTextButton"  @click="toogleExpand(scope.row)">
           水价构成
           <i :class="[rotate?'el-icon-caret-right':'el-icon-caret-bottom']" class></i>
         </span>
@@ -52,7 +52,7 @@
         </el-row>
 
         <el-row>
-          <el-col :span="10" v-if="props.row.TotalPrice2">
+          <el-col :span="10" >
             <i class="numberTo">2</i>
             <span>
               2阶单价：
@@ -70,7 +70,7 @@
             </span>
           </el-col>
         </el-row>
-        <el-row v-if="props.row.TotalPrice3">
+        <el-row >
           <el-col :span="10">
             <i class="numberTo">3</i>
             <span>
@@ -89,7 +89,7 @@
             </span>
           </el-col>
         </el-row>
-        <el-row v-if="props.row.TotalPrice4">
+        <el-row >
           <el-col :span="10">
             <i class="numberTo">4</i>
             <span>
@@ -109,7 +109,7 @@
           </el-col>
         </el-row>
 
-        <el-row v-if="props.row.TotalPrice5">
+        <el-row >
           <el-col :span="10">
             <i class="numberTo">5</i>
             <span>
@@ -218,7 +218,7 @@ export default {
   margin-left: 100px;
 }
 .el-row {
-  padding: 5px 0;
+  padding: 0;
 }
 span {
   font-size: 14px;
