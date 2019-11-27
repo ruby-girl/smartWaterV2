@@ -19,7 +19,7 @@ export function waterAccount(data) {//机械表查询
     })
 }
 ///销户记录查询 POST /api/Customer/AccountCanCellationList
-export function waterAccount(data) {//机械表查询
+export function waterAccountPost(data) {//机械表查询
     return request({
         url: "/Customer/AccountCanCellationList",
         method: 'POST',
@@ -34,3 +34,14 @@ export function excelWaterAccount(data) {//机械表查询
         data
     })
 }
+
+
+// 用户过户
+export function IsTransfer(data) {//查询是否欠费
+    return request({
+        url: "/Customer/IsTransfer",
+        method: 'POST',
+        data
+    })
+}
+

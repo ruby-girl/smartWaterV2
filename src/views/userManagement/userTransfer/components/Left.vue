@@ -12,19 +12,19 @@
           </div>
           <el-form ref="form" label-width="70px" style="margin-top:13px;">
             <el-form-item label="姓名：">
-              <el-input v-model="name"></el-input>
+              <el-input v-model="name" @keyup.enter.native="handleSelect(name,1)"></el-input>
             </el-form-item>
             <el-form-item label="电话：">
-              <el-input v-model="name"></el-input>
+              <el-input v-model="name" @keyup.enter.native="handleSelect"></el-input>
             </el-form-item>
             <el-form-item label="用户编号：">
-              <el-input v-model="name"></el-input>
+              <el-input v-model="name" @keyup.enter.native="handleSelect"></el-input>
             </el-form-item>
             <el-form-item label="证件号：">
-              <el-input v-model="name"></el-input>
+              <el-input v-model="name" @keyup.enter.native="handleSelect"></el-input>
             </el-form-item>
             <el-form-item label="地址：">
-              <el-input v-model="name"></el-input>
+              <el-input v-model="name" @keyup.enter.native="handleSelect"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -65,13 +65,21 @@
         </el-button>
         </div>
         <fileList :show.sync="fileShow" :file.sync="file"></fileList>
+        <select-user
+      :selectUserShow.sync="selectUserShow"
+      :headQuery="params"
+      @handleFilter="handleFilter"
+    />
       </div>
 </template>
 <script>
 import "@/styles/organization.scss";
+import {IsTransfer} from "@/api/userAccount"
+import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
+import SelectUser from "@/components/SelectUser";
 import FileList from "./FileList"
 export default {
-  components: {FileList},
+  components: {FileList,SelectUser},
   props: {ifShow:{}},
   data() {
     return {
@@ -86,7 +94,15 @@ export default {
         NewIdentityNo:'',//证件号
         Remark:'',//备注
       },     
-      file:[]    
+      file:[],
+      params:{
+        page:1,
+        Limit:10,
+        CustomerQueryType:"",
+        CustomerQueryValue:"",
+      },
+      selectUserShow:false,
+
     };
   },
   watch:{
@@ -111,6 +127,32 @@ export default {
     },
     account(){
       console.log(this.file)
+    },
+    // 模糊查询用户
+    handleSelect(val,n){
+      if(!val) {
+        this.user={}
+        return false
+      }
+      this.params.CustomerQueryValue=val
+      this.params.CustomerQueryType=n
+       GetCustomerDataList(this.params).then(res => {
+        if (res.data.length == 0) {
+          this.$message({
+            message: "未查询到用户！",
+            type: "error",
+            duration: 4000
+          });
+          this.user={}
+        } else if (res.data.length == 1) {
+          this.user = res.data[0];
+        } else {
+          this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
+        }
+      });
+    },
+    handleFilter(val){
+      console.log(val)
     }
    
   },
