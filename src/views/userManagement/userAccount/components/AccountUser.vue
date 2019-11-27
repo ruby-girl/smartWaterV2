@@ -10,16 +10,25 @@
       </div>
       <el-form ref="userInfo" :model="userInfo" label-width="70px">
         <el-form-item label="姓名：">
-          <el-input v-model="userInfo.CustomerName" @keydown.enter.native="searchEnter(2)"></el-input>
+          <el-input
+            v-model="userInfo.CustomerName"
+            @keydown.enter.native="searchEnter(2,userInfo.CustomerName)"
+          ></el-input>
         </el-form-item>
         <el-form-item label="电话：">
-          <el-input v-model="userInfo.Tel"></el-input>
+          <el-input v-model="userInfo.Tel" @keydown.enter.native="searchEnter(3,userInfo.Tel)"></el-input>
         </el-form-item>
         <el-form-item label="用户编号：">
-          <el-input v-model="userInfo.CustomerNo"></el-input>
+          <el-input
+            v-model="userInfo.CustomerNo"
+            @keydown.enter.native="searchEnter(1,userInfo.CustomerNo)"
+          ></el-input>
         </el-form-item>
         <el-form-item label="证件号：">
-          <el-input v-model="userInfo.IdentityNo"></el-input>
+          <el-input
+            v-model="userInfo.IdentityNo"
+            @keydown.enter.native="searchEnter(4,userInfo.IdentityNo)"
+          ></el-input>
         </el-form-item>
         <el-form-item label="地址：">
           <el-input v-model="userInfo.Address"></el-input>
@@ -36,13 +45,13 @@
       <h4>水表信息</h4>
       <el-form ref="waterInfo" :model="userInfo" label-width="70px">
         <el-form-item label="水表编号：">
-          <el-input v-model="waterInfo.name"></el-input>
+          <el-input v-model="waterInfo.WaterMeterNo"></el-input>
         </el-form-item>
         <el-form-item label="水表类型：">
-          <el-input v-model="waterInfo.name"></el-input>
+          <el-input v-model="waterInfo.WaterMeterTypeName"></el-input>
         </el-form-item>
         <el-form-item label="表端余额">
-          <el-input v-model="waterInfo.name"></el-input>
+          <el-input v-model="waterInfo.MeterBalance"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -57,68 +66,77 @@
     <p class="userBtn">
       <el-button size="small" type="primary">确认销户</el-button>
     </p>
-    <el-dialog
-      title="历史详情"
-      :visible.sync="viewWaterHistory"
-      top="30vh"
-      width="836px"
-      hight="432px"
-      center
-      :close-on-click-modal="false"
-    >
-      <iC-water-meterHis
-        :hisData="hisData"
-        @sortProp="sortProp"
-        :meterReadListParam="meterReadListParam"
-      />
-
-      <pagination
-        v-show="histotal>0"
-        :total="histotal"
-        :page.sync="meterReadListParam.page"
-        :limit.sync="meterReadListParam.limit"
-      />
-    </el-dialog>
+    <select-user :selectUserShow="selectUserShow" :headQuery="params" @handleFilter="handleFilter" />
   </div>
 </template>
 <script>
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
-import { getWaterInfo } from "@/api/userSetting"; //水表信息
-import Pagination from "@/components/Pagination";
+import { getWaterInfo } from "@/api/userAccount"; //水表信息
+import SelectUser from "@/components/SelectUser/index";
 
 export default {
   name: "AccountUser",
+  components: { SelectUser },
   data() {
     return {
       userInfo: {
         //用户信息
       },
-      waterInfo: {},
+      waterInfo: {}, //水表信息
       user: "admin",
       totalMoney: "333.00",
-      viewWaterHistory:false,
-      histotal:0,
-      params:{
-        page:1,
-        Limit:10,
-        CustomerQueryType:"",
-        CustomerQueryValue:"",
+      selectUserShow: false,
+      histotal: 0,
+      params: {
+        page: 1,
+        limit: 10,
+        CustomerQueryType: "",
+        CustomerQueryValue: ""
       },
+      userList: []
     };
   },
+
   methods: {
-    searchEnter(num) {
-      if (num == 2) {
-        this.params.CustomerQueryValue = this.userInfo.CustomerName;
-      } else if (num == 3) {
-        this.params.CustomerQueryValue = this.userInfo.Tel;
-      } else if (num == 1) {
-        this.params.CustomerQueryValue = this.userInfo.CustomerNo;
-      } else if (num == 4) {
-        this.params.CustomerQueryValue = this.userInfo.IdentityNo;
+    searchEnter(num, val) {
+      if (val == "") {
+        return;
       }
+      this.params.CustomerQueryType = num;
+      this.params.CustomerQueryValue = val;
       GetCustomerDataList(this.params).then(res => {
-        console.log(res);
+        this.userInfo = {};
+        this.waterInfo = {};
+        if (res.data.length == 0) {
+          this.$message({
+            message: "该用户不存在",
+            type: "warning"
+          });
+          return false;
+        }
+        if (res.data.length > 1) {
+          this.userList = res.data;
+          this.selectUserShow = true;
+        } else {
+          this.userInfo = res.data[0];
+          this.getWaterMeterInfo(res.data[0].Id);
+        }
+      });
+    },
+    handleFilter(val) {
+      this.userInfo = val;
+      this.getWaterMeterInfo(val.Id);
+    },
+    getWaterMeterInfo(id) {
+      getWaterInfo({ customerId: id }).then(res => {
+        if (res.code == 0) {
+          this.waterInfo = res.data;
+        } else {
+          this.$message({
+            type: "warning",
+            message: res.msg ? res.msg : "未查询到该用户水表信息"
+          });
+        }
       });
     }
   },

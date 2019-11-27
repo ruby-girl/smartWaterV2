@@ -99,9 +99,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-/deep/ .dialog-head-lv .el-dialog__header {
-  background-color: #5e920e !important;
-}
+// /deep/ .dialog-head-lv .el-dialog__header {
+//   background-color: #5e920e !important;
+// }
 .main-padding-20-y{
     padding: 25px;
 }
