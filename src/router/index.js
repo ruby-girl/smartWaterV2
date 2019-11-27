@@ -320,8 +320,7 @@ export const asyncRoutes = [
           title: '用户销户',
           roles: ['1']
         }
-      },
-
+      }
     ]
   },
   // 404 page must be placed at the end !!!
