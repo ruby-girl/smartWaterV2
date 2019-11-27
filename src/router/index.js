@@ -292,39 +292,29 @@ export const asyncRoutes = [
     ]
   },
 
-  // {
-  //   path: '/userManagement',
-  //   component: Layout,
-  //   redirect: '/userManagement/userTransfer',
-  //   alwaysShow: true, // will always show the root menu
-  //   name: 'userManagement',
-  //   meta: {
-  //     title: '用户管理',
-  //     icon: 'iconfont iconcaidan-yewuguanli',
-  //     roles: ['1']
-  //   },
-  //   children: [
-  //     {
-  //       path: 'userTransfer',
-  //       component: () => import('@/views/userManagement/userTransfer/index'),
-  //       name: 'userTransfer',
-  //       meta: {
-  //         title: '用户过户',
-  //         roles: ['1']
-  //       }
-  //     },
-  //     {
-  //       path: 'userAccount',
-  //       component: () => import('@/views/userManagement/userAccount/index'),
-  //       name: 'userAccount',
-  //       meta: {
-  //         title: '用户销户',
-  //         roles: ['1']
-  //       }
-  //     },
-
-  //   ]
-  // },
+  {
+    path: '/userManagement',
+    component: Layout,
+    redirect: '/userManagement/userTransfer',
+    alwaysShow: true, // will always show the root menu
+    name: 'userManagement',
+    meta: {
+      title: '用户管理',
+      icon: 'iconfont iconcaidan-yewuguanli',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: 'userTransfer',
+        component: () => import('@/views/userManagement/userTransfer/index'),
+        name: 'userTransfer',
+        meta: {
+          title: '用户过户',
+          roles: ['1']
+        }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
