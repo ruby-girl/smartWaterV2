@@ -20,7 +20,7 @@ import MechanicalWater  from "./conmponents/MechanicalWater";
 import InternetWater  from "./conmponents/InternetWater";
 import IcWater  from "./conmponents/ICWater";
 import RemoterWater  from "./conmponents/RemoterWater";
-import { getDictionaryOption } from "@/utils/permission";
+import { getDictionaryOption } from "@/utils/permission";//获取字典项
 export default {
   name: "WaterMeterSetting",
   components:{MechanicalWater,InternetWater,IcWater,RemoterWater},
