@@ -80,7 +80,7 @@ export default {
       companyShow:true
     };
   },
-  wacj: {
+  watch: {
     companyOptions() {
       this.companyShow=true
       if (this.companyOptions.length == 1) {
