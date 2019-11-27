@@ -136,7 +136,7 @@ export default {
         this.disEdit = false;
         this.disDel = false;
       }
-      if(data.Level==6){
+      if (data.Level == 6) {
         this.disAdd = false;
       }
     },
@@ -151,7 +151,7 @@ export default {
       _this.$refs.editDialog.param.pieName = selectNode.label;
       _this.$refs.editDialog.param.Id = selectNode.Id;
       _this.$refs.editDialog.param.Pid = selectNode.Pid;
-      console.log(selectNode)
+      console.log(selectNode);
       switch (type) {
         case 1:
           if (selectNode.Id === undefined || selectNode.Id == 0) {
@@ -245,8 +245,10 @@ export default {
           promptInfoFun(this, 1, res.message);
         }
       });
-
-      GetWaterTypeCustomerNum(query).then(res => {
+      let parms = this.query;
+    
+      parms.WaterTypeId = -1;
+      GetWaterTypeCustomerNum(parms).then(res => {
         //用户统计数据
         if (res.code == 0) {
           this.$refs.tableChild.StatisticsData = res.data;
