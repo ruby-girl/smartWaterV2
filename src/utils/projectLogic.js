@@ -56,12 +56,8 @@ export function getOrgTree(callback,id) {
     }
   GetAreaListNotPNode({pid:id}).then(res => {
     let resResult =res.data
-    // orgTree[0].id = resResult[0].Id
-    // orgTree[0].label = resResult[0].label
      let orgTree= resResult.map(org => mapTree(org));
      orgTree.unshift(orgTreeAll)
-    //  console.log(orgTree)
-    //  orgTreeAll.push(orgTree)
     return callback(orgTree)
   });
 }

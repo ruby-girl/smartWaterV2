@@ -65,7 +65,7 @@
   </el-dialog>
 </template>
 <script>
-import { SelectUpdateWaterPropertyBeforeInfo } from "@/api/system";
+import { SelectUpdateWaterPropertyBeforeInfo,SelectWaterPropertyInfoById } from "@/api/system";
 import { ladderChangeArr } from "@/utils/index";
 export default {
   props: {
@@ -85,9 +85,15 @@ export default {
     constituteShow() {
       this.AdialogFormVisible = this.constituteShow;
       if (!this.constituteShow) return false; //如果监听ID，编辑行数据后，ID依然不会变，所以在弹窗显示再请求数据
-      SelectUpdateWaterPropertyBeforeInfo({ id: this.id }).then(res => {
+      if(this.type!==1){
+         SelectUpdateWaterPropertyBeforeInfo({ id: this.id }).then(res => {
         this.details = ladderChangeArr(res.data); //阶梯转换数组
       });
+      }else{
+         SelectWaterPropertyInfoById({ waterPropertyId: this.id }).then(res => {
+        this.details = ladderChangeArr(res.data); //阶梯转换数组
+      });
+      } 
     },
     AdialogFormVisible(val, oldVal) {
       if (val === oldVal) {

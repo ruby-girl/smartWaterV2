@@ -83,7 +83,14 @@ export function SelectWaterPropertyHisInfo(id,data){
     params:id,
   })
 }
-
+//列查看最新--水价构成
+export function SelectWaterPropertyInfoById(id){
+  return request({
+    url: '/WaterProperty/SelectWaterPropertyInfoById',
+    method: 'post',  
+    params:id
+  })
+}
 //撤销用水性质
 export function ResetUpdateWaterPropertyInfo(data){
   return request({

@@ -51,7 +51,9 @@
               <el-input type="textarea" v-model="name"></el-input>
             </el-form-item>
           </el-form>
-        
+          <el-button type="success" size="mini" @click="addRole">
+              <i class="icon iconfont">&#xe688;</i>附件
+            </el-button>
         </div>
         <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp">
           收起

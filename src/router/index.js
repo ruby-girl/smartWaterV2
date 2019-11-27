@@ -276,7 +276,7 @@ export const asyncRoutes = [
     name: 'waterMetermangments',
     meta: {
       title: '水表管理',
-      icon: 'iconfont iconcaidan-yewuguanli',
+      icon: 'iconfont iconshuibiaoguanli',
       roles: ['1']
     },
     children: [
@@ -300,7 +300,7 @@ export const asyncRoutes = [
     name: 'userManagement',
     meta: {
       title: '用户管理',
-      icon: 'iconfont iconcaidan-yewuguanli',
+      icon: 'iconfont iconrenyuan',
       roles: ['1']
     },
     children: [
