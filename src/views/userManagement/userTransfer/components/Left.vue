@@ -6,7 +6,7 @@
         <div class="transfer-container">
           <div class="display-flex align-items-center justify-content-flex-justify">
             <div class="font-weight" style="color:#535353">原用户信息</div>
-            <el-button type="success" size="mini" @click="addRole">
+            <el-button type="success" size="mini">
               <i class="iconfont icontianjia"></i>读卡
             </el-button>
           </div>
@@ -35,57 +35,83 @@
           <el-form ref="form" label-width="70px">
             <div class="display-flex align-items-center justify-content-flex-justify">
               <el-form-item label="姓名：">
-                <el-input v-model="name"></el-input>
+                <el-input v-model="newUser.NewCustomerName"></el-input>
               </el-form-item>
               <el-form-item label="人口：" label-width="45px">
-                <el-input v-model="name" style="width:40px;"></el-input>
+                <el-input v-model="newUser.NewPeopleNo" style="width:40px;"></el-input>
               </el-form-item>
             </div>
             <el-form-item label="电话：">
-              <el-input v-model="name"></el-input>
+              <el-input v-model="newUser.NewTel"></el-input>
             </el-form-item>
             <el-form-item label="证件号：">
-              <el-input v-model="name"></el-input>
+              <el-input v-model="newUser.NewIdentityNo"></el-input>
             </el-form-item>
             <el-form-item label="备注：">
-              <el-input type="textarea" v-model="name"></el-input>
+              <el-input type="textarea" v-model="newUser.Remark"></el-input>
             </el-form-item>
           </el-form>
-          <el-button type="success" size="mini" @click="addRole">
-              <i class="icon iconfont">&#xe688;</i>附件
-            </el-button>
+          <div class="bottom-btn-box">
+             <el-button style="padding:8px 14px;" type="success" size="mini"  @click="fileShow=true"><i class="iconfont iconsousuo"></i>附件</el-button>
+          </div>  
         </div>
-        <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp">
+        <span v-show="!ifShowChild" class="telescopic telescopic2" @click="getUp">
           收起
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
         </span>
+        <div class="bottom-btn-box">
+          <el-button type="primary" @click="account()" size="mini" style="padding:8px 14px;">
+          确认过户
+        </el-button>
+        </div>
+        <fileList :show.sync="fileShow" :file.sync="file"></fileList>
       </div>
 </template>
 <script>
 import "@/styles/organization.scss";
+import FileList from "./FileList"
 export default {
-  name: "userSeting",
-  components: {},
+  components: {FileList},
+  props: {ifShow:{}},
   data() {
     return {
-      ifShow: false,
-      name:'r'
+      ifShowChild: false,
+      fileShow:false,
+      name:'r',
+      user:{},
+      newUser:{
+        NewCustomerName:'',//姓名
+        NewTel:'',//电话
+        NewPeopleNo:'',//人口
+        NewIdentityNo:'',//证件号
+        Remark:'',//备注
+      },     
+      file:[]    
     };
+  },
+  watch:{
+    ifShow(v){
+      this.ifShowChild=v
+    }
   },
   methods: {
     /**
      * 伸缩功能
      * */
     getUp() {
-      this.ifShow = !this.ifShow;
-      if (this.ifShow) {
-        document.getElementsByClassName("user_tree")[0].classList.add("hide");
-      } else {
-        document
-          .getElementsByClassName("user_tree")[0]
-          .classList.remove("hide");
-      }
+      this.$emit("getUp",this.ifShowChild)
+      // this.ifShow = !this.ifShow;
+      // if (this.ifShow) {
+      //   document.getElementsByClassName("user_tree")[0].classList.add("hide");
+      // } else {
+      //   document
+      //     .getElementsByClassName("user_tree")[0]
+      //     .classList.remove("hide");
+      // }
     },
+    account(){
+      console.log(this.file)
+    }
    
   },
   mounted() {}
@@ -175,5 +201,9 @@ export default {
   /deep/ .el-form-item {
     margin-bottom: 10px;
   }
+}
+.bottom-btn-box{
+  text-align: center;
+  padding: 25px 0;
 }
 </style>

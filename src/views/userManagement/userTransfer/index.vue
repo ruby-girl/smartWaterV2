@@ -1,7 +1,7 @@
 <template>
   <div class="tree_container">
     <div class="user_box">
-      <left-box></left-box>
+      <left-box @getUp="getUp" :ifShow="ifShow"></left-box>
       <div class="user_table">
         <div class="section-full-container">
           <div ref="formHeight">
@@ -122,8 +122,8 @@ export default {
     /**
      * 伸缩功能
      * */
-    getUp() {
-      this.ifShow = !this.ifShow;
+    getUp(v) {
+      this.ifShow =v;
       if (this.ifShow) {
         document.getElementsByClassName("user_tree")[0].classList.add("hide");
       } else {
@@ -181,21 +181,17 @@ export default {
         });
       });
     },
-    addRole() {
-      this.temp = {};
-      this.dialogStatus = "create";
-      this.dialogFormVisible = true;
-    },
+    
     createData(dialog) {
-      addRole(dialog.RoleName).then(res => {
-        this.$message({
-          message: res.message,
-          type: "success",
-          duration: 4000
-        });
-        this.dialogFormVisible = false;
-        this.handleFilter();
-      });
+      // addRole(dialog.RoleName).then(res => {
+      //   this.$message({
+      //     message: res.message,
+      //     type: "success",
+      //     duration: 4000
+      //   });
+      //   this.dialogFormVisible = false;
+      //   this.handleFilter();
+      // });
     },
     updateData(dialog) {
       updateRole(dialog.RoleName, dialog.Id).then(res => {
@@ -301,13 +297,6 @@ export default {
     .el-button--small {
       padding: 7px 15px;
     }
-  }
-}
-.transfer-container {
-  padding: 5px;
-  background: #f5f5f5;
-  /deep/ .el-form-item {
-    margin-bottom: 10px;
   }
 }
 </style>
