@@ -75,7 +75,7 @@
             @updateData="updateData"
           />
         </div>
-        <span v-show="ifShow" class="telescopic telescopic1" @click="getUp">
+        <span v-show="ifShow" class="telescopic telescopic1" @click="getUp(false)">
           展开
           <i class="iconfont iconshouqi1" style="font-size: 12px;"></i>
         </span>
@@ -123,6 +123,7 @@ export default {
      * 伸缩功能
      * */
     getUp(v) {
+      console.log(v)
       this.ifShow =v;
       if (this.ifShow) {
         document.getElementsByClassName("user_tree")[0].classList.add("hide");

@@ -12,19 +12,19 @@
           </div>
           <el-form ref="form" label-width="70px" style="margin-top:13px;">
             <el-form-item label="姓名：">
-              <el-input v-model="name" @keyup.enter.native="handleSelect(name,1)"></el-input>
+              <el-input v-model="user.CustomerName" @keyup.enter.native="handleSelect(user.CustomerName,2)"></el-input>
             </el-form-item>
             <el-form-item label="电话：">
-              <el-input v-model="name" @keyup.enter.native="handleSelect"></el-input>
+              <el-input v-model="user.Tel" @keyup.enter.native="handleSelect(user.Tel,1)"></el-input>
             </el-form-item>
             <el-form-item label="用户编号：">
-              <el-input v-model="name" @keyup.enter.native="handleSelect"></el-input>
+              <el-input v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
             </el-form-item>
             <el-form-item label="证件号：">
-              <el-input v-model="name" @keyup.enter.native="handleSelect"></el-input>
+              <el-input v-model="user.IdentityNo" @keyup.enter.native="handleSelect(user.IdentityNo,1)"></el-input>
             </el-form-item>
             <el-form-item label="地址：">
-              <el-input v-model="name" @keyup.enter.native="handleSelect"></el-input>
+              <el-input v-model="user.Address" @keyup.enter.native="handleSelect(user.Address,1)"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -115,6 +115,14 @@ export default {
      * 伸缩功能
      * */
     getUp() {
+      this.ifShowChild=true
+      if (this.ifShow) {
+        document.getElementsByClassName("user_tree")[0].classList.add("hide");
+      } else {
+        document
+          .getElementsByClassName("user_tree")[0]
+          .classList.remove("hide");
+      }
       this.$emit("getUp",this.ifShowChild)
       // this.ifShow = !this.ifShow;
       // if (this.ifShow) {
@@ -130,6 +138,7 @@ export default {
     },
     // 模糊查询用户
     handleSelect(val,n){
+      debugger
       if(!val) {
         this.user={}
         return false
