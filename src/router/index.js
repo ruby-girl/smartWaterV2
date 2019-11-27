@@ -312,6 +312,15 @@ export const asyncRoutes = [
           title: '用户过户',
           roles: ['1']
         }
+      },
+      {
+        path: 'userAccount',
+        component: () => import('@/views/userManagement/userAccount/index'),
+        name: 'userAccount',
+        meta: {
+          title: '用户销户',
+          roles: ['1']
+        }
       }
     ]
   },
