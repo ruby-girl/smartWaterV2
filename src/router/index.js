@@ -291,7 +291,7 @@ export const asyncRoutes = [
       }
     ]
   },
-<<<<<<< HEAD
+
   // {
   //   path: '/userManagement',
   //   component: Layout,
