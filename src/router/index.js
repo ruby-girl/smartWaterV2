@@ -321,7 +321,7 @@ export const asyncRoutes = [
           roles: ['1']
         }
       },
-     
+
     ]
   },
   // 404 page must be placed at the end !!!
