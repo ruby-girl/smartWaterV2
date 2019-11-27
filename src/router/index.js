@@ -314,13 +314,14 @@ export const asyncRoutes = [
       },
       {
         path: 'userAccount',
-        component: () => import('@/views/userManageMent/userAccount/index'),
+        component: () => import('@/views/userManagement/userAccount/index'),
         name: 'userAccount',
         meta: {
           title: '用户销户',
           roles: ['1']
         }
-      }
+      },
+     
     ]
   },
   // 404 page must be placed at the end !!!
