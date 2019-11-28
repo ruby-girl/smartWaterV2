@@ -10,6 +10,16 @@
   export default {
     name: "SubTree",
     props: ['treeData'],
+    data(){
+      return {
+        datas:[]
+      }
+    },
+    watch: {
+      datas(){
+        this.getClick()
+      }
+    },
     methods: {
       /**
        * 遍历树状图数据，获取选中ID 及其所有父级ID
@@ -63,27 +73,26 @@
           nexts = nexts.nextSibling;
         }
         return nodes; //最后按从老大到老小的顺序，把这一组元素返回
+      },
+      getClick(){
+        let _this = this
+        this.$nextTick(() => {
+          $('#userTree li').on('click', function (e) {
+            e.stopPropagation()
+            $(this).addClass('on')
+            $(this).siblings().removeClass('on')
+            $(this).children('ul').removeClass('none')
+            $(this).siblings().children('ul').addClass('none')
+            $(this).siblings().find('li').removeClass('on')
+            $(this).siblings().find('ul').addClass('none')
+            if ($(this).children('ul').length <= 0) {
+              let curId = $(this).attr('data-id')
+              _this.getParentId(curId, _this.datas[0])
+            }
+          });
+
+        })
       }
-    },
-    mounted() {
-      let _this = this, data = this.$parent.data
-      this.$nextTick(() => {
-        $('#userTree li').on('click', function (e) {
-          e.stopPropagation()
-          $(this).addClass('on')
-          $(this).siblings().removeClass('on')
-          $(this).children('ul').removeClass('none')
-
-          $(this).siblings().children('ul').addClass('none')
-          $(this).siblings().find('li').removeClass('on')
-          $(this).siblings().find('ul').addClass('none')
-          if ($(this).children('ul').length <= 0) {
-            let curId = $(this).attr('data-id')
-            _this.getParentId(curId, data[0])
-          }
-        });
-
-      })
     }
   }
 </script>

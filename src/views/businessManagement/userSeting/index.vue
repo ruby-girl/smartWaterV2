@@ -85,7 +85,7 @@ export default {
         AreaId: "-1",
         WaterTypeId: -1,
         limit: 10,
-        page: 0,
+        page: 1,
         sort: "",
         filed: "",
         createUserId: "",
@@ -246,7 +246,7 @@ export default {
         }
       });
       let parms = this.query;
-    
+
       parms.WaterTypeId = -1;
       GetWaterTypeCustomerNum(parms).then(res => {
         //用户统计数据

@@ -16,12 +16,11 @@
       </div>
       <!--列表组建 s-->
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
-        <el-table-column
-          type="index"
-          label="序号"
-          width="80"
-          align="center"
-          fixed="left"/>
+        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+          <template slot-scope="scope">
+            <span>{{(rbp.page - 1) * rbp.limit+ scope.$index + 1}}</span>
+          </template>
+        </el-table-column>
         <template v-for="(item ,index) in tableHead" >
           <el-table-column
             v-if="item.IsFreeze"

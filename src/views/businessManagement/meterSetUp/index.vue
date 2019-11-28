@@ -15,12 +15,11 @@
                   @sort-change="sortChanges" highlight-current-row ref="multipleTable"
                   :row-class-name="tableRowClassName"
                   @row-click="getCurInfo">
-          <el-table-column
-            type="index"
-            label="序号"
-            width="80"
-            align="center"
-            fixed="left"/>
+          <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(param.page - 1) * param.limit+ scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
           <template v-for="(item ,index) in tableHead">
             <el-table-column
               v-if="item.IsFreeze"

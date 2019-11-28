@@ -21,9 +21,12 @@
     },
     watch:{
       data(){
+        console.log(this.data)
         this.$nextTick(()=>{
-          if(this.$refs.subTreeChild)
-          this.$refs.subTreeChild[0].getParentId(this.Id,this.data[0])
+          if(this.$refs.subTreeChild){
+            this.$refs.subTreeChild[0].getParentId(this.Id,this.data[0])
+            this.$refs.subTreeChild[0].datas = this.data
+          }
         })
       }
     },

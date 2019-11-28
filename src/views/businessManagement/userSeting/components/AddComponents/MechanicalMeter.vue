@@ -285,6 +285,7 @@
       getTreeData(Id) {
         GetAreaListByWaterFactory({'waterFactoryId':Id}).then(res => {
           if (res.code ==0 ) {
+            this.$refs.areaTree.data = []
             this.$refs.areaTree.data.push(res.data)
           } else {
             promptInfoFun(this,1,res.message)
