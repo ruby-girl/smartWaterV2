@@ -83,7 +83,7 @@ export default {
         LowTensionNumber1: "0",
         LowTensionNumber2: "0",
         MemorizerErrorNumber: "0",
-        MemorizerErrorNumber: "0"
+        BatteryPoweredErrorNumber: "0"
       }
     };
   },

@@ -9,8 +9,7 @@
       </el-form-item>
       <el-form-item label="当审核不通过时，流程：">
         <el-select v-model="form.ToId" placeholder="结束"  size="small">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+          <el-option v-for="(item,index) in nodeIds" :label="item.ModuleName" :value="item.Id" :key="index">{{item.ModuleName}} {{item.Id}}</el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -23,10 +22,9 @@
     <!--配置操作员-->
     <el-form :inline="true" :model="form" class="person_form" v-show="type==3">
       <el-form-item label="名称：">
-        <el-input v-model="form.ModuleName" placeholder="操作员" size="small"></el-input>
+        <el-input v-model="form.ModuleName" disabeld placeholder="操作员" size="small"></el-input>
       </el-form-item>
     </el-form>
-
     <div class="card_box">
       <el-tabs type="border-card" v-model="activeName">
         <!--按人员选择-->
@@ -68,6 +66,7 @@
     <div slot="footer" class="dialog-footer">
       <el-button size="mini" type="primary" v-show="type==1" @click="saveFun2">确认</el-button>
       <el-button size="mini" type="primary" v-show="type==2" @click="saveFun1">确认</el-button>
+      <el-button size="mini" type="primary" v-show="type==3" @click="saveFun3">确认</el-button>
       <el-button size="mini" @click="cancleFun">取消</el-button>
     </div>
   </el-dialog>
@@ -86,6 +85,7 @@
     components:{CheckNodes:CheckNodes},
     data() {
       return {
+        nodeIds:[],//暂存本地流程节点所有ID
         activeName:'1',
         choseItem:[],
         module:{},
@@ -118,10 +118,25 @@
         roleForm:{//按角色查
           role:'',
           person:''
-        }
+        },
+        processID:''//当前流程ID
       }
     },
     methods: {
+      getMembers(){//遍历所选择复选框信息
+        let choseData = this.$refs.peopleChild.persons
+        choseData.forEach(item=>{
+          if(item.isSow){
+            let obj = {
+              Id: '',
+              ConfigType: item.ProcessMemberType,
+              ObjectId: item.Id,
+              ObjectName: item.Name
+            }
+            this.module.Members.push(obj)
+          }
+        })
+      },
       getSelectData(funName,type){//获取部门，角色下拉选项数据
         funName().then(res => {
           if (res.code ==0 ) {
@@ -249,19 +264,8 @@
       },
       saveFun1(){//公用模块保存
         this.module.Members = []
-        let choseData = this.$refs.peopleChild.persons
-        choseData.forEach(item=>{
-          if(item.isSow){
-            let obj = {
-              Id: '',
-              ConfigType: item.ProcessMemberType,
-              ObjectId: item.Id,
-              ObjectName: item.Name
-            }
-            this.module.Members.push(obj)
-          }
-        })
         this.module.ModuleName = this.form.ModuleName
+        this.getMembers()//获取复选框数据集合
         UpdateProcessModuleInfo(this.module).then(res => {
           if (res.code ==0 ) {
             promptInfoFun(this,2,res.message)
@@ -274,32 +278,53 @@
       },
       saveFun2(){//流程保存
         this.module.Members = []
-        let choseData = this.$refs.peopleChild.persons
-        choseData.forEach(item=>{
-          if(item.isSow){
-            let obj = {
-              Id: '',
-              ConfigType: item.ProcessMemberType,
-              ObjectId: item.Id,
-              ObjectName: item.Name
-            }
-            this.module.Members.push(obj)
-          }
-        })
-        this.module.ModuleName = this.form.ModuleName
-        console.log(this.module)
+        this.module.ModuleName = this.form.ModuleName//该节点名称
+        this.module.ProcessConfigLine = {//暂存当前节点执行失败，跳转至某节点数据
+          FromId:this.module.Id,
+          ToId:this.form.ToId
+        }
+        this.getMembers()//获取复选框数据集合
+        let newProcessInfo = {
+          id: this.processID,//流程ID
+          data: this.module,//新修改流程节点信息
+          type:1
+        }
+
+        Bus.$emit('saveProcessNodeInfo',newProcessInfo)//暂存整个流程所有节点信息
+        this.configVisible = false
+        this.resetFun()
       },
-      cancleFun(){
+      saveFun3(){//操作员保存
+        this.module.Members = []
+        this.module.ModuleName = this.form.ModuleName//该节点名称
+        this.getMembers()//获取复选框数据集合
+        let newProcessInfo = {
+          id: this.processID,//流程ID
+          data: this.module,//新修改流程节点信息
+          type:2
+        }
+        Bus.$emit('saveProcessNodeInfo',newProcessInfo)//暂存整个流程所有节点信息
+        this.configVisible = false
+        this.resetFun()
+      },
+      cancleFun(){//取消操作
         localStorage.removeItem('choseData');
         this.resetFun()
       },
-      resetFun(){
+      resetFun(){//重置子元素表单信息
         this.activeName = '1'
         this.configVisible = false
         this.$refs.peopleChild.data = []
         this.$refs.roleChild.data = []
         this.$refs['roleForm'].resetFields();
         this.$refs['personForm'].resetFields();
+      },
+      getLocalstorageData(data){//动态获取节点，回归线下拉数据
+        data.forEach((item,index)=>{//该节点之后的节点 不允许选择
+          if(item.Id === this.module.Id){
+            this.nodeIds = data.slice(0,index)
+          }
+        })
       }
     },
     mounted() {
@@ -308,6 +333,10 @@
       Bus.$off('deleteCheckList')
       Bus.$off('addCheckList')
       Bus.$on('NodesSetFun', (msg) => {//触发流程节点配置
+        let exp = undefined
+        if(msg.item.ProcessConfigLine!=exp){
+          this.form.ToId = msg.item.ProcessConfigLine.ToId
+        }
         this.type = msg.type
         this.module = msg.item
         this.form.ModuleName = msg.item.ModuleName

@@ -105,8 +105,9 @@
         :cell-style="{'padding':'5px 0'}"
         highlight-current-row
         @current-change="handleCurrentChange"
+        @sort-change="sortChanges"
       >
-         <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
           <template slot-scope="scope">
             <span>{{(WLWQueryParam.page - 1) * WLWQueryParam.limit+ scope.$index + 1}}</span>
           </template>
@@ -282,6 +283,14 @@ export default {
         //统计
         that.ErrorList = res.data;
       });
+    },
+    sortChanges({ column, prop, order }) {
+      //排序
+      this.WLWQueryParam.page = 1;
+      this.WLWQueryParam.filed = prop;
+      this.WLWQueryParam.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      this.searchWLWMeterInfo();
     },
     setCustomData() {
       //表格自定义方法

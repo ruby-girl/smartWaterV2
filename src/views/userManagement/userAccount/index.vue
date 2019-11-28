@@ -2,7 +2,7 @@
   <div class="section-container">
     <el-container>
       <el-aside width="0">
-        <account-user class="account-user" />
+        <account-user class="account-user" :editUserList="editUserList" />
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
           用户销户
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
@@ -11,7 +11,11 @@
 
       <el-main>
         <h3>销户查询</h3>
-        <selecte-head />
+        <selecte-head
+          :editUserList="editUserList"
+          :selectHead="listQuery"
+          @handleFilter="seachAccountOrder"
+        />
         <div class="cl-operation1 clearfix">
           <el-button
             type="warning"
@@ -22,7 +26,7 @@
           >
             <i class="icon iconfont">&#xe678;</i> 表格自定义
           </el-button>
-          <el-button type="success" size="small" class="fr" @click>
+          <el-button type="success" size="small" class="fr" @click="excelWaterAccountOrder">
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
         </div>
@@ -37,6 +41,7 @@
             style="width: 100%;"
             :header-cell-style="{'background-color': '#F0F2F5'}"
             :cell-style="{'padding':'7px 0'}"
+            @sort-change="sortChanges"
           >
             <el-table-column fixed="left" label="序号" width="60" align="center">
               <template slot-scope="scope">
@@ -86,6 +91,10 @@ import AccountUser from "./components/AccountUser";
 import SelecteHead from "./components/SelecteHead";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
+import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
+import { legalTime } from "@/utils/index"; //时间格式化
+
 export default {
   name: "userAccount",
   components: { AccountUser, SelecteHead, customTable, Pagination },
@@ -97,26 +106,37 @@ export default {
         limit: 10,
         filed: "",
         sort: "",
-        roleName: "", // 角色名称
-        editUserId: "-1", // 操作人
-        editStartTime: "", // 操作时间起
-        editEndTime: "", // 操作时间止
-        tableId: "0000004"
+        customerQueryType: "", //查询类型
+        customerQueryValue: "", //查询值
+        waterFactoryId: "-1", //水厂ID
+        userType: "-1", // 用户类型
+        waterMeterType: "-1", //水表类型
+        createUserId: "-1", // 操作人
+        createStartTime: "", // 操作时间起
+        createEndTime: "", // 操作时间止
+        tableId: "0000026"
       },
       checksData: [],
       tableKey: 0,
       tableData: [],
       tableHeight: null,
-      total: 10,
+      total: 0,
       customHeight: "", //自定义高度
-      ifShow: false
+      ifShow: false,
+      editUserList: [] //操作员、经办人
     };
+  },
+  created() {
+    getSelectUser().then(res => {
+      this.editUserList = res.data;
+    });
   },
   mounted() {
     this.tableHeight =
       document.getElementsByClassName("el-main")[0].offsetHeight -
-      document.getElementById("table").offsetTop -58
-     
+      document.getElementById("table").offsetTop -
+      58;
+
     this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },
@@ -127,8 +147,8 @@ export default {
       that.$nextTick(() => {
         that.tableHeight =
           document.getElementsByClassName("el-main")[0].offsetHeight -
-          document.getElementById("table").offsetTop -58
-        
+          document.getElementById("table").offsetTop -
+          58;
       });
     }
   },
@@ -147,26 +167,62 @@ export default {
     }
   },
   methods: {
+    //表格自定义方法
     setCustomData() {
-      //表格自定义方法
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
     },
+    //左侧显示隐藏
     closeAccount() {
       this.ifShow = !this.ifShow;
       if (this.ifShow) {
         document.getElementsByClassName("el-aside")[0].classList.remove("none");
         document.getElementsByClassName("el-aside")[0].classList.add("hide");
-       
       } else {
-        document
-          document.getElementsByClassName("el-aside")[0].classList.remove("hide");
-        setTimeout(() => {
-          document
-            .getElementsByClassName("el-aside")[0]
-            .classList.add("none");
-        }, 160);
+        document.getElementsByClassName("el-aside")[0].classList.remove("hide");
+        document.getElementsByClassName("el-aside")[0].classList.add("none");
       }
+    },
+    //查询记录
+    seachAccountOrder() {
+      waterAccountPost(this.listQuery).then(res => {
+        if (res.code == 0) {
+          this.tableData = res.data;
+          this.total = res.count;
+          let timeObj = this.tableData;
+          timeObj.forEach((item, index) => {
+            for (let i in item) {
+              i == "CancelDate" ? (item[i] = legalTime(item[i])) : "";
+            }
+          });
+        } else {
+          this.$message({
+            type: "warning",
+            msg: res.msg ? res.msg : "查询失败"
+          });
+        }
+      });
+    },
+    //导出
+    excelWaterAccountOrder() {
+      excelWaterAccount(this.listQuery).then(res => {
+        if (res.code == 0) {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        } else {
+          this.$message({
+            type: "warning",
+            msg: res.msg ? res.msg : "导出失败  "
+          });
+        }
+      });
+    },
+    sortChanges({ column, prop, order }) {
+      //排序
+      this.listQuery.page = 1;
+      this.listQuery.filed = prop;
+      this.listQuery.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      this.seachAccountOrder();
     }
   }
 };
@@ -179,7 +235,7 @@ export default {
       padding: 0;
       margin-bottom: 0;
       position: relative;
-      transition:width 2s;
+      transition: width 0.2s;
     }
     .el-main {
       background: #fff;
@@ -214,7 +270,7 @@ export default {
     cursor: pointer;
     box-shadow: 1px 1px 5px #cecece;
   }
-  .telescopic1 { 
+  .telescopic1 {
     left: 0;
     border-bottom-right-radius: 15px;
     border-top-right-radius: 15px;
@@ -229,16 +285,14 @@ export default {
     // padding: 0 !important;
     // overflow: hidden;
     // // margin-right: 0 !important;
-       margin-right: 14px;
-
+    margin-right: 14px;
   }
   .none {
     width: 0 !important;
     // padding: 0 !important;
     // overflow: hidden;
     // // margin-right: 0 !important;
-       margin-right: 0px!important;
-
+    margin-right: 0px !important;
   }
 }
 </style>

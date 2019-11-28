@@ -1,7 +1,7 @@
 <template>
   <div class="auditTeam">
     <ul class="clearfix" id="teamWidth">
-      <li v-for="(item,index) in teams" :key="index" :data-id="index">
+      <li v-for="(item,index) in teams" :key="index" :data-id="index" :class="item.Members.length >0?'':'filterName'">
         <h3 class="team_name">
           {{ item.ModuleName }}
           <i></i>
@@ -13,7 +13,7 @@
           <span class="btnSpan btnSpanRight" @click="deletePerson(item.Id)">删除</span>
         </p>
       </li>
-      <li class="addTeam" @click="addPerson">
+      <li class="addTeam filterName" @click="addPerson">
         <p><i class="iconfont icontianjia"></i>新增审核人组</p>
       </li>
     </ul>
@@ -34,19 +34,21 @@
     components:{configureDialog:configureDialog},
     data() {
       return {
-        teams: []
+        teams: [],
+        type: false//是否初始化
       }
     },
     methods:{
       getWidth(id,width){//动态设置用户组容易宽度
         document.getElementById(id).style.width = (this.teams.length + 1) * width + 30 + 'px'
         this.$nextTick(() => {
-          document.getElementById(id).parentNode.scrollLeft = (this.teams.length+1) * 160 + 30
+          this.type ? document.getElementById(id).parentNode.scrollLeft = (this.teams.length+1) * 160 + 30: document.getElementById(id).parentNode.scrollLeft = 0
         })
       },
       addPerson(){//新增节点用户组
         AddProcessModuleInfo().then(res => {//增加模组
           if (res.code ==0 ) {
+            this.type = true
             this.getMenuData()
             this.getWidth('teamWidth',160)
           } else {
@@ -64,6 +66,7 @@
         }).then(() => {
           DeleteProcessModuleInfo({'id':id}).then(res => {//删除节点
             if (res.code ==0 ) {
+              this.type = false
               promptInfoFun(this,2,res.message)
               this.getMenuData()
             } else {
@@ -102,7 +105,7 @@
         },
         animation: 150,
         sort: false,
-        filter:'.addTeam',
+        filter:'.filterName',
         onStart: function (/**Event*/evt) {//开始拖拽时，记录被拖拽元素
           localStorage.setItem('curObj',JSON.stringify(_this.teams[evt.oldIndex]))
           Bus.$emit('moveNodeEmpty')
@@ -111,7 +114,6 @@
           Bus.$emit('moveNode')
         },
     });
-
       Bus.$on('getNewInfo', () => {//接受当前子元素所选中的内容
         this.$nextTick(()=>{
           this.getMenuData()

@@ -157,3 +157,25 @@ export function ProcessCopy(data) {
 }
 
 
+/**
+ * 流程人组新增ID
+ * */
+export function GetMD5Id(data) {
+  return request({
+    url: '/ProcessConfig/GetMD5Id',
+    method: 'post',
+    params: data
+  })
+}
+
+
+/**
+ * 节点修改
+ * */
+export function UpdateProcessConfig(data) {
+  return request({
+    url: '/ProcessConfig/UpdateProcessConfig',
+    method: 'post',
+    data: data
+  })
+}

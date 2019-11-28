@@ -29,7 +29,7 @@
               <i v-show="item.type === 1?true:false" class="icon iconfont" style="color:#345e9e">&#xe65d;</i><!--word-->
               <i v-show="item.type === 2?true:false" class="icon iconfont" style="color:#389850">&#xe693;</i><!--excel-->
               <i v-show="item.type === 3?true:false" class="icon iconfont" style="color:#dc2e1b">&#xe691;</i><!--pdf-->
-              <span>{{ item.name }}</span>
+              <span class="picName" :title="item.name">{{ item.name }}</span>
             </p>
             <i class="el-icon-view" @click="handlePreview(item)" />
             <i class="el-icon-close" @click="handleRemove(item.id)" />
@@ -243,12 +243,13 @@
         cursor: pointer;
         position: relative;
         >div{position: relative;border-bottom: solid 1px #eee;margin: 0;padding: 0px;
-          >p{margin: 0;display: inline-block;}
+          >p{margin: 0;display: inline-block;width: 100%;position: relative;line-height: 17px;}
         }
         padding: 0 15px;
         list-style-type: none;
         .el-icon-view{position: absolute;right: 25px;top:9px;cursor: pointer;}
         .el-icon-close{display: block;top:9px;}
+        .picName{display: inline-block;width: 80%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis}
       }
       .smallImg{
         width: 80px;height: 80px;

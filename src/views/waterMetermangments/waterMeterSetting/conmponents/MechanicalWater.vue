@@ -68,6 +68,7 @@
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'5px 0'}"
+        @sort-change="sortChanges"
       >
         <template v-for="(item ,index) in tableHeadData">
           <el-table-column
@@ -119,7 +120,11 @@
       center
       :close-on-click-modal="false"
     >
-      <water-meterHis :hisData="hisData" @sortProp="sortProp" :meterReadListParam="meterReadListParam" />
+      <water-meterHis
+        :hisData="hisData"
+        @sortProp="sortProp"
+        :meterReadListParam="meterReadListParam"
+      />
 
       <pagination
         v-show="histotal>0"
@@ -148,6 +153,7 @@ import {
 } from "@/api/waterMeterMang";
 import WaterMeterHis from "./intercomponents/WaterMeterHis";
 import EditJXWaterMeter from "./intercomponents/EditJXWaterMeter";
+ import { legalTime } from "@/utils/index";//时间格式化
 export default {
   //机械表
   name: "MechanicalWater",
@@ -194,8 +200,7 @@ export default {
       histotal: 0,
       editId: "", //获取行信息id
       editShow: false, //编辑
-      editInfo: {},
-   
+      editInfo: {}
     };
   },
   mounted() {
@@ -243,6 +248,14 @@ export default {
         that.histotal = res.count;
       });
     },
+    sortChanges({ column, prop, order }) {
+      //排序
+      this.wachMeterData.page = 1;
+      this.wachMeterData.filed = prop;
+      this.wachMeterData.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      this.searchWatetJX();
+    },
     searchWatetJX() {
       //查询
       let that = this;
@@ -250,6 +263,12 @@ export default {
         if (res.code == 0) {
           that.tableData = res.data;
           that.total = res.count;
+          let timeObj=that.tableData
+          timeObj.forEach((item,index)=>{
+              for(let i in item){
+                i=='ReadDate' ? item[i] = legalTime(item[i]) :''
+              }
+            })
         } else {
           that.$message({
             message: res.msg ? res.msg : "查询失败",
