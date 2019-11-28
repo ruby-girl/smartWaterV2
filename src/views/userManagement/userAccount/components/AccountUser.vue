@@ -4,7 +4,7 @@
     <div class="user_info">
       <div class="display-flex align-items-center justify-content-flex-justify">
         <h4>用户信息</h4>
-        <el-button type="success" size="mini" class="redingK">
+        <el-button type="success" size="mini" class="redingK" @click="handleFilterIC">
           <i class="iconfont icontianjia"></i>读卡
         </el-button>
       </div>
@@ -31,10 +31,12 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="地址：">
-          <el-input v-model="userInfo.Address"></el-input>
+          <el-input v-model="userInfo.Address" disabled></el-input>
         </el-form-item>
         <el-form-item label="账户余额：">
-          <el-input v-model="userInfo.Balance"></el-input>
+          <el-input class="totalMoney" v-model="userInfo.Balance" disabled>
+            <template slot="append">元</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="备注：">
           <el-input v-model="userInfo.Remark"></el-input>
@@ -45,59 +47,99 @@
       <h4>水表信息</h4>
       <el-form ref="waterInfo" :model="userInfo" label-width="70px">
         <el-form-item label="水表编号：">
-          <el-input v-model="waterInfo.WaterMeterNo"></el-input>
+          <el-input v-model="waterInfo.WaterMeterNo" disabled></el-input>
         </el-form-item>
         <el-form-item label="水表类型：">
-          <el-input v-model="waterInfo.WaterMeterTypeName"></el-input>
+          <el-input v-model="waterInfo.WaterMeterTypeName" disabled></el-input>
         </el-form-item>
-        <el-form-item label="表端余额">
-          <el-input v-model="waterInfo.MeterBalance"></el-input>
+        <el-form-item label="表端余额：">
+          <el-input
+            class="totalMoney"
+            v-model="waterInfo.MeterBalance"
+            :disabled="waterInfo.WaterMeterTypeName=='IC卡表水表'?false:true"
+          >
+            <template slot="append">元</template>
+          </el-input>
         </el-form-item>
       </el-form>
     </div>
-    <p>
-      <span class="text">总计：</span>
-      <span class="totalMoney">{{totalMoney}}</span>元
-    </p>
-    <p>
-      <span class="text">经办人：</span>
-      <el-input class="userJB" placeholder="请输入内容" v-model="user"></el-input>
-    </p>
+    <el-row>
+      <el-col :span="6">
+        <span class="text">总计：</span>
+      </el-col>
+      <el-col :span="16">
+        <span class="totalMoney">{{totalMoney}}</span>元
+      </el-col>
+    </el-row>
+    <el-row style="margin-top:10px;">
+      <el-col :span="6">
+        <span class="text">经办人：</span>
+      </el-col>
+      <el-col :span="16">
+        <el-select
+          v-model="accountList.operatorEmpId"
+          placeholder="请选择"
+          @keydown.enter.native="handleFilter"
+        >
+          <el-option
+            v-for="item in editUserList"
+            :key="item.Id"
+            :label="item.Name"
+            :value="item.Id"
+          />
+        </el-select>
+      </el-col>
+    </el-row>
+
     <p class="userBtn">
-      <el-button size="small" type="primary">确认销户</el-button>
+      <el-button size="small" type="primary" @click="accountBtn">确认销户</el-button>
     </p>
     <select-user :selectUserShow="selectUserShow" :headQuery="params" @handleFilter="handleFilter" />
   </div>
 </template>
 <script>
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
-import { getWaterInfo } from "@/api/userAccount"; //水表信息
-import SelectUser from "@/components/SelectUser/index";
-
+import { getWaterInfo, waterAccount } from "@/api/userAccount"; //水表信息
+import SelectUser from "@/components/SelectUser/index"; //水表信息
+import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
+import "@/styles/userAccount.scss";
 export default {
   name: "AccountUser",
   components: { SelectUser },
+  props: {
+    editUserList: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   data() {
     return {
       userInfo: {
         //用户信息
       },
       waterInfo: {}, //水表信息
-      user: "admin",
-      totalMoney: "333.00",
+      totalMoney: 0,
       selectUserShow: false,
-      histotal: 0,
       params: {
         page: 1,
         limit: 10,
         CustomerQueryType: "",
         CustomerQueryValue: ""
       },
-      userList: []
+      userList: [],
+      accountList: {
+        customerId: "",
+        remark: "",
+        operatorEmpId: "",
+        icMeterBalance: ""
+      }
     };
   },
 
   methods: {
+    //回车模糊查询
     searchEnter(num, val) {
       if (val == "") {
         return;
@@ -105,32 +147,38 @@ export default {
       this.params.CustomerQueryType = num;
       this.params.CustomerQueryValue = val;
       GetCustomerDataList(this.params).then(res => {
-        this.userInfo = {};
-        this.waterInfo = {};
-        if (res.data.length == 0) {
-          this.$message({
-            message: "该用户不存在",
-            type: "warning"
-          });
-          return false;
-        }
-        if (res.data.length > 1) {
-          this.userList = res.data;
-          this.selectUserShow = true;
-        } else {
-          this.userInfo = res.data[0];
-          this.getWaterMeterInfo(res.data[0].Id);
+        if (res.code == 0) {
+          this.userInfo = {};
+          this.waterInfo = {};
+          if (res.data.length == 0) {
+            this.$message({
+              message: "该用户不存在",
+              type: "warning"
+            });
+            return false;
+          }
+          if (res.data.length > 1) {
+            this.userList = res.data;
+            this.selectUserShow = true;
+          } else {
+            this.userInfo = res.data[0];
+            this.getWaterMeterInfo(res.data[0].Id);
+          }
         }
       });
     },
+    //选择用户信息
     handleFilter(val) {
       this.userInfo = val;
       this.getWaterMeterInfo(val.Id);
+      this.selectUserShow = false;
     },
+    //获取水表信息
     getWaterMeterInfo(id) {
       getWaterInfo({ customerId: id }).then(res => {
         if (res.code == 0) {
           this.waterInfo = res.data;
+          this.totalMoney = this.waterInfo.MeterBalance + this.userInfo.Balance;
         } else {
           this.$message({
             type: "warning",
@@ -138,6 +186,44 @@ export default {
           });
         }
       });
+    },
+    //销户
+    accountBtn() {
+      if (this.userInfo == {} || this.waterInfo == {}) {
+        this.$message({
+          message: "请先查询信息在进行操作",
+          type: "warning"
+        });
+        return false;
+      }
+      this.accountList.customerId = this.userInfo.Id;
+      this.accountList.remark = this.userInfo.remark
+        ? this.userInfo.remark
+        : "";
+      this.accountList.icMeterBalance = this.waterInfo.MeterBalance;
+      console.log(this.accountList);
+      waterAccount(this.accountList).then(res => {
+        console.log(res);
+      });
+    },
+    //读卡
+    handleFilterIC() {
+      try {
+        // resInfo用户信息  resData卡片信息
+        // ICReadCardInfo((resInfo,resData)=>{
+        //   console.log('头部咯')
+        //   console.log(resData)
+        //this.$emit("handleFilterIcParent", resInfo,resData)
+        // })
+        // 读卡
+        ICReadCardInfo(resData => {
+          console.log("头部咯");
+          console.log(resData);
+          this.$emit("handleFilterIcParent", resData);
+        });
+      } catch (error) {
+        console.log("请在CS端操作1");
+      }
     }
   },
   created() {}
@@ -192,6 +278,7 @@ export default {
     width: 180px;
     display: inline-block;
   }
+
   .text {
     display: inline-block;
     width: 56px;

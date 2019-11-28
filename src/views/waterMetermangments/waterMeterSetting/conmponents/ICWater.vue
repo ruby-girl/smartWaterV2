@@ -68,6 +68,7 @@
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'5px 0'}"
+        @sort-change="sortChanges"
       >
         <template v-for="(item ,index) in tableHeadData">
           <el-table-column
@@ -90,7 +91,7 @@
             :label="item.ColDesc"
           />
         </template>
-       <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
           <template slot-scope="scope">
             <span>{{(IcwachMeterData.page - 1) * IcwachMeterData.limit+ scope.$index + 1}}</span>
           </template>
@@ -117,7 +118,11 @@
       center
       :close-on-click-modal="false"
     >
-      <iC-water-meterHis :hisData="hisData" @sortProp="sortProp" :meterReadListParam="meterReadListParam" />
+      <iC-water-meterHis
+        :hisData="hisData"
+        @sortProp="sortProp"
+        :meterReadListParam="meterReadListParam"
+      />
 
       <pagination
         v-show="histotal>0"
@@ -132,6 +137,7 @@
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
+
 import {
   searICMeterWater,
   searICHisWater,
@@ -166,7 +172,7 @@ export default {
         filed: "", //排序字段
         tableId: "0000023"
       },
-      
+
       meterReadListParam: {
         //历史数据
         WaterMeterId: "", //水表Id ,
@@ -228,6 +234,7 @@ export default {
         if (res.code == 0) {
           that.tableData = res.data;
           that.total = res.count;
+         
         } else {
           that.$message({
             message: res.msg ? res.msg : "查询失败",
@@ -235,6 +242,14 @@ export default {
           });
         }
       });
+    },
+    sortChanges({ column, prop, order }) {
+      //排序
+      this.IcwachMeterData.page = 1;
+      this.IcwachMeterData.filed = prop;
+      this.IcwachMeterData.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      this.searchFun();
     },
     excelWaterMeter() {
       let that = this;

@@ -61,11 +61,13 @@
           </template>
           <el-table-column label="操作" width="300px" align="center" fixed="right">
             <template slot-scope="scope">
-              <a
-                v-if="scope.row.IsCanGenerateOrder"
-                class="operation1"
-                @click="generateOrder(scope.row.Id)"
-              >生成费用</a>
+              <span style="display:inline-block;width:72px;">
+                <a
+                  v-show="scope.row.IsCanGenerateOrder"
+                  class="operation1"
+                  @click="generateOrder(scope.row.Id)"
+                >生成费用</a>
+              </span>
               <a
                 class="operation2"
                 @click="changeInput(scope.row.Id,false)"
@@ -165,7 +167,7 @@ export default {
       //获取自定义模块高度
       let that = this;
       that.$nextTick(() => {
-        that.tableHeight = 
+        that.tableHeight =
           document.getElementsByClassName("section-container")[0].offsetHeight -
           document.getElementById("table").offsetTop -
           58;
@@ -191,7 +193,8 @@ export default {
       // console.log(document.getElementsByClassName("section-full-container")[0].offsetHeight)
       // console.log(document.getElementById("table").offsetTop)
       that.tableHeight =
-        document.getElementsByClassName("section-full-container")[0].offsetHeight -
+        document.getElementsByClassName("section-full-container")[0]
+          .offsetHeight -
         document.getElementById("table").offsetTop -
         73;
       this.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值

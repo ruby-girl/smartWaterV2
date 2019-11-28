@@ -109,6 +109,7 @@
         :header-cell-style="{'background-color': '#F0F2F5'}"
         :cell-style="{'padding':'5px 0'}"
         @selection-change="selectionChange"
+        @sort-change="sortChanges"
       >
         <el-table-column type="selection" fixed="left" width="55"></el-table-column>
         <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
@@ -295,6 +296,14 @@ export default {
           });
         }
       });
+    },
+    sortChanges({ column, prop, order }) {
+      //排序
+      this.YCMeterQueryParam.page = 1;
+      this.YCMeterQueryParam.filed = prop;
+      this.YCMeterQueryParam.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      this.searchYCWaterList();
     },
     ExcelYcInfo() {
       //导出
