@@ -66,14 +66,6 @@
               @pagination="getList"
             />
           </div>
-          <!-- 编辑弹窗 -->
-          <Dialog
-            :show.sync="dialogFormVisible"
-            :temp="temp"
-            :dialog-status="dialogStatus"
-            @createData="createData"
-            @updateData="updateData"
-          />
         </div>
         <span v-show="ifShow" class="telescopic telescopic1" @click="getUp(false)">
           展开
@@ -86,6 +78,7 @@
 <script>
 import SelectHead from "./components/SelectHead";
 import LeftBox from "./components/Left"
+import {TransferCustomerList} from "@/api/userAccount";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import "@/styles/organization.scss";
@@ -99,18 +92,21 @@ export default {
       tableKey: 9,
       tableHeight: 0,
       temp: {},
-      name: "r",
       listQuery: {
         // 查询条件
         page: 1,
         limit: 10,
         filed: "",
         sort: "",
-        roleName: "", // 角色名称
-        editUserId: "-1", // 操作人
-        editStartTime: "", // 操作时间起
-        editEndTime: "", // 操作时间止
-        tableId: "0000004"
+       SA_WaterFactory_Id:'-1',//水厂
+       UserType:'-1',//用户类型
+       WaterTypeId:'-1',//水表类型
+       TransferCustomer:'',//查询类型
+       Customer:'',//Input值
+       OpId:'-1',//过户操作员
+       Star_TransferDate:'',//开始时间
+       End_TransferDate:'',//开始时间
+       tableId: "0000004"
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
@@ -138,11 +134,7 @@ export default {
     });
   },
   methods: {
-    /**
-     * 伸缩功能
-     * */
     getUp(v) {
-      console.log(v)
       this.ifShow =v;
       if (this.ifShow) {
         document.getElementsByClassName("user_tree")[0].classList.add("hide");
@@ -158,7 +150,7 @@ export default {
       else this.tableHeight = this.tableHeight + 80;
     },
     getList() {
-      getRolesList(this.listQuery).then(res => {
+      TransferCustomerList(this.listQuery).then(res => {
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -177,68 +169,13 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row);
-      this.temp.timestamp = new Date(this.temp.timestamp);
-      this.dialogStatus = "update";
-      this.dialogFormVisible = true;
-    },
-    delRow(r) {
-      this.$confirm("是否删除当前信息", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        customClass: "warningBox",
-        showClose: false
-      }).then(() => {
-        deleteRole(r.Id).then(res => {
-          this.$message({
-            message: res.message,
-            type: "success",
-            duration: 4000
-          });
-          this.getList();
-        });
-      });
-    },
-    
-    createData(dialog) {
-      // addRole(dialog.RoleName).then(res => {
-      //   this.$message({
-      //     message: res.message,
-      //     type: "success",
-      //     duration: 4000
-      //   });
-      //   this.dialogFormVisible = false;
-      //   this.handleFilter();
-      // });
-    },
-    updateData(dialog) {
-      updateRole(dialog.RoleName, dialog.Id).then(res => {
-        this.$message({
-          message: res.message,
-          type: "success",
-          duration: 4000
-        });
-        this.dialogFormVisible = false;
-        for (const v of this.tableData) {
-          if (v.Id == this.temp.Id) {
-            const index = this.tableData.indexOf(v);
-            this.tableData.splice(index, 1, this.temp);
-            break;
-          }
-        }
-        this.dialogFormVisible = false;
-      });
-    },
     excel() {
       //导出
       exportExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     }
-  },
-  mounted() {}
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -284,13 +221,6 @@ export default {
       transition: width 0.2s;
       -webkit-transition: width 0.2s;
       position: relative;
-    }
-    .user_tree {
-      width: 280px;
-      position: relative;
-      background: #fff;
-      padding: 0 13px;
-      margin-right: 16px;
     }
     .user_table {
       flex: 1;

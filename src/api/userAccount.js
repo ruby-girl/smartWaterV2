@@ -36,12 +36,27 @@ export function excelWaterAccount(data) {//机械表查询
 }
 
 
-// 用户过户
+// 用户过户----------------------
 export function IsTransfer(data) {//查询是否欠费
     return request({
         url: "/Customer/IsTransfer",
         method: 'POST',
-        data
+        params:data
     })
 }
-
+//过户操作
+export function TransferCustomer(data) {
+    return request({
+        url: "/Customer/TransferCustomer",
+        method: 'POST',
+        data:data
+    })
+}
+// 查询列表
+export function TransferCustomerList(data) {
+    return request({
+        url: "/Customer/TransferCustomerList",
+        method: 'POST',
+        data:data
+    })
+}
