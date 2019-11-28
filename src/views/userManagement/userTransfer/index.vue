@@ -38,25 +38,13 @@
               <template v-for="(item ,index) in tableHead">
                 <el-table-column
                   :key="index"
-                  min-width="100px"
+                  :min-width="item.ColProp=='TransferDate'?'170px':'120px'"
                   :prop="item.ColProp"
                   align="center"
                   :sortable="item.IsSortBol?'custom':null"
                   :label="item.ColDesc"
                 />
               </template>
-              <el-table-column label="操作" align="center" class-name="small-padding">
-                <template slot-scope="{row}">
-                  <div class="display-flex justify-content-flex-center">
-                    <div class="main-color" @click="handleUpdate(row)">
-                      <a>编辑</a>
-                    </div>
-                    <div class="main-color-red pl-15" @click="delRow(row)">
-                      <a>删除</a>
-                    </div>
-                  </div>
-                </template>
-              </el-table-column>
             </el-table>
             <pagination
               v-show="total>0"
@@ -78,7 +66,7 @@
 <script>
 import SelectHead from "./components/SelectHead";
 import LeftBox from "./components/Left"
-import {TransferCustomerList} from "@/api/userAccount";
+import {TransferCustomerList,TransferCustomerList_Execl} from "@/api/userAccount";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import "@/styles/organization.scss";
@@ -106,7 +94,7 @@ export default {
        OpId:'-1',//过户操作员
        Star_TransferDate:'',//开始时间
        End_TransferDate:'',//开始时间
-       tableId: "0000004"
+       tableId: "0000027"
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
@@ -127,7 +115,7 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 220;
+      that.tableHeight = document.body.clientHeight - formHeight - 200;
       this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
      
@@ -171,7 +159,7 @@ export default {
     },
     excel() {
       //导出
-      exportExcel(this.listQuery).then(res => {
+      TransferCustomerList_Execl(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     }
@@ -180,9 +168,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tree_container {
-  .icon {
-    font-size: 14px;
-  }
   background: #eff1f4;
   .telescopic {
     position: absolute;

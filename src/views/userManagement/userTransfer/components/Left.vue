@@ -191,7 +191,8 @@ export default {
      //进行过户操作
     accountBalancesFunc(user) { 
       user.FileIdList=this.file
-      TransferCustomer({tcp:user}).then(res=>{
+      this.accountShow=false
+      TransferCustomer(user).then(res=>{
         this.$message({
             message: "操作成功！",
             type: "success",
@@ -200,15 +201,15 @@ export default {
           this.user={}
           this.newUser={
             CustomerId:'',
-        NewCustomerName: "", //姓名
-        NewTel: "", //电话
-        NewPeopleNo: "", //人口
-        NewIdentityNo: "", //证件号
-        Remark: "", //备注
-        FileIdList: [], //文件合集
-        BalanceValue: 0, //余额
-        OperatorEmpId: "", //经办人ID
-        IsBalanceDeposit: false //是否转存
+            NewCustomerName: "", //姓名
+            NewTel: "", //电话
+            NewPeopleNo: "", //人口
+            NewIdentityNo: "", //证件号
+            Remark: "", //备注
+            FileIdList: [], //文件合集
+            BalanceValue: 0, //余额
+            OperatorEmpId: "", //经办人ID
+            IsBalanceDeposit: false //是否转存
           }
       })
     },

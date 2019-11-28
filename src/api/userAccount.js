@@ -60,3 +60,11 @@ export function TransferCustomerList(data) {
         data:data
     })
 }
+// 导出
+export function TransferCustomerList_Execl(data) {
+    return request({
+        url: "/Customer/TransferCustomerList_Execl",
+        method: 'POST',
+        data:data
+    })
+}
