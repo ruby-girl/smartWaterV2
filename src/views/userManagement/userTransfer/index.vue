@@ -96,7 +96,7 @@ export default {
     return {
       ifShow: false,
       total: 0,
-      tableKey: 0,
+      tableKey: 9,
       tableHeight: 0,
       temp: {},
       name: "r",
@@ -117,6 +117,25 @@ export default {
       tableData: [],
       checksData: []
     };
+  },
+  computed: {
+    tableHead: function() {
+      let arrayHead = this.checksData.filter(item => {
+        return item.IsCheck;
+      });
+      return arrayHead;
+    }
+  },
+   mounted: function() {
+    this.$nextTick(function() {
+      // 自适应表格高度
+      var formHeight = this.$refs.formHeight.offsetHeight;
+      const that = this;
+      that.tableHeight = document.body.clientHeight - formHeight - 220;
+      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+     
+    });
   },
   methods: {
     /**
