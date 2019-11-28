@@ -66,7 +66,7 @@
     mounted() {
       this.query = this.$parent.query
       this.userType = getDictionaryOption('用户类型')
-      this.userStaus = getDictionaryOption('用户状态')
+      this.userStaus = getDictionaryOption('用水用户状态')
     }
   }
 </script>
