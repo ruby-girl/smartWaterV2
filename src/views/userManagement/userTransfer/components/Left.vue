@@ -61,7 +61,7 @@
       </div>
     </div>
     <span v-show="!ifShowChild" class="telescopic telescopic2" @click="getUp">
-      收起
+      用户过户
       <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
     </span>
     <div class="bottom-btn-box">
@@ -281,7 +281,7 @@ export default {
     position: absolute;
     display: block;
     top: 300px;
-    color: #777c82;
+    color: #00b2a1;
     font: normal 16px "Microsoft YaHei";
     width: 30px;
     margin: 0 auto;
