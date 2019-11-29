@@ -47,7 +47,7 @@ export default {
       return variables
     },
     isCollapse() {//是否左侧展示导航
-      return false
+      return !this.sidebar.opened
     }
   }
 }

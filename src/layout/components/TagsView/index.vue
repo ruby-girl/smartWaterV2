@@ -1,6 +1,8 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
+    
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
+      <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
@@ -26,12 +28,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ScrollPane from './ScrollPane'
 import path from 'path'
 import Bus from '@/utils/bus.js'
-
+import Hamburger from '@/components/Hamburger'
 export default {
-  components: { ScrollPane },
+  components: { ScrollPane,Hamburger },
   data() {
     return {
       visible: false,
@@ -42,6 +45,11 @@ export default {
     }
   },
   computed: {
+     ...mapGetters([
+      'sidebar',
+      'avatar',
+      'device'
+    ]),
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
     },
@@ -193,7 +201,10 @@ export default {
     },
     closeMenu() {
       this.visible = false
-    }
+    },
+    toggleSideBar() {
+      this.$store.dispatch('app/toggleSideBar')
+    },
   }
 }
 </script>
@@ -220,7 +231,7 @@ export default {
       margin-left: 5px;
       margin-top: 4px;
       &:first-of-type {
-        margin-left: 15px;
+        margin-left: 0px;
       }
       &:last-of-type {
         margin-right: 15px;
@@ -291,4 +302,18 @@ export default {
     }
   }
 }
+.hamburger-container {
+   
+    // height: 100%;
+    margin-top:-5px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    transition: background .3s;
+    -webkit-tap-highlight-color:transparent;
+
+    &:hover {
+      background: rgba(0, 0, 0, .025)
+    }
+  }
 </style>
