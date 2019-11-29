@@ -20,7 +20,9 @@
       </el-form-item>
       <el-form-item label="阶梯结算月数：" prop="LadderResetTime">
         <el-select v-model="temp.LadderResetTime" placeholder="请选择">
-          <el-option v-for="item in 12" :key="item" :label="item" :value="item" />
+          <el-option label="1" value="1" />
+        <el-option label="3" value="3" />
+        <el-option label="12" value="12" />
         </el-select>
       </el-form-item>
       <el-form-item label="污水费：" prop="SewagePrice">

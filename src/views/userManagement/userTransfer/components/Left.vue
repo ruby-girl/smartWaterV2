@@ -6,7 +6,7 @@
       <div class="display-flex align-items-center justify-content-flex-justify">
         <div class="font-weight" style="color:#535353">原用户信息</div>
         <el-button type="success" size="mini" @click="handleFilterIC">
-          <i class="iconfont icontianjia"></i>读卡
+          <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
       <el-form ref="form" label-width="70px" style="margin-top:13px;">
