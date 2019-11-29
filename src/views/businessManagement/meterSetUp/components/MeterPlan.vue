@@ -48,44 +48,50 @@
               </el-checkbox-group>
             </el-col>
             <el-col :span="4">
-              <el-button style="float: right" type="primary" size="small" @click="getWaterPredict(2)">确定</el-button>
+              <el-button class="setSure" style="float: right" type="primary" size="small"  @keyup.enter.native="getWaterPredict(2)" @click="getWaterPredict(2)">确定</el-button>
             </el-col>
           </el-row>
         </div>
       </div>
       <div class="meter_forms">
         <p class="plan_box1 plan_box2 clearfix">
-          <a>表册：<label style="color: #777C82;font-size: 14px;cursor:pointer;" :title="meterData.BookName">{{ meterData.BookName }}</label></a>
-          <a>合计：<label style="color: #46494C">{{ meterData.TotalNum }}</label></a>
-          <a>已抄：<label style="color: #00B3A1">{{ meterData.CompletedNum }}</label></a>
-          <a>未抄：<label style="color: #FF3D3D">{{ meterData.UnCompletedNum }}</label></a>
+          <a style="padding-left: 18px;width: 50%;text-align: left">表册：<label style="color: #777C82;font-size: 14px;cursor:pointer;" :title="meterData.BookName">{{ meterData.BookName }}</label></a>
+          <a style="width: 15%">合计：<label style="color: #46494C">{{ meterData.TotalNum }}</label></a>
+          <a style="width: 15%">已抄：<label style="color: #00B3A1">{{ meterData.CompletedNum }}</label></a>
+          <a style="width: 20%">未抄：<label style="color: #FF3D3D">{{ meterData.UnCompletedNum }}</label></a>
         </p>
         <div class="plan_box3">
-          <h2>水量水费预估</h2>
-          <el-row v-for="(item,index) in temp.ladder.slice(0,temp.LadderNumber)" :key="index" v-show="ifLadder">
-            <el-col :span="8" class="unit">
-              {{index + 1}}阶单价：<span>{{ item.LadderPrice || 0}}</span> <label>元/吨</label>
-            </el-col>
-            <el-col :span="8" class="unit">
-              {{index + 1}}阶水量：<label>{{ item.LadderWaterNum || 0}} 吨</label>
-            </el-col>
-            <el-col :span="8" class="unit">
-              {{index + 1}}阶水费：<i>{{ item.TotalPrice || 0}}</i> <label>元</label>
-            </el-col>
-          </el-row>
-
-          <el-row v-show="!ifLadder">
-            <el-col :span="8" class="unit">
-              单价：<span>{{ oneLadder.TotalPrice || 0}}</span> <label>元/吨</label>
-            </el-col>
-            <el-col :span="8" class="unit">
-              水量：<label>{{ oneLadder.TotalWaterYield || 0}} 吨</label>
-            </el-col>
-            <el-col :span="8" class="unit">
-              水费：<i>{{ oneLadder.TotalWaterPrice || 0}}</i> <label>元</label>
-            </el-col>
-          </el-row>
-
+          <h2>水量水费预估
+            <p class="switch_btn">加载水费预估
+              <el-switch
+                v-model="isEstimate">
+              </el-switch>
+            </p>
+          </h2>
+          <div class="yg_box">
+            <el-row v-for="(item,index) in temp.ladder.slice(0,temp.LadderNumber)" :key="index" v-show="ifLadder">
+              <el-col :span="8" class="unit">
+                {{index + 1}}阶单价：<span>{{ item.LadderPrice || 0}}</span> <label>元/吨</label>
+              </el-col>
+              <el-col :span="8" class="unit">
+                {{index + 1}}阶水量：<label>{{ item.LadderWaterNum || 0}} 吨</label>
+              </el-col>
+              <el-col :span="8" class="unit">
+                {{index + 1}}阶水费：<i>{{ item.TotalPrice || 0}}</i> <label>元</label>
+              </el-col>
+            </el-row>
+            <el-row v-show="!ifLadder">
+              <el-col :span="8" class="unit">
+                单价：<span>{{ oneLadder.TotalPrice || 0}}</span> <label>元/吨</label>
+              </el-col>
+              <el-col :span="8" class="unit">
+                水量：<label>{{ oneLadder.TotalWaterYield || 0}} 吨</label>
+              </el-col>
+              <el-col :span="8" class="unit">
+                水费：<i>{{ oneLadder.TotalWaterPrice || 0}}</i> <label>元</label>
+              </el-col>
+            </el-row>
+          </div>
         </div>
       </div>
     </div>
@@ -103,7 +109,12 @@
         </ul>
         <div class="water_box">
           <h3 @click="getShrink(0)">水量水费预估</h3>
-          <div id="water_hide">
+          <div id="water_hide" style="margin-top: 10px;position: relative;padding-top: 30px">
+            <p style="font: normal 14px 'Microsoft YaHei';color: #46494C;position: absolute;margin: 0;top:8px;left: 21px;">加载水费预估
+              <el-switch
+                v-model="isEstimate">
+              </el-switch>
+            </p>
             <el-row v-for="(item,index) in temp.ladder.slice(0,temp.LadderNumber)" :key="index" v-if="ifLadder">
               <el-col :span="8" class="unit">
                 {{index + 1}}阶单价：<span>{{ item.LadderPrice || 0}}</span> <label>元/吨</label>
@@ -171,7 +182,7 @@
             </el-checkbox-group>
           </el-col>
           <el-col :span="4">
-            <el-button style="float: right" type="primary" size="small" @click="getWaterPredict(2)">确定</el-button>
+            <el-button class="setSure" style="float: right" type="primary" size="small" @click="getWaterPredict(2)">确定</el-button>
           </el-col>
         </el-row>
       </div>
@@ -188,6 +199,7 @@
     name: "MeterPlan",
     data() {
       return {
+        isEstimate:false,//是否加载水量水费预估
         checks: ['自动载入下一户'],
         meterData: {},
         meterPlan: '',//抄表计划
@@ -250,7 +262,10 @@
                 if (type === 2) {
                   this.getMagnificate(magnificate,curWater,lastWater,params)//抄表
                 } else {
-                  this.getPrice(params)//水量水费预估
+                  if (this.isEstimate) {
+                    this.getPrice(params)//水量水费预估
+                  }
+                  document.getElementsByClassName("setSure")[0].focus()
                 }
               }
             } else {//当选择字轮翻页时，上次读数一定比本次读数大，若上次读数为0，第一次就不予处理
@@ -261,13 +276,15 @@
                 totalNum += "9"
               }
               if (lastRead > 0 && lastRead > curNum) {
-
                 curWater = parseInt(totalNum) - lastRead + parseInt(curNum) + 1 //本次水量 = 总数 - 上次读数 + 本次读数 + 1;例：上次读数12345，本次读数为10，则本次水量为99999 – 12345 + 10 + 1
                 let magnificate = curWater / lastWater //公式（本次水量/上次水量）
                 if (type === 2) {
                   this.getMagnificate(magnificate,curWater,lastWater,params)//抄表
                 } else {
-                  this.getPrice(params)//水量水费预估
+                  if (this.isEstimate) {
+                    this.getPrice(params)//水量水费预估
+                  }
+                  document.getElementsByClassName("setSure")[0].focus()
                 }
               } else {
                 promptInfoFun(this, 1, '本次读数需小于上次读数！')
@@ -283,6 +300,7 @@
       getPrice(param) {//水费水量
         WaterYieldPricePredict(param).then(res => {
           if (res.code == 0) {
+            this.isEstimate = false
             let oneData = {}
             this.ifLadder = res.data.IsLadder  //true 时为阶梯计价，需根据LadderNumber 字段计算到第几个阶梯
             if (this.ifLadder) {//启用阶梯
@@ -488,21 +506,20 @@
     }
 
     .plan_box3 {
+      .yg_box{height: 115px;overflow: auto}
       background: #fff;
       padding: 0 18px 20px 18px;
       margin-top: 13px;
       height: 172px;
-      overflow: auto;
+      overflow: hidden;
       position: relative;
-
       h2 {
         color: #777C82;
         font-size: 20px;
         padding: 16px 0 10px 0;
         margin: 0;
       }
-
-      /*>a{font-size: 14px;color: #00B3A1;position: absolute;top: 10px;right: 25px;}*/
+      .switch_btn{font: normal 12px 'Microsoft YaHei';display: inline-block;float: right;margin-top: 1px;}
     }
 
     .unit {

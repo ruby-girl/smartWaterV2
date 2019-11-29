@@ -36,7 +36,7 @@
           </ul>
           <!--结束回归线-->
           <p class="line" v-for="(i,j) in item.lines" :key="j"
-             :style="'width:'+ (i.FromId-i.ToId) * 195 + 'px;height:' + (j+1)*28 + 'px;margin-top:' + -j*28 + 'px;margin-left:' + ((i.ToId -1 ) * 195 + 70) + 'px'">
+             :style="'width:'+ (i.FromId-i.ToId) * 195 + 'px;height:' + (j+1)*28 + 'px;margin-top:' + -j*28 + 'px;margin-left:' + ((i.ToId -1 ) * 195 + 70 + j*8) + 'px'">
             <i class="triangle_Up"></i>
             <i class="triangle_Left"></i>
           </p>
@@ -146,6 +146,7 @@
                   return
                 })
               }else {//流程不为空
+
                 item.ProcessConfigNode.forEach(is=>{//获取对应节点成员数量
                   is.Members = is.Member
                   is.ModuleName = is.Name
@@ -244,9 +245,6 @@
               this.moveTarget.Index = 0
               this.moveTarget.ProcessConfigLine = {FromId:'',ToId:''}
               obj.push(this.moveTarget)
-              console.log(this.moveTarget)
-              console.log(obj)
-              console.log("--------------------------")
               this.getWidth(this.moveId, 195, obj)//动态计算流程模块实际宽度
               document.getElementsByClassName('contralSee' + this.moveId.replace('teams_node', ''))[0].classList.add('onPointer')//修改保存撤销按钮状态
               document.getElementsByClassName('contralSee' + this.moveId.replace('teams_node', ''))[1].classList.add('onPointer')
@@ -272,25 +270,29 @@
       },
       deleteProcessId(data,process,num){//删除流程节点ID,obj 整个流程实体，item 流程中删除节点 ,num 手动添加容器标识
         let obj = data.ProcessConfigNode//接口存储节点数据
-        let line = data.ProcessConfigLine//接口存储回归线集合
         let itemName = 'teams_node' + num //该条信息本地存储名称
-        line.forEach((k,j)=>{//删除回归线集合中对应数据
-          if (k.FromId == process.Id){
-            line.splice(j,1)
-          }
-        })
-        obj.forEach((item,index)=>{
-          if(item.Id == process.Id){//删除对应节点NODE数据
-            obj.splice(index,1)//流程实体中删除该条记录
+        data.ProcessConfigLine = data.ProcessConfigLine.filter(function(v){
+          return JSON.stringify(v).indexOf(process.Id) == -1
+        });
+        for (let i = 0; i < obj.length; i++) {//先删除点击节点，避免使用forEach 循环数组本身，删除后下标变化循环失败
+          if (obj[i].Id == process.Id) {//删除对应节点NODE数据
+            obj.splice(i, 1)//流程实体中删除该条记录
             let localData = JSON.parse(localStorage.getItem(itemName))//删除本地节点ID集合中对应数据
-            localData.forEach((i,j)=>{
-              if(i.id == process.Id){
-                localData.splice(j,1)
-                localStorage.setItem(itemName,JSON.stringify(localData))
+            localData.forEach((i, j) => {
+              if (i.id == process.Id) {
+                localData.splice(j, 1)
+                localStorage.setItem(itemName, JSON.stringify(localData))
               }
             })
           }
+        }
+        obj.forEach(i => {//再过滤该流程下其他节点中是否有关联删除节点数据
+          if (JSON.stringify(i.ProcessConfigLine.ToId).indexOf(process.Id) != -1) {//清空剩余节点中 结束回归线对象里包含当前删除节点ID的数据
+            i.ProcessConfigLine.ToId = ''
+            i.ProcessConfigLine.FromId = ''
+          }
         })
+
         /*根据删除节点后的数据重新绘制结束回归线*/
         data.lines = JSON.parse(JSON.stringify(data.ProcessConfigLine))//复制数组避免影响原有数据
         data.lines.forEach((i, j) => {//回归线对象
@@ -306,6 +308,7 @@
         })
         document.getElementsByClassName('contralSee' + num)[0].classList.add('onPointer')//修改保存撤销按钮状态
         document.getElementsByClassName('contralSee' + num)[1].classList.add('onPointer')
+
       },
       addProcess(){//新增流程
         GetProcessConfigId({code:localStorage.getItem('menuId'),menuId:localStorage.getItem('menuCode')}).then(res => {

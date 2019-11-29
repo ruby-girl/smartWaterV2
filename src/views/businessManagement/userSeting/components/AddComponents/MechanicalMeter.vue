@@ -4,7 +4,7 @@
     <div class="user_information">
       <h3 class="add_title"><i></i>用户资料</h3>
       <el-form :inline="true" ref="formData" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="水厂：" prop="SA_WaterFactory_Id">
+        <el-form-item label="水厂：" prop="SA_WaterFactory_Id"  v-if="this.waterFactory.length>1">
           <el-select v-model="formData.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getDataByWater">
             <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>

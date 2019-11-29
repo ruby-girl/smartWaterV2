@@ -144,7 +144,7 @@
       }
     },
     mounted() {
-      this.getWater()
+      this.waterFactory=this.$store.state.user.waterWorks
     }
   }
 </script>

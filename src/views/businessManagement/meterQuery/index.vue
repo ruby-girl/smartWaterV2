@@ -10,8 +10,7 @@
             size="small"
             class="fr cl-color1"
             @click="setCustomData()"
-            style="margin-left: 10px;"
-          >
+            style="margin-left: 10px;">
             <i class="icon iconfont">&#xe678;</i> 表格自定义
           </el-button>
           <el-button type="success" size="small" class="fr" @click="exportExcel">
@@ -80,7 +79,8 @@
 
 <script>
 import "@/styles/organization.scss";
-import customTable from "@/components/CustomTable/index"; //自定义组建
+//import customTable from "@/components/TableCustom"; //自定义组建
+import customTable from "@/components/CustomTable"; //自定义组建
 import SelectHead from "./components/SelectHead"; //查询条件组建
 import EditDialog from "./components/EditDialog"; //查询条件组建
 import Pagination from "@/components/Pagination/index"; //分页

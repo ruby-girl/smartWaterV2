@@ -80,30 +80,65 @@
       }
     },
     watch:{
-      checkList1: {
+      data:{
+        handler(newVal,oblVal){//3001 部门 3002 岗位 3004 姓名 3003 角色
+          let dataType;
+          if(newVal[1]){
+            dataType = newVal[1].ProcessMemberType
+
+            switch (dataType) {//回填全部样式
+              case 3001:
+                this.checkAll1 =  this.checkList1.length == newVal.length;
+                let checkedCount = this.checkList1.length
+                this.isIndeterminate1 = checkedCount > 0 && checkedCount < newVal.length;//控制全选按钮样式
+                break
+              case 3002:
+                this.checkAll2 =  this.checkList2.length == newVal.length;
+                let checkedCount2 = this.checkList2.length
+                this.isIndeterminate2 = checkedCount2 > 0 && checkedCount2 < newVal.length;//控制全选按钮样式
+                break
+              case 3003:
+                this.checkAll3 =  this.checkList3.length == newVal.length;
+                let checkedCount3 = this.checkList3.length
+                this.isIndeterminate3 = checkedCount3 > 0 && checkedCount3 < newVal.length;//控制全选按钮样式
+                break
+              case 3004:
+                this.checkAll4 =  this.checkList4.length == newVal.length;
+                let checkedCount4 = this.checkList4.length
+                this.isIndeterminate4 = checkedCount4 > 0 && checkedCount4 < newVal.length;//控制全选按钮样式
+                break
+            }
+          }
+        }
+      },
+      checkList1: {//部门下拉集合
         handler() {
           this.$nextTick(()=>{
+            this.checkList1 = this.removeRepeat(this.checkList1)
             Bus.$emit('setCheckList')
           })
         }
       },
-      checkList2: {
+      checkList2: {//岗位下拉集合
         handler () {
           this.$nextTick(()=>{
+            this.checkList2 = this.removeRepeat(this.checkList2)
             Bus.$emit('setCheckList')
           })
         }
       },
-      checkList3: {
+      checkList3: {//姓名下拉集合
         handler () {
           this.$nextTick(()=>{
+            this.checkList3 = this.removeRepeat(this.checkList3)
             Bus.$emit('setCheckList')
           })
         }
       },
-      checkList4: {
+      checkList4: {//角色下拉集合
         handler () {
           this.$nextTick(()=>{
+            this.checkList4 = this.removeRepeat(this.checkList4)
             Bus.$emit('setCheckList')
           })
         }
@@ -242,9 +277,18 @@
             })
           }
         })
+      },
+      removeRepeat(arr) {
+        for (var i = 0; i < arr.length; i++) {
+          if (arr.indexOf(arr[i]) != i) {
+            arr.splice(i, 1);//删除数组元素后数组长度减1后面的元素前移
+            i--;//数组下标回退
+          }
+        }
+        return arr;
       }
     },
-    created() {
+    created() {//初始化全部数据
       this.getTotalInfo(getRoles, 1)//角色
       this.getTotalInfo(ComboBoxList, 2)//部门
       this.getTotalInfo(CacheComboBoxByPIdZhuanYong, 3)//岗位

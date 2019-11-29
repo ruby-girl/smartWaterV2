@@ -12,7 +12,7 @@
       label-width="100px"
       @submit.native.prevent>
           <el-form-item label="水厂：">
-            <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList">
+            <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList" v-show="waterFactory.length>1">
               <el-option label="全部" value="-1"></el-option>
               <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
             </el-select>
@@ -229,7 +229,9 @@
       this.formArry = getDictionaryOption('表册类型')
       this.meterState = getDictionaryOption('抄表状态')
       this.userArry = getDictionaryOption('用户类型')
-      this.getWaterFactoryList()
+      //this.getWaterFactoryList()
+      this.waterFactory=this.$store.state.user.waterWorks
+      this.getPlanList('-1');//默认查全部抄表计划
 
       if(this.$route.query.CustomerNo){
           this.typeCheck = 2

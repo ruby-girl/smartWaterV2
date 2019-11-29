@@ -1,7 +1,7 @@
 <template>
   <div class="wlw_Water">
     <p class="top_num">
-      <span ref="dzNum">0</span>
+      <span ref="dzNum">1</span><span style="font-size: 36px">{{"."+decimalNum}}</span>
       <label>m³</label>
     </p>
     <p class="number">No.1010701140027</p>
@@ -171,18 +171,41 @@
     name: "WlwWater",
     data(){
       return {
-        Ids:''
+        Ids:'',
+        decimalNum:''
       }
     },
     methods:{
       setNumber(num){
          let obj = this.$refs.dzNum
          scroNum(this.Ids,num)
-         numRunFun(obj,num)
+          let s = this.toDecimal(num)
+          let b = s.split(".");
+          let integerNum = b[0];
+          let decimalNum = b[1];
+         this.decimalNum = decimalNum
+         numRunFun(obj,integerNum)
       },
       randomNum(m,n){
         return 'team_data'+Math.floor(Math.random()*(m - n) + n);
-      }
+      },
+      toDecimal(x) {
+        var f = parseFloat(x);
+        if (isNaN(f)) {
+          return false;
+        }
+        var f = Math.round(x * 100) / 100;
+        var s = f.toString();
+        var rs = s.indexOf('.');
+        if (rs < 0) {
+          rs = s.length;
+          s += '.';
+        }
+        while (s.length <= rs + 2) {
+          s += '0';
+        }
+        return s;
+     }
     },
     mounted() {
       this.Ids = this.randomNum(0,10000)
