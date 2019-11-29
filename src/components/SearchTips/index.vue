@@ -133,6 +133,7 @@ export default {
     .cont-right {
       position: absolute;
       right: 106px;
+        cursor: pointer;
     }
     .spiceTips {
       padding: 0 5px;
