@@ -1,22 +1,23 @@
+
 <template>
   <div class="section-container">
     <el-container>
       <el-aside width="0">
         <account-user class="account-user" :editUserList="editUserList" />
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
-          用户销户
+          水表升级
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
         </span>
       </el-aside>
 
       <el-main>
-        <h3>销户查询</h3>
+        <h3>升级查询</h3>
         <selecte-head
           :editUserList="editUserList"
           :selectHead="listQuery"
           @handleFilter="seachAccountOrder"
         />
-        <!-- <div class="cl-operation1 clearfix">
+        <div class="cl-operation1 clearfix">
           <el-button
             type="warning"
             size="small"
@@ -29,8 +30,7 @@
           <el-button type="success" size="small" class="fr" @click="excelWaterAccountOrder">
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
-        </div> -->
-        <search-tips />
+        </div>
         <customTable ref="myChild" />
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -80,7 +80,7 @@
           />
         </div>
         <span v-show="!ifShow" class="telescopic telescopic1" @click="closeAccount">
-          用户销户
+          水表升级
           <i class="iconfont iconshouqi1" style="font-size: 12px;"></i>
         </span>
       </el-main>
@@ -95,10 +95,10 @@ import Pagination from "@/components/Pagination";
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
-import SearchTips from "@/components/SearchTips/index"
+
 export default {
-  name: "userAccount",
-  components: { AccountUser, SelecteHead, customTable, Pagination,SearchTips },
+  name: "waterMeterUpdate",
+  components: { AccountUser, SelecteHead, customTable, Pagination },
   data() {
     return {
       listQuery: {
@@ -186,7 +186,6 @@ export default {
     },
     //查询记录
     seachAccountOrder() {
-     
       waterAccountPost(this.listQuery).then(res => {
         if (res.code == 0) {
           this.tableData = res.data;
