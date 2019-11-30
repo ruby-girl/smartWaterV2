@@ -367,7 +367,7 @@ export default {
 .backgrounf-fff {
   background: #fff;
   .dialog-title-border-shadow {
-    line-height: 40px;
+    line-height: 30px;
     padding-left: 20px;
   }
 }

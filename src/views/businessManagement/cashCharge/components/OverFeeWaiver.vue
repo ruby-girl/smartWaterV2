@@ -17,8 +17,7 @@
         label-width="60px"
         @submit.native.prevent
       >
-      <el-tabs v-model="activeName">
-    <el-tab-pane label="水费" name="frist"> <el-row>
+        <el-row>
           <el-form-item :label="feeWaiverItem.OrderTypeStr">
             <el-input v-model="feeWaiverItem.PriceSurplus" disabled />
           </el-form-item>
@@ -34,9 +33,8 @@
               maxlength="8"
             />
           </el-form-item>
-        </el-row></el-tab-pane>
-    <el-tab-pane label="违约金" name="two">
-      <el-row v-if="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee>0">
+        </el-row>
+        <el-row v-if="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee>0">
           <el-form-item label="违约金：">
             <el-input v-model="feeWaiverItem.LateFee" disabled />
           </el-form-item>
@@ -53,11 +51,6 @@
             />
           </el-form-item>
         </el-row>
-    </el-tab-pane>
-   
-  </el-tabs>
-       
-        
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer">
@@ -95,8 +88,7 @@ export default {
     return {
       dialogFormVisible: false,
       inputValue: "",
-      lateFeeValue: "", //违约金金额
-      activeName:'frist'
+      lateFeeValue: "" //违约金金额
     };
   },
   methods: {
@@ -118,25 +110,6 @@ export default {
         SA_Order_Id: this.feeWaiverItem.Id,
         AfterFee: this.inputValue
       }).then(res => {
-        return true;
-      });
-      // 如果有违约金
-      if (this.feeWaiverItem.OrderType == 2001 &&this.feeWaiverItem.LateFee > 0 && water) {
-        OrderAfterOverdueFeeWaiver({
-        SA_Order_Id: this.feeWaiverItem.Id,
-        AfterOverdueFee: this.lateFeeValue
-      }).then(res => {
-          this.$message({
-            message: "减免成功",
-            type: "success",
-            duration: 4000
-          });
-          this.inputValue=''
-          this.lateFeeValue=''
-          this.dialogFormVisible = false;
-          this.$emit("getList");
-        });
-      } else {
         this.$message({
           message: "减免成功",
           type: "success",
@@ -146,7 +119,7 @@ export default {
         this.lateFeeValue=''
         this.dialogFormVisible = false;
         this.$emit("getList");
-      }
+      });
     },
     // 输入金额保留2位
     money(e) {

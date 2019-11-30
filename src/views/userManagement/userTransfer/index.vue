@@ -112,6 +112,7 @@ export default {
   },
    mounted: function() {
     this.$nextTick(function() {
+      this.getUp(true)
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;

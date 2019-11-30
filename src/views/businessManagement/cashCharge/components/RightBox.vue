@@ -186,7 +186,7 @@ export default {
       //   });
       //   return false
       // }
-      let receipts=parseFloat(this.num)
+      let receipts=parseFloat(this.num)-parseFloat(this.surplus)
       let obj={
         customerId:this.customerId,
         orderId:this.payOrderId,
