@@ -29,7 +29,6 @@
   import { promptInfoFun } from "@/utils/index"
   import MechanicalMeter from './AddComponents/MechanicalMeter'
   import RemoteMeter from './AddComponents/RemoteMeter'
-  import { GetCustomerNo , ReleaseCustomerNo} from "@/api/userSetting"//区域接口
   import { WaterFactoryComboBoxListAuth } from "@/api/organize"//具有权限的水厂
 
   export default {
@@ -41,7 +40,7 @@
         dialogVisible: false,
         formData:{//添加抄表及IC表对象
           SA_WaterFactory_Id: "",
-          CustomerNo: "",
+          CustomerNo: "系统自动分配",
           SA_UserArea_Id: "",
           CustomerName: "",
           PeopleNo: 1,
@@ -65,7 +64,7 @@
         },
         ycData: {//添加远传及物联网，用户信息数据，水表信息由下层提供
           SA_WaterFactory_Id: "",
-          CustomerNo: "",
+          CustomerNo: "系统自动分配",
           CustomerName: "",
           NameCode:'',
           Tel: "",
@@ -83,21 +82,9 @@
       }
     },
     methods: {
-      /***********************生成用户编码**************************/
-      getUserCode(){
-        GetCustomerNo().then(res => {
-          if (res.code ==0 ) {
-            this.formData.CustomerNo = res.data
-            this.ycData.CustomerNo = res.data
-          } else {
-            promptInfoFun(this,1,res.message)
-          }
-        })
-      },
       /***********************弹窗关闭事件**************************/
       handleClose(){//弹窗关闭初始化表单信息
         this.dialogVisible = false
-        ReleaseCustomerNo({'CustomerNo':this.formData.CustomerNo}).then(res => {})//清除未占用用户编码
         this.$refs.jxChild.$refs['formData'].resetFields();
         this.$refs.jxChild.$refs['formData1'].resetFields();
         this.$refs.ycChild.$refs.ycChilds.$refs['data'].resetFields();

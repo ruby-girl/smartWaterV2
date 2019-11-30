@@ -25,7 +25,7 @@
           <el-table-column
             v-if="item.IsFreeze"
             :key="index"
-            min-width="200px"
+            :width=" index == 0 ? 350+'px':'auto'"
             :sortable="item.IsSortBol ? 'custom' : null"
             :prop="item.ColProp"
             :align="item.Position"
@@ -34,7 +34,7 @@
           <el-table-column
             v-else
             :key="index"
-            min-width="200px"
+            :width=" index == 0 ? 350+'px':'auto'"
             :sortable="item.IsSortBol ? 'custom' : null"
             :prop="item.ColProp"
             :align="item.Position"
@@ -42,9 +42,9 @@
         </template>
         <el-table-column label="操作" width="200px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
-            <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDelete">删除</a>
-            <el-tooltip v-else effect="dark" content="部门已关联岗位，不可删除" placement="bottom-start">
+            <a class="operation1" @click="handleEdit(scope.row)">编辑</a>
+            <a class="operation2" @click="handleDelete(scope.row)" v-if="scope.row.isDelete">删除</a>
+            <el-tooltip v-else effect="dark" content="岗位已关联人员，不可删除" placement="bottom-start">
               <a style="color: #C0C8CC;margin: 10px;">删除</a>
             </el-tooltip>
           </template>
@@ -60,28 +60,7 @@
       <!--列表数据 e-->
     </div>
     <!--编辑或新增窗口 s-->
-    <el-dialog
-      :close-on-click-modal="false"
-      top="30vh"
-      :title="title"
-      :visible.sync="dialogVisible"
-      :before-close="handleClose"
-      width="400px">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
-        <el-form-item label="部门:" prop="newDertmentName">
-          <el-input
-            v-model.trim="ruleForm.newDertmentName"
-            placeholder="请输入部门名称"
-            maxlength="10"
-            size="small"
-            style="width: 250px"/>
-        </el-form-item>
-        <p class="footBox dialogFooter">
-          <el-button type="primary" size="small" @click="submitForm('ruleForm')">确 定</el-button>
-          <el-button size="small" @click="resetForm('ruleForm')">取 消</el-button>
-        </p>
-      </el-form>
-    </el-dialog>
+    <AddOrEdit ref="addChild"></AddOrEdit>
     <!--编辑或新增窗口 e-->
   </div>
 </template>
@@ -89,39 +68,35 @@
 <script>
   import '@/styles/organization.scss'
   import customTable from '@/components/CustomTable/index'//自定义表格组建
+  import AddOrEdit from './components/AddOrEdit'
   import SelectHead from './components/SelectHead'//查询条件组建
   import Pagination from '@/components/Pagination/index'//分页组建
-  import { GetList, Add, UpDate, Delete, GetList_Execl } from "@/api/organize"//http 请求方法
-  import { parseTime } from "@/utils/index"
+  import { GetList, Delete, GetList_Execl,GetEditObjById } from "@/api/organize"
+  import { parseTime, promptInfoFun } from "@/utils/index"
   let editObj = {};//编辑需要用到的全局变量
 
   export default {
     name: 'department',
-    components: { SelectHead, customTable, Pagination },
+    components: { SelectHead, customTable, Pagination, AddOrEdit },
     data() {
       return {
         tableHeight: null,//表格高度
-        dialogVisible: false,//编辑或新增弹窗标识
         title: '',//编辑或新增弹窗标题
         total: 0,//分页总条数
         dp: {//查询条件对象
-           page: 1,
-           limit: 10,
-           filed:'',
-           sort:"",
-           DeptName: '',
-           editUserId: '-1',//操作者
-           editStartTime: '',//操作开始结束时间
-           editEndTime: '',
-           tableId: '0000001'
-         },
-        ruleForm: {//新增或编辑操作对象
-          newDertmentName: ''
-        },
-        rules: {
-          newDertmentName: [
-            { required: true, message: '不能为空', trigger: 'change' }
-          ]
+          Id: "-1",
+          JobName: "",
+          createUserId: "",
+          createStartTime: "",
+          createEndTime: "",
+          editUserId: "",
+          editStartTime: "",
+          editEndTime: "",
+          limit: 10,
+          page: 1,
+          sort: "",
+          filed: "",
+          tableId: "0000001"
         },
         tableData: [],//列表数据
         checkAllData: [],
@@ -159,18 +134,21 @@
           window.location.href = `${this.common.excelPath}${res.data}`;
         })
       },
-      handleEdit(scope,row) {//编辑方法
-        editObj = row
-        this.dialogVisible = true
-        this.title = '编辑'
-        this.ruleForm.newDertmentName = row.DeptName
+      handleEdit(row) {//编辑方法
+        this.$refs.addChild.dialogVisible = true
+        this.$refs.addChild.title = '编辑'
+        GetEditObjById({id:row.Id}).then(res => {
+          if(res.code==0){
+            this.$refs.addChild.jp = res.data
+          }
+        })
       },
       addNewFun() {//新增方法
-        this.dialogVisible = true
-        this.title = '添加'
-        this.ruleForm.newDertmentName = ''
+        this.$refs.addChild.dialogVisible = true
+        this.$refs.addChild.title = '添加'
+        this.$refs.addChild.jp.DeptName = ''
       },
-      handleDelete(scope,row) {//删除方法
+      handleDelete(row) {//删除方法
         this.$confirm("是否删除当前信息", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -180,95 +158,24 @@
         }).then(() => {
           Delete({ Id: row.Id }).then(res => {
             if (res.code ==0 ) {
-              this.$message({
-                message: res.message,
-                type: 'success',
-                duration: 4000
-              });
+              promptInfoFun(this, 2, res.message);
               this.dialogVisible = false
               this.searchFun()
             } else {
-              this.$message({
-                message: res.message,
-                type: 'warning',
-                duration: 4000
-              });
+              promptInfoFun(this, 1, res.message);
             }
           })
         });
       },
-      searchFun() {//查询方法
+      searchFun() {
         GetList(this.dp).then(res => {
           if (res.code ==0 ) {
             this.total = res.count;
             this.tableData = res.data;
           } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+            promptInfoFun(this, 1, res.message);
           }
         })
-      },
-      submitForm(formName) {//编辑及新增保存方法
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if (this.title ==='编辑') {
-              let params = { Id: editObj.Id, DeptName: this.ruleForm.newDertmentName }
-              UpDate(params).then(res => {
-                if (res.code ==0 ) {
-                  this.$message({
-                    message: res.message,
-                    type: 'success',
-                    duration: 4000
-                  });
-                  this.dialogVisible = false
-                  this.$refs[formName].resetFields();
-                  this.searchFun()
-                } else {
-                  this.$message({
-                    message: res.message,
-                    type: 'warning',
-                    duration: 4000
-                  });
-                }
-              })
-            } else {
-              let params = { deptName: this.ruleForm.newDertmentName }
-              Add(params).then(res => {
-                if (res.code == 0) {
-                  this.$message({
-                    message: res.message,
-                    type: 'success',
-                    duration: 4000
-                  });
-                  this.dialogVisible = false
-                  this.$refs[formName].resetFields();
-                  this.searchFun()
-                } else {
-                  this.$message({
-                    message: res.message,
-                    type: 'warning',
-                    duration: 4000
-                  });
-                }
-              })
-            }
-          } else {
-            return false
-          }
-        })
-      },
-      resetForm(formName){//表格重置
-        this.dialogVisible = false;
-        this.ruleForm.newDertmentName = ''
-        this.$refs[formName].resetFields();
-      },
-      handleClose(){//新增或编辑弹窗关闭事件
-        this.dialogVisible = false;
-        this.ruleForm.newDertmentName = ''
-        this.$refs['ruleForm'].resetFields();
       },
       sortChanges({prop, order }){//列表排序方法
         this.dp.filed = prop
@@ -280,7 +187,6 @@
       }
     },
     mounted() {
-      let _this = this
       this.$refs.myChild.GetTable(this.dp.tableId);//调用子组件方法获取表头信息
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50

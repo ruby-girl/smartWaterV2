@@ -51,6 +51,15 @@ export function GetList_Execl(data) {
   })
 }
 
+/*部门编辑*/
+export function GetEditObjById(data) {
+  return request({
+    url: '/Department/GetEditObjById',
+    method: 'post',
+    params: data
+  })
+}
+
 /**
  * 岗位接口
  * */

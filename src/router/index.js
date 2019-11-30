@@ -127,12 +127,12 @@ export const asyncRoutes = [
         component: () => import('@/views/organizationManage/department/index'),
         meta: { title: '部门管理', roles: ['1'] }
       },
-      {
+     /* {
         path: 'postManage',
         name: 'postManage',
         component: () => import('@/views/organizationManage/postManage/index'),
         meta: { title: '岗位管理', roles: ['1'] }
-      },
+      },*/
       {
         path: 'peopleManage',
         name: 'peopleManage',

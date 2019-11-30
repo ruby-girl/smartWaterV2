@@ -294,3 +294,23 @@
     }
   }
 </script>
+<style lang="scss">
+  .people_info_box {
+    .el-dialog__body{
+      background: #F5F5F5;
+      padding: 26px 24px 26px 24px;
+      .edit_box{
+        padding: 0 30px 0 0;
+      }
+      .edit_box_moudler{
+        background: #fff;padding: 1px 20px 5px 20px;margin-bottom: 10px;
+        h3{color: #5B5B5B;font: bold 16px 'Microsoft YaHei';
+          i{display: inline-block;width: 4px;height: 18px;background: #29BEB0;
+            vertical-align: middle;
+            margin: -3px 5px 0 0;}
+        }
+      }
+      .el-form-item{margin-bottom: 16px;margin-right: 50px;}
+    }
+  }
+</style>

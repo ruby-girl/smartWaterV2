@@ -151,7 +151,6 @@ export default {
       _this.$refs.editDialog.param.pieName = selectNode.label;
       _this.$refs.editDialog.param.Id = selectNode.Id;
       _this.$refs.editDialog.param.Pid = selectNode.Pid;
-      console.log(selectNode);
       switch (type) {
         case 1:
           if (selectNode.Id === undefined || selectNode.Id == 0) {

@@ -153,9 +153,10 @@
       /******************新增用户*********************/
       addNewFun(){
         this.$refs.addDialog.dialogVisible = true;
-        this.$refs.addDialog.getUserCode()//创建用户编码
       },
-      makeCard(){},
+      makeCard(){
+
+      },
       lowApplication(){},
       /*******************表格自定义***********************/
       setCustomData() {

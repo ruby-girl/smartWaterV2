@@ -2,7 +2,7 @@
   <div>
     <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
       <el-row>
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="8" style="position: relative">
+        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="9" style="position: relative">
           <span style="position: absolute;color: #F56C6C;left: 45px;top:10px;">*</span>
           <span v-show="item.SYS_Department_Id==''&&isFlag"
                 style="position: absolute;color: #F56C6C;left: 100px;top:40px;font-size: 12px;">不能为空</span>
@@ -18,7 +18,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="22" :sm="22" :md="22" :lg="10" :xl="6" style="position: relative">
+        <el-col :xs="22" :sm="22" :md="22" :lg="11" :xl="7" style="position: relative">
           <span style="position: absolute;color: #F56C6C;left: -4px;top:10px;">*</span>
           <span v-show="item.OA_Job_Id==''&&isFlag"
                 style="position: absolute;color: #F56C6C;left: 70px;top:40px;font-size: 12px;">不能为空</span>

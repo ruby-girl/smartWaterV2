@@ -6,31 +6,15 @@
     size="small"
     label-width="100px"
     @submit.native.prevent>
+
     <el-form-item label="部门：">
-      <el-input v-model="dp.DeptName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
-    </el-form-item>
-    <el-form-item label="操作人：">
-      <el-select v-model="dp.editUserId" placeholder="请选择" size="small"  @keyup.enter.native="searchFun">
+      <el-select v-model="dp.Id" placeholder="请选择" size="small" filterable>
         <el-option label="全部" value="-1"></el-option>
-        <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
+        <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="操作时间：">
-      <el-date-picker
-        :editable="false"
-        @keydown.enter.native="searchFun"
-        v-model="createStartTimes"
-        :unlink-panels="true"
-        size="small"
-        type="datetimerange"
-        range-separator="~"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        format="yyyy-MM-dd HH:mm:ss"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        :default-time="['00:00:00', '23:59:59']"
-        @change="getTime1"
-      />
+    <el-form-item label="岗位：">
+      <el-input v-model="dp.JobName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
     </el-form-item>
     <el-form-item label=""><el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
   </el-form>
@@ -38,10 +22,13 @@
 
 <script>
     import { GetLoginNameList } from "@/api/user"
+    import { ComboBoxList } from "@/api/organize"// 请求方法
+    import { promptInfoFun } from "@/utils/index";
     export default {
       name: "SelectHead",
       data() {
           return {
+            postArray:[],
             operatorArray:[],//操作人数据值
             createStartTimes:[],
             dp: {}//查询参数
@@ -76,11 +63,16 @@
             if (res.code ==0 ) {
               this.operatorArray = res.data;
             } else {
-              this.$message({
-                message: res.message,
-                type: 'warning',
-                duration: 4000
-              });
+              promptInfoFun(this, 1, res.message);
+            }
+          })
+        },
+        getComboBoxList() {//获取部门信息
+          ComboBoxList().then(res => {
+            if(res.code==0){
+              this.postArray = res.data;
+            } else {
+              promptInfoFun(this, 1, res.message);
             }
           })
         }
@@ -88,6 +80,7 @@
       mounted() {
           this.dp = this.$parent.dp;//从父组件获取初始化查询参数
           this.GetLoginNameList()//获取操作员数组信息
+          this.getComboBoxList()//获取操作员数组信息
       }
     }
 </script>
