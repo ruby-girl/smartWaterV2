@@ -23,8 +23,8 @@
           <el-option v-for="(item,index) in formsArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item  label="用户：">
-        <el-select v-model="param.CustomerQueryType" placeholder="请选择" style="width: 80px;float: left">
+      <el-form-item>
+        <el-select v-model="param.CustomerQueryType" placeholder="请选择" class="user-select-box" style="width: 100px;float: left;margin-left: 30px">
           <el-option label="编号" value="1"></el-option>
           <el-option label="姓名/简码" value="2"></el-option>
         </el-select>

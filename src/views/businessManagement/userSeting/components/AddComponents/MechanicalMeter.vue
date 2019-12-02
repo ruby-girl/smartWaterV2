@@ -121,7 +121,7 @@
   import { convertToPinyinUpper } from "@/utils/convert"
   import { getDictionaryOption } from "@/utils/permission"
   import {DeleteList} from "@/api/upload"
-  import { AddJXCustomer, AddICCustomer, GetWaterPropertyList, ReleaseCustomerNo } from "@/api/userSetting"//区域接口
+  import { AddJXCustomer, AddICCustomer, GetWaterPropertyList } from "@/api/userSetting"//区域接口
   import Bus from '@/utils/bus'
   import { GetAreaListByWaterFactory } from "@/api/userArea"//区域接口
   import { ComboBoxListByWaterFactory } from "@/api/registerBook"//根据水厂获取表册
@@ -237,8 +237,6 @@
       },
       /************************重置表单*************************/
       resetForm(){//取消时初始化表单信息
-        if(this.formData.CustomerNo!='')
-          ReleaseCustomerNo({'CustomerNo':this.formData.CustomerNo}).then(res => {})//清除未占用用户编码
         this.$refs['formData'].resetFields();
         this.$refs['formData1'].resetFields();
         this.$parent.$parent.$parent.$parent.dialogVisible = false

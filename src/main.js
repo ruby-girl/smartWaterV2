@@ -24,6 +24,8 @@ import $ from 'jquery'
 import * as filters from './filters' // global filters
 import VueDND from 'awe-dnd'//拖动
 Vue.prototype.baseUrl='http://192.168.2.216:10002'
+import axios from 'axios'
+Vue.prototype.$http = axios
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

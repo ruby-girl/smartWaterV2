@@ -9,8 +9,8 @@
         </el-radio-group>
         <mechanical-water v-if="typeCheck==1" :waterMeterList="waterMeterList" :openStatus="openStatus"/>
         <ic-water v-if="typeCheck==2" :waterMeterList="waterMeterList" :openStatus="openStatus"/>
-        <remoter-water v-if="typeCheck==3" :openStatus="openStatus"/>
-        <internet-water v-if="typeCheck==4"/>
+        <remoter-water v-if="typeCheck==3" :openStatus="openStatus" ref="remoterChild"/>
+        <internet-water v-if="typeCheck==4" ref="interChild"/>
     </div>
   </div>
 </template>
@@ -31,6 +31,26 @@ export default {
       openStatus:[],
     };
   },
+  beforeRouteLeave(to,from,next){
+    if(document.getElementsByClassName('v-modal')[0])
+      document.getElementsByClassName('v-modal')[0].style.display = 'block'
+    next()
+  },
+  mounted(){
+    if(document.getElementsByClassName('v-modal')[0])
+      document.getElementsByClassName('v-modal')[0].style.display = 'none'
+    this.typeCheck = this.$route.query.type
+    this.$nextTick(()=>{
+      if (this.$route.query.type == 3) {
+        this.$refs.remoterChild.YCMeterQueryParam.CustomerQueryValue = this.$route.query.CustomerQueryValue
+        this.$refs.remoterChild.searchYCWaterList();
+      } else if (this.$route.query.type == 4) {
+        this.$refs.interChild.WLWQueryParam.WaterMeterNo = this.$route.query.CustomerQueryValue
+        this.$refs.interChild.searchWLWMeterInfo();
+      }
+    })
+
+  },
   created(){
       this.waterMeterList = getDictionaryOption("水表样式");
       if(getDictionaryOption("水表样式")){
@@ -43,7 +63,7 @@ export default {
       }else {
         this.openStatus = []
       }
-     
+
   }
 };
-</script>   
+</script>

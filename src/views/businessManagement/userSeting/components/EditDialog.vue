@@ -296,7 +296,7 @@
 
       .areaInput {
         width: 100%;
-        height: 32px;
+        height: 26px;
         line-height: 32px;
         border: solid 1px #D8E2E7;
         border-radius: 5px;

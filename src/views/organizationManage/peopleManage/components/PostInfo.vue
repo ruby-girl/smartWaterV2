@@ -1,55 +1,43 @@
 <template>
   <div>
-    <el-col v-for="(item,index) in sojList" :key="index" :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-      <el-row>
-        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="9" style="position: relative">
-          <span style="position: absolute;color: #F56C6C;left: 45px;top:10px;">*</span>
-          <span v-show="item.SYS_Department_Id==''&&isFlag"
-                style="position: absolute;color: #F56C6C;left: 100px;top:40px;font-size: 12px;">不能为空</span>
-          <el-form-item label="部门:" label-width="100px" :class="item.SYS_Department_Id==''&&isFlag?'on':''">
-            <el-select v-model="item.SYS_Department_Id" placeholder="请选择" size="small"
-                       @change="getPostList(item.SYS_Department_Id,index)">
-              <el-option
-                v-for="(items,indexs) in item.depart"
-                :key="indexs"
-                :label="items.Name"
-                :value="items.Id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="22" :sm="22" :md="22" :lg="11" :xl="7" style="position: relative">
-          <span style="position: absolute;color: #F56C6C;left: -4px;top:10px;">*</span>
-          <span v-show="item.OA_Job_Id==''&&isFlag"
-                style="position: absolute;color: #F56C6C;left: 70px;top:40px;font-size: 12px;">不能为空</span>
-          <el-form-item label="岗位:" label-width="50px" :class="item.OA_Job_Id==''&&isFlag?'on':''">
-            <el-select v-model="item.OA_Job_Id" placeholder="请选择" size="small" @change="recurFun(index)">
-              <el-option
-                v-for="(items,indexs) in item.post"
-                :key="indexs"
-                :label="items.Name"
-                :value="items.Id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col v-show="index<=sojList.length-2" :span="1">
-                <span class="el-icon-minus"
-                      style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold"
-                      @click="reduceFun(index)"/>
-        </el-col>
-        <el-col v-show="index==sojList.length-1 && sojList.length>1" :span="1">
-                <span class="el-icon-minus"
-                      style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold"
-                      @click="reduceFun(index)"/>
-        </el-col>
-        <el-col v-show="index==sojList.length-1" :span="1">
-                <span class="el-icon-plus"
-                      style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold"
-                      @click="addFun"/>
-        </el-col>
-      </el-row>
-    </el-col>
+    <div v-for="(item,index) in sojList" :key="index">
+      <el-form-item label="部门:" label-width="100px" :class="item.SYS_Department_Id==''&&isFlag?'on':''" style="position: relative">
+        <span style="position: absolute;color: #F56C6C;left: -55px;top:3px;">*</span>
+        <span v-show="item.SYS_Department_Id==''&&isFlag"
+              style="position: absolute;color: #F56C6C;left: 0px;top:20px;font-size: 12px;">不能为空</span>
+        <el-select v-model="item.SYS_Department_Id" placeholder="请选择" size="small"
+                   @change="getPostList(item.SYS_Department_Id,index)">
+          <el-option
+            v-for="(items,indexs) in item.depart"
+            :key="indexs"
+            :label="items.Name"
+            :value="items.Id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="岗位:" label-width="100px" :class="item.OA_Job_Id==''&&isFlag?'on':''" style="position: relative">
+        <span style="position: absolute;color: #F56C6C;left: -55px;top:3px;">*</span>
+        <span v-show="item.OA_Job_Id==''&&isFlag"
+              style="position: absolute;color: #F56C6C;left: -0px;top:20px;font-size: 12px;">不能为空</span>
+        <el-select v-model="item.OA_Job_Id" placeholder="请选择" size="small" @change="recurFun(index)">
+          <el-option
+            v-for="(items,indexs) in item.post"
+            :key="indexs"
+            :label="items.Name"
+            :value="items.Id"
+          />
+        </el-select>
+        <span class="el-icon-minus" v-show="index<=sojList.length-2"
+              style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold;position: absolute;right: -25px;top:-5px"
+              @click="reduceFun(index)"/>
+        <span class="el-icon-minus" v-show="index==sojList.length-1 && sojList.length>1"
+              style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold;position: absolute;right: -25px;top:-5px"
+              @click="reduceFun(index)"/>
+        <span class="el-icon-plus" v-show="index==sojList.length-1"
+              style="margin: 10px 0 0 8px;font-size: 14px;cursor: pointer;color: #00B3A1;font-weight: bold;position: absolute;right: -25px;top:-5px"
+              @click="addFun"/>
+      </el-form-item>
+    </div>
   </div>
 </template>
 

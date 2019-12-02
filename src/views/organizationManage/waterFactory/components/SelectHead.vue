@@ -29,14 +29,14 @@
     <el-form-item label="操作时间：">
       <el-date-picker
         v-model="timevalue"
-        type="datetimerange"
+        type="daterange"
         :editable="false"
         :unlink-panels="true"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         :default-time="['00:00:00', '23:59:59']"
-        format="yyyy-MM-dd HH:mm:ss"
+        format="yyyy-MM-dd"
         value-format="yyyy-MM-dd HH:mm:ss"
         @change="getTime"
         @keydown.enter.native="handleFilter"

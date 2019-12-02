@@ -8,7 +8,7 @@
       size="small"
       label-width="100px"
       @submit.native.prevent>
-      <el-form-item label="部门：">
+      <el-form-item label="部门 ">
         <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList"
                    @keyup.enter.native="searchFun">
           <el-option label="全部" value="-1"></el-option>
@@ -20,7 +20,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="岗位：">
+      <el-form-item label="岗位 ">
         <el-select v-model="queryData.OA_Job_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
           <el-option label="全部" value="-1"></el-option>
           <el-option
@@ -31,7 +31,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="人员：">
+      <el-form-item label="人员 ">
         <el-input
           @keyup.enter.native="searchFun"
           v-model="queryData.EmpNo"
@@ -40,12 +40,12 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="岗位状态：">
+      <el-form-item label="岗位状态 ">
         <el-select v-model="queryData.JobStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
           <el-option label="在职" value="在职"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="入职时间：">
+      <el-form-item label="入职时间 ">
         <el-date-picker
           @keydown.enter.native="searchFun"
           :editable="false"
@@ -62,7 +62,7 @@
           @change="getTime1"
         />
       </el-form-item>
-      <el-form-item label="性别：">
+      <el-form-item label="性别 ">
         <el-select v-model="queryData.Gender" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
           <el-option label="全部" value="-1"></el-option>
           <el-option label="女" value="女"/>
@@ -70,7 +70,7 @@
         </el-select>
       </el-form-item>
       <transition name="fade">
-        <el-form-item label="电话号码：" v-show="ifMore">
+        <el-form-item label="电话号码 " v-show="ifMore">
           <el-input
             @keyup.enter.native="searchFun"
             v-model="queryData.MobileNumber"
@@ -81,7 +81,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="出生日期：" v-show="ifMore">
+        <el-form-item label="出生日期 " v-show="ifMore">
           <el-date-picker
             @keydown.enter.native="searchFun"
             :editable="false"
@@ -100,7 +100,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="身份证号：" v-show="ifMore">
+        <el-form-item label="身份证号 " v-show="ifMore">
           <el-input
             @keyup.enter.native="searchFun"
             v-model.trim="queryData.IDNumber"
@@ -111,7 +111,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="操作人：" v-show="ifMore">
+        <el-form-item label="操作人 " v-show="ifMore">
           <el-select v-model="queryData.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
             <el-option label="全部" value="-1"></el-option>
             <el-option
@@ -124,14 +124,14 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="操作时间：" v-show="ifMore">
+        <el-form-item label="操作时间 " v-show="ifMore">
           <el-date-picker
             @keydown.enter.native="searchFun"
             :editable="false"
             v-model="operationTime"
             :unlink-panels="true"
             size="small"
-            type="datetimerange"
+            type="daterange"
             range-separator="~"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -143,7 +143,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="账号状态：" v-show="ifMore">
+        <el-form-item label="账号状态 " v-show="ifMore">
           <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
             <el-option label="全部" value="-1"/>
             <el-option label="已分配" value="已分配"/>
@@ -152,7 +152,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="邮箱：" v-show="ifMore">
+        <el-form-item label="邮箱 " v-show="ifMore">
           <el-input
             @keyup.enter.native="searchFun"
             v-model="queryData.EmailAddress"
@@ -173,7 +173,7 @@
     <el-row class="ssearchText2">
       <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">部门：</label>
+          <label class="cl-label">部门&nbsp;</label>
           <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList"
                      @keyup.enter.native="searchFun">
             <el-option label="全部" value="-1"></el-option>
@@ -188,7 +188,7 @@
       </el-col>
       <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">岗位：</label>
+          <label class="cl-label">岗位&nbsp;</label>
           <el-select v-model="queryData.OA_Job_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
             <el-option label="全部" value="-1"></el-option>
             <el-option
@@ -202,7 +202,7 @@
       </el-col>
       <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">人员：</label>
+          <label class="cl-label">人员&nbsp;</label>
           <el-input
             @keyup.enter.native="searchFun"
             v-model="queryData.EmpNo"
@@ -214,7 +214,7 @@
       </el-col>
       <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">岗位状态：</label>
+          <label class="cl-label">岗位状态&nbsp;</label>
           <el-select v-model="queryData.JobStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
             <el-option label="在职" value="在职"/>
           </el-select>
@@ -222,7 +222,7 @@
       </el-col>
       <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
         <div class="cl-inlineItem" style="width: 100%">
-          <label class="cl-label">入职时间：</label>
+          <label class="cl-label">入职时间&nbsp;</label>
           <el-date-picker
             @keydown.enter.native="searchFun"
             :editable="false"
@@ -243,7 +243,7 @@
       </el-col>
       <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">性别：</label>
+          <label class="cl-label">性别&nbsp;</label>
           <el-select v-model="queryData.Gender" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
             <el-option label="全部" value="-1"></el-option>
             <el-option label="女" value="女"/>
@@ -254,7 +254,7 @@
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">电话号码：</label>
+          <label class="cl-label">电话号码&nbsp;</label>
           <el-input
             @keyup.enter.native="searchFun"
             v-model="queryData.MobileNumber"
@@ -268,7 +268,7 @@
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
         <div class="cl-inlineItem" style="width: 100%">
-          <label class="cl-label">出生日期：</label>
+          <label class="cl-label">出生日期&nbsp;</label>
           <el-date-picker
             @keydown.enter.native="searchFun"
             :editable="false"
@@ -291,7 +291,7 @@
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">身份证号：</label>
+          <label class="cl-label">身份证号&nbsp;</label>
           <el-input
             @keyup.enter.native="searchFun"
             v-model.trim="queryData.IDNumber"
@@ -305,7 +305,7 @@
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">操作人：</label>
+          <label class="cl-label">操作人&nbsp;</label>
           <el-select v-model="queryData.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
             <el-option label="全部" value="-1"></el-option>
             <el-option
@@ -320,31 +320,31 @@
       </transition>
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-        <div class="cl-inlineItem" style="width: 100%">
-          <label class="cl-label">操作时间：</label>
-          <el-date-picker
-            @keydown.enter.native="searchFun"
-            :editable="false"
-            v-model="operationTime"
-            :unlink-panels="true"
-            style="width: 81%"
-            size="small"
-            type="datetimerange"
-            range-separator="~"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
-            format="yyyy-MM-dd HH:mm:ss"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            @change="getTime3"
-          />
-        </div>
+          <div class="cl-inlineItem" style="width: 100%">
+            <label class="cl-label">操作时间&nbsp;</label>
+            <el-date-picker
+              @keydown.enter.native="searchFun"
+              :editable="false"
+              v-model="operationTime"
+              :unlink-panels="true"
+              style="width: 81%"
+              size="small"
+              type="daterange"
+              range-separator="~"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              @change="getTime3"
+            />
+          </div>
       </el-col>
       </transition>
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">账号状态：</label>
+          <label class="cl-label">账号状态&nbsp;</label>
           <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
             <el-option label="全部" value="-1"/>
             <el-option label="已分配" value="已分配"/>
@@ -356,7 +356,7 @@
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
-          <label class="cl-label">邮箱：</label>
+          <label class="cl-label">邮箱&nbsp;</label>
           <el-input
             @keyup.enter.native="searchFun"
             v-model="queryData.EmailAddress"

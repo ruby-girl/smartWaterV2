@@ -48,7 +48,7 @@
               <!--部门岗位组件 s-->
               <PostInfo ref="childPost"></PostInfo>
               <el-form-item label="水厂:" prop="WaterFactoryIdarr">
-                <el-select v-model="jp.WaterFactoryIdarr" placeholder="请选择" size="small">
+                <el-select v-model="jp.WaterFactoryIdarr" placeholder="请选择" size="small" multiple>
                   <el-option v-for="(item,index) in WaterFactory" :label="item.Name" :value="item.Id" :key="index"/>
                 </el-select>
               </el-form-item>
@@ -176,7 +176,7 @@
           Address: '',//地址
           Idarr: [],//上传文件ID
           EmailAddress: '',//邮箱
-          WaterFactoryIdarr:'',//水厂
+          WaterFactoryIdarr:[],//水厂
           EnumFun:'',//职务
           RoleId:'',
           Account:'',

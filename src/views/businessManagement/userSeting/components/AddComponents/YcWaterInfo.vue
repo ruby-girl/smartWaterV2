@@ -2,7 +2,7 @@
   <el-form :inline="true" ref="data" :model="data" :rules="rules" label-width="100px">
     <!--远程水表 s-->
     <el-form-item label="水表编号：" prop="WaterMeterNo">
-      <el-input v-model="data.WaterMeterNo " size="small" placeholder="【按enter建查询水表信息】"
+      <el-input v-model="data.WaterMeterNo " size="small" placeholder="按enter建查询水表信息"
                 @keyup.enter.native="GetYCWaterByWaterMeterNo"/>
     </el-form-item>
     <el-form-item label="集中器号：" prop="ConcentratorNo">
@@ -74,17 +74,32 @@
     methods:{
       /**********************根据编号获取数据**************/
       GetYCWaterByWaterMeterNo(){
+        let _this = this
         if(this.data.WaterMeterNo==''){
           promptInfoFun(this,1,"水表编号不能为空");
           return
         }
-        GetYCWaterMeterByWaterMeterNo({'WaterMeterNo':this.data.WaterMeterNo}).then(res => {
-          if (res.code ==0 ) {
-            this.data = res.data
-          } else {
-            promptInfoFun(this,1,res.message)
-          }
-        })
+        /*犹豫axios 异步请求导致获取不到返回值 股用以下方式解决*/
+        this.$http.get(this.baseUrl+'/api//Customer/GetYCWaterMeterByWaterMeterNo?WaterMeterNo='+ this.data.WaterMeterNo)
+          .then((res) => {
+            if (res.data.code == 0) {
+              _this.data = res.data.data
+            }else {
+              if(res.data.message.indexOf('已绑定用户') != -1){
+                this.$confirm(res.data.message, "提示", {
+                  confirmButtonText: "确定",
+                  cancelButtonText: "取消",
+                  iconClass:"el-icon-question questionIcon",
+                  customClass: "warningBox",
+                  showClose: false
+                }).then(() => {
+                  this.$router.push({path: '/waterMetermangments/waterMeterSetting', query: {CustomerQueryValue: this.data.WaterMeterNo,type:3}})
+                })
+              }else {
+                promptInfoFun(this,1,res.data.message)
+              }
+            }
+          })
       },
       /**********************转换保存字段名称**************/
       changeWordName(){

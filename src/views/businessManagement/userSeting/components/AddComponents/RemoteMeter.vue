@@ -90,7 +90,7 @@
   import { convertToPinyinUpper } from "@/utils/convert"
   import {DeleteList} from "@/api/upload"
   import Bus from '@/utils/bus'
-  import { AddYCCustomer, AddWLWCustomer, GetWaterPropertyList, ReleaseCustomerNo} from "@/api/userSetting"//区域接口
+  import { AddYCCustomer, AddWLWCustomer, GetWaterPropertyList} from "@/api/userSetting"//区域接口
   import { GetAreaListByWaterFactory } from "@/api/userArea"//区域接口
   import { ComboBoxListByWaterFactory } from "@/api/registerBook"//根据水厂获取表册
 
@@ -208,9 +208,6 @@
       },
       /************************重置表单*************************/
       resetForm() {
-        if (this.ycData.CustomerNo != '')
-          ReleaseCustomerNo({'CustomerNo': this.ycData.CustomerNo}).then(res => {
-          })//清除未占用用户编码
         this.$refs['ycData'].resetFields();
         let childName = this.differ ? childName = this.$refs.wlyChild : childName = this.$refs.ycChilds
         childName.$refs['data'].resetFields()

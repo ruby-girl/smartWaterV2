@@ -7,13 +7,14 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item label="用户：" label-width="65px">
-      <el-select v-model="selectHead.CustomerQueryType" placeholder="请选择" style="width: 100px;float: left">
+    <el-form-item>
+      <el-select v-model="selectHead.CustomerQueryType" placeholder="请选择"  class="user-select-box" style="width: 100px;float: left">
         <el-option label="用户编号" value="1"></el-option>
         <el-option label="姓名/简码" value="2"></el-option>
         <el-option label="水表编号" value="3"></el-option>
         <el-option label="交易流水号" value="4"></el-option>
       </el-select>
+
       <el-input
         v-model="selectHead.CustomerQueryValue"
         maxlength="20"
@@ -26,12 +27,12 @@
       <el-select
         v-model="selectHead.WaterFactory"
         placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
+        @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
+
     <el-form-item label="缴费日期：">
       <el-date-picker
         v-model="timevalue"
@@ -59,13 +60,13 @@
       </el-select>
     </el-form-item>
     <transition-group name="fade">
-     
+
         <el-form-item label="缴费方式：" v-show="ifMore" key="type">
           <el-select
             v-model="selectHead.PayMentType"
             placeholder="请选择"
             @keydown.enter.native="handleFilter"
-          >         
+          >
             <el-option label="全部" value="-1" />
             <el-option label="现金" value="2701" />
             <el-option label="微信" value="2702" />
@@ -104,7 +105,7 @@
             />
           </el-select>
         </el-form-item>
-     
+
     </transition-group>
     <el-form-item>
       <el-button type="primary" size="mini" @click="handleFilter">
@@ -169,7 +170,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .getUpDown {
   font-size: 14px;
   color: #00b3a0;
@@ -180,5 +181,6 @@ export default {
 .inline{
   display: inline-block;
 }
+
 </style>
 

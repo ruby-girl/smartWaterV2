@@ -7,8 +7,8 @@
       size="small"
       label-width="100px"
       @submit.native.prevent>
-      <el-form-item  label="用户：">
-        <el-select v-model="query.CustomerQueryType" placeholder="请选择" style="width: 100px;float: left">
+      <el-form-item>
+        <el-select v-model="query.CustomerQueryType" placeholder="请选择" class="short-select-item" style="width: 100px;float: left">
           <el-option label="编号" value="1"></el-option>
           <el-option label="姓名/简码" value="2"></el-option>
           <el-option label="电话" value="3"></el-option>

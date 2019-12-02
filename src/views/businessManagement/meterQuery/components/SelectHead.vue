@@ -11,8 +11,8 @@
       size="small"
       label-width="100px"
       @submit.native.prevent>
-          <el-form-item label="水厂：">
-            <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList" v-show="waterFactory.length>1">
+          <el-form-item label="水厂：" v-show="waterFactory.length>1">
+            <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList" >
               <el-option label="全部" value="-1"></el-option>
               <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
             </el-select>
@@ -43,21 +43,21 @@
           <el-form-item label="抄表日期：" v-show="typeCheck==2">
             <el-date-picker
               v-model="meterData"
-              type="datetimerange"
+              type="daterange"
               :editable="false"
               :unlink-panels="true"
               range-separator="~"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               :default-time="['00:00:00', '23:59:59']"
-              format="yyyy-MM-dd HH:mm:ss"
+              format="yyyy-MM-dd"
               value-format="yyyy-MM-dd HH:mm:ss"
               @keydown.enter.native="handleFilter"
               @change="getTime"
             />
           </el-form-item>
-          <el-form-item label="用户：">
-            <el-select v-model="param.CustomerQueryType" placeholder="请选择" style="width: 80px;float: left">
+          <el-form-item >
+            <el-select v-model="param.CustomerQueryType" placeholder="请选择" class="user-select-box" style="width: 100px;float: left;margin-left: 30px">
               <el-option label="编号" value="1"></el-option>
               <el-option label="姓名/简码" value="2"></el-option>
             </el-select>
@@ -81,14 +81,14 @@
             <el-form-item label="录入日期：" v-show="ifMore">
               <el-date-picker
                 v-model="InputData"
-                type="datetimerange"
+                type="daterange"
                 :editable="false"
                 :unlink-panels="true"
                 range-separator="~"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 :default-time="['00:00:00', '23:59:59']"
-                format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 @keydown.enter.native="handleFilter"
                 @change="getTime1"
