@@ -138,14 +138,24 @@
  color:#8A9299;
 }
 
-// 输入框 长度 高度
-.el-input__inner{
+// 统一设置输入框 长度 高度
+.el-form-item__content .el-input__inner{
   padding-right:10px;
   width:180px;
   height:26px;
 }
 .el-form-item--small.el-form-item{
   margin-bottom: 16px;
+}
+.el-date-editor--datetimerange{
+  width:250px !important;
+}
+.short-select .el-input__inner{
+  width:100% !important;
+}
+// 时间选择器宽度
+.el-form-item--small .el-form-item__content,.el-form-item--small .el-form-item__label,.el-input--small .el-input__icon,.el-form-item--medium .el-form-item__content,.el-form-item--medium .el-form-item__label,.el-input--medium .el-input__icon{
+  line-height: 26px;
 }
 .el-form-item__label{
   padding:0 !important;

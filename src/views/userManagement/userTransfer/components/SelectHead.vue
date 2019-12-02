@@ -44,7 +44,8 @@
           <el-select
             v-model="selectHead.TransferCustomer"
             placeholder="请选择"
-            style="width: 100px;float: left"
+            style="width: 110px;float: left"
+            class="short-select"
           >
             <el-option label="原用户姓名" value="1"></el-option>
             <el-option label="新用户姓名" value="2"></el-option>
