@@ -14,7 +14,7 @@
       </el-radio-group>
     </div>
     <div style="padding:15px;padding-bottom:0;" v-show="type==1">
-      <el-form-item label="用户：" >
+      <el-form-item>
         <el-select v-model="selectHead.Enumcqt" placeholder="请选择" style="width: 100px;float: left">
           <el-option label="用户编号" value="1"></el-option>
           <el-option label="姓名/简码" value="2"></el-option>

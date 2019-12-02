@@ -395,3 +395,7 @@ font-size: 13px;
 .el-table__empty-block{
   width:100% !important;
 }
+.vue-treeselect__control,.vue-treeselect__placeholder, .vue-treeselect__single-value{
+  height:26px !important;
+  line-height: 26px !important;
+}
