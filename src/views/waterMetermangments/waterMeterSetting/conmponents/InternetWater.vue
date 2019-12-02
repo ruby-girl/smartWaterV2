@@ -92,7 +92,7 @@
       </el-button>
     </div>
     <customTable ref="myChild" />
-    <Static :ErrorList="ErrorList" />
+    <Static class="static-height" :ErrorList="ErrorList" />
     <div class="main-padding-20-y" id="table">
       <el-table
         :key="tableKey"
@@ -232,25 +232,14 @@ export default {
     this.TrafficStatusList = getDictionaryOption("远传表通讯状态");
   },
   mounted() {
-    this.tableHeight =
+      this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
-      document.getElementById("table").offsetTop -
-      58;
+      document.getElementsByClassName("el-form")[0].offsetHeight -
+      289;
     this.$refs.myChild.GetTable(this.WLWQueryParam.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
   },
-  watch: {
-    customHeight() {
-      //获取自定义模块高度
-      let that = this;
-      that.$nextTick(() => {
-        that.tableHeight =
-          document.getElementsByClassName("section-container")[0].offsetHeight -
-          document.getElementById("table").offsetTop -
-          58;
-      });
-    }
-  },
+
   computed: {
     tableHeadData: function() {
       //获取表头信息

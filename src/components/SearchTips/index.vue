@@ -5,44 +5,7 @@
         <span class="textW fl">已选条件：</span>
         <div class="allSpice fl" :style="{width:widthData}">
           <p ref="spiceAll" :style="{width:widthData1}" style="margin:0;transition: margin 0.2s;">
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">121</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">121</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">121</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">121</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">121</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">121</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
-            <span class="spiceTips">羊安水厂</span>
+            <span v-for="item in tipsData" class="spiceTips">{{item.name}} <i @click="delTips(item.model)">X</i></span>
           </p>
         </div>
       </div>
@@ -60,33 +23,75 @@
 <script>
 export default {
   name: "SearchTips",
-  //   props: {
-  //     searchName: {
-  //       type: Object,
-  //       default: function() {
-  //         return {};
-  //       }
-  //     }
-  //   }
+  props: {
+    tipsData: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
+  watch: {
+    tipsData() {
+      const length = this.tipsData.length;
+      this.widthData1 = length * 80;
+      this.tipsData1 = this.tipsData;
+    }
+  },
   data() {
     return {
       widthData: null,
-      widthData1: '3000px',
+      widthData1: null,
       w: "200px",
-      num: 0
+      num: 0,
+      tipsData1: []
     };
   },
   methods: {
+    getArrData(val, model, arr) {
+      let obj = {};
+      let obj1 = {};
+      obj1.model = model;
+      if (arr) {
+        if(val=="-1"){
+          obj1.name = "全部";
+        }else{
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i].Id == val) {
+              obj = arr[i];
+              obj1.name = obj.Name;
+            }
+          }
+
+        }
+      } else {
+        obj1.name = val;
+      }
+      return obj1;
+    },
+    delTips(val){
+      this.$emit("delTips",val)
+    },
     rightEnter() {
-      //  var tag= document.getElementsByTagName("allSpice")[0]
-      this.$refs.spiceAll.style.position = "relative";
       this.num = this.num + 200;
+
+      //  var tag= document.getElementsByTagName("allSpice")[0]
+      if (this.num >= this.widthData1) {
+        this.num = 0;
+        return false;
+      }
+      this.$refs.spiceAll.style.position = "relative";
       this.$refs.spiceAll.style.marginLeft = "-" + this.num + "px";
     },
     leftEnter() {
+      this.num = this.num - 200;
+      if (this.num <= 0) {
+        this.num = 0;
+
+        return false;
+      }
       //  var tag= document.getElementsByTagName("allSpice")[0]
       this.$refs.spiceAll.style.position = "relative";
-      this.num = this.num - 200;
       this.$refs.spiceAll.style.marginLeft = "-" + this.num + "px";
     }
   },
@@ -94,14 +99,13 @@ export default {
     var w = document.getElementsByClassName("searchTips")[0].offsetWidth;
     var w1 = document.getElementsByClassName("tipsBtn")[0].offsetWidth;
     var w2 = document.getElementsByClassName(" cont-right")[0].offsetWidth;
-    this.widthData = w - w1 - w2 - 80+"px";
-    console.log(this.widthData);
-    console.log(w, w1, w2);
+    this.widthData = w - w1 - w2 - 80 + "px";
   }
 };
 </script>
 <style lang="scss" scoped>
 .searchTips {
+  user-select: none;
   margin: 0;
   overflow: hidden;
   padding-left: 5px;
@@ -133,16 +137,17 @@ export default {
     .cont-right {
       position: absolute;
       right: 106px;
-        cursor: pointer;
+      cursor: pointer;
     }
     .spiceTips {
       padding: 0 5px;
       border: 1px solid rgba(188, 188, 188, 1);
+      margin-right: 5px;
     }
   }
   .tipsBtn {
     .icon {
-        cursor: pointer;
+      cursor: pointer;
       display: inline-block;
       width: 39px;
       height: 34px;

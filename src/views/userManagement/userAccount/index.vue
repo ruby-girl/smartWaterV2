@@ -15,6 +15,7 @@
           :editUserList="editUserList"
           :selectHead="listQuery"
           @handleFilter="seachAccountOrder"
+          @getText="getText"
         />
         <!-- <div class="cl-operation1 clearfix">
           <el-button
@@ -29,8 +30,8 @@
           <el-button type="success" size="small" class="fr" @click="excelWaterAccountOrder">
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
-        </div> -->
-        <search-tips />
+        </div>-->
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" />
         <customTable ref="myChild" />
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -95,10 +96,10 @@ import Pagination from "@/components/Pagination";
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
-import SearchTips from "@/components/SearchTips/index"
+import SearchTips from "@/components/SearchTips/index";
 export default {
   name: "userAccount",
-  components: { AccountUser, SelecteHead, customTable, Pagination,SearchTips },
+  components: { AccountUser, SelecteHead, customTable, Pagination, SearchTips },
   data() {
     return {
       listQuery: {
@@ -124,7 +125,9 @@ export default {
       total: 0,
       customHeight: "", //自定义高度
       ifShow: false,
-      editUserList: [] //操作员、经办人
+      editUserList: [], //操作员、经办人
+      tipsData: [],
+      tipsData1: []
     };
   },
   created() {
@@ -168,6 +171,32 @@ export default {
     }
   },
   methods: {
+    delTips(val) {
+      let data1 = this.$options.data();
+      let arrTips = this.tipsData1;
+      this.listQuery[val] = data1.listQuery[val];
+      for (let i = 0; i < arrTips.length; i++) {
+        if (arrTips[i].model == val) {
+          if (this.listQuery[val] == "-1") {
+            arrTips[i].name = "全部";
+          } else {
+            arrTips.splice(i, 1);
+          }
+        }
+      }
+      this.seachAccountOrder()
+    },
+    getText(val, model, arr) {
+      let arrTips = this.tipsData1;
+      let obj = {};
+      for (let i = 0; i < arrTips.length; i++) {
+        if (arrTips[i].model == model) {
+          arrTips.splice(i, 1);
+        }
+      }
+      obj = this.$refs.searchTips.getArrData(val, model, arr);
+      arrTips.push(obj);
+    },
     //表格自定义方法
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
@@ -186,7 +215,10 @@ export default {
     },
     //查询记录
     seachAccountOrder() {
-     
+      this.tipsData = [];
+      this.tipsData1.forEach(res => {
+        this.tipsData.push(res);
+      });
       waterAccountPost(this.listQuery).then(res => {
         if (res.code == 0) {
           this.tableData = res.data;
@@ -283,7 +315,7 @@ export default {
     border-top-left-radius: 15px;
   }
   .hide {
-    width: 280px !important;
+    width: 330px !important;
     // padding: 0 !important;
     // overflow: hidden;
     // // margin-right: 0 !important;
