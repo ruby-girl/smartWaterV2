@@ -30,8 +30,8 @@
         @keydown.enter.native="handleFilter"
         @change="getText(selectHead.userType,'userType',userTypeList)"
       >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in userTypeList" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option label="全部" :value="-1" />
+        <el-option v-for="item in userTypeList" :key="item.Id" :label="item.Name" :value="Number(item.Id)" />
       </el-select>
     </el-form-item>
     <el-form-item label="水表类型：">
@@ -41,12 +41,12 @@
         @keydown.enter.native="handleFilter"
         @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList)"
       >
-        <el-option label="全部" value="-1" />
+        <el-option label="全部" :value="-1" />
         <el-option
           v-for="item in WaterMeterList"
           :key="item.Id"
           :label="item.Name"
-          :value="item.Id"
+          :value="Number(item.Id)"
         />
       </el-select>
     </el-form-item>

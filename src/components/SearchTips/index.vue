@@ -5,7 +5,10 @@
         <span class="textW fl">已选条件：</span>
         <div class="allSpice fl" :style="{width:widthData}">
           <p ref="spiceAll" :style="{width:widthData1}" style="margin:0;transition: margin 0.2s;">
-            <span v-for="item in tipsData" class="spiceTips">{{item.name}} <i @click="delTips(item.model)">X</i></span>
+            <span v-for="item in tipsData" class="spiceTips">
+              {{item.name}}
+              <i @click="delTips(item.model)">X</i>
+            </span>
           </p>
         </div>
       </div>
@@ -15,8 +18,8 @@
       </div>
     </div>
     <div class="tipsBtn fr">
-      <i class="icon iconfont">&#xe678;</i>
-      <i class="icon iconfont">&#xe683;</i>
+      <i class="icon iconfont" @click="setCustomData">&#xe678;</i>
+      <i class="icon iconfont" @click="excelWaterAccountOrder">&#xe683;</i>
     </div>
   </div>
 </template>
@@ -34,8 +37,12 @@ export default {
   watch: {
     tipsData() {
       const length = this.tipsData.length;
-      this.widthData1 = length * 80;
       this.tipsData1 = this.tipsData;
+      if (length == 0) {
+        this.widthData1 = null;
+      } else {
+        this.widthData1 = length * 80;
+      }
     }
   },
   data() {
@@ -48,29 +55,34 @@ export default {
     };
   },
   methods: {
+    setCustomData(){//表格自定义
+      this.$emit("setCustomData")
+    },
+    excelWaterAccountOrder(){//导出
+      this.$emit("excelWaterAccountOrder")
+    },
     getArrData(val, model, arr) {
       let obj = {};
       let obj1 = {};
       obj1.model = model;
       if (arr) {
-        if(val=="-1"){
+        if (val == "-1") {
           obj1.name = "全部";
-        }else{
+        } else {
           for (let i = 0; i < arr.length; i++) {
             if (arr[i].Id == val) {
               obj = arr[i];
               obj1.name = obj.Name;
             }
           }
-
         }
       } else {
         obj1.name = val;
       }
       return obj1;
     },
-    delTips(val){
-      this.$emit("delTips",val)
+    delTips(val) {
+      this.$emit("delTips", val);
     },
     rightEnter() {
       this.num = this.num + 200;

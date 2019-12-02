@@ -31,7 +31,7 @@
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
         </div>-->
-        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" />
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @setCustomData="setCustomData" @excelWaterAccountOrder="excelWaterAccountOrder"/>
         <customTable ref="myChild" />
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -97,6 +97,7 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
+import { delTips,getText } from "@/utils/projectLogic";
 export default {
   name: "userAccount",
   components: { AccountUser, SelecteHead, customTable, Pagination, SearchTips },
@@ -111,8 +112,8 @@ export default {
         customerQueryType: "", //查询类型
         customerQueryValue: "", //查询值
         waterFactoryId: "-1", //水厂ID
-        userType: "-1", // 用户类型
-        waterMeterType: "-1", //水表类型
+        userType: -1, // 用户类型
+        waterMeterType: -1, //水表类型
         createUserId: "-1", // 操作人
         createStartTime: "", // 操作时间起
         createEndTime: "", // 操作时间止
@@ -126,8 +127,8 @@ export default {
       customHeight: "", //自定义高度
       ifShow: false,
       editUserList: [], //操作员、经办人
-      tipsData: [],
-      tipsData1: []
+      tipsData: [],//传入子组件的值
+      tipsData1: []//表单变化的值
     };
   },
   created() {
@@ -172,30 +173,12 @@ export default {
   },
   methods: {
     delTips(val) {
-      let data1 = this.$options.data();
-      let arrTips = this.tipsData1;
-      this.listQuery[val] = data1.listQuery[val];
-      for (let i = 0; i < arrTips.length; i++) {
-        if (arrTips[i].model == val) {
-          if (this.listQuery[val] == "-1") {
-            arrTips[i].name = "全部";
-          } else {
-            arrTips.splice(i, 1);
-          }
-        }
-      }
-      this.seachAccountOrder()
+      this.tipsData1 = delTips(val, this, this.tipsData1, "listQuery");
+      this.seachAccountOrder();
     },
     getText(val, model, arr) {
-      let arrTips = this.tipsData1;
-      let obj = {};
-      for (let i = 0; i < arrTips.length; i++) {
-        if (arrTips[i].model == model) {
-          arrTips.splice(i, 1);
-        }
-      }
-      obj = this.$refs.searchTips.getArrData(val, model, arr);
-      arrTips.push(obj);
+      let obj=getText(val, model, arr,this.tipsData1,this)
+      this.tipsData1.push(obj);
     },
     //表格自定义方法
     setCustomData() {
