@@ -21,11 +21,9 @@
           :key="tableKey"
           :data="tableDataUser"
           border
-          :height="tableHeightUser"
-          
+          :height="tableHeightUser"       
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
-          :cell-style="{'padding':'7px 0'}"
           @sort-change="sortChanges"
           @selection-change="handleSelectionChange"
         >

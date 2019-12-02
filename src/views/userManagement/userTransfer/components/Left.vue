@@ -9,25 +9,26 @@
           <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
-      <el-form ref="form" label-width="70px" style="margin-top:13px;">
-        <el-form-item label="姓名：">
+      <el-form ref="form" label-width="60px" style="margin-top:13px;">
+        <el-form-item label="姓名:">
           <el-input
+          class="left-input"
             v-model="user.CustomerName"
             @keyup.enter.native="handleSelect(user.CustomerName,2)"
             placeholder="回车进行模糊查询"
           ></el-input>
         </el-form-item>
-        <el-form-item label="电话：">
-          <el-input v-model="user.Tel" @keyup.enter.native="handleSelect(user.Tel,3)"></el-input>
+        <el-form-item label="电话:">
+          <el-input class="left-input" v-model="user.Tel" @keyup.enter.native="handleSelect(user.Tel,3)"></el-input>
         </el-form-item>
-        <el-form-item label="用户编号：">
-          <el-input v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
+        <el-form-item label="用户编号:">
+          <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
         </el-form-item>
         <el-form-item label="证件号：">
-          <el-input v-model="user.IdentityNo" @keyup.enter.native="handleSelect(user.IdentityNo,4)"></el-input>
+          <el-input class="left-input" v-model="user.IdentityNo" @keyup.enter.native="handleSelect(user.IdentityNo,4)"></el-input>
         </el-form-item>
         <el-form-item label="地址：">
-          <el-input v-model="user.Address" @keyup.enter.native="handleSelect(user.Address,1)"></el-input>
+          <el-input class="left-input" v-model="user.Address" @keyup.enter.native="handleSelect(user.Address,1)"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -38,20 +39,20 @@
       <el-form :model="newUser" ref="user" :rules="rules" label-width="70px">
         <div class="display-flex align-items-center justify-content-flex-justify">
           <el-form-item label="姓名：" prop="NewCustomerName">
-            <el-input v-model="newUser.NewCustomerName"></el-input>
+            <el-input  v-model="newUser.NewCustomerName" class="short-input"></el-input>
           </el-form-item>
           <el-form-item label="人口：" label-width="55px" prop="NewPeopleNo">
-            <el-input v-model="newUser.NewPeopleNo" maxlength="1" @keyup.native="testNumber" style="width:40px;"></el-input>
+            <el-input class="people-input" v-model="newUser.NewPeopleNo" maxlength="1" @keyup.native="testNumber" style="width:40px;"></el-input>
           </el-form-item>
         </div>
         <el-form-item label="电话：" prop="NewTel">
-          <el-input  v-model="newUser.NewTel"></el-input>
+          <el-input class="left-input"  v-model="newUser.NewTel"></el-input>
         </el-form-item>
         <el-form-item label="证件号：" prop="NewIdentityNo">
-          <el-input v-model="newUser.NewIdentityNo"></el-input>
+          <el-input class="left-input" v-model="newUser.NewIdentityNo"></el-input>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input type="textarea" v-model="newUser.Remark"></el-input>
+          <el-input  type="textarea" v-model="newUser.Remark"></el-input>
         </el-form-item>
       </el-form>
       <div class="bottom-btn-box">
@@ -280,7 +281,7 @@ export default {
   .telescopic {
     position: absolute;
     display: block;
-    top: 300px;
+    top: 220px;
     color: #00b2a1;
     font: normal 16px "Microsoft YaHei";
     width: 30px;
@@ -316,7 +317,7 @@ export default {
       position: relative;
     }
     .user_tree {
-      width: 300px;
+      width: 280px;
       position: relative;
       background: #fff;
       padding: 0 13px;
@@ -331,6 +332,24 @@ export default {
       padding: 16px;
       position: relative;
       overflow: hidden;
+    }
+  }
+  .short-input{
+    width:80px;
+   /deep/ input.el-input__inner{
+      width:100% !important;
+    }
+  }
+  .left-input{
+    width:170px !important;
+     /deep/ input.el-input__inner{
+      width:100% !important;
+    }
+  }
+  .people-input{
+    width:50px;
+   /deep/ input.el-input__inner{
+      width:100% !important;
     }
   }
   .el-button--mini {

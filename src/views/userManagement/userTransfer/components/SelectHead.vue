@@ -74,18 +74,18 @@
     </el-form-item>
     <el-form-item label="过户日期：">
       <el-date-picker
-        v-model="timevalue"
-        type="datetimerange"
+         v-model="timevalue"
+        type="daterange"
         :editable="false"
         :unlink-panels="true"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         :default-time="['00:00:00', '23:59:59']"
-        format="yyyy-MM-dd HH:mm:ss"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        @change="getTime"
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
         @keydown.enter.native="handleFilter"
+        @change="getTime"
       ></el-date-picker>
     </el-form-item>
     <el-form-item>

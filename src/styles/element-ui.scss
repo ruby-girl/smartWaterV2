@@ -147,12 +147,14 @@
 .el-form-item--small.el-form-item{
   margin-bottom: 16px;
 }
-.el-date-editor--datetimerange{
-  width:250px !important;
+.el-date-editor--datetimerange,.el-form-item__content .el-date-editor--daterange{
+  width:290px !important;
 }
+
 .short-select .el-input__inner{
   width:100% !important;
 }
+
 // 时间选择器宽度
 .el-form-item--small .el-form-item__content,.el-form-item--small .el-form-item__label,.el-input--small .el-input__icon,.el-form-item--medium .el-form-item__content,.el-form-item--medium .el-form-item__label,.el-input--medium .el-input__icon{
   line-height: 26px;
@@ -172,7 +174,7 @@ tbody .hover-row>td{
   background-color: #DAF2EC !important;
 }
 .el-table--medium th{
-  padding:3px 0;
+  padding:5px 0;
 }
 .el-pagination__editor.el-input .el-input__inner{
   line-height: 28px !important;
@@ -183,4 +185,7 @@ tbody .hover-row>td{
 //表格选中样式
 .el-table__body tr.current-row>td{
   background: #E6ECFA;
+}
+.el-table--medium td{
+  padding: 5px 0 !important;
 }

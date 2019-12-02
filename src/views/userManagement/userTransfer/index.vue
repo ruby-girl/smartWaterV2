@@ -27,7 +27,6 @@
               :height="tableHeight"
               style="width: 100%;"
               :header-cell-style="{'background-color': '#F0F2F5'}"
-              :cell-style="{'padding':'7px 0'}"
               @sort-change="sortChanges"
             >
               <el-table-column fixed="left" label="序号" width="60" align="center">
