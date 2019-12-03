@@ -51,7 +51,26 @@
         peopleArray:[],//抄表员
         formsArray:[],//表册
         meterState:[],//抄表状态
-        query:{},
+        query:{
+          //右侧用户列表查询条件
+          CustomerQueryType: "1",
+          CustomerQueryValue: "",
+          UserType: "-1",
+          UserState: "-1",
+          AreaId: "-1",
+          WaterTypeId: -1,
+          limit: 10,
+          page: 1,
+          sort: "",
+          filed: "",
+          createUserId: "",
+          createStartTime: "",
+          createEndTime: "",
+          editUserId: "",
+          editStartTime: "",
+          editEndTime: "",
+          tableId: "0000016"
+        },
         meterData:[]
       }
     },
@@ -60,11 +79,11 @@
        * 触发父组建搜索方法
        * */
       searchFun(){
+        this.$parent.query =  Object.assign({},this.query)
         this.$parent.searchTableFun()
       }
     },
     mounted() {
-      this.query = this.$parent.query
       this.userType = getDictionaryOption('用户类型')
       this.userStaus = getDictionaryOption('用水用户状态')
     }

@@ -82,14 +82,6 @@
         tableHeight: null,//表格高度
         total: 0,
         sbap: {//查询条件对象集
-          page: 1,
-          limit: 10,
-          filed:'',
-          sort:"",
-          BlockAreaName: '',//片区名称
-          editUserId: '-1',//操作者
-          editStartTime: '',//操作开始结束时间
-          editEndTime: '',
           tableId: '0000007'
         },
         tableData: [],//表格数据
@@ -194,7 +186,6 @@
       }
     },
     mounted() {
-      let _this = this
       this.$refs.myChild.GetTable(this.sbap.tableId);
       this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50

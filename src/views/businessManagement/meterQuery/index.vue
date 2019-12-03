@@ -100,24 +100,6 @@ export default {
       total: 0,
       param: {
         //查询条件
-        CustomerQueryType: "1", //用户查询类型 用户编号=1，姓名=2，简码=3
-        CustomerQueryValue: "", //用户查询值
-        SA_WaterFactory_Id: "-1", //水厂
-        SA_MeterReadPlan_Id: "", //抄表计划Id
-        SA_MeterReader_Id: "-1", //抄表员ID
-        SA_RegisterBookInfo_Id: "-1", //表册Id
-        UserType: "-1", //用户类型 = ['1201', '1202', '1203', '1204', '-1']
-        InputEmpName: "", //录入人
-        ReadDateStart: "", //抄表时间
-        ReadDateEnd: "",
-        ReadingQueryType: "1", //抄表查询类型 按抄表计划查询=1， 按抄表时间查询=2
-        MeterReadState: "-1", //抄表状态 = ['1401', '1402', '-1']
-        InputTimeStart: "", //录入时间
-        InputTimeEnd: "",
-        limit: 10,
-        page: 0,
-        sort: "",
-        filed: "",
         tableId: "0000015"
       }
     };

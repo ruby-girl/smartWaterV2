@@ -387,7 +387,29 @@
     data() {
       return {
         ifMore: false,//判断是否查询隐藏条件
-        queryData: {},//查询条件对象
+        queryData: {
+          page: 1,
+          limit: 10,
+          filed:'',
+          sort:"",
+          SYS_Department_Id: '-1',//部门
+          OA_Job_Id: '-1',//岗位
+          EmpNo: '',//员工编号或名称
+          JobStatus: '在职',//职位
+          EnrollingTime: '',//入职开始结束时间
+          EnrollingTimeEnd: '',
+          Gender: '-1',//性别
+          IDNumber: '',//身份证
+          MobileNumber: '',//手机号
+          Birthday: '',//生日开始结束时间
+          BirthdayEnd: '',
+          editUserId: '-1',//操作者
+          editStartTime: '',//操作开始结束时间
+          editEndTime: '',
+          EmailAddress: '',//邮箱地址
+          AccountStatus: '-1',//账号状态
+          tableId: '0000003'
+        },//查询条件对象
         operationTime: [],//操作时间
         birthdayTime: [],//生日
         EntryTime: [],//入职时间
@@ -401,6 +423,7 @@
        * 触发父组建查询方法
        * */
       searchFun() {
+        this.$parent.queryData =  Object.assign({},this.queryData)
         this.$parent.searchFun();
       },
       /**
@@ -486,7 +509,6 @@
       }
     },
     mounted() {
-      this.queryData = this.$parent.queryData;//从父组件获取初始化查询参数
       this.getComboBoxList()
       this.GetRoleNameList()
     }

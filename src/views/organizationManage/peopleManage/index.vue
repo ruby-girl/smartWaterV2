@@ -107,26 +107,6 @@
       return {
         tableHeight: 600,//表格高度
         queryData: {//查询条件对象
-          page: 1,
-          limit: 10,
-          filed:'',
-          sort:"",
-          SYS_Department_Id: '-1',//部门
-          OA_Job_Id: '-1',//岗位
-          EmpNo: '',//员工编号或名称
-          JobStatus: '在职',//职位
-          EnrollingTime: '',//入职开始结束时间
-          EnrollingTimeEnd: '',
-          Gender: '-1',//性别
-          IDNumber: '',//身份证
-          MobileNumber: '',//手机号
-          Birthday: '',//生日开始结束时间
-          BirthdayEnd: '',
-          editUserId: '-1',//操作者
-          editStartTime: '',//操作开始结束时间
-          editEndTime: '',
-          EmailAddress: '',//邮箱地址
-          AccountStatus: '-1',//账号状态
           tableId: '0000003'
         },
         total: 0,

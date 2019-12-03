@@ -80,16 +80,6 @@
         tableHeight: null,//表格高度
         total: 0,
         param: {//查询条件对象集
-          page: 1,
-          limit: 10,
-          filed: '',
-          sort: "",
-          SA_MeterReadPlan_Id: '',//抄表计划ID
-          SA_MeterReader_Id: '',//抄表员ID
-          SA_RegisterBookInfo_Id: '',//表册ID
-          CustomerQueryType: '1',//用户类型
-          CustomerQueryValue: '',//用户类型数值
-          MeterReadState: '-1',//抄表状态
           tableId: '0000014'
         },
         tableData: [],//表格数据

@@ -7,7 +7,7 @@
     label-width="100px"
     @submit.native.prevent>
     <el-form-item label="片区：">
-      <el-input v-model="sbap.BlockAreaName" maxlength="20" placeholder="片区名称(长度20)" @keyup.enter.native="handleFilter"/>
+      <el-input v-model="sbap.BlockAreaName" maxlength="20" placeholder="片区名称(长度20)" @keyup.enter.native="searchFun"/>
     </el-form-item>
     <el-form-item label="操作人：">
       <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
@@ -47,7 +47,17 @@
     name: "SelectHead",
     data() {
       return {
-        sbap:{},
+        sbap:{
+          page: 1,
+          limit: 10,
+          filed:'',
+          sort:"",
+          BlockAreaName: '',//片区名称
+          editUserId: '-1',//操作者
+          editStartTime: '',//操作开始结束时间
+          editEndTime: '',
+          tableId: '0000007'
+        },
         createStartTimes:[],
         operatorArray:[]
       }
@@ -57,6 +67,7 @@
        * 触发父组建查询方法
        * */
       searchFun(){
+        this.$parent.sbap = Object.assign({},this.sbap)
         this.$parent.searchFun();
       },
       getTime1(data) {
@@ -86,7 +97,6 @@
       },
     },
     mounted() {
-      this.sbap = this.$parent.sbap;//从父组件获取初始化查询参数
       this.GetLoginNameList()
     }
   }

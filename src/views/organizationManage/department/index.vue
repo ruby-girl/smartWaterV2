@@ -84,18 +84,6 @@
         title: '',//编辑或新增弹窗标题
         total: 0,//分页总条数
         dp: {//查询条件对象
-          Id: "-1",
-          JobName: "",
-          createUserId: "",
-          createStartTime: "",
-          createEndTime: "",
-          editUserId: "",
-          editStartTime: "",
-          editEndTime: "",
-          limit: 10,
-          page: 1,
-          sort: "",
-          filed: "",
           tableId: "0000001"
         },
         tableData: [],//列表数据

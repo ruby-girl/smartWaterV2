@@ -14,12 +14,13 @@
       </el-form-item>
       <el-form-item label="抄表员：">
         <el-select v-model="param.SA_MeterReader_Id" placeholder="请选择" size="small">
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value="-1" v-if="peopleArray.length>1"></el-option>
           <el-option v-for="(item,index) in peopleArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="表册：">
         <el-select v-model="param.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
+          <el-option label="全部" value="-1" v-if="formsArray.length>1"></el-option>
           <el-option v-for="(item,index) in formsArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -29,7 +30,7 @@
           <el-option label="姓名/简码" value="2"></el-option>
         </el-select>
         <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)" style="width: 180px;float: left"/>
-      </el-form-item><br/>
+      </el-form-item>
       <el-form-item label="抄表状态：">
         <el-select v-model="param.MeterReadState" placeholder="请选择" size="small">
           <el-option label="全部" value="-1"></el-option>
@@ -74,12 +75,17 @@
         formsArray:[],//表册
         meterState:[],//抄表状态
         param:{//分页搜索条件
-          SA_MeterReadPlan_Id:'',//抄表计划ID
-          SA_MeterReader_Id:'',//抄表员ID
-          SA_RegisterBookInfo_Id:'',//表册ID
-          CustomerQueryType:'1',//用户类型
-          CustomerQueryValue:'',//用户类型数值
-          MeterReadState:'-1',//抄表状态
+          page: 1,
+          limit: 10,
+          filed: '',
+          sort: "",
+          SA_MeterReadPlan_Id: '',//抄表计划ID
+          SA_MeterReader_Id: '',//抄表员ID
+          SA_RegisterBookInfo_Id: '',//表册ID
+          CustomerQueryType: '1',//用户类型
+          CustomerQueryValue: '',//用户类型数值
+          MeterReadState: '-1',//抄表状态
+          tableId: '0000014'
         },
         meterData:[]//表册定位模拟数据
       }
@@ -89,8 +95,10 @@
         getPlan().then(res => {
           if (res.code ==0 ) {
             this.planArray = res.data;
-            this.param.SA_MeterReadPlan_Id = res.data[0].Id;//默认选择第一个
-            this.getUserInfo(res.data[0].Id)
+            if (res.data.length > 1) {
+              this.param.SA_MeterReadPlan_Id = res.data[0].Id
+              this.getUserInfo(res.data[0].Id)
+            }
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -121,6 +129,7 @@
        * 触发父组建搜索方法
        * */
       searchFun(){
+        this.$parent.param =  Object.assign({},this.param)
         let id = this.param.SA_MeterReadPlan_Id,
           type = this.param.CustomerQueryType,
           value = this.param.CustomerQueryValue;
@@ -149,7 +158,6 @@
       }
     },
     mounted() {
-      this.param = this.$parent.param;//从父组件获取初始化搜索参数
       this.getplanArray()
       this.meterState = getDictionaryOption('抄表状态')
     }

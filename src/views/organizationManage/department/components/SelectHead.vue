@@ -31,7 +31,21 @@
             postArray:[],
             operatorArray:[],//操作人数据值
             createStartTimes:[],
-            dp: {}//查询参数
+            dp: {
+              Id: "-1",
+              JobName: "",
+              createUserId: "",
+              createStartTime: "",
+              createEndTime: "",
+              editUserId: "",
+              editStartTime: "",
+              editEndTime: "",
+              limit: 10,
+              page: 1,
+              sort: "",
+              filed: "",
+              tableId: "0000001"
+            }//查询参数
           }
       },
       methods: {
@@ -39,7 +53,8 @@
          * 触发父组建查询方法
          * */
         searchFun(){
-            this.$parent.searchFun();
+          this.$parent.dp = Object.assign({},this.dp)
+          this.$parent.searchFun();
         },
         /**
          * 从日期插件选择值中分割开始，结束时间
@@ -78,7 +93,6 @@
         }
       },
       mounted() {
-          this.dp = this.$parent.dp;//从父组件获取初始化查询参数
           this.GetLoginNameList()//获取操作员数组信息
           this.getComboBoxList()//获取操作员数组信息
       }
