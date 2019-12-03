@@ -1,17 +1,22 @@
 <template>
   <div class="mac-contianer" style>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="180px">
         <ul>
           <li v-for="itemList in deviceList">
-            <p>
-              <i class="icon iconfont" style="font-size:12px"></i>{{itemList.ConcentratorNo}}({{itemList.AreaName}})
-              <span class="isonline"></span>
+            <p class="item-title">
+              <i
+                class="icon iconfont showFlase"
+                style="font-size:12px"
+                @click="isshow=!isshow"
+              >{{isshow?"&#xe657;":"&#xe658;"}}</i>
+              <span class="title-name">{{itemList.ConcentratorNo}}({{itemList.AreaName}})</span>
+              <img :src="itemList.IsOnline?imgSuccess:imgLose" />
             </p>
-            <p v-for="item in itemList.listCollNo">00000000000{{item}}</p>
-            <!-- <p>0000011111111</p>
-            <p>0000011111111</p>
-            <p>0000011111111</p> -->
+            <div v-show="isshow" class="cjNum">
+              <p v-for="item in itemList.listCollNo">00000000000{{item}}</p>
+            </div>
+
             <p class="dateYC">{{itemList.RefreshTime}}</p>
           </li>
         </ul>
@@ -215,6 +220,8 @@ import {
   getWaterDevice
 } from "@/api/waterMeterMang";
 import YCWaterMeterHis from "./intercomponents/YCWaterMeterHis"; //历史
+import imgLose from "@/assets/imgs/loseYC.png";
+import imgSuccess from "@/assets/imgs/successYC.png";
 export default {
   //机械表
   name: "MechanicalWater",
@@ -250,12 +257,29 @@ export default {
       customHeight: "", //自定义高度
       checksData: [],
       total: 0,
-      hisData: [],
+      hisData: [], //历史数据
       histotal: 0,
       viewWaterHistory: false,
-      SelectionList: [],
-      deviceList:[]
+      SelectionList: [], //表格选中数据
+      deviceList: [],
+      imgLose: imgLose,
+      imgSuccess: imgSuccess,
+      isshow: true
     };
+  },
+  activated: function() {
+    // let id = this.$route.query.id;
+    // if (id) {
+    //   this.param.SA_MeterReadPlan_Id = id;
+    //   this.searchFun();
+    // }
+    this.getdevice();
+    this.timeFunction = setInterval(() => {
+      this.getdevice();
+    }, 6000);
+  },
+  beforeDestroy() {
+    clearInterval(this.timeFunction);
   },
   created() {
     this.ValveStateList = getDictionaryOption("远传表阀门状态");
@@ -268,10 +292,10 @@ export default {
       194;
     this.$refs.myChild.GetTable(this.YCMeterQueryParam.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-    getWaterDevice().then(res=>{
-      console.log(res)
-      this.deviceList=res.data
-    })
+    this.getdevice();
+    this.timeFunction = setInterval(() => {
+      this.getdevice();
+    }, 60000);
   },
   computed: {
     tableHeadData: function() {
@@ -289,6 +313,11 @@ export default {
   },
   methods: {
     //删除操作成功后
+    getdevice() {
+      getWaterDevice().then(res => {
+        this.deviceList = res.data;
+      });
+    },
     childrenSearch() {
       searYCHisWater(this.meterReadListParam).then(res => {
         this.hisData = res.data;
@@ -455,21 +484,13 @@ export default {
 <style lang="scss" scoped>
 .mac-contianer {
   padding: 0 !important;
+  user-select: none;
   .el-container {
     background: #eee;
     padding-top: 10px !important;
     .el-aside {
       padding: 0;
       margin: 0;
-      .isonline{
-        display: inline-block;
-        width:10px;
-        height: 10px;
-        background: #f00;
-        border-radius:50%;
-        border: 0;
-         box-shadow:0 0 1px 1px #a00 inset;
-      }
       ul {
         margin: 0;
         padding: 0;
@@ -480,10 +501,52 @@ export default {
         list-style: none;
         border-radius: 2px;
         box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 12px;
       }
       p {
         padding: 0 10px;
         margin: 0;
+      }
+      .item-title {
+        position: relative;
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 31px;
+        color: rgba(70, 73, 76, 1);
+        .title-name {
+          display: inline-block;
+          width: 116px;
+          height: 22px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-left: 20px;
+        }
+        .showFlase {
+          position: absolute;
+          left: 10px;
+          color: #00b2a1;
+          cursor: pointer;
+        }
+        img {
+          position: absolute;
+          right: 10px;
+          top: 5px;
+          width: 26px;
+          height: 25px;
+        }
+      }
+      .cjNum {
+        padding-left: 20px;
+        p {
+          font-size: 14px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 28px;
+          color: rgba(70, 73, 76, 1);
+          opacity: 1;
+        }
       }
       .dateYC {
         text-align: right;
