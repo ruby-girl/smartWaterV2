@@ -18,14 +18,17 @@
       </div>
     </div>
     <div class="tipsBtn fr">
-      <i class="icon iconfont" @click="setCustomData">&#xe678;</i>
-      <i class="icon iconfont" @click="excelWaterAccountOrder">&#xe683;</i>
+      <i class="icon iconfont" @click="excelWaterAccountOrder" title="导出excel">&#xe683;</i>
+      <i class="icon iconfont" @click="setCustomData" title="自定义表格">&#xe678;</i>
     </div>
+    <table-custom ref="myChild" class="table-custom"/>
   </div>
 </template>
 <script>
+import TableCustom from "@/components/TableCustom/index"; //自定义表格
 export default {
   name: "SearchTips",
+  components: { TableCustom },
   props: {
     tipsData: {
       type: Array,
@@ -55,11 +58,14 @@ export default {
     };
   },
   methods: {
-    setCustomData(){//表格自定义
-      this.$emit("setCustomData")
+    //表格自定义方法
+    setCustomData() {
+      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
+      // this.customHeight = this.$refs.myChild.isCustom;
     },
-    excelWaterAccountOrder(){//导出
-      this.$emit("excelWaterAccountOrder")
+    excelWaterAccountOrder() {
+      //导出
+      this.$emit("excelWaterAccountOrder");
     },
     getArrData(val, model, arr) {
       let obj = {};
@@ -125,6 +131,9 @@ export default {
   border: 1px solid rgba(216, 226, 231, 1);
   opacity: 1;
   line-height: 34px;
+  .table-custom{
+    margin-top: 35px;
+  }
   .tipsCont {
     overflow: hidden;
     .textW {
