@@ -98,6 +98,14 @@ export function  unLockYCChange(data) {//解锁
     data
   })
 }
+export function  getWaterDevice() {//获取设备信息
+  return request({
+    url: "/WaterMeter/Device3",
+    method: 'post',
+    
+  })
+}
+
 export function  DeleteMeterReading(data) {//删除抄表记录
   return request({
     url: "/WaterMeter/DeleteMeterReading3ById",
