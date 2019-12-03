@@ -7,7 +7,7 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item label="水厂：">
+    <el-form-item label="水厂" label-width="28px">
       <el-select v-model="selectHead.SA_WaterFactory_Id" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -18,7 +18,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="用户类型：">
+    <el-form-item label="用户类型">
       <el-select v-model="selectHead.UserType" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -29,7 +29,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="水表类型：">
+    <el-form-item label="水表类型">
       <el-select v-model="selectHead.WaterTypeId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -61,7 +61,7 @@
             style="width: 180px;float: left"
           />
         </el-form-item>
-        <el-form-item label="过户操作员：" label-width="80">
+        <el-form-item label="过户操作员" label-width="80">
       <el-select v-model="selectHead.OpId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -72,7 +72,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="过户日期：">
+    <el-form-item label="过户日期">
       <el-date-picker
          v-model="timevalue"
         type="daterange"
@@ -89,7 +89,7 @@
       ></el-date-picker>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" size="mini"  @click="handleFilter"><i class="iconfont iconsousuo"></i>搜索</el-button>
+      <el-button round type="primary" size="mini"  @click="handleFilter"><i class="iconfont iconsousuo"></i>搜索</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -121,8 +121,8 @@ export default {
   methods: {
     getTime(v) {
       if (v) {
-        this.selectHead.Star_TransferDate = v[0];
-        this.selectHead.End_TransferDate = v[1];
+        this.selectHead.Star_TransferDate = v[0]+' 00:00:00';
+        this.selectHead.End_TransferDate = v[1]+' 23:59:59';
       } else {
         this.selectHead.Star_TransferDate = "";
         this.selectHead.End_TransferDate = "";

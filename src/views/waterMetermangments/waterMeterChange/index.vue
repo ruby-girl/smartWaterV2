@@ -70,7 +70,7 @@ import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import "@/styles/organization.scss";
 export default {
-  name: "userTransfer",
+  name: "waterMeterChange",
   components: { SelectHead, customTable, Pagination,LeftBox},
   data() {
     return {

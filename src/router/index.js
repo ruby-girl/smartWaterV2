@@ -297,6 +297,15 @@ export const asyncRoutes = [
           title: '水表升级',
           roles: ['1']
         }
+      },
+      {
+        path: 'waterMeterChange',
+        component: () => import('@/views/waterMetermangments/waterMeterChange/index'),
+        name: 'waterMeterChange',
+        meta: {
+          title: '水表换表',
+          roles: ['1']
+        }
       }
     ]
   },
