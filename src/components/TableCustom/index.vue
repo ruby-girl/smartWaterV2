@@ -23,7 +23,7 @@
     name: "TableCustom",
     data() {
       return {
-        isCustom: true,//是否显示属性
+        isCustom: false,//是否显示属性
         checkData: [],
         curID: '',
       }
