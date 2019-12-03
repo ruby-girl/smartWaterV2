@@ -61,7 +61,8 @@
       height: 100%;
       width: 100% !important;
     }
-
+    .el-menu .el-submenu__icon-arrow{right: 10px !important;}
+    .el-menu .icon-margin{margin-right: 10px !important;}
     // menu hover
     // .submenu-title-noDropdown,
     // .el-submenu__title {
@@ -73,16 +74,29 @@
     .is-active>.el-submenu__title {
       color: $subMenuActiveText !important;
     }
+    .el-submenu__title i {
+      color: #00B3A1;
+    }
     // 这里是设置子菜单选择时的背景色
     .is-active>.el-menu>.nest-menu .router-link-active .el-menu-item {
       background-color:$menuHover !important;
-     
+
     }
+    .is-active>.el-menu>.nest-menu .router-link-active .el-menu-item:before{
+      content: '/';
+      display: inline-block;
+      background: #FFEC3D;
+      position: absolute;
+      width: 3px;
+      left:0;
+      font-size: 0;
+    }
+    .el-submenu.is-active .el-submenu__title i{color: #fff;}
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
       min-width: $sideBarWidth !important;
       background-color: $subMenuBg !important;
-      padding-left: 50px !important;
+      //padding-left: 50px !important;
       font-size: 13px;
       height:40px;
       line-height: 40px;
@@ -129,7 +143,6 @@
         }
       }
     }
-
     .el-menu--collapse {
       .el-submenu {
         &>.el-submenu__title {
@@ -143,7 +156,7 @@
           &>.iconfont{
             height: 40px;
             width: 50px;
-            text-align: center;                  
+            text-align: center;
             visibility:visible;
             display: inline-block;
           }

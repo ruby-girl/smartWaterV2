@@ -89,8 +89,8 @@
             </el-col>
           </div>
           <el-form-item style="text-align: center;width: 100%">
-            <el-button type="primary" size="small" @click="submitForm('jp')">保存</el-button>
-            <el-button size="small" @click="resetForm('jp')">取消</el-button>
+            <el-button type="primary" size="mini" @click="submitForm('jp')">保存</el-button>
+            <el-button size="mini" @click="resetForm('jp')">取消</el-button>
           </el-form-item>
         </el-form>
     </div>

@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :close-on-click-modal="false"
-    top="10vh"
+    top="30vh"
     :title="title"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
@@ -31,8 +31,8 @@
         </el-form-item>
       </div>
       <p class="footBox dialogFooter">
-        <el-button type="primary" size="small" @click="submitForm('jp')">确 定</el-button>
-        <el-button size="small" @click="resetForm('jp')">取 消</el-button>
+        <el-button type="primary" size="mini" @click="submitForm('jp')">确 定</el-button>
+        <el-button size="mini" @click="resetForm('jp')">取 消</el-button>
       </p>
     </el-form>
   </el-dialog>

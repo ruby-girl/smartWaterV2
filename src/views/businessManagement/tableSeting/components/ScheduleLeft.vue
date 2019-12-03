@@ -39,11 +39,11 @@
                 <el-option v-for="(item,index) in formsArry" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </el-form-item>
-            <el-form-item label=""><el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
+            <el-form-item label=""><el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
           </el-form>
           <div class="cl-operation1 clearfix">
-            <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
-            <el-button type="success" size="small" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
+            <el-button type="primary" size="mini" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+            <el-button type="success" size="mini" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
           </div>
           <!--自定义组建 s-->
           <CustomTable ref="formChilds"></CustomTable>
@@ -94,8 +94,8 @@
                 </el-radio-group>
               </el-form-item>
               <el-form-item style="text-align: center">
-                <el-button type="primary" size="small" @click="submitFun()">确认</el-button>
-                <el-button size="small" @click="cancelFun()">取消</el-button>
+                <el-button type="primary" size="mini" @click="submitFun()">确认</el-button>
+                <el-button size="mini" @click="cancelFun()">取消</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -110,7 +110,7 @@
       </div>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="closeFun" size="small">关 闭</el-button>
+      <el-button @click="closeFun" size="mini">关 闭</el-button>
     </div>
   </el-dialog>
 </template>

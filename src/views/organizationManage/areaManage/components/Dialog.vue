@@ -21,8 +21,8 @@
         </el-select>
       </el-form-item>
       <p class="footBox dialogFooter">
-        <el-button type="primary" size="small" @click="submitForm('ruleForm')">确 定</el-button>
-        <el-button size="small" @click="resetForm('ruleForm')">取 消</el-button>
+        <el-button type="primary" size="mini" @click="submitForm('ruleForm')">确 定</el-button>
+        <el-button size="mini" @click="resetForm('ruleForm')">取 消</el-button>
       </p>
     </el-form>
   </el-dialog>

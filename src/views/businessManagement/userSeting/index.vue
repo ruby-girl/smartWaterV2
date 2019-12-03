@@ -7,7 +7,7 @@
         <div id="operate_area">
           <el-button
             type="primary"
-            size="mini"
+            size="small"
             @click="getCheckedNodes(1)"
             :disabled="disAdd?false:true"
             class="btn_one"
@@ -15,7 +15,7 @@
             <i class="icon iconfont">&#xe689;</i> 添加
           </el-button>
           <el-button
-            size="mini"
+            size="small"
             :disabled="disEdit?false:true"
             @click="getCheckedNodes(2)"
             class="btn_two"
@@ -25,7 +25,7 @@
             <i class="icon iconfont">&#xe618;</i> 编辑
           </el-button>
           <el-button
-            size="mini"
+            size="small"
             :disabled="disDel?false:true"
             @click="getCheckedNodes(3)"
             class="btn_three"
@@ -323,8 +323,8 @@ export default {
     border-top-left-radius: 15px;
   }
   position: relative;
-  padding: 16px 16px 0 16px;
-  height: calc(100vh - 74px);
+  padding: 11px 11px 0 11px;
+  height:100%;
   .user_box {
     display: flex;
     height: inherit;
@@ -371,7 +371,7 @@ export default {
       overflow: hidden;
     }
   }
-  .el-button--mini {
+  .el-button--small {
     padding: 7px 5px;
   }
   .hide {
@@ -382,11 +382,6 @@ export default {
   }
   .none {
     display: none;
-  }
-  .user_table {
-    .el-button--small {
-      padding: 7px 15px;
-    }
   }
 }
 </style>

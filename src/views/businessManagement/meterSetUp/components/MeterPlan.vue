@@ -48,7 +48,7 @@
               </el-checkbox-group>
             </el-col>
             <el-col :span="4">
-              <el-button class="setSure" style="float: right" type="primary" size="small"  @keyup.enter.native="getWaterPredict(2)" @click="getWaterPredict(2)">确定</el-button>
+              <el-button class="setSure" style="float: right" type="primary" size="mini"  @keyup.enter.native="getWaterPredict(2)" @click="getWaterPredict(2)">确定</el-button>
             </el-col>
           </el-row>
         </div>

@@ -16,7 +16,7 @@
     <el-form-item label="岗位：">
       <el-input v-model="dp.JobName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
     </el-form-item>
-    <el-form-item label=""><el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
+    <el-form-item label=""><el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
   </el-form>
 </template>
 

@@ -33,7 +33,7 @@
       />
     </el-form-item>
     <el-form-item label="">
-      <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i>
+      <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i>
         搜索
       </el-button>
     </el-form-item>

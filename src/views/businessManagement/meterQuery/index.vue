@@ -7,13 +7,13 @@
         <div class="cl-operation1 clearfix">
           <el-button
             type="primary"
-            size="small"
+            size="mini"
             class="fr cl-color1"
             @click="setCustomData()"
             style="margin-left: 10px;">
             <i class="icon iconfont">&#xe678;</i> 表格自定义
           </el-button>
-          <el-button type="success" size="small" class="fr" @click="exportExcel">
+          <el-button type="success" size="mini" class="fr" @click="exportExcel">
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
         </div>

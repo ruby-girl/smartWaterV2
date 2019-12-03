@@ -6,7 +6,7 @@
         size="small"
         class="search_btn"
         @click="getNodeByName"
-        style="background: #00B3A1;color: #fff;padding: 7px 3px 9px 3px;"
+        style="background: #00B3A1;color: #fff;padding: 5px 3px 7px 3px;"
       >
         <i class="icon iconfont">&#xe694;</i>搜索
       </el-button>

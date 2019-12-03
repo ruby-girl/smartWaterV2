@@ -5,12 +5,11 @@
     color: #777C82;
   }
   i{font-style:normal}
-  .el-button--small{padding: 7px 15px;font-family: 'Microsoft YaHei' !important;}
   .cl-color1{background: #FADB14;border: solid 1px #FADB14;}
   .cl-color2{background: #CC4141;border: solid 1px #CC4141;}
   position: relative;
-  padding: 16px 16px 0 16px;
-  height: calc(100vh - 74px);
+  padding: 11px 11px 0 11px;
+  height: 100%;
   .el-dialog__title{font-size: 14px;}
   .el-dialog__footer{padding: 35px 20px 20px 20px}
   .warningBox{
@@ -154,3 +153,6 @@
   .ssearchText1 {display: none !important;}
   .ssearchText2 {display: block !important;}
 }
+.cl-container .cl-inlineItem {padding-bottom: 18px;}
+.el-input--small .el-input__inner{height: 28px !important;line-height: 28px !important;}
+.el-range-editor--small.el-input__inner {height: 28px;}
