@@ -4,7 +4,7 @@
      <!--类型判断  开户：2101，充值：2102，换表：2103，水表升级：2104，编辑：2015-->
     <li v-for="(item,index) in data" :key="index">
       <span class="title open_account" v-if="item.BussinessType===2101">{{ item.BussinessTypeName }}</span>
-      <i class="icon iconfont iconjianqu1 open_account" v-if="item.BussinessType===2101"></i>
+     
       <span class="title recharge" v-else-if="item.BussinessType===2102">{{ item.BussinessTypeName }}</span>
       <i class="icon iconfont iconzu3 recharge" v-else-if="item.BussinessType===2102"></i>
       <span class="title change_table" v-else-if="item.BussinessType===2103">{{ item.BussinessTypeName }}</span>
