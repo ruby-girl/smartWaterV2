@@ -246,8 +246,8 @@ export default {
         color: #008C83;
         border-color: #93E6D2;
         .el-icon-close:before {
-          color: #e3eaed;
-          background: #00B3A1;
+          color: #e3eaed !important;
+          background: #00B3A1 !important;
           border-radius: 50%;
           padding: 1px;
         }
@@ -262,6 +262,14 @@ export default {
         left: -1px;
         z-index: 10;
         width: 3px;
+      }
+    }
+    .tags-view-item:hover{
+      .el-icon-close:before {
+        color: #fff;
+        background: #D8E2E7;
+        border-radius: 50%;
+        padding: 1px;
       }
     }
   }

@@ -50,7 +50,18 @@
     name: "SelectHead",
     data() {
       return {
-        rbp:{},
+        rbp:{
+          page: 1,
+          limit: 10,
+          filed:'',
+          sort:"",
+          SA_WaterFactory_Id: "",
+          MeterReaderId: "-1",
+          BookTypeKey: "-1",
+          BookNo: "",
+          BookName: "",
+          tableId: "0000009"
+        },
         formArry:[],//表册类型
         waterFactory:[],//具有权限水厂数据
         meterArry:[],//抄表员
@@ -61,6 +72,7 @@
        * 触发父组建搜索方法
        * */
       searchFun(){
+        this.$parent.rbp =  Object.assign({},this.rbp)
         this.$parent.searchFun();
       },
       getMeterRead(id){
@@ -69,7 +81,6 @@
     },
     mounted() {
       this.formArry = getDictionaryOption('表册类型')
-      this.rbp = this.$parent.rbp;//从父组件获取初始化搜索参数
     }
   }
 </script>

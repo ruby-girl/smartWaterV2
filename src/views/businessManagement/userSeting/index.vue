@@ -78,22 +78,8 @@ export default {
       ifShow: false,
       query: {
         //右侧用户列表查询条件
-        CustomerQueryType: "1",
-        CustomerQueryValue: "",
-        UserType: "-1",
-        UserState: "-1",
-        AreaId: "-1",
-        WaterTypeId: -1,
         limit: 10,
         page: 1,
-        sort: "",
-        filed: "",
-        createUserId: "",
-        createStartTime: "",
-        createEndTime: "",
-        editUserId: "",
-        editStartTime: "",
-        editEndTime: "",
         tableId: "0000016"
       },
       oldTreeData: [],

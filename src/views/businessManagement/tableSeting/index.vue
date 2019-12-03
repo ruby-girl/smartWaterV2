@@ -89,15 +89,6 @@
         tableHeight: null,//表格高度
         total: 0,
         rbp: {//查询条件对象集
-          page: 1,
-          limit: 10,
-          filed:'',
-          sort:"",
-          SA_WaterFactory_Id: "",
-          MeterReaderId: "-1",
-          BookTypeKey: "-1",
-          BookNo: "",
-          BookName: "",
           tableId: "0000009"
         },
         tableData: [],//表格数据

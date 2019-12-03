@@ -121,7 +121,27 @@
       return {
         typeCheck:1,
         ifMore: false,
-        param: {},
+        param: {
+          CustomerQueryType: "1", //用户查询类型 用户编号=1，姓名=2，简码=3
+          CustomerQueryValue: "", //用户查询值
+          SA_WaterFactory_Id: "-1", //水厂
+          SA_MeterReadPlan_Id: "", //抄表计划Id
+          SA_MeterReader_Id: "-1", //抄表员ID
+          SA_RegisterBookInfo_Id: "-1", //表册Id
+          UserType: "-1", //用户类型 = ['1201', '1202', '1203', '1204', '-1']
+          InputEmpName: "", //录入人
+          ReadDateStart: "", //抄表时间
+          ReadDateEnd: "",
+          ReadingQueryType: "1", //抄表查询类型 按抄表计划查询=1， 按抄表时间查询=2
+          MeterReadState: "-1", //抄表状态 = ['1401', '1402', '-1']
+          InputTimeStart: "", //录入时间
+          InputTimeEnd: "",
+          limit: 10,
+          page: 0,
+          sort: "",
+          filed: "",
+          tableId: "0000015"
+        },
         waterFactory: [],
         meterData: [],
         InputData:[],
@@ -142,6 +162,8 @@
         this.param.InputEmpName = this.ifMore ? this.param.InputEmpName : ''
         this.param.InputTimeStart = this.ifMore ? this.param.InputTimeStart : ''
         this.param.InputTimeEnd = this.ifMore ? this.param.InputTimeEnd : ''
+        this.$parent.param =  Object.assign({},this.param)
+
         if( this.typeCheck==2 && this.meterData.length<=0 ){//当选择抄表日期类型时候，抄表日期为必填项
           promptInfoFun(this,1,'请选择抄表日期！')
           return
@@ -225,14 +247,11 @@
       }
     },
     mounted() {
-      this.param = this.$parent.param;//从父组件获取初始化搜索参数
       this.formArry = getDictionaryOption('表册类型')
       this.meterState = getDictionaryOption('抄表状态')
       this.userArry = getDictionaryOption('用户类型')
-      //this.getWaterFactoryList()
       this.waterFactory=this.$store.state.user.waterWorks
       this.getPlanList('-1');//默认查全部抄表计划
-
       if(this.$route.query.CustomerNo){
           this.typeCheck = 2
           this.param.ReadingQueryType = '2'
