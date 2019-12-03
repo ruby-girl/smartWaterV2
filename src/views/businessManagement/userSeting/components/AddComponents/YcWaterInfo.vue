@@ -46,6 +46,7 @@
   import {  GetYCWaterMeterByWaterMeterNo } from "@/api/userSetting"//区域接口
   import { promptInfoFun } from "@/utils/index"
   import { getDictionaryOption } from "@/utils/permission"
+  import { getToken } from '@/utils/auth'
 
   export default {
     name: "YcWaterInfo",
@@ -80,8 +81,12 @@
           return
         }
         /*犹豫axios 异步请求导致获取不到返回值 股用以下方式解决*/
-        this.$http.get(this.baseUrl+'/api//Customer/GetYCWaterMeterByWaterMeterNo?WaterMeterNo='+ this.data.WaterMeterNo)
-          .then((res) => {
+        let url = this.baseUrl+'/api/Customer/GetYCWaterMeterByWaterMeterNo',
+          data = {WaterMeterNo:this.data.WaterMeterNo}
+        this.$http.get(url,{
+          params: data,
+          headers: {'Authorization': getToken()}//设置header信息
+        }).then((res) => {
             if (res.data.code == 0) {
               _this.data = res.data.data
             }else {
@@ -93,7 +98,7 @@
                   customClass: "warningBox",
                   showClose: false
                 }).then(() => {
-                  this.$router.push({path: '/waterMetermangments/waterMeterSetting', query: {CustomerQueryValue: this.data.WaterMeterNo,type:3}})
+                  this.$router.push({path: '/waterMetermangments/waterMeterSetting', query: {CustomerQueryValue: this.data.WaterMeterNo,type:'3'}})
                 })
               }else {
                 promptInfoFun(this,1,res.data.message)

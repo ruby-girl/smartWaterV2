@@ -392,10 +392,14 @@ font-size: 13px;
 .vue-treeselect__menu-container div{
   line-height: 35px;
 }
-.el-table__empty-block{
-  width:100% !important;
+.el-table__empty-block {
+  width: 100% !important;
 }
-.el-form-item__error{top:90%}
+.vue-treeselect__control,.vue-treeselect__placeholder, .vue-treeselect__single-value{
+  height:26px !important;
+  line-height: 26px !important;
+}
+el-form-item__error{top:90%}
 .el-select > .el-input{width: 180px;}
 .short-select-item .el-input, .short-select-item .el-input__inner{ width: 100px;}
 .user-select-box{

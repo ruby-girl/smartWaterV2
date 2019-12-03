@@ -153,7 +153,7 @@ import {
 } from "@/api/waterMeterMang";
 import WaterMeterHis from "./intercomponents/WaterMeterHis";
 import EditJXWaterMeter from "./intercomponents/EditJXWaterMeter";
- import { legalTime } from "@/utils/index";//时间格式化
+import { legalTime } from "@/utils/index"; //时间格式化
 export default {
   //机械表
   name: "MechanicalWater",
@@ -206,23 +206,12 @@ export default {
   mounted() {
     this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
-      document.getElementById("table").offsetTop -
-      58;
+      document.getElementsByClassName("el-form")[0].offsetHeight -
+      194;
     this.$refs.myChild.GetTable(this.wachMeterData.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
   },
-  watch: {
-    customHeight() {
-      //获取自定义模块高度
-      let that = this;
-      that.$nextTick(() => {
-        that.tableHeight =
-          document.getElementsByClassName("section-container")[0].offsetHeight -
-          document.getElementById("table").offsetTop -
-          58;
-      });
-    }
-  },
+
   computed: {
     tableHeadData: function() {
       //获取表头信息
@@ -263,12 +252,12 @@ export default {
         if (res.code == 0) {
           that.tableData = res.data;
           that.total = res.count;
-          let timeObj=that.tableData
-          timeObj.forEach((item,index)=>{
-              for(let i in item){
-                i=='ReadDate' ? item[i] = legalTime(item[i]) :''
-              }
-            })
+          let timeObj = that.tableData;
+          timeObj.forEach((item, index) => {
+            for (let i in item) {
+              i == "ReadDate" ? (item[i] = legalTime(item[i])) : "";
+            }
+          });
         } else {
           that.$message({
             message: res.msg ? res.msg : "查询失败",

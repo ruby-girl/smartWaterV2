@@ -15,6 +15,7 @@
           :editUserList="editUserList"
           :selectHead="listQuery"
           @handleFilter="seachAccountOrder"
+          @getText="getText"
         />
         <!-- <div class="cl-operation1 clearfix">
           <el-button
@@ -29,8 +30,8 @@
           <el-button type="success" size="small" class="fr" @click="excelWaterAccountOrder">
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
-        </div> -->
-        <search-tips />
+        </div>-->
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @setCustomData="setCustomData" @excelWaterAccountOrder="excelWaterAccountOrder"/>
         <customTable ref="myChild" />
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -95,10 +96,11 @@ import Pagination from "@/components/Pagination";
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
-import SearchTips from "@/components/SearchTips/index"
+import SearchTips from "@/components/SearchTips/index";
+import { delTips,getText } from "@/utils/projectLogic";
 export default {
   name: "userAccount",
-  components: { AccountUser, SelecteHead, customTable, Pagination,SearchTips },
+  components: { AccountUser, SelecteHead, customTable, Pagination, SearchTips },
   data() {
     return {
       listQuery: {
@@ -110,8 +112,8 @@ export default {
         customerQueryType: "", //查询类型
         customerQueryValue: "", //查询值
         waterFactoryId: "-1", //水厂ID
-        userType: "-1", // 用户类型
-        waterMeterType: "-1", //水表类型
+        userType: -1, // 用户类型
+        waterMeterType: -1, //水表类型
         createUserId: "-1", // 操作人
         createStartTime: "", // 操作时间起
         createEndTime: "", // 操作时间止
@@ -124,7 +126,9 @@ export default {
       total: 0,
       customHeight: "", //自定义高度
       ifShow: false,
-      editUserList: [] //操作员、经办人
+      editUserList: [], //操作员、经办人
+      tipsData: [],//传入子组件的值
+      tipsData1: []//表单变化的值
     };
   },
   created() {
@@ -168,6 +172,14 @@ export default {
     }
   },
   methods: {
+    delTips(val) {
+      this.tipsData1 = delTips(val, this, this.tipsData1, "listQuery");
+      this.seachAccountOrder();
+    },
+    getText(val, model, arr) {
+      let obj=getText(val, model, arr,this.tipsData1,this)
+      this.tipsData1.push(obj);
+    },
     //表格自定义方法
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
@@ -186,7 +198,10 @@ export default {
     },
     //查询记录
     seachAccountOrder() {
-     
+      this.tipsData = [];
+      this.tipsData1.forEach(res => {
+        this.tipsData.push(res);
+      });
       waterAccountPost(this.listQuery).then(res => {
         if (res.code == 0) {
           this.tableData = res.data;
@@ -283,7 +298,7 @@ export default {
     border-top-left-radius: 15px;
   }
   .hide {
-    width: 280px !important;
+    width: 330px !important;
     // padding: 0 !important;
     // overflow: hidden;
     // // margin-right: 0 !important;

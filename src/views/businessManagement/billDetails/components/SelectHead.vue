@@ -7,7 +7,7 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item label="用户：" label-width="65px">
+    <el-form-item  label-width="65px">
       <el-select
         v-model="selectHead.CustomerQueryType"
         placeholder="请选择"

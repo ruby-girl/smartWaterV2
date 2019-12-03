@@ -4,13 +4,13 @@
     <h4 style="color:#777777;">用户过户</h4>
     <div class="transfer-container">
       <div class="display-flex align-items-center justify-content-flex-justify">
-        <div class="font-weight" style="color:#535353">原用户信息</div>
+        <div class="font-weight pl-15" style="color:#535353">原用户信息</div>
         <el-button type="success" size="mini" @click="handleFilterIC">
           <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
-      <el-form ref="form" label-width="60px" style="margin-top:13px;">
-        <el-form-item label="姓名:">
+      <el-form ref="form" label-width="70px" style="margin-top:13px;">
+        <el-form-item label="姓名：">
           <el-input
           class="left-input"
             v-model="user.CustomerName"
@@ -18,10 +18,10 @@
             placeholder="回车进行模糊查询"
           ></el-input>
         </el-form-item>
-        <el-form-item label="电话:">
+        <el-form-item label="电话：">
           <el-input class="left-input" v-model="user.Tel" @keyup.enter.native="handleSelect(user.Tel,3)"></el-input>
         </el-form-item>
-        <el-form-item label="用户编号:">
+        <el-form-item label="用户编号：">
           <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
         </el-form-item>
         <el-form-item label="证件号：">
@@ -34,15 +34,15 @@
     </div>
     <div class="transfer-container" style="margin-top:13px;">
       <div class="display-flex align-items-center justify-content-flex-justify">
-        <div class="font-weight" style="color:#535353;line-height:38px;">新用户信息</div>
+        <div class="font-weight pl-15" style="color:#535353;line-height:38px;">新用户信息</div>
       </div>
-      <el-form :model="newUser" ref="user" :rules="rules" label-width="70px">
+      <el-form :model="newUser" ref="user" :rules="rules" label-width="68px">
         <div class="display-flex align-items-center justify-content-flex-justify">
           <el-form-item label="姓名：" prop="NewCustomerName">
             <el-input  v-model="newUser.NewCustomerName" class="short-input"></el-input>
           </el-form-item>
           <el-form-item label="人口：" label-width="55px" prop="NewPeopleNo">
-            <el-input class="people-input" v-model="newUser.NewPeopleNo" maxlength="1" @keyup.native="testNumber" style="width:40px;"></el-input>
+            <el-input class="people-input" v-model="newUser.NewPeopleNo" maxlength="1" @keyup.native="testNumber"></el-input>
           </el-form-item>
         </div>
         <el-form-item label="电话：" prop="NewTel">
@@ -347,9 +347,11 @@ export default {
     }
   }
   .people-input{
-    width:50px;
+    width:35px;
    /deep/ input.el-input__inner{
       width:100% !important;
+      padding: 0 2px;
+      text-align: center;
     }
   }
   .el-button--mini {
@@ -371,7 +373,7 @@ export default {
   }
 }
 .transfer-container {
-  padding: 5px;
+  padding: 10px 13px 5px 2px;
   background: #f5f5f5;
   /deep/ .el-form-item {
     margin-bottom: 10px;

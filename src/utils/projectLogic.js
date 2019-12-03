@@ -48,16 +48,39 @@ function mapTree(org) {
     }
   }
 }
-export function getOrgTree(callback,id) {
-  let orgTreeAll = 
-    {
-      id: '-1',
-      label: '全部'
-    }
-  GetAreaListNotPNode({pid:id}).then(res => {
-    let resResult =res.data
-     let orgTree= resResult.map(org => mapTree(org));
-     orgTree.unshift(orgTreeAll)
+export function getOrgTree(callback, id) {
+  let orgTreeAll =
+  {
+    id: '-1',
+    label: '全部'
+  }
+  GetAreaListNotPNode({ pid: id }).then(res => {
+    let resResult = res.data
+    let orgTree = resResult.map(org => mapTree(org));
+    orgTree.unshift(orgTreeAll)
     return callback(orgTree)
   });
+}
+//删除
+export function delTips(val, that, arr1, obj) { //{val,this,arr1}=>{绑定的model,父组件this,变化时的数组,搜索传入的对象}
+  let initData = that.$options.data();//获取data初始化数据
+  that[obj][val] = initData[obj][val];//将初始化数据赋值给这个值
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i].model == val) {
+      arr1.splice(i, 1);
+    }
+  }
+  return arr1
+}
+//获取
+export function getText(val, model, arr,arr1,that) {//{val, model, arr,arr1,this}=>{变化后的值，绑定的model,循环下拉框options数组（不传为输入框）,变化时的数组，父组件this}
+  let obj = {};
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i].model == model) {//判断是否有相同的收缩条件
+      arr1.splice(i, 1);
+    }
+  }
+  obj = that.$refs.searchTips.getArrData(val, model, arr);//调用面包屑组件里面的方法
+  return obj
 }

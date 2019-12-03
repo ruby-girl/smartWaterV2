@@ -12,6 +12,7 @@
         v-model="selectHead.waterFactoryId "
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.waterFactoryId,'waterFactoryId',companyParentOptions)"
       >
         <el-option label="全部" value="-1" />
         <el-option
@@ -27,9 +28,10 @@
         v-model="selectHead.userType"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.userType,'userType',userTypeList)"
       >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in userTypeList" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option label="全部" :value="-1" />
+        <el-option v-for="item in userTypeList" :key="item.Id" :label="item.Name" :value="Number(item.Id)" />
       </el-select>
     </el-form-item>
     <el-form-item label="水表类型：">
@@ -37,13 +39,14 @@
         v-model="selectHead.waterMeterType"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList)"
       >
-        <el-option label="全部" value="-1" />
+        <el-option label="全部" :value="-1" />
         <el-option
           v-for="item in WaterMeterList"
           :key="item.Id"
           :label="item.Name"
-          :value="item.Id"
+          :value="Number(item.Id)"
         />
       </el-select>
     </el-form-item>
@@ -52,6 +55,8 @@
         v-model="selectHead.CustomerQueryType"
         placeholder="请选择"
         style="width: 100px;float: left;margin-right:10px;"
+        
+        
       >
         <el-option label="用户姓名" value="2"></el-option>
         <el-option label="用户编号" value="1"></el-option>
@@ -64,6 +69,7 @@
         maxlength="20"
         placeholder="(长度1-30)"
         @keyup.enter.native="handleFilter"
+         @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue')"
         style="width: 180px;float: left"
       />
     </el-form-item>
@@ -72,6 +78,7 @@
         v-model="selectHead.createUserId"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.createUserId,'createUserId',editUserList)"
       >
         <el-option label="全部" value="-1" />
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
@@ -136,6 +143,9 @@ export default {
     this.WaterMeterList = getDictionaryOption("水表类型");
   },
   methods: {
+    getText(val, model, arr) {
+      this.$emit("getText", val, model, arr);
+    },
     getTime(v) {
       if (v) {
         this.selectHead.createStartTime = v[0];
