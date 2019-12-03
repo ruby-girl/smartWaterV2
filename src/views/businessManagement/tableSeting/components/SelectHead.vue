@@ -33,7 +33,7 @@
             <el-input v-model="rbp.BookName" maxlength="20" placeholder="片区名称(长度20)"/>
           </el-form-item>
           <el-form-item label="">
-            <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i
+            <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i
               class="icon iconfont">&#xe694;</i>
               搜索
             </el-button>

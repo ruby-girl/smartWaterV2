@@ -85,7 +85,7 @@ export default {
     top: 0;
     right: 0;
     z-index: 9;
-    width: calc(100% - 198px);
+    width: calc(100% - 140px);
     transition: width 0.28s;
   }
 

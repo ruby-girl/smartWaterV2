@@ -37,9 +37,9 @@
         </el-select>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i>搜索</el-button>
+        <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i>搜索</el-button>
       </el-form-item>
-      <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+      <el-button type="primary" size="mini" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
     </el-form>
 
     <!--多用户弹窗 s-->

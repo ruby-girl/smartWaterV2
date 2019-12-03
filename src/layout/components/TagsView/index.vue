@@ -1,6 +1,6 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
-    
+
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
       <router-link
@@ -211,7 +211,8 @@ export default {
 
 <style lang="scss" scoped>
 .tags-view-container {
-  height: 34px;
+  overflow: hidden;
+  height: 28px;
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #d8dce5;
@@ -221,35 +222,46 @@ export default {
       display: inline-block;
       position: relative;
       cursor: pointer;
-      height: 26px;
-      line-height: 26px;
-      border: 1px solid #d8dce5;
+      height: 28px;
+      line-height: 28px;
       color: #8A9299;
       background: #fff;
-      padding: 0 8px;
+      padding: 0 16px;
       font-size: 12px;
-      margin-left: 5px;
-      margin-top: 4px;
       &:first-of-type {
         margin-left: 0px;
       }
       &:last-of-type {
         margin-right: 15px;
       }
+      &::after {
+          content: '|';
+          color: #D8E2E7;
+          position: absolute;
+          right: -2px;
+          z-index: 9;
+      }
       &.active {
         background-color: #93E6D2;
         color: #008C83;
         border-color: #93E6D2;
-        &::before {
-          content: '';
-          background: #fff;
-          display: inline-block;
-          width: 8px;
-          height: 8px;
+        .el-icon-close:before {
+          color: #e3eaed;
+          background: #00B3A1;
           border-radius: 50%;
-          position: relative;
-          margin-right: 2px;
+          padding: 1px;
         }
+      }
+      &.active:after{
+        color: transparent;
+      }
+      &.active:before{
+        content: '|';
+        color: #93E6D2;
+        position: absolute;
+        left: -1px;
+        z-index: 10;
+        width: 3px;
       }
     }
   }
@@ -292,19 +304,19 @@ export default {
       &:before {
         transform: scale(.6);
         display: inline-block;
-        vertical-align: -3px;
-        font-size: 15px;
+        vertical-align: -6px;
+        font-size: 22px;
+        color: #e3eaed;
+        margin-left:3px
       }
       &:hover {
-        background-color: #b4bccc;
-        color: #fff;
+       // background-color: #b4bccc;
+       // color: #fff;
       }
     }
   }
 }
 .hamburger-container {
-   
-    // height: 100%;
     margin-top:-5px;
     position: relative;
     display: inline-block;

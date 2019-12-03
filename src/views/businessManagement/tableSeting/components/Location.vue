@@ -4,13 +4,13 @@
     <div :class="location? 'location_box moveOut': 'location_box'">
       <h5>用户表册定位 <i class="el-icon-close" @click="setForm"></i></h5>
       <el-form>
-        <el-form-item label="用户:" label-width="63px">
-          <el-select v-model="rbp.ecqt" placeholder="请选择" style="width: 70px;float: left" size="small">
+        <el-form-item>
+          <el-select v-model="rbp.ecqt" placeholder="请选择" size="small" class="short-select-item" style="float: left;margin-left: 15px;">
             <el-option label="编号" value="1"></el-option>
             <el-option label="姓名/简码" value="2"></el-option>
           </el-select>
           <el-input v-model="rbp.Customer" ref="userInfoInput" maxlength="20" placeholder="(长度1-30)"
-                    style="width: 150px;float: left;margin-left: 8px" size="small"/>
+                    style="width: 150px;float: left;" size="small"/>
         </el-form-item>
         <el-form-item style="text-align: right;width: 100%">
           <el-button @click="getListUser()" style="margin-right: 17px;background: #75C200;border: solid 1px #75C200;"

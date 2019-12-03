@@ -6,9 +6,9 @@
         <SelectHead ref="childSelect"></SelectHead>
         <!--查询条件组件 e-->
         <div class="cl-operation1">
-          <el-button type="primary" size="small" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
-          <el-button type="primary" size="small" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
-          <el-button type="success" size="small" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
+          <el-button type="primary" size="mini" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
+          <el-button type="primary" size="mini" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+          <el-button type="success" size="mini" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
         </div>
       </div>
       <!--自定义字段组建 s-->
@@ -296,7 +296,7 @@
 </script>
 <style lang="scss">
   .people_info_box {
-    .el-dialog__body{
+    .el-diaog__body{
       background: #F5F5F5;
       padding: 26px 24px 26px 24px;
       .edit_box{

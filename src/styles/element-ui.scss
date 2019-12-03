@@ -30,11 +30,13 @@
 
 .fixed-width {
   .el-button--mini {
-    padding: 7px 10px;
+    padding: 5px 12px;
     width: 60px;
   }
 }
-
+.el-button--mini{
+  padding: 5px 12px;
+}
 .status-col {
   .cell {
     padding: 0 10px;
@@ -142,7 +144,7 @@
 .el-form-item__content .el-input__inner{
   padding-right:10px;
   width:180px;
-  height:26px;
+  height:28px;
 }
 .el-form-item--small.el-form-item{
   margin-bottom: 16px;
@@ -157,7 +159,7 @@
 
 // 时间选择器宽度
 .el-form-item--small .el-form-item__content,.el-form-item--small .el-form-item__label,.el-input--small .el-input__icon,.el-form-item--medium .el-form-item__content,.el-form-item--medium .el-form-item__label,.el-input--medium .el-input__icon{
-  line-height: 26px;
+  line-height: 28px;
 }
 .el-form-item__label{
   padding:0 !important;
@@ -186,12 +188,12 @@ tbody .hover-row>td{
 .el-table__body tr.current-row>td{
   background: #E6ECFA;
 }
-.el-table--medium td{
+.el-table--medium td {
   padding: 3px 0 !important;
 }
 // 按钮圆角样式
-.el-button--mini .is-round{
-  padding: 3px 8px;
+.el-button--mini .is-round {
+  padding:  3px 8px;
 }
 // label离input的距离 
 .head-search-form{

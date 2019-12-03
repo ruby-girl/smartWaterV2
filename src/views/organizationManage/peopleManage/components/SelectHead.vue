@@ -163,7 +163,7 @@
         </el-form-item>
       </transition>
       <el-form-item>
-        <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i
+        <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i
           class="icon iconfont">&#xe694;</i> 搜索
         </el-button>
         <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
@@ -368,7 +368,7 @@
       </el-col>
       </transition>
       <el-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" style="margin-bottom: 20px;">
-        <el-button type="primary" size="small" class="cl-search" @click="searchFun"><i
+        <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i
           class="icon iconfont">&#xe694;</i> 搜索
         </el-button>
         <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>

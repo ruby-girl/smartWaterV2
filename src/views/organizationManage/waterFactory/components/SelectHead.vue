@@ -5,8 +5,7 @@
     class="head-search-form form-inline-small-input"
     size="small"
     label-width="80px"
-    @submit.native.prevent
-  >
+    @submit.native.prevent>
     <el-form-item label="水厂：" label-width="44px">
         <el-input
         maxlength="20"

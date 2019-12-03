@@ -322,8 +322,9 @@ aside {
 }
 .section-container{
   position: relative;
-    padding: 16px 16px 0 16px;
-    height: calc(100vh - 74px);
+    padding: 11px 11px 0 11px;
+    //height: calc(100vh - 74px);
+    height: 100%;
     background: #eee;
     .section-full-container{
       height: 100%;
@@ -405,3 +406,5 @@ el-form-item__error{top:90%}
 .user-select-box{
   .el-input__inner, .el-input{width: 100px !important;}
 }
+.el-range-editor--small .el-range-separator { line-height: 16px; }
+.el-date-editor .el-range__icon {margin-top: -6px;}

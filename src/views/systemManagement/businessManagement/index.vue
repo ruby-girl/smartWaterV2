@@ -70,8 +70,8 @@
     }
     background: #EFF1F4;
     position: relative;
-    padding: 16px 16px 0 16px;
-    height: calc(100vh - 74px);
+    padding: 11px 11px 0 11px;
+    height: 100%;
     > div {
       display: -webkit-box;
       display: -ms-flexbox;
@@ -169,7 +169,7 @@
       .team_item {
         background: #fff;
         padding: 16px;
-        height: calc(100% - 58px);
+        height: calc(100% - 45px);
         width: 100%;
         overflow: auto;
         > div{position: relative; background: #F7F7F7;
