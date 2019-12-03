@@ -265,6 +265,19 @@ export default {
       });
     }
   },
+  created() {
+    let parms = this.query;
+
+    parms.WaterTypeId = -1;
+    GetWaterTypeCustomerNum(parms).then(res => {
+      //用户统计数据
+      if (res.code == 0) {
+        this.$refs.tableChild.StatisticsData = res.data;
+      } else {
+        promptInfoFun(this, 1, res.message);
+      }
+    });
+  },
   mounted() {
     let _this = this;
     this.getTreeData();

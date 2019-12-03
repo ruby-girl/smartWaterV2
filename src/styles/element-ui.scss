@@ -176,7 +176,7 @@ tbody .hover-row>td{
   background-color: #DAF2EC !important;
 }
 .el-table--medium th{
-  padding:5px 0;
+  padding:0;
 }
 .el-pagination__editor.el-input .el-input__inner{
   line-height: 28px !important;
@@ -188,6 +188,14 @@ tbody .hover-row>td{
 .el-table__body tr.current-row>td{
   background: #E6ECFA;
 }
-.el-table--medium td{
-  padding: 5px 0 !important;
+.el-table--medium td {
+  padding: 3px 0 !important;
+}
+// 按钮圆角样式
+.el-button--mini .is-round {
+  padding:  3px 8px;
+}
+// 筛选条件label
+.head-search-form .el-form-item label {
+  margin-right:  5px;
 }

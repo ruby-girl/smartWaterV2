@@ -31,8 +31,8 @@
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
         </div>-->
-        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @setCustomData="setCustomData" @excelWaterAccountOrder="excelWaterAccountOrder"/>
-        <customTable ref="myChild" />
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excelWaterAccountOrder="excelWaterAccountOrder"/>
+        <!-- <customTable ref="myChild" /> -->
         <div class="main-padding-20-y" id="table">
           <el-table
             :key="tableKey"
@@ -42,7 +42,6 @@
             :height="tableHeight"
             style="width: 100%;"
             :header-cell-style="{'background-color': '#F0F2F5'}"
-            :cell-style="{'padding':'7px 0'}"
             @sort-change="sortChanges"
           >
             <el-table-column fixed="left" label="序号" width="60" align="center">
@@ -97,7 +96,7 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
-import { delTips,getText } from "@/utils/projectLogic";
+import { delTips,getText } from "@/utils/projectLogic";//搜索条件面包屑
 export default {
   name: "userAccount",
   components: { AccountUser, SelecteHead, customTable, Pagination, SearchTips },
@@ -141,9 +140,8 @@ export default {
       document.getElementsByClassName("el-main")[0].offsetHeight -
       document.getElementById("table").offsetTop -
       58;
-
-    this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },
   watch: {
     customHeight() {
@@ -180,11 +178,7 @@ export default {
       let obj=getText(val, model, arr,this.tipsData1,this)
       this.tipsData1.push(obj);
     },
-    //表格自定义方法
-    setCustomData() {
-      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
-      this.customHeight = this.$refs.myChild.isCustom;
-    },
+   
     //左侧显示隐藏
     closeAccount() {
       this.ifShow = !this.ifShow;

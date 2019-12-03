@@ -54,7 +54,7 @@
     mounted() {
       if (document.getElementsByClassName('v-modal')[0])
         document.getElementsByClassName('v-modal')[0].style.display = 'none'
-      this.typeCheck = this.$route.query.type
+      this.typeCheck = this.$route.query.type?this.$route.query.type:"1"
       this.$nextTick(() => {
         if (this.$route.query.type == 3) {
           this.$refs.remoterChild.YCMeterQueryParam.CustomerQueryValue = this.$route.query.CustomerQueryValue

@@ -13,7 +13,6 @@
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
         @change="getText(selectHead.waterFactoryId,'waterFactoryId',companyParentOptions)"
-        吗
       >
         <el-option label="全部" value="-1" />
         <el-option
@@ -32,12 +31,7 @@
         @change="getText(selectHead.userType,'userType',userTypeList)"
       >
         <el-option label="全部" :value="-1" />
-        <el-option
-          v-for="item in userTypeList"
-          :key="item.Id"
-          :label="item.Name"
-          :value="Number(item.Id)"
-        />
+        <el-option v-for="item in userTypeList" :key="item.Id" :label="item.Name" :value="Number(item.Id)" />
       </el-select>
     </el-form-item>
     <el-form-item label="水表类型：">
@@ -60,8 +54,7 @@
       <el-select
         v-model="selectHead.CustomerQueryType"
         placeholder="请选择"
-        style="width: 100px;float: left;margin-right:4px;"
-        class="short-select"
+        style="width: 100px;float: left;margin-right:10px;"
       >
         <el-option label="用户姓名" value="2"></el-option>
         <el-option label="用户编号" value="1"></el-option>
@@ -74,7 +67,7 @@
         maxlength="20"
         placeholder="(长度1-30)"
         @keyup.enter.native="handleFilter"
-        @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue')"
+         @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue')"
         style="width: 180px;float: left"
       />
     </el-form-item>
