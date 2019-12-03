@@ -192,8 +192,8 @@ tbody .hover-row>td{
   padding: 3px 0 !important;
 }
 // 按钮圆角样式
-.el-button--mini .is-round {
-  padding:  3px 8px;
+.el-button--mini.is-round {
+  padding: 5px 8px;
 }
 // label离input的距离 
 .head-search-form{

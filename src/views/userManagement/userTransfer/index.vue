@@ -68,7 +68,6 @@ import LeftBox from "./components/Left"
 import {TransferCustomerList,TransferCustomerList_Execl} from "@/api/userAccount";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
-import "@/styles/organization.scss";
 export default {
   name: "userTransfer",
   components: { SelectHead, customTable, Pagination,LeftBox},

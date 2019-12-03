@@ -4,10 +4,10 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="62px"
     @submit.native.prevent
   >
-    <el-form-item label="水厂" label-width="28px">
+    <el-form-item label="水厂" label-width="33px">
       <el-select v-model="selectHead.SA_WaterFactory_Id" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
