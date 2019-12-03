@@ -4,166 +4,140 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="61px"
     @submit.native.prevent
   >
-    <el-form-item v-if="companyShow" label="水厂：">
-      <el-select
-        v-model="selectHead.waterFactoryId "
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.waterFactoryId,'waterFactoryId',companyParentOptions)"
-      >
+    <el-form-item label="水厂" label-width="33px">
+      <el-select v-model="selectHead.SA_WaterFactory_Id" placeholder="请选择" @keydown.enter.native="handleFilter" @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',waterWorks)">
         <el-option label="全部" value="-1" />
         <el-option
-          v-for="item in companyParentOptions"
+          v-for="item in waterWorks"
           :key="item.Id"
           :label="item.Name"
           :value="item.Id"
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="用户类型：">
-      <el-select
-        v-model="selectHead.userType"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.userType,'userType',userTypeList)"
-      >
-        <el-option label="全部" :value="-1" />
-        <el-option v-for="item in userTypeList" :key="item.Id" :label="item.Name" :value="Number(item.Id)" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="水表类型：">
-      <el-select
-        v-model="selectHead.waterMeterType"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList)"
-      >
-        <el-option label="全部" :value="-1" />
+    <el-form-item label="用户类型">
+      <el-select v-model="selectHead.UserType" placeholder="请选择" @keydown.enter.native="handleFilter"  @change="getText(selectHead.UserType,'UserType',userType)">
+        <el-option label="全部" value="-1" />
         <el-option
-          v-for="item in WaterMeterList"
+          v-for="item in userType"
           :key="item.Id"
           :label="item.Name"
-          :value="Number(item.Id)"
+          :value="item.Id"
         />
       </el-select>
     </el-form-item>
-    <el-form-item>
-      <el-select
-        v-model="selectHead.CustomerQueryType"
-        placeholder="请选择"
-        style="width: 100px;float: left;margin-right:10px;"
-      >
-        <el-option label="用户姓名" value="2"></el-option>
-        <el-option label="用户编号" value="1"></el-option>
-        <el-option label="用户电话" value="3"></el-option>
-        <el-option label="用户证件号" value="4"></el-option>
-        <el-option label="用户地址" value="5"></el-option>
-      </el-select>
-      <el-input
-        v-model="selectHead.CustomerQueryValue"
-        maxlength="20"
-        placeholder="(长度1-30)"
-        @keyup.enter.native="handleFilter"
-         @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue')"
-        style="width: 180px;float: left"
-      />
-    </el-form-item>
-    <el-form-item label="销户操作员：" label-width="80">
-      <el-select
-        v-model="selectHead.createUserId"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.createUserId,'createUserId',editUserList)"
-      >
+    <el-form-item label="水表类型" >
+      <el-select v-model="selectHead.WaterTypeId" placeholder="请选择" @keydown.enter.native="handleFilter" @change="getText(selectHead.UserType,'UserType',editUserList)">
         <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option
+          v-for="item in editUserList"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
+        />
       </el-select>
     </el-form-item>
-    <el-form-item label="销户日期：">
+    <el-form-item >
+          <el-select
+            v-model="selectHead.TransferCustomer"
+            placeholder="请选择"
+            style="width: 110px;float: left"
+            class="short-select"
+          >
+            <el-option label="原用户姓名" value="1"></el-option>
+            <el-option label="新用户姓名" value="2"></el-option>
+            <el-option label="用户编号" value="3"></el-option>
+            <el-option label="用户电话" value="4"></el-option>
+            <el-option label="用户证件号" value="5"></el-option>
+            <el-option label="用户地址" value="6"></el-option>
+          </el-select>
+          <el-input
+            v-model="selectHead.Customer"
+            maxlength="20"
+            @keyup.enter.native="handleFilter"
+            @change="getText(selectHead.Customer,'Customer')"
+            style="width: 180px;float: left"
+          />
+        </el-form-item>
+        <el-form-item label="过户操作员" label-width="80">
+      <el-select v-model="selectHead.OpId" placeholder="请选择" @keydown.enter.native="handleFilter" @change="getText(selectHead.OpId,'OpId',editUserList)">
+        <el-option label="全部" value="-1" />
+        <el-option
+          v-for="item in editUserList"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="过户日期">
       <el-date-picker
-        v-model="timevalue"
-        type="datetimerange"
+         v-model="timevalue"
+        type="daterange"
         :editable="false"
         :unlink-panels="true"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         :default-time="['00:00:00', '23:59:59']"
-        format="yyyy-MM-dd HH:mm:ss"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        @change="getTime"
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
         @keydown.enter.native="handleFilter"
+        @change="getTime"
       ></el-date-picker>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" size="mini" @click="handleFilter">
-        <i class="iconfont iconsousuo"></i>搜索
-      </el-button>
+      <el-button round type="primary" size="mini"  @click="handleFilter"><i class="iconfont iconsousuo"></i>搜索</el-button>
     </el-form-item>
   </el-form>
 </template>
 <script>
-import { getDictionaryOption } from "@/utils/permission"; //获取字典项
+import {getSelectUser} from "@/api/account"//获取操作人下拉框
+import {getDictionaryOption} from "@/utils/permission"//字典
 export default {
   props: {
-    selectHead: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
-    editUserList: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    }
+    selectHead: {}
   },
   data() {
     return {
       timevalue: [],
-      companyParentOptions: [], //水厂
-      companyShow: true,
-      userTypeList: [],
-      WaterMeterList: []
+      editUserList: [],
+      userType:[],
+      waterWorks:[]//水厂
     };
   },
   created() {
-    this.companyParentOptions = this.$store.state.user.waterWorks;
-    if (this.companyParentOptions.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.companyOptions[0].Id;
-      this.companyShow = false;
+     this.waterWorks=this.$store.state.user.waterWorks
+    if(this.waterWorks.length==1){
+      this.selectHead.SA_WaterFactory_Id=this.waterWorks[0].Id
     }
-    this.userTypeList = getDictionaryOption("用户类型");
-    this.WaterMeterList = getDictionaryOption("水表类型");
+    this.userType=getDictionaryOption('用户类型')
+    getSelectUser().then((res)=>{//操作人
+      this.editUserList=res.data
+    })
   },
   methods: {
-    getText(val, model, arr) {
+      getText(val, model, arr) {
       this.$emit("getText", val, model, arr);
     },
     getTime(v) {
       if (v) {
-        this.selectHead.createStartTime = v[0];
-        this.selectHead.createEndTime = v[1];
+        this.selectHead.Star_TransferDate = v[0]+' 00:00:00';
+        this.selectHead.End_TransferDate = v[1]+' 23:59:59';
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
+        this.selectHead.Star_TransferDate = "";
+        this.selectHead.End_TransferDate = "";
       }
     },
     handleFilter() {
-      // this.$parent.seachAccountOrder()
-      this.$emit("handleFilter");
-      // this.$parent.seachAccountOrder()
+      this.$emit("handleFilter", this.selectHead);
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.el-form {
-  margin-top: 17px;
-}
 </style>
 

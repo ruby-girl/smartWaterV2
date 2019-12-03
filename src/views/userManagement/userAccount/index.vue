@@ -31,7 +31,7 @@
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
         </div>-->
-        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excelWaterAccountOrder="excelWaterAccountOrder"/>
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excel="excelWaterAccountOrder"/>
         <!-- <customTable ref="myChild" /> -->
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -96,7 +96,7 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
-import { delTips,getText } from "@/utils/projectLogic";//搜索条件面包屑
+import { delTips,getText,pushItem } from "@/utils/projectLogic";//搜索条件面包屑
 export default {
   name: "userAccount",
   components: { AccountUser, SelecteHead, customTable, Pagination, SearchTips },
@@ -127,7 +127,7 @@ export default {
       ifShow: false,
       editUserList: [], //操作员、经办人
       tipsData: [],//传入子组件的值
-      tipsData1: []//表单变化的值
+      tipsDataCopy: []//表单变化的值
     };
   },
   created() {
@@ -171,12 +171,12 @@ export default {
   },
   methods: {
     delTips(val) {
-      this.tipsData1 = delTips(val, this, this.tipsData1, "listQuery");
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
       this.seachAccountOrder();
     },
     getText(val, model, arr) {
-      let obj=getText(val, model, arr,this.tipsData1,this)
-      this.tipsData1.push(obj);
+      let obj=getText(val, model, arr,this.tipsDataCopy,this)
+      this.tipsDataCopy.push(obj);
     },
    
     //左侧显示隐藏
@@ -191,12 +191,9 @@ export default {
       }
     },
     //查询记录
-    seachAccountOrder() {
-      this.tipsData = [];
-      this.tipsData1.forEach(res => {
-        this.tipsData.push(res);
-      });
+    seachAccountOrder() {     
       waterAccountPost(this.listQuery).then(res => {
+        pushItem(this)
         if (res.code == 0) {
           this.tableData = res.data;
           this.total = res.count;

@@ -5,29 +5,19 @@
       <div class="user_table">
         <div class="section-full-container">
           <div ref="formHeight">
-            <select-head :select-head="listQuery" @handleFilter="handleFilter" />
+            <select-head :select-head="listQuery" @handleFilter="handleFilter" @getText="getText"/>
           </div>
-          <div class="display-flex justify-content-flex-justify">
-           <div></div>
-            <div>
-              <el-button type="success" size="mini" @click="excel">
-                <i class="iconfont icondaochuexcel"></i>导出Excel
-              </el-button>
-              <el-button type="warning" size="mini" @click="setCustomData()">
-                <i class="iconfont iconbiaogezidingyi"></i>表格自定义
-              </el-button>
-            </div>
-          </div>
-          <customTable ref="myChild" />
+         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excel="setCustomData"/>
           <div class="main-padding-20-y">
             <el-table
               :key="tableKey"
-              :data="tableData"
-              border
-              :height="tableHeight"
-              style="width: 100%;"
-              :header-cell-style="{'background-color': '#F0F2F5'}"
-              @sort-change="sortChanges"
+            :data="tableData"
+            border
+            fit
+            :height="tableHeight"
+            style="width: 100%;"
+            :header-cell-style="{'background-color': '#F0F2F5'}"
+            @sort-change="sortChanges"
             >
               <el-table-column fixed="left" label="序号" width="60" align="center">
                 <template slot-scope="scope">
@@ -55,7 +45,7 @@
           </div>
         </div>
         <span v-show="ifShow" class="telescopic telescopic1" @click="getUp(false)">
-          用户过户
+          水表换表
           <i class="iconfont iconshouqi1" style="font-size: 12px;"></i>
         </span>
       </div>
@@ -68,10 +58,11 @@ import LeftBox from "./components/Left"
 import {TransferCustomerList,TransferCustomerList_Execl} from "@/api/userAccount";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
-import "@/styles/organization.scss";
+import SearchTips from "@/components/SearchTips/index";
+import { delTips,getText,pushItem } from "@/utils/projectLogic";//搜索条件面包屑
 export default {
   name: "waterMeterChange",
-  components: { SelectHead, customTable, Pagination,LeftBox},
+  components: { SelectHead, customTable, Pagination,LeftBox,SearchTips},
   data() {
     return {
       ifShow: false,
@@ -98,7 +89,9 @@ export default {
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableData: [],
-      checksData: []
+      checksData: [],
+      tipsData: [],//传入子组件的值
+      tipsDataCopy: []//表单变化的值
     };
   },
   computed: {
@@ -116,12 +109,19 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 200;
-      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-     
+      this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\   
     });
   },
   methods: {
+    delTips(val) {
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
+      this.seachAccountOrder();
+    },
+    getText(val, model, arr) {
+      let obj=getText(val, model, arr,this.tipsDataCopy,this)
+      this.tipsDataCopy.push(obj);
+    },
     getUp(v) {
       this.ifShow =v;
       if (this.ifShow) {
@@ -139,6 +139,7 @@ export default {
     },
     getList() {
       TransferCustomerList(this.listQuery).then(res => {
+        pushItem(this)
         this.total = res.count;
         this.tableData = res.data;
       });

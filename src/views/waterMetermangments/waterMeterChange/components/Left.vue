@@ -1,73 +1,20 @@
 <template>
   <!--左侧树形菜单-->
   <div class="user_tree">
-    <h4 style="color:#777777;">用户过户</h4>
-    <div class="transfer-container">
-      <div class="display-flex align-items-center justify-content-flex-justify">
-        <div class="font-weight pl-15" style="color:#535353">原用户信息</div>
-        <el-button type="success" size="mini" @click="handleFilterIC">
-          <i class="iconfont iconduka"></i>读卡
-        </el-button>
-      </div>
-      <el-form ref="form" label-width="70px" style="margin-top:13px;">
-        <el-form-item label="姓名：">
-          <el-input
-          class="left-input"
-            v-model="user.CustomerName"
-            @keyup.enter.native="handleSelect(user.CustomerName,2)"
-            placeholder="回车进行模糊查询"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="电话：">
-          <el-input class="left-input" v-model="user.Tel" @keyup.enter.native="handleSelect(user.Tel,3)"></el-input>
-        </el-form-item>
-        <el-form-item label="用户编号：">
-          <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
-        </el-form-item>
-        <el-form-item label="证件号：">
-          <el-input class="left-input" v-model="user.IdentityNo" @keyup.enter.native="handleSelect(user.IdentityNo,4)"></el-input>
-        </el-form-item>
-        <el-form-item label="地址：">
-          <el-input class="left-input" v-model="user.Address" @keyup.enter.native="handleSelect(user.Address,1)"></el-input>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="transfer-container" style="margin-top:13px;">
-      <div class="display-flex align-items-center justify-content-flex-justify">
-        <div class="font-weight pl-15" style="color:#535353;line-height:38px;">新用户信息</div>
-      </div>
-      <el-form :model="newUser" ref="user" :rules="rules" label-width="68px">
-        <div class="display-flex align-items-center justify-content-flex-justify">
-          <el-form-item label="姓名：" prop="NewCustomerName">
-            <el-input  v-model="newUser.NewCustomerName" class="short-input"></el-input>
-          </el-form-item>
-          <el-form-item label="人口：" label-width="55px" prop="NewPeopleNo">
-            <el-input class="people-input" v-model="newUser.NewPeopleNo" maxlength="1" @keyup.native="testNumber"></el-input>
-          </el-form-item>
-        </div>
-        <el-form-item label="电话：" prop="NewTel">
-          <el-input class="left-input"  v-model="newUser.NewTel"></el-input>
-        </el-form-item>
-        <el-form-item label="证件号：" prop="NewIdentityNo">
-          <el-input class="left-input" v-model="newUser.NewIdentityNo"></el-input>
-        </el-form-item>
-        <el-form-item label="备注：">
-          <el-input  type="textarea" v-model="newUser.Remark"></el-input>
-        </el-form-item>
-      </el-form>
-      <div class="bottom-btn-box">
-        <el-button style="padding:8px 14px;" type="success" size="mini" @click="fileShow=true">
-          <i class="iconfont iconsousuo"></i>附件
-        </el-button>
-      </div>
-    </div>
-    <span v-show="!ifShowChild" class="telescopic telescopic2" @click="getUp">
+    <div class="type-title">水表换表</div>
+     <el-tabs v-model="activeName">
+    <el-tab-pane label="以旧换新" name="first">
+      <old-for-new></old-for-new>
+    </el-tab-pane>
+    <el-tab-pane label="用户互换" name="second">
+      <user-change></user-change>>
+    </el-tab-pane>
+
+  </el-tabs>
+  <span v-show="!ifShowChild" class="telescopic telescopic2" @click="getUp">
       用户过户
       <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
     </span>
-    <div class="bottom-btn-box">
-      <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户</el-button>
-    </div>
     <select-user
       :selectUserShow.sync="selectUserShow"
       :headQuery="params"
@@ -81,64 +28,31 @@ import "@/styles/organization.scss";
 import { IsTransfer,TransferCustomer } from "@/api/userAccount";
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import SelectUser from "@/components/SelectUser";
-import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
+import OldForNew from "./OldForNew"
+import UserChange from "./UserChange"
 export default {
-  components: {SelectUser },
+  components: {SelectUser,OldForNew,UserChange},
   props: { ifShow: {} },
   data() {
     return {
-      ifShowChild: false,
-      fileShow: false,
-      name: "r",
-      user: {},
-      accountShow: false, //账户转存弹窗
-      newUser: {
-        CustomerId:'',
-        NewCustomerName: "", //姓名
-        NewTel: "", //电话
-        NewPeopleNo: "", //人口
-        NewIdentityNo: "", //证件号
-        Remark: "", //备注
-        FileIdList: [], //文件合集
-        BalanceValue: 0, //余额
-        OperatorEmpId: "", //经办人ID
-        IsBalanceDeposit: false //是否转存
-      },
-      IsArrearageRes: {}, //是否欠费接口返回的所有信息
-      file: [],
-      params: {
+      activeName:'first',
+       params: {
         page: 1,
         Limit: 10,
         CustomerQueryType: "",
         CustomerQueryValue: ""
       },
       selectUserShow: false,
-      rules: {
-        NewCustomerName: [{ required: true, message: " ", trigger: "blur" }],
-        NewTel: [
-          { required: true, message: " ", trigger: "blur" },
-          {
-            pattern: /^[1][3,4,5,6,7,8,9][0-9]{9}$/,
-            message: " ",
-            trigger: "blur"
-          }
-        ],
-        NewPeopleNo: [{ required: true, message: " ", trigger: "blur" }],
-        NewIdentityNo: [
-          { required: true, message: " ", trigger: "blur" },
-          {
-            pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
-            message: " ",
-            trigger: "blur"
-          }
-        ]
-      }
+      ifShowChild:false
     };
   },
   watch: {
     ifShow(v) {
       this.ifShowChild = v;
     }
+  },
+  mounted(){
+    this.getUp(true)
   },
   methods: {
     getUp() {
@@ -266,12 +180,22 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.type-title{
+  color:#777;
+  padding: 11px 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
 .tree_container {
   .icon {
     font-size: 14px;
   }
   background: #eff1f4;
-  .telescopic {
+  position: relative;
+  padding: 16px 16px 0 16px;
+  height: calc(100vh - 74px);
+    .telescopic {
     position: absolute;
     display: block;
     top: 220px;
@@ -288,19 +212,11 @@ export default {
     cursor: pointer;
     box-shadow: 1px 1px 5px #cecece;
   }
-  .telescopic1 {
-    left: 0;
-    border-bottom-right-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-  .telescopic2 {
+   .telescopic2 {
     right: 0px;
     border-bottom-left-radius: 15px;
     border-top-left-radius: 15px;
   }
-  position: relative;
-  padding: 16px 16px 0 16px;
-  height: calc(100vh - 74px);
   .user_box {
     display: flex;
     height: inherit;
@@ -313,7 +229,7 @@ export default {
       width: 280px;
       position: relative;
       background: #fff;
-      padding: 0 13px;
+      padding: 0 11px;
       margin-right: 16px;
       height: 100%;
     overflow: auto;
@@ -326,29 +242,6 @@ export default {
       position: relative;
       overflow: hidden;
     }
-  }
-  .short-input{
-    width:80px;
-   /deep/ input.el-input__inner{
-      width:100% !important;
-    }
-  }
-  .left-input{
-    width:170px !important;
-     /deep/ input.el-input__inner{
-      width:100% !important;
-    }
-  }
-  .people-input{
-    width:35px;
-   /deep/ input.el-input__inner{
-      width:100% !important;
-      padding: 0 2px;
-      text-align: center;
-    }
-  }
-  .el-button--mini {
-    padding: 7px 5px;
   }
   .hide {
     width: 0 !important;
@@ -371,6 +264,9 @@ export default {
   /deep/ .el-form-item {
     margin-bottom: 10px;
   }
+}
+/deep/ .el-tabs__header{
+  margin-bottom: 0;
 }
 .bottom-btn-box {
   text-align: center;

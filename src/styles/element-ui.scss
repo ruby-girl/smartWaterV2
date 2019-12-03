@@ -193,7 +193,9 @@ tbody .hover-row>td{
 .el-button--mini .is-round{
   padding: 3px 8px;
 }
-  // 筛选条件label
-  .head-search-form .el-form-item label{
-    margin-right: 5px;
-  }
+// label离input的距离 
+.head-search-form{
+  /deep/ .el-form-item .el-form-item__label{
+padding-right: 5px !important;
+}
+}

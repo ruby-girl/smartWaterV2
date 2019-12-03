@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="tipsBtn fr">
-      <i class="icon iconfont" @click="excelWaterAccountOrder" title="导出excel">&#xe683;</i>
+      <i class="icon iconfont" @click="excel" title="导出excel">&#xe683;</i>
       <i class="icon iconfont" @click="setCustomData" title="自定义表格">&#xe678;</i>
     </div>
     <table-custom ref="myChild" class="table-custom"/>
@@ -40,7 +40,7 @@ export default {
   watch: {
     tipsData() {
       const length = this.tipsData.length;
-      this.tipsData1 = this.tipsData;
+      this.tipsDataCopy = this.tipsData;
       if (length == 0) {
         this.widthData1 = null;
       } else {
@@ -54,7 +54,7 @@ export default {
       widthData1: null,
       w: "200px",
       num: 0,
-      tipsData1: []
+      tipsDataCopy: []
     };
   },
   methods: {
@@ -63,9 +63,9 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       // this.customHeight = this.$refs.myChild.isCustom;
     },
-    excelWaterAccountOrder() {
+    excel() {
       //导出
-      this.$emit("excelWaterAccountOrder");
+      this.$emit("excel");
     },
     getArrData(val, model, arr) {
       let obj = {};

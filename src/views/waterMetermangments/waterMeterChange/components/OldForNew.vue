@@ -1,16 +1,18 @@
 <template>
   <!--左侧树形菜单-->
-  <div class="user_tree">
-    <div class="type-title">用户过户</div>
+  <div class="tab-container">
     <div class="transfer-container">
       <div class="display-flex align-items-center justify-content-flex-justify">
-        <div class="font-weight pl-15 top-title">原用户信息</div>
+        <div class="font-weight pl-15 top-title">原水表信息</div>
         <el-button type="success" size="mini" @click="handleFilterIC">
           <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
-      <el-form ref="form" label-width="70px" style="margin-top:10px;">
-        <el-form-item label="姓名：">
+      <el-form ref="form" class="head-search-form" label-width="90px" style="margin-top:10px;">
+          <el-form-item label="用户编号">
+          <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
+        </el-form-item>
+        <el-form-item label="用户姓名">
           <el-input
           class="left-input"
             v-model="user.CustomerName"
@@ -18,79 +20,59 @@
             placeholder="回车进行模糊查询"
           ></el-input>
         </el-form-item>
-        <el-form-item label="电话：">
-          <el-input class="left-input" v-model="user.Tel" @keyup.enter.native="handleSelect(user.Tel,3)"></el-input>
+        <el-form-item label="原水表类型">
+          <el-input class="left-input" v-model="user.Tel" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="用户编号：">
-          <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
+        
+        <el-form-item label="原水表读数">
+          <el-input class="left-input" v-model="user.IdentityNo"></el-input>
         </el-form-item>
-        <el-form-item label="证件号：">
-          <el-input class="left-input" v-model="user.IdentityNo" @keyup.enter.native="handleSelect(user.IdentityNo,4)"></el-input>
+        <el-form-item label="原水表编号">
+          <el-input class="left-input" v-model="user.IdentityNo" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="地址：">
-          <el-input class="left-input" v-model="user.Address" @keyup.enter.native="handleSelect(user.Address,1)"></el-input>
+         <el-form-item label="账户余额">
+          <el-input class="left-input" v-model="user.IdentityNo" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="地址">
+          <el-input class="left-input" v-model="user.Address" :disabled="true"></el-input>
         </el-form-item>
       </el-form>
     </div>
     <div class="transfer-container" style="margin-top:13px;">
       <div class="display-flex align-items-center justify-content-flex-justify">
-        <div class="font-weight pl-15 top-title">新用户信息</div>
+        <div class="font-weight pl-15 top-title">新水表信息</div>    
       </div>
-      <el-form :model="newUser" ref="user" :rules="rules" label-width="68px" style="margin-top:10px;">
-        <div class="display-flex align-items-center justify-content-flex-justify">
-          <el-form-item label="姓名：" prop="NewCustomerName">
-            <el-input  v-model="newUser.NewCustomerName" class="short-input"></el-input>
-          </el-form-item>
-          <el-form-item label="人口：" label-width="55px" prop="NewPeopleNo">
-            <el-input class="people-input" v-model="newUser.NewPeopleNo" maxlength="1" @keyup.native="testNumber"></el-input>
-          </el-form-item>
-        </div>
-        <el-form-item label="电话：" prop="NewTel">
+      <el-form class="head-search-form" :model="newUser" ref="user" :rules="rules" label-width="86px" style="margin-top:10px;">
+           <el-form-item label="新水表编号" prop="NewTel">
+          <el-input class="left-input" v-model="newUser.NewTel"></el-input>
+        </el-form-item>
+        <el-form-item label="新水表读数" prop="NewTel">
           <el-input class="left-input"  v-model="newUser.NewTel"></el-input>
         </el-form-item>
-        <el-form-item label="证件号：" prop="NewIdentityNo">
-          <el-input class="left-input" v-model="newUser.NewIdentityNo"></el-input>
-        </el-form-item>
-        <el-form-item label="备注：">
+        <el-form-item label="备注">
           <el-input  type="textarea" v-model="newUser.Remark"></el-input>
         </el-form-item>
       </el-form>
-      <div class="bottom-btn-box">
-        <el-button style="padding:8px 14px;" type="success" size="mini" @click="fileShow=true">
-          <i class="iconfont iconsousuo"></i>附件
-        </el-button>
-      </div>
     </div>
-    <span v-show="!ifShowChild" class="telescopic telescopic2" @click="getUp">
-      用户过户
-      <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
-    </span>
+    <el-form class="is-page">
+     <el-form-item label="字轮是否翻页">
+    <el-radio-group v-model="isPage">
+      <el-radio :label="true">是</el-radio>
+      <el-radio :label="false">否</el-radio>
+    </el-radio-group>
+  </el-form-item>
+  </el-form>
     <div class="bottom-btn-box">
       <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户</el-button>
     </div>
-    <fileList :show.sync="fileShow" :file.sync="file"></fileList>
-    <select-user
-      :selectUserShow.sync="selectUserShow"
-      :headQuery="params"
-      @handleFilter="handleFilter"
-    />
-    <account-balances
-      :accountShow.sync="accountShow"
-      :user="newUser"
-      @accountBalancesFunc="accountBalancesFunc"
-    />
   </div>
 </template>
 <script>
 import "@/styles/organization.scss";
 import { IsTransfer,TransferCustomer } from "@/api/userAccount";
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
-import SelectUser from "@/components/SelectUser";
-import AccountBalances from "./AccountBalances";
 import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
-import FileList from "./FileList";
 export default {
-  components: { FileList, SelectUser, AccountBalances },
   props: { ifShow: {} },
   data() {
     return {
@@ -119,6 +101,7 @@ export default {
         CustomerQueryType: "",
         CustomerQueryValue: ""
       },
+      isPage:false,
       selectUserShow: false,
       rules: {
         NewCustomerName: [{ required: true, message: " ", trigger: "blur" }],
@@ -214,30 +197,6 @@ export default {
           }
       })
     },
-    // 模糊查询用户
-    handleSelect(val, n) {
-      if (!val) {
-        this.user = {};
-        return false;
-      }
-      this.params.CustomerQueryValue = val;
-      this.params.CustomerQueryType = n;
-      GetCustomerDataList(this.params).then(res => {
-        if (res.data.length == 0) {
-          this.$message({
-            message: "未查询到用户！",
-            type: "error",
-            duration: 4000
-          });
-          this.user = {};
-        } else if (res.data.length == 1) {
-          this.user = res.data[0];
-          this.IsTransferFunc(this.user.Id);
-        } else {
-          this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
-        }
-      });
-    },
     handleFilter(val) {
       this.user = val;  
       this.IsTransferFunc(val.Id);
@@ -273,12 +232,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.type-title{
-  color:#777;
-  padding: 11px 0;
-  font-weight: bold;
-  font-size: 14px;
-}
 .top-title{
 color:#535353;
 font-size: 14px;
@@ -288,33 +241,6 @@ font-size: 14px;
     font-size: 14px;
   }
   background: #eff1f4;
-  .telescopic {
-    position: absolute;
-    display: block;
-    top: 220px;
-    color: #00b2a1;
-    font: normal 16px "Microsoft YaHei";
-    width: 30px;
-    margin: 0 auto;
-    word-wrap: break-word;
-    -webkit-box-shadow: 1px 1px 5px #cecece;
-    background: #fff;
-    padding: 15px 0;
-    z-index: 999;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 1px 1px 5px #cecece;
-  }
-  .telescopic1 {
-    left: 0;
-    border-bottom-right-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-  .telescopic2 {
-    right: 0px;
-    border-bottom-left-radius: 15px;
-    border-top-left-radius: 15px;
-  }
   position: relative;
   padding: 16px 16px 0 16px;
   height: calc(100vh - 74px);
@@ -326,11 +252,10 @@ font-size: 14px;
       -webkit-transition: width 0.2s;
       position: relative;
     }
-    .user_tree {
-      width: 280px;
+    .tab-container {
+      width: 100%;
       position: relative;
       background: #fff;
-      padding: 0 13px;
       margin-right: 16px;
       height: 100%;
     overflow: auto;
@@ -351,17 +276,12 @@ font-size: 14px;
     }
   }
   .left-input{
-    width:170px !important;
+    width:160px !important;
      /deep/ input.el-input__inner{
       width:100% !important;
     }
-  }
-  .people-input{
-    width:35px;
-   /deep/ input.el-input__inner{
-      width:100% !important;
-      padding: 0 2px;
-      text-align: center;
+    /deep/ .el-select > .el-input{
+         width:160px !important;
     }
   }
   .el-button--mini {
@@ -383,7 +303,7 @@ font-size: 14px;
   }
 }
 .transfer-container {
-  padding: 10px 13px 5px 2px;
+  padding: 10px 5px 5px 2px;
   background: #f5f5f5;
   /deep/ .el-form-item {
     margin-bottom: 10px;
@@ -392,5 +312,11 @@ font-size: 14px;
 .bottom-btn-box {
   text-align: center;
   padding: 25px 0;
+}
+.is-page{
+    margin:6px;
+    /deep/ .el-radio-group{
+        margin-left: 20px;
+    }
 }
 </style>
