@@ -3,7 +3,7 @@
   <div class="section-container">
     <el-container>
       <el-aside width="0">
-        <account-user class="account-user" :editUserList="editUserList" />
+        <upadate class="account-user" />
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
           水表升级
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
@@ -88,7 +88,7 @@
   </div>
 </template>
 <script>
-import AccountUser from "./components/AccountUser";
+import Upadate from "./components/Upadate";
 import SelecteHead from "./components/SelecteHead";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
@@ -98,7 +98,7 @@ import { legalTime } from "@/utils/index"; //时间格式化
 
 export default {
   name: "waterMeterUpdate",
-  components: { AccountUser, SelecteHead, customTable, Pagination },
+  components: { Upadate, SelecteHead, customTable, Pagination },
   data() {
     return {
       listQuery: {
@@ -237,6 +237,21 @@ export default {
       margin-bottom: 0;
       position: relative;
       transition: width 0.2s;
+      overflow: scroll;
+
+      background: #fff;
+    }
+    .el-aside::-webkit-scrollbar {
+      width: 3px;
+    }
+    .el-aside::-webkit-scrollbar-thumb {
+      /*滚动条里面小方块*/
+      
+      border-radius: 10px;
+
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+
+      background: #ccc;
     }
     .el-main {
       background: #fff;
@@ -282,7 +297,7 @@ export default {
     border-top-left-radius: 15px;
   }
   .hide {
-    width: 280px !important;
+    width: 284px !important;
     // padding: 0 !important;
     // overflow: hidden;
     // // margin-right: 0 !important;

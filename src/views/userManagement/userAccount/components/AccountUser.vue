@@ -13,33 +13,40 @@
           <el-input
             v-model="userInfo.CustomerName"
             @keydown.enter.native="searchEnter(2,userInfo.CustomerName)"
+            class="left-input"
           ></el-input>
         </el-form-item>
         <el-form-item label="电话：">
-          <el-input v-model="userInfo.Tel" @keydown.enter.native="searchEnter(3,userInfo.Tel)"></el-input>
+          <el-input
+            v-model="userInfo.Tel"
+            @keydown.enter.native="searchEnter(3,userInfo.Tel)"
+            class="left-input"
+          ></el-input>
         </el-form-item>
         <el-form-item label="用户编号：">
           <el-input
             v-model="userInfo.CustomerNo"
             @keydown.enter.native="searchEnter(1,userInfo.CustomerNo)"
+            class="left-input"
           ></el-input>
         </el-form-item>
         <el-form-item label="证件号：">
           <el-input
             v-model="userInfo.IdentityNo"
             @keydown.enter.native="searchEnter(4,userInfo.IdentityNo)"
+            class="left-input"
           ></el-input>
         </el-form-item>
         <el-form-item label="地址：">
-          <el-input v-model="userInfo.Address" disabled></el-input>
+          <el-input v-model="userInfo.Address" disabled class="left-input"></el-input>
         </el-form-item>
         <el-form-item label="账户余额：">
-          <el-input class="totalMoney" v-model="userInfo.Balance" disabled>
+          <el-input class="totalMoney left-input" v-model="userInfo.Balance" disabled>
             <template slot="append">元</template>
           </el-input>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="userInfo.Remark"></el-input>
+          <el-input v-model="userInfo.Remark" class="left-input"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -47,14 +54,14 @@
       <h4>水表信息</h4>
       <el-form ref="waterInfo" :model="userInfo" label-width="70px">
         <el-form-item label="水表编号：">
-          <el-input v-model="waterInfo.WaterMeterNo" disabled></el-input>
+          <el-input v-model="waterInfo.WaterMeterNo" disabled class="left-input"></el-input>
         </el-form-item>
         <el-form-item label="水表类型：">
-          <el-input v-model="waterInfo.WaterMeterTypeName" disabled></el-input>
+          <el-input v-model="waterInfo.WaterMeterTypeName" disabled class="left-input"></el-input>
         </el-form-item>
         <el-form-item label="表端余额：">
           <el-input
-            class="totalMoney"
+            class="totalMoney left-input"
             v-model="waterInfo.MeterBalance"
             :disabled="waterInfo.WaterMeterTypeName=='IC卡表水表'?false:true"
           >
@@ -189,8 +196,10 @@ export default {
     },
     //销户
     accountBtn() {
-
-      if (this.userInfo.Id ==undefined|| this.waterInfo.MeterBalance==undefined) {
+      if (
+        this.userInfo.Id == undefined ||
+        this.waterInfo.MeterBalance == undefined
+      ) {
         this.$message({
           message: "请先查询信息在进行操作",
           type: "warning"
@@ -255,10 +264,21 @@ export default {
       margin-top: 18px;
     }
     .el-form-item {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .redingK {
-      padding: 7px 5px;
+      padding: 5px;
+      width: 64px;
+      height: 28px;
+      background: rgba(117, 194, 0, 1);
+      opacity: 1;
+      border-radius: 4px;
+    }
+    .left-input {
+      width: 170px !important;
+      /deep/ input.el-input__inner {
+        width: 100% !important;
+      }
     }
   }
   .waterInfo {

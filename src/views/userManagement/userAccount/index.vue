@@ -289,7 +289,7 @@ export default {
     border-top-left-radius: 15px;
   }
   .hide {
-    width: 330px !important;
+    width: 280px !important;
     // padding: 0 !important;
     // overflow: hidden;
     // // margin-right: 0 !important;

@@ -1,7 +1,7 @@
 <template>
   <div class="mac-contianer" style>
     <el-container>
-      <el-aside width="180px">
+      <el-aside width="0">
         <ul>
           <li v-for="itemList in deviceList">
             <p class="item-title">
@@ -14,12 +14,21 @@
               <img :src="itemList.IsOnline?imgSuccess:imgLose" />
             </p>
             <div v-show="isshow" class="cjNum">
-              <p  :class="{active:item==deiKey}" v-for="(item,index) in itemList.listCollNo"   @click="changeColor(item)" :key="index">00000000000{{item}}</p>
+              <p
+                :class="{active:item==deiKey}"
+                v-for="(item,index) in itemList.listCollNo"
+                @click="changeColor(item)"
+                :key="index"
+              >00000000000{{item}}</p>
             </div>
 
             <p class="dateYC">{{itemList.RefreshTime}}</p>
           </li>
         </ul>
+        <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
+          用户详情
+          <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
+        </span>
       </el-aside>
       <el-main>
         <el-form
@@ -207,6 +216,10 @@
             @pagination="waterMeterYCDetail(meterReadListParam.customerId)"
           />
         </el-dialog>
+        <span v-show="!ifShow" class="telescopic telescopic1" @click="closeAccount">
+          用户详情
+          <i class="iconfont iconshouqi1" style="font-size: 12px;"></i>
+        </span>
       </el-main>
     </el-container>
     <instrction-order :orderHistory="orderHistory" ref="order" :orderid="orderid" />
@@ -240,7 +253,7 @@ export default {
         page: 1,
         limit: 10,
         CustomerQueryType: "6", //水表编号
-        CollectorNo:"",//采集器
+        CollectorNo: "", //采集器
         CustomerQueryValue: "", //水表编号值
         ValveState: "", //阀门状态
         TrafficStatus: "-1", //通讯状态
@@ -276,8 +289,8 @@ export default {
       isshow: true,
       orderHistory: false,
       orderid: "",
-      deiKey:-1
-      //指令记录
+      deiKey: -1,
+      ifShow: false
     };
   },
   activated: function() {
@@ -325,13 +338,24 @@ export default {
     }
   },
   methods: {
-   changeColor(index){
-    this.deiKey=index
-    console.log(index)
-    this.YCMeterQueryParam.CollectorNo="00000000000"+index
-    this.searchYCWaterList()
-   },
-    instructionsHis(id) {//指令记录
+    closeAccount() {
+      this.ifShow = !this.ifShow;
+      if (this.ifShow) {
+        document.getElementsByClassName("el-aside")[0].classList.remove("none");
+        document.getElementsByClassName("el-aside")[0].classList.add("hide");
+      } else {
+        document.getElementsByClassName("el-aside")[0].classList.remove("hide");
+        document.getElementsByClassName("el-aside")[0].classList.add("none");
+      }
+    },
+    changeColor(index) {
+      this.deiKey = index;
+      console.log(index);
+      this.YCMeterQueryParam.CollectorNo = "00000000000" + index;
+      this.searchYCWaterList();
+    },
+    instructionsHis(id) {
+      //指令记录
       this.orderid = id;
       this.orderHistory = true;
       // console.log(id);
@@ -521,6 +545,7 @@ export default {
     .el-aside {
       padding: 0;
       margin: 0;
+      position: relative;
       ul {
         margin: 0;
         padding: 0;
@@ -578,8 +603,8 @@ export default {
           opacity: 1;
           cursor: pointer;
         }
-        .active{
-          color: #00B2A1
+        .active {
+          color: #00b2a1;
         }
       }
       .dateYC {
@@ -595,7 +620,48 @@ export default {
     .el-main {
       padding: 13px;
       background: #fff;
-      margin-left: 10px;
+      margin-left: 0px;
+      position: relative;
+    }
+    .telescopic {
+      position: absolute;
+      display: block;
+      top: 300px;
+      color: #00b2a1;
+      font: normal 16px "Microsoft YaHei";
+      width: 30px;
+      margin: 0 auto;
+      word-wrap: break-word;
+      -webkit-box-shadow: 1px 1px 5px #cecece;
+      background: #fff;
+      padding: 15px 0;
+      z-index: 999;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 1px 1px 5px #cecece;
+    }
+    .telescopic1 {
+      left: 0;
+      border-bottom-right-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+    .telescopic2 {
+      right: 0px;
+      border-bottom-left-radius: 15px;
+      border-top-left-radius: 15px;
+    }
+    .hide {
+      width: 180px !important;
+      // padding: 0 !important;
+      // overflow: hidden;
+      margin-right: 10px !important;
+    }
+    .none {
+      width: 0 !important;
+      // padding: 0 !important;
+      // overflow: hidden;
+      // // margin-right: 0 !important;
+      margin-right: 0px !important;
     }
   }
 }

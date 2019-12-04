@@ -7,7 +7,7 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item v-if="companyShow" label="水厂：">
+    <el-form-item v-if="companyShow" label="水厂">
       <el-select
         v-model="selectHead.waterFactoryId "
         placeholder="请选择"
@@ -22,7 +22,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="用户类型：">
+    <el-form-item label="用户类型">
       <el-select
         v-model="selectHead.userType"
         placeholder="请选择"
@@ -32,7 +32,7 @@
         <el-option v-for="item in userTypeList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="升级前水表类型：" label-width="120px">
+    <el-form-item label="升级前水表类型" label-width="120px">
       <el-select
         v-model="selectHead.waterMeterType"
         placeholder="请选择"
@@ -47,7 +47,7 @@
         />
       </el-select>
     </el-form-item>
-     <el-form-item label="升级后水表类型：" label-width="120px">
+    <el-form-item label="升级后水表类型" label-width="120px">
       <el-select
         v-model="selectHead.waterMeterType"
         placeholder="请选择"
@@ -66,7 +66,9 @@
       <el-select
         v-model="selectHead.CustomerQueryType"
         placeholder="请选择"
-        style="width: 100px;float: left;margin-right:10px;"
+        style="width: 100px;float: left;margin-right:4px;"
+        class="short-select"
+        
       >
         <el-option label="用户姓名" value="2"></el-option>
         <el-option label="用户编号" value="1"></el-option>
@@ -82,7 +84,7 @@
         style="width: 180px;float: left"
       />
     </el-form-item>
-    <el-form-item label="操作员：" label-width="80">
+    <el-form-item label="操作员" label-width="80">
       <el-select
         v-model="selectHead.createUserId"
         placeholder="请选择"
@@ -92,7 +94,7 @@
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="升级日期：">
+    <el-form-item label="升级日期">
       <el-date-picker
         v-model="timevalue"
         type="datetimerange"

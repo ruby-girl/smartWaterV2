@@ -230,8 +230,8 @@ export default {
           promptInfoFun(this, 1, res.message);
         }
       });
-      let parms = this.query;
-
+      let parms = JSON.stringify(this.query);
+      parms = JSON.parse(parms);
       parms.WaterTypeId = -1;
       GetWaterTypeCustomerNum(parms).then(res => {
         //用户统计数据
@@ -323,7 +323,7 @@ export default {
   }
   position: relative;
   padding: 11px 11px 0 11px;
-  height:100%;
+  height: 100%;
   .user_box {
     display: flex;
     height: inherit;

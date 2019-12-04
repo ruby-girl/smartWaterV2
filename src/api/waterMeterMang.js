@@ -77,102 +77,111 @@ export function searYCHisWater(data) {//远传表历史
     data
   })
 }
-export function readYCWaterinfo (data) {//抄表
+export function readYCWaterinfo(data) {//抄表
   return request({
     url: "/WaterMeter/MeterReading3",
     method: 'post',
     data
   })
 }
-export function lockYCChange (data) {//远传表阀门锁定开关
+export function lockYCChange(data) {//远传表阀门锁定开关
   return request({
-    url: "/WaterMeter/LockSwitchingValve3?isOpen="+data.isOpen,
+    url: "/WaterMeter/LockSwitchingValve3?isOpen=" + data.isOpen,
     method: 'post',
-    data:data.waterMeterId
+    data: data.waterMeterId
   })
 }
-export function  unLockYCChange(data) {//解锁
+export function unLockYCChange(data) {//解锁
   return request({
     url: "/WaterMeter/Unlock3",
     method: 'post',
     data
   })
 }
-export function  GetCommandRecord(data) {//获取指令记录
+export function GetCommandRecord(data) {//获取指令记录
   return request({
     url: "/WaterMeter/GetCommandRecord",
     method: 'GET',
-    params:data
-    
+    params: data
+
   })
 }
-export function  getWaterDevice() {//获取设备信息
+export function getWaterDevice() {//获取设备信息
   return request({
     url: "/WaterMeter/Device3",
     method: 'post',
-    
+
   })
 }
 
-export function  DeleteMeterReading(data) {//删除抄表记录
+export function DeleteMeterReading(data) {//删除抄表记录
   return request({
     url: "/WaterMeter/DeleteMeterReading3ById",
     method: 'GET',
-    params:data
+    params: data
   })
 }
 
 
 //物联网
 
-export function  getWLWWaterInfo(data) {//查询
+export function getWLWWaterInfo(data) {//查询
   return request({
     url: "/WaterMeter/SelectWaterMeter4DataList",
     method: 'post',
     data
   })
 }
-export function  excelWLWWaterInfo(data) {//导出
+export function excelWLWWaterInfo(data) {//导出
   return request({
     url: "/WaterMeter/SelectWaterMeter4DataListToExcel",
     method: 'post',
     data
   })
 }
-export function  GetMeter4ErrorTypeNum(data) {//异常统计
+export function GetMeter4ErrorTypeNum(data) {//异常统计
   return request({
     url: "/WaterMeter/GetMeter4ErrorTypeNum",
     method: 'GET',
-    params:data
+    params: data
   })
 }
-export function  searWLWHisWater(data) {//历史
+export function searWLWHisWater(data) {//历史
   return request({
     url: "/WaterMeter/GetMeter4ReportedDetail",
     method: 'POST',
     data
   })
 }
-export function  ValveLockOpen(data) {//锁定开
+export function ValveLockOpen(data) {//锁定开
   return request({
     url: "/WaterMeter/ValveLockOpen",
     method: 'POST',
-    params:data
+    params: data
   })
 }
-export function  ValveLockClose(data) {//锁定关
+export function ValveLockClose(data) {//锁定关
   return request({
     url: "/WaterMeter/ValveLockClose",
     method: 'POST',
-    params:data
+    params: data
   })
 }
-export function  ValveUnLock(data) {//解锁
+export function ValveUnLock(data) {//解锁
   return request({
     url: "/WaterMeter/ValveUnLock",
     method: 'POST',
-    params:data
+    params: data
   })
 }
 
 
+//------------------------------------水表升级-----------------------------------------------
+//WaterMeterUpgrade/SelectMeter1ThisLadderWaterYield
+export function getWaterTotalNum(data) {//解锁
+  return request({
+    url: "/WaterMeterUpgrade/SelectMeter1ThisLadderWaterYield",
+    method: 'POST',
+    params: data
+  })
+}
