@@ -4,10 +4,10 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="61px"
+    label-width="75px"
     @submit.native.prevent
   >
-    <el-form-item label="水厂" label-width="33px">
+    <el-form-item label="水厂" v-if="this.waterWorks.length>1">
       <el-select v-model="selectHead.SA_WaterFactory_Id" placeholder="请选择" @keydown.enter.native="handleFilter" @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',waterWorks)">
         <el-option label="全部" value="-1" />
         <el-option
@@ -44,8 +44,7 @@
           <el-select
             v-model="selectHead.TransferCustomer"
             placeholder="请选择"
-            style="width: 110px;float: left"
-            class="short-select"
+            class="user-select-box" style="width: 100px;float: left;margin-right:3px;"
           >
             <el-option label="原用户姓名" value="1"></el-option>
             <el-option label="新用户姓名" value="2"></el-option>
@@ -62,7 +61,7 @@
             style="width: 180px;float: left"
           />
         </el-form-item>
-        <el-form-item label="过户操作员" label-width="80">
+        <el-form-item label="过户操作员">
       <el-select v-model="selectHead.OpId" placeholder="请选择" @keydown.enter.native="handleFilter" @change="getText(selectHead.OpId,'OpId',editUserList)">
         <el-option label="全部" value="-1" />
         <el-option
@@ -82,7 +81,6 @@
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :default-time="['00:00:00', '23:59:59']"
         format="yyyy-MM-dd"
         value-format="yyyy-MM-dd"
         @keydown.enter.native="handleFilter"

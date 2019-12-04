@@ -6,41 +6,41 @@
     :model="temp"
     :inline="true"
     :rules="rules"
-    class="form-inline-small-input ladder-form-padding"
+    class="form-inline-small-input ladder-form-padding head-search-form"
     size="small"
     label-width="110px"
   >
-    <el-form-item label="用水性质：" prop="UseWaterTypeName">
+    <el-form-item label="用水性质" prop="UseWaterTypeName">
       <el-input v-model="temp.UseWaterTypeName" placeholder="长度1-50" maxlength="50" />
     </el-form-item>
-    <el-form-item label="用水性质类型：" prop="WaterPropertyType">
+    <el-form-item label="用水性质类型" prop="WaterPropertyType">
       <el-select v-model="temp.WaterPropertyType" placeholder="请选择">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="阶梯结算月数：" prop="LadderResetTime">
+    <el-form-item label="阶梯结算月数" prop="LadderResetTime">
       <el-select v-model="temp.LadderResetTime" placeholder="请选择">
         <el-option label="1" value="1" />
         <el-option label="3" value="3" />
         <el-option label="12" value="12" />
       </el-select>
     </el-form-item>
-    <el-form-item label="污水费：" prop="SewagePrice">
+    <el-form-item label="污水费" prop="SewagePrice">
       <el-input
         v-model="temp.SewagePrice"
         @blur="changeTwoDecimal_x($event)"
         @keyup.native="money($event)"
       />
     </el-form-item>
-    <el-form-item label="其他费用1：">
+    <el-form-item label="其他费用1">
       <el-input
         v-model="temp.OtherPrice1"
         @blur="changeTwoDecimal_x($event)"
         @keyup.native="money($event)"
       />
     </el-form-item>
-    <el-form-item label="其他费用2：">
+    <el-form-item label="其他费用2">
       <el-input
         v-model="temp.OtherPrice2"
         @blur="changeTwoDecimal_x($event)"
@@ -48,18 +48,18 @@
       />
     </el-form-item>
     <div class="ladder-box">
-      <el-form-item label="单价：" label-width="80px" prop="NotLadderPrice">
+      <el-form-item label="单价" label-width="80px" prop="NotLadderPrice">
         <el-input
           v-model="temp.NotLadderPrice"
           @blur="changeTwoDecimal_x($event,'all')"
           @keyup.native="money($event)"
         />
       </el-form-item>
-      <el-form-item label="合计单价：" label-width="100px" prop="TotalPrice">
+      <el-form-item label="合计单价" label-width="100px" prop="TotalPrice">
         <el-input class="big-blue-color" v-model="temp.TotalPrice" readonly />
       </el-form-item>
     </div>
-    <el-form-item label="开始执行日期：">
+    <el-form-item label="开始执行日期">
       <el-date-picker
         v-model="temp.StartPlanDate"
         format="yyyy-MM-dd HH:mm:ss"
@@ -70,7 +70,7 @@
         :disabled="dialogStatus=='update'"
       ></el-date-picker>
     </el-form-item>
-    <el-form-item label="新计价启用日期：" v-if="dialogStatus=='update'" label-width="150px">
+    <el-form-item label="新计价启用日期" v-if="dialogStatus=='update'" label-width="150px">
       <el-date-picker
         v-model="temp.NewPriceUseDate"
         format="yyyy-MM-dd HH:mm:ss"

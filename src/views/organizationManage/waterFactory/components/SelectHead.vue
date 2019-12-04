@@ -6,7 +6,7 @@
     size="small"
     label-width="80px"
     @submit.native.prevent>
-    <el-form-item label="水厂：" label-width="44px">
+    <el-form-item label="水厂" label-width="36px">
         <el-input
         maxlength="20"
         v-model="selectHead.WaterWorksName"
@@ -14,7 +14,7 @@
         @keyup.enter.native="handleFilter"
       />
     </el-form-item>
-    <el-form-item label="操作人：">
+    <el-form-item label="操作人">
       <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -25,7 +25,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="操作时间：">
+    <el-form-item label="操作时间">
       <el-date-picker
         v-model="timevalue"
         type="daterange"
@@ -34,7 +34,6 @@
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :default-time="['00:00:00', '23:59:59']"
         format="yyyy-MM-dd"
         value-format="yyyy-MM-dd HH:mm:ss"
         @change="getTime"
@@ -50,17 +49,27 @@
 import {getSelectUser} from "@/api/account"//获取操作人下拉框
 export default {
   props: {
-    selectHead: {
+    selectHeadObj: {
       type: Object,
       default: function() {
         return {};
       }
     }
   },
+   watch:{
+    selectHeadObj:{
+       handler(val, oldVal) {      
+       this.selectHead=Object.assign({},val)      
+      },
+      immediate: true
+    }
+  },
+
   data() {
     return {
       timevalue: [],
       editUserList: [],
+      selectHead:{}
     };
   },
   created() {
@@ -71,12 +80,13 @@ export default {
   methods: {
     getTime(v) {
       if (v) {
-        this.selectHead.editStartTime = v[0];
-        this.selectHead.editEndTime = v[1];
+        this.selectHead.editStartTime = v[0]+' 00:00:00';
+        this.selectHead.editEndTime = v[1]+' 23:59:59';
       } else {
         this.selectHead.editStartTime = "";
         this.selectHead.editEndTime = "";
       }
+      console.log(v)
     },
     handleFilter() {
       this.$emit("handleFilter", this.selectHead);

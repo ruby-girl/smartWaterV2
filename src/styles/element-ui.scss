@@ -149,15 +149,17 @@
 .el-form-item--small.el-form-item{
   margin-bottom: 16px;
 }
-.el-date-editor--datetimerange,.el-form-item__content .el-date-editor--daterange{
+// 时间选择器宽度
+.el-form-item__content .el-date-editor--daterange{
   width:290px !important;
 }
-
+// 含时分秒
+.el-date-editor--datetimerange{
+  width:350px !important;
+}
 .short-select .el-input__inner{
   width:100% !important;
 }
-
-// 时间选择器宽度
 .el-form-item--small .el-form-item__content,.el-form-item--small .el-form-item__label,.el-input--small .el-input__icon,.el-form-item--medium .el-form-item__content,.el-form-item--medium .el-form-item__label,.el-input--medium .el-input__icon{
   line-height: 28px;
 }

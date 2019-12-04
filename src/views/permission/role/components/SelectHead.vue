@@ -4,13 +4,13 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="68px"
     @submit.native.prevent
   >
-    <el-form-item label="角色：" label-width="45px">
+    <el-form-item label="角色">
       <el-input v-model="selectHead.roleName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
     </el-form-item>
-    <el-form-item label="操作人：">
+    <el-form-item label="操作人">
       <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -21,18 +21,17 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="操作时间：">
+    <el-form-item label="操作时间">
       <el-date-picker
         v-model="timevalue"
-        type="datetimerange"
+        type="daterange"
         :editable="false"
         :unlink-panels="true"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :default-time="['00:00:00', '23:59:59']"
-        format="yyyy-MM-dd HH:mm:ss"
-        value-format="yyyy-MM-dd HH:mm:ss"
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
         @change="getTime"
         @keydown.enter.native="handleFilter"
       ></el-date-picker>
@@ -46,17 +45,26 @@
 import {getSelectUser} from "@/api/account"//获取操作人下拉框
 export default {
   props: {
-    selectHead: {
+    selectHeadObj: {
       type: Object,
       default: function() {
         return {};
       }
     }
   },
+   watch:{
+    selectHeadObj:{
+       handler(val, oldVal) {      
+       this.selectHead=Object.assign({},val)      
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       timevalue: [],
-      editUserList: []
+      editUserList: [],
+      selectHead:{}
     };
   },
   created() {
@@ -67,8 +75,8 @@ export default {
   methods: {
     getTime(v) {
       if (v) {
-        this.selectHead.editStartTime = v[0];
-        this.selectHead.editEndTime = v[1];
+        this.selectHead.editStartTime = v[0]+' 00:00:00';
+        this.selectHead.editEndTime = v[1]+' 23:59:59';
       } else {
         this.selectHead.editStartTime = "";
         this.selectHead.editEndTime = "";

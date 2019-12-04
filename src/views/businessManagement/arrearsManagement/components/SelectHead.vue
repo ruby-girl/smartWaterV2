@@ -4,7 +4,7 @@
     :model="selectHead"
     class="head-search-form backgrounf-fff form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="68px"
     @submit.native.prevent
   >
     <div class="dialog-title-border-shadow">
@@ -15,7 +15,7 @@
     </div>
     <div style="padding:15px;padding-bottom:0;" v-show="type==1">
       <el-form-item>
-        <el-select v-model="selectHead.Enumcqt" placeholder="请选择" style="width: 100px;float: left">
+        <el-select v-model="selectHead.Enumcqt" placeholder="请选择" class="short-select-item" style="width: 100px;float: left">
           <el-option label="用户编号" value="1"></el-option>
           <el-option label="姓名/简码" value="2"></el-option>
           <el-option label="水表编号" value="6"></el-option>
@@ -37,27 +37,12 @@
           <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="欠费日期：">
-        <el-date-picker
-          v-model="timevalue"
-          type="datetimerange"
-          :editable="false"
-          :unlink-panels="true"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd HH:mm:ss"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          @change="getTime"
-          @keydown.enter.native="handleFilter"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="所属区域：">
+      
+      <el-form-item label="所属区域">
         <treeselect :searchable="false" v-model="selectHead.SA_UserArea_Id" :options="orgTree" />
       </el-form-item>
       <transition-group name="fade">
-        <el-form-item label="费用类型：" v-show="ifMore" key="type">
+        <el-form-item label="费用类型" v-show="ifMore" key="type">
           <el-select
             v-model="selectHead.Enumot"
             placeholder="请选择"
@@ -67,22 +52,22 @@
             <el-option v-for="item in Enumot" :key="item.Id" :label="item.Name" :value="item.Id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="欠费金额："  v-show="ifMore" key="TotalPrice ">
+        <el-form-item label="欠费金额" class="money-input"  v-show="ifMore" key="TotalPrice ">
           <el-input
           v-model="selectHead.Star_TotalPrice"
           maxlength="20"      
           @blur="testMoney()"
           @keyup.native="money($event)"
-          style="width: 80px;float: left"
+          style="width: 80px !important;float: left"
         />~<el-input
           v-model="selectHead.End_TotalPrice"
           maxlength="20"
           @blur="testMoney()"
           @keyup.native="money($event)"      
-          style="width: 80px;float: right"
+          style="width: 80px !important;float: right"
         />
       </el-form-item>
-        <el-form-item label="用户类型：" v-show="ifMore" key="state">
+        <el-form-item label="用户类型" v-show="ifMore" key="state">
           <el-select
             v-model="selectHead.Enumut"
             placeholder="请选择"
@@ -92,7 +77,7 @@
             <el-option v-for="item in Enumut" :key="item.Id" :label="item.Name" :value="item.Id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="水表类型：" v-show="ifMore" key="Enumwm">
+        <el-form-item label="水表类型" v-show="ifMore" key="Enumwm">
           <el-select
             v-model="selectHead.Enumwm"
             placeholder="请选择"
@@ -102,7 +87,7 @@
             <el-option v-for="item in Enumwm" :key="item.Id" :label="item.Name" :value="item.Id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="费用状态：" v-show="ifMore" key="Enumcf">
+        <el-form-item label="费用状态" v-show="ifMore" key="Enumcf">
           <el-select
             v-model="selectHead.Enumcf"
             placeholder="请选择"
@@ -114,6 +99,21 @@
             <el-option label="已撤销" value="1003" />
           </el-select>
         </el-form-item>
+        <el-form-item label="欠费日期" v-show="ifMore" key="time">
+        <el-date-picker
+          v-model="timevalue"
+          type="daterange"
+          :editable="false"
+          :unlink-panels="true"
+          range-separator="~"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          @change="getTime"
+          @keydown.enter.native="handleFilter"
+        ></el-date-picker>
+      </el-form-item>
       </transition-group>
       <el-form-item>
         <el-button type="primary" size="mini" @click="handleFilter">
@@ -125,7 +125,7 @@
       </el-form-item>
     </div>
     <div style="padding:15px;padding-bottom:0;" v-show="type==2">
-      <el-form-item label="水厂：" v-if="this.waterWorks.length>1">
+      <el-form-item label="水厂" v-if="this.waterWorks.length>1">
         <el-select
           v-model="factoryQuery.SA_WaterFactory_Id"
           placeholder="请选择"
@@ -135,23 +135,7 @@
           <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="欠费日期：">
-        <el-date-picker
-          v-model="timevalueFactory"
-          type="datetimerange"
-          :editable="false"
-          :unlink-panels="true"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd HH:mm:ss"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          @change="getTimeFactory"
-          @keydown.enter.native="handleFilterFactory"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="费用类型：" key="type">
+      <el-form-item label="费用类型" key="type">
         <el-select
           v-model="factoryQuery.Enumot"
           placeholder="请选择"
@@ -161,7 +145,7 @@
           <el-option v-for="item in Enumot" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="用户类型：" key="state">
+      <el-form-item label="用户类型" key="state">
         <el-select
           v-model="factoryQuery.Enumut"
           placeholder="请选择"
@@ -171,7 +155,7 @@
           <el-option v-for="item in Enumut" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="水表类型：" key="Enumwm">
+      <el-form-item label="水表类型" key="Enumwm">
         <el-select
           v-model="factoryQuery.Enumwm"
           placeholder="请选择"
@@ -181,7 +165,7 @@
           <el-option v-for="item in Enumwm" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="费用状态：" key="Enumcf">
+      <el-form-item label="费用状态" key="Enumcf">
         <el-select
           v-model="factoryQuery.Enumcf"
           placeholder="请选择"
@@ -189,6 +173,21 @@
         >
           <el-option v-for="item in Enumcf" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="欠费日期">
+        <el-date-picker
+          v-model="timevalueFactory"
+          type="daterange"
+          :editable="false"
+          :unlink-panels="true"
+          range-separator="~"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          @change="getTimeFactory"
+          @keydown.enter.native="handleFilterFactory"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="mini" @click="handleFilterFactory">
@@ -207,7 +206,7 @@ import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
   props: {
-    selectHead: {
+     selectHeadObj: {
       //按用户查询条件
       type: Object,
       default: function() {
@@ -230,13 +229,20 @@ export default {
     }
   },
   watch: {
-    "selectHead.SA_WaterFactory_Id": {//选择水厂动态获取区域
+    "selectHeadObj.SA_WaterFactory_Id": {//选择水厂动态获取区域
       handler(val, oldVal) {
        
        this.getArea(val)
       },
       immediate: true
     },
+     selectHeadObj:{
+       handler(val, oldVal) {     
+        console.log(val) 
+       this.selectHead=Object.assign({},val)      
+      },
+      immediate: true
+    },
     selectType(val) {
       this.type = val;
     },
@@ -257,7 +263,8 @@ export default {
       ifMore: false,
       value: 0,
       orgTree: [],
-      type: "1"
+      type: "1",
+      selectHead:{}
     };
   },
   created() {
@@ -299,8 +306,8 @@ export default {
     },
     getTime(v) {
       if (v) {
-        this.selectHead.Star_ArrearsDate = v[0];
-        this.selectHead.End_ArrearsDate = v[1];
+        this.selectHead.Star_ArrearsDate = v[0]+' 00:00:00';
+        this.selectHead.End_ArrearsDate = v[1]+ '23:59:59';
       } else {
         this.selectHead.Star_ArrearsDate = "";
         this.selectHead.End_ArrearsDate = "";
@@ -308,8 +315,8 @@ export default {
     },
     getTimeFactory(v) {
       if (v) {
-        this.factoryQuery.Star_ArrearsDate = v[0];
-        this.factoryQuery.End_ArrearsDate = v[1];
+        this.factoryQuery.Star_ArrearsDate =  v[0]+' 00:00:00';
+        this.factoryQuery.End_ArrearsDate = v[1]+ '23:59:59';
       } else {
         this.factoryQuery.Star_ArrearsDate = "";
         this.factoryQuery.End_ArrearsDate = "";
@@ -377,6 +384,11 @@ export default {
   display: inline-block;
   margin-left: 20px;
   cursor: pointer;
+}
+.money-input{
+   /deep/ .el-input .el-input__inner{
+      width:80px;
+   }
 }
 </style>
 

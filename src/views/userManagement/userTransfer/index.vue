@@ -5,7 +5,7 @@
       <div class="user_table">
         <div class="section-full-container">
           <div ref="formHeight">
-            <select-head :select-head="listQuery" @handleFilter="handleFilter" />
+            <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" />
           </div>
           <div class="display-flex justify-content-flex-justify">
            <div></div>
@@ -152,7 +152,8 @@ export default {
         this.getList();
       }
     },
-    handleFilter() {
+    handleFilter(v) {
+      this.listQuery=v
       this.listQuery.page = 1;
       this.getList();
     },

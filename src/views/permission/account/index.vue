@@ -2,7 +2,7 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :select-head="listQuery" @handleFilter="handleFilter" :role-list="roleList" />
+        <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" :role-list="roleList" />
       </div>
       <div class="display-flex justify-content-flex-justify">
         <el-button type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
@@ -204,7 +204,8 @@ export default {
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.getList();
     },
-    handleFilter() {
+    handleFilter(v) {
+      this.listQuery=v
       this.listQuery.page = 1;
       this.getList();
     },

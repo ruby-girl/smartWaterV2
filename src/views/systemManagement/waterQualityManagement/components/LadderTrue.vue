@@ -6,40 +6,40 @@
       :model="temp"
       :inline="true"
       :rules="rules"
-      class="form-inline-small-input ladder-form-padding"
+      class="form-inline-small-input head-search-form ladder-form-padding"
       size="small"
       label-width="110px"
     >
-      <el-form-item label="用水性质：" prop="UseWaterTypeName">
+      <el-form-item label="用水性质" prop="UseWaterTypeName">
         <el-input v-model="temp.UseWaterTypeName" placeholder="长度1-50" maxlength="50" />
       </el-form-item>
-      <el-form-item label="用水性质类型：" prop="WaterPropertyType">
+      <el-form-item label="用水性质类型" prop="WaterPropertyType">
         <el-select v-model="temp.WaterPropertyType" placeholder="请选择">
           <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="阶梯结算月数：" prop="LadderResetTime">
+      <el-form-item label="阶梯结算月数" prop="LadderResetTime">
         <el-select v-model="temp.LadderResetTime" placeholder="请选择">
           <el-option label="1" value="1" />
         <el-option label="3" value="3" />
         <el-option label="12" value="12" />
         </el-select>
       </el-form-item>
-      <el-form-item label="污水费：" prop="SewagePrice">
+      <el-form-item label="污水费" prop="SewagePrice">
         <el-input
           v-model="temp.SewagePrice"
           @blur="changeTwoDecimal_x($event,'all')"
           @keyup.native="money($event)"
         />
       </el-form-item>
-      <el-form-item label="其他费用1：">
+      <el-form-item label="其他费用1">
         <el-input
           v-model="temp.OtherPrice1"
           @blur="changeTwoDecimal_x($event,'all')"
           @keyup.native="money($event)"
         />
       </el-form-item>
-      <el-form-item label="其他费用2：">
+      <el-form-item label="其他费用2">
         <el-input
           v-model="temp.OtherPrice2"
           @blur="changeTwoDecimal_x($event,'all')"
@@ -51,8 +51,8 @@
           <div class="display-flex" v-if="temp.LadderNumber>i">
           <div class="display-flex align-items-center ladder-item">
             <i class="main-color-red">*</i>
-            <span>{{i+1}}阶单价：</span>
-            <div class="table-input-y">
+            <span>{{i+1}}阶单价</span>
+            <div class="table-input-y ml-5">
               <input
                 type="text"
                 v-model="item.LadderPrice"
@@ -64,8 +64,8 @@
           </div>
           <div class="display-flex align-items-center ladder-item">
             <i class="main-color-red">*</i>
-            <span>{{i+1}}阶起始量：</span>
-            <div class="table-input-y">
+            <span>{{i+1}}阶起始量</span>
+            <div class="table-input-y ml-5">
               <input
                 type="text"
                 :readonly="i==0?true:false"
@@ -78,8 +78,8 @@
           </div>
           <div class="display-flex align-items-center ladder-item">
             <i class="main-color-red">*</i>
-            <span>{{i+1}}阶合计单价：</span>
-            <div class="table-input-y">
+            <span>{{i+1}}阶合计单价</span>
+            <div class="table-input-y ml-5">
               <input class="big-blue-color"
                 type="text"
                 readonly
@@ -97,11 +97,11 @@
         </div>
         </div>
       </div>
-      <el-form-item label="开始执行日期：">
+      <el-form-item label="开始执行日期">
         <el-date-picker v-model="temp.StartPlanDate" format="yyyy-MM-dd HH:mm:ss"  :disabled="dialogStatus=='update'"
         value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择日期时间" :picker-options="pickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="新计价启用日期：" v-if="dialogStatus=='update'" label-width="150px">
+      <el-form-item label="新计价启用日期" v-if="dialogStatus=='update'" label-width="150px">
         <el-date-picker v-model="temp.NewPriceUseDate" format="yyyy-MM-dd HH:mm:ss"
         value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择日期时间" :picker-options="newPickerOptions"></el-date-picker>
       </el-form-item>
@@ -218,6 +218,9 @@ export default {
 }
 .cursor{
   cursor: pointer;
+}
+.ml-5{
+  margin-left: 5px;
 }
 </style>
 
