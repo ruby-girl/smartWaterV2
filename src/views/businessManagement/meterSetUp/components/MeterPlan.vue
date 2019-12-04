@@ -238,7 +238,11 @@
           if (res.code == 0) {
             promptInfoFun(this, 2, res.message)
             this.param.ReadNum = ''
-            this.checks.indexOf('自动载入下一户') == '-1' ? this.$refs.ReadNumInput.$el.querySelector('input').focus() : this.$parent.nextPageFun(true);
+            if(this.$parent.tableData.length>1){
+              this.checks.indexOf('自动载入下一户') == '-1' ? this.$refs.ReadNumInput.$el.querySelector('input').focus() : this.$parent.nextPageFun(true);
+            }else {
+              this.$parent.searchFun()
+            }
           } else {
             promptInfoFun(this, 1, res.message)
           }

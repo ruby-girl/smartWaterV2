@@ -174,8 +174,7 @@
     .el-checkbox__input.is-disabled + span.el-checkbox__label {
       color: #00B3A1 !important;
     }
-    .el-checkbox{margin-bottom: 13px;}
-    .check_box {height: 260px;overflow: auto;margin-top: 15px;padding: 0 12px}
+    .check_box {height: 260px;overflow: overlay;margin-top: 10px;padding: 0 12px}
     >p:first-child{
       padding: 16px 0 0 10px;
       i{display: inline-block;vertical-align: middle;margin-top: -27px;}
@@ -197,5 +196,6 @@
       label:first-child{color: #00B3A1;}
       label:last-child{color: #FF3E3E;}
     }
+    label.el-checkbox.is-checked{margin-right: 0;width: 100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;display: block}
   }
 </style>

@@ -115,7 +115,7 @@
           if (res.code ==0 ) {
             this.peopleArray = res.data.MeterReaders;//抄表员
             this.formsArray = res.data.RegisterBooks;//表册
-            this.param.SA_MeterReader_Id = '-1'//默认选中第一个
+            this.param.SA_MeterReader_Id = res.data.MeterReaders[0].Id//默认选中第一个
             this.param.SA_RegisterBookInfo_Id = res.data.RegisterBooks[0].Id
           } else {
             promptInfoFun(this,1,res.message)
