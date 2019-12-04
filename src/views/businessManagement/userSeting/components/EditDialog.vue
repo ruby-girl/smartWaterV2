@@ -8,64 +8,64 @@
     :before-close="handleClose"
     width="51%">
     <el-form :inline="true" ref="ruleForm" :model="formData" :rules="rules" label-width="100px">
-      <el-form-item label="水厂：" prop="SA_WaterFactory_Id" >
+      <el-form-item label="水厂  " prop="SA_WaterFactory_Id" >
         <el-select v-model="formData.SA_WaterFactory_Id" placeholder=" " size="small" @change="getDataByWater" :disabled="true">
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户编码：" prop="CustomerNo">
+      <el-form-item label="用户编码  " prop="CustomerNo">
         <el-input :disabled="true" v-model="formData.CustomerNo" size="small"/>
       </el-form-item>
-      <el-form-item label="姓名：" prop="CustomerName">
+      <el-form-item label="姓名  " prop="CustomerName">
         <el-input v-model="formData.CustomerName" placeholder="长度（1-30）" max-length="30" size="small"  @blur="getJMFun"/>
       </el-form-item>
-      <el-form-item label="简码：" prop="NameCode">
+      <el-form-item label="简码  " prop="NameCode">
         <el-input :disabled="true" v-model="formData.NameCode" size="small"/>
       </el-form-item>
-      <el-form-item label="电话：" prop="Tel">
+      <el-form-item label="电话  " prop="Tel">
         <el-input v-model="formData.Tel " size="small"/>
       </el-form-item>
-      <el-form-item label="人口：" prop="PeopleNo">
+      <el-form-item label="人口  " prop="PeopleNo">
         <el-input v-model="formData.PeopleNo" size="small" :disabled="true" />
       </el-form-item>
-      <el-form-item label="用户类型：" prop="UserType">
+      <el-form-item label="用户类型  " prop="UserType">
         <el-select v-model="formData.UserType" placeholder=" " size="small" :disabled="true">
           <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="证件号：" prop="IdentityNo">
+      <el-form-item label="证件号  " prop="IdentityNo">
         <el-input v-model="formData.IdentityNo" size="small"/>
       </el-form-item>
-      <el-form-item label="用水性质：" prop="SA_UseWaterType_Id">
+      <el-form-item label="用水性质  " prop="SA_UseWaterType_Id">
         <el-select v-model="formData.SA_UseWaterType_Id" placeholder=" " size="small" :disabled="true">
           <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.SA_UseWaterType_Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="区域：" prop="SA_UserArea_Id" class="cl_allLine">
+      <el-form-item label="区域  " prop="SA_UserArea_Id" class="cl_allLine">
         <el-input v-model="formData.SA_UserArea_Id" style="display: none"></el-input>
         <p @click="setAreaFun" class="areaInput">{{areaName}}<i
           :class="ifArea?'el-icon-arrow-up':'el-icon-arrow-down'"
           style="float: right; margin-top: 7px;color: #C0C4CC"></i></p>
         <AreaTree ref="areaTree" v-show="ifArea" @click="getArea" @watchChild="getCurAreaId"></AreaTree>
       </el-form-item>
-      <el-form-item label="表册：">
+      <el-form-item label="表册  ">
         <el-select v-model="formData.SA_RegisterBookInfo_Id" placeholder=" " size="small" :disabled="true">
           <el-option v-for="(item,index) in RegisterBookInfo" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="纳税人识别号：" label-width="110px">
+      <el-form-item label="纳税人识别号  " label-width="110px">
         <el-input v-model.trim="formData.TaxpayerNumber " size="small"/>
       </el-form-item>
-      <el-form-item label="账号余额：" prop="Balance" class="money">
+      <el-form-item label="账号余额  " prop="Balance" class="money">
         <el-input v-model="formData.Balance " size="small" :disabled="true" />
       </el-form-item>
 
-      <el-form-item label="地址：" class="cl_allArea">
+      <el-form-item label="地址  " class="cl_allArea">
         <el-input type="textarea" v-model="formData.Address" max-length="500" @input="descInput('Address')"
                   rows="1"></el-input>
         <span>{{Address}}/500</span>
       </el-form-item>
-      <el-form-item label="备注：" class="cl_allArea">
+      <el-form-item label="备注  " class="cl_allArea">
         <el-input type="textarea" v-model="formData.Remark" max-length="500" @input="descInput('Remark')"></el-input>
         <span>{{Remark}}/500</span>
       </el-form-item>
@@ -297,7 +297,7 @@
       .areaInput {
         width: 100%;
         height: 26px;
-        line-height: 32px;
+        line-height: 26px;
         border: solid 1px #D8E2E7;
         border-radius: 5px;
         margin: 0;

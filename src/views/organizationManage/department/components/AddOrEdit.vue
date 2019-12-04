@@ -7,7 +7,7 @@
     :before-close="handleClose"
     width="400px">
     <el-form ref="jp" :model="jp" label-width="80px" class="demo-jp">
-      <el-form-item label="部门:" prop="DeptName">
+      <el-form-item label="部门 " prop="DeptName">
         <el-input
           v-model.trim="jp.DeptName"
           placeholder="请输入部门名称"
@@ -19,7 +19,7 @@
       <el-button v-show="title=='编辑'" type="primary" icon="el-icon-plus" size="mini" style="margin-bottom: 30px;" @click="addPost">添加职位</el-button>
 
       <div style="max-height:220px;overflow: auto">
-        <el-form-item v-show="title=='编辑'" label="职位:" v-for="(item,index) in jp.JobNameList" :key="index">
+        <el-form-item v-show="title=='编辑'" label="职位" v-for="(item,index) in jp.JobNameList" :key="index">
           <el-input
             v-model.trim="item.JobName"
             placeholder="请输入岗位名称"

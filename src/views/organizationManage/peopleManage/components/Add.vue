@@ -2,7 +2,7 @@
   <el-dialog
     class="people_info_box"
     :close-on-click-modal="false"
-    top="0vh"
+    top="3vh"
     title="人员管理添加"
     :visible.sync="addVisible"
     :before-close="handleClose"
@@ -11,35 +11,35 @@
           <el-form :inline="true" ref="jp" :model="jp" :rules="rules" label-width="100px">
             <div class="edit_box_moudler">
               <h3><i></i>人员资料</h3>
-              <el-form-item label="人员编号:">
+              <el-form-item label="人员编号">
                 <el-input size="small" placeholder="系统自动生成" disabled/>
-              </el-form-item>
-              <el-form-item label="人员名称:" prop="EmpName">
+              </el-form-item>&nbsp;
+              <el-form-item label="人员名称" prop="EmpName">
                 <el-input v-model.trim="jp.EmpName" size="small" maxlength="10" placeholder="请输入人员名称"/>
               </el-form-item>
-              <el-form-item label="性别:" prop="Gender">
+              <el-form-item label="性别" prop="Gender">
                 <el-select v-model="jp.Gender" placeholder="请选择" size="small">
                   <el-option label="女" value="女"/>
                   <el-option label="男" value="男"/>
                 </el-select>
               </el-form-item>
-              <el-form-item label="出生日期:" prop="Birthday">
+              <el-form-item label="出生日期" prop="Birthday">
                 <el-date-picker v-model="jp.Birthday" type="date" placeholder="年月日" size="small" value-format="yyyy-MM-dd" style="width: 185px"/>
               </el-form-item>
-              <el-form-item label="电话号码:" prop="MobileNumber">
+              <el-form-item label="电话号码" prop="MobileNumber">
                 <el-input v-model.trim="jp.MobileNumber" size="small" maxlength="11" placeholder="请输入11位电话号码"/>
               </el-form-item>
-              <el-form-item label="身份证号:" prop="IDNumber">
+              <el-form-item label="身份证号" prop="IDNumber">
                 <el-input v-model.trim="jp.IDNumber" size="small" maxlength="18" placeholder="请输入18位身份证号"/>
               </el-form-item>
-              <el-form-item label="入职日期:" prop="EnrollingTime">
+              <el-form-item label="入职日期" prop="EnrollingTime">
                 <el-date-picker v-model="jp.EnrollingTime" type="date" placeholder="年月日" size="small"
                                 value-format="yyyy-MM-dd" style="width: 185px"/>
               </el-form-item>
-              <el-form-item label="邮箱:" prop="EmailAddress">
+              <el-form-item label="邮箱" prop="EmailAddress">
                 <el-input v-model="jp.EmailAddress" size="small" maxlength="50" placeholder="长度0-50"/>
               </el-form-item>
-              <el-form-item label="岗位状态:" prop="JobStatus">
+              <el-form-item label="岗位状态" prop="JobStatus">
                 <el-input v-model.trim="jp.JobStatus" size="small" disabled/>
               </el-form-item>
             </div>
@@ -47,19 +47,19 @@
               <h3><i></i>人员信息</h3>
               <!--部门岗位组件 s-->
               <PostInfo ref="childPost"></PostInfo>
-              <el-form-item label="水厂:" prop="WaterFactoryIdarr">
+              <el-form-item label="水厂" prop="WaterFactoryIdarr">
                 <el-select v-model="jp.WaterFactoryIdarr" placeholder="请选择" size="small" multiple>
                   <el-option v-for="(item,index) in WaterFactory" :label="item.Name" :value="item.Id" :key="index"/>
                 </el-select>
               </el-form-item>
-              <el-form-item label="职务:" prop="EnumFun">
+              <el-form-item label="职务" prop="EnumFun">
                 <el-select v-model="jp.EnumFun" placeholder="请选择" size="small">
                   <el-option v-for="(item,index) in  EnumFunArry" :label="item.Name" :value="item.Id" :key="index"/>
                 </el-select>
               </el-form-item>
               <div>
                 <el-row>
-                  <el-form-item label="是否添加账号:" style="margin-left: 55px;">
+                  <el-form-item label="是否添加账号" style="margin-left: 55px;">
                     <el-radio-group v-model="ifAddAcount">
                       <el-radio label="是"></el-radio>
                       <el-radio label="否"></el-radio>
@@ -67,19 +67,19 @@
                   </el-form-item>
                 </el-row>
                 <transition name="fade">
-                <el-form-item label="角色:" prop="RoleId" v-show="ifAddAcount=='是'">
+                <el-form-item label="角色" prop="RoleId" v-show="ifAddAcount=='是'">
                   <el-select v-model="jp.RoleId" placeholder="请选择" size="small" >
                     <el-option v-for="(item,index) in  RoleArry" :label="item.Name" :value="item.Id" :key="index"/>
                   </el-select>
                 </el-form-item>
                 </transition>
                 <transition name="fade">
-                <el-form-item label="账号:" prop="Account" v-show="ifAddAcount=='是'">
+                <el-form-item label="账号" prop="Account" v-show="ifAddAcount=='是'">
                   <el-input v-model="jp.Account" size="small" maxlength="50" placeholder=""/>
                 </el-form-item>
                 </transition>
                 <transition name="fade">
-                <el-form-item label="密码:" prop="PassWord" v-show="ifAddAcount=='是'">
+                <el-form-item label="密码" prop="PassWord" v-show="ifAddAcount=='是'">
                   <el-input v-model="jp.PassWord" size="small" maxlength="50" placeholder=""/>
                 </el-form-item>
                 </transition>
@@ -287,3 +287,4 @@
     }
   }
 </script>
+

@@ -16,24 +16,24 @@
             :model="rbdp"
             size="small"
             label-width="100px">
-            <el-form-item label="水厂：">
+            <el-form-item label="水厂  ">
               <el-select v-model="rbdp.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getMeterRead">
                 <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </el-form-item>
-            <el-form-item label="所属区域：">
+            <el-form-item label="所属区域  ">
               <el-select v-model="rbdp.SA_UserArea_Id" placeholder="请选择" size="small">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </el-form-item>
-            <el-form-item label="抄表员：">
+            <el-form-item label="抄表员  ">
               <el-select v-model="rbdp.MeterReaderId" placeholder="请选择" size="small" @change="getMeterForm">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id" />
               </el-select>
             </el-form-item>
-            <el-form-item label="表册：">
+            <el-form-item label="表册  ">
               <el-select v-model="rbdp.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" >
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item,index) in formsArry" :key="index" :label="item.Name" :value="item.Id" />

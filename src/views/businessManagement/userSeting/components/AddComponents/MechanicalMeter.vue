@@ -4,59 +4,59 @@
     <div class="user_information">
       <h3 class="add_title"><i></i>用户资料</h3>
       <el-form :inline="true" ref="formData" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="水厂：" prop="SA_WaterFactory_Id"  v-if="this.waterFactory.length>1">
+        <el-form-item label="水厂 " prop="SA_WaterFactory_Id"  >
           <el-select v-model="formData.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getDataByWater">
             <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="用户编码：">
+        <el-form-item label="用户编码 ">
           <el-input :disabled="true" v-model="formData.CustomerNo" size="small"/>
         </el-form-item>
-        <el-form-item label="姓名：" prop="CustomerName">
+        <el-form-item label="姓名 " prop="CustomerName">
           <el-input v-model="formData.CustomerName" placeholder="长度（1-30）" max-length="30" size="small" @blur="getJMFun"/>
         </el-form-item>
-        <el-form-item label="简码：" prop="NameCode">
+        <el-form-item label="简码 " prop="NameCode">
           <el-input :disabled="true" v-model="formData.NameCode" size="small"/>
         </el-form-item>
-        <el-form-item label="电话："prop="Tel">
+        <el-form-item label="电话 "prop="Tel">
           <el-input v-model="formData.Tel " size="small"/>
         </el-form-item>
-        <el-form-item label="人口：" prop="PeopleNo">
+        <el-form-item label="人口 " prop="PeopleNo">
           <el-input v-model.number="formData.PeopleNo" size="small"/>
         </el-form-item>
-        <el-form-item label="用户类型：" prop="UserType">
+        <el-form-item label="用户类型 " prop="UserType">
           <el-select v-model="formData.UserType" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="证件号：" prop="IdentityNo">
+        <el-form-item label="证件号 " prop="IdentityNo">
           <el-input v-model="formData.IdentityNo" size="small"/>
         </el-form-item>
-        <el-form-item label="区域：" prop="SA_UserArea_Id" class="cl_allLine">
+        <el-form-item label="区域 " prop="SA_UserArea_Id" class="cl_allLine">
           <el-input v-model="formData.SA_UserArea_Id" style="display: none"></el-input>
           <p @click="setAreaFun" class="areaInput">{{areaName}}<i
             :class="ifArea?'el-icon-arrow-up':'el-icon-arrow-down'"
             style="float: right; margin-top: 7px;color: #C0C4CC"></i></p>
           <AreaTree ref="areaTree" v-show="ifArea" @click="getArea" @watchChild="getCurAreaId"></AreaTree>
         </el-form-item>
-        <el-form-item label="用水性质：" prop="SA_UseWaterType_Id">
+        <el-form-item label="用水性质 " prop="SA_UseWaterType_Id">
           <el-select v-model="formData.SA_UseWaterType_Id" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.SA_UseWaterType_Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="表册：" prop="SA_RegisterBookInfo_Id">
+        <el-form-item label="表册 " prop="SA_RegisterBookInfo_Id">
           <el-select v-model="formData.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in RegisterBookInfo" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="纳税人识别号：" label-width="110px" prop="TaxpayerNumber">
+        <el-form-item label="纳税人识别号 " label-width="110px" prop="TaxpayerNumber">
           <el-input v-model.trim="formData.TaxpayerNumber " size="small"/>
         </el-form-item>
-        <el-form-item label="地址：" class="cl_allArea" prop="Address">
+        <el-form-item label="地址 " class="cl_allArea" prop="Address">
           <el-input type="textarea" v-model="formData.Address" max-length="500" @input="descInput('Address')" rows="1"></el-input>
           <span>{{Address}}/500</span>
         </el-form-item>
-        <el-form-item label="备注：" class="cl_allArea" prop="Remark">
+        <el-form-item label="备注 " class="cl_allArea" prop="Remark">
           <el-input type="textarea" v-model="formData.Remark" max-length="500" @input="descInput('Remark')"></el-input>
           <span>{{Remark}}/500</span>
         </el-form-item>
@@ -66,34 +66,34 @@
     <div class="user_information">
       <h3 class="add_title"><i></i>水表信息</h3>
       <el-form :inline="true" ref="formData1" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="水表编号：" prop="WaterMeterNo">
+        <el-form-item label="水表编号 " prop="WaterMeterNo">
           <el-input v-model="formData.WaterMeterNo" size="small"/>
         </el-form-item>
-        <el-form-item label="水表样式：" prop="WaterMeterStyle">
+        <el-form-item label="水表样式 " prop="WaterMeterStyle">
           <el-select v-model="formData.WaterMeterStyle" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in waterMeterStyles" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="水表口径：" prop="MeterDiameter">
+        <el-form-item label="水表口径 " prop="MeterDiameter">
           <el-select v-model="formData.MeterDiameter" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in MeterDiameters" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
         <!--机械表 s-->
-        <el-form-item label="起始读数：" v-show="!differ" prop="StarReadNum">
+        <el-form-item label="起始读数 " v-show="!differ" prop="StarReadNum">
           <el-input v-model="formData.StarReadNum" size="small"/>
         </el-form-item>
         <!--机械表 e-->
         <!--IC表 s-->
-        <el-form-item label="报警金额：" prop="AlarmMoney" v-show="differ">
+        <el-form-item label="报警金额 " prop="AlarmMoney" v-show="differ">
           <el-input v-model="formData.AlarmMoney" size="small"/>
         </el-form-item>
         <!--IC表 e-->
-        <el-form-item label="安装位置：" class="cl_allArea" prop="InstallAddress">
+        <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
           <el-input type="textarea" v-model="formData.InstallAddress" max-length="500" @input="descInput('InstallAddress')" rows="1"></el-input>
           <span>{{InstallAddress}}/500</span>
         </el-form-item>
-        <el-form-item label="备注：" class="cl_allArea" prop="WaterRemark">
+        <el-form-item label="备注 " class="cl_allArea" prop="WaterRemark">
           <el-input type="textarea" v-model="formData.WaterRemark" max-length="500" @input="descInput('WaterRemark')"></el-input>
           <span>{{WaterRemark}}/500</span>
         </el-form-item>

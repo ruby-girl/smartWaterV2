@@ -162,7 +162,7 @@
   line-height: 28px;
 }
 .el-form-item__label{
-  padding:0 !important;
+  padding: 0 5px 0 0 !important;
 }
 .el-submenu__title{
   height:40px !important;
@@ -195,7 +195,7 @@ tbody .hover-row>td{
 .el-button--mini .is-round {
   padding:  3px 8px;
 }
-// label离input的距离 
+// label离input的距离
 .head-search-form{
   /deep/ .el-form-item .el-form-item__label{
 padding-right: 5px !important;

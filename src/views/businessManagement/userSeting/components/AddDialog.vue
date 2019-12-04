@@ -142,7 +142,7 @@
   .cl_allLine {
     position: relative; width: 100%;
     .el-form-item__content { width: calc(100% - 140px);}
-    .areaInput{width: 100%;height: 26px;line-height: 32px;border: solid 1px #D8E2E7;border-radius: 5px;margin: 3px 0 0 0;cursor: pointer;padding: 0 10px 0 15px;position: relative;}
+    .areaInput{width: 100%;height: 26px;line-height: 26px;border: solid 1px #D8E2E7;border-radius: 5px;margin: 3px 0 0 0;cursor: pointer;padding: 0 10px 0 15px;position: relative;}
   }
   .cl_allArea {
     width: 100%;

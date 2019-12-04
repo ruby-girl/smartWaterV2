@@ -1,33 +1,33 @@
 <template>
   <el-form :inline="true" ref="data" :model="data" :rules="rules" label-width="100px">
-    <el-form-item label="水表编号：" prop="WaterMeterNo">
+    <el-form-item label="水表编号 " prop="WaterMeterNo">
       <el-input v-model="data.WaterMeterNo" size="small" placeholder="按enter建查询水表信息"
                 @keyup.enter.native="GetYCWaterByWaterMeterNo"/>
     </el-form-item>
-    <el-form-item label="报警量：" prop="WaterAmountAlarm">
+    <el-form-item label="报警量 " prop="WaterAmountAlarm">
       <el-input size="small" v-model="data.WaterAmountAlarm"/>
     </el-form-item>
-    <el-form-item label="透支量：" prop="WaterAmountOverdraft">
+    <el-form-item label="透支量 " prop="WaterAmountOverdraft">
       <el-input size="small" v-model="data.WaterAmountOverdraft"/>
     </el-form-item>
-    <el-form-item label="当前读数：" prop="TotalCumulateWater">
+    <el-form-item label="当前读数 " prop="TotalCumulateWater">
       <el-input :disabled="true" v-model="data.TotalCumulateWater" size="small"/>
     </el-form-item>
-    <el-form-item label="水表样式：" prop="WaterMeterStyle">
+    <el-form-item label="水表样式 " prop="WaterMeterStyle">
       <el-select v-model="data.WaterMeterStyle" placeholder="请选择" size="small" :disabled="true">
         <el-option v-for="(item,index) in waterMeterStyles" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="水表口径：" prop="MeterDiameter">
+    <el-form-item label="水表口径 " prop="MeterDiameter">
       <el-select v-model="data.MeterDiameter" placeholder="请选择" size="small" :disabled="true">
         <el-option v-for="(item,index) in MeterDiameters" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="安装位置：" class="cl_allArea" prop="InstallAddress">
+    <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
       <el-input :disabled="true" type="textarea" v-model="data.InstallAddress" max-length="500" rows="1"></el-input>
       <!--<span>{{InstallAddress}}/500</span>-->
     </el-form-item>
-    <el-form-item label="备注：" class="cl_allArea" prop="Remark">
+    <el-form-item label="备注 " class="cl_allArea" prop="Remark">
       <el-input :disabled="true" type="textarea" v-model="data.Remark" max-length="500"></el-input>
       <!-- <span>{{Remark}}/500</span>-->
     </el-form-item>

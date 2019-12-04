@@ -237,9 +237,9 @@
             OA_Job_Id: this.queryData.OA_Job_Id,
             EmpNo: this.queryData.EmpNo,
             JobStatus: this.queryData.JobStatus,
-            EnrollingTime: this.queryData.EnrollingTime,
-            EnrollingTimeEnd: this.queryData.EnrollingTimeEnd,
             Gender: this.queryData.Gender,
+            EnrollingTime: '',
+            EnrollingTimeEnd: '',
             IDNumber: '',
             MobileNumber: '',
             Birthday: '',
@@ -276,11 +276,11 @@
 </script>
 <style lang="scss">
   .people_info_box {
-    .el-diaog__body{
+    .el-dialog__body{
       background: #F5F5F5;
       padding: 26px 24px 26px 24px;
       .edit_box{
-        padding: 0 30px 0 0;
+        padding: 0;
       }
       .edit_box_moudler{
         background: #fff;padding: 1px 20px 5px 20px;margin-bottom: 10px;

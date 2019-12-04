@@ -1,6 +1,6 @@
 <template>
   <div class="uploadBox">
-    <el-form-item label="附件类型：">
+    <el-form-item label="附件类型">
       <el-select v-model="certificates" placeholder="请选择" size="small">
         <el-option v-for="(item,index) in option" :key="index" :label="item.label" :value="item.value" />
       </el-select>

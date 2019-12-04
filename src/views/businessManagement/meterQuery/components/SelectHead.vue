@@ -9,100 +9,101 @@
       :model="param"
       class="head-search-form form-inline-small-input"
       size="small"
-      label-width="100px"
+      label-width="80px"
       @submit.native.prevent>
-          <el-form-item label="水厂：" v-show="waterFactory.length>1">
-            <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList" >
-              <el-option label="全部" value="-1"></el-option>
-              <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="抄表计划：" v-show="typeCheck==1">
-            <el-select v-model="param.SA_MeterReadPlan_Id" placeholder="请选择" size="small" @change="getCbyInfo">
-              <el-option v-for="(item,index) in planArry" :key="index" :label="item.Name" :value="item.Id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="抄表员：">
-            <el-select v-model="param.SA_MeterReader_Id" placeholder="请选择" size="small">
-              <el-option label="全部" value="-1"></el-option>
-              <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="抄表状态：">
-            <el-select v-model="param.MeterReadState" placeholder="请选择" size="small">
-              <el-option label="全部" value="-1"></el-option>
-              <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="表册：">
-            <el-select v-model="param.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
-              <el-option label="全部" value="-1"></el-option>
-              <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="抄表日期：" v-show="typeCheck==2">
-            <el-date-picker
-              v-model="meterData"
-              type="daterange"
-              :editable="false"
-              :unlink-panels="true"
-              range-separator="~"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :default-time="['00:00:00', '23:59:59']"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              @keydown.enter.native="handleFilter"
-              @change="getTime"
-            />
-          </el-form-item>
-          <el-form-item >
-            <el-select v-model="param.CustomerQueryType" placeholder="请选择" class="user-select-box" style="width: 100px;float: left;margin-left: 30px">
-              <el-option label="编号" value="1"></el-option>
-              <el-option label="姓名/简码" value="2"></el-option>
-            </el-select>
-            <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
-                      style="width: 180px;float: left"/>
-          </el-form-item>
-          <transition name="fade">
-            <el-form-item label="用户类型：" v-show="ifMore">
-              <el-select v-model="param.UserType" placeholder="请选择" size="small">
-                <el-option label="全部" value="-1"></el-option>
-                <el-option v-for="(item,index) in userArry" :key="index" :label="item.Name" :value="item.Id"/>
-              </el-select>
-            </el-form-item>
-          </transition>
-          <transition name="fade">
-            <el-form-item label="录入人：" v-show="ifMore">
-              <el-input v-model="param.InputEmpName" maxlength="20" placeholder="请输入录入人"/>
-            </el-form-item>
-          </transition>
-          <transition name="fade">
-            <el-form-item label="录入日期：" v-show="ifMore">
-              <el-date-picker
-                v-model="InputData"
-                type="daterange"
-                :editable="false"
-                :unlink-panels="true"
-                range-separator="~"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :default-time="['00:00:00', '23:59:59']"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                @keydown.enter.native="handleFilter"
-                @change="getTime1"
-              />
-            </el-form-item>
-          </transition>
-          <el-form-item label="">
-            <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i
-              class="icon iconfont">&#xe694;</i>
-              搜索
-            </el-button>
-            <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
-            <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
-          </el-form-item>
+      <el-form-item label="水厂  " v-show="waterFactory.length>1">
+        <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList">
+          <el-option label="全部" value="-1"></el-option>
+          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="抄表计划  " v-show="typeCheck==1">
+        <el-select v-model="param.SA_MeterReadPlan_Id" placeholder="请选择" size="small" @change="getCbyInfo">
+          <el-option v-for="(item,index) in planArry" :key="index" :label="item.Name" :value="item.Id"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="抄表员  ">
+        <el-select v-model="param.SA_MeterReader_Id" placeholder="请选择" size="small">
+          <el-option label="全部" value="-1"></el-option>
+          <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="抄表状态  ">
+        <el-select v-model="param.MeterReadState" placeholder="请选择" size="small">
+          <el-option label="全部" value="-1"></el-option>
+          <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="表册  ">
+        <el-select v-model="param.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
+          <el-option label="全部" value="-1"></el-option>
+          <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="抄表日期  " v-show="typeCheck==2">
+        <el-date-picker
+          v-model="meterData"
+          type="daterange"
+          :editable="false"
+          :unlink-panels="true"
+          range-separator="~"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          @keydown.enter.native="handleFilter"
+          @change="getTime"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="param.CustomerQueryType" placeholder="请选择" class="user-select-box"
+                   style="width: 100px;float: left;margin-left: 30px">
+          <el-option label="编号" value="1"></el-option>
+          <el-option label="姓名/简码" value="2"></el-option>
+        </el-select>
+        <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
+                  style="width: 180px;float: left"/>
+      </el-form-item>
+      <transition name="fade">
+        <el-form-item label="用户类型  " v-show="ifMore">
+          <el-select v-model="param.UserType" placeholder="请选择" size="small">
+            <el-option label="全部" value="-1"></el-option>
+            <el-option v-for="(item,index) in userArry" :key="index" :label="item.Name" :value="item.Id"/>
+          </el-select>
+        </el-form-item>
+      </transition>
+      <transition name="fade">
+        <el-form-item label="录入人  " v-show="ifMore">
+          <el-input v-model="param.InputEmpName" maxlength="20" placeholder="请输入录入人"/>
+        </el-form-item>
+      </transition>
+      <transition name="fade">
+        <el-form-item label="录入日期  " v-show="ifMore">
+          <el-date-picker
+            v-model="InputData"
+            type="daterange"
+            :editable="false"
+            :unlink-panels="true"
+            range-separator="~"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="['00:00:00', '23:59:59']"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            @keydown.enter.native="handleFilter"
+            @change="getTime1"
+          />
+        </el-form-item>
+      </transition>
+      <el-form-item label="">
+        <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i
+          class="icon iconfont">&#xe694;</i>
+          搜索
+        </el-button>
+        <i v-show="ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">收起 &#xe692;</i>
+        <i v-show="!ifMore" class="icon iconfont getUpDown" @click="ifMore=!ifMore">展开 &#xe68f;</i>
+      </el-form-item>
     </el-form>
   </div>
 </template>

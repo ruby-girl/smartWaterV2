@@ -45,23 +45,6 @@
           <el-option label="在职" value="在职"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="入职时间 ">
-        <el-date-picker
-          @keydown.enter.native="searchFun"
-          :editable="false"
-          v-model="EntryTime"
-          :unlink-panels="true"
-          size="small"
-          type="daterange"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          @change="getTime1"
-        />
-      </el-form-item>
       <el-form-item label="性别 ">
         <el-select v-model="queryData.Gender" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
           <el-option label="全部" value="-1"></el-option>
@@ -78,6 +61,50 @@
             maxlength="11"
             size="small"
           />
+        </el-form-item>
+      </transition>
+      <transition name="fade">
+        <el-form-item label="身份证号 " v-show="ifMore">
+          <el-input
+            @keyup.enter.native="searchFun"
+            v-model.trim="queryData.IDNumber"
+            placeholder="请输入18位身份证号"
+            maxlength="18"
+            size="small"
+          />
+        </el-form-item>
+      </transition>
+      <transition name="fade">
+        <el-form-item label="账号状态 " v-show="ifMore">
+          <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+            <el-option label="全部" value="-1"/>
+            <el-option label="已分配" value="已分配"/>
+            <el-option label="未分配" value="未分配"/>
+          </el-select>
+        </el-form-item>
+      </transition>
+      <transition name="fade">
+        <el-form-item label="邮箱 " v-show="ifMore">
+          <el-input
+            @keyup.enter.native="searchFun"
+            v-model="queryData.EmailAddress"
+            placeholder="长度0-50"
+            maxlength="50"
+            size="small"
+          />
+        </el-form-item>
+      </transition>
+      <transition name="fade">
+        <el-form-item label="操作人 " v-show="ifMore">
+          <el-select v-model="queryData.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+            <el-option label="全部" value="-1"></el-option>
+            <el-option
+              v-for="(item,index) in operationArray"
+              :key="index"
+              :label="item.Name"
+              :value="item.Id"
+            />
+          </el-select>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -100,27 +127,22 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="身份证号 " v-show="ifMore">
-          <el-input
-            @keyup.enter.native="searchFun"
-            v-model.trim="queryData.IDNumber"
-            placeholder="请输入18位身份证号"
-            maxlength="18"
+        <el-form-item label="入职时间 " v-show="ifMore">
+          <el-date-picker
+            @keydown.enter.native="searchFun"
+            :editable="false"
+            v-model="EntryTime"
+            :unlink-panels="true"
             size="small"
+            type="daterange"
+            range-separator="~"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="['00:00:00', '23:59:59']"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            @change="getTime1"
           />
-        </el-form-item>
-      </transition>
-      <transition name="fade">
-        <el-form-item label="操作人 " v-show="ifMore">
-          <el-select v-model="queryData.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
-            <el-option label="全部" value="-1"></el-option>
-            <el-option
-              v-for="(item,index) in operationArray"
-              :key="index"
-              :label="item.Name"
-              :value="item.Id"
-            />
-          </el-select>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -139,26 +161,6 @@
             format="yyyy-MM-dd HH:mm:ss"
             value-format="yyyy-MM-dd HH:mm:ss"
             @change="getTime3"
-          />
-        </el-form-item>
-      </transition>
-      <transition name="fade">
-        <el-form-item label="账号状态 " v-show="ifMore">
-          <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
-            <el-option label="全部" value="-1"/>
-            <el-option label="已分配" value="已分配"/>
-            <el-option label="未分配" value="未分配"/>
-          </el-select>
-        </el-form-item>
-      </transition>
-      <transition name="fade">
-        <el-form-item label="邮箱 " v-show="ifMore">
-          <el-input
-            @keyup.enter.native="searchFun"
-            v-model="queryData.EmailAddress"
-            placeholder="长度0-50"
-            maxlength="50"
-            size="small"
           />
         </el-form-item>
       </transition>
@@ -220,27 +222,6 @@
           </el-select>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-        <div class="cl-inlineItem" style="width: 100%">
-          <label class="cl-label">入职时间&nbsp;</label>
-          <el-date-picker
-            @keydown.enter.native="searchFun"
-            :editable="false"
-            v-model="EntryTime"
-            :unlink-panels="true"
-            style="width: 81%"
-            size="small"
-            type="daterange"
-            range-separator="~"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            @change="getTime1"
-          />
-        </div>
-      </el-col>
       <el-col :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
         <div class="cl-inlineItem">
           <label class="cl-label">性别&nbsp;</label>
@@ -252,55 +233,58 @@
         </div>
       </el-col>
       <transition name="fade">
-      <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
-        <div class="cl-inlineItem">
-          <label class="cl-label">电话号码&nbsp;</label>
-          <el-input
-            @keyup.enter.native="searchFun"
-            v-model="queryData.MobileNumber"
-            placeholder="请输入11位电话号码"
-            maxlength="11"
-            size="small"
-          />
-        </div>
-      </el-col>
+        <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
+          <div class="cl-inlineItem">
+            <label class="cl-label">电话号码&nbsp;</label>
+            <el-input
+              @keyup.enter.native="searchFun"
+              v-model="queryData.MobileNumber"
+              placeholder="请输入11位电话号码"
+              maxlength="11"
+              size="small"
+            />
+          </div>
+        </el-col>
       </transition>
       <transition name="fade">
-      <el-col v-show="ifMore" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-        <div class="cl-inlineItem" style="width: 100%">
-          <label class="cl-label">出生日期&nbsp;</label>
-          <el-date-picker
-            @keydown.enter.native="searchFun"
-            :editable="false"
-            v-model="birthdayTime"
-            :unlink-panels="true"
-            style="width: 81%"
-            size="small"
-            type="daterange"
-            range-separator="~"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            @change="getTime2"
-          />
-        </div>
-      </el-col>
+        <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
+          <div class="cl-inlineItem">
+            <label class="cl-label">身份证号&nbsp;</label>
+            <el-input
+              @keyup.enter.native="searchFun"
+              v-model.trim="queryData.IDNumber"
+              placeholder="请输入18位身份证号"
+              maxlength="18"
+              size="small"
+            />
+          </div>
+        </el-col>
       </transition>
       <transition name="fade">
-      <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
-        <div class="cl-inlineItem">
-          <label class="cl-label">身份证号&nbsp;</label>
-          <el-input
-            @keyup.enter.native="searchFun"
-            v-model.trim="queryData.IDNumber"
-            placeholder="请输入18位身份证号"
-            maxlength="18"
-            size="small"
-          />
-        </div>
-      </el-col>
+        <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
+          <div class="cl-inlineItem">
+            <label class="cl-label">账号状态&nbsp;</label>
+            <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+              <el-option label="全部" value="-1"/>
+              <el-option label="已分配" value="已分配"/>
+              <el-option label="未分配" value="未分配"/>
+            </el-select>
+          </div>
+        </el-col>
+      </transition>
+      <transition name="fade">
+        <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
+          <div class="cl-inlineItem">
+            <label class="cl-label">邮箱&nbsp;</label>
+            <el-input
+              @keyup.enter.native="searchFun"
+              v-model="queryData.EmailAddress"
+              placeholder="长度0-50"
+              maxlength="50"
+              size="small"
+            />
+          </div>
+        </el-col>
       </transition>
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
@@ -317,6 +301,52 @@
           </el-select>
         </div>
       </el-col>
+      </transition>
+      <transition name="fade">
+        <el-col v-show="ifMore" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <div class="cl-inlineItem" style="width: 100%">
+            <label class="cl-label">出生日期&nbsp;</label>
+            <el-date-picker
+              @keydown.enter.native="searchFun"
+              :editable="false"
+              v-model="birthdayTime"
+              :unlink-panels="true"
+              style="width: 81%"
+              size="small"
+              type="daterange"
+              range-separator="~"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              @change="getTime2"
+            />
+          </div>
+        </el-col>
+      </transition>
+      <transition name="fade">
+        <el-col v-show="ifMore" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <div class="cl-inlineItem" style="width: 100%">
+            <label class="cl-label">入职时间&nbsp;</label>
+            <el-date-picker
+              @keydown.enter.native="searchFun"
+              :editable="false"
+              v-model="EntryTime"
+              :unlink-panels="true"
+              style="width: 81%"
+              size="small"
+              type="daterange"
+              range-separator="~"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              @change="getTime1"
+            />
+          </div>
+        </el-col>
       </transition>
       <transition name="fade">
       <el-col v-show="ifMore" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -341,32 +371,7 @@
           </div>
       </el-col>
       </transition>
-      <transition name="fade">
-      <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
-        <div class="cl-inlineItem">
-          <label class="cl-label">账号状态&nbsp;</label>
-          <el-select v-model="queryData.AccountStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
-            <el-option label="全部" value="-1"/>
-            <el-option label="已分配" value="已分配"/>
-            <el-option label="未分配" value="未分配"/>
-          </el-select>
-        </div>
-      </el-col>
-      </transition>
-      <transition name="fade">
-      <el-col v-show="ifMore" :xs="24" :sm="8" :md="8" :lg="4" :xl="4">
-        <div class="cl-inlineItem">
-          <label class="cl-label">邮箱&nbsp;</label>
-          <el-input
-            @keyup.enter.native="searchFun"
-            v-model="queryData.EmailAddress"
-            placeholder="长度0-50"
-            maxlength="50"
-            size="small"
-          />
-        </div>
-      </el-col>
-      </transition>
+
       <el-col :xs="24" :sm="12" :md="6" :lg="4" :xl="4" style="margin-bottom: 20px;">
         <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i
           class="icon iconfont">&#xe694;</i> 搜索

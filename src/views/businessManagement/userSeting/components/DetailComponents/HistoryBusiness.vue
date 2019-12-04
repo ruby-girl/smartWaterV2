@@ -3,14 +3,42 @@
     <p class="search_btn">按日期： <span :class="asce=='asc'? 'on':''" @click="sortFun(1)">降序</span> <span :class="asce=='desc'? 'on':''" @click="sortFun(2)">升序</span></p>
      <!--类型判断  开户：2101，充值：2102，换表：2103，水表升级：2104，编辑：2015-->
     <li v-for="(item,index) in data" :key="index">
-      <span class="title open_account" v-if="item.BussinessType===2101">{{ item.BussinessTypeName }}</span>
-      <i class="icon iconfont iconjianqu1 open_account" v-if="item.BussinessType===2101"></i>
-      <span class="title recharge" v-else-if="item.BussinessType===2102">{{ item.BussinessTypeName }}</span>
-      <i class="icon iconfont iconzu3 recharge" v-else-if="item.BussinessType===2102"></i>
-      <span class="title change_table" v-else-if="item.BussinessType===2103">{{ item.BussinessTypeName }}</span>
-      <i class="icon iconfont iconhuanbiao change_table" v-else-if="item.BussinessType===2103"></i>
-      <span class="title upgrade" v-else>{{ item.BussinessTypeName }}</span>
-      <i class="icon iconfont iconjianqu2 upgrade" v-else></i>
+      <!--开户-->
+      <p v-if="item.BussinessType===2101">
+        <span class="title open_account">{{ item.BussinessTypeName }}</span>
+        <i class="icon iconfont iconkaihuzhongxin open_account"></i>
+      </p>
+      <!--充值-->
+      <p v-else-if="item.BussinessType===2102">
+        <span class="title recharge">{{ item.BussinessTypeName }}</span>
+        <i class="icon iconfont iconzu3 recharge"></i>
+      </p>
+
+      <!--换表-->
+      <p v-else-if="item.BussinessType===2103">
+        <span class="title change_table">{{ item.BussinessTypeName }}</span>
+        <i class="icon iconfont iconhuanbiao change_table"></i>
+      </p>
+      <!--水表升级-->
+      <p v-else-if="item.BussinessType===2104">
+        <span class="title upgrade">{{ item.BussinessTypeName }}</span>
+        <i class="icon iconfont iconjianqu2 upgrade"></i>
+      </p>
+      <!--编辑-->
+      <p v-else-if="item.BussinessType===2105">
+        <span class="title edit_record">{{ item.BussinessTypeName }}</span>
+        <i class="icon iconfont iconbianji2 edit_record"></i>
+      </p>
+      <!--制卡-->
+      <p v-else-if="item.BussinessType===2106">
+        <span class="title made_card">{{ item.BussinessTypeName }}</span>
+        <i class="icon iconfont iconjianqu1 made_card"></i>
+      </p>
+      <!--补卡-->
+      <p v-else>
+        <span class="title patch_card">{{ item.BussinessTypeName }}</span>
+        <i class="icon iconfont iconzu7 patch_card"></i>
+      </p>
       <div class="content">
         <span>{{item.EditTime}}</span>
         <label>{{item.BussinessContent}}</label>
@@ -29,7 +57,7 @@
       return {
         asce: 'asc',
         Id:'',
-        data:''
+        data:[]
       }
     },
     methods:{
@@ -71,6 +99,7 @@
       display: flex;
       -webkit-flex: 1;
       margin-top: 60px;
+      p{margin: 0;}
     }
 
     li:before {
@@ -107,6 +136,21 @@
     }
     .upgrade.icon{background: #46BE56;}
 
+    .edit_record {
+      color: #B9B300;
+    }
+    .edit_record.icon{background: #B9B300;}
+
+    .made_card {
+      color: #8AD120;
+    }
+    .made_card.icon{background: #8AD120;}
+
+    .patch_card {
+      color: #46BE56;
+    }
+    .patch_card.icon{background: #46BE56;}
+
     .icon {
       position: absolute;
       left: 95px;
@@ -127,6 +171,7 @@
       width: 60px;
       font: bold 14px/70px 'Microsoft YaHei';
       line-height: 70px;
+      display: inline-block;
     }
 
     .content {

@@ -6,16 +6,16 @@
     size="small"
     label-width="100px"
     @submit.native.prevent>
-    <el-form-item label="片区：">
+    <el-form-item label="片区  ">
       <el-input v-model="sbap.BlockAreaName" maxlength="20" placeholder="片区名称(长度20)" @keyup.enter.native="searchFun"/>
     </el-form-item>
-    <el-form-item label="操作人：">
+    <el-form-item label="操作人  ">
       <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="操作时间：">
+    <el-form-item label="操作时间  ">
       <el-date-picker
         :editable="false"
         @keydown.enter.native="searchFun"

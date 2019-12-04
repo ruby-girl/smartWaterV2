@@ -6,7 +6,7 @@
     size="small"
     label-width="80px"
     @submit.native.prevent>
-    <el-form-item label="水厂：" label-width="44px">
+    <el-form-item label="水厂  " label-width="44px">
         <el-input
         maxlength="20"
         v-model="selectHead.WaterWorksName"
@@ -14,7 +14,7 @@
         @keyup.enter.native="handleFilter"
       />
     </el-form-item>
-    <el-form-item label="操作人：">
+    <el-form-item label="操作人  ">
       <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -25,7 +25,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="操作时间：">
+    <el-form-item label="操作时间  ">
       <el-date-picker
         v-model="timevalue"
         type="daterange"

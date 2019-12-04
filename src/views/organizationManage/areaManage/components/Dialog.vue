@@ -7,7 +7,7 @@
     :before-close="handleClose"
     width="400px">
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="80px" class="demo-ruleForm">
-      <el-form-item label="片区:" prop="newAreaName">
+      <el-form-item label="片区 " prop="newAreaName">
         <el-input
           v-model.trim="ruleForm.newAreaName"
           placeholder="(长度1-20内)"
@@ -15,7 +15,7 @@
           size="small"
           style="width: 250px"/>
       </el-form-item>
-      <el-form-item label="水厂:" prop="waterFactoryName">
+      <el-form-item label="水厂 " prop="waterFactoryName">
         <el-select style="width: 250px" multiple v-model="ruleForm.waterFactoryName">
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>

@@ -7,13 +7,13 @@
     label-width="100px"
     @submit.native.prevent>
 
-    <el-form-item label="部门：">
+    <el-form-item label="部门  ">
       <el-select v-model="dp.Id" placeholder="请选择" size="small" filterable>
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="岗位：">
+    <el-form-item label="岗位  ">
       <el-input v-model="dp.JobName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
     </el-form-item>
     <el-form-item label=""><el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
