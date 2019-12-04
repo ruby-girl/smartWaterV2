@@ -24,12 +24,12 @@
       <ul class="uploadList el-upload-list el-upload-list--text">
         <li v-for="(item,index) in fileList" :key="index" tabindex="0" class="el-upload-list__item is-success">
           <div>
-            <p @mouseover="selectStyle (item)" @mouseout="outStyle(item)">
+            <p>
               <i v-show="item.type === 0?true:false" class="icon iconfont" style="color:#EBB021">&#xe68b;</i><!--图片-->
               <i v-show="item.type === 1?true:false" class="icon iconfont" style="color:#345e9e">&#xe65d;</i><!--word-->
               <i v-show="item.type === 2?true:false" class="icon iconfont" style="color:#389850">&#xe693;</i><!--excel-->
               <i v-show="item.type === 3?true:false" class="icon iconfont" style="color:#dc2e1b">&#xe691;</i><!--pdf-->
-              <span class="picName" :title="item.name">{{ item.name }}</span>
+              <span class="picName" :title="item.name"  @mouseover="selectStyle (item)" @mouseout="outStyle(item)">{{ item.name }}</span>
             </p>
             <i class="el-icon-view" @click="handlePreview(item)" />
             <i class="el-icon-close" @click="handleRemove(item.id)" />
@@ -42,6 +42,7 @@
     <div v-show="ifImg" class="cl-image-viewer">
       <div class="cl-image-viewer__mask" @click="ifImg=false" />
       <img :src="curSrc" alt="">
+      <i class="el-icon-circle-close" @click="ifImg=false"></i>
     </div>
 
     <el-dialog
@@ -243,13 +244,12 @@
         cursor: pointer;
         position: relative;
         >div{position: relative;border-bottom: solid 1px #eee;margin: 0;padding: 0px;
-          >p{margin: 0;display: inline-block;width: 100%;position: relative;line-height: 17px;}
+          >p{margin: 0;display: inline-block;width: 70%;position: relative;line-height: 18px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis}
         }
         padding: 0 15px;
         list-style-type: none;
         .el-icon-view{position: absolute;right: 25px;top:9px;cursor: pointer;}
         .el-icon-close{display: block;top:9px;}
-        .picName{display: inline-block;width: 80%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis}
       }
       .smallImg{
         width: 80px;height: 80px;
@@ -278,6 +278,8 @@
         left: 50%;
         transform: translate(-50%, -50%);
       }
+      >i{color: #ddd;font-size: 36px;position: absolute;right: 5px;top: 5px;cursor: pointer}
+      >i:hover {color: #fefefe}
     }
     .cl-image-viewer__mask{
       position: absolute;

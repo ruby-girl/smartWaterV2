@@ -220,6 +220,8 @@
             this.$refs.childPost.isFlag = false;
           }
         }
+        delete self.jp.Function
+        self.jp.EnumFun = parseInt(self.jp.EnumFun)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             peopleUpDate(self.jp).then(res => {//更新保存
@@ -277,6 +279,7 @@
             }
             delete res.data.blList
             this.jp = res.data
+            this.jp.EnumFun = res.data.Function.toString()
             let fileList = res.data.saList//已经上传文件信息
             this.$refs.getFiles.setFiles(fileList)
           } else {
