@@ -4,11 +4,11 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="68px"
     @submit.native.prevent
   >
     <el-form-item>
-      <el-select v-model="selectHead.CustomerQueryType" placeholder="请选择"  class="user-select-box" style="width: 100px;float: left">
+      <el-select v-model="selectHead.CustomerQueryType" placeholder="请选择"  class="user-select-box" style="width: 100px;float: left;margin-right:3px;">
         <el-option label="用户编号" value="1"></el-option>
         <el-option label="姓名/简码" value="2"></el-option>
         <el-option label="水表编号" value="3"></el-option>
@@ -23,7 +23,7 @@
         style="width: 180px;float: left"
       />
     </el-form-item>
-    <el-form-item label="水厂：" v-if="this.waterWorks.length>1">
+    <el-form-item label="水厂" v-if="this.waterWorks.length>1">
       <el-select
         v-model="selectHead.WaterFactory"
         placeholder="请选择"
@@ -32,8 +32,63 @@
         <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
+    <el-form-item label="收款人">
+      <el-select
+        v-model="selectHead.ReceiveMoneyUser"
+        placeholder="请选择"
+        @keydown.enter.native="handleFilter"
+      >
+        <el-option label="全部" value="-1" />
+        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
+      </el-select>
+    </el-form-item>
+    <transition-group name="fade">
 
-    <el-form-item label="缴费日期：">
+        <el-form-item label="缴费方式" v-show="ifMore" key="type">
+          <el-select
+            v-model="selectHead.PayMentType"
+            placeholder="请选择"
+            @keydown.enter.native="handleFilter"
+          >
+            <el-option label="全部" value="-1" />
+            <el-option label="现金" value="2701" />
+            <el-option label="微信" value="2702" />
+            <el-option label="支付宝" value="2703" :disabled="true"/>
+            <el-option label="银行代扣" value="2704" />
+            <el-option label="转账" value="2705" :disabled="true"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="缴费状态" v-show="ifMore" key="state">
+          <el-select
+            v-model="selectHead.PayMentState"
+            placeholder="请选择"
+            @keydown.enter.native="handleFilter"
+          >
+            <el-option label="全部" value="-1" />
+            <el-option
+              v-for="item in payMentState"
+              :key="item.Id"
+              :label="item.Name"
+              :value="item.Id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="水表类型" v-show="ifMore" key="waterType">
+          <el-select
+            v-model="selectHead.WaterMeterTypeId"
+            placeholder="请选择"
+            @keydown.enter.native="handleFilter"
+          >
+            <el-option label="全部" value="-1" />
+            <el-option
+              v-for="item in waterMeterType"
+              :key="item.Id"
+              :label="item.Name"
+              :value="item.Id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="缴费日期" v-show="ifMore" key="time">
       <el-date-picker
         v-model="timevalue"
         type="datetimerange"
@@ -49,62 +104,6 @@
         @keydown.enter.native="handleFilter"
       ></el-date-picker>
     </el-form-item>
-    <el-form-item label="收款人：">
-      <el-select
-        v-model="selectHead.ReceiveMoneyUser"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-    <transition-group name="fade">
-
-        <el-form-item label="缴费方式：" v-show="ifMore" key="type">
-          <el-select
-            v-model="selectHead.PayMentType"
-            placeholder="请选择"
-            @keydown.enter.native="handleFilter"
-          >
-            <el-option label="全部" value="-1" />
-            <el-option label="现金" value="2701" />
-            <el-option label="微信" value="2702" />
-            <el-option label="支付宝" value="2703" :disabled="true"/>
-            <el-option label="银行代扣" value="2704" />
-            <el-option label="转账" value="2705" :disabled="true"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="缴费状态：" v-show="ifMore" key="state">
-          <el-select
-            v-model="selectHead.PayMentState"
-            placeholder="请选择"
-            @keydown.enter.native="handleFilter"
-          >
-            <el-option label="全部" value="-1" />
-            <el-option
-              v-for="item in payMentState"
-              :key="item.Id"
-              :label="item.Name"
-              :value="item.Id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="水表类型：" v-show="ifMore" key="waterType">
-          <el-select
-            v-model="selectHead.WaterMeterTypeId"
-            placeholder="请选择"
-            @keydown.enter.native="handleFilter"
-          >
-            <el-option label="全部" value="-1" />
-            <el-option
-              v-for="item in waterMeterType"
-              :key="item.Id"
-              :label="item.Name"
-              :value="item.Id"
-            />
-          </el-select>
-        </el-form-item>
 
     </transition-group>
     <el-form-item>
@@ -121,13 +120,21 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import {getDictionaryOption} from "@/utils/permission"//字典-水表类型等
 export default {
   props: {
-    selectHead: {
+    selectHeadObj: {
       type: Object,
       default: function() {
         return {};
       }
     }
   },
+   watch:{
+    selectHeadObj:{
+       handler(val, oldVal) {      
+       this.selectHead=Object.assign({},val)      
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       timevalue: [],
@@ -136,7 +143,8 @@ export default {
       payMentState:[],//缴费状态
       editUserList:[],//收款人
       waterWorks:[],//水厂
-      ifMore: false
+      ifMore: false,
+      selectHead:{}
     };
   },
   created() {

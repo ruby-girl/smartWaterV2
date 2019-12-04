@@ -4,24 +4,24 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="68px"
     @submit.native.prevent
   >
-    <el-form-item label="用水性质：" label-width="70px">
+    <el-form-item label="用水性质">
       <el-input
         v-model="selectHead.WaterPropertyName"
         placeholder="长度1-50"
         maxlength="50"
       />
     </el-form-item>
-    <el-form-item label="是否阶梯：">
+    <el-form-item label="是否阶梯">
       <el-select v-model="selectHead.IsLadder" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
          <el-option label="是" value="1" />
           <el-option label="否" value="0" />
       </el-select>
     </el-form-item>
-    <el-form-item label="用水性质类型：" label-width="100px">
+    <el-form-item label="用水性质类型" label-width="90px">
       <el-select v-model="selectHead.WaterPropertyType" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
@@ -37,7 +37,7 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { getDictionaryOption } from "@/utils/permission";
 export default {
   props: {
-    selectHead: {
+    selectHeadObj: {
       type: Object,
       default: function() {
         return {};
@@ -50,11 +50,20 @@ export default {
       }
     }
   },
+  watch:{
+    selectHeadObj:{
+       handler(val, oldVal) {      
+       this.selectHead=Object.assign({},val)      
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       oldOptions: [],
       editUserList: [],
-      stateType: []
+      stateType: [],
+      selectHead:{}
     };
   },
   created() {

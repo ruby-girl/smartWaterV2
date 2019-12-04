@@ -98,6 +98,14 @@ export function  unLockYCChange(data) {//解锁
     data
   })
 }
+export function  GetCommandRecord(data) {//获取指令记录
+  return request({
+    url: "/WaterMeter/GetCommandRecord",
+    method: 'GET',
+    params:data
+    
+  })
+}
 export function  getWaterDevice() {//获取设备信息
   return request({
     url: "/WaterMeter/Device3",

@@ -4,14 +4,14 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="68px"
     @submit.native.prevent
   >
-    <el-form-item  label-width="65px">
+    <el-form-item>
       <el-select
         v-model="selectHead.CustomerQueryType"
         placeholder="请选择"
-        style="width: 80px;float: left"
+        class="short-select-item" style="width: 100px;float: left;margin-right:3px"
       >
         <el-option label="编号" value="1"></el-option>
         <el-option label="姓名" value="2"></el-option>
@@ -25,7 +25,7 @@
         style="width: 180px;float: left"
       />
     </el-form-item>
-    <el-form-item label="水厂：" v-if="this.waterWorks.length>1">
+    <el-form-item label="水厂" v-if="this.waterWorks.length>1">
       <el-select
         v-model="selectHead.WaterFactory"
         placeholder="请选择"
@@ -35,23 +35,22 @@
         <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="缴费日期：">
+    <el-form-item label="缴费日期">
       <el-date-picker
         v-model="timevalue"
-        type="datetimerange"
+        type="daterange"
         :editable="false"
         :unlink-panels="true"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :default-time="['00:00:00', '23:59:59']"
-        format="yyyy-MM-dd HH:mm:ss"
-        value-format="yyyy-MM-dd HH:mm:ss"
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
         @change="getTime"
         @keydown.enter.native="handleFilter"
       ></el-date-picker>
     </el-form-item>
-    <el-form-item label="收款人：">
+    <el-form-item label="收款人">
       <el-select
         v-model="selectHead.ReceiveMoneyUser"
         placeholder="请选择"
@@ -62,7 +61,7 @@
       </el-select>
     </el-form-item>
     <transition-group name="fade">
-      <el-form-item label="缴费方式：" v-show="ifMore" key="type">
+      <el-form-item label="缴费方式" v-show="ifMore" key="type">
         <el-select
           v-model="selectHead.PayMentType"
           placeholder="请选择"
@@ -77,7 +76,7 @@
             <el-option label="自动扣减" value="2706"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="费用状态：" v-show="ifMore" key="state">
+      <el-form-item label="费用状态" v-show="ifMore" key="state">
         <el-select
           v-model="selectHead.FeeState"
           placeholder="请选择"
@@ -87,7 +86,7 @@
           <el-option v-for="item in FeeState" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="水表类型：" v-show="ifMore" key="waterType">
+      <el-form-item label="水表类型" v-show="ifMore" key="waterType">
         <el-select
           v-model="selectHead.WaterMeterTypeId"
           placeholder="请选择"
@@ -102,7 +101,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="费用类型：" v-show="ifMore" key="detailsType">
+      <el-form-item label="费用类型" v-show="ifMore" key="detailsType">
         <el-select
           v-model="selectHead.FeeType"
           placeholder="请选择"
@@ -127,13 +126,21 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import {getDictionaryOption} from "@/utils/permission"//字典-水表类型等
 export default {
   props: {
-    selectHead: {
+    selectHeadObj: {
       type: Object,
       default: function() {
         return {};
       }
     }
   },
+   watch:{
+    selectHeadObj:{
+       handler(val, oldVal) {      
+       this.selectHead=Object.assign({},val)      
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       timevalue: [],
@@ -143,7 +150,8 @@ export default {
       FeeType: [], //费用类型
       editUserList: [], //收款人
       waterWorks:[],//水厂
-      ifMore: false
+      ifMore: false,
+      selectHead:{}
     };
   },
   created() {
@@ -162,8 +170,8 @@ export default {
   methods: {
     getTime(v) {
       if (v) {
-        this.selectHead.editStartTime = v[0];
-        this.selectHead.editEndTime = v[1];
+        this.selectHead.editStartTime = v[0]+' 00:00:00';
+        this.selectHead.editEndTime = v[1]+ '23:59:59';
       } else {
         this.selectHead.editStartTime = "";
         this.selectHead.editEndTime = "";

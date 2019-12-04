@@ -1,6 +1,6 @@
 <template>
   <!--左侧树形菜单-->
-  <div class="user_tree">
+  <div class="user_tree head-search-form">
     <div class="type-title">用户过户</div>
     <div class="transfer-container">
       <div class="display-flex align-items-center justify-content-flex-justify">
@@ -10,7 +10,7 @@
         </el-button>
       </div>
       <el-form ref="form" label-width="70px" style="margin-top:10px;">
-        <el-form-item label="姓名：">
+        <el-form-item label="姓名">
           <el-input
           class="left-input"
             v-model="user.CustomerName"
@@ -18,17 +18,17 @@
             placeholder="回车进行模糊查询"
           ></el-input>
         </el-form-item>
-        <el-form-item label="电话：">
+        <el-form-item label="电话">
           <el-input class="left-input" v-model="user.Tel" @keyup.enter.native="handleSelect(user.Tel,3)"></el-input>
         </el-form-item>
-        <el-form-item label="用户编号：">
+        <el-form-item label="用户编号">
           <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
         </el-form-item>
-        <el-form-item label="证件号：">
+        <el-form-item label="证件号">
           <el-input class="left-input" v-model="user.IdentityNo" @keyup.enter.native="handleSelect(user.IdentityNo,4)"></el-input>
         </el-form-item>
-        <el-form-item label="地址：">
-          <el-input class="left-input" v-model="user.Address" @keyup.enter.native="handleSelect(user.Address,1)"></el-input>
+        <el-form-item label="地址">
+          <el-input class="left-input" v-model="user.Address" @keyup.enter.native="handleSelect(user.Address,5)"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -38,20 +38,20 @@
       </div>
       <el-form :model="newUser" ref="user" :rules="rules" label-width="68px" style="margin-top:10px;">
         <div class="display-flex align-items-center justify-content-flex-justify">
-          <el-form-item label="姓名：" prop="NewCustomerName">
+          <el-form-item label="姓名" prop="NewCustomerName">
             <el-input  v-model="newUser.NewCustomerName" class="short-input"></el-input>
           </el-form-item>
-          <el-form-item label="人口：" label-width="55px" prop="NewPeopleNo">
+          <el-form-item label="人口" label-width="55px" prop="NewPeopleNo">
             <el-input class="people-input" v-model="newUser.NewPeopleNo" maxlength="1" @keyup.native="testNumber"></el-input>
           </el-form-item>
         </div>
-        <el-form-item label="电话：" prop="NewTel">
+        <el-form-item label="电话" prop="NewTel">
           <el-input class="left-input"  v-model="newUser.NewTel"></el-input>
         </el-form-item>
-        <el-form-item label="证件号：" prop="NewIdentityNo">
+        <el-form-item label="证件号" prop="NewIdentityNo">
           <el-input class="left-input" v-model="newUser.NewIdentityNo"></el-input>
         </el-form-item>
-        <el-form-item label="备注：">
+        <el-form-item label="备注">
           <el-input  type="textarea" v-model="newUser.Remark"></el-input>
         </el-form-item>
       </el-form>

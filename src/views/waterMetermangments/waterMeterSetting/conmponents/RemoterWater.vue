@@ -14,7 +14,7 @@
               <img :src="itemList.IsOnline?imgSuccess:imgLose" />
             </p>
             <div v-show="isshow" class="cjNum">
-              <p v-for="item in itemList.listCollNo">00000000000{{item}}</p>
+              <p  :class="{active:item==deiKey}" v-for="(item,index) in itemList.listCollNo"   @click="changeColor(item)" :key="index">00000000000{{item}}</p>
             </div>
 
             <p class="dateYC">{{itemList.RefreshTime}}</p>
@@ -161,13 +161,18 @@
                 :label="item.ColDesc"
               />
             </template>
-            <el-table-column label="操作" width="150px" align="center" fixed="right">
+            <el-table-column label="操作" width="180px" align="center" fixed="right">
               <template slot-scope="scope">
                 <a
                   class="viewHis"
                   v-if="scope.row.SA_Customer_Id!=''"
                   @click="waterMeterYCDetail(scope.row.SA_Customer_Id)"
                 >查看历史详情</a>
+                <a
+                  class="viewHis"
+                  v-if="scope.row.SA_Customer_Id!=''"
+                  @click="instructionsHis(scope.row.Id)"
+                >指令历史</a>
               </template>
             </el-table-column>
           </el-table>
@@ -204,6 +209,7 @@
         </el-dialog>
       </el-main>
     </el-container>
+    <instrction-order :orderHistory="orderHistory" ref="order" :orderid="orderid" />
   </div>
 </template>
 <script>
@@ -217,21 +223,24 @@ import {
   readYCWaterinfo,
   lockYCChange,
   unLockYCChange,
-  getWaterDevice
+  getWaterDevice,
+  GetCommandRecord
 } from "@/api/waterMeterMang";
 import YCWaterMeterHis from "./intercomponents/YCWaterMeterHis"; //历史
+import InstrctionOrder from "./intercomponents/InstrctionOrder"; //指令记录
 import imgLose from "@/assets/imgs/loseYC.png";
 import imgSuccess from "@/assets/imgs/successYC.png";
 export default {
   //机械表
   name: "MechanicalWater",
-  components: { TableCustom, Pagination, YCWaterMeterHis },
+  components: { TableCustom, Pagination, YCWaterMeterHis, InstrctionOrder },
   data() {
     return {
       YCMeterQueryParam: {
         page: 1,
         limit: 10,
         CustomerQueryType: "6", //水表编号
+        CollectorNo:"",//采集器
         CustomerQueryValue: "", //水表编号值
         ValveState: "", //阀门状态
         TrafficStatus: "-1", //通讯状态
@@ -264,7 +273,11 @@ export default {
       deviceList: [],
       imgLose: imgLose,
       imgSuccess: imgSuccess,
-      isshow: true
+      isshow: true,
+      orderHistory: false,
+      orderid: "",
+      deiKey:-1
+      //指令记录
     };
   },
   activated: function() {
@@ -312,6 +325,23 @@ export default {
     }
   },
   methods: {
+   changeColor(index){
+    this.deiKey=index
+    console.log(index)
+    this.YCMeterQueryParam.CollectorNo="00000000000"+index
+    this.searchYCWaterList()
+   },
+    instructionsHis(id) {//指令记录
+      this.orderid = id;
+      this.orderHistory = true;
+      // console.log(id);
+      // this.instrictionList.waterMeterId = id;
+      // GetCommandRecord(this.instrictionList).then(res => {
+      //   console.log(res);
+      //   this.orderList = res.data;
+      //   this.orderHistory = true;
+      // });
+    },
     //删除操作成功后
     getdevice() {
       getWaterDevice().then(res => {
@@ -546,6 +576,10 @@ export default {
           line-height: 28px;
           color: rgba(70, 73, 76, 1);
           opacity: 1;
+          cursor: pointer;
+        }
+        .active{
+          color: #00B2A1
         }
       }
       .dateYC {

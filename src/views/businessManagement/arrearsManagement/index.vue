@@ -1,12 +1,12 @@
 
 <template>
-  <!-- 收费查询 -->
+  <!-- 欠费管理-->
   <div class="section-container">
    <div class="back-fff height-container">
       <div ref="formHeight">
       <select-head
         :select-type.sync="selectType"
-        :select-head="listQuery"
+        :select-head-obj="listQuery"
         :factory-query="factoryQuery"
         @handleFilter="handleFilter"
         @handleFilterFactory="handleFilterFactory"
@@ -139,7 +139,8 @@ export default {
          this.tableDataUser = res.data.list;
       });
     },
-    handleFilter() {
+    handleFilter(v) {
+      this.listQuery=v
       this.listQuery.page = 1;
       this.getList();
     },

@@ -5,7 +5,7 @@
       <div class="user_table">
         <div class="section-full-container">
           <div ref="formHeight">
-            <select-head :select-head="listQuery" @handleFilter="handleFilter" />
+            <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" />
           </div>
           <div class="display-flex justify-content-flex-justify">
            <div></div>
@@ -68,7 +68,6 @@ import LeftBox from "./components/Left"
 import {TransferCustomerList,TransferCustomerList_Execl} from "@/api/userAccount";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
-import "@/styles/organization.scss";
 export default {
   name: "userTransfer",
   components: { SelectHead, customTable, Pagination,LeftBox},
@@ -153,7 +152,8 @@ export default {
         this.getList();
       }
     },
-    handleFilter() {
+    handleFilter(v) {
+      this.listQuery=v
       this.listQuery.page = 1;
       this.getList();
     },

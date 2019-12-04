@@ -6,12 +6,12 @@
       :rules="rules"
       :model="temp"
       :inline="true"
-      class="form-inline-small-input"
+      class="form-inline-small-input head-search-form"
       size="small"
       label-width="100px"
       @submit.native.prevent
     >
-      <el-form-item label="角色名称：" prop="RoleName">
+      <el-form-item label="角色名称" prop="RoleName">
         <el-input v-model="temp.RoleName" maxlength="20" placeholder="长度20内"/>
       </el-form-item>
     </el-form>

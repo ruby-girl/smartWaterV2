@@ -3,6 +3,7 @@
     <p class="search_btn">按日期： <span :class="asce=='asc'? 'on':''" @click="sortFun(1)">降序</span> <span :class="asce=='desc'? 'on':''" @click="sortFun(2)">升序</span></p>
      <!--类型判断  开户：2101，充值：2102，换表：2103，水表升级：2104，编辑：2015-->
     <li v-for="(item,index) in data" :key="index">
+
       <!--开户-->
       <p v-if="item.BussinessType===2101">
         <span class="title open_account">{{ item.BussinessTypeName }}</span>

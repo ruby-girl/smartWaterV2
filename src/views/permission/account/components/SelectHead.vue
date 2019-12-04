@@ -4,10 +4,10 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="68px"
     @submit.native.prevent
   >
-    <el-form-item label="人员编号：">
+    <el-form-item label="人员编号">
       <el-input
         v-model="selectHead.empNo"
         oninput = "value=value.replace(/[^\d]/g,'')"
@@ -15,7 +15,7 @@
         @keyup.enter.native="handleFilter"
       />
     </el-form-item>
-    <el-form-item label="人员姓名：">
+    <el-form-item label="人员姓名">
       <el-input
         maxlength="10"
         v-model="selectHead.empName"
@@ -23,7 +23,7 @@
         @keyup.enter.native="handleFilter"
       />
     </el-form-item>
-     <el-form-item label="账号：">
+     <el-form-item label="账号">
       <el-input
         maxlength="20"
         v-model="selectHead.loginName"
@@ -31,36 +31,35 @@
         @keyup.enter.native="handleFilter"
       />
     </el-form-item>
-    <el-form-item label="角色：">
+    <el-form-item label="角色">
       <el-select v-model="selectHead.roldId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="状态：">
+    <el-form-item label="状态">
       <el-select v-model="selectHead.userState" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in stateType" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="操作人：">
+    <el-form-item label="操作人">
       <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="操作时间：">
+    <el-form-item label="操作时间">
       <el-date-picker
         v-model="timevalue"
-        type="datetimerange"
+        type="daterange"
         :editable="false"
         :unlink-panels="true"
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :default-time="['00:00:00', '23:59:59']"
-        format="yyyy-MM-dd HH:mm:ss"
-        value-format="yyyy-MM-dd HH:mm:ss"
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
         @change="getTime"
         @keydown.enter.native="handleFilter"
       />
@@ -75,7 +74,7 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { getDictionaryOption } from "@/utils/permission";
 export default {
   props: {
-    selectHead: {
+    selectHeadObj: {
       type: Object,
       default: function() {
         return {};
@@ -88,12 +87,21 @@ export default {
       }
     }
   },
+  watch:{
+    selectHeadObj:{
+       handler(val, oldVal) {      
+       this.selectHead=Object.assign({},val)      
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       timevalue: [],
       oldOptions: [],
       editUserList: [],
-      stateType: []
+      stateType: [],
+      selectHead:{}
     };
   },
   created() {
@@ -106,8 +114,8 @@ export default {
   methods: {
     getTime(v) {//计划时间
       if (v) {
-        this.selectHead.editStartTime = v[0];
-        this.selectHead.editEndTime = v[1];
+        this.selectHead.editStartTime = v[0]+' 00:00:00';
+        this.selectHead.editEndTime = v[1]+' 23:59:59';
       } else {
         this.selectHead.editStartTime = "";
         this.selectHead.editEndTime = "";

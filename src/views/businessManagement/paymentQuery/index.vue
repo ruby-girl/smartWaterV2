@@ -4,7 +4,7 @@
     <div class="section-full-container">
       <div ref="formHeight">
         <select-head
-          :select-head="listQuery"
+          :select-head-obj="listQuery"
           @handleFilter="handleFilter"
           @toggleShow="toggleShow"
         />
@@ -177,7 +177,8 @@
           this.getList();
         }
       },
-      handleFilter() {
+      handleFilter(v) {
+        this.listQuery=v
         this.listQuery.page = 1;
         this.getList();
       },

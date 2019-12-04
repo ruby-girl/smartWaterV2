@@ -224,7 +224,7 @@ export function waterFactoryDelete(data) {
 // 导出水厂
 export function waterFactoryExcel(data) {
   return request({
-    url: '/SA_WaterFactory/Excel',
+    url: '/SA_WaterFactory/GetList_Execl',
     method: 'post',
     data: data
   })

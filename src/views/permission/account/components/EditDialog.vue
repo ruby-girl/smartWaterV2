@@ -5,14 +5,14 @@
       ref="dataForm"
       :model="temp"
       :inline="true"
-      class="form-inline-small-input"
+      class="form-inline-small-input head-search-form"
       size="small"
       label-width="100px"
     >
-    <el-form-item label="人员编号：">
+    <el-form-item label="人员编号">
       <el-input v-model="temp.empNo" disabled></el-input>
     </el-form-item>
-     <el-form-item label="关联角色：">
+     <el-form-item label="关联角色">
       <el-select
         v-model="temp.roleId"
         placeholder="请选择">
@@ -24,7 +24,7 @@
         />
     </el-select>
     </el-form-item>
-    <el-form-item label="账号：">
+    <el-form-item label="账号">
       <el-input v-model="temp.loginName" disabled></el-input>
     </el-form-item>
     </el-form>

@@ -2,7 +2,7 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :select-head="listQuery" @handleFilter="handleFilter" :type-list="typeList" />
+        <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" :type-list="typeList" />
       </div>
       <div class="display-flex justify-content-flex-justify">
         <el-button type="primary" size="mini" @click="add">
@@ -231,7 +231,8 @@ export default {
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.getList();
     },
-    handleFilter() {
+    handleFilter(v) {
+      this.listQuery=v
       this.listQuery.page = 1;
       this.getList();
     },

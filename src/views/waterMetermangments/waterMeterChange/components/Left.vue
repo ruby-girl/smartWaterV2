@@ -9,29 +9,21 @@
     <el-tab-pane label="用户互换" name="second">
       <user-change></user-change>>
     </el-tab-pane>
-
   </el-tabs>
   <span v-show="!ifShowChild" class="telescopic telescopic2" @click="getUp">
       用户过户
       <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
-    </span>
-    <select-user
-      :selectUserShow.sync="selectUserShow"
-      :headQuery="params"
-      @handleFilter="handleFilter"
-    />
-   
+  </span>
   </div>
 </template>
 <script>
 import "@/styles/organization.scss";
 import { IsTransfer,TransferCustomer } from "@/api/userAccount";
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
-import SelectUser from "@/components/SelectUser";
 import OldForNew from "./OldForNew"
 import UserChange from "./UserChange"
 export default {
-  components: {SelectUser,OldForNew,UserChange},
+  components: {OldForNew,UserChange},
   props: { ifShow: {} },
   data() {
     return {
@@ -65,9 +57,6 @@ export default {
           .classList.remove("hide");
       }
       this.$emit("getUp", this.ifShowChild);
-    },
-    testNumber(){
-      this.newUser.NewPeopleNo = this.newUser.NewPeopleNo.replace(/[^\d]/g,'');
     },
     account() {
       if (!this.user.CustomerNo) {

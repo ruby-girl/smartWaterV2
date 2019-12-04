@@ -4,10 +4,10 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="80px"
+    label-width="75px"
     @submit.native.prevent
   >
-    <el-form-item label="水厂" label-width="28px">
+    <el-form-item label="水厂" v-if="this.waterWorks.length>1">
       <el-select v-model="selectHead.SA_WaterFactory_Id" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -33,7 +33,7 @@
       <el-select v-model="selectHead.WaterTypeId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
-          v-for="item in editUserList"
+          v-for="item in waterType"
           :key="item.Id"
           :label="item.Name"
           :value="item.Id"
@@ -44,8 +44,7 @@
           <el-select
             v-model="selectHead.TransferCustomer"
             placeholder="请选择"
-            style="width: 110px;float: left"
-            class="short-select"
+            class="user-select-box" style="width: 100px;float: left;margin-right:3px;"
           >
             <el-option label="原用户姓名" value="1"></el-option>
             <el-option label="新用户姓名" value="2"></el-option>
@@ -61,7 +60,7 @@
             style="width: 180px;float: left"
           />
         </el-form-item>
-        <el-form-item label="过户操作员" label-width="80">
+        <el-form-item label="过户操作员">
       <el-select v-model="selectHead.OpId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
@@ -97,14 +96,24 @@ import {getSelectUser} from "@/api/account"//获取操作人下拉框
 import {getDictionaryOption} from "@/utils/permission"//字典
 export default {
   props: {
-    selectHead: {}
+        selectHeadObj: {}
   },
+  watch:{
+    selectHeadObj:{
+       handler(val, oldVal) {      
+       this.selectHead=Object.assign({},val)      
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       timevalue: [],
       editUserList: [],
       userType:[],
-      waterWorks:[]//水厂
+      waterType:[],//水表类型
+      waterWorks:[],//水厂
+      selectHead:{}
     };
   },
   created() {
@@ -113,6 +122,7 @@ export default {
       this.selectHead.SA_WaterFactory_Id=this.waterWorks[0].Id
     }
     this.userType=getDictionaryOption('用户类型')
+    this.waterType=getDictionaryOption('水表类型')
     getSelectUser().then((res)=>{//操作人
       this.editUserList=res.data
     })
