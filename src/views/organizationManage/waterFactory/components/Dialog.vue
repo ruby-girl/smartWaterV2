@@ -8,11 +8,11 @@
       :rules="rules"
       :model="temp"
       :inline="true"
-      class="form-inline-small-input"
+      class="form-inline-small-input head-search-form"
       size="small"
-      label-width="100px"
+      label-width="80px"
     >
-      <el-form-item label="水厂：" prop="WaterWorksName">
+      <el-form-item label="水厂" prop="WaterWorksName">
         <el-input
           v-model="temp.WaterWorksName"
           maxlength="20"

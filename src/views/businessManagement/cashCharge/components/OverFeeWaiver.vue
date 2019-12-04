@@ -35,7 +35,7 @@
           </el-form-item>
         </el-row>
         <el-row v-if="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee>0">
-          <el-form-item label="违约金：">
+          <el-form-item label="违约金">
             <el-input v-model="feeWaiverItem.LateFee" disabled />
           </el-form-item>
           <div class="inline-box">

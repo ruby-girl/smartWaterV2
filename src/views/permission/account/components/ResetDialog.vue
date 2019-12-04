@@ -14,14 +14,14 @@
       :rules="rules"
       :inline="true"
       :model="resetData"
-      class="form-inline-small-input"
+      class="form-inline-small-input head-search-form"
       size="small"
       label-width="100px"
     >
-      <el-form-item label="新密码：" prop="pwd">
+      <el-form-item label="新密码" prop="pwd">
         <el-input @keyup.native="setNum" maxlength="18" placeholder="请输入新密码" v-model="resetData.pwd"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码：" prop="pwdNew">
+      <el-form-item label="确认密码" prop="pwdNew">
         <el-input :disabled="disabled" @keyup.native="setConfirmNum" maxlength="18" placeholder="再次输入新密码" v-model="resetData.pwdNew"></el-input>
       </el-form-item>
     </el-form>

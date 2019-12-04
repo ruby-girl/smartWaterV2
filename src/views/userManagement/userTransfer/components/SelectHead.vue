@@ -33,7 +33,7 @@
       <el-select v-model="selectHead.WaterTypeId" placeholder="请选择" @keydown.enter.native="handleFilter">
         <el-option label="全部" value="-1" />
         <el-option
-          v-for="item in editUserList"
+          v-for="item in waterType"
           :key="item.Id"
           :label="item.Name"
           :value="item.Id"
@@ -111,6 +111,7 @@ export default {
       timevalue: [],
       editUserList: [],
       userType:[],
+      waterType:[],//水表类型
       waterWorks:[],//水厂
       selectHead:{}
     };
@@ -121,6 +122,7 @@ export default {
       this.selectHead.SA_WaterFactory_Id=this.waterWorks[0].Id
     }
     this.userType=getDictionaryOption('用户类型')
+    this.waterType=getDictionaryOption('水表类型')
     getSelectUser().then((res)=>{//操作人
       this.editUserList=res.data
     })

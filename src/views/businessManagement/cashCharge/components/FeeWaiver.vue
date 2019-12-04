@@ -37,7 +37,7 @@
         </el-row></el-tab-pane>
     <el-tab-pane label="违约金" name="two">
       <el-row v-if="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee>0">
-          <el-form-item label="违约金：">
+          <el-form-item label="违约金">
             <el-input v-model="feeWaiverItem.LateFee" disabled />
           </el-form-item>
           <div class="inline-box">

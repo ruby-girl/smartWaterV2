@@ -39,29 +39,36 @@
       <div class="display-flex align-items-center justify-content-flex-justify">
         <div class="font-weight pl-15 top-title">新水表信息</div>    
       </div>
-      <el-form class="head-search-form" :model="newUser" ref="user" :rules="rules" label-width="86px" style="margin-top:10px;">
-           <el-form-item label="新水表编号" prop="NewTel">
-          <el-input class="left-input" v-model="newUser.NewTel"></el-input>
+      <el-form class="head-search-form"  ref="user" label-width="86px" style="margin-top:10px;">
+           <el-form-item label="用户编号" prop="NewTel">
+          <el-input class="left-input" @keyup.enter.native="handleSelect(newUser.CustomerName,1,)" v-model="newUser.NewTel"></el-input>
         </el-form-item>
-        <el-form-item label="新水表读数" prop="NewTel">
-          <el-input class="left-input"  v-model="newUser.NewTel"></el-input>
+        <el-form-item label="用户姓名" prop="NewTel">
+          <el-input class="left-input" @keyup.enter.native="handleSelect(newUser.CustomerName,2)" placeholder="回车进行模糊查询"  v-model="newUser.NewTel"></el-input>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input  type="textarea" v-model="newUser.Remark"></el-input>
+        <el-form-item label="水表类型" prop="NewTel">
+          <el-input class="left-input"  v-model="newUser.NewTel" :disabled="true"></el-input>
         </el-form-item>
+        <el-form-item label="原水表编号" prop="NewTel">
+          <el-input class="left-input"  v-model="newUser.NewTel" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="账户余额" prop="NewTel">
+          <el-input class="left-input"  v-model="newUser.NewTel" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="地址" prop="NewTel">
+          <el-input class="left-input"  v-model="newUser.NewTel" :disabled="true"></el-input>
+        </el-form-item>
+
       </el-form>
     </div>
-    <el-form class="is-page">
-     <el-form-item label="字轮是否翻页">
-    <el-radio-group v-model="isPage">
-      <el-radio :label="true">是</el-radio>
-      <el-radio :label="false">否</el-radio>
-    </el-radio-group>
-  </el-form-item>
-  </el-form>
     <div class="bottom-btn-box">
       <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户</el-button>
     </div>
+    <select-user
+      :selectUserShow.sync="selectUserShow"
+      :headQuery="params"
+      @handleFilter="handleFilter"
+    />
   </div>
 </template>
 <script>
@@ -69,8 +76,10 @@ import "@/styles/organization.scss";
 import { IsTransfer,TransferCustomer } from "@/api/userAccount";
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
+import SelectUser from "@/components/SelectUser";
 export default {
   props: { ifShow: {} },
+  components: {SelectUser},
   data() {
     return {
       ifShowChild: false,
@@ -98,28 +107,7 @@ export default {
         CustomerQueryType: "",
         CustomerQueryValue: ""
       },
-      isPage:false,
-      selectUserShow: false,
-      rules: {
-        NewCustomerName: [{ required: true, message: " ", trigger: "blur" }],
-        NewTel: [
-          { required: true, message: " ", trigger: "blur" },
-          {
-            pattern: /^[1][3,4,5,6,7,8,9][0-9]{9}$/,
-            message: " ",
-            trigger: "blur"
-          }
-        ],
-        NewPeopleNo: [{ required: true, message: " ", trigger: "blur" }],
-        NewIdentityNo: [
-          { required: true, message: " ", trigger: "blur" },
-          {
-            pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
-            message: " ",
-            trigger: "blur"
-          }
-        ]
-      }
+      selectUserShow: false
     };
   },
   watch: {
@@ -128,6 +116,29 @@ export default {
     }
   },
   methods: {
+      // 模糊查询用户
+    handleSelect(val, n) {
+      if (!val) {
+        this.user = {};
+        return false;
+      }
+      this.params.CustomerQueryValue = val;
+      this.params.CustomerQueryType = n;
+      GetCustomerDataList(this.params).then(res => {
+        if (res.data.length == 0) {
+          this.$message({
+            message: "未查询到用户！",
+            type: "error",
+            duration: 4000
+          });
+          this.user = {};
+        } else if (res.data.length == 1) {
+          this.user = res.data[0];
+        } else {
+          this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
+        }
+      });
+    },
     getUp() {
       this.ifShowChild = true;
       if (this.ifShow) {
@@ -159,15 +170,8 @@ export default {
           });
           return
       }
-      this.$refs["user"].validate(valid => {
-        if (!valid) return false;
-        else {
-          this.IsBalanceDepositFunc(); //如果双方信息通过，这里询问账户余额是否转存
-        }
-      });
-    },
-    IsBalanceDepositFunc() {      
-      this.accountShow = true;
+     
+      this.IsBalanceDepositFunc(); //如果双方信息通过，这里询问账户余额是否转存
     },
      //进行过户操作
     accountBalancesFunc(user) { 

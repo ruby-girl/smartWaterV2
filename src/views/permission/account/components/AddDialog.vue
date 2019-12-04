@@ -14,11 +14,11 @@
       :rules="rules"
       :model="temp"
       :inline="true"
-      class="form-inline-small-input"
+      class="form-inline-small-input head-search-form"
       size="small"
-      label-width="100px"
+      label-width="80px"
     >
-      <el-form-item label="人员：" prop="employeeId">
+      <el-form-item label="人员" prop="employeeId">
         <!-- <el-input maxlength="10" v-model="temp.employeeId" placeholder="请输入人员编号"></el-input> -->
         <el-select v-model="temp.employeeId" filterable remote :filter-method="selectOption" @visible-change="userChange" placeholder="请输入人员信息">
           <el-option
@@ -33,12 +33,12 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="角色：" prop="roleId">
+      <el-form-item label="角色" prop="roleId">
         <el-select v-model="temp.roleId" placeholder="请选择" :disabled="temp.employeeId==''?true:false">
           <el-option v-for="item in roleList" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="账号：" prop="loginName">
+      <el-form-item label="账号" prop="loginName">
         <el-input
           v-model="temp.loginName"
           :disabled="temp.employeeId==''?true:false"
@@ -46,7 +46,7 @@
           placeholder="长度20"
         ></el-input>
       </el-form-item>
-      <el-form-item label="密码：" prop="loginPwdSave">
+      <el-form-item label="密码" prop="loginPwdSave">
         <el-input
           v-model="temp.loginPwdSave"
           :disabled="temp.employeeId==''?true:false"
