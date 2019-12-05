@@ -16,7 +16,7 @@
           style="width: 250px"/>
       </el-form-item>
       <el-form-item label="水厂 " prop="waterFactoryName">
-        <el-select style="width: 250px" multiple v-model="ruleForm.waterFactoryName">
+        <el-select multiple v-model="ruleForm.waterFactoryName">
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>

@@ -5,76 +5,64 @@
       <el-tab-pane label="按抄表日期搜索" name="2"></el-tab-pane>
     </el-tabs>
     <div class="cl-container">
-      <div id="conditionBox">
-        <!--查询条件组建 s-->
-        <SelectHead ref="childSelect"></SelectHead>
-        <div class="cl-operation1 clearfix">
-          <el-button
-            type="primary"
-            size="mini"
-            class="fr cl-color1"
-            @click="setCustomData()"
-            style="margin-left: 10px;">
-            <i class="icon iconfont">&#xe678;</i> 表格自定义
-          </el-button>
-          <el-button type="success" size="mini" class="fr" @click="exportExcel">
-            <i class="icon iconfont">&#xe683;</i> 导出Excel
-          </el-button>
-        </div>
-      </div>
+      <!--查询条件组建 s-->
+      <SelectHead ref="childSelect"></SelectHead>
+      <!--<div class="cl-operation1 clearfix">
+        <el-button round size="mini" class="fr cl-operation-btn" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i>表格自定义</el-button>
+        <el-button round size="mini" class="fr cl-operation-btn" @click="exportExcel()"><i class="icon iconfont">&#xe683;</i>导出Excel</el-button>
+      </div>-->
       <!--自定义组建 s-->
-      <customTable ref="myChild" />
+     <!-- <customTable ref="myChild" />-->
       <!--自定义组建 e-->
-      <!--列表组建 s-->
-      <el-table
-        id="table"
-        :data="tableData"
-        :height="tableHeight"
-        border
-        @sort-change="sortChanges"
-        ref="multipleTable"
-      >
-        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
-          <template slot-scope="scope">
-            <span>{{(param.page - 1) * param.limit + scope.$index + 1}}</span>
+      <div class="">
+        <el-table
+          id="table"
+          :data="tableData"
+          :height="tableHeight"
+          border
+          @sort-change="sortChanges"
+          ref="multipleTable">
+          <el-table-column type="index" fixed="left" label="#" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(param.page - 1) * param.limit + scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
+          <template v-for="(item ,index) in tableHead">
+            <el-table-column
+              v-if="item.IsFreeze"
+              :key="index"
+              min-width="200px"
+              :sortable="item.IsSortBol ? 'custom' : null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+              :fixed="item.Freeze"
+            />
+            <el-table-column
+              v-else
+              :key="index"
+              min-width="200px"
+              :sortable="item.IsSortBol ? 'custom' : null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+            />
           </template>
-        </el-table-column>
-        <template v-for="(item ,index) in tableHead">
-          <el-table-column
-            v-if="item.IsFreeze"
-            :key="index"
-            min-width="200px"
-            :sortable="item.IsSortBol ? 'custom' : null"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
-            :fixed="item.Freeze"
-          />
-          <el-table-column
-            v-else
-            :key="index"
-            min-width="200px"
-            :sortable="item.IsSortBol ? 'custom' : null"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
-          />
-        </template>
-        <el-table-column label="操作" width="200px" align="center" fixed="right">
-          <template slot-scope="scope">
-            <a class="operation1" @click="handleDetail(scope.row)" v-if="scope.LadderNumber>1">水量详情</a>
-            <a class="operation2" @click="handleDelete(scope.row)">删除</a>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="param.page"
-        :limit.sync="param.limit"
-        @pagination="searchFun"
-      />
-      <!--列表组建 e-->
+          <el-table-column label="操作" width="200px" align="center" fixed="right">
+            <template slot-scope="scope">
+              <a class="operation1" @click="handleDetail(scope.row)" v-if="scope.LadderNumber>1">水量详情</a>
+              <a class="operation2" @click="handleDelete(scope.row)">删除</a>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="param.page"
+          :limit.sync="param.limit"
+          @pagination="searchFun"
+        />
+      </div>
     </div>
     <!--水量详情-->
     <EditDialog ref="editDialog"></EditDialog>
@@ -173,9 +161,9 @@
       customHeight() {   //获取自定义模块高度
         let self = this;
         self.$nextTick(() => {
-      /*    self.tableHeight =
-            document.getElementsByClassName("cl-container")[0].offsetHeight -
-            document.getElementById("table").offsetTop - 50;*/
+          self.tableHeight =
+            document.getElementsByClassName("clMeterBox")[0].offsetHeight -
+            document.getElementById("table").offsetTop - 90;
         });
       }
     },
@@ -189,21 +177,22 @@
       }
       _this.$refs.myChild.GetTable(this.param.tableId);
       _this.checksData = this.$refs.myChild.checkData; //获取自定义字段中选中了字段
- /*     _this.tableHeight =
-        document.getElementsByClassName("cl-container")[0].offsetHeight -
-        document.getElementById("table").offsetTop - 50;*/
+      _this.tableHeight =
+        document.getElementsByClassName("clMeterBox")[0].offsetHeight -
+        document.getElementById("table").offsetTop - 90;
     }
   };
 </script>
 <style lang="scss">
   .clMeterBox{
+    width: 100%;position: relative;
+  .cl-operation1{margin: 35px 0 6px 0;}
     height: 100%;
     .el-tabs{background: #eff1f4}
     .el-tabs__header{margin: 0 !important;}
     padding: 2px 11px 0 11px;
     >div{background: #fff;}
     .cl-container{height: calc(100% - 40px)}
-    .cl-container > div:first-child{height: auto}
-    .iconshouqi3, .iconjianqu3{font-size: 24px;color: #00B2A1;vertical-align: middle;cursor: pointer;}
+    .cl-container > div:first-child{height: auto;padding: 0;width: 100%;position: relative}
   }
 </style>
