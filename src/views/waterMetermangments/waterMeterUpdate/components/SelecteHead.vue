@@ -7,11 +7,13 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item v-if="companyShow" label="水厂">
+    <el-form-item v-if="companyShow" label="水厂：">
       <el-select
-        v-model="selectHead.waterFactoryId "
+        v-model="selectHead.SA_WaterFactory_Id "
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyParentOptions)"
+        吗
       >
         <el-option label="全部" value="-1" />
         <el-option
@@ -22,43 +24,51 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="用户类型">
+    <el-form-item label="用户类型：">
       <el-select
-        v-model="selectHead.userType"
+        v-model="selectHead.UserType"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.UserType,'UserType',userTypeList)"
       >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in userTypeList" :key="item.Id" :label="item.Name" :value="item.Id" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="升级前水表类型" label-width="120px">
-      <el-select
-        v-model="selectHead.waterMeterType"
-        placeholder="请选择"
-        @keydown.enter.native="handleFilter"
-      >
-        <el-option label="全部" value="-1" />
+        <el-option label="全部" :value="-1" />
         <el-option
-          v-for="item in WaterMeterList"
+          v-for="item in userTypeList"
           :key="item.Id"
           :label="item.Name"
-          :value="item.Id"
+          :value="Number(item.Id)"
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="升级后水表类型" label-width="120px">
+    <el-form-item label="升级前水表类型：" label-width="120px">
       <el-select
-        v-model="selectHead.waterMeterType"
+        v-model="selectHead.OldWaterMeterTypeId"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.OldWaterMeterTypeId,'OldWaterMeterTypeId',WaterMeterList)"
       >
-        <el-option label="全部" value="-1" />
+        <el-option label="全部" :value="-1" />
         <el-option
           v-for="item in WaterMeterList"
           :key="item.Id"
           :label="item.Name"
-          :value="item.Id"
+          :value="Number(item.Id)"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="升级后水表类型：" label-width="120px">
+      <el-select
+        v-model="selectHead.NewWaterMeterTypeId"
+        placeholder="请选择"
+        @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.NewWaterMeterTypeId,'NewWaterMeterTypeId',WaterMeterList)"
+      >
+        <el-option label="全部" :value="-1" />
+        <el-option
+          v-for="item in WaterMeterList"
+          :key="item.Id"
+          :label="item.Name"
+          :value="Number(item.Id)"
         />
       </el-select>
     </el-form-item>
@@ -68,7 +78,6 @@
         placeholder="请选择"
         style="width: 100px;float: left;margin-right:4px;"
         class="short-select"
-        
       >
         <el-option label="用户姓名" value="2"></el-option>
         <el-option label="用户编号" value="1"></el-option>
@@ -81,22 +90,24 @@
         maxlength="20"
         placeholder="(长度1-30)"
         @keyup.enter.native="handleFilter"
+        @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue')"
         style="width: 180px;float: left"
       />
     </el-form-item>
-    <el-form-item label="操作员" label-width="80">
+    <el-form-item label="操作员：" label-width="80">
       <el-select
-        v-model="selectHead.createUserId"
+        v-model="selectHead.UpgradeEmpId"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.UpgradeEmpId,'UpgradeEmpId',editUserList)"
       >
         <el-option label="全部" value="-1" />
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="升级日期">
+    <el-form-item label="升级日期：">
       <el-date-picker
-        v-model="timevalue"
+        v-model="selectHead.timevalue"
         type="datetimerange"
         :editable="false"
         :unlink-panels="true"
@@ -136,7 +147,6 @@ export default {
   },
   data() {
     return {
-      timevalue: [],
       companyParentOptions: [], //水厂
       companyShow: true,
       userTypeList: [],
@@ -153,13 +163,24 @@ export default {
     this.WaterMeterList = getDictionaryOption("水表类型");
   },
   methods: {
+    getText(val, model, arr) {
+      this.$emit("getText", val, model, arr);
+    },
     getTime(v) {
+      let date;
       if (v) {
-        this.selectHead.createStartTime = v[0];
-        this.selectHead.createEndTime = v[1];
+        this.selectHead.StartUpgradeDate = v[0];
+        this.selectHead.EndUpgradeDate = v[1];
+        date =
+          this.selectHead.StartUpgradeDate +
+          "~" +
+          this.selectHead.EndUpgradeDate;
+        this.$emit("getText", date, "timevalue");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
+        this.selectHead.StartUpgradeDate = "";
+        this.selectHead.EndUpgradeDate = "";
+        date = "";
+        this.$emit("getText", date, "timevalue");
       }
     },
     handleFilter() {

@@ -7,21 +7,26 @@
           <p ref="spiceAll" :style="{width:widthData1}" style="margin:0;transition: margin 0.2s;">
             <span v-for="item in tipsData" class="spiceTips">
               {{item.name}}
-              <i @click="delTips(item.model)">X</i>
+              <i class="icon iconfont" @click="delTips(item.model)">&#xe68a;</i>
             </span>
           </p>
         </div>
       </div>
       <div class="cont-right fr">
-        <i class="icon iconfont" @click="leftEnter">&#xe678;</i>
-        <i class="icon iconfont" @click="rightEnter">&#xe683;</i>
+        <i class="icon iconfont" @click="leftEnter">&#xe65a;</i>
+        <i class="icon iconfont" @click="rightEnter">&#xe65f;</i>
       </div>
     </div>
     <div class="tipsBtn fr">
-      <i class="icon iconfont" @click="excel" title="导出excel">&#xe683;</i>
-      <i class="icon iconfont" @click="setCustomData" title="自定义表格">&#xe678;</i>
+      <i class="icon iconfont" @click="excel" title="导出excel">&#xe64f;</i>
+      <i
+        class="icon iconfont"
+        :class="{thisTableClass:thisTable}"
+        @click="setCustomData"
+        title="自定义表格"
+      >&#xe64a;</i>
     </div>
-    <table-custom ref="myChild" class="table-custom"/>
+    <table-custom ref="myChild" class="table-custom" />
   </div>
 </template>
 <script>
@@ -54,12 +59,14 @@ export default {
       widthData1: null,
       w: "200px",
       num: 0,
+      thisTable: false,
       tipsDataCopy: []
     };
   },
   methods: {
     //表格自定义方法
     setCustomData() {
+      this.thisTable = !this.thisTable;
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       // this.customHeight = this.$refs.myChild.isCustom;
     },
@@ -131,7 +138,11 @@ export default {
   border: 1px solid rgba(216, 226, 231, 1);
   opacity: 1;
   line-height: 34px;
-  .table-custom{
+  .icon:hover {
+    color: #00b2a1;
+    cursor: pointer;
+  }
+  .table-custom {
     margin-top: 35px;
   }
   .tipsCont {
@@ -167,16 +178,23 @@ export default {
     }
   }
   .tipsBtn {
+    width: 78px;
+    position: relative;
+    top: -1px;
     .icon {
       cursor: pointer;
       display: inline-block;
-      width: 39px;
+      width: 34px;
       height: 34px;
       background: rgba(255, 255, 255, 1);
       border-left: 1px solid rgba(216, 226, 231, 1);
       opacity: 1;
       font-size: 14px;
       text-align: center;
+    }
+
+    .thisTableClass {
+      color: #00b2a1;
     }
   }
 }

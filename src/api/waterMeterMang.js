@@ -178,9 +178,65 @@ export function ValveUnLock(data) {//解锁
 
 //------------------------------------水表升级-----------------------------------------------
 //WaterMeterUpgrade/SelectMeter1ThisLadderWaterYield
-export function getWaterTotalNum(data) {//解锁
+export function getWaterTotalNum(data) {//总用水量详情获取
   return request({
     url: "/WaterMeterUpgrade/SelectMeter1ThisLadderWaterYield",
+    method: 'POST',
+    params: data
+  })
+}
+export function getYCWaterInfo(data) {//根据远传表编号  获取水表信息
+  return request({
+    url: "/Customer/GetYCWaterMeterByWaterMeterNo",
+    method: 'GET',
+    params: data
+  })
+}
+export function getWLWaterInfo(data) {//根据物联网编号  获取水表信息
+  return request({
+    url: "/Customer/GetWLWWaterMeterByWaterMeterNo",
+    method: 'GET',
+    params: data
+  })
+}
+export function UpgradeInfo(data) {//根据物联网编号  获取水表信息
+  return request({
+    url: "/WaterMeterUpgrade/SubmitUpgradeInfo",
+    method: 'POST',
+    data
+  })
+}
+export function getUpgradeRecordList(data) {//获取升级记录
+  return request({
+    url: "/WaterMeterUpgrade/SelectUpgradeRecordList",
+    method: 'POST',
+    data
+  })
+}
+export function ExcelUpgradeRecordList(data) {//导出升级记录
+  return request({
+    url: "/WaterMeterUpgrade/UpgradeRecordList_OutExcel",
+    method: 'POST',
+    data
+  })
+}
+export function checkResidueMon(data) {//检查是否欠费
+  return request({
+    url: "/WaterMeterUpgrade/CheckCustomerResidueMoney",
+    method: 'POST',
+    params: data
+  })
+}
+export function checkMeterRecord(data) {//检查是否存在未抄表
+  return request({
+    url: "/WaterMeterUpgrade/CheckMeterRecord",
+    method: 'POST',
+    params: data
+  })
+}
+export function checkWaterMOney(data) {//检查ic卡输入的表端余额是否合理
+  return request({
+    url: "/WaterMeterUpgrade/CheckMeter2ResidueMoney",
     method: 'POST',
     params: data
   })
