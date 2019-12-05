@@ -44,8 +44,9 @@ export default {
   transform: rotate(180deg);
 }
 .hamburger-img{
- height: 100%;
-    padding: 6px 9px;
+    padding: 4px 8px 5px 8px;
     background: #f2f2f2;
+    margin: 0;
+    float: left;
 }
 </style>

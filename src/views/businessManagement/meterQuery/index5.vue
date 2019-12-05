@@ -1,10 +1,6 @@
 <template>
-  <div class="clMeterBox">
-    <el-tabs v-model="typeCheck" @tab-click="handleClick">
-      <el-tab-pane label="按抄表计划搜索" name="1"></el-tab-pane>
-      <el-tab-pane label="按抄表日期搜索" name="2"></el-tab-pane>
-    </el-tabs>
-    <div class="cl-container">
+  <div class="cl-container">
+    <div>
       <div id="conditionBox">
         <!--查询条件组建 s-->
         <SelectHead ref="childSelect"></SelectHead>
@@ -42,7 +38,7 @@
         <template v-for="(item ,index) in tableHead">
           <el-table-column
             v-if="item.IsFreeze"
-            :key="index"
+            :key="index1"
             min-width="200px"
             :sortable="item.IsSortBol ? 'custom' : null"
             :prop="item.ColProp"
@@ -52,7 +48,7 @@
           />
           <el-table-column
             v-else
-            :key="index"
+            :key="index1"
             min-width="200px"
             :sortable="item.IsSortBol ? 'custom' : null"
             :prop="item.ColProp"
@@ -80,6 +76,7 @@
     <EditDialog ref="editDialog"></EditDialog>
   </div>
 </template>
+
 <script>
   import "@/styles/organization.scss";
   //import customTable from "@/components/TableCustom"; //自定义组建
@@ -95,7 +92,6 @@
     components: { customTable, Pagination, SelectHead, EditDialog },
     data() {
       return {
-        typeCheck:'1',
         tableData: [], //表格数据
         checkAllData: [],
         checksData: [], //自定义选中字段
@@ -151,9 +147,6 @@
       setCustomData() {//表格自定义
         this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
         this.customHeight = this.$refs.myChild.isCustom;
-      },
-      handleClick(){
-        this.$refs.childSelect.setparams(parseInt(this.typeCheck))
       }
     },
     computed: {
@@ -173,9 +166,10 @@
       customHeight() {   //获取自定义模块高度
         let self = this;
         self.$nextTick(() => {
-      /*    self.tableHeight =
+          self.tableHeight =
             document.getElementsByClassName("cl-container")[0].offsetHeight -
-            document.getElementById("table").offsetTop - 50;*/
+            document.getElementById("table").offsetTop -
+            50;
         });
       }
     },
@@ -189,21 +183,11 @@
       }
       _this.$refs.myChild.GetTable(this.param.tableId);
       _this.checksData = this.$refs.myChild.checkData; //获取自定义字段中选中了字段
- /*     _this.tableHeight =
+      _this.tableHeight =
         document.getElementsByClassName("cl-container")[0].offsetHeight -
-        document.getElementById("table").offsetTop - 50;*/
+        document.getElementById("table").offsetTop -
+        50;
+
     }
   };
 </script>
-<style lang="scss">
-  .clMeterBox{
-    height: 100%;
-    .el-tabs{background: #eff1f4}
-    .el-tabs__header{margin: 0 !important;}
-    padding: 2px 11px 0 11px;
-    >div{background: #fff;}
-    .cl-container{height: calc(100% - 40px)}
-    .cl-container > div:first-child{height: auto}
-    .iconshouqi3, .iconjianqu3{font-size: 24px;color: #00B2A1;vertical-align: middle;cursor: pointer;}
-  }
-</style>

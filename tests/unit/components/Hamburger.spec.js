@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import Hamburger from '@/components/Hamburger/index1.vue'
+import Hamburger from '@/components/Hamburger/index5.vue'
 describe('Hamburger.vue', () => {
   it('toggle click', () => {
     const wrapper = shallowMount(Hamburger)
