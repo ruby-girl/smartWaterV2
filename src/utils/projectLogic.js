@@ -73,21 +73,40 @@ export function delTips(val, that, tipsDataCopy, obj) { //{val,this,arr1}=>{绑�
   return tipsDataCopy
 }
 //获取-筛选条件面包屑
-export function getText(val, model, arr, tipsDataCopy, that) {//{val, model, arr,arr1,this}=>{变化后的值，绑定的model,循环下拉框options数组（不传为输入框）,变化时的数组，父组件this}
+export function getText(val, model, arr, tipsDataCopy, that,name) {//{val, model, arr,arr1,this}=>{变化后的值，绑定的model,循环下拉框options数组（不传为输入框）,变化时的数组，父组件this,搜索名}
   let obj = {};
   for (let i = 0; i < tipsDataCopy.length; i++) {
     if (tipsDataCopy[i].model == model) {//判断是否有相同的收缩条件
       tipsDataCopy.splice(i, 1);
     }
   }
-  obj = that.$refs.searchTips.getArrData(val, model, arr);//调用面包屑组件里面的方法
+  obj = that.$refs.searchTips.getArrData(val, model, arr,name);//调用面包屑组件里面的方法
+  console.log(obj)
   return obj
 }
 // 筛选条件面包屑
 export function pushItem(that) {
   that.tipsData = [];
- 
+
   that.tipsDataCopy.forEach(item => {
     that.tipsData.push(item);
   });
+}
+//根据Id 获取偶所的Name用户查询类型 用户编号=1，姓名/简码=2，电话=3，证件号=4，地址=5,水表编号=6 = ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+export function getName(id) {
+  let name = ""
+  if (id == 1) {
+    name = "用户编号"
+  } else if (id == 2) {
+    name = "用户姓名"
+  } else if (id == 3) {
+    name = "电话"
+  } else if (id == 4) {
+    name = "证件号"
+  } else if (id == 5) {
+    name = "地址"
+  } else if (id == 6) {
+    name = "水表编号"
+  }
+  return name
 }
