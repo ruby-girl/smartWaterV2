@@ -167,4 +167,12 @@
   .ssearchText2 {display: block !important;}
 }
 .cl-container .cl-inlineItem {padding-bottom: 18px;}
-.el-range-editor--small.el-input__inner {height: 28px;}
+.el-range-editor--small.el-input__inner {height: 28px;padding-top: 4px;}
+.cl-operation-btn{color:#6DA783;border: solid 1px #6DA783;}
+.cl-operation-btn:hover{color:#8ECCA5;border: solid 1px #8ECCA5;background: #F7FCF9}
+.iconshouqi3, .iconjianqu3{font-size: 24px !important;color: #00B2A1;vertical-align: middle;cursor: pointer;margin-right: 4px;}
+.el-button--mini.is-round{margin:0 4px 0 0;}
+.search-head-box{position: absolute;height: 29px;width: calc(100% + 22px);background: #fff;z-index: 9;margin-left: -11px;overflow: hidden;}
+.search-head-box.on{height: 100px;box-shadow: 4px 4px 4px #ddd;}
+.cl-center-box{margin-top: 46px;}
+.el-table--medium td{padding: 3px 0 !important}
