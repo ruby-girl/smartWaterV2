@@ -168,7 +168,7 @@
     -webkit-box-shadow: -3px 4px 6px #ddd;
     width: 152px;
     position: absolute;
-    right: 0;
+    right: 15px;
     background: #fff;
     z-index: 999;
     .el-checkbox__input.is-disabled + span.el-checkbox__label {

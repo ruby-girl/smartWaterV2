@@ -45,7 +45,6 @@ export default {
   },
   watch: {
     orderid() {
-      console.log(this.orderid);
       this.instrictionList.waterMeterId = this.orderid;
       if (this.orderid) {
         this.getHistoryInfo();
@@ -75,10 +74,6 @@ export default {
       }
     };
   },
-  mounted() {
-    console.log(this.orderid);
-  },
-
   methods: {
     sortFun(type) {
       console.log(this.instrictionList, type);

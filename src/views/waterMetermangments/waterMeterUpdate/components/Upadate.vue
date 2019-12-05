@@ -12,6 +12,7 @@
         <el-form-item label="用户编号">
           <el-input
             v-model="userInfo.CustomerNo"
+            placeholder="回车进行模糊查询"
             @keydown.enter.native="searchEnter(1,userInfo.CustomerNo)"
             class="left-input"
           ></el-input>
@@ -19,6 +20,7 @@
         <el-form-item label="用户姓名">
           <el-input
             v-model="userInfo.CustomerName"
+            placeholder="回车进行模糊查询"
             @keydown.enter.native="searchEnter(2,userInfo.CustomerName)"
             class="left-input"
           ></el-input>
@@ -34,9 +36,9 @@
             <template slot="append">元</template>
           </el-input>
         </el-form-item>
-        <el-form-item v-show="showInfo" class="thisLable">
+        <el-form-item v-show="showInfo&&userInfo.WaterMeterTypeName=='机械表水表'" class="thisLable">
           <u class="thisJD" @click="thisTotalWater">当前阶梯总用水量</u>
-          <el-input v-model="userInfo.Address" disabled class="left-input"></el-input>
+          <el-input v-model="userInfo.TotalYield" disabled class="left-input"></el-input>
         </el-form-item>
         <el-form-item v-show="showInfo" label="账户余额">
           <el-input class="totalMoney left-input" v-model="userInfo.Balance" disabled>
@@ -58,7 +60,12 @@
       <h4>升级后水表信息</h4>
       <el-form ref="waterInfo" :model="userInfo" label-width="70px">
         <el-form-item label="水表类型">
-          <el-select v-model="UpgradeWaterNeedInfo.WaterType" placeholder="请选择" class="left-input">
+          <el-select
+            v-model="UpgradeWaterNeedInfo.WaterType"
+            placeholder="请选择"
+            class="left-input"
+            @change="switchWater(UpgradeWaterNeedInfo.WaterType)"
+          >
             <el-option label="IC卡水表" value="1102" />
             <el-option label="远传水表" value="1103" />
             <el-option label="物联网水表" value="1104" />
@@ -102,7 +109,12 @@
         </div>
         <div v-if="UpgradeWaterNeedInfo.WaterType=='1103'">
           <el-form-item label="新水表编号">
-            <el-input v-model="UpgradeWaterNeedInfo.WaterMeterNo" class="left-input"></el-input>
+            <el-input
+              v-model="UpgradeWaterNeedInfo.WaterMeterNo"
+              placeholder="回车进行水表查询"
+              @keydown.enter.native="getYCWater(UpgradeWaterNeedInfo.WaterMeterNo)"
+              class="left-input"
+            ></el-input>
           </el-form-item>
           <el-form-item label="集中器号">
             <el-input v-model="UpgradeWaterNeedInfo.meter3Param.ConcentratorNo" class="left-input"></el-input>
@@ -127,7 +139,12 @@
         </div>
         <div v-if="UpgradeWaterNeedInfo.WaterType=='1104'">
           <el-form-item label="新水表编号">
-            <el-input v-model="UpgradeWaterNeedInfo.WaterMeterNo" disabled class="left-input"></el-input>
+            <el-input
+              v-model="UpgradeWaterNeedInfo.WaterMeterNo"
+              placeholder="回车进行水表查询"
+              @keydown.enter.native="getWlWWater(UpgradeWaterNeedInfo.WaterMeterNo)"
+              class="left-input"
+            ></el-input>
           </el-form-item>
           <el-form-item label="报警量">
             <el-input
@@ -143,7 +160,7 @@
               class="left-input"
             ></el-input>
           </el-form-item>
-          <el-form-item label="表端余额：">
+          <el-form-item label="表端余额">
             <el-input class="totalMoney left-input" v-model="waterInfo.MeterBalance">
               <template slot="append">元</template>
             </el-input>
@@ -156,7 +173,7 @@
     </div>
 
     <p class="userBtn">
-      <el-button size="small" type="primary" @click>确认升级</el-button>
+      <el-button size="small" type="primary" @click="updateWater">确认升级</el-button>
     </p>
     <select-user :selectUserShow="selectUserShow" :headQuery="params" @handleFilter="handleFilter" />
     <water-numDetail ref="numDetaile" />
@@ -168,12 +185,20 @@ import { getWaterInfo, waterAccount } from "@/api/userAccount"; //水表信息
 import SelectUser from "@/components/SelectUser/index"; //水表信息
 import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
-import { getWaterTotalNum } from "@/api/waterMeterMang"; //获取用水量
-import WaterNumDetail from "./WaterNumDetail"
+import {
+  getWaterTotalNum,
+  getYCWaterInfo,
+  getWLWaterInfo,
+  UpgradeInfo,
+  checkResidueMon,
+  checkMeterRecord,
+  checkWaterMOney
+} from "@/api/waterMeterMang"; //获取用水量
+import WaterNumDetail from "./WaterNumDetail";
 import "@/styles/userAccount.scss";
 export default {
   name: "Upadate",
-  components: { SelectUser,WaterNumDetail },
+  components: { SelectUser, WaterNumDetail },
 
   data() {
     return {
@@ -219,9 +244,8 @@ export default {
         CustomerId: "" //用户ID
       },
       thisWaterMerter: {
-        customerId:"",//用户id
-        useWaterTypeId:"",
-
+        customerId: "", //用户id
+        useWaterTypeId: ""
       },
       waerMeterDirSize: [], //水表口径
       waterStyleList: [] //水表样式
@@ -229,12 +253,58 @@ export default {
   },
 
   methods: {
+    //检查是否欠费
+    checkNoMoney(Id) {
+      let isCheck = true;
+      checkResidueMon({ customerId: Id }).then(res => {
+        if (res.code != 0) {
+          this.$message({
+            type: "warning",
+            message: res.message ? res.message : "当前用户已欠费,不可升级水表"
+          });
+          isCheck = false;
+        }
+      });
+      return isCheck;
+    },
+    //升级
+    updateWater() {
+      UpgradeInfo(this.UpgradeWaterNeedInfo).then(res => {
+        console.log(res);
+      });
+    },
+    //切换升级水表
+    switchWater(num) {
+      // console.log(111)
+      this.userInfo = {};
+      this.UpgradeWaterNeedInfo = this.$options.data().UpgradeWaterNeedInfo;
+      this.UpgradeWaterNeedInfo.WaterType = num;
+    },
+    getWlWWater(num) {
+      getWLWaterInfo({ WaterMeterNo: num }).then(res => {
+        console.log(res);
+        this.userInfo = res.data;
+        this.UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm = this.userInfo.WaterAmountAlarm;
+        this.UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft = this.userInfo.WaterAmountOverdraft;
+        this.UpgradeWaterNeedInfo.meter4Param.IMSI = this.userInfo.IMSI;
+      });
+    },
+    getYCWater(num) {
+      //远传表水表信息
+      getYCWaterInfo({ WaterMeterNo: num }).then(res => {
+        console.log(res);
+        this.userInfo = res.data;
+        this.UpgradeWaterNeedInfo.meter3Param.ConcentratorNo = this.userInfo.ConcentratorNo;
+        this.UpgradeWaterNeedInfo.meter3Param.CollectorNo = this.userInfo.CollectorNo;
+        this.UpgradeWaterNeedInfo.meter3Param.MeterDiameter = this.userInfo.MeterDiameter;
+      });
+    },
     //当前用水量
     thisTotalWater() {
-      this.thisWaterMerter.customerId=this.userInfo.Id
-      this.thisWaterMerter.useWaterTypeId=this.userInfo.SA_UseWaterType_Id
+      this.thisWaterMerter.customerId = this.userInfo.Id;
+      this.thisWaterMerter.useWaterTypeId = this.userInfo.SA_UseWaterType_Id;
       // console.log(this.userInfo)
-      this.$refs.numDetaile.dialogVisible=true
+      this.$refs.numDetaile.dialogVisible = true;
       // getWaterTotalNum(this.thisWaterMerter).then(res=>{
       //   console.log(res)
       // })
@@ -262,6 +332,7 @@ export default {
             this.selectUserShow = true;
           } else {
             this.userInfo = res.data[0];
+            console.log(this.checkNoMoney(this.userInfo.Id));
             // this.getWaterMeterInfo(res.data[0].Id);
           }
         }
@@ -270,7 +341,7 @@ export default {
     //选择用户信息
     handleFilter(val) {
       this.userInfo = val;
-      this.getWaterMeterInfo(val.Id);
+      console.log(this.checkNoMoney(val.Id));
       this.selectUserShow = false;
     },
     //获取水表信息
@@ -278,7 +349,7 @@ export default {
       getWaterInfo({ customerId: id }).then(res => {
         if (res.code == 0) {
           this.waterInfo = res.data;
-          this.totalMoney = this.waterInfo.MeterBalance + this.userInfo.Balance;
+          // this.totalMoney = this.waterInfo.MeterBalance + this.userInfo.Balance;
         } else {
           this.$message({
             type: "warning",
@@ -377,6 +448,9 @@ export default {
     }
     .el-form {
       margin-top: 18px;
+      /deep/ .el-form-item__label {
+        padding: 0 !important;
+      }
     }
     .el-form-item {
       margin-bottom: 12px;

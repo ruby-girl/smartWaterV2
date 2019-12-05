@@ -25,6 +25,7 @@
             <p class="dateYC">{{itemList.RefreshTime}}</p>
           </li>
         </ul>
+        <p>{{msg}}</p>
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
           用户详情
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
@@ -262,6 +263,7 @@ export default {
         filed: "", //排序字段
         tableId: "0000022"
       },
+      msg: "11111",
       meterReadListParam: {
         //历史数据
         customerId: "", //水表Id ,
@@ -310,6 +312,10 @@ export default {
   created() {
     this.ValveStateList = getDictionaryOption("远传表阀门状态");
     this.TrafficStatusList = getDictionaryOption("远传表通讯状态");
+    this.getdevice();
+    this.timeFunction = setInterval(() => {
+      this.getdevice();
+    }, 60000);
   },
   mounted() {
     this.tableHeight =
@@ -318,10 +324,6 @@ export default {
       194;
     this.$refs.myChild.GetTable(this.YCMeterQueryParam.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-    this.getdevice();
-    this.timeFunction = setInterval(() => {
-      this.getdevice();
-    }, 60000);
   },
   computed: {
     tableHeadData: function() {
@@ -350,7 +352,6 @@ export default {
     },
     changeColor(index) {
       this.deiKey = index;
-      console.log(index);
       this.YCMeterQueryParam.CollectorNo = "00000000000" + index;
       this.searchYCWaterList();
     },
@@ -358,18 +359,16 @@ export default {
       //指令记录
       this.orderid = id;
       this.orderHistory = true;
-      // console.log(id);
-      // this.instrictionList.waterMeterId = id;
-      // GetCommandRecord(this.instrictionList).then(res => {
-      //   console.log(res);
-      //   this.orderList = res.data;
-      //   this.orderHistory = true;
-      // });
     },
     //删除操作成功后
     getdevice() {
       getWaterDevice().then(res => {
-        this.deviceList = res.data;
+        if (res.code == 0) {
+          this.msg = "";
+          this.deviceList = res.data;
+        } else {
+          this.msg = res.message;
+        }
       });
     },
     childrenSearch() {

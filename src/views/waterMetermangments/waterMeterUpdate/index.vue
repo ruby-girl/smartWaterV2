@@ -16,22 +16,15 @@
           :editUserList="editUserList"
           :selectHead="listQuery"
           @handleFilter="seachAccountOrder"
+          @getText="getText"
         />
-        <div class="cl-operation1 clearfix">
-          <el-button
-            type="warning"
-            size="small"
-            class="fr c"
-            style="margin-left: 10px;"
-            @click="setCustomData"
-          >
-            <i class="icon iconfont">&#xe678;</i> 表格自定义
-          </el-button>
-          <el-button type="success" size="small" class="fr" @click="excelWaterAccountOrder">
-            <i class="icon iconfont">&#xe683;</i> 导出Excel
-          </el-button>
-        </div>
-        <customTable ref="myChild" />
+        <search-tips
+          :tipsData="tipsData"
+          ref="searchTips"
+          @delTips="delTips"
+          @excel="excelWaterAccountOrder"
+        />
+        <!-- <customTable ref="myChild" /> -->
         <div class="main-padding-20-y" id="table">
           <el-table
             :key="tableKey"
@@ -93,12 +86,16 @@ import SelecteHead from "./components/SelecteHead";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
-import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
+import {
+  getUpgradeRecordList,
+  ExcelUpgradeRecordList
+} from "@/api/waterMeterMang"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
-
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "waterMeterUpdate",
-  components: { Upadate, SelecteHead, customTable, Pagination },
+  components: { Upadate, SelecteHead, customTable, Pagination, SearchTips },
   data() {
     return {
       listQuery: {
@@ -107,15 +104,17 @@ export default {
         limit: 10,
         filed: "",
         sort: "",
-        customerQueryType: "", //查询类型
-        customerQueryValue: "", //查询值
-        waterFactoryId: "-1", //水厂ID
-        userType: "-1", // 用户类型
-        waterMeterType: "-1", //水表类型
-        createUserId: "-1", // 操作人
-        createStartTime: "", // 操作时间起
-        createEndTime: "", // 操作时间止
-        tableId: "0000026"
+        CustomerQueryType: "", //查询类型
+        CustomerQueryType: "", //查询值
+        SA_WaterFactory_Id: "-1", //水厂ID
+        UserType: -1, // 用户类型
+        OldWaterMeterTypeId: -1, //升级前水表类型
+        NewWaterMeterTypeId: -1, //升级后水表类型
+        UpgradeEmpId: "-1", // 操作人
+        StartUpgradeDate: "", // 操作时间起
+        EndUpgradeDate: "", // 操作时间止
+        timevalue: [],
+        tableId: "0000028"
       },
       checksData: [],
       tableKey: 0,
@@ -124,7 +123,9 @@ export default {
       total: 0,
       customHeight: "", //自定义高度
       ifShow: false,
-      editUserList: [] //操作员、经办人
+      editUserList: [], //操作员、经办人
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [] //表单变化的值
     };
   },
   created() {
@@ -138,8 +139,8 @@ export default {
       document.getElementById("table").offsetTop -
       58;
 
-    this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },
   watch: {
     customHeight() {
@@ -168,6 +169,20 @@ export default {
     }
   },
   methods: {
+    
+    delTips(val) {
+      if (val == "timevalue") {
+        this.listQuery.StartUpgradeDate = "";
+        this.listQuery.EndUpgradeDate = "";
+      }
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
+      this.seachAccountOrder();
+    },
+    getText(val, model, arr) {
+      console.log(val);
+      let obj = getText(val, model, arr, this.tipsDataCopy, this);
+      this.tipsDataCopy.push(obj);
+    },
     //表格自定义方法
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
@@ -186,7 +201,8 @@ export default {
     },
     //查询记录
     seachAccountOrder() {
-      waterAccountPost(this.listQuery).then(res => {
+      getUpgradeRecordList(this.listQuery).then(res => {
+        pushItem(this);
         if (res.code == 0) {
           this.tableData = res.data;
           this.total = res.count;
@@ -206,7 +222,7 @@ export default {
     },
     //导出
     excelWaterAccountOrder() {
-      excelWaterAccount(this.listQuery).then(res => {
+      ExcelUpgradeRecordList(this.listQuery).then(res => {
         if (res.code == 0) {
           window.location.href = `${this.common.excelPath}${res.data}`;
         } else {
@@ -246,7 +262,7 @@ export default {
     }
     .el-aside::-webkit-scrollbar-thumb {
       /*滚动条里面小方块*/
-      
+
       border-radius: 10px;
 
       box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
