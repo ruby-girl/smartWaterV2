@@ -263,6 +263,18 @@ export default {
             message: res.message ? res.message : "当前用户已欠费,不可升级水表"
           });
           isCheck = false;
+        } else {
+          checkMeterRecord({ customerId: Id }).then(res => {
+            if (res.code != 0) {
+              this.$message({
+                type: "warning",
+                message: res.message
+                  ? res.message
+                  : "当前用户存在未抄表或未生成费用单,不可升级水表"
+              });
+              isCheck = false;
+            }
+          });
         }
       });
       return isCheck;

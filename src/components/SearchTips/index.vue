@@ -6,8 +6,11 @@
         <div class="allSpice fl" :style="{width:widthData}">
           <p ref="spiceAll" :style="{width:widthData1}" style="margin:0;transition: margin 0.2s;">
             <span v-for="item in tipsData" class="spiceTips">
-              {{item.name}}
-              <i class="icon iconfont" @click="delTips(item.model)">&#xe68a;</i>
+              {{item.seachName+":"}}{{item.name}}
+              <i
+                class="icon iconfont"
+                @click="delTips(item.model)"
+              >&#xe68a;</i>
             </span>
           </p>
         </div>
@@ -49,7 +52,7 @@ export default {
       if (length == 0) {
         this.widthData1 = null;
       } else {
-        this.widthData1 = length * 80;
+        this.widthData1 = length * 150;
       }
     }
   },
@@ -74,10 +77,12 @@ export default {
       //导出
       this.$emit("excel");
     },
-    getArrData(val, model, arr) {
+    getArrData(val, model, arr, name) {
+      console.log(name);
       let obj = {};
       let obj1 = {};
       obj1.model = model;
+      obj1.seachName = name;
       if (arr) {
         if (val == "-1") {
           obj1.name = "全部";
@@ -139,7 +144,7 @@ export default {
   opacity: 1;
   line-height: 34px;
   .icon:hover {
-    color: #00b2a1;
+    color: #00b2a1!important;
     cursor: pointer;
   }
   .table-custom {
@@ -178,12 +183,12 @@ export default {
     }
   }
   .tipsBtn {
-    width: 78px;
     position: relative;
     top: -1px;
     .icon {
       cursor: pointer;
-      display: inline-block;
+      float: left;
+      color: #808080;
       width: 34px;
       height: 34px;
       background: rgba(255, 255, 255, 1);

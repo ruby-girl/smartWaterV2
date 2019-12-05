@@ -18,6 +18,7 @@
           @handleFilter="seachAccountOrder"
           @getText="getText"
         />
+
         <search-tips
           :tipsData="tipsData"
           ref="searchTips"
@@ -169,7 +170,10 @@ export default {
     }
   },
   methods: {
-    
+    getOneId(val) {
+      // this.$refs.oneDay.getCheckedNodes()
+      console.log(this.$refs.oneDay.getCheckedNodes());
+    },
     delTips(val) {
       if (val == "timevalue") {
         this.listQuery.StartUpgradeDate = "";
@@ -178,9 +182,8 @@ export default {
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
       this.seachAccountOrder();
     },
-    getText(val, model, arr) {
-      console.log(val);
-      let obj = getText(val, model, arr, this.tipsDataCopy, this);
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
     //表格自定义方法
@@ -201,8 +204,10 @@ export default {
     },
     //查询记录
     seachAccountOrder() {
+      this.listQuery.StartUpgradeDate += " 00:00:00";
+      this.listQuery.EndUpgradeDate += " 23:58:59";
+      pushItem(this);
       getUpgradeRecordList(this.listQuery).then(res => {
-        pushItem(this);
         if (res.code == 0) {
           this.tableData = res.data;
           this.total = res.count;
