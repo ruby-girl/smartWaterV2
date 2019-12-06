@@ -14,7 +14,7 @@
     <!-- 表格模式 -->
     <div class="container-bottom-box">
       <!-- 左边表格 -->
-      <div class="cash-padding-bg" v-if="!isIC">
+      <div class="cash-padding-bg" :style="{'height':tableHeight+'px'}">
         <div class="display-flex justify-content-flex-justify">
           <div class="display-flex">
             <el-tooltip
@@ -68,27 +68,20 @@
         ></components>
       </div>
       <!-- IC卡展示内容 -->
-      <div
-        class="cash-padding-bg ic-container"
-        v-if="isIC"
-        :style="{'height':saveTableHeight+'px'}"
-      >
-        <components :is="icType" :tableData="tableData" :tableHeight="tableHeight"></components>
-      </div>
       <!-- 左边表格end -->
       <!-- 右 -->
-      <div class="cash-padding-bg cash-right-box">
-      <right-box
-        @selectPint="selectPint"
-        @selectPayment="selectPayment"
-        :unpaidMoney.sync="unpaidMoney"
-        :accountMoney="accountMoney"
-        :customerId="listQuery.CustomerId"
-        :payOrderId="payOrderId"
-        :totalLength="totalLength"
-        @getCustomer="getCustomer"
-        :headUser="headUser"
-      ></right-box>
+      <div class="cash-padding-bg cash-right-box" ref="cashRightbox">
+        <right-box
+          @selectPint="selectPint"
+          @selectPayment="selectPayment"
+          :unpaidMoney.sync="unpaidMoney"
+          :accountMoney="accountMoney"
+          :customerId="listQuery.CustomerId"
+          :payOrderId="payOrderId"
+          :totalLength="totalLength"
+          @getCustomer="getCustomer"
+          :headUser="headUser"
+        />
     </div>
     </div>
     
@@ -188,8 +181,8 @@ export default {
       feeWaiverShow: false, //费用减免弹窗
       selectPintShow: false, //选择打印机
       paymentCodeShow: false, //扫码支付弹窗
-      isIC: false,
-      icType: "CreditCardAlready", //默认已刷卡
+      // isIC: false,
+      // icType: "CreditCardAlready", //默认已刷卡
       unpaidMoney: 0, //剩余未缴
       isNull: true
     };
@@ -198,7 +191,9 @@ export default {
     this.$nextTick(function() {
       // 自适应表格高度 getBoundingClientRect().height比dom.offsetHeight性能更好
       var formHeight = this.$refs.formHeight.getBoundingClientRect().height;
-      this.tableHeight = document.body.clientHeight - formHeight - 350;
+      var bottomHeight=this.$refs.cashRightbox.getBoundingClientRect().height;
+      this.tableHeight = document.body.clientHeight - formHeight -bottomHeight-70;
+     
     });
   },
   methods: {

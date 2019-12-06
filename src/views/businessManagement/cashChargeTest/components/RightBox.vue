@@ -33,29 +33,31 @@
       <el-col :md="10" class="payment-box  flex-1">
         <div class="display-flex align-items-center justify-content-flex-justify payment-item">
           <div>应收金额</div>
-          <div>¥60.00</div>
+          <div>¥{{needMoney}}</div>
         </div>
        <div class="display-flex align-items-center justify-content-flex-justify payment-item">
           <div>实收金额</div>
-         <div class="right-detail-input">
-          <input
+         <div :class="{'right-detail-input-active':isFocus,'right-detail-input display-flex justify-content-flex-end align-items-flex-end':true}">
+           <span class="main-color-pink">¥</span>
+          <input :style="{'width':inputWidth+'px'}"
             type="text"
             v-model="num"
             @blur="changeTwoDecimal_x()"
             @keyup="money($event)"
+            @focus="isFocus=true"
             ref="myInput"
           />
-           <span class="main-color-pink">¥</span>
+           
         </div>
         </div>
         <div class="display-flex align-items-center justify-content-flex-justify payment-item">
           <div>找零</div>
-          <div>¥60.00</div>
+          <div>¥{{surplus}}</div>
         </div>
       </el-col>
       <!-- 结算 -->
       <el-col :md="6" class="pay-type-box">
-        <div style="text-align:right"><i class="iconfont iconshezhi1"></i></div>
+        <div style="text-align:right" class="pointer" @click="settingShow=true"><i class="iconfont iconshezhi1"></i></div>
         <div style="font-size: 14px;">选择缴费方式</div>
         <div class="display-flex align-items-center justify-content-flex-justify">
           <div :class="{'cash-assets':true,'cash-assets-scan-active':paymentType==2?true:false}"
@@ -69,8 +71,33 @@
               <i class="iconfont iconxianjin"></i>
               <span>现金</span>
           </div>        
-          </div>
+        </div>
           <button class="pay-btn" @click="mydebounce()">结算</button>
+          <div class="setting-box" v-show="settingShow">
+            <div class="display-flex save-account">
+              <span> 是否存入账户:&emsp;</span>
+              <el-radio-group v-model="isAccount">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+              </el-radio-group>
+            </div>
+            <div class="pint-item">
+              <el-radio v-model="radio" :label="1">打印小票</el-radio>
+              <span @click="selectPint" style="font-size:13px;">
+                  <i class="iconfont icondayinji"></i>&ensp;设置打印机
+              </span>
+            </div>
+            <div class="pint-item">
+              <el-radio v-model="radio" :label="2">打印发票</el-radio>
+              <span @click="selectPint" style="font-size:13px;">
+                <i class="iconfont icondayinji"></i>&ensp;设置打印机
+              </span>
+            </div>
+            <div class="pay-type-btn">
+              <el-button type="primary" size="mini" @click="settingFunc">确定</el-button>
+              <el-button type="success" size="mini" @click="settingShow=false">取消</el-button>
+            </div>
+          </div>     
       </el-col>
     </el-row>
   </div>
@@ -94,20 +121,30 @@ export default {
       default: 0
      }//账户余额
   },
-  watch:{
-    
+ watch:{
+    unpaidMoney(v){
+       this.calculationReceivable()
+    },
+    isAccount(v){
+      //  this.isAccount =v;
+       if(!this.testMoney()) return false
+      this.surplusFunc();
+    }
   },
   data() {
     return {
       isIc:false,
       radio: 1,
       paymentType: 2701,
-      isAccount: true,
-      num: "",
+      isAccount: false,
+      num: 0.00,
       needMoney: 0, //应缴金额    
       surplus: 0, //找零
       balanceDeduction:0,//账户抵扣
-      saveAccount:0//zanshi
+      saveAccount:0,//zanshi
+      isFocus:false,
+      settingShow:false,
+      inputWidth:100
     };
   },
   mounted() {
@@ -151,6 +188,7 @@ export default {
     },
     // 输入金额保留2位
     money(e) {
+      this.inputWidth=e.target.value.length*25<100?100:e.target.value.length*25
       e.target.value = updateMoney(e.target.value);
     },
     selectPint() {
@@ -218,6 +256,7 @@ export default {
     },
     // 补齐小数-
     changeTwoDecimal_x() {
+      this.isFocus=false
      this.num= changeTwoDecimal(this.num);
       if(!this.testMoney()) return false
      this.surplusFunc()
@@ -241,6 +280,9 @@ export default {
       this.surplus=0
       else
       this.surplus = (parseFloat(this.num) * 1000 - parseFloat(this.needMoney) * 1000) /1000
+    },
+    settingFunc(){
+
     }
   }
 };
@@ -258,26 +300,33 @@ export default {
 }
 .right-detail-input {
   position: relative;
+   border: 1px solid #ff5656;
+   color: #ff5656;
+   width:300px;
   > input {
     height: 73px;
-    width: 280px;
-    border: 1px solid #ff5656;
-    margin-right: 5px;
+    // min-width: 50px;
+    // max-width: 280px;
+  //  border:none;
+    text-align: right;
     color: #ff5656;
     font-size: 40px;
     font-weight: bold;
-    padding-left: 60px;
+    // padding-left: 60px;
     // text-align: center;
     &:focus {
       outline: none;
-      border: 2px solid #ff5656;
+     
     }
   }
   .main-color-pink{
-    position: absolute;
-    top:20px;
-    left:40px;
+    // position: absolute;
+    // top:20px;
+    // left:40px;
   }
+}
+.right-detail-input-active{
+  border: 2px solid #ff5656;
 }
 .payment-box{
   min-width:400px;
@@ -288,6 +337,14 @@ export default {
   background: #F5F5F5;
   padding: 10px 18px 18px 18px;
   color:#46494C;
+  position: relative;
+  .setting-box{
+    position: absolute;
+    right:35px;
+    top:15px;
+    background: #fff;
+    padding: 10px;
+  }
 }
 .cash-assets {
   width: 47%;
@@ -339,6 +396,17 @@ export default {
   &:focus {
     background-color: #ff8c00;
   }
+}
+.pay-type-btn{
+  padding:20px 0 15px 0;
+  text-align: center;
+}
+.pint-item{
+  padding-top: 10px;
+}
+.save-account{
+  font-size: 14px;
+  padding: 5px 0;
 }
 </style>
 

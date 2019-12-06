@@ -3,7 +3,7 @@
   <div ref="myCard">
     <div
       class="main-padding-20-y card-container"
-      :style="{'height':(tableHeight+10)+'px'}"
+      :style="{'height':(tableHeight-120)+'px'}"
     >
     <div v-if="cardData.length>0">
        <!-- 循环 -->

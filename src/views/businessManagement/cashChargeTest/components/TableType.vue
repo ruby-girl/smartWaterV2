@@ -8,7 +8,7 @@
         :data="tableData"
         border
         ref="cashTable"
-        :height="tableHeight"
+        :height="tableHeight-130"
         style="width: 100%;"
         :header-cell-style="{'background-color': '#F0F2F5'}"
         @sort-change="sortChanges"
