@@ -26,7 +26,7 @@
         </el-form-item>
         <el-form-item label="用户类型 " prop="UserType">
           <el-select v-model="formData.UserType" placeholder="请选择" size="small">
-            <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
+            <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id" v-show="item.Id!=1201"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="证件号 " prop="IdentityNo">

@@ -3,8 +3,8 @@
     <div class="user_box">
       <!--左侧树形菜单-->
       <div class="user_tree">
-        <h2>水厂</h2>
-        <p class="switch_water"><i class="icon iconfont"></i>切换水厂</p>
+        <h2>{{ waterFactoryName.Name }}</h2>
+        <p class="switch_water" @click="changeWaterFactory"><i class="icon iconfont iconqiehuan"></i>切换水厂</p>
         <div id="operate_area">
           <el-button type="primary" size="mini" @click="getCheckedNodes(1)" round><i class="icon iconfont">&#xe689;</i>添加</el-button>
           <el-button round size="mini" class="cl-reset" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe618;</i>编辑</el-button>
@@ -28,6 +28,8 @@
     </div>
     <!--新增编辑区域弹窗 s-->
     <Dialog ref="editDialog"></Dialog>
+    <!--切换水厂-->
+    <SwitchFactory ref="switchChild"></SwitchFactory>
   </div>
 </template>
 
@@ -37,8 +39,9 @@ import myTree from "@/components/Tree/index";
 import SelectHead from "./components/SelectHead";
 import tableQuery from "./components/TableQuery";
 import Dialog from "./components/Dialog";
+import SwitchFactory from './components/SwitchFactory'
 import { promptInfoFun } from "@/utils/index";
-import { GetAreaList, CreateAreaNo, DelCustomerArea } from "@/api/userArea"; //区域接口
+import { CreateAreaNo, DelCustomerArea, GetAreaListByWaterFactory } from "@/api/userArea"; //区域接口
 import {
   GetWaterTypeCustomerNum,
   GetCustomerDataList,
@@ -48,9 +51,10 @@ import Bus from "@/utils/bus";
 
 export default {
   name: "userSeting",
-  components: { myTree, SelectHead, tableQuery, Dialog },
+  components: { myTree, SelectHead, tableQuery, Dialog,SwitchFactory },
   data() {
     return {
+      waterFactoryName:{},
       ifShow: false,
       query: {
         //右侧用户列表查询条件
@@ -61,8 +65,8 @@ export default {
       oldTreeData: [],
       disAdd: false,
       disEdit: false,
-      disDel: false
-      // selectNode:this.$refs.myChild.selectNode
+      disDel: false,
+      //selectNode:this.$refs.myChild.selectNode
     };
   },
   watch: {},
@@ -141,7 +145,7 @@ export default {
             ? (_this.disEdit = false)
             : (_this.$refs.editDialog.dialogVisible = true);
           _this.$refs.editDialog.param.AreaNo = selectNode.AreaNo; //老树
-          /*_this.$refs.editDialog.param.AreaName = selectNode.text*/ _this.$refs.editDialog.param.AreaName =
+          _this.$refs.editDialog.param.AreaName = selectNode.text
             selectNode.label;
           _this.$refs.editDialog.title = "编辑";
           break;
@@ -179,14 +183,14 @@ export default {
      * 获取左侧区域列表数据
      * */
     getTreeData() {
-      GetAreaList().then(res => {
-        this.oldTreeData = [];
-        if (res.code == 0) {
-          this.oldTreeData.push(res.data);
+      GetAreaListByWaterFactory({'waterFactoryId':this.waterFactoryName.Id}).then(res => {
+        if (res.code ==0 ) {
+          this.oldTreeData = []
+          this.oldTreeData.push(res.data)
         } else {
-          promptInfoFun(this, 1, res.message);
+          promptInfoFun(this,1,res.message)
         }
-      });
+      })
     },
     /**
      * 用户列表查询
@@ -225,11 +229,17 @@ export default {
       GetCustomerDataList_ToExcel(this.query).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
+    },
+    /**
+     * 切换水厂
+     * */
+    changeWaterFactory(){
+      this.$refs.switchChild.dialogVisible = true;
+      this.$refs.switchChild.formData.waterFactoryId = this.waterFactoryName.Id
     }
   },
   created() {
     let parms = this.query;
-
     parms.WaterTypeId = -1;
     GetWaterTypeCustomerNum(parms).then(res => {
       //用户统计数据
@@ -241,6 +251,7 @@ export default {
     });
   },
   mounted() {
+    this.waterFactoryName = this.$store.state.user.waterWorks[0]
     let _this = this;
     this.getTreeData();
     Bus.$off("queryData");
@@ -256,6 +267,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tree_container {
+  .switch_water {cursor: pointer;
+  i{font-size: 12px;margin-right: 3px;}}
   .switch_water{ position: absolute;right: 16px;top:10px;margin: 0;font: normal 13px 'Microsoft YaHei';color: #8F8F8F;}
   .info {
     background: rgba(199, 199, 199, 1) !important;
@@ -316,7 +329,7 @@ export default {
       padding: 0 15px;
       h2 {
         font: bold 16px/16px "Microsoft YaHei";
-        color: #46494c;
+        color: #46494c;width: 65%;text-overflow:ellipsis;overflow: hidden;white-space: nowrap;
       }
       .btn_one {
         color: #fefefe;

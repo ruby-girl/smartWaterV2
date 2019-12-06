@@ -12,7 +12,7 @@
         ref="tree"
         highlight-current
         auto-expand-parent
-        :expand-on-click-node="false"
+        :expand-on-click-node="true"
         @node-click="setCurNode"
         default-expand-all
         :render-content="renderContent"
@@ -45,12 +45,7 @@ export default {
      * 动态添加模板图标
      * */
     renderContent(h, { node, data, store }) {
-      return (
-        <span slot-scope="{ node, data }" style="margin-left:12px" id={data.Id}>
-          {" "}
-          {node.label}{" "}
-        </span>
-      );
+      return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class='ndoe_level'>{node.level}</i> {node.label} < /span>)
     },
     /**
      * 当前选中需编辑或者新增信息或删除
@@ -100,15 +95,16 @@ export default {
           this.getChildId(keyword, item, newPidArr);
           return;
         });
+        if (count === this.idsLength + 1) {
+          //二级节点+1 其中1为最顶层父节点,获取最后一层遍历之后数据集合
+          this.treeClickChecked(this.$refs.tree, this.idsArry);
+        }
         count++;
       } else {
         let resultArry = data.pidArr;
         this.idsArry.push(resultArry);
-        return;
-      }
-      if (count === this.idsLength + 1) {
-        //二级节点+1 其中1为最顶层父节点,获取最后一层遍历之后数据集合
         this.treeClickChecked(this.$refs.tree, this.idsArry);
+        return;
       }
     },
     /**
@@ -120,6 +116,7 @@ export default {
       this.macthArray = [];
       this.noneArry = [];
       let Nodes = theTree.store._getAllNodes(); //获取所有节点
+
       manualNode.forEach(item => {
         //过滤选中节点与未选中节点集合
         for (let i = item.length - 1; i >= 0; i--) {
@@ -135,8 +132,10 @@ export default {
         }
       });
 
+
+
       /*展开选中节点*/
-      if (this.macthArray.length > 0)
+      if (this.macthArray.length > 0){
         this.macthArray.forEach(items => {
           //过来当前模糊查询所匹配节点
           items.forEach(i => {
@@ -144,22 +143,18 @@ export default {
               if (key.data.Id === i[0].Id) {
                 theTree.store._getAllNodes()[0].expanded = true; //默认展开一级节点
                 key.expanded = true;
-                i[0].flag
-                  ? document.getElementById(i[0].Id).classList.add("matchStyle")
-                  : document
-                      .getElementById(i[0].Id)
-                      .classList.remove("matchStyle"); //动态设置过滤节点样式
+                i[0].flag ? document.getElementById(i[0].Id).classList.add("matchStyle") : document.getElementById(i[0].Id).classList.remove("matchStyle"); //动态设置过滤节点样式
               }
             });
           });
         });
+      }
       /*关闭未选中节点*/
-      if (this.noneArry.length > 0)
+      if (this.noneArry.length > 0){
         this.noneArry.forEach(items => {
           //过来当前模糊查询所匹配节点
           items.forEach(i => {
-            if (parseInt(i[0].Id) === 0)
-              //过滤一级节点
+            if (parseInt(i[0].Id) === 0)//过滤一级节点
               return;
             Nodes.forEach(key => {
               if (key.data.Id === i[0].Id) {
@@ -167,18 +162,28 @@ export default {
                 document.getElementById(i[0].Id).classList.remove("matchStyle"); //去除过滤选中样式
               }
             });
+            theTree.store._getAllNodes()[0].expanded = true;
           });
         });
+      }
     }
   }
 };
 </script>
 <style lang="scss">
 .cl-treeBox {
+  .back{display: block;width: 100%;height: 100%;padding-left: 10px;line-height: 38px;}
+  .back1{background: #6DB3AC}
+  .back2{background: #95CCC7;padding-left: 20px;}
+  .back3{background: #B6DBD8;padding-left: 30px}
+  .back4{background: #CFE6E2;padding-left: 40px}
+  .back5{background: #dff6f4;padding-left: 50px}
+  .back6{background: #E9F5F4;padding-left: 60px}
+  .ndoe_level{display: inline-block;width: 16px;height: 16px;border-radius: 50%;text-align: center;background: #247A77;color: #E3F1EF;font: bold 12px/16px 'Script MT';}
   .matchStyle {
-    color: #00b3a1;
+    color: #b32f00;
   }
-  .el-input-group__append{padding: 0;background: #00b3a1;
+  .el-input-group__append{padding: 0;background: #00b3a1;border: none;
     color: #fefeff;padding: 5px 6px 5px 6px;cursor: pointer}
   > p {
     font: bold 16px/38px "Microsoft YaHei";
@@ -187,23 +192,15 @@ export default {
     padding: 0;
     width: 190px;
   }
-
   height: calc(100vh - 20%);
   overflow: auto;
-
   .custom-tree-container {
     width: 190px;
     border: solid 1px #cad9e0;
-
+    border-top: none;
     .el-tree {
       color: #777c82;
     }
-  }
-  .el-tree-node > .el-tree-node__content {
-    background: rgba(242, 244, 247, 1);
-  }
-  .el-tree-node__children .el-tree-node__content {
-    background: #fff;
   }
   .el-tree-node__content {
     height: 38px;
@@ -211,8 +208,8 @@ export default {
     color: #46494c;
     border-top: solid 1px #cad9e0;
     position: relative;
+    padding-left: 0px !important;
   }
-
   .el-tree-node__expand-icon {
     position: absolute;
     right: 6px;
@@ -235,15 +232,16 @@ export default {
   .el-tree--highlight-current
     .el-tree-node.is-current
     > .el-tree-node__content {
-    background-color: #00b2a1;
-    color: #fff;
+    color: #b32f00;
+    font-weight: bold;
   }
-
+  .el-tree-node__children{margin-top: -1px;}
   .el-tree--highlight-current
     .el-tree-node.is-current
     > .el-tree-node__content
     .el-tree-node__expand-icon {
-    color: #fff;
+    color: #b32f00;
+    font-weight: bold;
   }
 }
 </style>

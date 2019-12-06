@@ -10,7 +10,6 @@
     <!--表格自定义组建 s-->
     <customTable ref="tableChild" />
     <Statistics :StatisticsData="StatisticsData"></Statistics>
-
     <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
       <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
         <template slot-scope="scope">
@@ -180,6 +179,7 @@
 </script>
 <style lang="scss">
   .tr_container{
+    .cl-operation1{margin-top: 46px;}
     .el-table thead tr th {
       background: #F0F2F5 !important;
     }
