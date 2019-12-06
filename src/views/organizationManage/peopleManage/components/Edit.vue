@@ -183,13 +183,16 @@
     },
     methods: {
       submitForm(formName) {//提交事件
+        let exp = null
         let beginDate = this.jp.Birthday;
         let endDate = this.jp.EnrollingTime;
-        let d1 = new Date(beginDate.replace(/\-/g, "\/"));
-        let d2=new Date(endDate.replace(/\-/g, "\/"));
-        if(beginDate!=""&&endDate!=""&&d1 >=d2) {
-          promptInfoFun(this,1,'入职日期不能小于出生日期')
-          return false;
+        if (beginDate != exp && endDate != exp) {
+          let d1 = new Date(beginDate.replace(/\-/g, "\/"));
+          let d2 = new Date(endDate.replace(/\-/g, "\/"));
+          if (beginDate != "" && endDate != "" && d1 >= d2) {
+            promptInfoFun(this, 1, '入职日期不能小于出生日期')
+            return false;
+          }
         }
         let self = this
         this.$refs.childPost.isFlag = true;
@@ -279,6 +282,8 @@
             }
             delete res.data.blList
             this.jp = res.data
+            let exp = null
+            if(res.data.Function!=exp)
             this.jp.EnumFun = res.data.Function.toString()
             let fileList = res.data.saList//已经上传文件信息
             this.$refs.getFiles.setFiles(fileList)

@@ -6,14 +6,14 @@
         :model="selectHead"
         class="head-search-form form-inline-small-input"
         size="small"
-        label-width="80px"
         @submit.native.prevent
       >
-        <el-form-item label="用户：" label-width="65px">
+        <el-form-item >
           <el-select
             v-model="selectHead.CustomerQueryType"
             placeholder="请选择"
-            style="width: 100px;float: left"
+           class="user-select-box"
+          style="width: 100px;float: left;margin-right:3px;"
           >
             <el-option label="用户编号" value="1"></el-option>
             <el-option label="姓名/简码" value="2"></el-option>
@@ -42,29 +42,6 @@
         <span>查询缴费记录>></span>
       </div>
     </div>
-
-    <el-row class="head-bottom-box">
-      <el-col :md="8" :lg="3" :xl="2">
-        姓名:
-        <span>{{user.CustomerName}}</span>
-      </el-col>
-      <el-col :md="8" :lg="4" :xl="3">
-        水表类型:
-        <span>{{user.WaterMeterTypeName}}</span>
-      </el-col>
-      <el-col :md="8" :lg="4" :xl="3">
-        电话:
-        <span>{{user.Tel}}</span>
-      </el-col>
-      <el-col :md="8" :lg="6" :xl="4">
-        水表编号:
-        <span>{{user.SA_WaterMeterNo}}</span>
-      </el-col>
-      <el-col :md="12" :lg="7" :xl="12" class="text-wrap">
-        地址:
-        <span>{{user.Address}}</span>
-      </el-col>
-    </el-row>
   </div>
 </template>
 <script>
@@ -156,7 +133,7 @@ export default {
 .payment-records {
   color: #00b2a1;
   font-size: 13px;
-  padding-bottom: 10px;
+  padding: 10px 10px 0 0;
   cursor: pointer;
   position: relative;
   .payment-num {
@@ -191,6 +168,12 @@ export default {
   padding: 15px;
   line-height: 30px;
 }
-
+.head-search-form{
+  margin-top:10px;
+  padding-left: 10px;
+  /deep/ .el-form-item--small.el-form-item{
+    margin-bottom: 0;
+  }
+}
 </style>
 

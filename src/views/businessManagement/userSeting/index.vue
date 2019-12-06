@@ -3,7 +3,8 @@
     <div class="user_box">
       <!--左侧树形菜单-->
       <div class="user_tree">
-        <h2>区域</h2>
+        <h2>水厂</h2>
+        <p class="switch_water"><i class="icon iconfont"></i>切换水厂</p>
         <div id="operate_area">
           <el-button type="primary" size="mini" @click="getCheckedNodes(1)" round><i class="icon iconfont">&#xe689;</i>添加</el-button>
           <el-button round size="mini" class="cl-reset" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe618;</i>编辑</el-button>
@@ -255,6 +256,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tree_container {
+  .switch_water{ position: absolute;right: 16px;top:10px;margin: 0;font: normal 13px 'Microsoft YaHei';color: #8F8F8F;}
   .info {
     background: rgba(199, 199, 199, 1) !important;
     border-color: rgba(199, 199, 199, 1) !important;
@@ -313,7 +315,7 @@ export default {
       background: #fff;
       padding: 0 15px;
       h2 {
-        font: bold 16px "Microsoft YaHei";
+        font: bold 16px/16px "Microsoft YaHei";
         color: #46494c;
       }
       .btn_one {
