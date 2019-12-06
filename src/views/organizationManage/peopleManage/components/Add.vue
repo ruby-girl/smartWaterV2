@@ -189,13 +189,16 @@
     },
     methods: {
       submitForm(formName) {//提交方法
+        let exp = null
         let beginDate = this.jp.Birthday;
         let endDate = this.jp.EnrollingTime;
-        let d1 = new Date(beginDate.replace(/\-/g, "\/"));
-        let d2=new Date(endDate.replace(/\-/g, "\/"));
-        if(beginDate!=""&&endDate!=""&&d1 >=d2) {
-          promptInfoFun(this,1,'入职日期不能小于出生日期')
-          return false;
+        if (beginDate != exp && endDate != exp) {
+          let d1 = new Date(beginDate.replace(/\-/g, "\/"));
+          let d2 = new Date(endDate.replace(/\-/g, "\/"));
+          if (beginDate != "" && endDate != "" && d1 >= d2) {
+            promptInfoFun(this, 1, '入职日期不能小于出生日期')
+            return false;
+          }
         }
         this.$refs.childPost.isFlag = true;//先判断一条及多条部门岗位信息是否正确，默认不允许为空
         this.jp.oeoList = []
