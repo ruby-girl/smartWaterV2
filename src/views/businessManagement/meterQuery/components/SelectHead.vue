@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-form
+      ref="formName1"
       v-show="typeCheck==1"
       :inline="true"
       :model="param1"
@@ -20,14 +21,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="抄表员" prop="SA_MeterReader_Id">
-        <el-select v-model="param1.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param1.SA_MeterReader_Id,'SA_MeterReader_Id',meterArry)">
+        <el-select v-model="param1.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param1.SA_MeterReader_Id,'SA_MeterReader_Id',meterArry,'抄表员')">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <transition name="fade">
         <el-form-item label="抄表状态" v-show="screenWdth<1920?ifMore:true" prop="MeterReadState">
-          <el-select v-model="param1.MeterReadState" placeholder="请选择" size="small" @change="getText(param1.MeterReadState,'MeterReadState',meterState)">
+          <el-select v-model="param1.MeterReadState" placeholder="请选择" size="small" @change="getText(param1.MeterReadState,'MeterReadState',meterState,'抄表状态')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
@@ -35,7 +36,7 @@
       </transition>
       <transition name="fade">
         <el-form-item label="表册" v-show="screenWdth<1680?ifMore:true" prop="SA_RegisterBookInfo_Id">
-          <el-select v-model="param1.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param1.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formArry)">
+          <el-select v-model="param1.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param1.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formArry,'表册')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
@@ -44,16 +45,16 @@
       <transition name="fade">
         <el-form-item v-show="ifMore" prop="CustomerQueryValue">
           <el-select v-model="param1.CustomerQueryType" placeholder="请选择" class="user-select-box"
-                     style="width: 100px;float: left;margin-left: 30px" @change="getText(param1.CustomerQueryType,'CustomerQueryType',userTypes)">
+                     style="width: 100px;float: left;margin-left: 30px">
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
           </el-select>
           <el-input v-model="param1.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
-                    style="width: 180px;float: left"/>
+                    style="width: 180px;float: left" @change="getText(param1.CustomerQueryValue,'CustomerQueryValue','',param1.CustomerQueryType)"/>
         </el-form-item>
       </transition>
       <transition name="fade">
         <el-form-item label="用户类型  " v-show="ifMore"  prop="UserType">
-          <el-select v-model="param1.UserType" placeholder="请选择" size="small" @change="getText(param1.UserType,'UserType',userArry)">
+          <el-select v-model="param1.UserType" placeholder="请选择" size="small" @change="getText(param1.UserType,'UserType',userArry,'用户类型')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in userArry" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
@@ -61,7 +62,7 @@
       </transition>
       <transition name="fade">
         <el-form-item label="录入人  " v-show="ifMore"  prop="InputEmpName">
-          <el-input v-model="param1.InputEmpName" maxlength="20" placeholder="请输入录入人" @change="getText(param1.InputEmpName,'InputEmpName')"/>
+          <el-input v-model="param1.InputEmpName" maxlength="20" placeholder="请输入录入人" @change="getText(param1.InputEmpName,'InputEmpName','','录入人')"/>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -87,12 +88,13 @@
         <i v-show="!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
         <el-button type="primary" size="mini" class="cl-search" round @click="searchFun(1)"><i
           class="icon iconfont">&#xe694;</i>
-          搜索
+          查询
         </el-button>
         <el-button round size="mini" class="cl-reset" @click="resetFun(1)"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
       </el-form-item>
     </el-form>
     <el-form
+      ref="formName2"
       v-show="typeCheck==2"
       :inline="true"
       :model="param2"
@@ -106,14 +108,14 @@
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="抄表员  " prop="SA_MeterReader_Id">
-        <el-select v-model="param2.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param2.SA_MeterReader_Id,'SA_MeterReader_Id',meterArry)">
+      <el-form-item label="抄表员" prop="SA_MeterReader_Id">
+        <el-select v-model="param2.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param2.SA_MeterReader_Id,'SA_MeterReader_Id',meterArry,'抄表员')">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="抄表状态" prop="MeterReadState">
-        <el-select v-model="param2.MeterReadState" placeholder="请选择" size="small" @change="getText(param2.MeterReadState,'MeterReadState',meterState)">
+        <el-select v-model="param2.MeterReadState" placeholder="请选择" size="small" @change="getText(param2.MeterReadState,'MeterReadState',meterState,'抄表状态')">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
@@ -137,8 +139,8 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="表册  " v-show="ifMore2" prop="SA_RegisterBookInfo_Id">
-          <el-select v-model="param2.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param2.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formArry)">
+        <el-form-item label="表册" v-show="ifMore2" prop="SA_RegisterBookInfo_Id">
+          <el-select v-model="param2.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param2.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formArry,'表册')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
@@ -147,16 +149,16 @@
       <transition name="fade">
         <el-form-item v-show="ifMore2" prop="CustomerQueryValue">
           <el-select v-model="param2.CustomerQueryType" placeholder="请选择" class="user-select-box"
-                     style="width: 100px;float: left;margin-left: 30px" @change="getText(param2.CustomerQueryType,'CustomerQueryType',userTypes)">
+                     style="width: 100px;float: left;margin-left: 30px">
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
           </el-select>
           <el-input v-model="param2.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
-                    style="width: 180px;float: left"/>
+                    style="width: 180px;float: left"  @change="getText(param2.CustomerQueryValue,'CustomerQueryValue','',param2.CustomerQueryType)"/>
         </el-form-item>
       </transition>
       <transition name="fade">
         <el-form-item label="用户类型  " v-show="ifMore2" prop="UserType">
-          <el-select v-model="param2.UserType" placeholder="请选择" size="small" @change="getText(param2.UserType,'UserType',userArry)">
+          <el-select v-model="param2.UserType" placeholder="请选择" size="small" @change="getText(param2.UserType,'UserType',userArry,'用户类型')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in userArry" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
@@ -164,7 +166,7 @@
       </transition>
       <transition name="fade">
         <el-form-item label="录入人  " v-show="ifMore2" prop="InputEmpName">
-          <el-input v-model="param2.InputEmpName" maxlength="20" placeholder="请输入录入人" @change="getText(param2.InputEmpName,'InputEmpName')"/>
+          <el-input v-model="param2.InputEmpName" maxlength="20" placeholder="请输入录入人" @change="getText(param2.InputEmpName,'InputEmpName','','录入人')"/>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -187,7 +189,7 @@
       </transition>
       <i v-show="ifMore2" class="icon iconfont iconshouqi3" @click="ifMore2=!ifMore2"></i>
       <i v-show="!ifMore2" class="icon iconfont iconjianqu3" @click="ifMore2=!ifMore2"></i>
-      <el-button type="primary" size="mini" round class="cl-search" @click="searchFun(2)"><i class="icon iconfont">&#xe694;</i>搜索</el-button>
+      <el-button type="primary" size="mini" round class="cl-search" @click="searchFun(2)"><i class="icon iconfont">&#xe694;</i>查询</el-button>
       <el-button round size="mini" class="cl-reset" @click="resetFun(2)"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
     </el-form>
   </div>
@@ -263,7 +265,8 @@
         formArry: [],//表册类型
         userArry:[],//用户类型
         planArry:[],
-        screenWdth:''
+        screenWdth:'',
+        checkAllData:[]
       }
     },
     methods: {
@@ -280,6 +283,7 @@
         this.$parent.searchFun();
       },
       getTime() {
+        this.getText(this.meterData,'meterData','','抄表日期')
         const date = this.meterData;
         if (date) {
           this.param2.ReadDateStart = date[0];
@@ -290,6 +294,7 @@
         }
       },
       getTime1() {
+        this.getText(this.InputData,'InputData','','录入日期')
         const date = this.InputData;
         if (date) {
           this.param1.InputTimeStart = date[0];
@@ -300,6 +305,7 @@
         }
       },
       getTime3() {
+       this.getText(this.InputData2,'InputData2','','录入日期')
         const date = this.InputData2;
         if (date) {
           this.param2.InputTimeStart = date[0];
@@ -320,7 +326,7 @@
         })
       },
       getPlanList(id){//通过水厂获得抄表计划，或抄表员信息
-        this.getText(id,'SA_WaterFactory_Id',this.waterFactory)
+        this.getText(id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
         if(this.typeCheck==1){//计划
           QueryMeterReadPlanByFactoryId({SA_WaterFactory_Id:id}).then(res => {
             if (res.code ==0 ) {
@@ -345,7 +351,7 @@
       getCbyInfo(id){ //获取抄表员及表册联动信息，区分抄表计划及抄表日期
         LoadRegisterBookAndMeterReader({'MeterReadPlanId' : id}).then(res => {
           if (res.code ==0 ) {
-            this.getText(id,'SA_MeterReadPlan_Id',this.planArry)
+            this.getText(id,'SA_MeterReadPlan_Id',this.planArry,'抄表计划')
             this.meterArry = res.data.MeterReaders
             this.formArry = res.data.RegisterBooks
           } else {
@@ -367,9 +373,29 @@
         }
         this.getPlanList('-1');//默认查全部抄表计划
       },
-      getText(val, model, arr) {
-        this.$emit("getText", val, model, arr);
+      getText(val, model, arr, name) {
+        this.$emit("getText", val, model, arr, name);
       },
+      resetFun(type){
+        if(type == 1){
+            this.InputData = []
+            this.param1.ReadDateStart = "",
+            this.param1.ReadDateEnd = "",
+            this.param1.InputTimeStart = "",
+            this.param1.InputTimeEnd = "",
+            this.param1.CustomerQueryType = '1'
+          this.$refs['formName1'].resetFields();
+        }else {
+            this.InputData2 = []
+            this.meterData = []
+            this.param2.ReadDateStart = "",
+            this.param2.ReadDateEnd = "",
+            this.param2.InputTimeStart = "",
+            this.param2.InputTimeEnd = "",
+            this.param2.CustomerQueryType = '1'
+          this.$refs['formName2'].resetFields();
+        }
+      }
     },
     mounted() {
       this.screenWdth = window.screen.width

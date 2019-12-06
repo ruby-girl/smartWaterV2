@@ -176,3 +176,8 @@
 .search-head-box.on{height: 100px;box-shadow: 4px 4px 4px #ddd;}
 .cl-center-box{margin-top: 46px;}
 .el-table--medium td{padding: 3px 0 !important}
+.cl-reset{color:#00B2A1;border: solid 1px #00B2A1;
+  i{font-size: 14px !important;margin-right: 2px;}
+}
+.cl-danger{color:#FF5656;border: solid 1px #FF5656;i{font-size: 14px !important;margin-right: 2px;}}
+.cl-danger:hover{border: solid 1px #fbc4c4;background: #fef0f0;color: #f56c6c;}

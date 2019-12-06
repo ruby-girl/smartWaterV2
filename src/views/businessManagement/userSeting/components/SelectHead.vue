@@ -1,13 +1,14 @@
 <template>
   <div>
     <el-form
+      ref="formName"
       :inline="true"
       :model="query"
       class="head-search-form form-inline-small-input"
       size="small"
       label-width="100px"
       @submit.native.prevent>
-      <el-form-item>
+      <el-form-item prop="CustomerQueryValue">
         <el-select v-model="query.CustomerQueryType" placeholder="请选择" class="short-select-item" style="width: 100px;float: left">
           <el-option label="编号" value="1"></el-option>
           <el-option label="姓名/简码" value="2"></el-option>
@@ -17,20 +18,21 @@
         </el-select>
         <el-input v-model="query.CustomerQueryValue" maxlength="50" placeholder="(长度1-50)" style="width: 180px;float: left"/>
       </el-form-item>
-      <el-form-item label="用户类型 ">
+      <el-form-item label="用户类型" prop="UserType">
         <el-select v-model="query.UserType" placeholder="请选择" size="small">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户状态 ">
+      <el-form-item label="用户状态" prop="UserState">
         <el-select v-model="query.UserState" placeholder="请选择" size="small">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in userStaus" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary" size="mini" @click="searchFun"><i class="icon iconfont">&#xe694;</i>搜索</el-button>
+        <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
+        <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -81,6 +83,10 @@
       searchFun(){
         this.$parent.query =  Object.assign({},this.query)
         this.$parent.searchTableFun()
+      },
+      resetFun(formName){
+        this.query.CustomerQueryType = '1'
+        this.$refs[formName].resetFields();
       }
     },
     mounted() {

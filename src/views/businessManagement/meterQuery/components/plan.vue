@@ -66,7 +66,6 @@
 
   export default {
     components: { Pagination,SelectHead,SearchTips,EditDialog},
-    props:['param'],
     name: "plan",
     data() {
       return {
@@ -76,7 +75,11 @@
         total: 0,
         tipsData: [],//传入子组件的值
         tipsDataCopy: [],//表单变化的值
-        checksData:[]
+        checksData:[],
+        param: {
+          //查询条件
+          tableId: "0000015"
+        },
       }
     },
     computed: {
@@ -126,8 +129,15 @@
         }
       },
       delTips(val) {
+        console.log(val)
+        if (val == "meterData") {
+          this.param.ReadDateStart = "";
+          this.param.ReadDateEnd = "";
+        }else if(val == 'InputTimeStart'){
+          this.param.InputTimeStart = "";
+          this.param.InputTimeEnd = "";
+        }
         this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "param");
-        this.seachAccountOrder();
       },
       getText(val, model, arr) {
         let obj=getText(val, model, arr,this.tipsDataCopy,this)

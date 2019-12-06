@@ -1,11 +1,11 @@
 <template>
   <div class="tr_container">
     <div class="cl-operation1">
-      <el-button type="primary" size="mini" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
-      <el-button type="primary" size="mini" class="fr" @click="setCustomData()" style="background: #FADB14;border: solid 1px #FADB14;"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
-      <el-button type="success" size="mini" class="fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
-      <el-button type="primary" size="mini" class="fr" @click="lowApplication" style="background: #E5A903;border: solid 1px #E5A903;"><i class="icon iconfont">&#xe617;</i> 低保户申请</el-button>
-      <el-button type="primary" size="mini" class="fr" @click="makeCard" style="background: #75C200;border: solid 1px #75C200;"><i class="icon iconfont" >&#xe61a;</i> 制卡</el-button>
+      <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+      <el-button size="mini" class="fr cl-operation-btn" round @click="setCustomData()" ><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+      <el-button size="mini" class="fr cl-operation-btn" round @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
+      <el-button size="mini" class="fr cl-operation-btn" round @click="lowApplication" ><i class="icon iconfont">&#xe617;</i> 低保户申请</el-button>
+      <el-button size="mini" class="fr cl-operation-btn" round @click="makeCard" ><i class="icon iconfont" >&#xe61a;</i> 制卡</el-button>
     </div>
     <!--表格自定义组建 s-->
     <customTable ref="tableChild" />

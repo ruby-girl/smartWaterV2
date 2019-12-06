@@ -5,34 +5,9 @@
       <div class="user_tree">
         <h2>区域</h2>
         <div id="operate_area">
-          <el-button
-            type="primary"
-            size="small"
-            @click="getCheckedNodes(1)"
-            :disabled="disAdd?false:true"
-            class="btn_one"
-          >
-            <i class="icon iconfont">&#xe689;</i> 添加
-          </el-button>
-          <el-button
-            size="small"
-            :disabled="disEdit?false:true"
-            @click="getCheckedNodes(2)"
-            class="btn_two"
-            plain
-            :class="!disEdit?'info':''"
-          >
-            <i class="icon iconfont">&#xe618;</i> 编辑
-          </el-button>
-          <el-button
-            size="small"
-            :disabled="disDel?false:true"
-            @click="getCheckedNodes(3)"
-            class="btn_three"
-            :class="!disDel?'info':''"
-          >
-            <i class="icon iconfont">&#xe68a;</i> 删除
-          </el-button>
+          <el-button type="primary" size="mini" @click="getCheckedNodes(1)" round><i class="icon iconfont">&#xe689;</i>添加</el-button>
+          <el-button round size="mini" class="cl-reset" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe618;</i>编辑</el-button>
+          <el-button round size="mini" class="cl-danger" @click="getCheckedNodes(3)"><i class="icon iconfont">&#xe68a;</i>删除</el-button>
         </div>
         <myTree ref="myChild" :treeData="oldTreeData" @changeSecode="changeSecode"></myTree>
         <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp">

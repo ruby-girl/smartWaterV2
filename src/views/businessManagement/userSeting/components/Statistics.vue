@@ -35,8 +35,8 @@
 </script>
 <style lang="scss">
   .statistics {
-    width: 100%;
-    border-top: solid 1px #e6ebf5;border-left: solid 1px #e6ebf5;border-right: solid 1px #e6ebf5;margin-bottom: 0;padding:10px 0 5px 0;
+    width: 100%;text-align: center;
+    border-top: solid 1px #e6ebf5;border-left: solid 1px #e6ebf5;border-right: solid 1px #e6ebf5;margin-bottom: 0;padding:5px 0 0 0;
     .total {
       color: #33B300;
 
@@ -48,19 +48,19 @@
         color: #33B300;
       }
     }
-
+    li:last-child{margin: 0;}
     li {
       list-style-type: none;
-      float: left;
-      width: 20%;
       text-align: center;
       font-size: 14px;
       color: #46494C;
       line-height: 35px;
       margin-bottom: 7px;
+      margin-right: 50px;
+      display: inline-block;
 
       span {
-        font: bold 16px 'Microsoft YaHei';
+        font: bold 14px 'Microsoft YaHei';
         color: #FF2907;
         display: block
       }
@@ -68,9 +68,9 @@
       label {
         border: solid 1px #D8E2E7;
         width: 90px;
-        height: 32px;
+        height: 24px;
         text-align: center;
-        line-height: 32px;
+        line-height: 24px;
         display: inline-block;
         margin-top: 5px;
         cursor: pointer

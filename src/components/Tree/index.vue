@@ -1,15 +1,9 @@
 <template>
   <div class="cl-treeBox">
-    <el-input placeholder="请输入内容" v-model="searchText" size="small" style="margin: 18px 0">
-      <el-button
-        slot="append"
-        size="small"
-        class="search_btn"
-        @click="getNodeByName"
-        style="background: #00B3A1;color: #fff;padding: 5px 3px 7px 3px;"
-      >
-        <i class="icon iconfont">&#xe694;</i>搜索
-      </el-button>
+    <el-input placeholder="请输入内容" v-model="searchText" size="mini" style="margin: 18px 0">
+      <template slot="append">
+        <span @click="getNodeByName"><i class="icon iconfont">&#xe694;</i>搜索</span>
+      </template>
     </el-input>
     <p>公司名称</p>
     <div class="custom-tree-container">
@@ -185,15 +179,8 @@ export default {
   .matchStyle {
     color: #00b3a1;
   }
-  .search_btn {
-    background: #00b3a1;
-    color: #fefeff;
-    padding-left: 6px;
-    padding-right: 6px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-
+  .el-input-group__append{padding: 0;background: #00b3a1;
+    color: #fefeff;padding: 5px 6px 5px 6px;cursor: pointer}
   > p {
     font: bold 16px/38px "Microsoft YaHei";
     color: #777c82;
