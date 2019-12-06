@@ -43,6 +43,7 @@
       label {
         border: solid 1px #33B300;
       }
+
       span {
         color: #33B300;
       }
@@ -76,7 +77,7 @@
       }
     }
 
-    @media only screen and (max-width: 1440px) {
+    @media only screen and (min-width: 1024px) {
         li { margin-right: 50px }
       }
   }

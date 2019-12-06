@@ -31,7 +31,12 @@
             <i class="icon iconfont">&#xe683;</i> 导出Excel
           </el-button>
         </div>-->
-        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excel="excelWaterAccountOrder"/>
+        <search-tips
+          :tipsData="tipsData"
+          ref="searchTips"
+          @delTips="delTips"
+          @excel="excelWaterAccountOrder"
+        />
         <!-- <customTable ref="myChild" /> -->
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -96,7 +101,7 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
-import { delTips,getText,pushItem } from "@/utils/projectLogic";//搜索条件面包屑
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "userAccount",
   components: { AccountUser, SelecteHead, customTable, Pagination, SearchTips },
@@ -116,6 +121,7 @@ export default {
         createUserId: "-1", // 操作人
         createStartTime: "", // 操作时间起
         createEndTime: "", // 操作时间止
+        timevalue: [],
         tableId: "0000026"
       },
       checksData: [],
@@ -126,8 +132,8 @@ export default {
       customHeight: "", //自定义高度
       ifShow: false,
       editUserList: [], //操作员、经办人
-      tipsData: [],//传入子组件的值
-      tipsDataCopy: []//表单变化的值
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [] //表单变化的值
     };
   },
   created() {
@@ -171,14 +177,19 @@ export default {
   },
   methods: {
     delTips(val) {
+      if (val == "timevalue") {
+        //当返回的model 为时间数组  置空 时间
+        this.listQuery.StartUpgradeDate = "";
+        this.listQuery.EndUpgradeDate = "";
+      }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
       this.seachAccountOrder();
     },
-    getText(val, model, arr) {
-      let obj=getText(val, model, arr,this.tipsDataCopy,this)
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
-   
+
     //左侧显示隐藏
     closeAccount() {
       this.ifShow = !this.ifShow;
@@ -191,9 +202,9 @@ export default {
       }
     },
     //查询记录
-    seachAccountOrder() {     
+    seachAccountOrder() {
       waterAccountPost(this.listQuery).then(res => {
-        pushItem(this)
+        pushItem(this);
         if (res.code == 0) {
           this.tableData = res.data;
           this.total = res.count;

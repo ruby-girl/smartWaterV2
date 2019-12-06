@@ -15,7 +15,6 @@ export function ICReadCardInfo(callback) {
       GetICReadCardInfo({ jsonData: rJSON.Data }).then(resInfo => {
         callback(resInfo, resData)
       }).catch(() => {
-        console.info('123')
         callback(resData)
       }
       );
@@ -61,8 +60,15 @@ export function getOrgTree(callback, id) {
     return callback(orgTree)
   });
 }
+/*
+*val 搜索数据值
+*model 对应绑定的属性
+* arr   下拉框循环的数组（输入框传“”）
+* name  对应的搜索lable
+*/
 //删除--筛选条件面包屑
 export function delTips(val, that, tipsDataCopy, obj) { //{val,this,arr1}=>{绑定的model,父组件this,变化时的数组,搜索传入的对象}
+  //学初始化值属性存在
   let initData = that.$options.data();//获取data初始化数据
   that[obj][val] = initData[obj][val];//将初始化数据赋值给这个值
   for (let i = 0; i < tipsDataCopy.length; i++) {
@@ -72,16 +78,23 @@ export function delTips(val, that, tipsDataCopy, obj) { //{val,this,arr1}=>{绑�
   }
   return tipsDataCopy
 }
+/*
+*val 搜索数据值
+*model 对应绑定的属性
+* arr   下拉框循环的数组（输入框传“”）
+* tipsDataCopy 对应的数组
+* that 组件this对象
+* name  对应的搜索lable
+*/
 //获取-筛选条件面包屑
-export function getText(val, model, arr, tipsDataCopy, that,name) {//{val, model, arr,arr1,this}=>{变化后的值，绑定的model,循环下拉框options数组（不传为输入框）,变化时的数组，父组件this,搜索名}
+export function getText(val, model, arr, tipsDataCopy, that, name) {
   let obj = {};
   for (let i = 0; i < tipsDataCopy.length; i++) {
     if (tipsDataCopy[i].model == model) {//判断是否有相同的收缩条件
       tipsDataCopy.splice(i, 1);
     }
   }
-  obj = that.$refs.searchTips.getArrData(val, model, arr,name);//调用面包屑组件里面的方法
-  console.log(obj)
+  obj = that.$refs.searchTips.getArrData(val, model, arr, name);//调用面包屑组件里面的方法
   return obj
 }
 // 筛选条件面包屑

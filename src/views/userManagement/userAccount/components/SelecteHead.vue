@@ -7,12 +7,12 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item v-if="companyShow" label="水厂：">
+    <el-form-item v-if="companyShow" label="水厂">
       <el-select
         v-model="selectHead.waterFactoryId "
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.waterFactoryId,'waterFactoryId',companyParentOptions)"
+        @change="getText(selectHead.waterFactoryId,'waterFactoryId',companyParentOptions,'水厂')"
         吗
       >
         <el-option label="全部" value="-1" />
@@ -24,12 +24,12 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="用户类型：">
+    <el-form-item label="用户类型">
       <el-select
         v-model="selectHead.userType"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.userType,'userType',userTypeList)"
+        @change="getText(selectHead.userType,'userType',userTypeList,'用户类型')"
       >
         <el-option label="全部" :value="-1" />
         <el-option
@@ -40,12 +40,12 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="水表类型：">
+    <el-form-item label="水表类型">
       <el-select
         v-model="selectHead.waterMeterType"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList)"
+        @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList,'水表类型')"
       >
         <el-option label="全部" :value="-1" />
         <el-option
@@ -62,6 +62,7 @@
         placeholder="请选择"
         style="width: 100px;float: left;margin-right:4px;"
         class="short-select"
+        @change="getscName(selectHead.CustomerQueryType)"
       >
         <el-option label="用户姓名" value="2"></el-option>
         <el-option label="用户编号" value="1"></el-option>
@@ -74,24 +75,24 @@
         maxlength="20"
         placeholder="(长度1-30)"
         @keyup.enter.native="handleFilter"
-        @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue')"
+        @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue','',secNmae)"
         style="width: 180px;float: left"
       />
     </el-form-item>
-    <el-form-item label="销户操作员：" label-width="80">
+    <el-form-item label="销户操作员" label-width="80">
       <el-select
         v-model="selectHead.createUserId"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.createUserId,'createUserId',editUserList)"
+        @change="getText(selectHead.createUserId,'createUserId',editUserList,'销户操作员')"
       >
         <el-option label="全部" value="-1" />
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="销户日期：">
+    <el-form-item label="销户日期">
       <el-date-picker
-        v-model="timevalue"
+        v-model="selectHead.timevalue"
         type="datetimerange"
         :editable="false"
         :unlink-panels="true"
@@ -114,6 +115,7 @@
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
+import { getName } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   props: {
     selectHead: {
@@ -131,11 +133,11 @@ export default {
   },
   data() {
     return {
-      timevalue: [],
       companyParentOptions: [], //水厂
       companyShow: true,
       userTypeList: [],
-      WaterMeterList: []
+      WaterMeterList: [],
+      secNmae: ""
     };
   },
   created() {
@@ -148,16 +150,27 @@ export default {
     this.WaterMeterList = getDictionaryOption("水表类型");
   },
   methods: {
-    getText(val, model, arr) {
-      this.$emit("getText", val, model, arr);
+    getscName(id) {
+      this.secNmae = getName(id);
+    },
+    getText(val, model, arr,name) {
+      this.$emit("getText", val, model, arr, name);
     },
     getTime(v) {
+      let date;
       if (v) {
-        this.selectHead.createStartTime = v[0];
-        this.selectHead.createEndTime = v[1];
+        this.selectHead.StartUpgradeDate = v[0];
+        this.selectHead.EndUpgradeDate = v[1];
+        date =
+          this.selectHead.StartUpgradeDate +
+          "~" +
+          this.selectHead.EndUpgradeDate;
+        this.$emit("getText", date, "timevalue", "", "销户日期");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
+        this.selectHead.StartUpgradeDate = "";
+        this.selectHead.EndUpgradeDate = "";
+        date = "";
+        this.$emit("getText", date, "timevalue", "", "销户日期");
       }
     },
     handleFilter() {

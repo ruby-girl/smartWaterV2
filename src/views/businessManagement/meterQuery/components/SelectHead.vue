@@ -230,7 +230,7 @@
           InputTimeStart: "", //录入时间
           InputTimeEnd: "",
           limit: 10,
-          page: 1,
+          page: 0,
           sort: "",
           filed: "",
           tableId: "0000015"
@@ -251,7 +251,7 @@
           InputTimeStart: "", //录入时间
           InputTimeEnd: "",
           limit: 10,
-          page: 1,
+          page: 0,
           sort: "",
           filed: "",
           tableId: "0000015"

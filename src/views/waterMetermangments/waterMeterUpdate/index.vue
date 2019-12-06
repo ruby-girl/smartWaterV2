@@ -3,7 +3,7 @@
   <div class="section-container">
     <el-container>
       <el-aside width="0">
-        <upadate class="account-user" />
+        <upadate-water class="account-user" />
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
           水表升级
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
@@ -82,9 +82,9 @@
   </div>
 </template>
 <script>
-import Upadate from "./components/Upadate";
+import UpadateWater from "./components/UpadateWater";
 import SelecteHead from "./components/SelecteHead";
-import customTable from "@/components/CustomTable/index";
+// import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import {
@@ -96,7 +96,7 @@ import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "waterMeterUpdate",
-  components: { Upadate, SelecteHead, customTable, Pagination, SearchTips },
+  components: { UpadateWater, SelecteHead, Pagination, SearchTips },
   data() {
     return {
       listQuery: {
@@ -170,12 +170,9 @@ export default {
     }
   },
   methods: {
-    getOneId(val) {
-      // this.$refs.oneDay.getCheckedNodes()
-      console.log(this.$refs.oneDay.getCheckedNodes());
-    },
-    delTips(val) {
-      if (val == "timevalue") {
+    //删除面包屑
+    delTips(val) {//返回的查询条件的属性
+      if (val == "timevalue") {//当返回的model 为时间数组  置空 时间
         this.listQuery.StartUpgradeDate = "";
         this.listQuery.EndUpgradeDate = "";
       }
