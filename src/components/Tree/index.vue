@@ -5,7 +5,6 @@
         <span @click="getNodeByName"><i class="icon iconfont">&#xe694;</i>搜索</span>
       </template>
     </el-input>
-    <p>公司名称</p>
     <div class="custom-tree-container">
       <el-tree
         :data="treeData"

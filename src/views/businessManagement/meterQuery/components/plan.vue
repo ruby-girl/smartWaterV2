@@ -63,6 +63,7 @@
   import { delTips,getText,pushItem } from "@/utils/projectLogic";//搜索条件面包屑
   import { MeterReadPlanExport, ReadingQueryPageQuery, QueryMeterReaderByFactoryId } from "@/api/meterQuery";
   import { promptInfoFun } from "@/utils/index";
+  import { getReadDelete} from "@/api/meterReading"
 
   export default {
     components: { Pagination,SelectHead,SearchTips,EditDialog},
@@ -92,7 +93,7 @@
           InputTimeStart: "", //录入时间
           InputTimeEnd: "",
           limit: 10,
-          page: 0,
+          page: 1,
           sort: "",
           filed: "",
           tableId: "0000015"
@@ -129,8 +130,23 @@
           window.location.href = `${this.common.excelPath}${res.data}`;
         });
       },
-      handleDelete() {//删除
-
+      handleDelete(row) {//删除
+        this.$confirm("是否删除当前信息", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          iconClass: "el-icon-question questionIcon",
+          customClass: "warningBox",
+          showClose: false
+        }).then(() => {
+          getReadDelete({MeterRecordId: row.SA_MeterRecord_Id}).then(res => {
+            if (res.code == 0) {
+              promptInfoFun(this, 2, res.message)
+              this.searchFun()
+            } else {
+              promptInfoFun(this, 1, res.message)
+            }
+          })
+        })
       },
       handleDetail(row) {//水量详情
         this.$refs.editDialog.dialogVisible = true
