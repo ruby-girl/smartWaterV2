@@ -5,29 +5,28 @@
     :title="title"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
-    width="800px">
+    width="700px">
     <el-form :inline="true" ref="ruleForm" :model="rb" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="表册名称" prop="BookName">
         <el-input
           v-model.trim="rb.BookName"
           placeholder="(长度1-20内)"
           maxlength="20"
-          size="small"
-          style="width: 250px"/>
+          size="small"/>
       </el-form-item>
       <!--根据操作人员权限判断是否可以选择水厂-->
       <el-form-item label="水厂" prop="SA_WaterFactory_Id">
-        <el-select :disabled="title=='编辑'" style="width: 250px" v-model="rb.SA_WaterFactory_Id" @change="getMeterRead">
+        <el-select :disabled="title=='编辑'" v-model="rb.SA_WaterFactory_Id" @change="getMeterRead">
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="抄表员" prop="MeterReaderId">
-        <el-select style="width: 250px" v-model="rb.MeterReaderId">
+        <el-select v-model="rb.MeterReaderId">
           <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="表册类型" prop="BookTypeKey">
-        <el-select :disabled="title=='编辑'" style="width: 250px" v-model="rb.BookTypeKey">
+        <el-select :disabled="title=='编辑'" v-model="rb.BookTypeKey">
           <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>

@@ -43,8 +43,8 @@
       }
       let num  = document.getElementsByClassName("clMeterBox")[0].offsetHeight -
         document.getElementById("table").offsetTop - 90;
-      _this.$refs.planChild1.tableHeight =num
-      _this.$refs.planChild2.tableHeight =num
+      _this.$refs.planChild1.tableHeight = num
+      _this.$refs.planChild2.tableHeight = num
     }
   };
 </script>

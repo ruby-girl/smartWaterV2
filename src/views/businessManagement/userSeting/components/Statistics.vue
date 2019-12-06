@@ -56,7 +56,7 @@
       color: #46494C;
       line-height: 35px;
       margin-bottom: 7px;
-      margin-right: 50px;
+      margin-right: 100px;
       display: inline-block;
 
       span {
@@ -76,5 +76,9 @@
         cursor: pointer
       }
     }
+
+    @media only screen and (min-width: 1024px) {
+        li { margin-right: 50px }
+      }
   }
 </style>
