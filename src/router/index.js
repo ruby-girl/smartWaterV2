@@ -181,6 +181,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'cashChargeTest',
+        component: () => import('@/views/businessManagement/cashChargeTest/index'),
+        name: 'cashChargeTest',
+        meta: {
+          title: '现金收费new',
+          roles: ['1']
+        }
+      },
+      {
         path: 'paymentQuery',
         component: () => import('@/views/businessManagement/paymentQuery/index'),
         name: 'paymentQuery',

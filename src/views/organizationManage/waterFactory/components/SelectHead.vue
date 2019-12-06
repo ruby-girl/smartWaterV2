@@ -5,9 +5,10 @@
     class="head-search-form form-inline-small-input"
     size="small"
     label-width="80px"
-    @submit.native.prevent>
+    @submit.native.prevent
+  >
     <el-form-item label="水厂 " label-width="60px">
-        <el-input
+      <el-input
         maxlength="20"
         v-model="selectHead.WaterWorksName"
         placeholder="水厂（长度1-20）"
@@ -15,14 +16,13 @@
       />
     </el-form-item>
     <el-form-item label="操作人 ">
-      <el-select v-model="selectHead.editUserId" placeholder="请选择" @keydown.enter.native="handleFilter">
+      <el-select
+        v-model="selectHead.editUserId"
+        placeholder="请选择"
+        @keydown.enter.native="handleFilter"
+      >
         <el-option label="全部" value="-1" />
-        <el-option
-          v-for="item in editUserList"
-          :key="item.Id"
-          :label="item.Name"
-          :value="item.Id"
-        />
+        <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="操作时间 ">
@@ -34,45 +34,54 @@
         range-separator="~"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :default-time="['00:00:00', '23:59:59']"
         format="yyyy-MM-dd"
-        value-format="yyyy-MM-dd HH:mm:ss"
+        value-format="yyyy-MM-dd"
         @change="getTime"
         @keydown.enter.native="handleFilter"
       ></el-date-picker>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" size="mini"  @click="handleFilter"><i class="iconfont iconsousuo"></i>搜索</el-button>
+      <el-button type="primary" size="mini" @click="handleFilter">
+        <i class="iconfont iconsousuo"></i>搜索
+      </el-button>
     </el-form-item>
   </el-form>
 </template>
 <script>
-import {getSelectUser} from "@/api/account"//获取操作人下拉框
+import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 export default {
   props: {
-    selectHead: {
+    selectHeadObj: {
       type: Object,
       default: function() {
         return {};
       }
     }
   },
+  watch: {
+    selectHeadObj: {
+    handler(val, oldVal) {
+      this.selectHead = Object.assign({}, val);
+    },
+    immediate: true
+  }
+  },
   data() {
     return {
       timevalue: [],
-      editUserList: [],
+      editUserList: []
     };
   },
   created() {
-    getSelectUser().then((res)=>{
-      this.editUserList=res.data
-    })
+    getSelectUser().then(res => {
+      this.editUserList = res.data;
+    });
   },
   methods: {
     getTime(v) {
       if (v) {
-        this.selectHead.editStartTime = v[0];
-        this.selectHead.editEndTime = v[1];
+        this.selectHead.editStartTime = v[0] +'00:00:00';
+        this.selectHead.editEndTime = v[1]+'23:59:59';
       } else {
         this.selectHead.editStartTime = "";
         this.selectHead.editEndTime = "";
