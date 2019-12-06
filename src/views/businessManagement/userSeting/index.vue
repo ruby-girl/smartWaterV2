@@ -6,11 +6,11 @@
         <h2>{{ waterFactoryName.Name }}</h2>
         <p class="switch_water" @click="changeWaterFactory"><i class="icon iconfont iconqiehuan"></i>切换水厂</p>
         <div id="operate_area">
-          <el-button type="primary" size="mini" @click="getCheckedNodes(1)" round><i class="icon iconfont">&#xe689;</i>添加</el-button>
-          <el-button round size="mini" class="cl-reset" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe618;</i>编辑</el-button>
-          <el-button round size="mini" class="cl-danger" @click="getCheckedNodes(3)"><i class="icon iconfont">&#xe68a;</i>删除</el-button>
+          <el-button :disabled="disAdd" type="primary" size="mini" @click="getCheckedNodes(1)" round><i class="icon iconfont">&#xe689;</i>添加</el-button>
+          <el-button :disabled="disEdit" round size="mini" class="cl-reset" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe618;</i>编辑</el-button>
+          <el-button :disabled="disDel" round size="mini" class="cl-danger" @click="getCheckedNodes(3)"><i class="icon iconfont">&#xe68a;</i>删除</el-button>
         </div>
-        <myTree ref="myChild" :treeData="oldTreeData" @changeSecode="changeSecode"></myTree>
+        <myTree ref="myChild" :treeData="oldTreeData"></myTree>
         <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp">
           收起
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
@@ -18,7 +18,7 @@
       </div>
       <!--右侧列表数据-->
       <div class="user_table">
-        <SelectHead></SelectHead>
+        <SelectHead @getText="getText"></SelectHead>
         <tableQuery ref="tableChild"></tableQuery>
         <span v-show="ifShow" class="telescopic telescopic1" @click="getUp">
           展开
@@ -48,28 +48,43 @@ import {
   GetCustomerDataList_ToExcel
 } from "@/api/userSetting"; //区域接口
 import Bus from "@/utils/bus";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
 export default {
   name: "userSeting",
   components: { myTree, SelectHead, tableQuery, Dialog,SwitchFactory },
   data() {
     return {
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
       waterFactoryName:{},
       ifShow: false,
       query: {
         //右侧用户列表查询条件
+        CustomerQueryType: "1",
+        CustomerQueryValue: "",
+        UserType: "-1",
+        UserState: "-1",
+        AreaId: "-1",
+        WaterTypeId: -1,
         limit: 10,
         page: 1,
+        sort: "",
+        filed: "",
+        createUserId: "",
+        createStartTime: "",
+        createEndTime: "",
+        editUserId: "",
+        editStartTime: "",
+        editEndTime: "",
         tableId: "0000016"
       },
       oldTreeData: [],
       disAdd: false,
       disEdit: false,
       disDel: false,
-      //selectNode:this.$refs.myChild.selectNode
     };
   },
-  watch: {},
   methods: {
     /**
      * 伸缩功能
@@ -89,21 +104,19 @@ export default {
       }
     },
     //获取选中的树节点
-    changeSecode(data) {
-      this.disAdd = true;
-      this.disEdit = true;
-      this.disDel = true;
-      let selectNode = this.$refs.myChild.selectNode;
-      if (
-        selectNode.Id === undefined ||
-        selectNode.Id == 0 ||
-        selectNode.Level <= 1
-      ) {
-        this.disEdit = false;
-        this.disDel = false;
-      }
-      if (data.Level == 6) {
-        this.disAdd = false;
+    changeSecode(Level) {
+      if(Level==1){
+        this.disEdit = true
+        this.disDel = true
+        this.disAdd = false
+      }else if(Level==6){
+        this.disAdd = true
+        this.disEdit = false
+        this.disDel = false
+      }else {
+        this.disAdd = false
+        this.disEdit = false
+        this.disDel = false
       }
     },
     /**
@@ -236,6 +249,27 @@ export default {
     changeWaterFactory(){
       this.$refs.switchChild.dialogVisible = true;
       this.$refs.switchChild.formData.waterFactoryId = this.waterFactoryName.Id
+    },
+    /**
+     *val 对应绑定的参数
+     *this this对象
+     * this.tipsDataCopy   存储面包屑数据的数组
+     * param  对应搜索条件的对象名
+     */
+    delTips(val) {
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query"); //返回删除后的数据传给组件
+      this.searchTableFun()
+    },
+    /**
+     *val 搜索数据值
+     *model 对应绑定的属性
+     * arr   下拉框循环的数组（输入框传“”）
+     * name  对应的搜索lable
+     */
+    //处理搜索条件,面包屑
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
+      this.tipsDataCopy.push(obj);
     }
   },
   created() {

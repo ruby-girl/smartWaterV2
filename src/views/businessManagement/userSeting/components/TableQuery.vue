@@ -8,8 +8,8 @@
       <el-button size="mini" class="fr cl-operation-btn" round @click="makeCard" ><i class="icon iconfont" >&#xe61a;</i> 制卡</el-button>
     </div>
     <!--表格自定义组建 s-->
-    <customTable ref="tableChild" />
     <Statistics :StatisticsData="StatisticsData"></Statistics>
+    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" />
     <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
       <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
         <template slot-scope="scope">
@@ -61,8 +61,8 @@
 </template>
 
 <script>
+  import SearchTips from "@/components/SearchTips/index";
   import Pagination from '@/components/Pagination/index'//分页组建
-  import customTable from '@/components/CustomTable/index'//自定义表格组建
   import { promptInfoFun } from "@/utils/index"
   import Statistics from './Statistics'
   import AddDialog from './AddDialog'
@@ -71,7 +71,7 @@
 
   export default {
     name: "TableQuery",
-    components: {Pagination, customTable, Statistics, AddDialog, EditDialog, DetailDialog},
+    components: {Pagination, Statistics, AddDialog, EditDialog, DetailDialog, SearchTips},
     data(){
       return {
         tableData:[],//列表数据
@@ -81,7 +81,8 @@
         checksData:[],
         query:{
           page:1,
-          limit:10
+          limit:10,
+          tableId: "0000016"
         },
         customHeight:'',
       }
@@ -157,17 +158,12 @@
 
       },
       lowApplication(){},
-      /*******************表格自定义***********************/
-      setCustomData() {
-        this.$refs.tableChild.isCustom = !this.$refs.tableChild.isCustom//给子组件变量赋值
-        this.customHeight = this.$refs.tableChild.isCustom
-      },
     },
     mounted() {
       let _this = this
       this.query = this.$parent.query
-      this.$refs.tableChild.GetTable(this.query.tableId);//调用子组件方法获取表头信息
-      this.checksData = this.$refs.tableChild.checkData//获取自定义字段中选中了字段
+      this.$refs.searchTips.$refs.myChild.GetTable(this.query.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       _this.$nextTick(() => {
         _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
         window.onresize = function () {

@@ -77,7 +77,7 @@
       }
     }
 
-    @media only screen and (min-width: 1024px) {
+    @media only screen and (max-width: 1680px) {
         li { margin-right: 50px }
       }
   }

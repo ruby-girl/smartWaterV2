@@ -10,23 +10,19 @@
       @submit.native.prevent>
       <el-form-item prop="CustomerQueryValue">
         <el-select v-model="query.CustomerQueryType" placeholder="请选择" class="short-select-item" style="width: 100px;float: left;">
-          <el-option label="编号" value="1"></el-option>
-          <el-option label="姓名/简码" value="2"></el-option>
-          <el-option label="电话" value="3"></el-option>
-          <el-option label="证件号" value="4"></el-option>
-          <el-option label="地址" value="5"></el-option>
+          <el-option v-for="(item,index) in dataTypes" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
-        <el-input v-model="query.CustomerQueryValue" maxlength="50" placeholder="(长度1-50)" style="width: 180px;float: left"/>
+        <el-input v-model="query.CustomerQueryValue" maxlength="50" placeholder="(长度1-50)" style="width: 180px;float: left" @change="getText(query.CustomerQueryValue,'CustomerQueryValue','',query.CustomerQueryType)"/>
       </el-form-item>
       <el-form-item label="用户类型" prop="UserType">
-        <el-select v-model="query.UserType" placeholder="请选择" size="small">
+        <el-select v-model="query.UserType" placeholder="请选择" size="small" @change="getText(query.UserType,'UserType','userType','用户类型')">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <transition name="fade">
         <el-form-item label="用户状态" prop="UserState" v-show="screenWdth<1600?ifMore:true">
-          <el-select v-model="query.UserState" placeholder="请选择" size="small">
+          <el-select v-model="query.UserState" placeholder="请选择" size="small" @change="getText(query.UserState,'userStaus','userType','用户状态')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in userStaus" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
@@ -50,6 +46,13 @@
     name: "SelectHead",
     data() {
       return {
+        dataTypes:[
+          {Name:'编号',Id:'1'},
+          {Name:'姓名/简码',Id:'2'},
+          {Name:'电话',Id:'3'},
+          {Name:'证件号',Id:'4'},
+          {Name:'地址',Id:'5'},
+        ],
         ifMore:false,
         userType:[],//用户类型
         userStaus:[],//用户状态
@@ -93,7 +96,10 @@
       resetFun(formName){
         this.query.CustomerQueryType = '1'
         this.$refs[formName].resetFields();
-      }
+      },
+      getText(val, model, arr, name) {
+        this.$emit("getText", val, model, arr, name);
+      },
     },
     mounted() {
       this.screenWdth = window.screen.width

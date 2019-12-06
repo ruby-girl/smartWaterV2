@@ -74,7 +74,6 @@ export default {
   name: "plan",
   data() {
     return {
-      tipsData: [],
       tableData: [],
       tableHeight: null, //表格高度
       total: 0,
@@ -171,7 +170,7 @@ export default {
         this.searchFun();
       }
     },
-    /*
+    /**
      *val 对应绑定的参数
      *this this对象
      * this.tipsDataCopy   存储面包屑数据的数组
@@ -190,7 +189,7 @@ export default {
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
       this.searchFun()
     },
-    /*
+    /**
      *val 搜索数据值
      *model 对应绑定的属性
      * arr   下拉框循环的数组（输入框传“”）

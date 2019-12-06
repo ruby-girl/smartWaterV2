@@ -54,7 +54,7 @@ export default {
     setCurNode(data) {
       this.selectNode = data;
       data.Id === "0" ? (this.areaId = -1) : (this.areaId = data.Id);
-      this.$emit("changeSecode",data)
+      this.$parent.changeSecode(data.Level)
     },
     getNodeByName() {
       this.searchText.trim() == ""
