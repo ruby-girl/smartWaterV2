@@ -26,7 +26,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="计划抄表日期：">
+      <el-form-item label="计划抄表日期：" class="planDate" label-width="110px;">
         <el-date-picker
           v-model="addPlanData.StartPlanDate"
           type="date"
@@ -95,9 +95,10 @@ export default {
         });
         return false;
       }
-      this.addPlanData.EndPlanDate = this.addPlanData.EndPlanDate + " 23:59:59";
+      const dateTime = this.addPlanData.EndPlanDate.split(" ")[0];
+      this.addPlanData.EndPlanDate = dateTime + " 23:59:59";
       // this.addPlanData.StartPlanDate =this.addPlanData.StartPlanDate + " 00:00:00";
-        
+
       addMeterReadingPlan(this.addPlanData).then(res => {
         if (res.code == 0) {
           this.AdialogFormVisible = false;
@@ -129,11 +130,11 @@ export default {
       }).then(res => {
         if (res.code == 0) {
           that.addPlanData.StartPlanDate = res.data;
-          const ETime=res.data.split(" ")[0]
-           that.addPlanData.EndPlanDate=ETime
+          const ETime = res.data.split(" ")[0];
+          that.addPlanData.EndPlanDate = ETime;
           that.endDateLimit = {
             disabledDate(time) {
-              return time.getTime()<new Date(res.data)
+              return time.getTime() < new Date(res.data);
             }
           };
         }
@@ -160,6 +161,12 @@ export default {
 <style lang="scss" scoped>
 .el-form-item {
   margin-top: 30px;
+  
+}
+.planDate{
+  /deep/.el-input__inner{
+    width: 100%!important;
+  }
 }
 </style>
 

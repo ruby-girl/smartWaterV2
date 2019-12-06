@@ -84,7 +84,7 @@
               placeholder="请选择"
               class="left-input"
             >
-              <el-option v-for="item in waterStyleList" :label="item.name" :value="item.Id" />
+              <el-option v-for="(item,index) in waterStyleList" :label="item.name" :value="item.Id" :key="index"/>
             </el-select>
           </el-form-item>
           <el-form-item label="水表口径">
@@ -93,7 +93,7 @@
               placeholder="请选择"
               class="left-input"
             >
-              <el-option v-for="item in waerMeterDirSize" :label="item.name" :value="item.Id" />
+              <el-option v-for="item in waerMeterDirSize" :label="item.name" :value="item.Id" :key="index" />
             </el-select>
           </el-form-item>
           <el-form-item label="表端余额">
@@ -128,7 +128,7 @@
               placeholder="请选择"
               class="left-input"
             >
-              <el-option v-for="item in waerMeterDirSize" :label="item.name" :value="item.Id" />
+              <el-option v-for="item in waerMeterDirSize" :label="item.name" :value="item.Id" :key="index" />
             </el-select>
           </el-form-item>
           <el-form-item label="账户余额">
@@ -197,7 +197,7 @@ import {
 import WaterNumDetail from "./WaterNumDetail";
 import "@/styles/userAccount.scss";
 export default {
-  name: "Upadate",
+  name: "UpadateWater",
   components: { SelectUser, WaterNumDetail },
 
   data() {

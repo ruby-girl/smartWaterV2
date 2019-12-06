@@ -78,7 +78,6 @@ export default {
       this.$emit("excel");
     },
     getArrData(val, model, arr, name) {
-      console.log(name);
       let obj = {};
       let obj1 = {};
       obj1.model = model;
