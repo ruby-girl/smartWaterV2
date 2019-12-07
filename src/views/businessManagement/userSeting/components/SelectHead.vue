@@ -52,7 +52,7 @@
           {Name:'姓名/简码',Id:'2'},
           {Name:'电话',Id:'3'},
           {Name:'证件号',Id:'4'},
-          {Name:'地址',Id:'5'},
+          {Name:'用户地址',Id:'5'},
         ],
         ifMore:false,
         userType:[],//用户类型
