@@ -19,7 +19,7 @@
       <!--右侧列表数据-->
       <div class="user_table">
         <SelectHead @getText="getText"></SelectHead>
-        <tableQuery ref="tableChild" @handleFilterIcParent="handleFilterIc"></tableQuery>
+        <tableQuery ref="tableChild"></tableQuery>
         <span v-show="ifShow" class="telescopic telescopic1" @click="getUp">
           展开
           <i class="iconfont iconshouqi1" style="font-size: 12px;"></i>
@@ -41,7 +41,7 @@ import tableQuery from "./components/TableQuery";
 import Dialog from "./components/Dialog";
 import SwitchFactory from './components/SwitchFactory'
 import { promptInfoFun } from "@/utils/index";
-import { CreateAreaNo, DelCustomerArea, GetAreaListByWaterFactory } from "@/api/userArea"; //区域接口
+import { CreateAreaNo, DelCustomerArea, GetAreaListByWaterFactory } from "@/api/userArea";
 import {
   GetWaterTypeCustomerNum,
   GetCustomerDataList,

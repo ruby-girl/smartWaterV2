@@ -4,7 +4,7 @@
       <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
       <el-button size="mini" class="fr cl-operation-btn" round @click="lowApplication" ><i class="icon iconfont">&#xe617;</i> 低保户申请</el-button>
       <el-button size="mini" class="fr cl-operation-btn" round @click="makeCard" ><i class="icon iconfont" >&#xe61a;</i> 制卡</el-button>
-      <el-button size="mini" class="fr cl-operation-btn" round @click="patchCard" ><i class="icon iconfont" >&#xe628;</i> 补卡</el-button>
+      <el-button size="mini" class="fr cl-operation-btn" round @click="patchCard" ><i class="icon iconfont" >&#xe664;</i> 补卡</el-button>
     </div>
     <!--表格自定义组建 s-->
     <Statistics :StatisticsData="StatisticsData"></Statistics>
