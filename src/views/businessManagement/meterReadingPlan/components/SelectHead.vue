@@ -4,10 +4,10 @@
     :model="selectHead"
     class="head-search-form form-inline-small-input"
     size="small"
-    label-width="100px"
+    label-width="70px"
     @submit.native.prevent
   >
-    <el-form-item v-if="companyShow" label="水厂：">
+    <el-form-item v-if="companyShow" label="水厂">
       <el-select
         v-model="selectHead.SA_WaterFactory_Id"
         placeholder="请选择"
@@ -22,7 +22,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="计划状态：">
+    <el-form-item label="计划状态">
       <el-select
         v-model="selectHead.enumPlanState"
         placeholder="请选择"
@@ -37,7 +37,7 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="计划抄表日期：">
+    <el-form-item label="计划抄表日期" label-width="110px">
       <el-date-picker
         v-model="warterMeterPlanDate"
         type="daterange"

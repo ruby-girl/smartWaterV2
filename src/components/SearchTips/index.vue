@@ -4,18 +4,15 @@
       <div class="cont-left fl">
         <span class="textW fl">已选条件：</span>
         <div class="allSpice fl" :style="{width:widthData}">
-          <p ref="spiceAll" :style="{width:widthData1}" style="margin:0;transition: margin 0.2s;">
+          <p  ref="spiceAll" :style="{width:widthData1}" style="margin:0;transition: margin 0.2s;">
             <span v-for="item in tipsData" class="spiceTips">
               {{item.seachName+":"}}{{item.name}}
-              <i
-                class="icon iconfont"
-                @click="delTips(item.model)"
-              >&#xe68a;</i>
+              <i class="icon iconfont" @click="delTips(item.model)">&#xe68a;</i>
             </span>
           </p>
         </div>
       </div>
-      <div class="cont-right fr">
+      <div class="cont-right fr" v-if="showBtn">
         <i class="icon iconfont" @click="leftEnter">&#xe65a;</i>
         <i class="icon iconfont" @click="rightEnter">&#xe65f;</i>
       </div>
@@ -51,8 +48,12 @@ export default {
       this.tipsDataCopy = this.tipsData;
       if (length == 0) {
         this.widthData1 = null;
+        this.showBtn=false
       } else {
         this.widthData1 = length * 150;
+        if( this.widthData1<this.widthData){
+          this.showBtn=true
+        }
       }
     }
   },
@@ -63,7 +64,8 @@ export default {
       w: "200px",
       num: 0,
       thisTable: false,
-      tipsDataCopy: []
+      tipsDataCopy: [],
+      showBtn:false
     };
   },
   methods: {
@@ -143,7 +145,7 @@ export default {
   opacity: 1;
   line-height: 34px;
   .icon:hover {
-    color: #00b2a1!important;
+    color: #00b2a1 !important;
     cursor: pointer;
   }
   .table-custom {
@@ -176,9 +178,16 @@ export default {
       cursor: pointer;
     }
     .spiceTips {
-      padding: 0 5px;
+      padding: 2px 5px;
       border: 1px solid rgba(188, 188, 188, 1);
       margin-right: 5px;
+      border-radius: 2px;
+      font-size: 12px;
+      line-height: 22px;
+      .icon {
+        // line-height: 22px;
+        font-size: 12px;
+      }
     }
   }
   .tipsBtn {

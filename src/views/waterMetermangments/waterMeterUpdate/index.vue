@@ -35,7 +35,6 @@
             :height="tableHeight"
             style="width: 100%;"
             :header-cell-style="{'background-color': '#F0F2F5'}"
-            :cell-style="{'padding':'7px 0'}"
             @sort-change="sortChanges"
           >
             <el-table-column fixed="left" label="序号" width="60" align="center">
@@ -71,6 +70,7 @@
             :total="total"
             :page.sync="listQuery.page"
             :limit.sync="listQuery.limit"
+            @pagination="seachAccountOrder('pan')"
           />
         </div>
         <span v-show="!ifShow" class="telescopic telescopic1" @click="closeAccount">
@@ -126,7 +126,8 @@ export default {
       ifShow: false,
       editUserList: [], //操作员、经办人
       tipsData: [], //传入子组件的值
-      tipsDataCopy: [] //表单变化的值
+      tipsDataCopy: [], //表单变化的值
+      orderData: {}
     };
   },
   created() {
@@ -171,8 +172,10 @@ export default {
   },
   methods: {
     //删除面包屑
-    delTips(val) {//返回的查询条件的属性
-      if (val == "timevalue") {//当返回的model 为时间数组  置空 时间
+    delTips(val) {
+      //返回的查询条件的属性
+      if (val == "timevalue") {
+        //当返回的model 为时间数组  置空 时间
         this.listQuery.StartUpgradeDate = "";
         this.listQuery.EndUpgradeDate = "";
       }
@@ -200,12 +203,17 @@ export default {
       }
     },
     //查询记录
-    seachAccountOrder() {
-      this.listQuery.StartUpgradeDate += " 00:00:00";
-      this.listQuery.EndUpgradeDate += " 23:58:59";
-      pushItem(this);
-      getUpgradeRecordList(this.listQuery).then(res => {
+    seachAccountOrder(num) {
+      if (this.listQuery.timevalue != []) {
+        this.listQuery.StartUpgradeDate += " 00:00:00";
+        this.listQuery.EndUpgradeDate += " 23:58:59";
+      }
+      if (num != "pan") {
+        this.orderData = Object.assign({}, this.listQuery);
+      }
+      getUpgradeRecordList(this.orderData).then(res => {
         if (res.code == 0) {
+          this.tipsData = pushItem(this.tipsDataCopy);
           this.tableData = res.data;
           this.total = res.count;
           let timeObj = this.tableData;

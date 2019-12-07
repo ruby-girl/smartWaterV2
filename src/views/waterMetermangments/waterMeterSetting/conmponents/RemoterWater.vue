@@ -37,13 +37,13 @@
           :model="YCMeterQueryParam"
           class="head-search-form form-inline-small-input"
           size="small"
-          label-width="100px"
+          label-width="70px"
           @submit.native.prevent
         >
-          <el-form-item label="水表编号：">
+          <el-form-item label="水表编号">
             <el-input v-model="YCMeterQueryParam.CustomerQueryValue" maxlength="20" />
           </el-form-item>
-          <el-form-item label="阀门状态：">
+          <el-form-item label="阀门状态">
             <el-select v-model="YCMeterQueryParam.ValveState" placeholder="请选择">
               <el-option label="全部" value="-1"></el-option>
               <el-option
@@ -54,14 +54,14 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="开户状态：">
+          <el-form-item label="开户状态">
             <el-select v-model="YCMeterQueryParam.IsOpenAccount" placeholder="请选择">
               <el-option label="全部" value="-1"></el-option>
               <el-option label="已开户" value="0"></el-option>
               <el-option label="未开户" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="通讯状态：">
+          <el-form-item label="通讯状态">
             <el-select v-model="YCMeterQueryParam.TrafficStatus" placeholder="请选择">
               <el-option label="全部" value="-1"></el-option>
               <el-option

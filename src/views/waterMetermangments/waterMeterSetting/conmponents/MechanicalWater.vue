@@ -5,16 +5,16 @@
       :model="wachMeterData"
       class="head-search-form form-inline-small-input"
       size="small"
-      label-width="100px"
+      label-width="70px"
       @submit.native.prevent
     >
-      <el-form-item label="姓名：">
+      <el-form-item label="姓名">
         <el-input v-model="wachMeterData.CustomerName" maxlength="20" placeholder="(长度1-30)" />
       </el-form-item>
-      <el-form-item label="水表编号：">
+      <el-form-item label="水表编号">
         <el-input v-model="wachMeterData.WaterMeterNo" maxlength="20" />
       </el-form-item>
-      <el-form-item label="水表样式：">
+      <el-form-item label="水表样式">
         <el-select v-model="wachMeterData.wms" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
           <el-option
@@ -25,7 +25,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户状态：">
+      <el-form-item label="用户状态">
         <el-select v-model="wachMeterData.cs" placeholder="请选择">
           <el-option label="全部" value="-1"></el-option>
           <el-option
