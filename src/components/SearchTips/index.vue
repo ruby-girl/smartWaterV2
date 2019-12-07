@@ -148,7 +148,7 @@ export default {
     cursor: pointer;
   }
   .table-custom {
-    margin-top: 35px;
+    margin-top: 33px;
   }
   .tipsCont {
     overflow: hidden;
