@@ -191,6 +191,7 @@
             :total="total"
             :page.sync="YCMeterQueryParam.page"
             :limit.sync="YCMeterQueryParam.limit"
+            @pagination="searchYCWaterList('0')"
           />
         </div>
         <el-dialog
@@ -292,7 +293,8 @@ export default {
       orderHistory: false,
       orderid: "",
       deiKey: -1,
-      ifShow: false
+      ifShow: false,
+      orderData: {}
     };
   },
   activated: function() {
@@ -377,10 +379,13 @@ export default {
         this.histotal = res.count;
       });
     },
-    searchYCWaterList() {
+    searchYCWaterList(num) {
       //查询
       let that = this;
-      searYCMeterWater(that.YCMeterQueryParam).then(res => {
+      if (num != "0") {
+        this.orderData = Object.assign({}, this.YCMeterQueryParam);
+      }
+      searYCMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
           that.tableData = res.data;
           that.total = res.count;

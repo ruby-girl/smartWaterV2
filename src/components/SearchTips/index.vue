@@ -129,8 +129,7 @@ export default {
   mounted() {
     var w = document.getElementsByClassName("searchTips")[0].offsetWidth;
     var w1 = document.getElementsByClassName("tipsBtn")[0].offsetWidth;
-    var w2 = document.getElementsByClassName(" cont-right")[0].offsetWidth;
-    this.widthData = w - w1 - w2 - 80 + "px";
+    this.widthData = w - w1 -150+ "px";
   }
 };
 </script>
@@ -176,6 +175,10 @@ export default {
       position: absolute;
       right: 106px;
       cursor: pointer;
+      .icon{
+        font-size: 22px;
+        color:#808080;
+      }
     }
     .spiceTips {
       padding: 2px 5px;

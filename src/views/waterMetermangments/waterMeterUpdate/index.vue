@@ -70,7 +70,7 @@
             :total="total"
             :page.sync="listQuery.page"
             :limit.sync="listQuery.limit"
-            @pagination="seachAccountOrder('pan')"
+            @pagination="seachAccountOrder('0')"
           />
         </div>
         <span v-show="!ifShow" class="telescopic telescopic1" @click="closeAccount">
@@ -208,7 +208,7 @@ export default {
         this.listQuery.StartUpgradeDate += " 00:00:00";
         this.listQuery.EndUpgradeDate += " 23:58:59";
       }
-      if (num != "pan") {
+      if (num != "0") {
         this.orderData = Object.assign({}, this.listQuery);
       }
       getUpgradeRecordList(this.orderData).then(res => {

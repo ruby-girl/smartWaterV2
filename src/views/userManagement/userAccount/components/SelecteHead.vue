@@ -64,10 +64,10 @@
         class="short-select"
         @change="getscName(selectHead.CustomerQueryType)"
       >
-        <el-option label="用户姓名" value="2"></el-option>
+        <el-option label="姓名/简码" value="2"></el-option>
         <el-option label="用户编号" value="1"></el-option>
-        <el-option label="用户电话" value="3"></el-option>
-        <el-option label="用户证件号" value="4"></el-option>
+        <el-option label="电话" value="3"></el-option>
+        <el-option label="证件号" value="4"></el-option>
         <el-option label="用户地址" value="5"></el-option>
       </el-select>
       <el-input
@@ -153,7 +153,7 @@ export default {
     getscName(id) {
       this.secNmae = getName(id);
     },
-    getText(val, model, arr,name) {
+    getText(val, model, arr, name) {
       this.$emit("getText", val, model, arr, name);
     },
     getTime(v) {

@@ -108,7 +108,7 @@
         :total="total"
         :page.sync="wachMeterData.page"
         :limit.sync="wachMeterData.limit"
-        @pagination="searchWatetJX"
+        @pagination="searchWatetJX('0')"
       />
     </div>
     <el-dialog
@@ -200,7 +200,8 @@ export default {
       histotal: 0,
       editId: "", //获取行信息id
       editShow: false, //编辑
-      editInfo: {}
+      editInfo: {},
+      orderData: {}
     };
   },
   mounted() {
@@ -245,10 +246,13 @@ export default {
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.searchWatetJX();
     },
-    searchWatetJX() {
+    searchWatetJX(num) {
       //查询
       let that = this;
-      searJXMeterWater(that.wachMeterData).then(res => {
+      if (num != "0") {
+        this.orderData = Object.assign({}, this.wachMeterData);
+      }
+      searJXMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
           that.tableData = res.data;
           that.total = res.count;

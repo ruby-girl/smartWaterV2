@@ -149,6 +149,7 @@
         :total="total"
         :page.sync="WLWQueryParam.page"
         :limit.sync="WLWQueryParam.limit"
+           @pagination="searchWLWMeterInfo('0')"
       />
     </div>
     <el-dialog
@@ -224,7 +225,8 @@ export default {
       SelectionList: "",
       hisData: [],
       histotal: 0,
-      viewWaterHistory: false
+      viewWaterHistory: false,
+      orderData:{}
     };
   },
   created() {
@@ -255,9 +257,12 @@ export default {
     }
   },
   methods: {
-    searchWLWMeterInfo() {
+    searchWLWMeterInfo(num) {
       let that = this;
-      getWLWWaterInfo(that.WLWQueryParam).then(res => {
+       if (num != "0") {
+        this.orderData = Object.assign({}, this.WLWQueryParam);
+      }
+      getWLWWaterInfo(that.orderData).then(res => {
         if (res.code == 0) {
           that.tableData = res.data;
           that.total = res.count;

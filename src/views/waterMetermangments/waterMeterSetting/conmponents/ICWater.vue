@@ -107,6 +107,7 @@
         :total="total"
         :page.sync="IcwachMeterData.page"
         :limit.sync="IcwachMeterData.limit"
+         @pagination="searchFun('0')"
       />
     </div>
     <el-dialog
@@ -190,7 +191,8 @@ export default {
       total: 0,
       hisData: [],
       histotal: 0,
-      viewWaterHistory: false
+      viewWaterHistory: false,
+      orderData: {}
     };
   },
   mounted() {
@@ -200,7 +202,6 @@ export default {
       194;
     this.$refs.myChild.GetTable(this.IcwachMeterData.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-   
   },
 
   computed: {
@@ -218,13 +219,15 @@ export default {
     }
   },
   methods: {
-    searchFun() {
+    searchFun(num) {
       let that = this;
-      searICMeterWater(that.IcwachMeterData).then(res => {
+      if (num != "0") {
+        this.orderData = Object.assign({}, this.IcwachMeterData);
+      }
+      searICMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
           that.tableData = res.data;
           that.total = res.count;
-         
         } else {
           that.$message({
             message: res.msg ? res.msg : "查询失败",

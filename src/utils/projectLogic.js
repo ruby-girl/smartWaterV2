@@ -111,7 +111,7 @@ export function getName(id) {
   if (id == 1) {
     name = "用户编号"
   } else if (id == 2) {
-    name = "用户姓名"
+    name = "姓名/简码"
   } else if (id == 3) {
     name = "电话"
   } else if (id == 4) {
