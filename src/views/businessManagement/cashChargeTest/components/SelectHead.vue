@@ -80,6 +80,7 @@ export default {
           type: "error",
           duration: 4000
         });
+        this.$emit("clearData");
         return;
       }
       GetCustomerDataList(this.selectHead).then(res => {
@@ -142,22 +143,9 @@ export default {
     border-radius: 50%;
     width: 18px;
     height: 18px;
-    line-height: 12px;
+    line-height: 17px;
     font-size: 12px;
-    top: -20px;
-    right: 15px;
-    color: #fff;
-    text-align: center;
-  }
-  .payment-num {
-    position: absolute;
-    background: #ff5656;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
-    font-size: 12px;
-    top: -20px;
+    top: -6px;
     right: 15px;
     color: #fff;
     text-align: center;
@@ -166,7 +154,7 @@ export default {
 .head-bottom-box {
   background: #f5f5f5;
   padding: 15px;
-  line-height: 30px;
+  line-height: 25px;
 }
 .head-search-form{
   margin-top:10px;

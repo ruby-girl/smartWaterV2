@@ -100,8 +100,8 @@ export default {
       default: false
     }
   },
-  watch: {
-    checkedAllParent(v, o) {
+  watch: { 
+    checkedAllParent(v) {
      this.checkedAllParentFunc(v)
     }
   },
@@ -140,6 +140,8 @@ export default {
       }
     },
     getCardList() {
+      this.$emit("update:isIndeterminateParent", false);
+      this.$emit("update:checkedAllParent", false);//初始化全选
       GetOrderView(this.cardQuery).then(res => {
         this.cardData = [];
         let obj = {
@@ -335,7 +337,9 @@ export default {
 }
 .no-data {
   color: #46494c;
-  padding-top: 40px;
+  padding-top: 20%;
+  font-size: 14px;
+  color:#777c82;
 }
 .item-time-head {
   background: #9cb85c;

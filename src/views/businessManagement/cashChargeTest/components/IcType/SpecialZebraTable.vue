@@ -30,7 +30,6 @@ export default {
       default: ""
     },
     lineHeight:{
-        type: String,
       default: ""
     },
     color: {
@@ -46,6 +45,11 @@ export default {
   line-height: 36px;
   color: #777c82;
   font-size: 14px;
+}
+@media screen and (max-width: 1200px) {
+    .ic-item {
+        line-height: 30px;
+    }
 }
 .ic-item-left {
   border-right: 1px solid #dbe3e8;

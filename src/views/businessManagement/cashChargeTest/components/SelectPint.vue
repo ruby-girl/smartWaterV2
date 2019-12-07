@@ -9,14 +9,13 @@
     custom-class="dialog-background"
     :close-on-click-modal="false"
   >
-    <!-- 其它费用 -->
-    
+    <!-- 其它费用 -->  
       <el-form
       :inline="false"
       :model="pint"
       class="head-search-form form-inline-small-input"
       size="small"
-      label-width="100px"
+      label-width="120px"
       @submit.native.prevent>
       <el-form-item label="选择打印机：">
       <el-select v-model="pint.pintType" placeholder="选择打印机">
@@ -83,7 +82,7 @@ pintType: 1
 </script>
 <style lang="scss" scoped>
 /deep/ .dialog-background .el-dialog__body {
-  padding: 50px 0 200px 95px;
+  padding: 50px 0 50px 95px;
 }
 </style>
 

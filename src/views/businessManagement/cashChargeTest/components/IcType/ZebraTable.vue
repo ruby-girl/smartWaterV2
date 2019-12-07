@@ -63,10 +63,10 @@ export default {
 .background-ddd {
   background: #f0f2f5;
 }
-@media screen and (max-width: 1298px) {
-  .ic-item {
-    line-height: 30px;
-  }
+@media screen and (max-width: 1200px) {
+    .ic-item {
+        line-height: 30px;
+    }
 }
 .text-right{
   text-align: right;

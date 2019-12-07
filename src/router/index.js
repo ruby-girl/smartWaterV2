@@ -172,20 +172,11 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'cashCharge',
-        component: () => import('@/views/businessManagement/cashCharge/index'),
-        name: 'cashCharge',
-        meta: {
-          title: '现金收费',
-          roles: ['1']
-        }
-      },
-      {
         path: 'cashChargeTest',
         component: () => import('@/views/businessManagement/cashChargeTest/index'),
         name: 'cashChargeTest',
         meta: {
-          title: '现金收费new',
+          title: '现金收费',
           roles: ['1']
         }
       },

@@ -139,7 +139,7 @@ export default {
       payOrderId: [],
       // orderMoney: 0, //减免前金额
       // orderType:'',//费用类型
-      accountMoney: 0, //账户余额
+      accountMoney: '0.00', //账户余额
       customerNo: "", //用户编号-结算后，用户编号获取账户余额
       icInfo: {}, //IC卡 卡片详情
       headQuery: {
@@ -183,20 +183,23 @@ export default {
       paymentCodeShow: false, //扫码支付弹窗
       // isIC: false,
       // icType: "CreditCardAlready", //默认已刷卡
-      unpaidMoney: 0, //剩余未缴
+      unpaidMoney: '0.00', //剩余未缴
       isNull: true
     };
   },
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度 getBoundingClientRect().height比dom.offsetHeight性能更好
-      var formHeight = this.$refs.formHeight.getBoundingClientRect().height;
-      var bottomHeight=this.$refs.cashRightbox.getBoundingClientRect().height;
-      this.tableHeight = document.body.clientHeight - formHeight -bottomHeight-70;
+     this.getHeight()
      
     });
   },
   methods: {
+    getHeight(){
+        var formHeight = this.$refs.formHeight.getBoundingClientRect().height;
+      var bottomHeight=this.$refs.cashRightbox.getBoundingClientRect().height;
+      this.tableHeight = document.body.clientHeight - formHeight -bottomHeight-70;
+    },
     getList() {
       if (this.type == 1) this.$refs.tableTypeCard.getList();
       else this.$refs.tableTypeCard.getCardList();
@@ -205,6 +208,7 @@ export default {
     handleFilter(user) {
       // user-当前选择/查询的用户信息
       this.isIC = false;
+      user.Balance=parseFloat(user.Balance).toFixed(2)
       this.headUser = user;
       this.customerNo = user.CustomerNo;
       this.accountMoney = user.Balance;
@@ -246,7 +250,7 @@ export default {
           _this.getList();
         }
       }, 300);
-      this.unpaidMoney = 0;
+      this.unpaidMoney = '0.00';
       this.checkedAllParent = false;
       this.isIndeterminateParent = false;
     },
@@ -263,13 +267,13 @@ export default {
     // },
     // 勾选操作计算剩余未缴
     calculatedAmount(data) {
-      this.unpaidMoney = 0;
+      this.unpaidMoney = '0.00';
       this.payOrderId = [];
       data.forEach(item => {
         this.payOrderId.push(item.Id);
         this.unpaidMoney =
-          (this.unpaidMoney * 1000 + parseFloat(item.PriceSurplus) * 1000) /
-          1000;
+         ((parseFloat(this.unpaidMoney) * 1000 + parseFloat(item.PriceSurplus) * 1000) /
+          1000).toFixed(2);
       });
     },
     // 费用详情- 根据费用类型展示不通的详情页面-水费or其它费用
@@ -320,9 +324,8 @@ export default {
     },
     // 未查询到用户
     clearData() {
-      this.isNull = true;
-      this.accountMoney = 0;
-      this.listQuery.CustomerId = "";
+     Object.assign(this.$data, this.$options.data())
+      this.getHeight()
       if (this.type == 1) this.$refs.tableTypeCard.tableData = [];
       else this.$refs.tableTypeCard.cardData = [];
     }
