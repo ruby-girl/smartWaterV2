@@ -19,7 +19,6 @@
 <script>
 import "@/styles/organization.scss";
 import { IsTransfer,TransferCustomer } from "@/api/userAccount";
-import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import OldForNew from "./OldForNew"
 import UserChange from "./UserChange"
 export default {

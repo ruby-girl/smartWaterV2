@@ -8,7 +8,7 @@
           <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
-      <el-form ref="form" class="head-search-form" label-width="90px" style="margin-top:10px;">
+      <el-form ref="form" class="head-search-form" :label-width="user.WaterMeterTypeId==1104?'106px':'86px'" style="margin-top:10px;">
           <el-form-item label="用户编号">
           <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
         </el-form-item>
@@ -21,17 +21,25 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="原水表类型">
-          <el-input class="left-input" v-model="user.Tel" :disabled="true"></el-input>
+          <el-input class="left-input" v-model="user.WaterMeterTypeName" :disabled="true"></el-input>
+        </el-form-item> 
+        <!-- 机械或远传    -->
+        <el-form-item label="原水表读数" v-show="user.WaterMeterTypeId==1101||user.WaterMeterTypeId==1103">
+          <el-input class="left-input" v-model="user.oldRead"></el-input>
         </el-form-item>
-        
-        <el-form-item label="原水表读数">
-          <el-input class="left-input" v-model="user.IdentityNo"></el-input>
-        </el-form-item>
+        <!-- 物联网 -->
+        <el-form-item label="换表期间用水量" v-show="user.WaterMeterTypeId==1104">
+          <el-input class="left-input" v-model="user.wlwWaterYield"></el-input>
+        </el-form-item>   
         <el-form-item label="原水表编号">
-          <el-input class="left-input" v-model="user.IdentityNo" :disabled="true"></el-input>
+          <el-input class="left-input" v-model="user.SA_WaterMeterNo" :disabled="true"></el-input>
         </el-form-item>
-         <el-form-item label="账户余额">
-          <el-input class="left-input" v-model="user.IdentityNo" :disabled="true"></el-input>
+         <!-- IC -->
+        <el-form-item label="表端余额" v-show="user.WaterMeterTypeId==1102||user.WaterMeterTypeId==1104">
+          <el-input class="left-input" v-model="user.IdentityNo" :disabled="user.WaterMeterTypeId==1104?true:false"></el-input>
+        </el-form-item>
+         <el-form-item label="账户余额" v-show="user.WaterMeterTypeId!==1104">
+          <el-input class="left-input" v-model="user.Balance" :disabled="true"></el-input> 
         </el-form-item>
         <el-form-item label="地址">
           <el-input class="left-input" v-model="user.Address" :disabled="true"></el-input>
@@ -42,12 +50,12 @@
       <div class="display-flex align-items-center justify-content-flex-justify">
         <div class="font-weight pl-15 top-title">新水表信息</div>    
       </div>
-      <el-form class="head-search-form" :model="newUser" ref="user" :rules="rules" label-width="86px" style="margin-top:10px;">
+      <el-form class="head-search-form" :model="newUser" ref="user" :rules="rules" :label-width="user.WaterMeterTypeId==1104?'106px':'86px'" style="margin-top:10px;">
            <el-form-item label="新水表编号" prop="NewTel">
-          <el-input class="left-input" v-model="newUser.NewTel"></el-input>
+          <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
         </el-form-item>
-        <el-form-item label="新水表读数" prop="NewTel">
-          <el-input class="left-input"  v-model="newUser.NewTel"></el-input>
+        <el-form-item label="新水表读数" prop="NewTel" v-show="user.WaterMeterTypeId==1101">
+          <el-input class="left-input"  v-model="newUser.newRead"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input  type="textarea" v-model="newUser.Remark"></el-input>
@@ -56,7 +64,7 @@
     </div>
     <el-form class="is-page">
      <el-form-item label="字轮是否翻页">
-    <el-radio-group v-model="isPage">
+    <el-radio-group v-model="newUser.isPage">
       <el-radio :label="true">是</el-radio>
       <el-radio :label="false">否</el-radio>
     </el-radio-group>
@@ -79,19 +87,18 @@ export default {
       ifShowChild: false,
       fileShow: false,
       name: "r",
-      user: {},
+      user: {
+        WaterMeterTypeId:1104
+      },
       accountShow: false, //账户转存弹窗
       newUser: {
         CustomerId:'',
-        NewCustomerName: "", //姓名
-        NewTel: "", //电话
-        NewPeopleNo: "", //人口
-        NewIdentityNo: "", //证件号
-        Remark: "", //备注
-        FileIdList: [], //文件合集
-        BalanceValue: 0, //余额
-        OperatorEmpId: "", //经办人ID
-        IsBalanceDeposit: false //是否转存
+        oldRead:'',//读数（机械，远传必填）
+        newWaterMeterNo:'',//新水表编号
+        wlwWaterYield:'',//物联网用水量
+        newRead:'',//新水表读数（机械表必填）
+        remark:'',//备注
+        isPage:false//是否翻页
       },
       IsArrearageRes: {}, //是否欠费接口返回的所有信息
       file: [],
@@ -101,7 +108,6 @@ export default {
         CustomerQueryType: "",
         CustomerQueryValue: ""
       },
-      isPage:false,
       selectUserShow: false,
       rules: {
         NewCustomerName: [{ required: true, message: " ", trigger: "blur" }],
@@ -131,6 +137,30 @@ export default {
     }
   },
   methods: {
+      // 模糊查询用户
+    handleSelect(val, n) {
+      if (!val) {
+        this.user = {};
+        return false;
+      }
+      this.params.CustomerQueryValue = val;
+      this.params.CustomerQueryType = n;
+      GetCustomerDataList(this.params).then(res => {
+        if (res.data.length == 0) {
+          this.$message({
+            message: "未查询到用户！",
+            type: "error",
+            duration: 4000
+          });
+          this.user = {};
+        } else if (res.data.length == 1) {
+          this.user = res.data[0];
+          this.IsTransferFunc(this.user.Id);
+        } else {
+          this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
+        }
+      });
+    },
     getUp() {
       this.ifShowChild = true;
       if (this.ifShow) {
@@ -276,12 +306,12 @@ font-size: 14px;
     }
   }
   .left-input{
-    width:160px !important;
+    width:150px !important;
      /deep/ input.el-input__inner{
       width:100% !important;
     }
     /deep/ .el-select > .el-input{
-         width:160px !important;
+         width:150px !important;
     }
   }
   .el-button--mini {
@@ -318,5 +348,8 @@ font-size: 14px;
     /deep/ .el-radio-group{
         margin-left: 20px;
     }
+}
+/deep/ .el-form-item__content .el-textarea{
+  width:150px !important;
 }
 </style>

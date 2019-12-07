@@ -8,7 +8,7 @@
           <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
-      <el-form ref="form" class="head-search-form" label-width="90px" style="margin-top:10px;">
+      <el-form ref="form" class="head-search-form" label-width="106px" style="margin-top:10px;">
           <el-form-item label="用户编号">
           <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
         </el-form-item>
@@ -282,7 +282,7 @@ font-size: 14px;
       width:100% !important;
     }
     /deep/ .el-select > .el-input{
-         width:160px !important;
+         width:150px !important;
     }
   }
   .el-button--mini {
