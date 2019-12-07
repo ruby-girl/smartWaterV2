@@ -122,7 +122,7 @@ export default {
       //列表查询
       ReadingQueryPageQuery(this.param).then(res => {
         if (res.code == 0) {
-          pushItem(this);
+          this.tipsData = pushItem(this.tipsDataCopy);
           this.total = res.count;
           this.tableData = res.data;
         } else {

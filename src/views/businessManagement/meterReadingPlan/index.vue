@@ -89,7 +89,7 @@
           :total="total"
           :page.sync="selectHead.page"
           :limit.sync="selectHead.limit"
-          @pagination="searchTableList"
+          @pagination="searchTableList('0')"
         />
       </div>
       <Add-ReadingPlan
@@ -145,7 +145,8 @@ export default {
       addDialogFormVisible: false,
       companyParentOptions: [],
       isShowAdPlan: false,
-      isShowAdPlanClass: !this.isShowAdPlan
+      isShowAdPlanClass: !this.isShowAdPlan,
+      orderData:{}
     };
   },
   computed: {
@@ -272,6 +273,9 @@ export default {
     searchTableList() {
       //查询列表
       this.$refs.child1.getTime();
+      if (num != 0) {
+        this.orderData = Object.assign({}, this.listQuery);
+      }
       const that = this;
       if (
         this.selectHead.createStartTime == "" ||
@@ -283,7 +287,7 @@ export default {
         });
         return false;
       }
-      searchPlanList(this.selectHead).then(res => {
+      searchPlanList(this.orderData).then(res => {
         if (res.code == 0) {
           that.tableData = res.data;
           that.total = res.count;

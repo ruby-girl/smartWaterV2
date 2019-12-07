@@ -9,43 +9,43 @@
         </el-button>
       </div>
       <el-form ref="userInfo" :model="userInfo" label-width="70px">
-        <el-form-item label="姓名：">
+        <el-form-item label="姓名">
           <el-input
             v-model="userInfo.CustomerName"
             @keydown.enter.native="searchEnter(2,userInfo.CustomerName)"
             class="left-input"
           ></el-input>
         </el-form-item>
-        <el-form-item label="电话：">
+        <el-form-item label="电话">
           <el-input
             v-model="userInfo.Tel"
             @keydown.enter.native="searchEnter(3,userInfo.Tel)"
             class="left-input"
           ></el-input>
         </el-form-item>
-        <el-form-item label="用户编号：">
+        <el-form-item label="用户编号">
           <el-input
             v-model="userInfo.CustomerNo"
             @keydown.enter.native="searchEnter(1,userInfo.CustomerNo)"
             class="left-input"
           ></el-input>
         </el-form-item>
-        <el-form-item label="证件号：">
+        <el-form-item label="证件号">
           <el-input
             v-model="userInfo.IdentityNo"
             @keydown.enter.native="searchEnter(4,userInfo.IdentityNo)"
             class="left-input"
           ></el-input>
         </el-form-item>
-        <el-form-item label="地址：">
+        <el-form-item label="地址">
           <el-input v-model="userInfo.Address" disabled class="left-input"></el-input>
         </el-form-item>
-        <el-form-item label="账户余额：">
+        <el-form-item label="账户余额">
           <el-input class="totalMoney left-input" v-model="userInfo.Balance" disabled>
             <template slot="append">元</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="备注：">
+        <el-form-item label="备注">
           <el-input v-model="userInfo.Remark" class="left-input"></el-input>
         </el-form-item>
       </el-form>
@@ -53,13 +53,13 @@
     <div class="waterInfo">
       <h4>水表信息</h4>
       <el-form ref="waterInfo" :model="userInfo" label-width="70px">
-        <el-form-item label="水表编号：">
+        <el-form-item label="水表编号">
           <el-input v-model="waterInfo.WaterMeterNo" disabled class="left-input"></el-input>
         </el-form-item>
-        <el-form-item label="水表类型：">
+        <el-form-item label="水表类型">
           <el-input v-model="waterInfo.WaterMeterTypeName" disabled class="left-input"></el-input>
         </el-form-item>
-        <el-form-item label="表端余额：">
+        <el-form-item label="表端余额">
           <el-input
             class="totalMoney left-input"
             v-model="waterInfo.MeterBalance"
@@ -72,7 +72,7 @@
     </div>
     <el-row>
       <el-col :span="6">
-        <span class="text">总计：</span>
+        <span class="text">总计</span>
       </el-col>
       <el-col :span="16">
         <span class="totalMoney">{{totalMoney}}</span>元
@@ -80,7 +80,7 @@
     </el-row>
     <el-row style="margin-top:10px;">
       <el-col :span="6">
-        <span class="text">经办人：</span>
+        <span class="text">经办人</span>
       </el-col>
       <el-col :span="16">
         <el-select

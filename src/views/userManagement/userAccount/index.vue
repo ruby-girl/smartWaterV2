@@ -82,6 +82,7 @@
             :total="total"
             :page.sync="listQuery.page"
             :limit.sync="listQuery.limit"
+            @pagination="seachAccountOrder('0')"
           />
         </div>
         <span v-show="!ifShow" class="telescopic telescopic1" @click="closeAccount">
@@ -133,7 +134,8 @@ export default {
       ifShow: false,
       editUserList: [], //操作员、经办人
       tipsData: [], //传入子组件的值
-      tipsDataCopy: [] //表单变化的值
+      tipsDataCopy: [], //表单变化的值
+      orderData: {} //搜索存储对象
     };
   },
   created() {
@@ -202,9 +204,12 @@ export default {
       }
     },
     //查询记录
-    seachAccountOrder() {
-      waterAccountPost(this.listQuery).then(res => {
-        pushItem(this);
+    seachAccountOrder(num) {
+      if (num != 0) {
+        this.orderData = Object.assign({}, this.listQuery);
+      }
+      waterAccountPost(this.orderData).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
         if (res.code == 0) {
           this.tableData = res.data;
           this.total = res.count;
