@@ -98,7 +98,7 @@
         this.$refs[formName].resetFields();
       },
       getText(val, model, arr, name) {
-        this.$emit("getText", val, model, arr, name);
+        this.$parent.getText(val, model, arr, name)
       },
     },
     mounted() {

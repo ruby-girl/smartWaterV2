@@ -6,7 +6,7 @@
     title="添加"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
-    width="51%">
+    width="55%">
     <!--用户资料-->
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="机械水表" name="1">

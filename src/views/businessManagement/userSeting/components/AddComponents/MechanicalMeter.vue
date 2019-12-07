@@ -9,7 +9,7 @@
             <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="用户编码 ">
+        <el-form-item label="用户编号 ">
           <el-input :disabled="true" v-model="formData.CustomerNo" size="small"/>
         </el-form-item>
         <el-form-item label="姓名 " prop="CustomerName">

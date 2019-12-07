@@ -209,9 +209,9 @@ export function GetWaterPropertyList(data) {
     data: data
   })
 }
-
-// IC卡读卡
-// IC卡读卡
+/**
+ * IC卡读卡
+ * */
 export function GetICReadCardInfo(data){
   return request({
     url: '/Customer/GetICReadCardInfo',
@@ -219,10 +219,46 @@ export function GetICReadCardInfo(data){
     params: data
   })
 }
-
-
-
-
+/**
+ * 用户制卡
+ * */
+export function GetICWriteCard(data){
+  return request({
+    url: '/Customer/GetICWriteCard',
+    method: 'get',
+    params: data
+  })
+}
+/**
+ * 用户制卡失败回滚
+ * */
+export function RollBackICWriteCard(data){
+  return request({
+    url: '/Customer/RollBackICWriteCard',
+    method: 'post',
+    params: data
+  })
+}
+/**
+ * 用户补卡
+ * */
+export function GetICReplaceWriteCardInfo(data){
+  return request({
+    url: '/Customer/GetICReplaceWriteCardInfo',
+    method: 'get',
+    params: data
+  })
+}
+/**
+ * 用户补卡失败回滚
+ * */
+export function RollBacICkReplaceWriteCardInfo(data){
+  return request({
+    url: '/Customer/RollBacICkReplaceWriteCardInfo',
+    method: 'post',
+    params: data
+  })
+}
 
 
 

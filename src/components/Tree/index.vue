@@ -5,7 +5,6 @@
         <span @click="getNodeByName"><i class="icon iconfont">&#xe694;</i>搜索</span>
       </template>
     </el-input>
-    <p>公司名称</p>
     <div class="custom-tree-container">
       <el-tree
         :data="treeData"
@@ -216,6 +215,7 @@ export default {
     right: 6px;
     color: #46494c;
     font-size: 14px;
+    top:50%;margin-top: -13px;
   }
 
   .el-tree-node__expand-icon.is-leaf {

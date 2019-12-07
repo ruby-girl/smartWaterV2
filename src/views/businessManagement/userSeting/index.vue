@@ -19,7 +19,7 @@
       <!--右侧列表数据-->
       <div class="user_table">
         <SelectHead @getText="getText"></SelectHead>
-        <tableQuery ref="tableChild"></tableQuery>
+        <tableQuery ref="tableChild" @handleFilterIcParent="handleFilterIc"></tableQuery>
         <span v-show="ifShow" class="telescopic telescopic1" @click="getUp">
           展开
           <i class="iconfont iconshouqi1" style="font-size: 12px;"></i>
@@ -46,17 +46,15 @@ import {
   GetWaterTypeCustomerNum,
   GetCustomerDataList,
   GetCustomerDataList_ToExcel
-} from "@/api/userSetting"; //区域接口
+} from "@/api/userSetting";
 import Bus from "@/utils/bus";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
 export default {
   name: "userSeting",
   components: { myTree, SelectHead, tableQuery, Dialog,SwitchFactory },
   data() {
     return {
-      tipsData: [], //传入子组件的值
-      tipsDataCopy: [], //表单变化的值
       waterFactoryName:{},
       ifShow: false,
       query: {
@@ -86,6 +84,7 @@ export default {
     };
   },
   methods: {
+
     /**
      * 伸缩功能
      * */
@@ -226,14 +225,7 @@ export default {
       let parms = JSON.stringify(this.query);
       parms = JSON.parse(parms);
       parms.WaterTypeId = -1;
-      GetWaterTypeCustomerNum(parms).then(res => {
-        //用户统计数据
-        if (res.code == 0) {
-          this.$refs.tableChild.StatisticsData = res.data;
-        } else {
-          promptInfoFun(this, 1, res.message);
-        }
-      });
+      this.$refs.tableChild.tipsData = pushItem(this.$refs.tableChild.tipsDataCopy)
     },
     /**
      * 用户导出
@@ -250,26 +242,8 @@ export default {
       this.$refs.switchChild.dialogVisible = true;
       this.$refs.switchChild.formData.waterFactoryId = this.waterFactoryName.Id
     },
-    /**
-     *val 对应绑定的参数
-     *this this对象
-     * this.tipsDataCopy   存储面包屑数据的数组
-     * param  对应搜索条件的对象名
-     */
-    delTips(val) {
-      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query"); //返回删除后的数据传给组件
-      this.searchTableFun()
-    },
-    /**
-     *val 搜索数据值
-     *model 对应绑定的属性
-     * arr   下拉框循环的数组（输入框传“”）
-     * name  对应的搜索lable
-     */
-    //处理搜索条件,面包屑
-    getText(val, model, arr, name) {
-      let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
-      this.tipsDataCopy.push(obj);
+    getText(val, model, arr, name) {//触发子元素事件
+      this.$refs.tableChild.getText(val, model, arr, name)
     }
   },
   created() {

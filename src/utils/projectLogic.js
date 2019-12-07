@@ -10,7 +10,7 @@ export function ICReadCardInfo(callback) {
   let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo();
   if (res != undefined && res != "") {
     let rJSON = JSON.parse(res)//处理后的res
-    let resData = eval('(' + rJSON.Data + ')')//处理后的Data     
+    let resData = eval('(' + rJSON.Data + ')')//处理后的Data
     if (rJSON.Result) {
       GetICReadCardInfo({ jsonData: rJSON.Data }).then(resInfo => {
         callback(resInfo, resData)
@@ -122,4 +122,22 @@ export function getName(id) {
     name = "水表编号"
   }
   return name
+}
+
+//IC制卡
+export function WriteCardInfo(objJson, callback) {
+  if (typeof jsObj == "undefined") {
+    this.$message({
+      message: "写卡接口初始化失败！",
+      type: "error",
+      duration: 4000
+    });
+    return;
+  }
+  let ret = jsObj.WriteCardInfo(objJson);
+  let tempJson = JSON.parse(ret);
+  //return tempJson;
+  if (typeof (callback) === "function") {
+    callback(tempJson);
+  }
 }

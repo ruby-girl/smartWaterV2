@@ -6,14 +6,14 @@
     title="编辑用户信息"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
-    width="51%">
+    width="55%">
     <el-form :inline="true" ref="ruleForm" :model="formData" :rules="rules" label-width="100px">
       <el-form-item label="水厂  " prop="SA_WaterFactory_Id" >
         <el-select v-model="formData.SA_WaterFactory_Id" placeholder=" " size="small" @change="getDataByWater" :disabled="true">
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户编码  " prop="CustomerNo">
+      <el-form-item label="用户编号  " prop="CustomerNo">
         <el-input :disabled="true" v-model="formData.CustomerNo" size="small"/>
       </el-form-item>
       <el-form-item label="姓名  " prop="CustomerName">

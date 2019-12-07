@@ -2,15 +2,14 @@
   <div class="tr_container">
     <div class="cl-operation1">
       <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
-      <el-button size="mini" class="fr cl-operation-btn" round @click="setCustomData()" ><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
-      <el-button size="mini" class="fr cl-operation-btn" round @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
       <el-button size="mini" class="fr cl-operation-btn" round @click="lowApplication" ><i class="icon iconfont">&#xe617;</i> 低保户申请</el-button>
       <el-button size="mini" class="fr cl-operation-btn" round @click="makeCard" ><i class="icon iconfont" >&#xe61a;</i> 制卡</el-button>
+      <el-button size="mini" class="fr cl-operation-btn" round @click="patchCard" ><i class="icon iconfont" >&#xe628;</i> 补卡</el-button>
     </div>
     <!--表格自定义组建 s-->
     <Statistics :StatisticsData="StatisticsData"></Statistics>
     <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" />
-    <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
+    <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges" highlight-current-row  @current-change="handleCurrentChange">
       <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{(query.page - 1) * query.limit + scope.$index + 1}}</span>
@@ -68,12 +67,22 @@
   import AddDialog from './AddDialog'
   import EditDialog from './EditDialog'
   import DetailDialog from './DetailDialog'
+  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { WriteCardInfo } from "@/utils/projectLogic"; //IC卡写卡
+  import {
+    GetICWriteCard,
+    RollBackICWriteCard,
+    GetICReplaceWriteCardInfo,
+    RollBacICkReplaceWriteCardInfo,
+  } from "@/api/userSetting";
 
   export default {
     name: "TableQuery",
     components: {Pagination, Statistics, AddDialog, EditDialog, DetailDialog, SearchTips},
     data(){
       return {
+        tipsData: [], //传入子组件的值
+        tipsDataCopy: [], //表单变化的值
         tableData:[],//列表数据
         StatisticsData:'',//统计数据
         tableHeight: null,//表格高度
@@ -118,6 +127,7 @@
           this.query.WaterTypeId = type//更改查询水表类型
         }
         this.$parent.searchTableFun()
+
       },
       /******************排序**********************/
       sortChanges({prop, order }){//排序
@@ -137,7 +147,6 @@
       handleDetail(row){
         this.$refs.detailDialog.dialogVisible = true;
         this.$refs.detailDialog.getInfo(row.Id,row.WaterMeterTypeId)//用户ID，表类型
-
       },
       /******************删除*********************/
       handleDelete(row) {
@@ -154,10 +163,93 @@
       addNewFun(){
         this.$refs.addDialog.dialogVisible = true;
       },
-      makeCard(){
+      makeCard(){//制卡
+        let param = {
+          customerId:'',//用户ID
+          receipts:false,//实收
+          payType:1,//缴费方式(参考字典码)
+          printerType:1,//打印方式,无打印 = -1,小票 = 2801,发票 = 2802,
+          payCode:''//支付码（付款码支付时该参数使用）
+        }
+        GetICWriteCard(param).then(res => {//写卡
+          if (res.code == 0) {
+            let resultCard = JSON.stringify(res.data);
+            WriteCardInfo(resultCard, function (tempJson) {
+              if (tempJson != undefined && tempJson != "") {
+                if (tempJson.Result) {//写卡成功
+                  promptInfoFun(this, 2, res.message);
+                }
+                else {
+                  //写卡失败
+                  promptInfoFun(this, 1, res.message);
+                  //写卡失败回滚
+                  RollBackICWriteCard({businessId:''}).then(res => {
+                  })
+                }
+              }
+            });
+          } else {
+            promptInfoFun(this, 1, res.message);
+          }
+        });
+      },
+      patchCard(){//补卡
+        let param = {
+          customerId:'',//用户ID
+          receipts:false,//实收
+          payType:1,//缴费方式(参考字典码)
+          printerType:1,//打印方式,无打印 = -1,小票 = 2801,发票 = 2802,
+          payCode:''//支付码（付款码支付时该参数使用）
+        }
+        GetICReplaceWriteCardInfo(param).then(res => {//补卡
+          if (res.code == 0) {
+            let resultCard = JSON.stringify(res.data);
+            WriteCardInfo(resultCard, function (tempJson) {
+              if (tempJson != undefined && tempJson != "") {
+                if (tempJson.Result) {//写卡成功
+                  promptInfoFun(this, 2, res.message);
+                }
+                else {
+                  //写卡失败
+                  promptInfoFun(this, 1, res.message);
+                  //补卡失败回滚
+                  RollBacICkReplaceWriteCardInfo({businessId:''}).then(res => {
+                  })
+                }
+              }
+            });
+          } else {
+            promptInfoFun(this, 1, res.message);
+          }
+        });
+      },
+      lowApplication(){//低保户申请
 
       },
-      lowApplication(){},
+      handleCurrentChange(val) {//列表点击事件
+       console.log(val)
+      },
+      /**
+       *val 对应绑定的参数
+       *this this对象
+       * this.tipsDataCopy   存储面包屑数据的数组
+       * param  对应搜索条件的对象名
+       */
+      delTips(val) {
+        this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query"); //返回删除后的数据传给组件
+        this.searchTableFun()
+      },
+      /**
+       *val 搜索数据值
+       *model 对应绑定的属性
+       * arr   下拉框循环的数组（输入框传“”）
+       * name  对应的搜索lable
+       */
+      //处理搜索条件,面包屑
+      getText(val, model, arr, name) {
+        let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
+        this.tipsDataCopy.push(obj);
+      }
     },
     mounted() {
       let _this = this
@@ -165,9 +257,9 @@
       this.$refs.searchTips.$refs.myChild.GetTable(this.query.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       _this.$nextTick(() => {
-        _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+        _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 65
         window.onresize = function () {
-          _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+          _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 65
         }
       })
     }
@@ -175,7 +267,7 @@
 </script>
 <style lang="scss">
   .tr_container{
-    .cl-operation1{margin-top: 46px;}
+    .cl-operation1{margin: 46px 0 14px 0;}
     .el-table thead tr th {
       background: #F0F2F5 !important;
     }
