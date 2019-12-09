@@ -1,48 +1,55 @@
 <template>
-  <div>
+  <div style="width: 100%;position: relative">
     <el-form
       :inline="true"
       :model="param"
-      class="head-search-form form-inline-small-input"
+      :class="ifMore?'head-search-form form-inline-small-input meter-head on':'head-search-form form-inline-small-input meter-head'"
       size="small"
       label-width="100px"
       @submit.native.prevent>
-      <el-form-item label="抄表计划  ">
+      <el-form-item label="抄表计划">
         <el-select v-model="param.SA_MeterReadPlan_Id" placeholder="请选择" size="small" @change="getUserInfo">
           <el-option v-for="(item,index) in planArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="抄表员  ">
-        <el-select v-model="param.SA_MeterReader_Id" placeholder="请选择" size="small">
+      <el-form-item label="抄表员">
+        <el-select v-model="param.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param.SA_MeterReader_Id,'SA_MeterReader_Id',peopleArray,'抄表员')">
           <el-option label="全部" value="-1" v-if="peopleArray.length>1"></el-option>
           <el-option v-for="(item,index) in peopleArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="表册  ">
-        <el-select v-model="param.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
+      <el-form-item label="表册">
+        <el-select v-model="param.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formsArray,'表册')">
           <el-option label="全部" value="-1" v-if="formsArray.length>1"></el-option>
           <el-option v-for="(item,index) in formsArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-select v-model="param.CustomerQueryType" placeholder="请选择" class="user-select-box" style="width: 100px;float: left;margin-left: 30px">
-          <el-option label="编号" value="1"></el-option>
-          <el-option label="姓名/简码" value="2"></el-option>
-        </el-select>
-        <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)" style="width: 180px;float: left"/>
+      <transition name="fade">
+        <el-form-item v-show="ifMore">
+          <el-select v-model="param.CustomerQueryType" placeholder="请选择" class="user-select-box"
+                     style="width: 100px;float: left;margin-left: 30px">
+            <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
+          </el-select>
+          <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)"
+                    style="width: 180px;float: left"  @blur="setText(param.CustomerQueryValue,'CustomerQueryValue',userTypes)"/>
+        </el-form-item>
+      </transition>
+      <transition name="fade">
+        <el-form-item label="抄表状态" v-show="ifMore">
+          <el-select v-model="param.MeterReadState" placeholder="请选择" size="small" @change="getText(param.MeterReadState,'MeterReadState',meterState,'抄表状态')">
+            <el-option label="全部" value="-1"></el-option>
+            <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
+          </el-select>
+        </el-form-item>
+      </transition>
+      <el-form-item label="" :class="ifMore?'cl-last-item':''">
+        <i v-show="ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
+        <i v-show="!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
+        <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
+        <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
       </el-form-item>
-      <el-form-item label="抄表状态  ">
-        <el-select v-model="param.MeterReadState" placeholder="请选择" size="small">
-          <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="">
-        <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i>搜索</el-button>
-      </el-form-item>
-      <el-button type="primary" size="mini" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
+      <!--<el-button type="primary" size="mini" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>-->
     </el-form>
-
     <!--多用户弹窗 s-->
     <el-dialog
       :close-on-click-modal="false"
@@ -63,12 +70,18 @@
   import { getPlan, LoadRegisterBookAndMeterReader, MeterReadingLocationQuery } from "@/api/meterReading"
   import { getDictionaryOption } from "@/utils/permission"
   import { promptInfoFun } from "@/utils/index"
+  import { getName } from "@/utils/projectLogic"
 
   import Bus from '@/utils/bus'
   export default {
     name: "SelectHead",
     data() {
       return {
+        userTypes:[
+          {name:'用户编号',Id:'1'},
+          {name:'姓名/简码',Id:'2'},
+        ],
+        ifMore:false,
         meterVisible: false,
         planArray:[],//抄表计划
         peopleArray:[],//抄表员
@@ -87,7 +100,8 @@
           MeterReadState: '-1',//抄表状态
           tableId: '0000014'
         },
-        meterData:[]//表册定位模拟数据
+        meterData:[],//表册定位模拟数据
+        screenWdth:'',
       }
     },
     methods: {
@@ -105,6 +119,7 @@
         })
       },
       getUserInfo(val){//表册抄表员与抄表计划联动搜索
+        this.getText(val,'SA_MeterReadPlan_Id',this.planArray,'抄表计划')
         let selectedWorkName = {}
         selectedWorkName = this.planArray.find((item)=>{
           return item.Id === val;
@@ -117,6 +132,8 @@
             this.formsArray = res.data.RegisterBooks;//表册
             this.param.SA_MeterReader_Id = res.data.MeterReaders[0].Id//默认选中第一个
             this.param.SA_RegisterBookInfo_Id = res.data.RegisterBooks[0].Id
+            this.getText(res.data.MeterReaders[0].Id,'SA_MeterReader_Id', res.data.MeterReaders,'抄表员')
+            this.getText(res.data.RegisterBooks[0].Id,'SA_RegisterBookInfo_Id',res.data.RegisterBooks,'表册')
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -124,6 +141,9 @@
       },
       setCustomData() {//表格自定义
         this.$parent.setCustomData()
+      },
+      getText(val, model, arr, name) {
+        this.$emit("getText", val, model, arr, name);
       },
       /**
        * 触发父组建搜索方法
@@ -155,9 +175,14 @@
         this.param.SA_RegisterBookInfo_Id = row.Id
         this.meterVisible = false
         this.$parent.searchFun();
+      },
+      setText(text,model,arr){
+        let name = getName(this.param.CustomerQueryType)
+        this.getText(text,model,arr,name)
       }
     },
     mounted() {
+      this.screenWdth = window.screen.width
       this.getplanArray()
       this.meterState = getDictionaryOption('抄表状态')
     }

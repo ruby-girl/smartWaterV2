@@ -310,3 +310,12 @@ export function BlockAreaGetObjById(data) {
     data: data
   })
 }
+
+//用户设置低保户申请
+export function InsuredMessageApply(data) {
+  return request({
+    url: '/Customer/InsuredMessageApply',
+    method: 'post',
+    data: data
+  })
+}

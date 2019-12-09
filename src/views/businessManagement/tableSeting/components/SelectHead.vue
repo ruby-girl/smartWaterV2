@@ -2,7 +2,7 @@
   <el-form
     :inline="true"
     :model="rbp"
-    class="head-search-form form-inline-small-input"
+    :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
     size="small"
     label-width="100px"
     @submit.native.prevent>
@@ -66,6 +66,7 @@
         formArry:[],//表册类型
         waterFactory:[],//具有权限水厂数据
         meterArry:[],//抄表员
+        ifMore:false,
       }
     },
     methods: {

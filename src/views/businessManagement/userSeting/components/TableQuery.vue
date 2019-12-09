@@ -59,7 +59,7 @@
     <!--详情弹窗-->
     <DetailDialog ref="detailDialog"></DetailDialog>
     <!--低保户申请-->
-    <LowIncome ref="lowIncomeDialog"></LowIncome>
+    <LowIncome ref="lowIncomeDialog" :curObj="curObj"></LowIncome>
   </div>
 </template>
 
@@ -86,6 +86,7 @@
     components: {Pagination, Statistics, AddDialog, EditDialog, DetailDialog, SearchTips, LowIncome},
     data(){
       return {
+        curObj:'',
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
         tableData:[],//列表数据
@@ -131,8 +132,8 @@
         if(type instanceof Object == false){//为false 则为区分水表类型条件查询，true 为普通分页查询
           this.query.WaterTypeId = type//更改查询水表类型
         }
+        this.$parent.query = this.query
         this.$parent.searchTableFun()
-
       },
       /******************排序**********************/
       sortChanges({prop, order }){//排序
@@ -140,6 +141,7 @@
         this.query.sort = order=='ascending'?'ASC':(order=='descending'?'DESC':'')
         if(this.tableData.length>0){
           this.query.page = 1
+          this.$parent.query = this.query
           this.$parent.searchTableFun()
         }
       },
@@ -232,7 +234,8 @@
         this.$refs.lowIncomeDialog.dialogVisible = true
       },
       handleCurrentChange(val) {//列表点击事件
-       console.log(val)
+        this.curObj = val
+        console.log(val)
       },
       /**
        *val 对应绑定的参数
@@ -242,7 +245,7 @@
        */
       delTips(val) {
         this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query"); //返回删除后的数据传给组件
-        this.searchTableFun()
+        this.$parent.searchTableFun()
       },
       /**
        *val 搜索数据值

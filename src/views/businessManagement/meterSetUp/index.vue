@@ -1,57 +1,53 @@
 <template>
   <div class="cl-container">
-    <div style="background: transparent;padding: 0">
-      <div style="background: #fff;padding: 16px;">
-        <div id="conditionBox">
-          <!--查询条件组建 s-->
-          <SelectHead ref="childSelect"></SelectHead>
-          <!--查询条件组建 e-->
-          <!--自定义组建 s-->
-          <customTable ref="myChild"/>
-          <!--自定义组建 e-->
-        </div>
+    <div style="background: transparent;padding: 0;width: 100%;position: relative">
+      <div style="background: #fff;padding: 16px;width: 100%;position: relative">
+        <SelectHead ref="childSelect" @getText="getText"></SelectHead>
         <!--列表组建 s-->
-        <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border
-                  @sort-change="sortChanges" highlight-current-row ref="multipleTable"
-                  :row-class-name="tableRowClassName"
-                  @row-click="getCurInfo">
-          <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
-            <template slot-scope="scope">
-              <span>{{(param.page - 1) * param.limit+ scope.$index + 1}}</span>
+        <div class="cl-center-box">
+          <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"/>
+          <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%;" border
+                    @sort-change="sortChanges" highlight-current-row ref="multipleTable"
+                    :row-class-name="tableRowClassName"
+                    @row-click="getCurInfo">
+            <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+              <template slot-scope="scope">
+                <span>{{(param.page - 1) * param.limit+ scope.$index + 1}}</span>
+              </template>
+            </el-table-column>
+            <template v-for="(item ,index) in tableHead">
+              <el-table-column
+                v-if="item.IsFreeze"
+                min-width="110"
+                :key="index"
+                :sortable="item.IsSortBol ? 'custom' : null"
+                :prop="item.ColProp"
+                :align="item.Position"
+                :label="item.ColDesc"
+                :fixed="item.Freeze"/>
+              <el-table-column
+                v-else
+                min-width="110"
+                :key="index"
+                :sortable="item.IsSortBol ? 'custom' : null"
+                :prop="item.ColProp"
+                :align="item.Position"
+                :label="item.ColDesc"/>
             </template>
-          </el-table-column>
-          <template v-for="(item ,index) in tableHead">
-            <el-table-column
-              v-if="item.IsFreeze"
-              min-width="110"
-              :key="index"
-              :sortable="item.IsSortBol ? 'custom' : null"
-              :prop="item.ColProp"
-              :align="item.Position"
-              :label="item.ColDesc"
-              :fixed="item.Freeze"/>
-            <el-table-column
-              v-else
-              min-width="110"
-              :key="index"
-              :sortable="item.IsSortBol ? 'custom' : null"
-              :prop="item.ColProp"
-              :align="item.Position"
-              :label="item.ColDesc"/>
-          </template>
-          <el-table-column label="操作" width="200px" align="center" fixed="right">
-            <template slot-scope="scope">
-              <a class="operation1" @click="handleHistory(scope.row)">查看历史记录</a>
-              <a class="operation2" @click="handleDelete(scope.row)" v-if=" scope.row.MeterReadState != 1402 ">删除</a>
-            </template>
-          </el-table-column>
-        </el-table>
-        <pagination
-          :total="total"
-          :page.sync="param.page"
-          :limit.sync="param.limit"
-          @pagination="searchFun"/>
-        <!--列表组建 e-->
+            <el-table-column label="操作" width="200px" align="center" fixed="right">
+              <template slot-scope="scope">
+                <a class="operation1" @click="handleHistory(scope.row)">查看历史记录</a>
+                <a class="operation2" @click="handleDelete(scope.row)" v-if=" scope.row.MeterReadState != 1402 ">删除</a>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination
+            :total="total"
+            :page.sync="param.page"
+            :limit.sync="param.limit"
+            @pagination="searchFun"/>
+          <!--列表组建 e-->
+        </div>
       </div>
       <!--抄表计划组建 s-->
       <MeterPlan ref="planchild1"></MeterPlan>
@@ -62,19 +58,23 @@
 
 <script>
   import '@/styles/organization.scss'
+  import SearchTips from "@/components/SearchTips/index";
   import customTable from '@/components/CustomTable/index'//自定义组建
   import SelectHead from './components/SelectHead'//查询条件组建
   import MeterPlan from './components/MeterPlan'//查询条件组建
   import Pagination from '@/components/Pagination/index'//分页
   import {MeterReadingPageQuery, MeterReadingProcessQuery, getReadDelete} from "@/api/meterReading"
   import {parseTime, promptInfoFun} from "@/utils/index"
-  import { legalTime } from "@/utils/index";
+  import {legalTime} from "@/utils/index";
+  import {delTips, getText, pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
 
   export default {
     name: 'meterSetUp',
-    components: {customTable, Pagination, SelectHead, MeterPlan},
+    components: {customTable, Pagination, SelectHead, MeterPlan, SearchTips},
     data() {
       return {
+        tipsData: [], //传入子组件的值
+        tipsDataCopy: [], //表单变化的值
         ID: '',
         waterFactory: [],//水厂数据集合
         tableHeight: null,//表格高度
@@ -118,10 +118,6 @@
       }
     },
     methods: {
-      setCustomData() {//表格自定义方法
-        this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
-        this.customHeight = this.$refs.myChild.isCustom
-      },
       handleDelete(row) {//删除方法
         this.$confirm("是否删除当前信息", "提示", {
           confirmButtonText: "确定",
@@ -146,12 +142,13 @@
         param.MeterReadState != '' ? param.MeterReadState = parseInt(param.MeterReadState) : ''
         MeterReadingPageQuery(param).then(res => {
           if (res.code == 0) {
+            this.tipsData = pushItem(this.tipsDataCopy);
             let _this = this, datas = res.data
             _this.tableData = res.data.tableDatas;
             let timeObj = res.data.tableDatas//过滤不合法时间
-            timeObj.forEach((item,index)=>{
-              for(let i in item){
-                i=='ReadDate' ? item[i] = legalTime(item[i]) :''
+            timeObj.forEach((item, index) => {
+              for (let i in item) {
+                i == 'ReadDate' ? item[i] = legalTime(item[i]) : ''
               }
             })
             _this.total = res.count;
@@ -159,7 +156,7 @@
               let curNum = 0;
               if (datas.IsLocation) {//判断是否需要定位
                 _this.param.page = datas.PageIndex//定位页数
-                curNum = datas.RowIndex -1//定为当前页行数
+                curNum = datas.RowIndex - 1//定为当前页行数
                 this.$refs.childSelect.param.CustomerQueryValue = ''
                 //动态设置滚动条位置
                 let curRowHeight = curNum * 44
@@ -235,12 +232,43 @@
       },
       handleHistory(row) {// 查看历史数据，跳转表册设置
         this.$router.push({path: '/businessManagement/meterQuery', query: {CustomerNo: row.CustomerNo}})
+      },
+      /**
+       *val 对应绑定的参数
+       *this this对象
+       * this.tipsDataCopy   存储面包屑数据的数组
+       * param  对应搜索条件的对象名
+       */
+      delTips(val) {
+        if (val == "meterData") {
+          //返回日期 置空
+          this.param.ReadDateStart = "";
+          this.param.ReadDateEnd = "";
+        } else if (val == "InputTimeStart") {
+          this.param.InputTimeStart = "";
+          this.param.InputTimeEnd = "";
+        }
+
+        this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
+        this.searchFun()
+      },
+      /**
+       *val 搜索数据值
+       *model 对应绑定的属性
+       * arr   下拉框循环的数组（输入框传“”）
+       * name  对应的搜索lable
+       */
+      //处理搜索条件,面包屑
+      getText(val, model, arr, name) {
+        let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
+        this.tipsDataCopy.push(obj);
       }
     },
     mounted() {
       this.screeWidth = window.screen.width
-      this.$refs.myChild.GetTable(this.param.tableId);
-      this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+      this.$refs.searchTips.$refs.myChild.GetTable(this.param.tableId); // 先获取所有自定义字段赋值
+      this.$refs.searchTips.showExcel = false; // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
       if (window.screen.width > 1400) {
         this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 300
       } else {
