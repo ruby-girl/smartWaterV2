@@ -45,7 +45,7 @@ export default {
      * 动态添加模板图标
      * */
     renderContent(h, { node, data, store }) {
-      return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class='ndoe_level'>{node.level}</i> {node.label} < /span>)
+      return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class='ndoe_level'>{node.level-1}</i> {node.label} < /span>)
     },
     /**
      * 当前选中需编辑或者新增信息或删除
@@ -172,7 +172,7 @@ export default {
 </script>
 <style lang="scss">
 .cl-treeBox {
-  .back{display: block;width: 100%;height: 100%;padding-left: 10px;line-height: 38px;}
+  .back{display: block;width: 100%;height: 100%;padding-left: 15px;line-height: 38px;}
   .back1{background: #6DB3AC}
   .back2{background: #95CCC7;padding-left: 20px;}
   .back3{background: #B6DBD8;padding-left: 30px}
@@ -244,5 +244,6 @@ export default {
     color: #b32f00;
     font-weight: bold;
   }
+  .back1 .ndoe_level{display: none;}
 }
 </style>

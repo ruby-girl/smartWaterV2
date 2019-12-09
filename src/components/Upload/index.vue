@@ -1,6 +1,6 @@
 <template>
   <div class="uploadBox">
-    <el-form-item label="附件类型">
+    <el-form-item label="附件类型" v-if="ifShow">
       <el-select v-model="certificates" placeholder="请选择" size="small">
         <el-option v-for="(item,index) in option" :key="index" :label="item.label" :value="item.value" />
       </el-select>
@@ -62,6 +62,7 @@
   name: 'Upload',
   data() {
     return {
+      ifShow:true,
       option:[
         {label:'身份证',value:'1'},
         {label:'居住证',value:'2'}
@@ -225,6 +226,7 @@
       height: 144px;
       text-align: center;
       border: dashed 1px #ddd;
+      border-radius: 3px;
       padding: 30px 0;
       .el-upload__tip{
         line-height: 20px;text-align: left;color: #8A9299;padding:0 5px;margin-top: 10px;
@@ -232,6 +234,7 @@
     }
     .uploadList{
       width: calc(100% - 220px);
+      border-radius: 3px;
       border: solid 1px #ddd;
       height: 144px;
       overflow: auto;
@@ -240,7 +243,7 @@
       margin: 0;
       left: 220px;
       li{
-        font-size: 16px;
+        font-size: 14px;
         cursor: pointer;
         position: relative;
         >div{position: relative;border-bottom: solid 1px #eee;margin: 0;padding: 0px;
