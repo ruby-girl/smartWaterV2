@@ -58,10 +58,13 @@
     <EditDialog ref="editDialog"></EditDialog>
     <!--详情弹窗-->
     <DetailDialog ref="detailDialog"></DetailDialog>
+    <!--低保户申请-->
+    <LowIncome ref="lowIncomeDialog"></LowIncome>
   </div>
 </template>
 
 <script>
+  import LowIncome from "./LowIncome"
   import SearchTips from "@/components/SearchTips/index";
   import Pagination from '@/components/Pagination/index'//分页组建
   import { promptInfoFun } from "@/utils/index"
@@ -80,7 +83,7 @@
 
   export default {
     name: "TableQuery",
-    components: {Pagination, Statistics, AddDialog, EditDialog, DetailDialog, SearchTips},
+    components: {Pagination, Statistics, AddDialog, EditDialog, DetailDialog, SearchTips, LowIncome},
     data(){
       return {
         tipsData: [], //传入子组件的值
@@ -226,7 +229,7 @@
         });
       },
       lowApplication(){//低保户申请
-
+        this.$refs.lowIncomeDialog.dialogVisible = true
       },
       handleCurrentChange(val) {//列表点击事件
        console.log(val)

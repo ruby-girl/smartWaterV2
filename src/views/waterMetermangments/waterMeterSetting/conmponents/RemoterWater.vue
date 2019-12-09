@@ -25,7 +25,7 @@
             <p class="dateYC">{{itemList.RefreshTime}}</p>
           </li>
         </ul>
-        <p>{{msg}}</p>
+        <p class="boxMsg" v-if="showMsg">暂无数据</p>
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
           用户详情
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
@@ -264,7 +264,6 @@ export default {
         filed: "", //排序字段
         tableId: "0000022"
       },
-      msg: "11111",
       meterReadListParam: {
         //历史数据
         customerId: "", //水表Id ,
@@ -294,15 +293,11 @@ export default {
       orderid: "",
       deiKey: -1,
       ifShow: false,
-      orderData: {}
+      orderData: {},
+      showMsg: true
     };
   },
   activated: function() {
-    // let id = this.$route.query.id;
-    // if (id) {
-    //   this.param.SA_MeterReadPlan_Id = id;
-    //   this.searchFun();
-    // }
     this.getdevice();
     this.timeFunction = setInterval(() => {
       this.getdevice();
@@ -314,12 +309,12 @@ export default {
   created() {
     this.ValveStateList = getDictionaryOption("远传表阀门状态");
     this.TrafficStatusList = getDictionaryOption("远传表通讯状态");
+  },
+  mounted() {
     this.getdevice();
     this.timeFunction = setInterval(() => {
       this.getdevice();
     }, 60000);
-  },
-  mounted() {
     this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
       document.getElementsByClassName("el-form")[0].offsetHeight -
@@ -366,10 +361,13 @@ export default {
     getdevice() {
       getWaterDevice().then(res => {
         if (res.code == 0) {
-          this.msg = "";
+          this.showMsg = false;
+          if (res.data.length < 1) {
+            this.showMsg = true;
+          }
           this.deviceList = res.data;
         } else {
-          this.msg = res.message;
+          this.showMsg = true;
         }
       });
     },
@@ -666,6 +664,10 @@ export default {
       // overflow: hidden;
       // // margin-right: 0 !important;
       margin-right: 0px !important;
+    }
+    .boxMsg {
+      border: 1px solid #eee;
+      height: 300px;
     }
   }
 }

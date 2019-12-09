@@ -204,9 +204,11 @@ export default {
     },
     //查询记录
     seachAccountOrder(num) {
-      if (this.listQuery.timevalue != []) {
-        this.listQuery.StartUpgradeDate += " 00:00:00";
-        this.listQuery.EndUpgradeDate += " 23:58:59";
+      if (this.listQuery.timevalue.length>0) {
+        this.listQuery.StartUpgradeDate =
+          this.listQuery.StartUpgradeDate.split(" ")[0] + " 00:00:00";
+        this.listQuery.EndUpgradeDate =
+          this.listQuery.EndUpgradeDate.split(" ")[0] + " 23:58:59";
       }
       if (num != "0") {
         this.orderData = Object.assign({}, this.listQuery);
@@ -267,18 +269,7 @@ export default {
 
       background: #fff;
     }
-    .el-aside::-webkit-scrollbar {
-      width: 3px;
-    }
-    .el-aside::-webkit-scrollbar-thumb {
-      /*滚动条里面小方块*/
-
-      border-radius: 10px;
-
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-
-      background: #ccc;
-    }
+   
     .el-main {
       background: #fff;
       padding: 7px 14px;

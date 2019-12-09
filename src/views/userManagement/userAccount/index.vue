@@ -66,15 +66,6 @@
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
               />
-              <el-table-column
-                v-else
-                :key="index"
-                min-width="190px"
-                sortable="custom"
-                :prop="item.ColProp"
-                :align="item.Position"
-                :label="item.ColDesc"
-              />
             </template>
           </el-table>
           <pagination
@@ -205,6 +196,12 @@ export default {
     },
     //查询记录
     seachAccountOrder(num) {
+      if (this.listQuery.timevalue.length > 0) {
+        this.listQuery.StartUpgradeDate =
+          this.listQuery.StartUpgradeDate.split(" ")[0] + " 00:00:00";
+        this.listQuery.EndUpgradeDate =
+          this.listQuery.EndUpgradeDate.split(" ")[0] + " 23:58:59";
+      }
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
       }

@@ -146,7 +146,7 @@ export default {
       companyParentOptions: [],
       isShowAdPlan: false,
       isShowAdPlanClass: !this.isShowAdPlan,
-      orderData:{}
+      orderData: {}
     };
   },
   computed: {
@@ -213,12 +213,12 @@ export default {
       GenerateOrder({ SA_MeterReadPlan_Id: id }).then(res => {
         if (res.code == 0) {
           that.$message({
-            message: res.msg ? res.msg : "操作成功",
+            message: res.data ? res.data : "操作成功",
             type: "success"
           });
         } else {
           that.$message({
-            message: res.msg ? res.msg : "操作失败",
+            message: res.message ? res.message : "操作失败",
             type: "warning"
           });
         }
@@ -249,13 +249,13 @@ export default {
         delPlanList({ SA_MeterReadPlan_Id: id }).then(res => {
           if (res.code == 0) {
             that.$message({
-              message: res.msg ? res.msg : "删除成功",
+              message: res.message ? res.message : "删除成功",
               type: "success"
             });
             that.searchTableList();
           } else {
             that.$message({
-              message: res.msg,
+              message: res.message,
               type: "warning"
             });
           }
@@ -270,11 +270,11 @@ export default {
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.searchTableList();
     },
-    searchTableList() {
+    searchTableList(num) {
       //查询列表
       this.$refs.child1.getTime();
       if (num != 0) {
-        this.orderData = Object.assign({}, this.listQuery);
+        this.orderData = Object.assign({}, this.selectHead);
       }
       const that = this;
       if (
@@ -315,13 +315,13 @@ export default {
       changeListState(parm).then(res => {
         if (res.code == 0) {
           that.$message({
-            message: res.msg,
+            message: res.message,
             type: "success"
           });
           that.searchTableList();
         } else {
           that.$message({
-            message: res.msg,
+            message: res.message,
             type: "warning"
           });
         }
