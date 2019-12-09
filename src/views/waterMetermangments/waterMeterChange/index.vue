@@ -85,7 +85,8 @@ export default {
        changeMeterType:'-1',//换表类型
        changeStartTime:'',//开始时间
        changeEndTime:'',//结束时间
-       tableId: "0000029"
+       tableId: "0000029",
+       timevalue:[]
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗

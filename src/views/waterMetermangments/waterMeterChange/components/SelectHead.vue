@@ -83,7 +83,7 @@
     </el-form-item>
     <el-form-item label="换表日期">
       <el-date-picker
-        v-model="timevalue"
+        v-model="selectHead.timevalue"
         type="daterange"
         :editable="false"
         :unlink-panels="true"
@@ -113,7 +113,6 @@ export default {
   },
   data() {
     return {
-      timevalue: [],
       editUserList: [],
       userType: [],
       waterType:[],//水表类型
