@@ -31,16 +31,16 @@
             :label="item.ColDesc"
             :fixed="item.Freeze"
           />
-          <el-table-column
-            v-else
-            :key="index"
-            min-width="190px"
-            sortable="custom"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
-          />
         </template>
+        <el-table-column label="操作" width="300px" align="center" fixed="right">
+          <template slot-scope="scope">
+            <!-- <a
+              class="viewHis"
+              v-if="scope.row.SA_Customer_Id!=''"
+              @click="waterMeterWLWDetail(scope.row.IMSI)"
+            >查看历史详情</a> -->
+          </template>
+        </el-table-column>
       </el-table>
       <pagination
         v-show="total>0"
@@ -60,7 +60,7 @@ import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
 export default {
   name: "UserSecurMangment",
-  components: { Selected,Pagination,SearchTips },
+  components: { Selected, Pagination, SearchTips },
   data() {
     return {
       listQuery: {
@@ -74,7 +74,7 @@ export default {
         waterMeterType: -1, //水表类型
         createStartTime: "", // 操作时间起
         createEndTime: "", // 操作时间止
-        securType:-1,//低保户 状态
+        securType: -1, //低保户 状态
         timevalue: [],
         tableId: "0000026"
       },
@@ -90,12 +90,13 @@ export default {
     };
   },
   mounted() {
-    console.log(document.getElementsByClassName("el-tabs")[0].offsetHeight)
-    console.log(document.getElementById("table").offsetTop)
+    console.log(document.getElementsByClassName("el-tabs")[0].offsetHeight);
+    console.log(document.getElementById("table").offsetTop);
     this.tableHeight =
       document.getElementsByClassName("el-tabs")[0].offsetHeight -
-      document.getElementById("table").offsetTop -98
-  console.log(this.tableHeight)
+      document.getElementById("table").offsetTop -
+      98;
+    console.log(this.tableHeight);
     this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },

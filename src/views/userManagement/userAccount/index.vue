@@ -66,15 +66,6 @@
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
               />
-              <el-table-column
-                v-else
-                :key="index"
-                min-width="190px"
-                sortable="custom"
-                :prop="item.ColProp"
-                :align="item.Position"
-                :label="item.ColDesc"
-              />
             </template>
           </el-table>
           <pagination

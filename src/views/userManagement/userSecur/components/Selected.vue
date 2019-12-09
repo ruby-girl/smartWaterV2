@@ -111,9 +111,9 @@
       </el-select>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" size="mini" @click="handleFilter">
-        <i class="iconfont iconsousuo"></i>搜索
-      </el-button>
+   
+      <el-button type="primary" size="mini" @click="handleFilter" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
+        <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
     </el-form-item>
   </el-form>
 </template>

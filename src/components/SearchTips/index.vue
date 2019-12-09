@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="tipsBtn fr">
-      <i class="icon iconfont" @click="excel" title="导出excel">&#xe64f;</i>
+      <i v-if="showExcel" class="icon iconfont" @click="excel" title="导出excel">&#xe64f;</i>
       <i
         class="icon iconfont"
         :class="{thisTableClass:thisTable}"
@@ -65,7 +65,8 @@ export default {
       num: 0,
       thisTable: false,
       tipsDataCopy: [],
-      showBtn:false
+      showBtn:false,
+      showExcel:true,//是否有导出按钮
     };
   },
   methods: {
