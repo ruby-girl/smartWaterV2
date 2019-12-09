@@ -49,7 +49,7 @@
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
           </el-select>
           <el-input v-model="param1.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
-                    style="width: 180px;float: left" @change="getText(param1.CustomerQueryValue,'CustomerQueryValue','',param1.CustomerQueryType)"/>
+                    style="width: 180px;float: left" @blur="setText(param.CustomerQueryValue,'CustomerQueryValue',userTypes)"/>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -202,13 +202,14 @@
   import { QueryMeterReaderByFactoryId } from "@/api/meterQuery" //抄表时间条件下，获取抄表员信息接口
   import { LoadRegisterBookAndMeterReader } from "@/api/meterReading"//抄表计划搜索条件下，获取表册及抄表员接口
   import { promptInfoFun } from "@/utils/index"
+  import { getName } from "@/utils/projectLogic"
 
   export default {
     name: "SelectHead",
     data() {
       return {
         userTypes:[
-          {name:'姓名',Id:'1'},
+          {name:'用户编号',Id:'1'},
           {name:'姓名/简码',Id:'2'},
         ],
         typeCheck:1,
@@ -373,9 +374,7 @@
         }
         this.getPlanList('-1');//默认查全部抄表计划
       },
-      getText(val, model, arr, name) {
-        this.$emit("getText", val, model, arr, name);
-      },
+
       resetFun(type){
         if(type == 1){
             this.InputData = []
@@ -395,6 +394,17 @@
             this.param2.CustomerQueryType = '1'
           this.$refs['formName2'].resetFields();
         }
+      },
+      getText(val, model, arr, name) {
+        this.$emit("getText", val, model, arr, name);
+      },
+      setText(text,model,arr){
+        let name = getName(this.query.CustomerQueryType)
+        this.getText(text,model,arr,name)
+      },
+      setText(text,model,arr){
+        let name = getName(this.param.CustomerQueryType)
+        this.getText(text,model,arr,name)
       }
     },
     mounted() {

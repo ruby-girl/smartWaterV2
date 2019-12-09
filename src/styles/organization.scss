@@ -174,7 +174,15 @@
 .el-button--mini.is-round{margin:0 7px 0 0;}
 .el-button--mini.is-round:last-child{margin: 0;}
 .search-head-box, .search-head-otherbox{position: absolute;height: 29px;width: calc(100% + 22px);background: #fff;z-index: 9;margin-left: -11px;overflow: hidden;}
-.search-head-box.on, .search-head-otherbox.on{height: auto;box-shadow: 4px 4px 4px #ddd;}
+.search-head-box.on, .search-head-otherbox.on, .meter-head.on{height: auto;box-shadow: 4px 4px 4px #ddd;}
+.cl-last-item{margin-left: 37px;}
+.meter-head{position: absolute;
+  height: 29px;
+  width: calc(100% + 32px);
+  background: #fff;
+  z-index: 9;
+  margin-left: -16px;
+  overflow: hidden;}
 .search-head-otherbox {
   width: calc(100% + 2px);
   margin-left: -18px;

@@ -187,7 +187,7 @@ export default {
       }
 
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
-      this.searchFun()
+     //  this.searchFun()
     },
     /**
      *val 搜索数据值
@@ -203,7 +203,7 @@ export default {
   },
   mounted() {
     this.$refs.searchTips.$refs.myChild.GetTable(this.param.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
   }
 };
 </script>
