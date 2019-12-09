@@ -241,3 +241,41 @@ export function checkWaterMOney(data) {//检查ic卡输入的表端余额是否�
     params: data
   })
 }
+// --------------------水表换表-----------------------------------
+export function OldChangeNew(data) {// 机械表、远传、物联以旧换新
+  return request({
+    url: "/WaterMeter/OldChangeNew",
+    method: 'POST',
+    data: data
+  })
+}
+export function GetICK_OldChangeNew(data) {// IC以旧换新
+  return request({
+    url: "/WaterMeter/GetICK_OldChangeNew",
+    method: 'GET',
+    params: data
+  })
+}
+
+export function Exchange(data) {// 用户互换（支持远传、物联）
+  return request({
+    url: "/WaterMeter/Exchange",
+    method: 'POST',
+    params: data
+  })
+}
+export function WaterMeterChangeList(data) {// 查询换表记录
+  return request({
+    url: "/WaterMeter/WaterMeterChangeList",
+    method: 'POST',
+    data: data
+  })
+}
+
+export function AccountCanCellationList_Execl(data) {// 导出
+  return request({
+    url: "/WaterMeter/AccountCanCellationList_Execl",
+    method: 'POST',
+    data: data
+  })
+}

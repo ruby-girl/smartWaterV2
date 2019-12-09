@@ -6,8 +6,8 @@
         <div class="section-full-container">
           <div ref="formHeight">
             <select-head :select-head="listQuery" @handleFilter="handleFilter" @getText="getText"/>
-          </div>
-         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excel="setCustomData"/>
+          </div>       
+         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excel="excel"/>
           <div class="main-padding-20-y">
             <el-table
               :key="tableKey"
@@ -40,7 +40,7 @@
               :total="total"
               :page.sync="listQuery.page"
               :limit.sync="listQuery.limit"
-              @pagination="getList"
+              @pagination="getList(1)"
             />
           </div>
         </div>
@@ -55,7 +55,7 @@
 <script>
 import SelectHead from "./components/SelectHead";
 import LeftBox from "./components/Left"
-import {TransferCustomerList,TransferCustomerList_Execl} from "@/api/userAccount";
+import {WaterMeterChangeList,AccountCanCellationList_Execl} from "@/api/waterMeterMang";
 import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import SearchTips from "@/components/SearchTips/index";
@@ -76,22 +76,24 @@ export default {
         limit: 10,
         filed: "",
         sort: "",
-       SA_WaterFactory_Id:'-1',//水厂
-       UserType:'-1',//用户类型
-       WaterTypeId:'-1',//水表类型
-       TransferCustomer:'',//查询类型
-       Customer:'',//Input值
-       OpId:'-1',//过户操作员
-       Star_TransferDate:'',//开始时间
-       End_TransferDate:'',//开始时间
-       tableId: "0000027"
+        waterFactoryId:'-1',//水厂
+        customerQueryType:'1',//查询用户类型
+        customerQueryValue:'',//input值
+        userType:'-1',//用户类型
+        waterMeterType:'-1',//水表类型
+        createUserId:'-1',//换表操作人
+       changeMeterType:'-1',//换表类型
+       changeStartTime:'',//开始时间
+       changeEndTime:'',//结束时间
+       tableId: "0000029"
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableData: [],
       checksData: [],
       tipsData: [],//传入子组件的值
-      tipsDataCopy: []//表单变化的值
+      tipsDataCopy: [],//表单变化的值
+      orderData:{}
     };
   },
   computed: {
@@ -110,16 +112,21 @@ export default {
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 200;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\   
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     });
   },
   methods: {
-    delTips(val) {
+   delTips(val) {
+      if (val == "timevalue") {
+        //当返回的model 为时间数组  置空 时间
+        this.listQuery.changeStartTime = "";
+        this.listQuery.changeEndTime = "";
+      }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
-      this.seachAccountOrder();
+      this.handleFilter();
     },
-    getText(val, model, arr) {
-      let obj=getText(val, model, arr,this.tipsDataCopy,this)
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
     getUp(v) {
@@ -132,14 +139,10 @@ export default {
           .classList.remove("hide");
       }
     },
-    setCustomData() {
-      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
-      if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;
-      else this.tableHeight = this.tableHeight + 80;
-    },
-    getList() {
-      TransferCustomerList(this.listQuery).then(res => {
-        pushItem(this)
+    getList(n) {
+      if(!n) this.orderData = Object.assign({}, this.listQuery);
+      WaterMeterChangeList(this.orderData).then(res => {
+       this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -160,7 +163,7 @@ export default {
     },
     excel() {
       //导出
-      TransferCustomerList_Execl(this.listQuery).then(res => {
+      AccountCanCellationList_Execl(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     }

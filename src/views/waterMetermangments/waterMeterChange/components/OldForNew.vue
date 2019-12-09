@@ -8,7 +8,7 @@
           <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
-      <el-form ref="form" class="head-search-form" :label-width="user.WaterMeterTypeId==1104?'106px':'86px'" style="margin-top:10px;">
+      <el-form  class="head-search-form big-margin-label" ref="oldUser" :rules="oldUser" label-width="86px" style="margin-top:10px;">
           <el-form-item label="用户编号">
           <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
         </el-form-item>
@@ -24,19 +24,19 @@
           <el-input class="left-input" v-model="user.WaterMeterTypeName" :disabled="true"></el-input>
         </el-form-item> 
         <!-- 机械或远传    -->
-        <el-form-item label="原水表读数" v-show="user.WaterMeterTypeId==1101||user.WaterMeterTypeId==1103">
-          <el-input class="left-input" v-model="user.oldRead"></el-input>
+        <el-form-item label="原水表读数" :prop="user.WaterMeterTypeId==1101||user.WaterMeterTypeId==1103?'oldRead':''" v-show="user.WaterMeterTypeId==1101||user.WaterMeterTypeId==1103">
+          <el-input class="left-input" v-model="newUser.oldRead"></el-input>
         </el-form-item>
         <!-- 物联网 -->
-        <el-form-item label="换表期间用水量" v-show="user.WaterMeterTypeId==1104">
-          <el-input class="left-input" v-model="user.wlwWaterYield"></el-input>
+        <el-form-item label="换表期间用水量" v-show="user.WaterMeterTypeId==1104" class="big-label-width">
+          <el-input class="left-input" v-model="newUser.wlwWaterYield"></el-input>
         </el-form-item>   
         <el-form-item label="原水表编号">
           <el-input class="left-input" v-model="user.SA_WaterMeterNo" :disabled="true"></el-input>
         </el-form-item>
          <!-- IC -->
-        <el-form-item label="表端余额" v-show="user.WaterMeterTypeId==1102||user.WaterMeterTypeId==1104">
-          <el-input class="left-input" v-model="user.IdentityNo" :disabled="user.WaterMeterTypeId==1104?true:false"></el-input>
+        <el-form-item label="表端余额" :prop="user.WaterMeterTypeId==1102?'meterBalance':''" v-show="user.WaterMeterTypeId==1102||user.WaterMeterTypeId==1104">
+          <el-input class="left-input" v-model="newUser.meterBalance" :disabled="user.WaterMeterTypeId==1104?true:false"></el-input>
         </el-form-item>
          <el-form-item label="账户余额" v-show="user.WaterMeterTypeId!==1104">
           <el-input class="left-input" v-model="user.Balance" :disabled="true"></el-input> 
@@ -50,15 +50,15 @@
       <div class="display-flex align-items-center justify-content-flex-justify">
         <div class="font-weight pl-15 top-title">新水表信息</div>    
       </div>
-      <el-form class="head-search-form" :model="newUser" ref="user" :rules="rules" :label-width="user.WaterMeterTypeId==1104?'106px':'86px'" style="margin-top:10px;">
-           <el-form-item label="新水表编号" prop="NewTel">
+      <el-form class="head-search-form big-margin-label" :model="newUser" ref="user" :rules="rules" label-width="86px" style="margin-top:10px;">
+           <el-form-item label="新水表编号" prop="newWaterMeterNo">
           <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
         </el-form-item>
-        <el-form-item label="新水表读数" prop="NewTel" v-show="user.WaterMeterTypeId==1101">
+        <el-form-item label="新水表读数" prop="newRead" v-show="user.WaterMeterTypeId==1101">
           <el-input class="left-input"  v-model="newUser.newRead"></el-input>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input  type="textarea" v-model="newUser.Remark"></el-input>
+        <el-form-item label="备注" prop="remark">
+          <el-input  type="textarea" v-model="newUser.remark"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -71,37 +71,52 @@
   </el-form-item>
   </el-form>
     <div class="bottom-btn-box">
-      <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户</el-button>
+      <el-button type="primary" @click="change" size="mini" style="padding:8px 14px;">确认换表</el-button>
     </div>
+    <select-user
+      :selectUserShow.sync="selectUserShow"
+      :headQuery="params"
+      @handleFilter="handleFilter"
+    />
   </div>
 </template>
 <script>
-import "@/styles/organization.scss";
-import { IsTransfer,TransferCustomer } from "@/api/userAccount";
+import { OldChangeNew,GetICK_OldChangeNew} from "@/api/waterMeterMang";
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
+import SelectUser from "@/components/SelectUser";
 import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 export default {
+  components: {SelectUser},
   props: { ifShow: {} },
   data() {
+    const validateNewRead = (rule, value, callback) => {
+      if (!value&&this.user.WaterMeterTypeId==1101) {
+        callback(new Error("必填"));
+      } else {
+        callback();
+      }
+    };
+     const validateMeterBalance = (rule, value, callback) => {
+      if (!value&&this.user.WaterMeterTypeId==1102) {//IC卡表端余额必填
+        callback(new Error("必填"));
+      } else {
+        callback();
+      }
+    };
     return {
-      ifShowChild: false,
-      fileShow: false,
-      name: "r",
       user: {
-        WaterMeterTypeId:1104
+        WaterMeterTypeId:1101
       },
-      accountShow: false, //账户转存弹窗
       newUser: {
-        CustomerId:'',
+        customerId:'',
         oldRead:'',//读数（机械，远传必填）
         newWaterMeterNo:'',//新水表编号
         wlwWaterYield:'',//物联网用水量
-        newRead:'',//新水表读数（机械表必填）
+        newRead:'',//新水表读数（机械表必填
+        meterBalance:'',//IC卡表端余额
         remark:'',//备注
         isPage:false//是否翻页
       },
-      IsArrearageRes: {}, //是否欠费接口返回的所有信息
-      file: [],
       params: {
         page: 1,
         Limit: 10,
@@ -110,31 +125,15 @@ export default {
       },
       selectUserShow: false,
       rules: {
-        NewCustomerName: [{ required: true, message: " ", trigger: "blur" }],
-        NewTel: [
-          { required: true, message: " ", trigger: "blur" },
-          {
-            pattern: /^[1][3,4,5,6,7,8,9][0-9]{9}$/,
-            message: " ",
-            trigger: "blur"
-          }
-        ],
-        NewPeopleNo: [{ required: true, message: " ", trigger: "blur" }],
-        NewIdentityNo: [
-          { required: true, message: " ", trigger: "blur" },
-          {
-            pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
-            message: " ",
-            trigger: "blur"
-          }
-        ]
+        newWaterMeterNo: [{ required: true, message: "必填", trigger: "blur" }],  
+        newRead: [{ required: true, trigger: "blur",validator: validateNewRead}],
+        remark:[{ required: true, message: "必填", trigger: "blur" }]
+      },
+      oldUser:{
+        meterBalance:[{ required: true, trigger: "blur",validator: validateMeterBalance}],
+        oldRead:[{ required: true, message: "必填", trigger: "blur" }]
       }
     };
-  },
-  watch: {
-    ifShow(v) {
-      this.ifShowChild = v;
-    }
   },
   methods: {
       // 模糊查询用户
@@ -155,58 +154,39 @@ export default {
           this.user = {};
         } else if (res.data.length == 1) {
           this.user = res.data[0];
-          this.IsTransferFunc(this.user.Id);
         } else {
           this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
         }
       });
     },
-    getUp() {
-      this.ifShowChild = true;
-      if (this.ifShow) {
-        document.getElementsByClassName("user_tree")[0].classList.add("hide");
-      } else {
-        document
-          .getElementsByClassName("user_tree")[0]
-          .classList.remove("hide");
-      }
-      this.$emit("getUp", this.ifShowChild);
-    },
-    testNumber(){
-      this.newUser.NewPeopleNo = this.newUser.NewPeopleNo.replace(/[^\d]/g,'');
-    },
-    account() {
+    change() {
       if (!this.user.CustomerNo) {
         this.$message({
-          message: "请先查询需要过户的用户信息！",
+          message: "请先查询需要换表的用户信息！",
           type: "error",
           duration: 4000
         });
         return;
       }
-      if(this.IsArrearageRes.IsArrearage){
-           this.$message({
-            message: "您选择的用户存在欠费不允许过户!",
-            type: "error",
-            duration: 4000
-          });
-          return
-      }
       this.$refs["user"].validate(valid => {
         if (!valid) return false;
         else {
-          this.IsBalanceDepositFunc(); //如果双方信息通过，这里询问账户余额是否转存
+          if(this.user.WaterMeterTypeId==1102){//如果是IC卡验证表端余额必填
+            this.$refs["oldUser"].validate(validIC => {
+            if (!validIC) return false;
+            this.changeRes(); 
+          })
+          }else{
+             this.changeRes(); 
+          }
+          //如果双方信息通过，这里询问账户余额是否转存
         }
       });
     },
-    IsBalanceDepositFunc() {      
-      this.accountShow = true;
-    },
      //进行过户操作
-    accountBalancesFunc(user) { 
-      user.FileIdList=this.file
-      this.accountShow=false
-      TransferCustomer(user).then(res=>{
+    changeRes() {
+      let Func=this.user.WaterMeterTypeId==1102?GetICK_OldChangeNew:OldChangeNew
+      Func(this.newUser).then(res=>{
         this.$message({
             message: "操作成功！",
             type: "success",
@@ -214,30 +194,19 @@ export default {
           });
           this.user={}
           this.newUser={
-            CustomerId:'',
-            NewCustomerName: "", //姓名
-            NewTel: "", //电话
-            NewPeopleNo: "", //人口
-            NewIdentityNo: "", //证件号
-            Remark: "", //备注
-            FileIdList: [], //文件合集
-            BalanceValue: 0, //余额
-            OperatorEmpId: "", //经办人ID
-            IsBalanceDeposit: false //是否转存
+            customerId:'',
+            oldRead:'',//读数（机械，远传必填）
+            newWaterMeterNo:'',//新水表编号
+            wlwWaterYield:'',//物联网用水量
+            newRead:'',//新水表读数（机械表必填）
+            remark:'',//备注
+            isPage:false//是否翻页
           }
       })
     },
     handleFilter(val) {
       this.user = val;  
-      this.IsTransferFunc(val.Id);
-    },
-    // 查询用户是否有欠费
-    IsTransferFunc(id) {
-      this.newUser.CustomerId=id
-      IsTransfer({ CustomerId: id }).then(res => {
-        this.user.BalanceValue=res.data.Balance
-        this.IsArrearageRes = res.data;
-      });
+      this.newUser.customerId=val.Id
     },
     // IC卡读卡
     handleFilterIC(){
@@ -306,12 +275,12 @@ font-size: 14px;
     }
   }
   .left-input{
-    width:150px !important;
+    width:160px !important;
      /deep/ input.el-input__inner{
       width:100% !important;
     }
     /deep/ .el-select > .el-input{
-         width:150px !important;
+         width:160px !important;
     }
   }
   .el-button--mini {
@@ -350,6 +319,32 @@ font-size: 14px;
     }
 }
 /deep/ .el-form-item__content .el-textarea{
-  width:150px !important;
+  width:160px !important;
+}
+.big-label-width{
+  /deep/ .el-form-item__label{
+    line-height: 14px;
+  }
+}
+.big-margin-label{
+   /deep/ .el-form-item{
+      margin-bottom: 16px;
+   }
+}
+@media screen and (max-width: 1200px) {
+  .tree_container{
+    .left-input{
+      width:145px !important;
+      /deep/ input.el-input__inner{
+        width:100% !important;
+    }
+      /deep/ .el-select > .el-input{
+        width:145px !important;
+      }
+    }
+  }
+  /deep/ .el-form-item__content .el-textarea{
+    width:145px !important;
+  }
 }
 </style>

@@ -7,18 +7,16 @@
       <old-for-new></old-for-new>
     </el-tab-pane>
     <el-tab-pane label="用户互换" name="second">
-      <user-change></user-change>>
+      <user-change></user-change>
     </el-tab-pane>
   </el-tabs>
   <span v-show="!ifShowChild" class="telescopic telescopic2" @click="getUp">
-      用户过户
+      水表换表
       <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
   </span>
   </div>
 </template>
 <script>
-import "@/styles/organization.scss";
-import { IsTransfer,TransferCustomer } from "@/api/userAccount";
 import OldForNew from "./OldForNew"
 import UserChange from "./UserChange"
 export default {
@@ -56,113 +54,6 @@ export default {
           .classList.remove("hide");
       }
       this.$emit("getUp", this.ifShowChild);
-    },
-    account() {
-      if (!this.user.CustomerNo) {
-        this.$message({
-          message: "请先查询需要过户的用户信息！",
-          type: "error",
-          duration: 4000
-        });
-        return;
-      }
-      if(this.IsArrearageRes.IsArrearage){
-           this.$message({
-            message: "您选择的用户存在欠费不允许过户!",
-            type: "error",
-            duration: 4000
-          });
-          return
-      }
-      this.$refs["user"].validate(valid => {
-        if (!valid) return false;
-        else {
-          this.IsBalanceDepositFunc(); //如果双方信息通过，这里询问账户余额是否转存
-        }
-      });
-    },
-    IsBalanceDepositFunc() {      
-      this.accountShow = true;
-    },
-     //进行过户操作
-    accountBalancesFunc(user) { 
-      user.FileIdList=this.file
-      this.accountShow=false
-      TransferCustomer(user).then(res=>{
-        this.$message({
-            message: "操作成功！",
-            type: "success",
-            duration: 4000
-          });
-          this.user={}
-          this.newUser={
-            CustomerId:'',
-            NewCustomerName: "", //姓名
-            NewTel: "", //电话
-            NewPeopleNo: "", //人口
-            NewIdentityNo: "", //证件号
-            Remark: "", //备注
-            FileIdList: [], //文件合集
-            BalanceValue: 0, //余额
-            OperatorEmpId: "", //经办人ID
-            IsBalanceDeposit: false //是否转存
-          }
-      })
-    },
-    // 模糊查询用户
-    handleSelect(val, n) {
-      if (!val) {
-        this.user = {};
-        return false;
-      }
-      this.params.CustomerQueryValue = val;
-      this.params.CustomerQueryType = n;
-      GetCustomerDataList(this.params).then(res => {
-        if (res.data.length == 0) {
-          this.$message({
-            message: "未查询到用户！",
-            type: "error",
-            duration: 4000
-          });
-          this.user = {};
-        } else if (res.data.length == 1) {
-          this.user = res.data[0];
-          this.IsTransferFunc(this.user.Id);
-        } else {
-          this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
-        }
-      });
-    },
-    handleFilter(val) {
-      this.user = val;  
-      this.IsTransferFunc(val.Id);
-    },
-    // 查询用户是否有欠费
-    IsTransferFunc(id) {
-      this.newUser.CustomerId=id
-      IsTransfer({ CustomerId: id }).then(res => {
-        this.user.BalanceValue=res.data.Balance
-        this.IsArrearageRes = res.data;
-      });
-    },
-    // IC卡读卡
-    handleFilterIC(){
-      try {
-        // resInfo用户信息  resData卡片信息
-        // ICReadCardInfo((resInfo,resData)=>{
-        //   console.log('头部咯')
-        //   console.log(resData)
-        //this.$emit("handleFilterIcParent", resInfo,resData) 
-        // })
-        // 读卡
-          ICReadCardInfo((resData)=>{
-          console.log('头部咯')
-          console.log(resData)
-          this.$emit("handleFilterIcParent", resData)      
-        })
-      } catch (error) {
-        console.log("请在CS端操作1");
-      }
     }
   }
 };
