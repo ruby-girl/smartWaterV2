@@ -143,7 +143,7 @@ export default {
   created() {
     this.companyParentOptions = this.$store.state.user.waterWorks;
     if (this.companyParentOptions.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.companyOptions[0].Id;
+      this.selectHead.SA_WaterFactory_Id = this.companyParentOptions[0].Id;
       this.companyShow = false;
     }
     this.userTypeList = getDictionaryOption("用户类型");

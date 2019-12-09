@@ -270,11 +270,11 @@ export default {
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.searchTableList();
     },
-    searchTableList() {
+    searchTableList(num) {
       //查询列表
       this.$refs.child1.getTime();
       if (num != 0) {
-        this.orderData = Object.assign({}, this.listQuery);
+        this.orderData = Object.assign({}, this.selectHead);
       }
       const that = this;
       if (
