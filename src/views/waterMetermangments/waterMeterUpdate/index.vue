@@ -269,18 +269,7 @@ export default {
 
       background: #fff;
     }
-    .el-aside::-webkit-scrollbar {
-      width: 3px;
-    }
-    .el-aside::-webkit-scrollbar-thumb {
-      /*滚动条里面小方块*/
-
-      border-radius: 10px;
-
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-
-      background: #ccc;
-    }
+   
     .el-main {
       background: #fff;
       padding: 7px 14px;

@@ -22,7 +22,6 @@
 
         <template v-for="(item ,index) in tableHeadData">
           <el-table-column
-            v-if="item.IsFreeze"
             :key="index"
             min-width="190px"
             :sortable="item.IsSortBol?'custom':null"
@@ -38,7 +37,7 @@
               class="viewHis"
               v-if="scope.row.SA_Customer_Id!=''"
               @click="waterMeterWLWDetail(scope.row.IMSI)"
-            >查看历史详情</a> -->
+            >查看历史详情</a>-->
           </template>
         </el-table-column>
       </el-table>
@@ -82,7 +81,7 @@ export default {
       tableKey: 0,
       tableData: [],
       tableHeight: null,
-      total: 10,
+      total:0,
       customHeight: "", //自定义高度
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
@@ -90,13 +89,10 @@ export default {
     };
   },
   mounted() {
-    console.log(document.getElementsByClassName("el-tabs")[0].offsetHeight);
-    console.log(document.getElementById("table").offsetTop);
     this.tableHeight =
       document.getElementsByClassName("el-tabs")[0].offsetHeight -
       document.getElementById("table").offsetTop -
       98;
-    console.log(this.tableHeight);
     this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },

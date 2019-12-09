@@ -5,7 +5,7 @@
         <user-secur-mangment />
       </el-tab-pane>
       <el-tab-pane label="历史记录 " name="2">
-        <div>历史 记录</div>
+        <user-secur-order />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -32,7 +32,7 @@ export default {
       background: #eee;
       margin: 0;
     }
-     /deep/.el-tabs__content{
+    /deep/.el-tabs__content {
       padding: 14px 12px;
     }
   }
