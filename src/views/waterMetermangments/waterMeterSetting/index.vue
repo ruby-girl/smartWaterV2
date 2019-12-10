@@ -1,6 +1,6 @@
 <template>
   <div class="section-container water-setting">
-    <el-tabs v-model="typeCheck">
+    <el-tabs v-model="typeCheck" @tab-click="tabClick">
       <el-tab-pane label="机械水表" name="1">
         <mechanical-water :waterMeterList="waterMeterList" :openStatus="openStatus" />
       </el-tab-pane>
@@ -66,6 +66,11 @@ export default {
         this.$refs.interChild.searchWLWMeterInfo();
       }
     });
+  },
+  methods:{
+    tabClick(tab){
+      console.log(document.getElementsByClassName("searchTips")[0].offsetWidth)
+    }
   }
 };
 </script>

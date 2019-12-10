@@ -5,7 +5,7 @@
       <div class="user_table">
         <div class="section-full-container">
           <div ref="formHeight">
-            <select-head :select-head="listQuery" @handleFilter="handleFilter" @getText="getText"/>
+            <select-head :select-head="listQuery" @handleFilter="handleFilter" @getText="getText" :searchWidth="searchWidth"/>
           </div>       
          <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excel="excel"/>
           <div class="main-padding-20-y">
@@ -56,13 +56,12 @@
 import SelectHead from "./components/SelectHead";
 import LeftBox from "./components/Left"
 import {WaterMeterChangeList,AccountCanCellationList_Execl} from "@/api/waterMeterMang";
-import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips,getText,pushItem } from "@/utils/projectLogic";//搜索条件面包屑
 export default {
   name: "waterMeterChange",
-  components: { SelectHead, customTable, Pagination,LeftBox,SearchTips},
+  components: { SelectHead,Pagination,LeftBox,SearchTips},
   data() {
     return {
       ifShow: false,
@@ -85,7 +84,8 @@ export default {
        changeMeterType:'-1',//换表类型
        changeStartTime:'',//开始时间
        changeEndTime:'',//结束时间
-       tableId: "0000029"
+       tableId: "0000029",
+       timevalue:[]
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
@@ -93,7 +93,8 @@ export default {
       checksData: [],
       tipsData: [],//传入子组件的值
       tipsDataCopy: [],//表单变化的值
-      orderData:{}
+      orderData:{},
+      searchWidth:1024,//右侧宽度
     };
   },
   computed: {
@@ -104,6 +105,14 @@ export default {
       return arrayHead;
     }
   },
+  watch:{
+    ifShow(){
+      let _this=this
+      setTimeout(function(){
+        _this.searchWidth=_this.$refs.formHeight.clientWidth
+      },100) 
+    }
+  },
    mounted: function() {
     this.$nextTick(function() {
       this.getUp(true)
@@ -112,7 +121,8 @@ export default {
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 200;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+      this.searchWidth=this.$refs.formHeight.clientWidth
     });
   },
   methods: {

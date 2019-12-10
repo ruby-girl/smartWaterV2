@@ -12,6 +12,7 @@
         v-model="selectHead.SA_WaterFactory_Id"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'水厂')"
       >
         <el-option label="全部" value="-1"></el-option>
         <el-option
@@ -27,6 +28,7 @@
         v-model="selectHead.enumPlanState"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+         @change="getText(selectHead.enumPlanState,'enumPlanState',planStateOptions,'计划状态')"
       >
         <el-option label="全部" value="-1"></el-option>
         <el-option
@@ -39,7 +41,7 @@
     </el-form-item>
     <el-form-item label="计划抄表日期" label-width="110px">
       <el-date-picker
-        v-model="warterMeterPlanDate"
+        v-model="selectHead.warterMeterPlanDate"
         type="daterange"
         :editable="false"
         :unlink-panels="true"
@@ -74,71 +76,49 @@ export default {
   data() {
     return {
       selectHead: {},
-      warterMeterPlanDate: [],
+      // warterMeterPlanDate: [],
       //companyOptions: [],
       planStateOptions: [],
-      companyShow:true
+      companyShow: true
     };
   },
   watch: {
     companyOptions() {
-      this.companyShow=true
+      this.companyShow = true;
       if (this.companyOptions.length == 1) {
         this.selectHead.SA_WaterFactory_Id = this.companyOptions[0].Id;
-        this.companyShow=false
+        this.companyShow = false;
       }
     }
   },
   created() {
-    const time = new Date();
-    let y = time.getFullYear();
-    let m = time.getMonth() + 1;
-    let d = time.getDate();
-    let lm, ly;
-    let nm, ny;
-
-    if (m - 6 < 0) {
-      lm = m + 12 - 6;
-      ly = y - 1;
-    } else {
-      lm = m - 6;
-      ly = y;
-    }
-    if (m + 6 > 12) {
-      nm = m + 6 - 12;
-      ny = y + 1;
-    } else {
-      nm = m + 6;
-      ny = y;
-    }
-    if (lm < 10) {
-      lm = "0" + lm;
-    }
-    if (nm < 10) {
-      nm = "0" + nm;
-    }
-    if (d < 10) {
-      d = "0" + d;
-    }
-    let lastTime = ly + "-" + lm + "-" + d + " " + "00:00:00";
-    let newTime = ny + "-" + nm + "-" + d + " " + "23:59:59";
-    this.warterMeterPlanDate.push(lastTime);
-    this.warterMeterPlanDate.push(newTime);
+    
   },
   methods: {
     handleFilter() {
       this.$parent.searchTableList();
     },
-
+    getText(val, model, arr, name) {
+      this.$emit("getText", val, model, arr, name);
+    },
     getTime() {
       //时间格式化
-      const date = this.warterMeterPlanDate;
+      // debugger
+      const date = this.selectHead.warterMeterPlanDate;
+      let date1;
       if (date) {
         this.selectHead.createStartTime = date[0];
         this.selectHead.createEndTime = date[1];
+        date1 =
+          this.selectHead.createStartTime.split(" ")[0] +
+          "~" +
+          this.selectHead.createEndTime.split(" ")[0];
+        this.$emit("getText", date1, "warterMeterPlanDate", "", "升级日期");
       } else {
         this.selectHead.createStartTime = "";
         this.selectHead.createEndTime = "";
+        date1 = "";
+        this.$emit("getText", date1, "warterMeterPlanDate", "", "升级日期");
       }
     }
   },

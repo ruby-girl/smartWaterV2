@@ -9,13 +9,26 @@
       @submit.native.prevent
     >
       <el-form-item label="姓名">
-        <el-input v-model="wachMeterData.CustomerName" maxlength="20" placeholder="(长度1-30)" />
+        <el-input
+          v-model="wachMeterData.CustomerName"
+          maxlength="20"
+          placeholder="(长度1-30)"
+          @change="getText(wachMeterData.CustomerName,'CustomerName','','姓名')"
+        />
       </el-form-item>
       <el-form-item label="水表编号">
-        <el-input v-model="wachMeterData.WaterMeterNo" maxlength="20" />
+        <el-input
+          v-model="wachMeterData.WaterMeterNo"
+          maxlength="20"
+          @change="getText(wachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
+        />
       </el-form-item>
       <el-form-item label="水表样式">
-        <el-select v-model="wachMeterData.wms" placeholder="请选择">
+        <el-select
+          v-model="wachMeterData.wms"
+          placeholder="请选择"
+          @change="getText(wachMeterData.wms,'wms',waterMeterList,'水表样式')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option
             v-for="item in waterMeterList"
@@ -26,7 +39,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="用户状态">
-        <el-select v-model="wachMeterData.cs" placeholder="请选择">
+        <el-select
+          v-model="wachMeterData.cs"
+          placeholder="请选择"
+          @change="getText(wachMeterData.cs,'cs',openStatus,'用户状态')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option
             v-for="item in openStatus"
@@ -43,21 +60,8 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <div class="cl-operation1 clearfix">
-      <el-button
-        type="warning"
-        size="small"
-        class="fr c"
-        style="margin-left: 10px;"
-        @click="setCustomData()"
-      >
-        <i class="icon iconfont">&#xe678;</i> 表格自定义
-      </el-button>
-      <el-button type="success" size="small" class="fr" @click="excelWaterMeter">
-        <i class="icon iconfont">&#xe683;</i> 导出Excel
-      </el-button>
-    </div>
-    <customTable ref="myChild" />
+
+    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelWaterMeter" />
     <div class="main-padding-20-y" id="table">
       <el-table
         :key="tableKey"
@@ -145,6 +149,8 @@
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   searJXMeterWater,
   searJXHisWater,
@@ -157,7 +163,7 @@ import { legalTime } from "@/utils/index"; //时间格式化
 export default {
   //机械表
   name: "MechanicalWater",
-  components: { customTable, Pagination, WaterMeterHis, EditJXWaterMeter },
+  components: { SearchTips, Pagination, WaterMeterHis, EditJXWaterMeter },
   props: {
     waterMeterList: {
       type: Array,
@@ -201,6 +207,8 @@ export default {
       editId: "", //获取行信息id
       editShow: false, //编辑
       editInfo: {},
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
       orderData: {}
     };
   },
@@ -209,8 +217,8 @@ export default {
       document.getElementsByClassName("section-container")[0].offsetHeight -
       document.getElementsByClassName("el-form")[0].offsetHeight -
       194;
-    this.$refs.myChild.GetTable(this.wachMeterData.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+    this.$refs.searchTips.$refs.myChild.GetTable(this.wachMeterData.tableId); // 先获取所有自定义字段赋值
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },
 
   computed: {
@@ -228,6 +236,21 @@ export default {
     }
   },
   methods: {
+    delTips(val) {
+      //返回的查询条件的属性
+
+      this.tipsDataCopy = delTips(
+        val,
+        this,
+        this.tipsDataCopy,
+        "wachMeterData"
+      );
+      this.searchWatetJX();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
     sortProp(data) {
       //历史列表排序
       let that = this;
@@ -255,6 +278,7 @@ export default {
       searJXMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
           that.tableData = res.data;
+          this.tipsData = pushItem(this.tipsDataCopy);
           that.total = res.count;
           let timeObj = that.tableData;
           timeObj.forEach((item, index) => {

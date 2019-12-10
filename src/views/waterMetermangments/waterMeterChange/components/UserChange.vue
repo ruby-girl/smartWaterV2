@@ -302,20 +302,6 @@ export default {
   text-align: center;
   padding: 25px 0;
 }
-.showInfo {
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  .icon {
-    font-size: 22px;
-    color: rgba(0, 178, 161, 1);
-    opacity: 1;
-    cursor: pointer;
-  }
-}
-.tro {
-  transform: rotate(180deg);
-}
 .big-margin-label {
   /deep/ .el-form-item {
     margin-bottom: 16px;

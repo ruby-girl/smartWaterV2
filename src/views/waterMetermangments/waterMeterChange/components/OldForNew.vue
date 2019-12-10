@@ -331,20 +331,4 @@ font-size: 14px;
       margin-bottom: 16px;
    }
 }
-@media screen and (max-width: 1200px) {
-  .tree_container{
-    .left-input{
-      width:145px !important;
-      /deep/ input.el-input__inner{
-        width:100% !important;
-    }
-      /deep/ .el-select > .el-input{
-        width:145px !important;
-      }
-    }
-  }
-  /deep/ .el-form-item__content .el-textarea{
-    width:145px !important;
-  }
-}
 </style>

@@ -9,35 +9,59 @@
       @submit.native.prevent
     >
       <el-form-item label="用户编号">
-        <el-input v-model="WLWQueryParam.CustomerNo" maxlength="20" />
+        <el-input
+          v-model="WLWQueryParam.CustomerNo"
+          maxlength="20"
+          @change="getText(WLWQueryParam.CustomerNo,'CustomerNo','','用户编号')"
+        />
       </el-form-item>
       <el-form-item label="水表编号">
-        <el-input v-model="WLWQueryParam.WaterMeterNo" maxlength="20" />
+        <el-input
+          v-model="WLWQueryParam.WaterMeterNo"
+          maxlength="20"
+          @change="getText(WLWQueryParam.WaterMeterNo,'WaterMeterNo','','水表编号')"
+        />
       </el-form-item>
 
       <el-form-item label="用户状态">
-        <el-select v-model="WLWQueryParam.CustomerMeterState" placeholder="请选择">
+        <el-select
+          v-model="WLWQueryParam.CustomerMeterState"
+          placeholder="请选择"
+          @change="getText(WLWQueryParam.CustomerMeterState,'CustomerMeterState',statusList,'用户状态')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option label="已开户" value="1"></el-option>
           <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="开户状态">
-        <el-select v-model="WLWQueryParam.CustomerOpenAccountState" placeholder="请选择">
+        <el-select
+          v-model="WLWQueryParam.CustomerOpenAccountState"
+          placeholder="请选择"
+          @change="getText(WLWQueryParam.CustomerOpenAccountState,'CustomerOpenAccountState',statusList,'开户状态')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option label="已开户" value="1"></el-option>
           <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="阀门状态">
-        <el-select v-model="WLWQueryParam.ValveState" placeholder="请选择">
+        <el-select
+          v-model="WLWQueryParam.ValveState"
+          placeholder="请选择"
+          @change="getText(WLWQueryParam.ValveState,'ValveState',statusList,'阀门状态')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option label="已开户" value="1"></el-option>
           <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="水表状态">
-        <el-select v-model="WLWQueryParam.MeterState" placeholder="请选择">
+        <el-select
+          v-model="WLWQueryParam.MeterState"
+          placeholder="请选择"
+          @change="getText(WLWQueryParam.MeterState,'MeterState',statusList,'水表状态')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option label="已开户" value="1"></el-option>
           <el-option label="销户" value="2"></el-option>
@@ -78,20 +102,8 @@
       >
         <i class="icon iconfont" style="font-size:12px">&#xe645;</i> 解锁
       </el-button>
-      <el-button
-        type="warning"
-        size="small"
-        class="fr"
-        style="margin-left: 10px;"
-        @click="setCustomData()"
-      >
-        <i class="icon iconfont">&#xe678;</i> 表格自定义
-      </el-button>
-      <el-button type="success" size="small" class="fr" @click="ExcelWLWInfo">
-        <i class="icon iconfont">&#xe683;</i> 导出Excel
-      </el-button>
     </div>
-    <customTable ref="myChild" />
+    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="ExcelWLWInfo" />
     <Static class="static-height" :ErrorList="ErrorList" />
     <div class="main-padding-20-y" id="table">
       <el-table
@@ -149,7 +161,7 @@
         :total="total"
         :page.sync="WLWQueryParam.page"
         :limit.sync="WLWQueryParam.limit"
-           @pagination="searchWLWMeterInfo('0')"
+        @pagination="searchWLWMeterInfo('0')"
       />
     </div>
     <el-dialog
@@ -188,10 +200,12 @@ import {
   ValveLockOpen, //开
   ValveLockClose //关
 } from "@/api/waterMeterMang";
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   //机械表
   name: "InternetWater",
-  components: { customTable, Pagination, Static, WLWWaterMeterHis },
+  components: { SearchTips, Pagination, Static, WLWWaterMeterHis },
   data() {
     return {
       WLWQueryParam: {
@@ -226,7 +240,10 @@ export default {
       hisData: [],
       histotal: 0,
       viewWaterHistory: false,
-      orderData:{}
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
+      orderData: {},
+      statusList: [{ Id: "1", Name: "已开户" },{ Id: "2", Name: "销户" }]
     };
   },
   created() {
@@ -234,12 +251,12 @@ export default {
     this.TrafficStatusList = getDictionaryOption("远传表通讯状态");
   },
   mounted() {
-      this.tableHeight =
+    this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
       document.getElementsByClassName("el-form")[0].offsetHeight -
       289;
-    this.$refs.myChild.GetTable(this.WLWQueryParam.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+    this.$refs.searchTips.$refs.myChild.GetTable(this.WLWQueryParam.tableId); // 先获取所有自定义字段赋值
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },
 
   computed: {
@@ -257,13 +274,30 @@ export default {
     }
   },
   methods: {
+    delTips(val) {
+      //返回的查询条件的属性
+      this.tipsDataCopy = delTips(
+        val,
+        this,
+        this.tipsDataCopy,
+        "WLWQueryParam"
+      );
+      this.searchWLWMeterInfo();
+    },
+    getText(val, model, arr, name) {
+      console.log(val, model, arr, name);
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      console.log(obj);
+      this.tipsDataCopy.push(obj);
+    },
     searchWLWMeterInfo(num) {
       let that = this;
-       if (num != "0") {
+      if (num != "0") {
         this.orderData = Object.assign({}, this.WLWQueryParam);
       }
       getWLWWaterInfo(that.orderData).then(res => {
         if (res.code == 0) {
+          this.tipsData = pushItem(this.tipsDataCopy);
           that.tableData = res.data;
           that.total = res.count;
         } else {

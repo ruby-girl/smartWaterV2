@@ -57,7 +57,6 @@
 
             <template v-for="(item ,index) in tableHeadData">
               <el-table-column
-                v-if="item.IsFreeze"
                 :key="index"
                 min-width="190px"
                 :sortable="item.IsSortBol?'custom':null"
@@ -93,7 +92,7 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,getTipsChangeWidth } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "userAccount",
   components: { AccountUser, SelecteHead, customTable, Pagination, SearchTips },
@@ -186,12 +185,15 @@ export default {
     //左侧显示隐藏
     closeAccount() {
       this.ifShow = !this.ifShow;
+      let that = this;
       if (this.ifShow) {
         document.getElementsByClassName("el-aside")[0].classList.remove("none");
         document.getElementsByClassName("el-aside")[0].classList.add("hide");
+        getTipsChangeWidth(this);
       } else {
         document.getElementsByClassName("el-aside")[0].classList.remove("hide");
         document.getElementsByClassName("el-aside")[0].classList.add("none");
+        getTipsChangeWidth(this);
       }
     },
     //查询记录
