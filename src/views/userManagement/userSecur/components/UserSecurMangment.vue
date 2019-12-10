@@ -49,6 +49,7 @@
         @pagination="seachAccountOrder('0')"
       />
     </div>
+    <exam-secur />
   </div>
 </template>
 <script>
@@ -57,9 +58,10 @@ import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条�
 import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
+import ExamSecur from "./ExamSecur";
 export default {
   name: "UserSecurMangment",
-  components: { Selected, Pagination, SearchTips },
+  components: { Selected, Pagination, SearchTips, ExamSecur },
   data() {
     return {
       listQuery: {
@@ -81,7 +83,7 @@ export default {
       tableKey: 0,
       tableData: [],
       tableHeight: null,
-      total:0,
+      total: 0,
       customHeight: "", //自定义高度
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值

@@ -153,6 +153,7 @@
       return isLt5M
     },
     uploadSuccess(response, file) { // 上传成功
+    debugger
       let data= response.data;
       const Suffix = data.FileExtName.split('.')[1]
       if (Suffix === 'docx' || Suffix === 'doc') {

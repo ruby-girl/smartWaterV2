@@ -41,10 +41,18 @@
           @submit.native.prevent
         >
           <el-form-item label="水表编号">
-            <el-input v-model="YCMeterQueryParam.CustomerQueryValue" maxlength="20" />
+            <el-input
+              v-model="YCMeterQueryParam.CustomerQueryValue"
+              maxlength="20"
+              @change="getText(YCMeterQueryParam.CustomerQueryValue,'CustomerQueryValue','','水表编号')"
+            />
           </el-form-item>
           <el-form-item label="阀门状态">
-            <el-select v-model="YCMeterQueryParam.ValveState" placeholder="请选择">
+            <el-select
+              v-model="YCMeterQueryParam.ValveState"
+              placeholder="请选择"
+              @change="getText(YCMeterQueryParam.ValveState,'ValveState',ValveStateList,'阀门状态')"
+            >
               <el-option label="全部" value="-1"></el-option>
               <el-option
                 v-for="item in ValveStateList"
@@ -55,14 +63,22 @@
             </el-select>
           </el-form-item>
           <el-form-item label="开户状态">
-            <el-select v-model="YCMeterQueryParam.IsOpenAccount" placeholder="请选择">
+            <el-select
+              v-model="YCMeterQueryParam.IsOpenAccount"
+              placeholder="请选择"
+              @change="getText(YCMeterQueryParam.IsOpenAccount,'IsOpenAccount',statusList,'开户状态')"
+            >
               <el-option label="全部" value="-1"></el-option>
               <el-option label="已开户" value="0"></el-option>
               <el-option label="未开户" value="1"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="通讯状态">
-            <el-select v-model="YCMeterQueryParam.TrafficStatus" placeholder="请选择">
+            <el-select
+              v-model="YCMeterQueryParam.TrafficStatus"
+              placeholder="请选择"
+              @change="getText(YCMeterQueryParam.TrafficStatus,'TrafficStatus',TrafficStatusList,'通讯状态')"
+            >
               <el-option label="全部" value="-1"></el-option>
               <el-option
                 v-for="item in TrafficStatusList"
@@ -116,20 +132,8 @@
           >
             <i class="icon iconfont" style="font-size:12px">&#xe645;</i> 解锁
           </el-button>
-          <el-button
-            type="warning"
-            size="small"
-            class="fr c"
-            style="margin-left: 10px;"
-            @click="setCustomData()"
-          >
-            <i class="icon iconfont">&#xe678;</i> 表格自定义
-          </el-button>
-          <el-button type="success" size="small" class="fr" @click="ExcelYcInfo">
-            <i class="icon iconfont">&#xe683;</i> 导出Excel
-          </el-button>
         </div>
-        <table-custom ref="myChild" />
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="ExcelYcInfo" />
         <div class="main-padding-20-y" id="table">
           <el-table
             :key="tableKey"
@@ -245,10 +249,18 @@ import YCWaterMeterHis from "./intercomponents/YCWaterMeterHis"; //历史
 import InstrctionOrder from "./intercomponents/InstrctionOrder"; //指令记录
 import imgLose from "@/assets/imgs/loseYC.png";
 import imgSuccess from "@/assets/imgs/successYC.png";
+import SearchTips from "@/components/SearchTips/index";
+import {
+  delTips,
+  getText,
+  pushItem,
+  getTipsChangeWidth
+} from "@/utils/projectLogic"; //搜索条件面包屑
+import { async } from "q";
 export default {
   //机械表
   name: "MechanicalWater",
-  components: { TableCustom, Pagination, YCWaterMeterHis, InstrctionOrder },
+  components: { SearchTips, Pagination, YCWaterMeterHis, InstrctionOrder },
   data() {
     return {
       YCMeterQueryParam: {
@@ -293,8 +305,11 @@ export default {
       orderid: "",
       deiKey: -1,
       ifShow: false,
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
       orderData: {},
-      showMsg: true
+      showMsg: true,
+      statusList: [{ Id: "0", Name: "已开户" }, { Id: "1", Name: "未开户" }]
     };
   },
   activated: function() {
@@ -319,8 +334,10 @@ export default {
       document.getElementsByClassName("section-container")[0].offsetHeight -
       document.getElementsByClassName("el-form")[0].offsetHeight -
       194;
-    this.$refs.myChild.GetTable(this.YCMeterQueryParam.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+    this.$refs.searchTips.$refs.myChild.GetTable(
+      this.YCMeterQueryParam.tableId
+    ); // 先获取所有自定义字段赋值
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },
   computed: {
     tableHeadData: function() {
@@ -337,20 +354,44 @@ export default {
     }
   },
   methods: {
+    delTips(val) {
+      //返回的查询条件的属性
+      this.tipsDataCopy = delTips(
+        val,
+        this,
+        this.tipsDataCopy,
+        "YCMeterQueryParam"
+      );
+      this.searchYCWaterList();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+      if (obj.name && model == "CollectorNo") {
+        this.searchYCWaterList();
+      }
+    },
     closeAccount() {
       this.ifShow = !this.ifShow;
       if (this.ifShow) {
         document.getElementsByClassName("el-aside")[0].classList.remove("none");
         document.getElementsByClassName("el-aside")[0].classList.add("hide");
+        getTipsChangeWidth(this);
       } else {
         document.getElementsByClassName("el-aside")[0].classList.remove("hide");
         document.getElementsByClassName("el-aside")[0].classList.add("none");
+         getTipsChangeWidth(this);
       }
     },
     changeColor(index) {
       this.deiKey = index;
       this.YCMeterQueryParam.CollectorNo = "00000000000" + index;
-      this.searchYCWaterList();
+      this.getText(
+        this.YCMeterQueryParam.CollectorNo,
+        "CollectorNo",
+        "",
+        "采集器"
+      );
     },
     instructionsHis(id) {
       //指令记录
@@ -385,6 +426,7 @@ export default {
       }
       searYCMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
+          this.tipsData = pushItem(this.tipsDataCopy);
           that.tableData = res.data;
           that.total = res.count;
         } else {
@@ -548,6 +590,7 @@ export default {
       padding: 0;
       margin: 0;
       position: relative;
+      transition: width 0.2s;
       ul {
         margin: 0;
         padding: 0;

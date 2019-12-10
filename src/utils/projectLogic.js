@@ -105,6 +105,16 @@ export function pushItem(tipsDataCopy) {
   });
   return tipsData
 }
+//左右布局 面包屑宽度获取 that==this对象
+export function getTipsChangeWidth(that){
+  setTimeout(function () {
+    that.$refs.searchTips.widthData =
+      document.getElementsByClassName("el-main")[0].clientWidth -
+      244 +
+      "px";
+  }, 200);
+}
+
 //根据Id 获取偶所的Name用户查询类型 用户编号=1，姓名/简码=2，电话=3，证件号=4，地址=5,水表编号=6 = ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
 export function getName(id) {
   let name = ""

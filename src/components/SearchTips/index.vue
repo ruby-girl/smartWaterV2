@@ -4,10 +4,13 @@
       <div class="cont-left fl">
         <span class="textW fl">已选条件：</span>
         <div class="allSpice fl" :style="{width:widthData}">
-          <p  ref="spiceAll" :style="{width:widthData1}" style="margin:0;transition: margin 0.2s;">
+          <p ref="spiceAll" :style="{width:widthData1}" style="margin:0;transition: margin 0.2s;">
             <span v-for="item in tipsData" class="spiceTips">
               {{item.seachName+":"}}{{item.name}}
-              <i class="icon iconfont" @click="delTips(item.model)">&#xe68a;</i>
+              <i
+                class="icon iconfont"
+                @click="delTips(item.model)"
+              >&#xe68a;</i>
             </span>
           </p>
         </div>
@@ -48,11 +51,11 @@ export default {
       this.tipsDataCopy = this.tipsData;
       if (length == 0) {
         this.widthData1 = null;
-        this.showBtn=false
+        this.showBtn = false;
       } else {
         this.widthData1 = length * 150;
-        if( this.widthData1<this.widthData){
-          this.showBtn=true
+        if (this.widthData1 < this.widthData) {
+          this.showBtn = true;
         }
       }
     }
@@ -65,8 +68,8 @@ export default {
       num: 0,
       thisTable: false,
       tipsDataCopy: [],
-      showBtn:false,
-      showExcel:true,//是否有导出按钮
+      showBtn: false,
+      showExcel: true //是否有导出按钮
     };
   },
   methods: {
@@ -119,18 +122,23 @@ export default {
       this.num = this.num - 200;
       if (this.num <= 0) {
         this.num = 0;
-
         return false;
       }
       //  var tag= document.getElementsByTagName("allSpice")[0]
       this.$refs.spiceAll.style.position = "relative";
       this.$refs.spiceAll.style.marginLeft = "-" + this.num + "px";
+    },
+    getWidth() {
+      var w = document.getElementsByClassName("searchTips")[0].offsetWidth;
+      var w1 = document.getElementsByClassName("tipsBtn")[0].offsetWidth;
+      this.widthData = w - w1 - 150 + "px";
+      // console.log(document.getElementsByClassName("el-main")[0].offsetWidth);
     }
   },
   mounted() {
-    var w = document.getElementsByClassName("searchTips")[0].offsetWidth;
-    var w1 = document.getElementsByClassName("tipsBtn")[0].offsetWidth;
-    this.widthData = w - w1 -150+ "px";
+    this.$nextTick(() => {
+      this.getWidth();
+    });
   }
 };
 </script>
@@ -176,9 +184,9 @@ export default {
       position: absolute;
       right: 106px;
       cursor: pointer;
-      .icon{
+      .icon {
         font-size: 22px;
-        color:#808080;
+        color: #808080;
       }
     }
     .spiceTips {
