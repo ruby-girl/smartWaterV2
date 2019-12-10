@@ -2,25 +2,15 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :companyOptions="companyParentOptions" ref="child1" />
+        <select-head :companyOptions="companyParentOptions" ref="child1" @getText="getText" />
       </div>
       <div
         class="display-flex justify-content-flex-justify"
         :class="{'plan-table':isShowAdPlanClass }"
       >
-        <el-button v-show="isShowAdPlan" type="primary" size="mini" @click="addPlan">
-          <i class="iconfont icontianjia"></i>添加
-        </el-button>
-        <div :class="{'showPlan':isShowAdPlanClass }">
-          <el-button type="success" size="mini" @click="exportList">
-            <i class="iconfont icondaochuexcel"></i>导出Excel
-          </el-button>
-          <el-button type="warning" size="mini" @click="setCustomData()">
-            <i class="iconfont iconbiaogezidingyi"></i>表格自定义
-          </el-button>
-        </div>
+         <el-button  v-show="isShowAdPlan" size="mini" class="cl-search cl-reset" round @click="addPlan"><i class="icon iconfont">&#xe689;</i>添加</el-button>
       </div>
-      <customTable ref="myChild" />
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
       <div class="main-padding-20-y" id="table">
         <el-table
           :key="tableKey"
@@ -103,6 +93,8 @@
 import SelectHead from "./components/SelectHead"; //查询条件组件
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import AddReadingPlan from "./components/AddReadingPlan";
 import {
   searchPlanList,
@@ -119,7 +111,8 @@ export default {
     SelectHead,
     customTable,
     Pagination,
-    AddReadingPlan
+    AddReadingPlan,
+    SearchTips
   },
   data() {
     return {
@@ -134,6 +127,7 @@ export default {
         enumPlanState: "-1", //抄表计划状态
         sort: "", //升序
         filed: "", //排序字段
+        warterMeterPlanDate: [],
         tableId: "0000008"
       },
       checksData: [],
@@ -146,6 +140,8 @@ export default {
       companyParentOptions: [],
       isShowAdPlan: false,
       isShowAdPlanClass: !this.isShowAdPlan,
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
       orderData: {}
     };
   },
@@ -177,6 +173,7 @@ export default {
   },
   created() {
     let that = this;
+    this.getDefaulDate();
     WhetherDisplay({ configkey: "IsAutoCreateReadPlan" }).then(res => {
       //判断是否显示新增抄表计划
       if (res.data == "0") {
@@ -198,11 +195,28 @@ export default {
           .offsetHeight -
         document.getElementById("table").offsetTop -
         73;
-      this.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+      this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     });
   },
   methods: {
+    //删除面包屑
+    delTips(val) {
+      if (val == "warterMeterPlanDate") {
+        this.$message({
+          message: "计划抄表日期不能为空!",
+          type: "warning"
+        });
+        return false;
+      }
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
+      this.searchTableList();
+      //返回的查询条件的属性
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
     setCustomData() {
       //表格自定义方法
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
@@ -272,23 +286,23 @@ export default {
     },
     searchTableList(num) {
       //查询列表
-      this.$refs.child1.getTime();
-      if (num != 0) {
-        this.orderData = Object.assign({}, this.selectHead);
-      }
       const that = this;
-      if (
-        this.selectHead.createStartTime == "" ||
-        this.selectHead.createEndTime == ""
-      ) {
+      console.log(this.selectHead.warterMeterPlanDate);
+      if (this.selectHead.warterMeterPlanDate.length < 1) {
         that.$message({
           message: "计划抄表日期不能为空，请选择!",
           type: "warning"
         });
         return false;
       }
+      this.$refs.child1.getTime();
+      if (num != 0) {
+        this.orderData = Object.assign({}, this.selectHead);
+      }
+
       searchPlanList(this.orderData).then(res => {
         if (res.code == 0) {
+          this.tipsData = pushItem(this.tipsDataCopy);
           that.tableData = res.data;
           that.total = res.count;
         }
@@ -300,7 +314,43 @@ export default {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
+    getDefaulDate() {
+      const time = new Date();
+      let y = time.getFullYear();
+      let m = time.getMonth() + 1;
+      let d = time.getDate();
+      let lm, ly;
+      let nm, ny;
 
+      if (m - 6 < 0) {
+        lm = m + 12 - 6;
+        ly = y - 1;
+      } else {
+        lm = m - 6;
+        ly = y;
+      }
+      if (m + 6 > 12) {
+        nm = m + 6 - 12;
+        ny = y + 1;
+      } else {
+        nm = m + 6;
+        ny = y;
+      }
+      if (lm < 10) {
+        lm = "0" + lm;
+      }
+      if (nm < 10) {
+        nm = "0" + nm;
+      }
+      if (d < 10) {
+        d = "0" + d;
+      }
+
+      let lastTime = ly + "-" + lm + "-" + d + " " + "00:00:00";
+      let newTime = ny + "-" + nm + "-" + d + " " + "23:59:59";
+      this.selectHead.warterMeterPlanDate.push(lastTime);
+      this.selectHead.warterMeterPlanDate.push(newTime);
+    },
     //新增抄表计划
     addPlan() {
       this.addDialogFormVisible = true;

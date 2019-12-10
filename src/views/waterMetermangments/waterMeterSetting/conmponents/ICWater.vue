@@ -9,13 +9,26 @@
       @submit.native.prevent
     >
       <el-form-item label="姓名">
-        <el-input v-model="IcwachMeterData.CustomerName" maxlength="20" placeholder="(长度1-30)" />
+        <el-input
+          v-model="IcwachMeterData.CustomerName"
+          maxlength="20"
+          placeholder="(长度1-30)"
+          @change="getText(IcwachMeterData.CustomerName,'CustomerName','','姓名')"
+        />
       </el-form-item>
       <el-form-item label="水表编号">
-        <el-input v-model="IcwachMeterData.WaterMeterNo" maxlength="20" />
+        <el-input
+          v-model="IcwachMeterData.WaterMeterNo"
+          maxlength="20"
+          @change="getText(IcwachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
+        />
       </el-form-item>
       <el-form-item label="水表样式">
-        <el-select v-model="IcwachMeterData.wms" placeholder="请选择">
+        <el-select
+          v-model="IcwachMeterData.wms"
+          placeholder="请选择"
+          @change="getText(IcwachMeterData.wms,'wms',waterMeterList,'水表样式')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option
             v-for="item in waterMeterList"
@@ -26,7 +39,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="用户状态">
-        <el-select v-model="IcwachMeterData.cs" placeholder="请选择">
+        <el-select
+          v-model="IcwachMeterData.cs"
+          placeholder="请选择"
+          @change="getText(IcwachMeterData.cs,'cs',openStatus,'用户状态')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option
             v-for="item in openStatus"
@@ -43,21 +60,8 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <div class="cl-operation1 clearfix">
-      <el-button
-        type="warning"
-        size="small"
-        class="fr c"
-        style="margin-left: 10px;"
-        @click="setCustomData()"
-      >
-        <i class="icon iconfont">&#xe678;</i> 表格自定义
-      </el-button>
-      <el-button type="success" size="small" class="fr" @click="excelWaterMeter">
-        <i class="icon iconfont">&#xe683;</i> 导出Excel
-      </el-button>
-    </div>
-    <customTable ref="myChild" />
+
+    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelWaterMeter" />
     <div class="main-padding-20-y" id="table">
       <el-table
         :key="tableKey"
@@ -107,7 +111,7 @@
         :total="total"
         :page.sync="IcwachMeterData.page"
         :limit.sync="IcwachMeterData.limit"
-         @pagination="searchFun('0')"
+        @pagination="searchFun('0')"
       />
     </div>
     <el-dialog
@@ -138,7 +142,8 @@
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
-
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   searICMeterWater,
   searICHisWater,
@@ -148,7 +153,7 @@ import ICWaterMeterHis from "./intercomponents/ICWaterMeterHis";
 export default {
   //机械表
   name: "ICWater",
-  components: { customTable, Pagination, ICWaterMeterHis },
+  components: { SearchTips, Pagination, ICWaterMeterHis },
   props: {
     waterMeterList: {
       type: Array,
@@ -192,6 +197,8 @@ export default {
       hisData: [],
       histotal: 0,
       viewWaterHistory: false,
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
       orderData: {}
     };
   },
@@ -200,8 +207,8 @@ export default {
       document.getElementsByClassName("section-container")[0].offsetHeight -
       document.getElementsByClassName("el-form")[0].offsetHeight -
       194;
-    this.$refs.myChild.GetTable(this.IcwachMeterData.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+    this.$refs.searchTips.$refs.myChild.GetTable(this.IcwachMeterData.tableId); // 先获取所有自定义字段赋值
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },
 
   computed: {
@@ -219,6 +226,20 @@ export default {
     }
   },
   methods: {
+    delTips(val) {
+      //返回的查询条件的属性
+      this.tipsDataCopy = delTips(
+        val,
+        this,
+        this.tipsDataCopy,
+        "IcwachMeterData"
+      );
+      this.searchFun();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
     searchFun(num) {
       let that = this;
       if (num != "0") {
@@ -226,6 +247,7 @@ export default {
       }
       searICMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
+           this.tipsData = pushItem(this.tipsDataCopy);
           that.tableData = res.data;
           that.total = res.count;
         } else {
