@@ -430,5 +430,46 @@ div::-webkit-scrollbar-thumb {
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   background: #ccc;
 }
-
-
+// 搜索展开按钮样式
+.position-absolute-head{
+  .isShow {
+    text-align: center;
+    margin: 0;
+    padding: 0; 
+    position: relative;
+    display: inline-block; 
+    bottom: -2px;
+    left:-4px;
+    .icon {
+      font-size: 22px;
+      color: rgba(0, 178, 161, 1);
+      opacity: 1;
+      cursor: pointer;
+    }
+  }
+  .tro {
+    bottom: 0px;
+    margin-left: 5px;
+    transform: rotate(180deg);
+  }
+}
+.position-absolute-head-shadow{
+  box-shadow:0px 3px 6px rgba(0,0,0,0.16);
+}
+.position-search-head {
+  position: relative;
+  height: 40px;
+  .position-absolute-head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    z-index: 111;
+  }
+  .head-title {
+    color: #777777;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+}

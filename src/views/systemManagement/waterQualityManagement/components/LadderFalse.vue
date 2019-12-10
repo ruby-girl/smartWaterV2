@@ -20,7 +20,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="阶梯结算月数" prop="LadderResetTime">
-      <el-select v-model="temp.LadderResetTime" placeholder="请选择">
+      <el-select v-model="temp.LadderResetTime" placeholder="请选择" @change="ladderResetTimeFunc(temp.LadderResetTime)">
         <el-option label="1" value="1" />
         <el-option label="3" value="3" />
         <el-option label="12" value="12" />
@@ -73,11 +73,9 @@
     <el-form-item label="新计价启用日期" v-if="dialogStatus=='update'" label-width="150px">
       <el-date-picker
         v-model="temp.NewPriceUseDate"
-        format="yyyy-MM-dd HH:mm:ss"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        type="datetime"
+        type="month"
         placeholder="选择日期时间"
-        :picker-options="pickerOptions"
+        :picker-options="newPickerOptions"
       ></el-date-picker>
     </el-form-item>
   </el-form>
@@ -106,11 +104,6 @@ export default {
   mounted() {},
   data() {
     return {
-      newPickerOptions:{
-        disabledDate(time) {
-          return time.getTime() <new Date(new Date().toLocaleDateString()).getTime();
-      }
-      },
       pickerOptions: {
       disabledDate(time) {
           return time.getTime() > new Date(new Date().toLocaleDateString()).getTime();

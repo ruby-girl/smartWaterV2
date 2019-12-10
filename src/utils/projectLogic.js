@@ -141,3 +141,41 @@ export function WriteCardInfo(objJson, callback) {
     callback(tempJson);
   }
 }
+// 阶梯计数1个月---获取几个月后的日期
+export function getTimeOption(time, n) {
+  var d = new Date(time);
+  d.setMonth((d.getMonth() - 1) + n);
+  var year = d.getFullYear();
+  var month = d.getMonth() + 1;
+  if (month < 10) {
+    month = '0' + month;
+  }
+  return year + '-' + month + '-01'
+}
+// 阶梯计数12个月
+export function yearTimeOption(time, n) {
+  var d = new Date(time);
+  var year = d.getFullYear()
+  let arr=[]
+  arr.push((year+1)+'-01-01')
+  for(let a=2;a<n+1;a++){
+    arr.push((year+a)+'-01-01')
+  }
+  return arr
+}
+// 阶梯计数3个月
+export function threeTimeOption(time) {
+  var d = new Date(time);
+  var year = d.getFullYear();
+  let arr;
+  if(d.getMonth()+1<4){
+     arr=[year + '-04-01',year + '-07-01',year + '-10-01',(year+1) + '-01-01',(year+1) + '-04-01']
+  }else if(d.getMonth()+1<7){
+     arr=[year + '-07-01',year + '-10-01',(year+1) + '-01-01',(year+1) + '-04-01',(year+1) + '-07-01']
+  }else if(d.getMonth()+1<10){
+     arr=[year + '-10-01',(year+1) + '-01-01',(year+1) + '-04-01',(year+1) + '-07-01',(year+1) + '-10-01']
+  }else{
+     arr=[(year+1) + '-01-01',(year+1) + '-04-01',(year+1) + '-07-01',(year+1)+ '-10-01',(year+2) + '-01-01']
+  }
+  return arr
+}

@@ -2,22 +2,19 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" :type-list="typeList" />
+        <select-head
+          :select-head="listQuery"
+          @handleFilter="getList"
+           @getText="getText"
+          :type-list="typeList"
+        />
       </div>
-      <div class="display-flex justify-content-flex-justify">
-        <el-button type="primary" size="mini" @click="add">
+      <div class="display-flex justify-content-flex-justify" style="margin-bottom:7px;">
+        <el-button round plain  type="primary" size="mini" @click="add">
           <i class="iconfont icontianjia"></i>添加
         </el-button>
-        <div>
-          <el-button type="success" size="mini" @click="excel">
-            <i class="iconfont icondaochuexcel"></i>导出Excel
-          </el-button>
-          <el-button type="warning" size="mini" @click="setCustomData()">
-            <i class="iconfont iconbiaogezidingyi"></i>表格自定义
-          </el-button>
-        </div>
       </div>
-      <customTable ref="myChild" />
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excel="excel"/>
       <div class="main-padding-20-y">
         <el-table
           :key="tableKey"
@@ -29,10 +26,10 @@
           :header-cell-style="{'background-color': '#F0F2F5'}"
           @sort-change="sortChanges"
         >
-           <el-table-column fixed="left" label="序号" width="60" align="center">
-            <template slot-scope="scope">
-            <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
-          </template>
+          <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
+            </template>
           </el-table-column>
           <template>
             <div v-for="(item ,index) in tableHead" :key="index">
@@ -93,7 +90,7 @@
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
-          @pagination="getList"
+          @pagination="getList(1)"
         />
         <add-dialog
           :add-show.sync="addDialogFormVisible"
@@ -118,11 +115,12 @@
 <script>
 import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
-import customTable from "@/components/CustomTable/index";
 import AddDialog from "./components/Add";
 import HistoryPrice from "./components/HistoryPrice";
 import WaterConstitute from "./components/WaterConstitute";
 import { getDictionaryOption } from "@/utils/permission";
+import SearchTips from "@/components/SearchTips/index";
+import { delTips,getText,pushItem} from "@/utils/projectLogic";//搜索条件面包屑
 import {
   addWaterQuality,
   delWaterQuality,
@@ -135,8 +133,7 @@ import {
 } from "@/api/system";
 import {
   parseStartTime,
-  ladderChangeArr,
-  parseTimeFiveEight
+  ladderChangeArr
 } from "@/utils/index.js";
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
@@ -145,10 +142,10 @@ export default {
   components: {
     SelectHead,
     Pagination,
-    customTable,
     AddDialog,
     WaterConstitute,
-    HistoryPrice
+    HistoryPrice,
+    SearchTips
   },
   data() {
     return {
@@ -178,7 +175,10 @@ export default {
       constituteType: 1, //1：水价构成页面；2：撤销前确认页面
       historyId: "", //历史水价行ID
       tableData: [],
-      checksData: []
+      checksData: [],
+       tipsData: [],//传入子组件的值
+        tipsDataCopy: [],//表单变化的值
+        orderData:[]
     };
   },
   computed: {
@@ -195,12 +195,20 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 220;
-      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+      this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.typeList = getDictionaryOption("用水性质类型");
     });
   },
   methods: {
+     delTips(val) {
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");   
+       this.getList();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
     // 历史水价
     history(row) {
       this.historyId = row.Id;
@@ -212,13 +220,13 @@ export default {
       this.constituteType = t;
       this.constituteShow = true;
     },
-    setCustomData() {
-      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
-      if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;
-      else this.tableHeight = this.tableHeight + 80;
-    },
-    getList() {
-      getWaterQualityList(this.listQuery).then(res => {
+    getList(n) {
+      if(!n){
+         this.orderData = Object.assign({}, this.listQuery);
+         this.orderData.page=1
+      }
+      getWaterQualityList(this.orderData).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -229,11 +237,6 @@ export default {
       this.listQuery.filed = prop;
       this.listQuery.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
-      this.getList();
-    },
-    handleFilter(v) {
-      this.listQuery=v
-      this.listQuery.page = 1;
       this.getList();
     },
     add() {
@@ -282,12 +285,12 @@ export default {
     // 水价调整-编辑
     handleUpdate(row) {
       SelectUpdateWaterPropertyBeforeInfo({ id: row.Id }).then(res => {
-        this.updateId = row.Id;
+        this.updateId = row.Id; 
+        let obj = ladderChangeArr(res.data); //阶梯转换数组
         let ladder = {
           isLadder: "1",
-          NewPriceUseDate: parseTimeFiveEight(new Date())
+          NewPriceUseDate: ''
         };
-        let obj = ladderChangeArr(res.data); //阶梯转换数组
         ladder.isLadder = obj.IsLadder == true ? "1" : "2";
         obj.WaterPropertyType = obj.WaterPropertyType.toString();
         this.temp = { ...ladder, ...obj };
@@ -342,7 +345,7 @@ export default {
       GetWaterPropertyList_OutExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
-    },
+    },  
     reset(id) {
       ResetUpdateWaterPropertyInfo({ id: id }).then(res => {
         this.constituteShow = false;
