@@ -2,21 +2,23 @@
   <el-form
     :inline="true"
     :model="dp"
-    class="head-search-form form-inline-small-input"
+    class="head-search-form form-inline-small-input search-head-otherbox"
     size="small"
     label-width="100px"
     @submit.native.prevent>
-
-    <el-form-item label="部门  ">
-      <el-select v-model="dp.Id" placeholder="请选择" size="small" filterable>
+    <el-form-item label="部门">
+      <el-select v-model="dp.Id" placeholder="请选择" size="small" @change="getText(dp.Id,'Id',postArray,'部门')">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="岗位  ">
-      <el-input v-model="dp.JobName" maxlength="20" placeholder="角色名称(长度20)" @keyup.enter.native="handleFilter" />
+    <el-form-item label="岗位">
+      <el-input v-model="dp.JobName" maxlength="20" placeholder="角色名称(长度20)" @change="getText(dp.JobName,'JobName','','岗位')"/>
     </el-form-item>
-    <el-form-item label=""><el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i> 搜索</el-button></el-form-item>
+    <el-form-item label="">
+      <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
+      <el-button round size="mini" class="cl-reset" @click="resetFun()"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -90,6 +92,15 @@
               promptInfoFun(this, 1, res.message);
             }
           })
+        },
+        getText(val, model, arr, name) {
+          this.$parent.getText(val, model, arr, name)
+        },
+        resetFun(){
+          this.dp.Id = ''
+          this.dp.JobName = ''
+          this.$parent.tipsDataCopy = []
+          this.searchFun()
         }
       },
       mounted() {

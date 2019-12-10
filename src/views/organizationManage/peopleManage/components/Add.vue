@@ -2,7 +2,7 @@
   <el-dialog
     class="people_info_box"
     :close-on-click-modal="false"
-    top="3vh"
+    top="0vh"
     title="人员管理添加"
     :visible.sync="addVisible"
     :before-close="handleClose"

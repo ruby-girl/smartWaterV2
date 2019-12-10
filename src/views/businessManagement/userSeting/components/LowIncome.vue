@@ -17,7 +17,7 @@
           <el-input :disabled="true" v-model="curObj.CustomerName" size="small"/>
         </el-form-item>
         <el-form-item label="水厂">
-          <el-input :disabled="true" v-model="curObj.CustomerNo" size="small"/>
+          <el-input :disabled="true" v-model="curObj.WaterWorksName" size="small"/>
         </el-form-item>
         <el-form-item label="所属区域">
           <el-input :disabled="true" v-model="curObj.AreaName" size="small"/>
@@ -134,18 +134,25 @@
       /************************保存提交*************************/
       submitForm() {
         let _this = this
-        if (_this.curObj.Id == '') {
-          promptInfoFun(this, 1, '请选择用户！')
-        } else {
-          _this.param.SA_Customer_Id = _this.curObj.Id
-          _this.dialogVisible = false
-          _this.param.Idarr = []//初始化，避免重复添加
-          for (let j = 0; j < _this.upload.file.length; j++) {//过滤获取上传文件信息ID
-            _this.param.Idarr.push(_this.upload.file[j].id)
+        _this.param.SA_Customer_Id = _this.curObj.Id
+        _this.param.Idarr = []//初始化，避免重复添加
+        for (let j = 0; j < _this.upload.file.length; j++) {//过滤获取上传文件信息ID
+          _this.param.Idarr.push(_this.upload.file[j].id)
+        }
+        InsuredMessageApply(this.param).then(res => {
+          res.code == 0 ? promptInfoFun(this, 2, res.message) : promptInfoFun(this, 1, res.message)
+          if (res.code == 0) {
+            promptInfoFun(this, 2, res.message)
+          } else {
+            promptInfoFun(this, 1, res.message)
           }
-          InsuredMessageApply(this.param).then(res => {
-            res.code == 0 ? promptInfoFun(this, 2, res.message) : promptInfoFun(this, 1, res.message)
-          })
+        })
+        _this.dialogVisible = false
+        this.$refs.getFiles.fileList = []
+        this.param = {//申请低保户对象
+          StartDate: "",
+          EndDate: "",
+          Remark: ""
         }
       },
       /************************重置表单*************************/

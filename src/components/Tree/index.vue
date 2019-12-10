@@ -1,6 +1,6 @@
 <template>
   <div class="cl-treeBox">
-    <el-input placeholder="请输入内容" v-model="searchText" size="mini" style="margin: 18px 0">
+    <el-input placeholder="请输入内容" v-show="ifSearch" v-model="searchText" size="mini" style="margin: 18px 0">
       <template slot="append">
         <span @click="getNodeByName"><i class="icon iconfont">&#xe694;</i>搜索</span>
       </template>
@@ -28,6 +28,7 @@ export default {
   name: "Tree",
   data() {
     return {
+      ifSearch:true,
       deleteIds: [],
       selectNode: "",
       searchText: "",
@@ -45,7 +46,7 @@ export default {
      * 动态添加模板图标
      * */
     renderContent(h, { node, data, store }) {
-      return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class='ndoe_level'>{node.level-1}</i> {node.label} < /span>)
+      return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class='ndoe_level'>{node.level}</i> {node.label} < /span>)
     },
     /**
      * 当前选中需编辑或者新增信息或删除
@@ -244,6 +245,6 @@ export default {
     color: #b32f00;
     font-weight: bold;
   }
-  .back1 .ndoe_level{display: none;}
+/*  .back1 .ndoe_level{display: none;}*/
 }
 </style>

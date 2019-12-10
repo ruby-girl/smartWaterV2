@@ -134,6 +134,7 @@
         }
         this.$parent.query = this.query
         this.$parent.searchTableFun()
+
       },
       /******************排序**********************/
       sortChanges({prop, order }){//排序
@@ -230,12 +231,11 @@
           }
         });
       },
-      lowApplication(){//低保户申请
-        this.$refs.lowIncomeDialog.dialogVisible = true
+      lowApplication() {//低保户申请
+        this.curObj == '' || typeof (this.curObj) == undefined ? promptInfoFun(this, 1, '请选择用户！') : this.$refs.lowIncomeDialog.dialogVisible = true
       },
       handleCurrentChange(val) {//列表点击事件
         this.curObj = val
-        console.log(val)
       },
       /**
        *val 对应绑定的参数
@@ -244,8 +244,8 @@
        * param  对应搜索条件的对象名
        */
       delTips(val) {
-        this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query"); //返回删除后的数据传给组件
-        this.$parent.searchTableFun()
+        this.tipsDataCopy = delTips(val, this.$parent.$refs.childSelect, this.tipsDataCopy, "query"); //返回删除后的数据传给组件
+        this.$parent.$refs.childSelect.searchFun()
       },
       /**
        *val 搜索数据值
@@ -261,7 +261,6 @@
     },
     mounted() {
       let _this = this
-      this.query = this.$parent.query
       this.$refs.searchTips.$refs.myChild.GetTable(this.query.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       _this.$nextTick(() => {

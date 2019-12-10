@@ -1,44 +1,53 @@
 <template>
   <el-form
     :inline="true"
+    ref="rbpForm"
     :model="rbp"
     :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
     size="small"
-    label-width="100px"
+    label-width="80px"
     @submit.native.prevent>
     <div style="display: flex">
       <div style="flex:1;float: left">
-          <el-form-item label="水厂  ">
+          <el-form-item label="水厂" prop="SA_WaterFactory_Id">
             <el-select v-model="rbp.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getMeterRead">
               <el-option label="全部" value="-1" v-if="waterFactory.length>1"></el-option>
               <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="抄表员  ">
-            <el-select v-model="rbp.MeterReaderId" placeholder="请选择" size="small">
+          <el-form-item label="抄表员" prop="MeterReaderId">
+            <el-select v-model="rbp.MeterReaderId" placeholder="请选择" size="small" @change="getText(rbp.MeterReaderId,'MeterReaderId',meterArry,'抄表员')">
               <el-option label="全部" value="-1"></el-option>
               <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="表册类型  ">
-            <el-select v-model="rbp.BookTypeKey" placeholder="请选择" size="small">
+        <transition name="fade">
+          <el-form-item label="表册类型" v-show="screenWdth<1680?ifMore:true" prop="BookTypeKey">
+            <el-select v-model="rbp.BookTypeKey" placeholder="请选择" size="small" @change="getText(rbp.BookTypeKey,'BookTypeKey',formArry,'表册类型')">
               <el-option label="全部" value="-1"></el-option>
               <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="表册编号  ">
+        </transition>
+        <transition name="fade">
+          <el-form-item label="表册编号" v-show="screenWdth<1680?ifMore:true" prop="BookNo">
             <el-input v-model="rbp.BookNo" maxlength="20" placeholder="片区名称(长度20)"
-                      @keyup.enter.native="handleFilter"/>
+                      @keyup.enter.native="handleFilter" @change="getText(rbp.BookNo,'BookNo','','表册编号')"/>
           </el-form-item>
-          <el-form-item label="表册名称  ">
-            <el-input v-model="rbp.BookName" maxlength="20" placeholder="片区名称(长度20)"/>
+        </transition>
+        <transition name="fade">
+          <el-form-item label="表册名称" v-show="ifMore" prop="BookName">
+            <el-input v-model="rbp.BookName" maxlength="20" placeholder="片区名称(长度20)" @change="getText(rbp.BookName,'BookName','','表册名称')"/>
           </el-form-item>
-          <el-form-item label="">
-            <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i
-              class="icon iconfont">&#xe694;</i>
-              搜索
-            </el-button>
-          </el-form-item>
+        </transition>
+        <el-form-item label="">
+          <i v-show="ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
+          <i v-show="!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
+          <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询
+          </el-button>
+          <el-button round size="mini" class="cl-reset" @click="resetFun()"><i class="icon iconfont">&#xe64e;</i>重置
+          </el-button>
+        </el-form-item>
       </div>
     </div>
   </el-form>
@@ -67,6 +76,7 @@
         waterFactory:[],//具有权限水厂数据
         meterArry:[],//抄表员
         ifMore:false,
+        screenWdth:''
       }
     },
     methods: {
@@ -77,11 +87,21 @@
         this.$parent.rbp =  Object.assign({},this.rbp)
         this.$parent.searchFun();
       },
+      resetFun(){//重置
+        this.$refs['rbpForm'].resetFields();
+        this.$parent.tipsDataCopy = []
+        this.searchFun()
+      },
       getMeterRead(id){
+        this.getText(this.rbp.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
         this.$parent.getMeterReaderList(1,id)
-      }
+      },
+      getText(val, model, arr, name) {
+        this.$parent.getText(val, model, arr, name)
+      },
     },
     mounted() {
+      this.screenWdth = window.screen.width
       this.formArry = getDictionaryOption('表册类型')
     }
   }

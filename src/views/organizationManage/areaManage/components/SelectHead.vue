@@ -1,41 +1,45 @@
 <template>
   <el-form
+    ref="formName"
     :inline="true"
     :model="sbap"
-    class="head-search-form form-inline-small-input"
+    :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
     size="small"
     label-width="100px"
     @submit.native.prevent>
-    <el-form-item label="片区  ">
-      <el-input v-model="sbap.BlockAreaName" maxlength="20" placeholder="片区名称(长度20)" @keyup.enter.native="searchFun"/>
+    <el-form-item label="片区" prop="BlockAreaName">
+      <el-input v-model="sbap.BlockAreaName" maxlength="20" placeholder="片区名称(长度20)" @keyup.enter.native="searchFun" @change="getText(sbap.BlockAreaName,'BlockAreaName','','片区')"/>
     </el-form-item>
-    <el-form-item label="操作人  ">
-      <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun">
+    <el-form-item label="操作人" prop="editUserId">
+      <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="操作时间  ">
-      <el-date-picker
-        :editable="false"
-        @keydown.enter.native="searchFun"
-        v-model="createStartTimes"
-        :unlink-panels="true"
-        size="small"
-        type="daterange"
-        range-separator="~"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        format="yyyy-MM-dd"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        :default-time="['00:00:00', '23:59:59']"
-        @change="getTime1"
-      />
-    </el-form-item>
+    <transition name="fade">
+      <el-form-item label="操作时间" prop="createStartTimes" v-show="screenWdth<1600?ifMore:true">
+        <el-date-picker
+          :editable="false"
+          @keydown.enter.native="searchFun"
+          v-model="createStartTimes"
+          :unlink-panels="true"
+          size="small"
+          type="daterange"
+          range-separator="~"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :default-time="['00:00:00', '23:59:59']"
+          @change="getTime1"
+        />
+      </el-form-item>
+    </transition>
     <el-form-item label="">
-      <el-button type="primary" size="mini" class="cl-search" @click="searchFun"><i class="icon iconfont">&#xe694;</i>
-        搜索
-      </el-button>
+      <i v-show="screenWdth<1600&&ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
+      <i v-show="screenWdth<1600&&!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
+      <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
+      <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -47,6 +51,7 @@
     name: "SelectHead",
     data() {
       return {
+        ifMore:false,
         sbap:{
           page: 1,
           limit: 10,
@@ -59,7 +64,8 @@
           tableId: '0000007'
         },
         createStartTimes:[],
-        operatorArray:[]
+        operatorArray:[],
+        screenWdth:''
       }
     },
     methods: {
@@ -71,6 +77,7 @@
         this.$parent.searchFun();
       },
       getTime1(data) {
+        this.getText(this.createStartTimes,'createStartTimes','','操作时间')
         if(data !=null){
           this.sbap.editStartTime = data[0]
           this.sbap.editEndTime = data[1]
@@ -95,8 +102,20 @@
           }
         })
       },
+      getText(val, model, arr, name) {
+        this.$parent.getText(val, model, arr, name)
+      },
+      resetFun(formName){
+        this.$refs[formName].resetFields();
+        this.sbap.editStartTime = ''
+        this.sbap.editEndTime = ''
+        this.createStartTimes = []
+        this.$parent.tipsDataCopy = []
+        this.searchFun()
+      }
     },
     mounted() {
+      this.screenWdth = window.screen.width
       this.GetLoginNameList()
     }
   }

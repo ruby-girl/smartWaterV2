@@ -42,7 +42,7 @@
           <i class="iconfont iconrenyuan" v-if="item.ProcessMemberType===3004"></i>
           <i class="iconfont icongangwei" v-else-if="item.ProcessMemberType===3001"></i>
           <i class="iconfont iconlujing" v-else-if="item.ProcessMemberType===3002"></i>
-          <i class="iconfont iconlujing" v-else></i>
+          <i class="iconfont iconjiaose" v-else></i>
           <span>{{ item.Name }}</span>
           <label class="iconfont iconguanbi fr" @click="removeFun(item)"></label>
         </p>

@@ -79,7 +79,7 @@
     z-index:6666;
     .position_icon {
       cursor: pointer;
-      position:absolute;right: 0px;top: 0px;
+      position:absolute;right: -5px;top: -10px;
       margin: 0;
       width: 46px;height: 46px;border-radius: 50%;box-shadow: 1px 1px 5px #cecece; -webkit-box-shadow: 1px 1px 5px #cecece;text-align: center;background: #fff;line-height: 46px;
     }

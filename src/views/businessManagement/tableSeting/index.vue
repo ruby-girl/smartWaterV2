@@ -1,27 +1,20 @@
 <template>
   <div class="cl-container">
-    <div>
-      <div id="conditionBox">
-        <!--查询条件组建 s-->
-        <SelectHead ref="childSelect"></SelectHead>
-        <!--查询条件组建 e-->
-        <div class="cl-operation1">
-          <el-button type="primary" size="mini" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
-          <el-button type="primary" size="mini" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
-          <el-button type="success" size="mini" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
-        </div>
-        <!--自定义组建 s-->
-        <customTable ref="myChild" />
-        <!--自定义组建 e-->
+    <div class="table-setting-box">
+      <SelectHead ref="childSelect" @getText="getText"></SelectHead>
+      <div class="table-setting">
+        <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" class="cl-operation-btn fr" round @click="allocationForm" ><i class="icon iconfont">&#xe617;</i> 表册分配</el-button>
       </div>
-      <!--列表组建 s-->
-      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
+      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border
+                @sort-change="sortChanges">
         <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
           <template slot-scope="scope">
             <span>{{(rbp.page - 1) * rbp.limit+ scope.$index + 1}}</span>
           </template>
         </el-table-column>
-        <template v-for="(item ,index) in tableHead" >
+        <template v-for="(item ,index) in tableHead">
           <el-table-column
             v-if="item.IsFreeze"
             :key="index"
@@ -30,7 +23,7 @@
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
-            :fixed= "item.Freeze"/>
+            :fixed="item.Freeze"/>
           <el-table-column
             v-else
             :key="index"
@@ -59,8 +52,8 @@
     </div>
     <!--编辑或新增窗口 s-->
     <Dialog ref="childDialog"></Dialog>
-    <!--表册移交 s-->
-    <ScheduleLeft ref="childSchedule"></ScheduleLeft>
+    <!--表册分配 s-->
+    <AllocationForm ref="childSchedule"></AllocationForm>
     <!--表册用户定位弹窗 s-->
     <FormsDialog ref="formsDialog"></FormsDialog>
     <!--用户定位-->
@@ -69,21 +62,23 @@
 </template>
 
 <script>
+  import SearchTips from "@/components/SearchTips/index";
   import '@/styles/organization.scss'
   import Dialog from './components/Dialog'//新增或添加组建
   import customTable from '@/components/CustomTable/index'//自定义组建
   import Pagination from '@/components/Pagination/index'//分页
-  import ScheduleLeft from './components/ScheduleLeft'//表册
+  import AllocationForm from './components/AllocationForm'
   import Location from './components/Location'//用户定位
   import SelectHead from './components/SelectHead'//查询条件组建
   import FormsDialog from './components/FormsDialog'//查询条件组建
   import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl, GetOrientationList} from "@/api/registerBook"
   import { parseTime, promptInfoFun } from "@/utils/index"
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
+  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
   export default {
     name: 'tableSeting',
-    components: { customTable, Pagination, SelectHead, Dialog, ScheduleLeft, FormsDialog, Location },
+    components: { customTable, Pagination, SelectHead, Dialog, AllocationForm, FormsDialog, Location, SearchTips },
     data() {
       return {
         tableHeight: null,//表格高度
@@ -95,6 +90,8 @@
         checkAllData: [],
         checksData: [],
         customHeight: '',//自定义高度
+        tipsData: [], //传入子组件的值
+        tipsDataCopy: [], //表单变化的值
       }
     },
     computed: {
@@ -118,10 +115,6 @@
       }
     },
     methods: {
-      setCustomData() {//表格自定义方法
-        this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
-        this.customHeight = this.$refs.myChild.isCustom
-      },
       exportExcel() {//导出事件
         GetRegisterList_Execl(this.rbp).then(res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
@@ -164,23 +157,17 @@
       },
       handleUser(row,type){//用户表册,type==2时候为定位
         this.$refs.childSchedule.dialogVisible = true
+       /* this.$refs.childSchedule.dialogVisible = true
         this.$refs.childSchedule.getTableInfo()//获取用户表册自定义表头信息
         type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : ''
         this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = row.SA_WaterFactory_Id//水厂
         this.$refs.childSchedule.rbdp.MeterReaderId = row.MeterReader_Id//抄表员
         this.$refs.childSchedule.getMeterForm(row.MeterReader_Id)//手动选择当前抄表员加载当前表册信息
         type == 2? this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.SA_RegisterBookInfo_Id : this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.Id//表册ID
-        this.$refs.childSchedule.searchFun()
-
-     /*   if(formID == 0){//初始化临时表册数据
-          this.$refs.childSchedule.searchFun1()
-        }else{//初始化正式表册数据
-          this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = row.SA_WaterFactory_Id
-          this.$refs.childSchedule.rbdp.MeterReaderId = row.MeterReader_Id
-          type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.Id//从列表点击表册用户时候传SA_RegisterBookInfo_Id,定位时候传表册SA_RegisterBookDetail_Id
-          this.$refs.childSchedule.getMeterForm(row.MeterReader_Id)//手动选择当前抄表员加载当前表册信息
-          this.$refs.childSchedule.searchFun(row)
-        }*/
+        this.$refs.childSchedule.searchFun()*/
+      },
+      allocationForm(){//表册分配 临时表册
+        this.$refs.childSchedule.dialogVisible = true
       },
       handleEmpty(row){//清空
         ClearRegisterBook({'RegisterBookId':row.Id}).then(res => {
@@ -196,6 +183,7 @@
           if (res.code ==0 ) {
             this.total = res.count;
             this.tableData = res.data;
+            this.tipsData = pushItem(this.tipsDataCopy)
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -233,11 +221,8 @@
           if (res.code ==0 ) {
               this.$refs.childDialog.waterFactory = res.data;
               this.$refs.childSelect.waterFactory = res.data;
-              this.$refs.childSchedule.waterFactory = res.data;
               this.rbp.SA_WaterFactory_Id = res.data[0].Id;//查询条件
               this.$refs.childDialog.rb.SA_WaterFactory_Id = res.data[0].Id//增加弹窗默认选当前登录人员所在水厂
-              this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
-              //this.$refs.childSchedule.rbdp1.SA_WaterFactory_Id = res.data[0].Id//用户移交默认选当前登录人员所在水厂
               this.getMeterReaderList(1,res.data[0].Id)//查询条件
               this.getMeterReaderList(2,res.data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
               this.getMeterReaderList(3,res.data[0].Id)//用户表册弹窗根据选中水厂获取默认抄表员数据
@@ -256,20 +241,38 @@
               case 2://新增或编辑条件
                 this.$refs.childDialog.meterArry = res.data
                 break
-              case 3://表册移交条件
-                this.$refs.childSchedule.meterArry = res.data
-                break
             }
           } else {
             promptInfoFun(this,1,res.message)
           }
         })
+      },
+      /**
+       *val 对应绑定的参数
+       *this this对象
+       * this.tipsDataCopy   存储面包屑数据的数组
+       * param  对应搜索条件的对象名
+       */
+      delTips(val) {
+        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "rbp"); //返回删除后的数据传给组件
+        this.$refs.childSelect.searchFun()
+      },
+      /**
+       *val 搜索数据值
+       *model 对应绑定的属性
+       * arr   下拉框循环的数组（输入框传“”）
+       * name  对应的搜索lable
+       */
+      //处理搜索条件,面包屑
+      getText(val, model, arr, name) {
+        let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
+        this.tipsDataCopy.push(obj);
       }
     },
     mounted() {
       let _this = this
-      _this.$refs.myChild.GetTable(this.rbp.tableId);
-      _this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+      _this.$refs.searchTips.$refs.myChild.GetTable(this.rbp.tableId); // 先获取所有自定义字段赋值
+      _this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
       _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
       _this.getWaterFactoryList()
     }

@@ -90,7 +90,8 @@
     background: #000;
     cursor: pointer;
   }
-
+  .table-setting {margin: 46px 0 15px 0;}
+  .table-setting-box{width: 100%;position: relative}
 }
 
 .cl-container1{
@@ -184,8 +185,8 @@
   margin-left: -16px;
   overflow: hidden;}
 .search-head-otherbox {
-  width: calc(100% + 2px);
-  margin-left: -18px;
+  width: 100%;
+  margin-left: -16px;
   padding: 0px 19px;
 }
 .cl-center-box{margin-top: 46px;}

@@ -1,24 +1,25 @@
 <template>
   <div style="width: 100%;position: relative">
     <el-form
+      ref="paramform"
       :inline="true"
       :model="param"
       :class="ifMore?'head-search-form form-inline-small-input meter-head on':'head-search-form form-inline-small-input meter-head'"
       size="small"
       label-width="100px"
       @submit.native.prevent>
-      <el-form-item label="抄表计划">
+      <el-form-item label="抄表计划" prop="SA_MeterReadPlan_Id">
         <el-select v-model="param.SA_MeterReadPlan_Id" placeholder="请选择" size="small" @change="getUserInfo">
           <el-option v-for="(item,index) in planArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="抄表员">
+      <el-form-item label="抄表员"prop="SA_MeterReader_Id">
         <el-select v-model="param.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param.SA_MeterReader_Id,'SA_MeterReader_Id',peopleArray,'抄表员')">
           <el-option label="全部" value="-1" v-if="peopleArray.length>1"></el-option>
           <el-option v-for="(item,index) in peopleArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="表册">
+      <el-form-item label="表册" prop="SA_RegisterBookInfo_Id">
         <el-select v-model="param.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formsArray,'表册')">
           <el-option label="全部" value="-1" v-if="formsArray.length>1"></el-option>
           <el-option v-for="(item,index) in formsArray" :key="index" :label="item.Name" :value="item.Id"/>
@@ -35,7 +36,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="抄表状态" v-show="ifMore">
+        <el-form-item label="抄表状态" v-show="ifMore" prop="MeterReadState">
           <el-select v-model="param.MeterReadState" placeholder="请选择" size="small" @change="getText(param.MeterReadState,'MeterReadState',meterState,'抄表状态')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
@@ -46,9 +47,8 @@
         <i v-show="ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
         <i v-show="!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
         <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
-        <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
+        <el-button round size="mini" class="cl-reset" @click="resetFun()"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
       </el-form-item>
-      <!--<el-button type="primary" size="mini" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>-->
     </el-form>
     <!--多用户弹窗 s-->
     <el-dialog
@@ -179,6 +179,16 @@
       setText(text,model,arr){
         let name = getName(this.param.CustomerQueryType)
         this.getText(text,model,arr,name)
+      },
+      resetFun(){
+        this.$parent.tipsData = []
+        this.$refs['paramform'].resetFields();
+        this.param.CustomerQueryType = '1'
+        this.param.CustomerQueryValue = ''
+        this.getplanArray()
+        setTimeout(()=>{
+          this.searchFun()
+        },200)
       }
     },
     mounted() {

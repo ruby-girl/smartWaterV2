@@ -2,10 +2,10 @@
   <div class="clMeterBox">
     <el-tabs v-model="typeCheck" @tab-click="handleClick">
       <el-tab-pane label="按抄表计划搜索" name="1">
-        <plan ref="planChild1"></plan>
+        <plan ref="planChild"></plan>
       </el-tab-pane>
       <el-tab-pane label="按抄表日期搜索" name="2">
-        <plan ref="planChild2"></plan>
+        <plan ref="planChild"></plan>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -25,26 +25,23 @@
     activated: function() {
       let id = this.$route.query.id;
       if(id){
-        this.$refs.planChild1.param.SA_MeterReadPlan_Id = id;
-        this.$refs.planChild1.searchFun();
+        this.$refs.planChild.$refs.childSelect.param1.SA_MeterReadPlan_Id = id;
+        this.$refs.planChild.$refs.childSelect.searchFun();
       }
     },
     methods: {
       handleClick(){
-        this.typeCheck==1 ? this.$refs.planChild1.$refs.childSelect.setparams(parseInt(this.typeCheck)) : this.$refs.planChild2.$refs.childSelect.setparams(parseInt(this.typeCheck))
+        this.$refs.planChild.$refs.childSelect.setparams(parseInt(this.typeCheck))
+        this.$refs.planChild.typeCheck = this.typeCheck
       },
     },
     mounted() {
       let _this = this;
       let id = _this.$route.query.id;
       if(id){
-        _this.param.SA_MeterReadPlan_Id = id;
-        _this.$refs.planChild1.searchFun();
+        this.$refs.planChild.$refs.childSelect.param1.SA_MeterReadPlan_Id = id;
+        _this.$refs.planChild.$refs.childSelect.searchFun();
       }
-      let num  = document.getElementsByClassName("clMeterBox")[0].offsetHeight -
-        document.getElementById("table").offsetTop - 90;
-      _this.$refs.planChild1.tableHeight = num
-      _this.$refs.planChild2.tableHeight = num
     }
   };
 </script>

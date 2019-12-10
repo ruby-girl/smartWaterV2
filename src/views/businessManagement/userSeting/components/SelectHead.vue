@@ -14,12 +14,14 @@
         </el-select>
         <el-input v-model="query.CustomerQueryValue" maxlength="50" placeholder="(长度1-50)" style="width: 180px;float: left" @blur="setText(query.CustomerQueryValue,'CustomerQueryValue',userType)"/>
       </el-form-item>
-      <el-form-item label="用户类型" prop="UserType">
+      <transition name="fade">
+      <el-form-item label="用户类型" prop="UserType"  v-show="screenWdth<1600?ifMore:true">
         <el-select v-model="query.UserType" placeholder="请选择" size="small" @change="getText(query.UserType,'UserType',userType,'用户类型')">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
+      </transition>
       <transition name="fade">
         <el-form-item label="用户状态" prop="UserState" v-show="screenWdth<1600?ifMore:true">
           <el-select v-model="query.UserState" placeholder="请选择" size="small" @change="getText(query.UserState,'UserState',userStaus,'用户状态')">
@@ -97,6 +99,8 @@
       resetFun(formName){
         this.query.CustomerQueryType = '1'
         this.$refs[formName].resetFields();
+        this.$parent.$refs.tableChild.tipsDataCopy = []
+        this.searchFun()
       },
       getText(val, model, arr, name) {
         this.$parent.getText(val, model, arr, name)

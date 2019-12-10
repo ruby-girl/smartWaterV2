@@ -249,8 +249,8 @@
           this.param.InputTimeEnd = "";
         }
 
-        this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
-        this.searchFun()
+        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
+        this.$refs.childSelect.searchFun()
       },
       /**
        *val 搜索数据值

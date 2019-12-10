@@ -231,7 +231,7 @@
           InputTimeStart: "", //录入时间
           InputTimeEnd: "",
           limit: 10,
-          page: 0,
+          page: 1,
           sort: "",
           filed: "",
           tableId: "0000015"
@@ -252,7 +252,7 @@
           InputTimeStart: "", //录入时间
           InputTimeEnd: "",
           limit: 10,
-          page: 0,
+          page: 1,
           sort: "",
           filed: "",
           tableId: "0000015"
@@ -374,7 +374,6 @@
         }
         this.getPlanList('-1');//默认查全部抄表计划
       },
-
       resetFun(type){
         if(type == 1){
             this.InputData = []
@@ -383,7 +382,12 @@
             this.param1.InputTimeStart = "",
             this.param1.InputTimeEnd = "",
             this.param1.CustomerQueryType = '1'
-          this.$refs['formName1'].resetFields();
+            this.$refs['formName1'].resetFields();
+            this.$parent.tipsData = []
+            this.getPlanList('-1');//默认查全部抄表计划
+            setTimeout(()=>{
+              this.searchFun(type)
+            },200)
         }else {
             this.InputData2 = []
             this.meterData = []
@@ -392,18 +396,19 @@
             this.param2.InputTimeStart = "",
             this.param2.InputTimeEnd = "",
             this.param2.CustomerQueryType = '1'
-          this.$refs['formName2'].resetFields();
+            this.$refs['formName2'].resetFields();
+            this.$parent.tipsData2 = []
+            setTimeout(()=>{
+              this.searchFun(type)
+            },200)
         }
+
       },
       getText(val, model, arr, name) {
         this.$emit("getText", val, model, arr, name);
       },
       setText(text,model,arr){
         let name = getName(this.query.CustomerQueryType)
-        this.getText(text,model,arr,name)
-      },
-      setText(text,model,arr){
-        let name = getName(this.param.CustomerQueryType)
         this.getText(text,model,arr,name)
       }
     },

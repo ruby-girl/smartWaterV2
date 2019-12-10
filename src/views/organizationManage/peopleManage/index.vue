@@ -1,20 +1,12 @@
 <template>
   <div class="cl-container cl-container2">
-    <div style="overflow: auto">
-      <div id="conditionBox">
-        <!--查询条件组件 s-->
-        <SelectHead ref="childSelect"></SelectHead>
-        <!--查询条件组件 e-->
-        <div class="cl-operation1">
-          <el-button type="primary" size="mini" class="cl-search" @click="addNewFun"><i class="icon iconfont">&#xe689;</i> 添加</el-button>
-          <el-button type="primary" size="mini" class="cl-search fr cl-color1" @click="setCustomData()"><i class="icon iconfont">&#xe678;</i> 表格自定义</el-button>
-          <el-button type="success" size="mini" class="cl-search fr" @click="exportExcel"><i class="icon iconfont">&#xe683;</i> 导出Excel</el-button>
-        </div>
+    <div style="width: 100%;position: relative">
+      <SelectHead ref="childSelect" @getText="getText"></SelectHead>
+      <div class="table-setting">
+        <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
       </div>
-      <!--自定义字段组建 s-->
-      <customTable ref="myChild" />
-      <!--自定义字段组建 e-->
       <!--列表数据 s-->
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
         <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
           <template slot-scope="scope">
@@ -90,6 +82,7 @@
   </div>
 </template>
 <script>
+  import SearchTips from "@/components/SearchTips/index";
   import '@/styles/organization.scss'
   import SelectHead from './components/SelectHead'
   import customTable from '@/components/CustomTable/index'
@@ -99,10 +92,11 @@
   import detailmponent from './components/Detail'
   import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl} from "@/api/organize"
   import { getTime } from "@/utils/index";
+  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
   export default {
     name: 'peopleManage',
-    components: {customTable, Pagination, addmponent, editmponent, detailmponent, SelectHead},
+    components: {customTable, Pagination, addmponent, editmponent, detailmponent, SelectHead, SearchTips},
     data() {
       return {
         tableHeight: 600,//表格高度
@@ -113,7 +107,9 @@
         tableData: [],
         checkAllData: [],
         checksData: [],
-        customHeight: ''
+        customHeight: '',
+        tipsData: [], //传入子组件的值
+        tipsDataCopy: [], //表单变化的值
       }
     },
     computed: {
@@ -257,6 +253,7 @@
         peopleGetList(jp).then(res => {
           this.total = res.count;
           this.tableData = res.data;
+          this.tipsData = pushItem(this.tipsDataCopy)
         })
       },
       sortChanges({prop, order }){//排序
@@ -266,11 +263,46 @@
           this.queryData.page = 1
           this.searchFun()
         }
+      },
+      /**
+       *val 对应绑定的参数
+       *this this对象
+       * this.tipsDataCopy   存储面包屑数据的数组
+       * param  对应搜索条件的对象名
+       */
+      delTips(val) {
+        switch (val) {
+          case 'EntryTime':
+            this.$refs.childSelect.queryData.EnrollingTime = ''
+            this.$refs.childSelect.queryData.EnrollingTimeEnd = ''
+            break
+          case 'birthdayTime':
+            this.$refs.childSelect.queryData.Birthday = ''
+            this.$refs.childSelect.queryData.BirthdayEnd = ''
+            break
+          case 'operationTime':
+            this.$refs.childSelect.queryData.editStartTime = ''
+            this.$refs.childSelect.queryData.editEndTime = ''
+            break
+        }
+        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "queryData"); //返回删除后的数据传给组件
+        this.$refs.childSelect.searchFun()
+      },
+      /**
+       *val 搜索数据值
+       *model 对应绑定的属性
+       * arr   下拉框循环的数组（输入框传“”）
+       * name  对应的搜索lable
+       */
+      //处理搜索条件,面包屑
+      getText(val, model, arr, name) {
+        let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
+        this.tipsDataCopy.push(obj);
       }
     },
     mounted() {
-      this.$refs.myChild.GetTable(this.queryData.tableId);//获取表头信息
-      this.checksData = this.$refs.myChild.checkData//获取自定义字段中选中了字段
+      this.$refs.searchTips.$refs.myChild.GetTable(this.queryData.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
     }
   }
 </script>

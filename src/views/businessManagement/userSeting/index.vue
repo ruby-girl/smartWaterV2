@@ -18,7 +18,7 @@
       </div>
       <!--右侧列表数据-->
       <div class="user_table">
-        <SelectHead @getText="getText"></SelectHead>
+        <SelectHead @getText="getText" ref="childSelect"></SelectHead>
         <tableQuery ref="tableChild"></tableQuery>
         <span v-show="ifShow" class="telescopic telescopic1" @click="getUp">
           展开
@@ -59,22 +59,6 @@ export default {
       ifShow: false,
       query: {
         //右侧用户列表查询条件
-        CustomerQueryType: "1",
-        CustomerQueryValue: "",
-        UserType: "-1",
-        UserState: "-1",
-        AreaId: "-1",
-        WaterTypeId: -1,
-        limit: 10,
-        page: 1,
-        sort: "",
-        filed: "",
-        createUserId: "",
-        createStartTime: "",
-        createEndTime: "",
-        editUserId: "",
-        editStartTime: "",
-        editEndTime: "",
         tableId: "0000016"
       },
       oldTreeData: [],
@@ -82,6 +66,11 @@ export default {
       disEdit: false,
       disDel: false,
     };
+  },
+  watch:{
+    query(){
+      this.$refs.tableChild.query = this.query
+    }
   },
   methods: {
 
@@ -91,9 +80,11 @@ export default {
     getUp() {
       this.ifShow = !this.ifShow;
       if (this.ifShow) {
+        document.getElementsByClassName('telescopic1')[0].style.display = 'block'
         document.getElementById("operate_area").classList.add("none");
         document.getElementsByClassName("user_tree")[0].classList.add("hide");
       } else {
+        document.getElementsByClassName('telescopic1')[0].style.display = 'none'
         document
           .getElementsByClassName("user_tree")[0]
           .classList.remove("hide");
@@ -197,8 +188,7 @@ export default {
     getTreeData() {
       GetAreaListByWaterFactory({'waterFactoryId':this.waterFactoryName.Id}).then(res => {
         if (res.code ==0 ) {
-          this.oldTreeData = []
-          this.oldTreeData.push(res.data)
+          this.oldTreeData = res.data.children
         } else {
           promptInfoFun(this,1,res.message)
         }
@@ -218,6 +208,7 @@ export default {
         if (res.code == 0) {
           this.$refs.tableChild.total = res.count;
           this.$refs.tableChild.tableData = res.data;
+          console.log(res.data)
         } else {
           promptInfoFun(this, 1, res.message);
         }

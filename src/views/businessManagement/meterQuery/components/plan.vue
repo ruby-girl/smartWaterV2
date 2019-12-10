@@ -2,15 +2,15 @@
   <div class="cl-container">
     <SelectHead ref="childSelect" @getText="getText"></SelectHead>
     <div class="cl-center-box">
-      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" />
+      <search-tips v-if="typeCheck==1" :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
+      <search-tips v-else :tipsData="tipsData2" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
       <el-table
         id="table"
         :data="tableData"
         :height="tableHeight"
         border
         @sort-change="sortChanges"
-        ref="multipleTable"
-      >
+        ref="multipleTable">
         <el-table-column type="index" fixed="left" label="#" width="60" align="center">
           <template slot-scope="scope">
             <span>{{(param.page - 1) * param.limit + scope.$index + 1}}</span>
@@ -79,6 +79,8 @@ export default {
       total: 0,
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
+      tipsData2: [], //传入子组件的值
+      tipsDataCopy2: [], //表单变化的值
       checksData: [],
       param: {
         CustomerQueryType: "1", //用户查询类型 用户编号=1，姓名=2，简码=3
@@ -100,7 +102,8 @@ export default {
         sort: "",
         filed: "",
         tableId: "0000015"
-      }
+      },
+      typeCheck:1
     };
   },
   computed: {
@@ -122,7 +125,7 @@ export default {
       //列表查询
       ReadingQueryPageQuery(this.param).then(res => {
         if (res.code == 0) {
-          this.tipsData = pushItem(this.tipsDataCopy);
+          this.typeCheck == 1 ? this.tipsData = pushItem(this.tipsDataCopy) : this.tipsData2 = pushItem(this.tipsDataCopy2);
           this.total = res.count;
           this.tableData = res.data;
         } else {
@@ -185,9 +188,8 @@ export default {
         this.param.InputTimeStart = "";
         this.param.InputTimeEnd = "";
       }
-
-      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
-     //  this.searchFun()
+      this.typeCheck == 1 ?  this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, 'param1'):this.tipsDataCopy2 = delTips(val, this.$refs.childSelect, this.tipsDataCopy2, 'param2') //返回删除后的数据传给组件
+      this.searchFun()
     },
     /**
      *val 搜索数据值
@@ -197,13 +199,25 @@ export default {
      */
     //处理搜索条件,面包屑
     getText(val, model, arr, name) {
-      let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
-      this.tipsDataCopy.push(obj);
+      if (this.typeCheck == 1) {
+        let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
+        this.tipsDataCopy.push(obj);
+      } else {
+        let obj = getText(val, model, arr, this.tipsDataCopy2, this, name); //返回的组件需要的对象
+        this.tipsDataCopy2.push(obj);
+      }
     }
   },
   mounted() {
     this.$refs.searchTips.$refs.myChild.GetTable(this.param.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+  },
+  created() {
+    this.$nextTick(()=>{
+      let num  = document.getElementsByClassName("clMeterBox")[0].offsetHeight -
+        document.getElementById("table").offsetTop - 90;
+      this.tableHeight = num
+    })
   }
 };
 </script>
