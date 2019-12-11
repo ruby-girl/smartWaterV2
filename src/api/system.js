@@ -109,3 +109,21 @@ export function DeleteWaterPropertyId(data){
   })
 }
 // 用水性质-end
+
+// 用水性质变更---------------------------
+// 获取记录列表
+export function SelectWaterPropertyChangeList(data){
+  return request({
+    url: '/CustomerWaterPropertyChange/SelectWaterPropertyChangeList',
+    method: 'post',  
+    data:data,  
+  })
+}
+// 用户变更用水性质 POST /api/CustomerWaterPropertyChange/
+export function ConfirmChangeWaterProperty(data){
+  return request({
+    url: '/CustomerWaterPropertyChange/ConfirmChangeWaterProperty',
+    method: 'post',  
+    params:data,  
+  })
+}

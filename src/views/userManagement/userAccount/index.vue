@@ -11,12 +11,16 @@
 
       <el-main>
         <h3>销户查询</h3>
-        <selecte-head
-          :editUserList="editUserList"
-          :selectHead="listQuery"
-          @handleFilter="seachAccountOrder"
-          @getText="getText"
-        />
+        <div ref="formHeight">
+          <selecte-head
+            :editUserList="editUserList"
+            :selectHead="listQuery"
+            @handleFilter="seachAccountOrder"
+            @getText="getText"
+            :searchWidth="searchWidth"
+          />
+        </div>
+
         <!-- <div class="cl-operation1 clearfix">
           <el-button
             type="warning"
@@ -92,7 +96,12 @@ import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { waterAccountPost, excelWaterAccount } from "@/api/userAccount"; //获取操作人下拉框waterAccountPost
 import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem,getTipsChangeWidth } from "@/utils/projectLogic"; //搜索条件面包屑
+import {
+  delTips,
+  getText,
+  pushItem,
+  getTipsChangeWidth
+} from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "userAccount",
   components: { AccountUser, SelecteHead, customTable, Pagination, SearchTips },
@@ -125,7 +134,8 @@ export default {
       editUserList: [], //操作员、经办人
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      orderData: {} //搜索存储对象
+      orderData: {}, //搜索存储对象
+      searchWidth: 1024 //右侧宽度
     };
   },
   created() {
@@ -140,17 +150,14 @@ export default {
       58;
     this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    this.searchWidth = this.$refs.formHeight.clientWidth;
   },
   watch: {
-    customHeight() {
-      //获取自定义模块高度
-      let that = this;
-      that.$nextTick(() => {
-        that.tableHeight =
-          document.getElementsByClassName("el-main")[0].offsetHeight -
-          document.getElementById("table").offsetTop -
-          58;
-      });
+    ifShow() {
+      let _this = this;
+      setTimeout(function() {
+        _this.searchWidth = _this.$refs.formHeight.clientWidth;
+      }, 200);
     }
   },
   computed: {

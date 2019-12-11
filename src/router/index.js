@@ -349,7 +349,15 @@ export const asyncRoutes = [
           roles: ['1']
         }
       },
-
+      {
+        path: 'waterNatureChange',
+        component: () => import('@/views/userManagement/waterNatureChange/index'),
+        name: 'waterNatureChange',
+        meta: {
+          title: '用水性质变更',
+          roles: ['1']
+        }
+      },
     ]
   },
 
