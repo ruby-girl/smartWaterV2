@@ -3,7 +3,9 @@
   <div class="section-container">
     <el-container>
       <el-aside width="0">
-        <upadate-water class="account-user" />
+        <div ref="updateHeight">
+          <upadate-water class="account-user" ref="update"/>
+        </div>
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
           水表升级
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
@@ -12,13 +14,15 @@
 
       <el-main>
         <h3>升级查询</h3>
-        <selecte-head
-          :editUserList="editUserList"
-          :selectHead="listQuery"
-          @handleFilter="seachAccountOrder"
-          @getText="getText"
-        />
-
+        <div ref="formHeight">
+          <selecte-head
+            :editUserList="editUserList"
+            :selectHead="listQuery"
+            @handleFilter="seachAccountOrder"
+            @getText="getText"
+            :searchWidth="searchWidth"
+          />
+        </div>
         <search-tips
           :tipsData="tipsData"
           ref="searchTips"
@@ -132,7 +136,8 @@ export default {
       editUserList: [], //操作员、经办人
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      orderData: {}
+      orderData: {},
+      searchWidth: 1024 //右侧宽度
     };
   },
   created() {
@@ -148,17 +153,14 @@ export default {
 
     this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    this.searchWidth = this.$refs.formHeight.clientWidth;
   },
   watch: {
-    customHeight() {
-      //获取自定义模块高度
-      let that = this;
-      that.$nextTick(() => {
-        that.tableHeight =
-          document.getElementsByClassName("el-main")[0].offsetHeight -
-          document.getElementById("table").offsetTop -
-          58;
-      });
+    ifShow() {
+      let _this = this;
+      setTimeout(function() {
+        _this.searchWidth = _this.$refs.formHeight.clientWidth;
+      }, 200);
     }
   },
   computed: {
@@ -192,10 +194,7 @@ export default {
       this.tipsDataCopy.push(obj);
     },
     //表格自定义方法
-    setCustomData() {
-      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
-      this.customHeight = this.$refs.myChild.isCustom;
-    },
+
     //左侧显示隐藏
     closeAccount() {
       this.ifShow = !this.ifShow;
@@ -204,11 +203,22 @@ export default {
         document.getElementsByClassName("el-aside")[0].classList.remove("none");
         document.getElementsByClassName("el-aside")[0].classList.add("hide");
         getTipsChangeWidth(this);
+
+        setTimeout(function() {
+          let asideHeight = document.getElementsByClassName("el-aside")[0]
+            .offsetHeight;
+          let conentHeight = that.$refs.updateHeight.offsetHeight;
+          if (asideHeight < conentHeight){
+            that.$refs.update.showInfo = false;
+
+          }
+        }, 200);
       } else {
         document.getElementsByClassName("el-aside")[0].classList.remove("hide");
         document.getElementsByClassName("el-aside")[0].classList.add("none");
-
         getTipsChangeWidth(this);
+        that.$refs.update.showInfo = true;
+
       }
     },
     //查询记录

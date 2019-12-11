@@ -167,7 +167,7 @@
     <el-dialog
       title="历史详情"
       :visible.sync="viewWaterHistory"
-      top="30vh"
+      top="20vh"
       width="836px"
       hight="432px"
       center
@@ -243,7 +243,7 @@ export default {
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
-      statusList: [{ Id: "1", Name: "已开户" },{ Id: "2", Name: "销户" }]
+      statusList: [{ Id: "1", Name: "已开户" }, { Id: "2", Name: "销户" }]
     };
   },
   created() {

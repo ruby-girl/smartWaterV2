@@ -117,7 +117,7 @@
     <el-dialog
       title="历史详情"
       :visible.sync="viewWaterHistory"
-      top="30vh"
+      top="20vh"
       width="836px"
       hight="432px"
       center
@@ -247,7 +247,7 @@ export default {
       }
       searICMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
-           this.tipsData = pushItem(this.tipsDataCopy);
+          this.tipsData = pushItem(this.tipsDataCopy);
           that.tableData = res.data;
           that.total = res.count;
         } else {

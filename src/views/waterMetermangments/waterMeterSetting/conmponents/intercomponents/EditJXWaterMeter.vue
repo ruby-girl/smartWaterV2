@@ -2,7 +2,7 @@
   <el-dialog
     title="添加"
     :visible.sync="EditWaterJX"
-    top="30vh"
+    top="20vh"
     width="60%"
     center
     :close-on-click-modal="false"
