@@ -32,10 +32,10 @@
     </el-form-item>
     <el-form-item label="水表类型">
       <el-select
-        v-model="selectHead.waterMeterType"
+        v-model="selectHead.WaterMeter "
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList,'水表类型')"
+        @change="getText(selectHead.WaterMeter ,'WaterMeter',WaterMeterList,'水表类型')"
       >
         <el-option label="全部" :value="-1" />
         <el-option
@@ -48,10 +48,10 @@
     </el-form-item>
     <el-form-item label="区域">
       <el-select
-        v-model="selectHead.waterMeterType"
+        v-model="selectHead.AreaId "
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList,'区域')"
+        @change="getText(selectHead.AreaId ,'AreaId',WaterMeterList,'区域')"
       >
         <el-option label="全部" :value="-1" />
         <el-option
@@ -64,10 +64,10 @@
     </el-form-item>
     <el-form-item label="低保户状态" label-width="80px">
       <el-select
-        v-model="selectHead.securType"
+        v-model="selectHead.InsuredState "
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.securType,'securType',securStatus,'低保户状态')"
+        @change="getText(selectHead.InsuredState ,'InsuredState',securStatus,'低保户状态')"
       >
         <el-option label="全部" :value="-1" />
         <el-option
@@ -96,14 +96,14 @@
     </el-form-item>
     <el-form-item label="次年复审状态" label-width="90px">
       <el-select
-        v-model="selectHead.waterMeterType"
+        v-model="selectHead.InsuredRecheckState "
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList,'次年复审状态')"
+        @change="getText(selectHead.InsuredRecheckState ,'InsuredRecheckState',securNextStatus,'次年复审状态')"
       >
         <el-option label="全部" :value="-1" />
         <el-option
-          v-for="item in WaterMeterList"
+          v-for="item in securNextStatus"
           :key="item.Id"
           :label="item.Name"
           :value="Number(item.Id)"
@@ -134,12 +134,14 @@ export default {
     return {
       secNmae: "",
       WaterMeterList: [], //
-      securStatus:[]
+      securStatus:[],
+      securNextStatus:[]
     };
   },
   created() {
     this.WaterMeterList = getDictionaryOption("水表类型");
     this.securStatus = getDictionaryOption("低保户状态");
+    this.securNextStatus = getDictionaryOption("低保户复审状态");
   },
   methods: {
     getscName(id) {
@@ -153,16 +155,16 @@ export default {
     getTime(v) {
       let date;
       if (v) {
-        this.selectHead.StartUpgradeDate = v[0];
-        this.selectHead.EndUpgradeDate = v[1];
+        this.selectHead.StartTime  = v[0];
+        this.selectHead.StartTime  = v[1];
         date =
-          this.selectHead.StartUpgradeDate +
+          this.selectHead.StartTime  +
           "~" +
-          this.selectHead.EndUpgradeDate;
+          this.selectHead.StartTime ;
         this.$emit("getText", date, "timevalue", "", "销户日期");
       } else {
-        this.selectHead.StartUpgradeDate = "";
-        this.selectHead.EndUpgradeDate = "";
+        this.selectHead.StartTime  = "";
+        this.selectHead.StartTime  = "";
         date = "";
         this.$emit("getText", date, "timevalue", "", "销户日期");
       }

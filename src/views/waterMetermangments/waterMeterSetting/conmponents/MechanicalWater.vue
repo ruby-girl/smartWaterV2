@@ -118,7 +118,7 @@
     <el-dialog
       title="历史详情"
       :visible.sync="viewWaterHistory"
-      top="30vh"
+      top="20vh"
       width="836px"
       hight="432px"
       center

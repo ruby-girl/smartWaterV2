@@ -59,6 +59,12 @@ import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
 import ExamSecur from "./ExamSecur";
+import {
+  getInssured,
+  excelInssured,
+  getInssureDetaile,
+  reviewInssure
+} from "@/api/inSecur";
 export default {
   name: "UserSecurMangment",
   components: { Selected, Pagination, SearchTips, ExamSecur },
@@ -72,12 +78,14 @@ export default {
         sort: "",
         customerQueryType: "", //查询类型
         customerQueryValue: "", //查询值
-        waterMeterType: -1, //水表类型
-        createStartTime: "", // 操作时间起
-        createEndTime: "", // 操作时间止
-        securType: -1, //低保户 状态
+        WaterMeter: -1, //水表类型
+        StartTime: "", // 操作时间起
+        StartTime: "", // 操作时间止
+        InsuredState: -1, //低保户 状态
+        AreaId: -1, //区域Id
+        InsuredRecheckState: -1, //次年复审状态
         timevalue: [],
-        tableId: "0000026"
+        tableId: "0000031"
       },
       checksData: [],
       tableKey: 0,
@@ -116,8 +124,8 @@ export default {
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
-        this.listQuery.StartUpgradeDate = "";
-        this.listQuery.EndUpgradeDate = "";
+        this.listQuery.StartTime = "";
+        this.listQuery.StartTime = "";
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
       this.seachAccountOrder();
@@ -136,7 +144,11 @@ export default {
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
       }
-      this.tipsData = pushItem(this.tipsDataCopy);
+      getInssured(this.listQuery).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
+        this.tableData = res.data;
+        this.total = res.count;
+      });
     },
     sortChanges({ column, prop, order }) {
       //排序

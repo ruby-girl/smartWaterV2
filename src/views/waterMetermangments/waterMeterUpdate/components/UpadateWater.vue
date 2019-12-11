@@ -248,7 +248,7 @@ export default {
         CustomerQueryValue: ""
       },
       userList: [], //回车查询数据列表
-      showInfo: false,
+      showInfo: true,
       UpgradeWaterNeedInfo: {
         meter2Param: {
           MeterDiameter: "", //水表口径

@@ -201,7 +201,7 @@
         <el-dialog
           title="历史详情"
           :visible.sync="viewWaterHistory"
-          top="30vh"
+          top="20vh"
           width="1000px"
           hight="432px"
           center
@@ -380,7 +380,7 @@ export default {
       } else {
         document.getElementsByClassName("el-aside")[0].classList.remove("hide");
         document.getElementsByClassName("el-aside")[0].classList.add("none");
-         getTipsChangeWidth(this);
+        getTipsChangeWidth(this);
       }
     },
     changeColor(index) {

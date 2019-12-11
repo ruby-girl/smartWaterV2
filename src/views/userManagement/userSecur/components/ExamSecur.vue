@@ -44,7 +44,7 @@ export default {
   components: { uploadBox },
   data() {
     return {
-      viewExam: true,
+      viewExam: false,
       nextTimeArr: [],
       Enclosure: {}
     };
