@@ -41,7 +41,7 @@
         </el-form-item>
         <el-form-item label="用水性质 " prop="SA_UseWaterType_Id">
           <el-select v-model="ycData.SA_UseWaterType_Id" placeholder="请选择" size="small">
-            <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.SA_UseWaterType_Id"/>
+            <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.Id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="纳税人识别号 " label-width="110px" prop="TaxpayerNumber">

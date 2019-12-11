@@ -157,6 +157,11 @@
       },
       handleUser(row,type){//用户表册,type==2时候为定位
         this.$refs.childSchedule.dialogVisible = true
+        this.$refs.childSchedule.$refs.waterTableChild.formRbp.ecqt = '1'
+        this.$refs.childSchedule.$refs.waterTableChild.formRbp.Customer = row.CustomerNo
+        this.$refs.childSchedule.$refs.waterTableChild.formRbp.SA_RegisterBookDetail_Id = row.Id
+        type == 2? this.$refs.childSchedule.$refs.waterTableChild.formRbp.SA_RegisterBookInfo_Id = row.SA_RegisterBookInfo_Id : this.$refs.childSchedule.$refs.waterTableChild.formRbp.SA_RegisterBookInfo_Id = row.Id//表册ID
+        this.$refs.childSchedule.$refs.waterTableChild.searchFun()
        /* this.$refs.childSchedule.dialogVisible = true
         this.$refs.childSchedule.getTableInfo()//获取用户表册自定义表头信息
         type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : ''

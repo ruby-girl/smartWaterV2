@@ -160,3 +160,14 @@ export function GetDefaultList(data) {
     data: data
   })
 }
+
+/**
+ * 获取水厂抄表员表册树
+ * */
+export function GetWFMRRBITree(data) {
+  return request({
+    url: '/RegisterBook/GetWFMRRBITree',
+    method: 'post',
+    data: data
+  })
+}

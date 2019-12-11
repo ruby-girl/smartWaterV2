@@ -154,11 +154,11 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'userSeting',
-        component: () => import('@/views/businessManagement/userSeting/index'),
-        name: 'userSeting',
+        path: 'tableSeting',
+        component: () => import('@/views/businessManagement/tableSeting/index'),
+        name: 'tableSeting',
         meta: {
-          title: '用户设置',
+          title: '表册设置',
           roles: ['1']
         }
       },
@@ -168,6 +168,24 @@ export const asyncRoutes = [
         name: 'MeterReadingPlan',
         meta: {
           title: '抄表计划',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'meterSetUp',
+        component: () => import('@/views/businessManagement/meterSetUp/index'),
+        name: 'meterSetUp',
+        meta: {
+          title: '抄表设置',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'meterQuery',
+        component: () => import('@/views/businessManagement/meterQuery/index'),
+        name: 'meterQuery',
+        meta: {
+          title: '抄表查询',
           roles: ['1']
         }
       },
@@ -204,33 +222,6 @@ export const asyncRoutes = [
         name: 'arrearsManagement',
         meta: {
           title: '欠费管理',
-          roles: ['1']
-        }
-      },
-      {
-        path: 'meterQuery',
-        component: () => import('@/views/businessManagement/meterQuery/index'),
-        name: 'meterQuery',
-        meta: {
-          title: '抄表查询',
-          roles: ['1']
-        }
-      },
-      {
-        path: 'meterSetUp',
-        component: () => import('@/views/businessManagement/meterSetUp/index'),
-        name: 'meterSetUp',
-        meta: {
-          title: '抄表设置',
-          roles: ['1']
-        }
-      },
-      {
-        path: 'tableSeting',
-        component: () => import('@/views/businessManagement/tableSeting/index'),
-        name: 'tableSeting',
-        meta: {
-          title: '表册设置',
           roles: ['1']
         }
       },
@@ -323,6 +314,15 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'userSeting',
+        component: () => import('@/views/userManagement/userSeting/index'),
+        name: 'userSeting',
+        meta: {
+          title: '用户设置',
+          roles: ['1']
+        }
+      },
+      {
         path: 'userTransfer',
         component: () => import('@/views/userManagement/userTransfer/index'),
         name: 'userTransfer',
@@ -349,6 +349,7 @@ export const asyncRoutes = [
           roles: ['1']
         }
       },
+
     ]
   },
 

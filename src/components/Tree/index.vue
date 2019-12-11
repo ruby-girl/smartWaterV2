@@ -44,9 +44,13 @@ export default {
   methods: {
     /**
      * 动态添加模板图标
-     * */
+     **/
     renderContent(h, { node, data, store }) {
-      return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class='ndoe_level'>{node.level}</i> {node.label} < /span>)
+      if(this.ifSearch){
+        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class={'icon iconfont ndoe_level iconlevel'+node.level}></i> {node.label} < /span>)
+      }else{
+        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}>{node.label} < /span>)
+      }
     },
     /**
      * 当前选中需编辑或者新增信息或删除
@@ -180,7 +184,7 @@ export default {
   .back4{background: #CFE6E2;padding-left: 40px}
   .back5{background: #dff6f4;padding-left: 50px}
   .back6{background: #E9F5F4;padding-left: 60px}
-  .ndoe_level{display: inline-block;width: 16px;height: 16px;border-radius: 50%;text-align: center;background: #247A77;color: #E3F1EF;font: bold 12px/16px 'Script MT';}
+  .ndoe_level{color: #247A77;font-size: 12px;}
   .matchStyle {
     color: #b32f00;
   }
@@ -196,7 +200,7 @@ export default {
   height: calc(100vh - 20%);
   overflow: auto;
   .custom-tree-container {
-    width: 190px;
+    width: 100%;
     border: solid 1px #cad9e0;
     border-top: none;
     .el-tree {
@@ -245,6 +249,5 @@ export default {
     color: #b32f00;
     font-weight: bold;
   }
-/*  .back1 .ndoe_level{display: none;}*/
 }
 </style>

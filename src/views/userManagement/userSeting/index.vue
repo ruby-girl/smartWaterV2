@@ -65,6 +65,7 @@ export default {
       disAdd: false,
       disEdit: false,
       disDel: false,
+      firstTree:{}
     };
   },
   watch:{
@@ -116,7 +117,8 @@ export default {
      * */
     getCheckedNodes(type) {
       const _this = this;
-      let selectNode = _this.$refs.myChild.selectNode; //当前选中数据节点
+      let selectNode ;
+      _this.$refs.myChild.selectNode!='' ? selectNode = _this.$refs.myChild.selectNode : selectNode = this.firstTree
       _this.$refs.editDialog.param.pieName = selectNode.label;
       _this.$refs.editDialog.param.Id = selectNode.Id;
       _this.$refs.editDialog.param.Pid = selectNode.Pid;
@@ -188,6 +190,7 @@ export default {
     getTreeData() {
       GetAreaListByWaterFactory({'waterFactoryId':this.waterFactoryName.Id}).then(res => {
         if (res.code ==0 ) {
+          this.firstTree = res.data
           this.oldTreeData = res.data.children
         } else {
           promptInfoFun(this,1,res.message)

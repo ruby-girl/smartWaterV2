@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item label="当审核不通过时，流程：">
         <el-select v-model="form.ToId" placeholder="结束"  size="small">
-          <el-option v-for="(item,index) in nodeIds" :label="item.ModuleName" :value="item.Id" :key="index">{{item.ModuleName}} {{item.Id}}</el-option>
+          <el-option v-for="(item,index) in nodeIds" :label="item.ModuleName" :value="item.Id" :key="index">{{item.ModuleName}}</el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -322,7 +322,7 @@
       getLocalstorageData(data){//动态获取节点，回归线下拉数据
         data.forEach((item,index)=>{//该节点之后的节点 不允许选择
           if(item.Id === this.module.Id){
-            this.nodeIds = data.slice(0,index)
+            this.nodeIds = data.slice(0,index+1)
           }
         })
       }
@@ -335,7 +335,9 @@
       Bus.$on('NodesSetFun', (msg) => {//触发流程节点配置
         let exp = undefined
         if(msg.item.ProcessConfigLine!=exp){
-          this.form.ToId = msg.item.ProcessConfigLine.ToId
+          msg.item.ProcessConfigLine.ToId !='' ? this.form.ToId = msg.item.ProcessConfigLine.ToId : this.form.ToId = msg.item.Id
+        }else{
+          this.form.ToId = msg.item.Id
         }
         this.type = msg.type
         this.module = msg.item

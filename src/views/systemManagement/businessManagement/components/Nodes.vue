@@ -35,7 +35,7 @@
             <!--审核人组-->
           </ul>
           <!--结束回归线 没超过10条线，j值归0从头计算，以免线条位置超出节点区域-->
-          <p class="line" v-for="(i,j) in item.lines" :key="j"
+          <p class="line" v-for="(i,j) in item.lines" :key="j" v-if="i.FromId!=i.ToId"
              :style="'width:'+ (i.FromId-i.ToId) * 195 + 'px;height:' + (j+1)*28 + 'px;margin-top:' + -j*28 + 'px;margin-left:' + ((i.ToId -1 ) * 195 + 70 + (j >9 ? j = j%10 : j = j)*8) + 'px'">
             <i class="triangle_Up"></i>
             <i class="triangle_Left"></i>
@@ -146,7 +146,6 @@
                   return
                 })
               }else {//流程不为空
-
                 item.ProcessConfigNode.forEach(is=>{//获取对应节点成员数量
                   is.Members = is.Member
                   is.ModuleName = is.Name
