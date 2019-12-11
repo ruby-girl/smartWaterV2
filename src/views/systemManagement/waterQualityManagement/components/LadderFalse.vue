@@ -71,16 +71,14 @@
       ></el-date-picker>
     </el-form-item>
     <el-form-item label="新计价启用日期" v-if="dialogStatus=='update'" label-width="150px">
-      <el-date-picker
-        v-model="temp.NewPriceUseDate"
-        type="month"
-        placeholder="选择日期时间"
-        :picker-options="newPickerOptions"
-      ></el-date-picker>
-    </el-form-item>
+        <el-select v-model="temp.NewPriceUseDate" placeholder="请选择">
+          <el-option :label="item" :value="item" v-for="item in timeOption" :key="item"/>
+        </el-select>
+      </el-form-item>
   </el-form>
 </template>
 <script>
+import { getTimeOption,yearTimeOption,threeTimeOption } from "@/utils/projectLogic"; //获取时间下拉框
 import { updateMoney, delDecimal } from "@/utils/index.js";
 export default {
   props: {
@@ -101,7 +99,22 @@ export default {
       }
     }
   },
-  mounted() {},
+ watch: {
+    "temp.LadderResetTime": {
+      handler(val) {
+        this.timeOption = [];
+        if(val==1){
+          this.oneMonth()
+        }else if(val==3){
+          this.timeOption=threeTimeOption(new Date())
+        }else{
+         this.timeOption=yearTimeOption(new Date(),5)
+        }
+        this.temp.NewPriceUseDate=this.timeOption[0]
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       pickerOptions: {
@@ -129,10 +142,16 @@ export default {
           { required: true, message: "不能为0", trigger: "blur" }
         ],
         TotalPrice: [{ required: true, message: "不能为空", trigger: "blur" }]
-      }
+      },
+      timeOption:[]
     };
   },
   methods: {
+    oneMonth() {       
+      for (let i = 1; i < 6; i++) {
+       this.timeOption.push(getTimeOption(new Date(), i+1))
+      }
+    },
     // 输入金额保留2位
     money(e) {
       e.target.value = updateMoney(e.target.value);

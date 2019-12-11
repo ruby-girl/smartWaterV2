@@ -118,7 +118,7 @@
       </el-form-item>
       <el-form-item label="新计价启用日期" v-if="dialogStatus=='update'" label-width="150px">
         <el-select v-model="temp.NewPriceUseDate" placeholder="请选择">
-          <el-option :label="item" :value="item" v-for="item in timeOption"/>
+          <el-option :label="item" :value="item" v-for="item in timeOption" :key="item"/>
         </el-select>
       </el-form-item>
     </el-form>

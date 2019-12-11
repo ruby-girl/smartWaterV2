@@ -9,7 +9,7 @@
     @submit.native.prevent
     ref="formHeight"
   >
-    <el-form-item label="用水性质">
+    <el-form-item label="用水性质" :label-width="!isShow?'64px':''">
       <el-input
         v-model="selectHead.WaterPropertyName"
         placeholder="长度1-50"
@@ -60,7 +60,6 @@ export default {
     return {
       oldOptions: [],
       editUserList: [],
-      stateType: [],
       isShow:false,
       ShowIcon:false,
       searchWidth:0,
@@ -74,7 +73,6 @@ export default {
     getSelectUser().then(res => {
       this.editUserList = res.data;
     });
-    this.stateType = getDictionaryOption("用水性质类型");
   },
   mounted(){
      this.searchWidth=this.$parent.$refs.formHeight.clientWidth
