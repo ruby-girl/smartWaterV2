@@ -84,7 +84,6 @@
         />
     </div>
     </div>
-    
     <charges-details :chargesDetailsShow.sync="chargesDetailsShow" :temp="temp" />
     <over-details :overDetailsShow.sync="overDetailsShow" :temp="temp" />
     <select-user
@@ -112,7 +111,6 @@ import SelectUser from "@/components/SelectUser";
 import FeeWaiver from "./components/FeeWaiver"; //水费减免弹窗
 import SelectPint from "./components/SelectPint"; //选择打印机
 import PaymentCode from "./components/PaymentCode"; //扫码支付
-
 import { OrderFeeCancel } from "@/api/cashCharge";
 import { GetCustomerDataList } from "@/api/userSetting"; ////模糊查询用户--结算成功后，重新获取账户余额
 export default {
@@ -184,14 +182,12 @@ export default {
       // isIC: false,
       // icType: "CreditCardAlready", //默认已刷卡
       unpaidMoney: '0.00', //剩余未缴
-      isNull: true
     };
   },
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度 getBoundingClientRect().height比dom.offsetHeight性能更好
-     this.getHeight()
-     
+     this.getHeight()    
     });
   },
   methods: {
@@ -261,10 +257,6 @@ export default {
         this.tableHeight = this.tableHeight - 105;
       else this.tableHeight = this.tableHeight + 105;
     },
-    // parentChange(v) {
-    //   this.isIndeterminateParent = false;
-    //   // this.$refs.tableTypeCard.$refs.myCard.changeParent();
-    // },
     // 勾选操作计算剩余未缴
     calculatedAmount(data) {
       this.unpaidMoney = '0.00';

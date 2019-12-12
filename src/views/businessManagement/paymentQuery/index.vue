@@ -161,10 +161,10 @@
           this.tableData = res.data;
         });
         GetWaterTypeCustomerNum(this.listQuery).then(res => {
-          this.tableTotal[0].num = res.data.NumberOfTrades
-          this.tableTotal[1].num = res.data.PayMentMoney
-          this.tableTotal[2].num = res.data.PrestoreMoney
-          this.tableTotal[3].num = res.data.ReceiptsMoney
+          this.tableTotal[0].num = res.data.NumberOfTrades?res.data.NumberOfTrades:0
+          this.tableTotal[1].num = res.data.PayMentMoney?res.data.PayMentMoney:0
+          this.tableTotal[2].num = res.data.PrestoreMoney?res.data.PrestoreMoney:0
+          this.tableTotal[3].num = res.data.ReceiptsMoney?res.data.ReceiptsMoney:0
         })
       },
       sortChanges({prop, order}) {

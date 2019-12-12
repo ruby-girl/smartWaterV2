@@ -53,7 +53,7 @@ export default {
 <style lang="scss" scoped>
 .ic-item {
   border-bottom: 1px solid #dbe3e8;
-  line-height: 36px;
+  line-height: 37px;
   color: #777c82;
   font-size: 14px;
 }

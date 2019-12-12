@@ -191,7 +191,7 @@ export default {
       isFocus:false,
       settingShow:false,
       inputWidth:100,
-      lineHeight:90,
+      lineHeight:91,
       userShow:false
     };
   },

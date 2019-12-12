@@ -1,6 +1,6 @@
 <template>
   <!-- 卡片-->
-  <el-row :class="{'background-ddd':isGray,'ic-item':true}">
+  <el-row :class="{'background-ddd':isGray,'ic-item':true,'borderBottom':lineHeight>50?false:true}">
     <el-col :md="24" class="pl-15">
       <el-row class="ic-item-left" :style="{'lineHeight':lineHeight+'px'}">
         <el-col :xs="10" :md="10" :style="{'color':color}">{{labelLeft}}</el-col>
@@ -41,10 +41,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ic-item {
-  border-bottom: 1px solid #dbe3e8;
-  line-height: 36px;
+  line-height: 37px;
   color: #777c82;
   font-size: 14px;
+}
+.border-bottom{
+  border-bottom: 1px solid #dbe3e8;
 }
 @media screen and (max-width: 1200px) {
     .ic-item {
