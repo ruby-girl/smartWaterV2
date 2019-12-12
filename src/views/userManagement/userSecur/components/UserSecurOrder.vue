@@ -81,7 +81,7 @@ export default {
         CustomerQueryValue: "", //查询值
         WaterMeter: -1, //水表类型
         StartTime: "", // 操作时间起
-        StartTime: "", // 操作时间止
+        EndTime: "", // 操作时间止
         InsuredState: -1, //低保户 状态
         AreaId: -1, //区域Id
         InsuredRecheckState: -1, //次年复审状态
@@ -139,10 +139,10 @@ export default {
     //查询低保户
     seachAccountOrder(num) {
       if (this.listQuery.timevalue.length > 0) {
-        this.listQuery.StartUpgradeDate =
-          this.listQuery.StartUpgradeDate.split(" ")[0] + " 00:00:00";
-        this.listQuery.EndUpgradeDate =
-          this.listQuery.EndUpgradeDate.split(" ")[0] + " 23:58:59";
+        this.listQuery.StartTime =
+          this.listQuery.StartTime.split(" ")[0] + " 00:00:00";
+        this.listQuery.EndTime =
+          this.listQuery.EndTime.split(" ")[0] + " 23:58:59";
       }
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);

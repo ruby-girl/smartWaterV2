@@ -54,7 +54,7 @@ export default {
         this.showBtn = false;
       } else {
         this.widthData1 = length * 150;
-        if (this.widthData1 < this.widthData) {
+        if (this.widthData1 > parseInt(this.widthData)) {
           this.showBtn = true;
         }
       }
@@ -108,19 +108,16 @@ export default {
       this.$emit("delTips", val);
     },
     rightEnter() {
-      this.num = this.num + 200;
-
-      //  var tag= document.getElementsByTagName("allSpice")[0]
-      if (this.num >= this.widthData1) {
-        this.num = 0;
+      if (this.widthData1 - this.num < parseInt(this.widthData)) {
         return false;
       }
+      this.num = this.num + 200;
       this.$refs.spiceAll.style.position = "relative";
       this.$refs.spiceAll.style.marginLeft = "-" + this.num + "px";
     },
     leftEnter() {
       this.num = this.num - 200;
-      if (this.num <= 0) {
+      if (this.num < 0) {
         this.num = 0;
         return false;
       }
@@ -132,7 +129,6 @@ export default {
       var w = document.getElementsByClassName("searchTips")[0].offsetWidth;
       var w1 = document.getElementsByClassName("tipsBtn")[0].offsetWidth;
       this.widthData = w - w1 - 150 + "px";
-      // console.log(document.getElementsByClassName("el-main")[0].offsetWidth);
     }
   },
   mounted() {

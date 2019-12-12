@@ -156,12 +156,12 @@ export default {
       let date;
       if (v) {
         this.selectHead.StartTime = v[0];
-        this.selectHead.StartTime = v[1];
-        date = this.selectHead.StartTime + "~" + this.selectHead.StartTime;
+        this.selectHead.EndTime  = v[1];
+        date = this.selectHead.StartTime + "~" + this.selectHead.EndTime ;
         this.$emit("getText", date, "timevalue", "", "销户日期");
       } else {
         this.selectHead.StartTime = "";
-        this.selectHead.StartTime = "";
+        this.selectHead.EndTime  = "";
         date = "";
         this.$emit("getText", date, "timevalue", "", "销户日期");
       }
