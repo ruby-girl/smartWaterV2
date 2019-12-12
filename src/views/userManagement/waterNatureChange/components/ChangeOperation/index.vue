@@ -52,7 +52,7 @@
                 content="变更用水性质"
                 placement="bottom"
               >
-               <i class="iconfont iconchexiao pointer" @click="edit(row)"></i>
+               <i class="iconfont main-color iconlianhe pointer" @click="edit(row)"></i>
               </el-tooltip>
             </div>
           </template>

@@ -438,7 +438,7 @@ div::-webkit-scrollbar-thumb {
     padding: 0; 
     position: relative;
     display: inline-block; 
-    bottom: -2px;
+     bottom: -2px;
     left:-4px;
     .icon {
       font-size: 22px;
@@ -448,7 +448,7 @@ div::-webkit-scrollbar-thumb {
     }
   }
   .tro {
-    bottom: 0px;
+    bottom: 3px;
     margin-left: 5px;
     transform: rotate(180deg);
   }
