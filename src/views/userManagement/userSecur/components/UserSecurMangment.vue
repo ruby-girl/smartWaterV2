@@ -28,16 +28,15 @@
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
-            :fixed="item.Freeze"
           />
         </template>
-        <el-table-column label="操作" width="300px" align="center" fixed="right">
+        <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <!-- <a
-              class="viewHis"
-              v-if="scope.row.SA_Customer_Id!=''"
-              @click="waterMeterWLWDetail(scope.row.IMSI)"
-            >查看历史详情</a>-->
+            <div class="icongStyle">
+              <i class="icon iconfont">&#xe653;</i>
+              <i class="icon iconfont">&#xe670;</i>
+              <i class="icon iconfont">&#xe66f;</i>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -170,5 +169,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .secur-content {
+  .icongStyle {
+    .icon {
+      font-size: 16px;
+    }
+  }
 }
 </style>
