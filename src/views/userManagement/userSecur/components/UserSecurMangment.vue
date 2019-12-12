@@ -30,12 +30,16 @@
             :label="item.ColDesc"
           />
         </template>
-        <el-table-column label="操作" width="100px" align="center" fixed="right">
+        <el-table-column label="操作" width="120px" align="center" fixed="right">
           <template slot-scope="scope">
             <div class="icongStyle">
-              <i class="icon iconfont">&#xe653;</i>
-              <i class="icon iconfont">&#xe670;</i>
-              <i class="icon iconfont">&#xe66f;</i>
+              <i
+                class="icon iconfont iconbiaodan1"
+                @click="detaile(scope.row.SA_InsuredMessage_Id)"
+                title="详情"
+              ></i>
+              <i class="icon iconfont" @click="goHisWeb(scope.row.CustomerNo)" title="历史详情">&#xe670;</i>
+              <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)" title="复审"></i>
             </div>
           </template>
         </el-table-column>
@@ -48,7 +52,7 @@
         @pagination="seachAccountOrder('0')"
       />
     </div>
-    <exam-secur />
+    <exam-secur ref="aduit" />
   </div>
 </template>
 <script>
@@ -62,11 +66,12 @@ import {
   getInssured,
   excelInssured,
   getInssureDetaile,
-  reviewInssure
 } from "@/api/inSecur";
+
 export default {
   name: "UserSecurMangment",
   components: { Selected, Pagination, SearchTips, ExamSecur },
+
   data() {
     return {
       listQuery: {
@@ -75,8 +80,8 @@ export default {
         limit: 10,
         filed: "",
         sort: "",
-        customerQueryType: "", //查询类型
-        customerQueryValue: "", //查询值
+        CustomerQueryType: "", //查询类型
+        CustomerQueryValue: "", //查询值
         WaterMeter: -1, //水表类型
         StartTime: "", // 操作时间起
         StartTime: "", // 操作时间止
@@ -163,6 +168,48 @@ export default {
       this.listQuery.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.seachAccountOrder();
+    },
+    //详情
+    detaile(id) {
+      this.$emit("getDetaile", id);
+    },
+    //历史详情
+    goHisWeb(CustomerNo) {
+      this.$emit("goHisWeb", CustomerNo);
+    },
+    auitSecur(data) {
+      this.$refs.aduit.InsuredRecheckParam.InsuredMessageId =
+        data.SA_InsuredMessage_Id;
+      this.$refs.aduit.nextTimeArr = this.formatTime(data.EndDate);
+      this.$refs.aduit.InsuredRecheckParam.FS_StartDate =
+        this.formatTime(data.EndDate)[0] + " 00:00:00";
+      this.$refs.aduit.InsuredRecheckParam.FS_EndDate =
+        this.formatTime(data.EndDate)[1] + " 23:59:59";
+      this.$refs.aduit.viewExam = true;
+      console.log( this.$refs.aduit.$refs)
+    },
+    formatTime(data) {
+      let arr = [];
+      let time = new Date(data);
+      time = new Date(time.setDate(time.getDate() + 1));
+      let year = time.getFullYear();
+      let month = time.getMonth() + 1;
+      let day = time.getDate();
+      let day1 = day - 1;
+      if (month < 10) {
+        month = "0" + month;
+      }
+      if (day < 10) {
+        day = "0" + day;
+      }
+      if (day1 < 10) {
+        day1 = "0" + day1;
+      }
+      let nextSatrt = year + "-" + month + "-" + day;
+      let nextEnd = year + 1 + "-" + month + "-" + day1;
+      arr.push(nextSatrt);
+      arr.push(nextEnd);
+      return arr;
     }
   }
 };
@@ -172,6 +219,15 @@ export default {
   .icongStyle {
     .icon {
       font-size: 16px;
+      color: #777c82;
+      padding-left: 10px;
+      cursor: pointer;
+    }
+    .iconbiaodan1 {
+      color: #b59200;
+    }
+    .iconlianhe1 {
+      color: #00b2a1;
     }
   }
 }

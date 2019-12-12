@@ -149,7 +149,6 @@ export default {
       this.secNmae = getName(id);
     },
     getText(val, model, arr, name) {
-      console.log(val, model, arr, name);
       this.$emit("getText", val, model, arr, name);
     },
     //日期格式化

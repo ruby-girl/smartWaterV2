@@ -11,15 +11,15 @@
       <el-form-item label="次年生效日期" label-width="90px">
         <el-date-picker
           v-model="nextTimeArr"
-          type="datetimerange"
+          type="daterange"
           :editable="false"
           :unlink-panels="true"
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
+          disabled
         ></el-date-picker>
       </el-form-item>
     </el-form>
@@ -32,13 +32,14 @@
       </el-form>
     </div>
     <p style="text-align: center">
-      <el-button type="primary" size="mini" @click>提交审核/确定</el-button>
-      <el-button size="mini" @click>取 消</el-button>
+      <el-button type="primary" size="mini" @click="saveAduite">提交审核/确定</el-button>
+      <el-button size="mini" @click="cancalSecur">取 消</el-button>
     </p>
   </el-dialog>
 </template>
 <script>
 import uploadBox from "@/components/Upload";
+import { reviewInssure } from "@/api/inSecur";
 export default {
   name: "ExamSecur",
   components: { uploadBox },
@@ -46,45 +47,81 @@ export default {
     return {
       viewExam: false,
       nextTimeArr: [],
-      Enclosure: {}
+      Enclosure: {},
+      InsuredRecheckParam: {
+        InsuredMessageId: "", //低保户Id
+        Idarr: [], //文件Id
+        FS_StartDate: "", //次年生效开始时间
+        FS_EndDate: "" //次年生效开始时间
+      }, //提交数据
+      fileArr: []
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-    //   this.$refs.getFiles.ifShow = false;
-    });
+  watch: {
+    viewExam() {
+      this.$nextTick(() => {
+        this.$refs.getFiles.ifShow = false;
+      });
+    }
   },
+
   methods: {
     /********************获取上传文件信息**********************/
     getFileFun(data) {
-      this.upload.file = data;
+      this.fileArr = data;
+    },
+    //提交
+    saveAduite() {
+      let _this = this;
+      _this.InsuredRecheckParam.Idarr = []; //初始化，避免重复添加
+      for (let j = 0; j < _this.fileArr.length; j++) {
+        //过滤获取上传文件信息ID
+        _this.InsuredRecheckParam.Idarr.push(_this.fileArr[j].id);
+      }
+      reviewInssure(_this.InsuredRecheckParam).then(res => {
+        if (res.code == 0) {
+          _this.viewExam = false;
+          _this.$mssage({
+            type: "success",
+            message: res.data ? res.data : "提交成功"
+          });
+        }
+        _this.nextTimeArr = [];
+        _this.InsuredRecheckParam = this.$options.InsuredRecheckParam;
+      });
+    },
+    //取消
+    cancalSecur() {
+      this.viewExam = false;
+      this.nextTimeArr = [];
+      this.InsuredRecheckParam = {};
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-/deep/.el-dialog__body{
-    padding-left: 0;
-    padding-right:0;
-    .el-form{
-        padding: 0 25px;
+/deep/.el-dialog__body {
+  padding-left: 0;
+  padding-right: 0;
+  .el-form {
+    padding: 0 25px;
+  }
+  .el-form-item__label {
+    color: #777c82;
+  }
+  .secur-file {
+    /deep/ .uploadPart {
+      margin: 0 !important;
+      margin-bottom: 40px !important;
     }
-    .el-form-item__label{
-        color: #777C82;
+  }
+  .user_information {
+    margin-top: 24px;
+    padding: 18px 25px 0 25px;
+    border-top: 10px solid rgba(245, 245, 245, 1);
+    .el-form {
+      padding: 0;
     }
-    .secur-file{
-       /deep/ .uploadPart{
-            margin: 0!important;
-            margin-bottom: 40px!important;
-        }
-    }
-    .user_information{
-        margin-top: 24px;
-        padding: 18px 25px 0 25px;
-        border-top: 10px solid rgba(245,245,245,1);
-        .el-form{
-            padding: 0;
-        }
-    }
+  }
 }
 </style>
