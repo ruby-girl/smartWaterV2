@@ -120,7 +120,7 @@
           WaterFactory: "-1",//水厂
           editStartTime: "", // 操作时间起
           editEndTime: "", // 操作时间止
-          tableId: "0000019"
+          tableId: "0000033"
         },
         selectPintShow: false,//票据打印弹窗
         tableData: [],

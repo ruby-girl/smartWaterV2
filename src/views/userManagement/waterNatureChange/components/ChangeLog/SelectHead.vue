@@ -9,7 +9,7 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item>
+      <el-form-item prop="CustomerQueryValue">
         <el-select
           v-model="selectHead.CustomerQueryType"
           placeholder="请选择"
@@ -28,7 +28,7 @@
           style="width: 180px;float: left"
         />
       </el-form-item>
-      <el-form-item label="用户类型">
+      <el-form-item label="用户类型" prop="UserType">
         <el-select
           v-model="selectHead.UserType"
           placeholder="请选择"
@@ -40,7 +40,7 @@
         </el-select>
       </el-form-item>
       <transition-group name="fade">
-        <el-form-item label="水表类型" v-show="showLabel(3)||isShow" key="WaterMeterType">
+        <el-form-item label="水表类型" prop="WaterMeterType" v-show="showLabel(3)||isShow" key="WaterMeterType">
           <el-select
             v-model="selectHead.WaterMeterType"
             placeholder="请选择"
@@ -56,12 +56,12 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="水厂" v-show="showLabel(4)||isShow" v-if="this.waterWorks.length>1" key="WaterFactoryId">
+        <el-form-item prop="WaterFactoryId" label="水厂" v-show="showLabel(4)||isShow" v-if="this.waterWorks.length>1" key="WaterFactoryId">
           <el-select
             v-model="selectHead.WaterFactoryId"
             placeholder="请选择"
             @keydown.enter.native="handleFilter"
-            @change="getText(selectHead.waterFactoryId,'waterFactoryId',waterWorks,'水厂')"
+            @change="getText(selectHead.WaterFactoryId,'waterFactoryId',waterWorks,'水厂')"
           >
             <el-option label="全部" value="-1" />
             <el-option
@@ -72,7 +72,7 @@
             />
           </el-select>
         </el-form-item>
-         <el-form-item label="操作员" v-show="showLabel(5)||isShow" v-if="this.waterWorks.length>1" key="OpId">
+         <el-form-item prop="OpId" label="操作员" v-show="showLabel(5)||isShow" key="OpId">
           <el-select
             v-model="selectHead.OpId"
             placeholder="请选择"
@@ -88,7 +88,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="变更日期" v-show="showLabel(6)||isShow" v-if="this.waterWorks.length>1" key="timevalue">
+        <el-form-item prop="timevalue" label="变更日期" v-show="showLabel(6)||isShow"  key="timevalue">
       <el-date-picker
          v-model="selectHead.timevalue"
         type="daterange"
@@ -111,6 +111,9 @@
         </span>
         <el-button round type="primary" size="mini" @click="handleFilter">
           <i class="iconfont iconsousuo"></i>搜索
+        </el-button>
+        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+          <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
       </el-form-item>
     </el-form>
@@ -181,19 +184,25 @@ export default {
       );
     },
     getText(val, model, arr, name) {
+      debugger
       this.$emit("getText", val, model, arr, name);
     },
     showLabel(n) {
       if (this.waterWorks.length == 1) {
-        if ((this.searchWidth - 100) / 270 > n || this.isShow) return true;
+        if (Math.floor((this.searchWidth - 180) / 260) > n || this.isShow) return true;
         return false;
       } else {
-        if ((this.searchWidth - 100) / 270 > n + 1 || this.isShow) return true;
+        if (Math.floor((this.searchWidth - 180) / 260) > n + 1 || this.isShow) return true;
         return false;
       }
     },
     handleFilter() {
       this.$emit("handleFilter");
+    },
+     resetting(){//重置
+      this.$refs['formHeight'].resetFields();  
+       this.$parent.tipsDataCopy=[]
+      this.$parent.delTips("timevalue")
     }
   }
 };

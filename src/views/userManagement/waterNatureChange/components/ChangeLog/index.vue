@@ -1,5 +1,5 @@
 <template>
-  <div class="section-full-container">
+  <div>
     <div ref="formHeight">
       <select-head
         :select-head="listQuery"
@@ -8,84 +8,86 @@
         :type-list="typeList"
       />
     </div>
-    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
-    <div class="main-padding-20-y">
-      <el-table
-        :key="tableKey"
-        :data="tableData"
-        border
-        fit
-        :height="tableHeight"
-        style="width: 100%;"
-        :header-cell-style="{'background-color': '#F0F2F5'}"
-        @sort-change="sortChanges"
-      >
-        <el-table-column fixed="left" label="序号" width="60" align="center">
-          <template slot-scope="scope">
-            <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
-          </template>
-        </el-table-column>
-        <template>
-          <div v-for="(item ,index) in tableHead" :key="index">
-            <el-table-column
-              :key="index"
-              min-width="160px"
-              :prop="item.ColProp"
-              align="center"
-              :sortable="item.IsSortBol?'custom':null"
-              :label="item.ColDesc"
-            />
-          </div>
-        </template>
-        <el-table-column
-          label="操作"
-          align="center"
-          class-name="small-padding"
-          width="313px"
-          fixed="right"
+    <div class="section-full-container">
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
+      <div class="main-padding-20-y">
+        <el-table
+          :key="tableKey"
+          :data="tableData"
+          border
+          fit
+          :height="tableHeight"
+          style="width: 100%;"
+          :header-cell-style="{'background-color': '#F0F2F5'}"
+          @sort-change="sortChanges"
         >
-          <template slot-scope="{row}">
-            <div class="display-flex justify-content-flex-center method-font">
-              <div
-                class="main-color-warn button-width"
-                @click="constitute(row,1)"
-                v-permission="['1010106']"
-              >
-                <a>水价构成</a>
-              </div>
-              <div class="button-width" @click="history(row)" v-permission="['1010105']">
-                <a>历史水价</a>
-              </div>
-              <div
-                class="main-color button-width"
-                @click="handleUpdate(row)"
-                v-if="row.UseState=='801'"
-                v-permission="['1010107']"
-              >
-                <a>水价调整</a>
-              </div>
-              <div
-                class="color-more-black button-width"
-                @click="constitute(row,2)"
-                v-if="row.UseState=='802'"
-                v-permission="['1010107']"
-              >
-                <a>撤销水价调整</a>
-              </div>
-              <div class="main-color-red pl-20" @click="cancel(row)" v-permission="['1010105']">
-                <a>删除</a>
-              </div>
+          <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
+          <template>
+            <div v-for="(item ,index) in tableHead" :key="index">
+              <el-table-column
+                :key="index"
+                min-width="160px"
+                :prop="item.ColProp"
+                align="center"
+                :sortable="item.IsSortBol?'custom':null"
+                :label="item.ColDesc"
+              />
             </div>
           </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList(1)"
-      />
+          <el-table-column
+            label="操作"
+            align="center"
+            class-name="small-padding"
+            width="313px"
+            fixed="right"
+          >
+            <template slot-scope="{row}">
+              <div class="display-flex justify-content-flex-center method-font">
+                <div
+                  class="main-color-warn button-width"
+                  @click="constitute(row,1)"
+                  v-permission="['1010106']"
+                >
+                  <a>水价构成</a>
+                </div>
+                <div class="button-width" @click="history(row)" v-permission="['1010105']">
+                  <a>历史水价</a>
+                </div>
+                <div
+                  class="main-color button-width"
+                  @click="handleUpdate(row)"
+                  v-if="row.UseState=='801'"
+                  v-permission="['1010107']"
+                >
+                  <a>水价调整</a>
+                </div>
+                <div
+                  class="color-more-black button-width"
+                  @click="constitute(row,2)"
+                  v-if="row.UseState=='802'"
+                  v-permission="['1010107']"
+                >
+                  <a>撤销水价调整</a>
+                </div>
+                <div class="main-color-red pl-20" @click="cancel(row)" v-permission="['1010105']">
+                  <a>删除</a>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.page"
+          :limit.sync="listQuery.limit"
+          @pagination="getList(1)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -116,7 +118,7 @@ export default {
         //右侧用户列表查询条件
         CustomerQueryType: "1", //用户下拉框类型
         CustomerQueryValue: "",
-        WaterMeterType: '-1', //水表类型
+        WaterMeterType: "-1", //水表类型
         UserType: "-1", //用户类型
         OpId: "-1", //操作人
         AreaId: "-1", //区域
@@ -128,7 +130,7 @@ export default {
         sort: "",
         filed: "",
         tableId: "0000030",
-        timevalue:[]
+        timevalue: []
       },
       typeList: [], //用水性质类型，传递给组件
       tableData: [],
@@ -149,9 +151,7 @@ export default {
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
-      var formHeight = this.$refs.formHeight.offsetHeight;
-      const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 220;
+      this.tableHeight = document.body.clientHeight - 260;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.typeList = getDictionaryOption("用水性质类型");
@@ -200,6 +200,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.section-full-container {
+  padding-top: 0;
+}
 .color-more-black {
   color: #46494c;
 }

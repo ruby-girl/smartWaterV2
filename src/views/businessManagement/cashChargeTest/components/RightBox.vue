@@ -246,7 +246,6 @@ export default {
     },
     //点击结算-验证
     test() {
-      console.log('结算事件')
       if(!this.customerId){
         this.$message({
           message: "请查询需要缴费的用户！",
@@ -265,6 +264,14 @@ export default {
       }
        this.changeTwoDecimal_x();//补齐小数-   
       if(!this.testMoney()) return false//验证金额
+      if(parseFloat(this.num)==parseFloat(this.surplus)){
+         this.$message({
+          message: "请注意实收金额实际为0！",
+          type: "error",
+          duration: 4000
+        });
+        return false
+      }
       this.pay();//结算
     },
     // 结算

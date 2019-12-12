@@ -107,7 +107,7 @@
       </transition-group>
       <el-form-item>
         <span class="isShow" :class="{tro:isShow}">
-          <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+          <i class="icon iconfont iconjianqu3" @click="toggle"></i>
         </span>
         <el-button round type="primary" size="mini" @click="handleFilter">
           <i class="iconfont iconsousuo"></i>搜索
@@ -127,11 +127,8 @@ export default {
   watch: {
     searchWidth:{
        handler(val, oldVal) {
-      this.show1 = this.showLabel(1,val);
-      this.show2 = this.showLabel(2,val);
-      this.show3 = this.showLabel(3,val);
-      this.show4 = this.showLabel(4,val);
-      this.show5 = this.showLabel(5,val);
+      if(this.isShow) return
+        this.setLabel(val)
       },
       immediate: true      
     }
@@ -168,14 +165,26 @@ export default {
     });
   },
   methods: {
+    toggle(){
+      this.isShow=!this.isShow
+      this.setLabel(this.searchWidth,true)
+    },
     showLabel(n,w) {
       if (this.waterWorks.length == 1) {
-        if ((w-100) / 280 > n || this.isShow) return true;
+        if (Math.floor((w-180) / 310) > n || this.isShow) return true;
         return false;
       } else {
-        if ((w-100)/ 280 > n + 1 || this.isShow) return true;
+        if (Math.floor((w-180)/ 310) > n + 1 || this.isShow) return true;
         return false;
       }
+    },
+       // 计算显示筛选
+    setLabel(val,isShow){
+       this.show1 = this.showLabel(1,val);
+      this.show2 = this.showLabel(2,val);
+      this.show3 = this.showLabel(3,val);
+      this.show4 = this.showLabel(4,val);
+      this.showIcon=isShow||!this.showLabel(5,val)
     },
     getscName(id) {
       this.secNmae = id == 1 ? "用户编号" : "用户姓名";

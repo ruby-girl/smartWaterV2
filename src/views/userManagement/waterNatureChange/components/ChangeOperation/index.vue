@@ -1,5 +1,5 @@
 <template>
-  <div class="section-full-container">
+  <div>
     <div ref="formHeight">
       <select-head
         :select-head="listQuery"
@@ -8,63 +8,60 @@
         :water-property="WaterProperty"
       />
     </div>
-    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
-    <div class="main-padding-20-y">
-      <el-table
-        :key="tableKey"
-        :data="tableData"
-        border
-        fit
-        :height="tableHeight"
-        style="width: 100%;"
-        :header-cell-style="{'background-color': '#F0F2F5'}"
-        @sort-change="sortChanges"
-      >
-        <el-table-column fixed="left" label="序号" width="60" align="center">
-          <template slot-scope="scope">
-            <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
-          </template>
-        </el-table-column>
-        <template>
-          <div v-for="(item ,index) in tableHead" :key="index">
-            <el-table-column
-              :key="index"
-              min-width="160px"
-              :prop="item.ColProp"
-              align="center"
-              :sortable="item.IsSortBol?'custom':null"
-              :label="item.ColDesc"
-            />
-          </div>
-        </template>
-        <el-table-column
-          label="操作"
-          align="center"
-          class-name="small-padding"
-          width="80px"
-          fixed="right"
+    <div class="section-full-container">
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
+      <div class="main-padding-20-y">
+        <el-table
+          :key="tableKey"
+          :data="tableData"
+          border
+          fit
+          :height="tableHeight"
+          style="width: 100%;"
+          :header-cell-style="{'background-color': '#F0F2F5'}"
+          @sort-change="sortChanges"
         >
-          <template slot-scope="{row}">
-            <div class="display-flex justify-content-flex-center method-font">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="变更用水性质"
-                placement="bottom"
-              >
-               <i class="iconfont main-color iconlianhe pointer" @click="edit(row)"></i>
-              </el-tooltip>
+          <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
+          <template>
+            <div v-for="(item ,index) in tableHead" :key="index">
+              <el-table-column
+                :key="index"
+                min-width="160px"
+                :prop="item.ColProp"
+                align="center"
+                :sortable="item.IsSortBol?'custom':null"
+                :label="item.ColDesc"
+              />
             </div>
           </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList(1)"
-      />
+          <el-table-column
+            label="操作"
+            align="center"
+            class-name="small-padding"
+            width="80px"
+            fixed="right"
+          >
+            <template slot-scope="{row}">
+              <div class="display-flex justify-content-flex-center method-font">
+                <el-tooltip class="item" effect="dark" content="变更用水性质" placement="bottom">
+                  <i class="iconfont main-color iconlianhe pointer" @click="edit(row)"></i>
+                </el-tooltip>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.page"
+          :limit.sync="listQuery.limit"
+          @pagination="getList(1)"
+        />
+      </div>
     </div>
     <Dialog :water-property="WaterProperty" @getList="getList" :show.sync="show" :temp="temp" />
   </div>
@@ -76,7 +73,7 @@ import Pagination from "@/components/Pagination";
 import { getDictionaryOption } from "@/utils/permission";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import { GetCustomerDataList,GetWaterPropertyList } from "@/api/userSetting";//用户列表、开启的用水性质
+import { GetCustomerDataList, GetWaterPropertyList } from "@/api/userSetting"; //用户列表、开启的用水性质
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   name: "changeOperation",
@@ -92,7 +89,7 @@ export default {
       total: 0,
       tableKey: 0,
       tableHeight: 0,
-      temp:{},
+      temp: {},
       listQuery: {
         // 查询条件
         //右侧用户列表查询条件
@@ -102,7 +99,7 @@ export default {
         UserType: "-1", //用户类型
         UserState: "-1", //用户状态
         AreaId: "-1", //区域
-        WaterTypeId: '-1', //水表类型
+        WaterTypeId: "-1", //水表类型
         WaterPropertyId: "-1", //用水性质
         limit: 10,
         page: 1,
@@ -110,13 +107,13 @@ export default {
         filed: "",
         tableId: "0000016"
       },
-      show:false,
+      show: false,
       tableData: [],
       checksData: [],
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: [],
-      WaterProperty:[]//开启的用水性质
+      WaterProperty: [] //开启的用水性质
     };
   },
   computed: {
@@ -136,11 +133,12 @@ export default {
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       GetWaterPropertyList().then(res => {
-        res.data.forEach(item=>{//SearchTips组件 需要Name Key，这里进行再次赋值
-          item.Name=item.UseWaterTypeName
-        })
-      this.WaterProperty = res.data;
-    });
+        res.data.forEach(item => {
+          //SearchTips组件 需要Name Key，这里进行再次赋值
+          item.Name = item.UseWaterTypeName;
+        });
+        this.WaterProperty = res.data;
+      });
     });
   },
   methods: {
@@ -158,15 +156,14 @@ export default {
         this.orderData.page = 1;
       }
       GetCustomerDataList(this.orderData).then(res => {
-        console.info(this.tipsDataCopy)
         this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
         this.tableData = res.data;
       });
     },
-    edit(r){
-      this.temp=Object.assign({},r);
-      this.show=true
+    edit(r) {
+      this.temp = Object.assign({}, r);
+      this.show = true;
     },
     sortChanges({ prop, order }) {
       //筛选
@@ -186,6 +183,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.section-full-container {
+  padding-top: 0;
+}
 .color-more-black {
   color: #46494c;
 }

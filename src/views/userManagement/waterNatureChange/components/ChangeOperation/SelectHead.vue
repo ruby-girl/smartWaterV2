@@ -95,8 +95,8 @@
         <el-button round type="primary" size="mini" @click="handleFilter">
           <i class="iconfont iconsousuo"></i>搜索
         </el-button>
-        <el-button round type="primary" size="mini" @click="resetting">
-          <i class="iconfont iconsousuo"></i>重置
+        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+          <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
       </el-form-item>
     </el-form>
@@ -168,10 +168,10 @@ export default {
     },
     showLabel(n) {
       if (this.waterWorks.length == 1) {
-        if ((this.searchWidth - 100) / 270 > n || this.isShow) return true;
+        if (Math.floor((this.searchWidth - 180) / 270) > n || this.isShow) return true;
         return false;
       } else {
-        if ((this.searchWidth - 100) / 270 > n + 1 || this.isShow) return true;
+        if (Math.floor((this.searchWidth - 180) / 270) > n + 1 || this.isShow) return true;
         return false;
       }
     },

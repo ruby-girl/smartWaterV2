@@ -110,7 +110,7 @@ export default {
       let _this=this
       setTimeout(function(){
         _this.searchWidth=_this.$refs.formHeight.clientWidth
-      },100) 
+      },250) 
     }
   },
    mounted: function() {

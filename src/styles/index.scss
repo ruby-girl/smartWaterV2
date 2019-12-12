@@ -438,8 +438,9 @@ div::-webkit-scrollbar-thumb {
     padding: 0; 
     position: relative;
     display: inline-block; 
-     bottom: -2px;
+     bottom: 1px;
     left:-4px;
+    vertical-align: middle;
     .icon {
       font-size: 22px;
       color: rgba(0, 178, 161, 1);
@@ -448,21 +449,22 @@ div::-webkit-scrollbar-thumb {
     }
   }
   .tro {
-    bottom: 3px;
+    bottom: 2px;
     margin-left: 5px;
     transform: rotate(180deg);
   }
 }
 .position-absolute-head-shadow{
-  box-shadow:0px 3px 6px rgba(0,0,0,0.16);
+  box-shadow:0px 5px 6px rgba(0,0,0,0.16);
 }
 .position-search-head {
   position: relative;
-  height: 40px;
+  height: 55px;
   .position-absolute-head {
     position: absolute;
-    top: 0;
+    top: 14px;
     left: 0;
+    padding-left: 14px;
     background: #fff;
     z-index: 111;
   }
@@ -471,5 +473,28 @@ div::-webkit-scrollbar-thumb {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 10px;
+  }
+}
+// 搜索条件 tab样式
+.section-container{
+  /deep/ .el-tabs{
+    height:100%;
+    background: #fff;
+  }
+  /deep/ .el-tabs__header{
+    margin:0 !important;
+    background: #eee;
+  }
+}
+// .btn-resetting{
+ 
+
+// }
+.btn-resetting{
+  background: #fff !important;
+  border-color:$menuText !important;
+  &:hover{
+    color:$menuText !important;
+    opacity: 0.8;
   }
 }

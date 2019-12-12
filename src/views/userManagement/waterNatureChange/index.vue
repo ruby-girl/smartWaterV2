@@ -33,9 +33,4 @@ import ChangeOperation from "./components/ChangeOperation"
   };
 </script>
 <style lang="scss">
-.section-container{
-  /deep/ .el-tabs__header{
-    margin:0 !important;
-  }
-}
 </style>

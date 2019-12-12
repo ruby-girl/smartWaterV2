@@ -3,22 +3,13 @@
     <div class="user_box">
       <left-box @getUp="getUp" :ifShow="ifShow"></left-box>
       <div class="user_table">
-        <div class="section-full-container">
-          <div ref="formHeight">
-            <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" />
-          </div>
-          <div class="display-flex justify-content-flex-justify">
-           <div></div>
-            <div>
-              <el-button type="success" size="mini" @click="excel">
-                <i class="iconfont icondaochuexcel"></i>导出Excel
-              </el-button>
-              <el-button type="warning" size="mini" @click="setCustomData()">
-                <i class="iconfont iconbiaogezidingyi"></i>表格自定义
-              </el-button>
-            </div>
-          </div>
-          <customTable ref="myChild" />
+        <div >
+          <div ref="formHeight" class="position-search-head">
+            <select-head :select-head="listQuery" @handleFilter="getList" @getText="getText" :searchWidth="searchWidth"/>
+          </div>      
+          <div class="section-full-container">
+           <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
+          <!-- <customTable ref="myChild" /> -->
           <div class="main-padding-20-y">
             <el-table
               :key="tableKey"
@@ -50,8 +41,9 @@
               :total="total"
               :page.sync="listQuery.page"
               :limit.sync="listQuery.limit"
-              @pagination="getList"
+              @pagination="getList(1)"
             />
+          </div>
           </div>
         </div>
         <span v-show="ifShow" class="telescopic telescopic1" @click="getUp(false)">
@@ -65,12 +57,13 @@
 <script>
 import SelectHead from "./components/SelectHead";
 import LeftBox from "./components/Left"
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import {TransferCustomerList,TransferCustomerList_Execl} from "@/api/userAccount";
-import customTable from "@/components/CustomTable/index";
 import Pagination from "@/components/Pagination";
 export default {
   name: "userTransfer",
-  components: { SelectHead, customTable, Pagination,LeftBox},
+  components: { SelectHead, Pagination,LeftBox,SearchTips},
   data() {
     return {
       ifShow: false,
@@ -87,18 +80,31 @@ export default {
        SA_WaterFactory_Id:'-1',//水厂
        UserType:'-1',//用户类型
        WaterTypeId:'-1',//水表类型
-       TransferCustomer:'',//查询类型
+       TransferCustomer:'3301',//查询类型
        Customer:'',//Input值
        OpId:'-1',//过户操作员
        Star_TransferDate:'',//开始时间
        End_TransferDate:'',//开始时间
-       tableId: "0000027"
+       tableId: "0000027",
+       timevalue:[]
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableData: [],
-      checksData: []
+      checksData: [],
+      orderData:null,
+      tipsData:[],
+      tipsDataCopy:[],
+      searchWidth:1024,//右侧宽度
     };
+  },
+   watch:{
+    ifShow(){
+      let _this=this
+      setTimeout(function(){
+        _this.searchWidth=_this.$refs.formHeight.clientWidth
+      },250) 
+    }
   },
   computed: {
     tableHead: function() {
@@ -115,12 +121,25 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 200;
-      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-     
+     this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+      this.searchWidth=this.$refs.formHeight.clientWidth
     });
   },
   methods: {
+    delTips(val) {
+      if (val == "timevalue") {
+        //当返回的model 为时间数组  置空 时间
+        this.listQuery.Star_TransferDate = "";
+        this.listQuery.End_TransferDate = "";
+      }
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
+      this.getList();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
     getUp(v) {
       this.ifShow =v;
       if (this.ifShow) {
@@ -131,13 +150,13 @@ export default {
           .classList.remove("hide");
       }
     },
-    setCustomData() {
-      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
-      if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;
-      else this.tableHeight = this.tableHeight + 80;
-    },
-    getList() {
-      TransferCustomerList(this.listQuery).then(res => {
+    getList(n) {
+      if (!n) {
+        this.orderData = Object.assign({}, this.listQuery);
+        this.orderData.page = 1;
+      }
+      TransferCustomerList(this.orderData).then(res => {
+         this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -151,11 +170,6 @@ export default {
         this.listQuery.page = 1;
         this.getList();
       }
-    },
-    handleFilter(v) {
-      this.listQuery=v
-      this.listQuery.page = 1;
-      this.getList();
     },
     excel() {
       //导出
@@ -211,7 +225,7 @@ export default {
       flex: 1;
       -webkit-flex: 1;
       background: #fff;
-      padding: 16px;
+      // padding: 16px;
       position: relative;
       overflow: hidden;
     }
@@ -233,5 +247,9 @@ export default {
       padding: 7px 15px;
     }
   }
+}
+.section-full-container {
+  padding: 15px;
+  padding-top: 0;
 }
 </style>
