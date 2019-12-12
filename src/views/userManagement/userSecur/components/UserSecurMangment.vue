@@ -1,7 +1,7 @@
 <template>
   <div class="secur-content">
     <selected :selectHead="listQuery" @handleFilter="seachAccountOrder" @getText="getText" />
-    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" />
+    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
     <!-- <customTable ref="myChild" /> -->
     <div class="main-padding-20-y" id="table">
       <el-table
@@ -134,6 +134,7 @@ export default {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
+    //查询低保户
     seachAccountOrder(num) {
       if (this.listQuery.timevalue.length > 0) {
         this.listQuery.StartUpgradeDate =
@@ -144,10 +145,16 @@ export default {
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
       }
-      getInssured(this.listQuery).then(res => {
+      getInssured(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.tableData = res.data;
         this.total = res.count;
+      });
+    },
+    //导出
+    excelInssud() {
+      excelInssured(this.orderData).then(res => {
+        window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
     sortChanges({ column, prop, order }) {

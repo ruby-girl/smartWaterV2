@@ -78,22 +78,6 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="生效日期止" label-width="80px">
-      <el-date-picker
-        v-model="selectHead.timevalue"
-        type="datetimerange"
-        :editable="false"
-        :unlink-panels="true"
-        range-separator="~"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        :default-time="['00:00:00', '23:59:59']"
-        format="yyyy-MM-dd"
-        value-format="yyyy-MM-dd"
-        @change="getTime"
-        @keydown.enter.native="handleFilter"
-      ></el-date-picker>
-    </el-form-item>
     <el-form-item label="次年复审状态" label-width="90px">
       <el-select
         v-model="selectHead.InsuredRecheckState "
@@ -110,10 +94,27 @@
         />
       </el-select>
     </el-form-item>
+    <el-form-item label="生效日期止" label-width="80px">
+      <el-date-picker
+        v-model="selectHead.timevalue"
+        type="datetimerange"
+        :editable="false"
+        :unlink-panels="true"
+        range-separator="~"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :default-time="['00:00:00', '23:59:59']"
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
+        @change="getTime"
+        @keydown.enter.native="handleFilter"
+      ></el-date-picker>
+    </el-form-item>
     <el-form-item>
-   
-      <el-button type="primary" size="mini" @click="handleFilter" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
-        <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
+      <el-button type="primary" size="mini" @click="handleFilter" round>
+        <i class="icon iconfont">&#xe694;</i>查询
+      </el-button>
+      <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
     </el-form-item>
   </el-form>
 </template>
@@ -134,8 +135,8 @@ export default {
     return {
       secNmae: "",
       WaterMeterList: [], //
-      securStatus:[],
-      securNextStatus:[]
+      securStatus: [],
+      securNextStatus: []
     };
   },
   created() {
@@ -148,23 +149,20 @@ export default {
       this.secNmae = getName(id);
     },
     getText(val, model, arr, name) {
-        console.log(val, model, arr, name)
+      console.log(val, model, arr, name);
       this.$emit("getText", val, model, arr, name);
     },
     //日期格式化
     getTime(v) {
       let date;
       if (v) {
-        this.selectHead.StartTime  = v[0];
-        this.selectHead.StartTime  = v[1];
-        date =
-          this.selectHead.StartTime  +
-          "~" +
-          this.selectHead.StartTime ;
+        this.selectHead.StartTime = v[0];
+        this.selectHead.StartTime = v[1];
+        date = this.selectHead.StartTime + "~" + this.selectHead.StartTime;
         this.$emit("getText", date, "timevalue", "", "销户日期");
       } else {
-        this.selectHead.StartTime  = "";
-        this.selectHead.StartTime  = "";
+        this.selectHead.StartTime = "";
+        this.selectHead.StartTime = "";
         date = "";
         this.$emit("getText", date, "timevalue", "", "销户日期");
       }

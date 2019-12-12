@@ -60,12 +60,12 @@
               </span>
               <a
                 class="operation2"
-                @click="changeInput(scope.row.Id,false)"
+                @click="changeInput(scope.row.Id,true)"
                 v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
               >数据补录</a>
               <a
                 class="operation2-1"
-                @click="changeInput(scope.row.Id,true)"
+                @click="changeInput(scope.row.Id,false)"
                 v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
               >数据绑定</a>
               <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
