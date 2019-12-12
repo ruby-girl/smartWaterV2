@@ -2,12 +2,13 @@
   <el-form
     :inline="true"
     :model="selectHead"
-    class="head-search-form form-inline-small-input"
+    :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
     size="small"
     label-width="70px"
     @submit.native.prevent
   >
-    <el-form-item>
+   <transition-group name="fade">
+    <el-form-item v-show="show1||isShow" key="customerQueryType">
       <el-select
         v-model="selectHead.CustomerQueryType"
         placeholder="请选择"
@@ -30,7 +31,7 @@
         style="width: 180px;float: left"
       />
     </el-form-item>
-    <el-form-item label="水表类型">
+    <el-form-item label="水表类型" v-show="show2||isShow" key="WaterMeter">
       <el-select
         v-model="selectHead.WaterMeter "
         placeholder="请选择"
@@ -46,7 +47,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="区域">
+    <el-form-item label="区域" v-show="show3||isShow" key="AreaId">
       <el-select
         v-model="selectHead.AreaId "
         placeholder="请选择"
@@ -62,7 +63,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="低保户状态" label-width="80px">
+    <el-form-item label="低保户状态" label-width="80px" v-show="show4||isShow" key="InsuredState">
       <el-select
         v-model="selectHead.InsuredState "
         placeholder="请选择"
@@ -78,7 +79,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="次年复审状态" label-width="90px">
+    <el-form-item label="次年复审状态" label-width="90px" v-show="show5||isShow" key="InsuredRecheckState">
       <el-select
         v-model="selectHead.InsuredRecheckState "
         placeholder="请选择"
@@ -94,7 +95,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="生效日期止" label-width="80px">
+    <el-form-item label="生效日期止" label-width="80px" v-show="show6||isShow" key="timevalue">
       <el-date-picker
         v-model="selectHead.timevalue"
         type="datetimerange"
@@ -110,7 +111,11 @@
         @keydown.enter.native="handleFilter"
       ></el-date-picker>
     </el-form-item>
+   </transition-group>
     <el-form-item>
+      <span class="isShow" :class="{tro:isShow}">
+        <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+      </span>
       <el-button type="primary" size="mini" @click="handleFilter" round>
         <i class="icon iconfont">&#xe694;</i>查询
       </el-button>
@@ -129,6 +134,20 @@ export default {
       default: function() {
         return {};
       }
+    },
+    searchWidth: {}
+  },
+  watch: {
+    searchWidth: {
+      handler(val, oldVal) {
+        this.show1 = this.showLabel(1, val);
+        this.show2 = this.showLabel(2, val);
+        this.show3 = this.showLabel(3, val);
+        this.show4 = this.showLabel(4, val);
+        this.show5 = this.showLabel(5, val);
+        this.show6 = this.showLabel(6, val);
+      },
+      immediate: true
     }
   },
   data() {
@@ -136,7 +155,14 @@ export default {
       secNmae: "",
       WaterMeterList: [], //
       securStatus: [],
-      securNextStatus: []
+      securNextStatus: [],
+      isShow: false,
+      show1: true,
+      show2: true,
+      show3: true,
+      show4: true,
+      show5: true,
+      show6: true
     };
   },
   created() {
@@ -145,6 +171,12 @@ export default {
     this.securNextStatus = getDictionaryOption("低保户复审状态");
   },
   methods: {
+    showLabel(n, w) {
+      if (Math.floor((w - 180) / 280) > n-1 || this.isShow) {
+        return true;
+      }
+      return false;
+    },
     getscName(id) {
       this.secNmae = getName(id);
     },
@@ -156,12 +188,12 @@ export default {
       let date;
       if (v) {
         this.selectHead.StartTime = v[0];
-        this.selectHead.EndTime  = v[1];
-        date = this.selectHead.StartTime + "~" + this.selectHead.EndTime ;
+        this.selectHead.EndTime = v[1];
+        date = this.selectHead.StartTime + "~" + this.selectHead.EndTime;
         this.$emit("getText", date, "timevalue", "", "销户日期");
       } else {
         this.selectHead.StartTime = "";
-        this.selectHead.EndTime  = "";
+        this.selectHead.EndTime = "";
         date = "";
         this.$emit("getText", date, "timevalue", "", "销户日期");
       }

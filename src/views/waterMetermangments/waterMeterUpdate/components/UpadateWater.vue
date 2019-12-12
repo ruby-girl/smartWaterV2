@@ -322,6 +322,9 @@ export default {
       this.waterInfo = {};
       this.UpgradeWaterNeedInfo = this.$options.data().UpgradeWaterNeedInfo;
       this.UpgradeWaterNeedInfo.WaterType = num;
+      this.UpgradeWaterNeedInfo.meter2Param.MeterBalance = this.userInfo.Balance;
+      this.UpgradeWaterNeedInfo.meter3Param.MeterBalance = this.userInfo.Balance;
+      this.UpgradeWaterNeedInfo.meter4Param.MeterBalance = this.userInfo.Balance;
     },
     getWlWWater(num) {
       getWLWaterInfo({ WaterMeterNo: num }).then(res => {
@@ -345,9 +348,9 @@ export default {
       this.thisWaterMerter.customerId = this.userInfo.Id;
       this.thisWaterMerter.useWaterTypeId = this.userInfo.SA_UseWaterType_Id;
       this.$refs.numDetaile.dialogVisible = true;
-      // getWaterTotalNum(this.thisWaterMerter).then(res=>{
-      //   console.log(res)
-      // })
+      getWaterTotalNum(this.thisWaterMerter).then(res => {
+        console.log(res);
+      });
     },
     //回车模糊查询
     searchEnter(num, val) {

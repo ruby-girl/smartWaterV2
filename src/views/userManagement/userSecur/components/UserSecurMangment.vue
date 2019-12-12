@@ -1,6 +1,13 @@
 <template>
   <div class="secur-content">
-    <selected :selectHead="listQuery" @handleFilter="seachAccountOrder" @getText="getText" />
+    <div ref="formHeight">
+      <selected
+        :selectHead="listQuery"
+        @handleFilter="seachAccountOrder"
+        @getText="getText"
+        :searchWidth="searchWidth"
+      />
+    </div>
     <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
     <!-- <customTable ref="myChild" /> -->
     <div class="main-padding-20-y" id="table">
@@ -62,11 +69,7 @@ import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
 import ExamSecur from "./ExamSecur";
-import {
-  getInssured,
-  excelInssured,
-  getInssureDetaile,
-} from "@/api/inSecur";
+import { getInssured, excelInssured, getInssureDetaile } from "@/api/inSecur";
 
 export default {
   name: "UserSecurMangment",
@@ -99,7 +102,8 @@ export default {
       customHeight: "", //自定义高度
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      orderData: {} //搜索存储对象
+      orderData: {}, //搜索存储对象
+      searchWidth: 1024
     };
   },
   mounted() {
@@ -109,6 +113,7 @@ export default {
       98;
     this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    this.searchWidth = this.$refs.formHeight.clientWidth;
   },
   computed: {
     tableHeadData: function() {
@@ -186,7 +191,7 @@ export default {
       this.$refs.aduit.InsuredRecheckParam.FS_EndDate =
         this.formatTime(data.EndDate)[1] + " 23:59:59";
       this.$refs.aduit.viewExam = true;
-      console.log( this.$refs.aduit.$refs)
+      console.log(this.$refs.aduit.$refs);
     },
     formatTime(data) {
       let arr = [];

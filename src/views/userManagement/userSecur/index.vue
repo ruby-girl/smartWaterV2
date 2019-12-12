@@ -1,11 +1,11 @@
 <template>
   <div class="section-container secur-setting">
-    <el-tabs v-model="typeCheck">
+    <el-tabs v-model="typeCheck" @tab-click="hisTab">
       <el-tab-pane label="低保户管理" name="1">
-        <user-secur-mangment @getDetaile="getDetaile" @goHisWeb="comeHisWeb" />
+        <user-secur-mangment @getDetaile="getDetaile" @goHisWeb="comeHisWeb" v-if="secure" />
       </el-tab-pane>
       <el-tab-pane label="历史记录 " name="2">
-        <user-secur-order ref="order" @getDetaile="getDetaile" />
+        <user-secur-order ref="order" @getDetaile="getDetaile" v-if="order" />
       </el-tab-pane>
     </el-tabs>
     <secur-dataile ref="detaile" :detaileData="detaileData" />
@@ -22,7 +22,9 @@ export default {
   data() {
     return {
       typeCheck: "1",
-      detaileData: {}
+      detaileData: {},
+      secure: true,
+      order: false
     };
   },
   methods: {
@@ -49,6 +51,15 @@ export default {
         this.$refs.order.$refs.selected.selectHead.CustomerQueryValue = CustomerNo;
         this.$refs.order.seachAccountOrder();
       });
+    },
+    hisTab(obj) {
+      if (obj.name == "1") {
+        this.secure = true;
+        this.order = false;
+      } else if (obj.name == "2") {
+        this.secure = false;
+        this.order = true;
+      }
     }
   }
 };
