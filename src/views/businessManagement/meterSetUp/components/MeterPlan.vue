@@ -256,10 +256,10 @@
           if (curNum != '') {
             let params = Object.assign({}, this.param);//赋值对象转换参数类型
             params.ReadNum != '' ? params.ReadNum = parseInt(params.ReadNum) : ''
-            if (this.checks.indexOf('字轮是否翻页') == '-1') {//当未勾选字轮翻页,判断本次读数必须大于上次读数
+            if (this.checks.indexOf('字轮是否翻页') == '-1') {//当未勾选字轮翻页,判断本次读数必须大于或等于上次读数
               this.param.IsPage = false
-              if (this.currentContract.LastReadNum >= curNum) {
-                promptInfoFun(this, 1, '本次读数必须大于上次读数！')
+              if (this.currentContract.LastReadNum > curNum) {
+                promptInfoFun(this, 1, '本次读数不能小于上次读数！')
               } else {
                 curWater = this.param.ReadNum - this.currentContract.LastReadNum//本次水量= 本次读数-上次读数
                 let magnificate = curWater / lastWater //公式（本次水量/上次水量）
@@ -380,6 +380,7 @@
     }
 
     .plan_box1 a {
+      cursor: default;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
       span {
         color: #777C82;
@@ -497,14 +498,13 @@
 
     .plan_box2 {
       padding: 14px 0;
-
       a {
         width: 25%;
         font-size: 14px;
-
         label {
           font-size: 16px;
-          color: #777C82
+          color: #777C82;
+          cursor: default !important;
         }
       }
     }

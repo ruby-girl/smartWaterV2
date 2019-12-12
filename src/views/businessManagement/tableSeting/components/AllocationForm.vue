@@ -10,25 +10,35 @@
       <el-tab-pane label="已分配表册用户" name="1">
         <div class="allocation-box clearfix">
           <div class="water-tree fl">
-            <myTree ref="myChild" :treeData="oldTreeData"></myTree>
+            <h2>表册</h2>
+            <myTree class="register-tree" ref="myChild" :treeData="oldTreeData"  @changeSecode="changeSecode"></myTree>
           </div>
           <div class="water-table fl">
-            <AllocationTable ref="waterTableChild"></AllocationTable>
+            <AllocationTable ref="waterTableChild1"></AllocationTable>
           </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="未分配表册用户" name="2">
-        <AllocationTable class="unallocated" ref="waterTableChild"></AllocationTable>
+        <div class="allocation-box clearfix">
+          <div class="water-tree fl">
+            <h2>区域</h2>
+            <myTree ref="myChild2" :treeData="oldTreeData2"  @changeSecode="changeSecode2"></myTree>
+          </div>
+          <div class="water-table fl">
+            <AllocationTable ref="waterTableChild2"></AllocationTable>
+          </div>
+        </div>
       </el-tab-pane>
     </el-tabs>
   </el-dialog>
 </template>
 
 <script>
-import { GetWFMRRBITree } from "@/api/registerBook"
+  import {GetWFMRRBITree, RegisterDetailGetList, GetOrientationList} from "@/api/registerBook"
   import myTree from "@/components/Tree/index";
   import AllocationTable from './AllocationTable'
-import { promptInfoFun } from "@/utils/index"
+  import {promptInfoFun} from "@/utils/index"
+  import { GetAreaList } from "@/api/userArea";
 
   export default {
     name: "AllocationForm",
@@ -36,34 +46,60 @@ import { promptInfoFun } from "@/utils/index"
     data() {
       return {
         userType:'1',
-        dialogVisible: true,
-        oldTreeData:[]
+        dialogVisible: false,
+        oldTreeData:[],//表册
+        oldTreeData2:[],//区域
       }
     },methods:{
       searchFun(){},
       handleClick(){//选项卡切换
-        this.$refs.waterTableChild.type = this.userType
+        this.userType=='1' ? this.$refs.waterTableChild1.type = this.userType : this.$refs.waterTableChild2.type = this.userType
       },
-      GetWFMRRBITreeFun(){
+      GetWFMRRBITreeFun(){//获取全部表册树
         GetWFMRRBITree({'WaterFactoryIdList':[]}).then(res => {
           if (res.code ==0 ) {
-
-            let data = JSON.stringify(res.data).replace(/MrList/g,'children').replace(/SA_WaterFactory_Name/g,'label').replace(/SA_WaterFactory_Id/g,'Id')
-            let data1 = data.replace(/RbiList/g,'children').replace(/SA_MeterReader_Id/g,'Id').replace(/SA_MeterReader_Name/g,'label')
-            let data2 = data1.replace(/SA_RegisterBookInfo_Id/g,'Id').replace(/SA_RegisterBookInfo_Name/g,'label')
-           // this.oldTreeData = JSON.parse(data2)
-
-            console.log(data)
+            this.oldTreeData = res.data
+            this.$refs.waterTableChild1.moveTree = res.data
+            this.$refs.waterTableChild2.moveTree = res.data
           } else {
             promptInfoFun(this,1,res.message)
           }
         })
-      }
+      },
+      changeSecode(data){//点击左侧表册回调
+        if(data.IsResponse){
+          this.$refs.waterTableChild1.tbdp.SA_RegisterBookInfo_Id = data.Id
+          this.$refs.waterTableChild1.tbdp.SA_WaterFactory_Id = data.SA_WaterFactory_Id
+          this.$refs.waterTableChild1.searchFun(2)
+        }
+      },
+      changeSecode2(data){//点击左侧区域回调
+        this.$refs.waterTableChild2.tbdp.SA_UserArea_Id = data.Id
+        this.$refs.waterTableChild2.tbdp.SA_RegisterBookInfo_Id = '0'
+        this.$refs.waterTableChild2.getRegister()
+      },
+      getTreeData() {//获取全部区域树
+        GetAreaList().then(res => {
+          if (res.code ==0 ) {
+             this.oldTreeData2 = res.data.children
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
+      },
     },
     created() {
       this.$nextTick(()=>{
+        this.$refs.myChild.ifLogo = false
         this.$refs.myChild.ifSearch = false
+        this.$refs.waterTableChild1.$refs.myChild.ifSearch = false
+        this.$refs.waterTableChild1.$refs.myChild.ifLogo = false
+        this.$refs.waterTableChild2.$refs.myChild.ifLogo = false
+        this.$refs.waterTableChild2.$refs.myChild.ifSearch = false
+        this.$refs.myChild2.ifLogo = true
+        this.$refs.myChild2.ifSearch = false
         this.GetWFMRRBITreeFun()
+        this.getTreeData()
       })
     }
   }
@@ -77,10 +113,12 @@ import { promptInfoFun } from "@/utils/index"
     .el-dialog__body{padding: 0 11px 11px 11px;background: #F5F5F5;}
     .allocation-box{
       width: 100%;position: relative;
-      .water-tree{width: 170px;background: #fff;margin-right: 10px;padding: 12px;position: relative;}
+      .water-tree{width: 190px;background: #fff;margin-right: 10px;padding: 12px;position: relative;
+        h2{color: #46494C;font: bold 14px 'Microsoft YaHei';margin-top: 0;}
+      }
       .cl-treeBox{height: 500px;overflow: auto}
       .water-table{
-        width: calc(100% - 180px);
+        width: calc(100% - 200px);
         background: #fff;padding: 12px;
       }
     }
@@ -89,7 +127,35 @@ import { promptInfoFun } from "@/utils/index"
       li{float: left;width: 50%;list-style-type: none;text-align: center;font: normal 13px/15px 'Microsoft YaHei';color: #5B5B5B;cursor: pointer}
       li.on{color: #37C2B5;border-bottom: solid 1px #37C2B5;}
     }
-    .unallocated{padding: 12px;background: #fff;}
     .cl-operation1 {margin-bottom: 15px;}
+
+    .register-tree, .moveTree {
+      .el-tree--highlight-current
+      .el-tree-node.is-current
+      > .el-tree-node__content {
+        color: #46494c;
+        font-weight: normal;
+      }
+
+      .el-tree-node__children {
+        margin-top: -1px;
+      }
+
+      .el-tree--highlight-current
+      .el-tree-node.is-current
+      > .el-tree-node__content
+      .el-tree-node__expand-icon {
+        color: #46494c;
+        font-weight: normal;
+      }
+
+      .el-tree--highlight-current
+      .el-tree-node.is-current
+      > .el-tree-node__content .back3 {
+        color: #b32f00;
+        font-weight: bold;
+      }
+    }
+    .moveTree{position: absolute;z-index: 9;right: 0px;margin-top: 14px;width: 170px;max-height: 400px;}
   }
 </style>

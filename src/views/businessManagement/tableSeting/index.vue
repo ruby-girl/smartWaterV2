@@ -157,19 +157,25 @@
       },
       handleUser(row,type){//用户表册,type==2时候为定位
         this.$refs.childSchedule.dialogVisible = true
-        this.$refs.childSchedule.$refs.waterTableChild.formRbp.ecqt = '1'
-        this.$refs.childSchedule.$refs.waterTableChild.formRbp.Customer = row.CustomerNo
-        this.$refs.childSchedule.$refs.waterTableChild.formRbp.SA_RegisterBookDetail_Id = row.Id
-        type == 2? this.$refs.childSchedule.$refs.waterTableChild.formRbp.SA_RegisterBookInfo_Id = row.SA_RegisterBookInfo_Id : this.$refs.childSchedule.$refs.waterTableChild.formRbp.SA_RegisterBookInfo_Id = row.Id//表册ID
-        this.$refs.childSchedule.$refs.waterTableChild.searchFun()
-       /* this.$refs.childSchedule.dialogVisible = true
-        this.$refs.childSchedule.getTableInfo()//获取用户表册自定义表头信息
-        type == 2 ? this.$refs.childSchedule.rbdp.SA_RegisterBookDetail_Id = row.Id : ''
-        this.$refs.childSchedule.rbdp.SA_WaterFactory_Id = row.SA_WaterFactory_Id//水厂
-        this.$refs.childSchedule.rbdp.MeterReaderId = row.MeterReader_Id//抄表员
-        this.$refs.childSchedule.getMeterForm(row.MeterReader_Id)//手动选择当前抄表员加载当前表册信息
-        type == 2? this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.SA_RegisterBookInfo_Id : this.$refs.childSchedule.rbdp.SA_RegisterBookInfo_Id = row.Id//表册ID
-        this.$refs.childSchedule.searchFun()*/
+
+        console.log(this.$refs.childSchedule)
+
+        return
+
+        if(row.SA_RegisterBookInfo_Id == '0'){
+          alert('0')
+          this.$refs.childSchedule.userType = '2'
+          this.$refs.childSchedule.$refs.waterTableChild2.formRbp.ecqt = '1'
+          this.$refs.childSchedule.$refs.waterTableChild2.formRbp.Customer = row.CustomerNo
+          this.$refs.childSchedule.$refs.waterTableChild2.getRegister(1)
+        }else {
+          alert(row.Id)
+          this.$refs.childSchedule.userType = '1'
+          this.$refs.childSchedule.$refs.waterTableChild1.formRbp.ecqt = '1'
+          this.$refs.childSchedule.$refs.waterTableChild1.formRbp.Customer = row.CustomerNo
+          this.$refs.childSchedule.$refs.waterTableChild1.formRbp.SA_RegisterBookInfo_Id = row.Id
+          this.$refs.childSchedule.$refs.waterTableChild1.searchFun()
+        }
       },
       allocationForm(){//表册分配 临时表册
         this.$refs.childSchedule.dialogVisible = true

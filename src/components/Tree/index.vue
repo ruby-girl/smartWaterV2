@@ -28,7 +28,7 @@ export default {
   name: "Tree",
   data() {
     return {
-      ifSearch:true,
+      ifSearch:true,//是否显示搜索
       deleteIds: [],
       selectNode: "",
       searchText: "",
@@ -37,7 +37,8 @@ export default {
       idsLength: [], //获取二级节点个数
       noneArry: [], //获取每次选中没有被包含的节点集合
       areaId: "", //区域ID
-      ifFlag: true
+      ifFlag: true,
+      ifLogo:true
     };
   },
   props: ["treeData"],
@@ -46,10 +47,11 @@ export default {
      * 动态添加模板图标
      **/
     renderContent(h, { node, data, store }) {
-      if(this.ifSearch){
-        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class={'icon iconfont ndoe_level iconlevel'+node.level}></i> {node.label} < /span>)
+      if(this.ifSearch||this.ifLogo){
+       // return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class={'icon iconfont ndoe_level iconlevel'+node.level}></i> {node.label} < /span>)
+        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> {node.label} < /span>)
       }else{
-        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}>{node.label} < /span>)
+        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level} title={node.label}>{node.label} < /span>)
       }
     },
     /**
@@ -58,7 +60,7 @@ export default {
     setCurNode(data) {
       this.selectNode = data;
       data.Id === "0" ? (this.areaId = -1) : (this.areaId = data.Id);
-      this.$parent.changeSecode(data.Level)
+      this.ifSearch ?  this.$parent.changeSecode(data.Level) : this.$emit('changeSecode',data)
     },
     getNodeByName() {
       this.searchText.trim() == ""
@@ -177,7 +179,11 @@ export default {
 </script>
 <style lang="scss">
 .cl-treeBox {
-  .back{display: block;width: 100%;height: 100%;padding-left: 15px;line-height: 38px;}
+  .back{display: block;width: 100%;height: 100%;padding-left: 15px;line-height: 38px;
+    padding-right: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap}
   .back1{background: #6DB3AC}
   .back2{background: #95CCC7;padding-left: 20px;}
   .back3{background: #B6DBD8;padding-left: 30px}
