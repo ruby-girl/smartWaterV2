@@ -1,14 +1,12 @@
 <template>
-    
-</template>
-<script>
-export default {
-    name:"UserSecurOrder"
-}
-</script><template>
   <div class="secur-content">
-    <selected :selectHead="listQuery" @handleFilter="seachAccountOrder" @getText="getText" />
-    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" />
+    <selected
+      ref="selected"
+      :selectHead="listQuery"
+      @handleFilter="seachAccountOrder"
+      @getText="getText"
+    />
+    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
     <!-- <customTable ref="myChild" /> -->
     <div class="main-padding-20-y" id="table">
       <el-table
@@ -35,16 +33,17 @@ export default {
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
-            :fixed="item.Freeze"
           />
         </template>
-        <el-table-column label="操作" width="300px" align="center" fixed="right">
+        <el-table-column label="操作" width="120px" align="center" fixed="right">
           <template slot-scope="scope">
-            <!-- <a
-              class="viewHis"
-              v-if="scope.row.SA_Customer_Id!=''"
-              @click="waterMeterWLWDetail(scope.row.IMSI)"
-            >查看历史详情</a>-->
+            <div class="icongStyle">
+              <i
+                class="icon iconfont iconbiaodan1"
+                @click="detaile(scope.row.SA_InsuredMessage_Id)"
+                title="详情"
+              ></i>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -64,9 +63,12 @@ import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条�
 import { legalTime } from "@/utils/index"; //时间格式化
 import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
+import { getInssuredHis, excelInssuredHis } from "@/api/inSecur";
+
 export default {
-  name: "UserSecurOrder",
+  name: "UserSecurMangment",
   components: { Selected, Pagination, SearchTips },
+
   data() {
     return {
       listQuery: {
@@ -75,26 +77,29 @@ export default {
         limit: 10,
         filed: "",
         sort: "",
-        customerQueryType: "", //查询类型
-        customerQueryValue: "", //查询值
-        waterMeterType: -1, //水表类型
-        createStartTime: "", // 操作时间起
-        createEndTime: "", // 操作时间止
-        securType: -1, //低保户 状态
+        CustomerQueryType: "", //查询类型
+        CustomerQueryValue: "", //查询值
+        WaterMeter: -1, //水表类型
+        StartTime: "", // 操作时间起
+        StartTime: "", // 操作时间止
+        InsuredState: -1, //低保户 状态
+        AreaId: -1, //区域Id
+        InsuredRecheckState: -1, //次年复审状态
         timevalue: [],
-        tableId: "0000026"
+        tableId: "0000032"
       },
       checksData: [],
       tableKey: 0,
       tableData: [],
       tableHeight: null,
-      total:0,
+      total: 0,
       customHeight: "", //自定义高度
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {} //搜索存储对象
     };
   },
+
   mounted() {
     this.tableHeight =
       document.getElementsByClassName("el-tabs")[0].offsetHeight -
@@ -121,8 +126,8 @@ export default {
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
-        this.listQuery.StartUpgradeDate = "";
-        this.listQuery.EndUpgradeDate = "";
+        this.listQuery.StartTime = "";
+        this.listQuery.StartTime = "";
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
       this.seachAccountOrder();
@@ -131,6 +136,7 @@ export default {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
+    //查询低保户
     seachAccountOrder(num) {
       if (this.listQuery.timevalue.length > 0) {
         this.listQuery.StartUpgradeDate =
@@ -141,7 +147,17 @@ export default {
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
       }
-      this.tipsData = pushItem(this.tipsDataCopy);
+      getInssuredHis(this.orderData).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
+        this.tableData = res.data;
+        this.total = res.count;
+      });
+    },
+    //导出
+    excelInssud() {
+      excelInssuredHis(this.orderData).then(res => {
+        window.location.href = `${this.common.excelPath}${res.data}`;
+      });
     },
     sortChanges({ column, prop, order }) {
       //排序
@@ -150,11 +166,28 @@ export default {
       this.listQuery.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.seachAccountOrder();
+    },
+    detaile(id) {
+      this.$emit("getDetaile", id);
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .secur-content {
+  .icongStyle {
+    .icon {
+      font-size: 16px;
+      color: #777c82;
+      padding-left: 10px;
+      cursor: pointer;
+    }
+    .iconbiaodan1 {
+      color: #b59200;
+    }
+    .iconlianhe1 {
+      color: #00b2a1;
+    }
+  }
 }
 </style>
