@@ -2,7 +2,7 @@
   <el-dialog
     class="cl_water_quantity"
     :close-on-click-modal="false"
-    top="30vh"
+    top="20vh"
     title="水量详情"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
@@ -11,55 +11,95 @@
     <ul class="clearfix">
       <li class="water_detail">
         <i>1</i>
-        <p >
-          <span class="startNum">1阶起始量：<label>{{WaterYield1}} 吨</label></span>
-          <span class="userNUm">1阶起始量：<label>{{WaterYield1}} 吨</label></span>
+        <p>
+          <span class="startNum">
+            1阶起始量：
+            <label>{{waterDetaileList.OneLadderWaterNum }} 吨</label>
+          </span>
+          <span class="userNUm">
+            1阶用水量：
+            <label>{{waterDetaileList.OneTotalNum }} 吨</label>
+          </span>
         </p>
         <!-- <span>1阶起始量：</span>
         <label>{{WaterYield1}} 吨</label>
         <span class="userNum">
           <span>1阶用水量：</span>
           <label>{{WaterYield1}} 吨</label>
-        </span> -->
+        </span>-->
       </li>
       <li class="water_detail">
         <i>2</i>
-        <span>2阶用水量：</span>
-        <label>{{WaterYield2}} 吨</label>
+        <p>
+          <span class="startNum">
+            2阶起始量：
+            <label>{{waterDetaileList.TwoLadderWaterNum }} 吨</label>
+          </span>
+          <span class="userNUm">
+            2阶用水量：
+            <label>{{waterDetaileList.TwoTotalNum }} 吨</label>
+          </span>
+        </p>
       </li>
       <li class="water_detail">
         <i>3</i>
-        <span>3阶用水量：</span>
-        <label>{{WaterYield3}} 吨</label>
+        <p>
+          <span class="startNum">
+            3阶起始量：
+            <label>{{waterDetaileList.ThreeLadderWaterNum }} 吨</label>
+          </span>
+          <span class="userNUm">
+            3阶用水量：
+            <label>{{waterDetaileList.ThreeTotalNum }} 吨</label>
+          </span>
+        </p>
       </li>
       <li class="water_detail">
         <i>4</i>
-        <span>4阶用水量：</span>
-        <label>{{WaterYield4}} 吨</label>
+        <p>
+          <span class="startNum">
+            4阶起始量：
+            <label>{{waterDetaileList.FourLadderWaterNum }} 吨</label>
+          </span>
+          <span class="userNUm">
+            4阶用水量：
+            <label>{{waterDetaileList.FourTotalNum }} 吨</label>
+          </span>
+        </p>
       </li>
       <li class="water_detail">
         <i>5</i>
-        <span>4阶用水量：</span>
-        <label>{{WaterYield5}} 吨</label>
+        <p>
+          <span class="startNum">
+            5阶起始量：
+            <label>{{waterDetaileList.FiveLadderWaterNum }} 吨</label>
+          </span>
+          <span class="userNUm">
+            5阶用水量：
+            <label>{{waterDetaileList.FiveTotalNum }} 吨</label>
+          </span>
+        </p>
       </li>
     </ul>
-    <div class="thisNum">本次用水量：{{totalWaterYield}}吨</div>
+    <div class="thisNum">本次用水量：{{waterDetaileList.TotalYield }}吨</div>
   </el-dialog>
 </template>
 
 <script>
 export default {
   name: "WaterNumDetail",
+  watch: {
+    dialogVisible() {
+      this.waterDetaileList=this.$parent.waterDetaileList
+    }
+  },
   data() {
     return {
       dialogVisible: false,
-      WaterYield1: 0,
-      WaterYield2: 0,
-      WaterYield3: 0,
-      WaterYield4: 0,
-      WaterYield5: 0
+      waterDetaileList: {}
     };
   },
+  mounted() {},
   computed: {
     //计算总用水量情况
     totalWaterYield: function() {
@@ -76,19 +116,7 @@ export default {
     handleClose() {
       //水量详情关闭
       this.dialogVisible = false;
-      this.WaterYield1 = 0; //初始化数据，避免下次进入无数据显示异常情况
-      this.WaterYield2 = 0;
-      this.WaterYield3 = 0;
-      this.WaterYield4 = 0;
-      this.WaterYield5 = 0;
-    },
-    getInfo(data) {
-      //获取五阶梯用水量情况
-      this.WaterYield1 = data.WaterYield1;
-      this.WaterYield2 = data.WaterYield2;
-      this.WaterYield3 = data.WaterYield3;
-      this.WaterYield4 = data.WaterYield4;
-      this.WaterYield5 = data.WaterYield5;
+      this.waterDetaileList = {};
     }
   }
 };
@@ -129,18 +157,22 @@ export default {
     label {
       color: #636669;
     }
-    p{
+    p {
       display: inline-block;
       margin: 0;
       padding: 0;
     }
-    .userNUm{
-      padding-left: 98px;
+    .userNUm {
+      padding-left: 70px;
+    }
+    .startNum{
+      display: inline-block;
+      width: 150px;
     }
   }
   // li:nth-child(2n){text-align: right}
   // li:nth-child(2n+1){text-align: left}
- .thisNum{
+  .thisNum {
     width: 100%;
     height: 55px;
     font: normal 16px/55px "Microsoft YaHei";

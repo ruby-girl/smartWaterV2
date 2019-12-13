@@ -191,7 +191,6 @@ export default {
       this.$refs.aduit.InsuredRecheckParam.FS_EndDate =
         this.formatTime(data.EndDate)[1] + " 23:59:59";
       this.$refs.aduit.viewExam = true;
-      console.log(this.$refs.aduit.$refs);
     },
     formatTime(data) {
       let arr = [];

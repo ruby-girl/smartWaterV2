@@ -94,19 +94,28 @@ export function getText(val, model, arr, tipsDataCopy, that, name) {
       tipsDataCopy.splice(i, 1);
     }
   }
-  obj = that.$refs.searchTips.getArrData(val, model, arr, name);//调用面包屑组件里面的方法
-  return obj
+  if (arr) {
+    if (val == "-1") {
+      return false
+    } else {
+      obj = that.$refs.searchTips.getArrData(val, model, arr, name);//调用面包屑组件里面的方法
+      return obj
+    }
+  }
+
 }
 // 筛选条件面包屑
 export function pushItem(tipsDataCopy) {
   let tipsData = [];
   tipsDataCopy.forEach(item => {
-    tipsData.push(item);
+    if (item) {
+      tipsData.push(item);
+    }
   });
   return tipsData
 }
 //左右布局 面包屑宽度获取 that==this对象
-export function getTipsChangeWidth(that){
+export function getTipsChangeWidth(that) {
   setTimeout(function () {
     that.$refs.searchTips.widthData =
       document.getElementsByClassName("el-main")[0].clientWidth -
@@ -166,10 +175,10 @@ export function getTimeOption(time, n) {
 export function yearTimeOption(time, n) {
   var d = new Date(time);
   var year = d.getFullYear()
-  let arr=[]
-  arr.push((year+1)+'-01-01')
-  for(let a=2;a<n+1;a++){
-    arr.push((year+a)+'-01-01')
+  let arr = []
+  arr.push((year + 1) + '-01-01')
+  for (let a = 2; a < n + 1; a++) {
+    arr.push((year + a) + '-01-01')
   }
   return arr
 }
@@ -178,14 +187,14 @@ export function threeTimeOption(time) {
   var d = new Date(time);
   var year = d.getFullYear();
   let arr;
-  if(d.getMonth()+1<4){
-     arr=[year + '-04-01',year + '-07-01',year + '-10-01',(year+1) + '-01-01',(year+1) + '-04-01']
-  }else if(d.getMonth()+1<7){
-     arr=[year + '-07-01',year + '-10-01',(year+1) + '-01-01',(year+1) + '-04-01',(year+1) + '-07-01']
-  }else if(d.getMonth()+1<10){
-     arr=[year + '-10-01',(year+1) + '-01-01',(year+1) + '-04-01',(year+1) + '-07-01',(year+1) + '-10-01']
-  }else{
-     arr=[(year+1) + '-01-01',(year+1) + '-04-01',(year+1) + '-07-01',(year+1)+ '-10-01',(year+2) + '-01-01']
+  if (d.getMonth() + 1 < 4) {
+    arr = [year + '-04-01', year + '-07-01', year + '-10-01', (year + 1) + '-01-01', (year + 1) + '-04-01']
+  } else if (d.getMonth() + 1 < 7) {
+    arr = [year + '-07-01', year + '-10-01', (year + 1) + '-01-01', (year + 1) + '-04-01', (year + 1) + '-07-01']
+  } else if (d.getMonth() + 1 < 10) {
+    arr = [year + '-10-01', (year + 1) + '-01-01', (year + 1) + '-04-01', (year + 1) + '-07-01', (year + 1) + '-10-01']
+  } else {
+    arr = [(year + 1) + '-01-01', (year + 1) + '-04-01', (year + 1) + '-07-01', (year + 1) + '-10-01', (year + 2) + '-01-01']
   }
   return arr
 }

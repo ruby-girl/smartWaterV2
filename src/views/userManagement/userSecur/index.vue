@@ -39,14 +39,16 @@ export default {
     },
     //历史
     comeHisWeb(CustomerNo) {
+      this.order = true;
       this.typeCheck = "2";
-      this.$refs.order.getText(
-        CustomerNo,
-        "CustomerQueryValue",
-        "",
-        "用户编号"
-      );
+
       this.$nextTick(function() {
+        this.$refs.order.getText(
+          CustomerNo,
+          "CustomerQueryValue",
+          "",
+          "用户编号"
+        );
         this.$refs.order.$refs.selected.selectHead.CustomerQueryType = "1";
         this.$refs.order.$refs.selected.selectHead.CustomerQueryValue = CustomerNo;
         this.$refs.order.seachAccountOrder();
