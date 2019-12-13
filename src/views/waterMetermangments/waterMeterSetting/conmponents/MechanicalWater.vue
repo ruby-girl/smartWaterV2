@@ -1,14 +1,15 @@
 <template>
   <div class="mac-contianer">
+    <div ref="formHeight"></div>
     <el-form
       :inline="true"
       :model="wachMeterData"
-      class="head-search-form form-inline-small-input"
+      :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
       size="small"
       label-width="70px"
       @submit.native.prevent
     >
-      <el-form-item label="姓名">
+      <el-form-item label="姓名" v-show="show1||isShow" key="CustomerName">
         <el-input
           v-model="wachMeterData.CustomerName"
           maxlength="20"
@@ -16,14 +17,14 @@
           @change="getText(wachMeterData.CustomerName,'CustomerName','','姓名')"
         />
       </el-form-item>
-      <el-form-item label="水表编号">
+      <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo">
         <el-input
           v-model="wachMeterData.WaterMeterNo"
           maxlength="20"
           @change="getText(wachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
         />
       </el-form-item>
-      <el-form-item label="水表样式">
+      <el-form-item label="水表样式" v-show="show3||isShow" key="wachMeterData">
         <el-select
           v-model="wachMeterData.wms"
           placeholder="请选择"
@@ -38,7 +39,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户状态">
+      <el-form-item label="用户状态" v-show="show4||isShow" key="cs">
         <el-select
           v-model="wachMeterData.cs"
           placeholder="请选择"
@@ -53,11 +54,14 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label>
-        <el-button type="primary" size="small" class="cl-search" @click="searchWatetJX">
-          <i class="icon iconfont">&#xe694;</i>
-          搜索
+      <el-form-item>
+        <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
+          <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+        </span>
+        <el-button type="primary" size="mini" @click="searchWatetJX" round>
+          <i class="icon iconfont">&#xe694;</i>查询
         </el-button>
+        <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
       </el-form-item>
     </el-form>
 
@@ -174,6 +178,17 @@ export default {
       default: []
     }
   },
+  watch: {
+    screenWidth: {
+      handler(val, oldVal) {
+        this.show1 = this.showLabel(1, val);
+        this.show2 = this.showLabel(2, val);
+        this.show3 = this.showLabel(3, val);
+        this.show4 = this.showLabel(4, val);
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       viewWaterHistory: false, //历史
@@ -209,7 +224,14 @@ export default {
       editInfo: {},
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      orderData: {}
+      orderData: {},
+      screenWidth: null,
+      showBtn: false,
+      isShow: false,
+      show1: true,
+      show2: true,
+      show3: true,
+      show4: true
     };
   },
   mounted() {
@@ -219,6 +241,9 @@ export default {
       194;
     this.$refs.searchTips.$refs.myChild.GetTable(this.wachMeterData.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    this.$nextTick(() => {
+      this.screenWidth = this.$refs.formHeight.clientWidth;
+    });
   },
 
   computed: {
@@ -236,6 +261,17 @@ export default {
     }
   },
   methods: {
+    showLabel(n, w) {
+      if (Math.floor((w - 180) / 280) < 4) {
+        this.showBtn = true;
+      } else {
+        this.showBtn = false;
+      }
+      if (Math.floor((w - 180) / 280) >= n || this.isShow) {
+        return true;
+      }
+      return false;
+    },
     delTips(val) {
       //返回的查询条件的属性
 

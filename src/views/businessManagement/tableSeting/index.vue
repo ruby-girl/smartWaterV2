@@ -155,30 +155,34 @@
           })
         })
       },
-      handleUser(row,type){//用户表册,type==2时候为定位
+      handleUser(row){//用户表册,type==2时候为定位
+        console.log(row)
         this.$refs.childSchedule.dialogVisible = true
-
-        console.log(this.$refs.childSchedule)
-
-        return
-
-        if(row.SA_RegisterBookInfo_Id == '0'){
-          alert('0')
+        if(row.SA_RegisterBookInfo_Id == '0'){//未分配表册
           this.$refs.childSchedule.userType = '2'
           this.$refs.childSchedule.$refs.waterTableChild2.formRbp.ecqt = '1'
-          this.$refs.childSchedule.$refs.waterTableChild2.formRbp.Customer = row.CustomerNo
-          this.$refs.childSchedule.$refs.waterTableChild2.getRegister(1)
-        }else {
-          alert(row.Id)
+          this.$nextTick(()=>{
+            this.$refs.childSchedule.$refs.waterTableChild2.formRbp.Customer = row.CustomerNo
+            this.$refs.childSchedule.$refs.waterTableChild2.getRegister(1)
+          })
+        }else {//已分配表册
           this.$refs.childSchedule.userType = '1'
-          this.$refs.childSchedule.$refs.waterTableChild1.formRbp.ecqt = '1'
-          this.$refs.childSchedule.$refs.waterTableChild1.formRbp.Customer = row.CustomerNo
-          this.$refs.childSchedule.$refs.waterTableChild1.formRbp.SA_RegisterBookInfo_Id = row.Id
-          this.$refs.childSchedule.$refs.waterTableChild1.searchFun()
+          this.$nextTick(()=>{
+            this.$refs.childSchedule.$refs.myChild.searchText = row.BookName
+            this.$refs.childSchedule.$refs.myChild.getNodeByName()
+            this.$refs.childSchedule.$refs.waterTableChild1.formRbp.ecqt = '1'
+            this.$refs.childSchedule.$refs.waterTableChild1.formRbp.Customer = row.CustomerNo
+            this.$refs.childSchedule.$refs.waterTableChild1.formRbp.SA_RegisterBookInfo_Id = row.Id
+            this.$refs.childSchedule.$refs.waterTableChild1.searchFun(1)
+          })
         }
       },
       allocationForm(){//表册分配 临时表册
         this.$refs.childSchedule.dialogVisible = true
+        this.$refs.childSchedule.userType = '2'
+        this.$nextTick(() => {
+          this.$refs.childSchedule.$refs.waterTableChild2.getRegister(1)
+        })
       },
       handleEmpty(row){//清空
         ClearRegisterBook({'RegisterBookId':row.Id}).then(res => {

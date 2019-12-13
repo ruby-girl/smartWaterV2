@@ -90,7 +90,7 @@
   import addmponent from './components/Add'
   import editmponent from './components/Edit'
   import detailmponent from './components/Detail'
-  import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl} from "@/api/organize"
+  import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl, WaterFactoryComboBoxList} from "@/api/organize"
   import { getTime } from "@/utils/index";
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
@@ -298,9 +298,24 @@
       getText(val, model, arr, name) {
         let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
         this.tipsDataCopy.push(obj);
+      },
+      getWaterFactory(){
+        WaterFactoryComboBoxList().then(res => {
+          if (res.code == 0) {
+            this.$refs.child.WaterFactory = res.data
+            this.$refs.child2.WaterFactory = res.data
+          } else {
+            this.$message({
+              message: res.message,
+              type: 'warning',
+              duration: 4000
+            });
+          }
+        })
       }
     },
     mounted() {
+      this.getWaterFactory();
       this.$refs.searchTips.$refs.myChild.GetTable(this.queryData.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
     }

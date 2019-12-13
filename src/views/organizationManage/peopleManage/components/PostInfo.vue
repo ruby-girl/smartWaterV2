@@ -2,7 +2,7 @@
   <div>
     <div v-for="(item,index) in sojList" :key="index">
       <el-form-item label="部门" label-width="100px" :class="item.SYS_Department_Id==''&&isFlag?'on':''" style="position: relative">
-        <span style="position: absolute;color: #F56C6C;left: -55px;top:3px;">*</span>
+        <span style="position: absolute;color: #F56C6C;left: -42px;top:3px;">*</span>
         <span v-show="item.SYS_Department_Id==''&&isFlag"
               style="position: absolute;color: #F56C6C;left: 0px;top:20px;font-size: 12px;">不能为空</span>
         <el-select v-model="item.SYS_Department_Id" placeholder="请选择" size="small"
@@ -16,7 +16,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="岗位" label-width="100px" :class="item.OA_Job_Id==''&&isFlag?'on':''" style="position: relative">
-        <span style="position: absolute;color: #F56C6C;left: -55px;top:3px;">*</span>
+        <span style="position: absolute;color: #F56C6C;left: -42px;top:3px;">*</span>
         <span v-show="item.OA_Job_Id==''&&isFlag"
               style="position: absolute;color: #F56C6C;left: -0px;top:20px;font-size: 12px;">不能为空</span>
         <el-select v-model="item.OA_Job_Id" placeholder="请选择" size="small" @change="recurFun(index)">

@@ -280,7 +280,8 @@ export default {
         useWaterTypeId: ""
       },
       waerMeterDirSize: [], //水表口径
-      waterStyleList: [] //水表样式
+      waterStyleList: [], //水表样式
+      waterDetaileList:{}
     };
   },
 
@@ -347,9 +348,10 @@ export default {
     thisTotalWater() {
       this.thisWaterMerter.customerId = this.userInfo.Id;
       this.thisWaterMerter.useWaterTypeId = this.userInfo.SA_UseWaterType_Id;
-      this.$refs.numDetaile.dialogVisible = true;
+      
       getWaterTotalNum(this.thisWaterMerter).then(res => {
-        console.log(res);
+        this.waterDetaileList=res.data
+        this.$refs.numDetaile.dialogVisible = true;
       });
     },
     //回车模糊查询

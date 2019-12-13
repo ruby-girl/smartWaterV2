@@ -5,6 +5,7 @@
         :selectHead="listQuery"
         @handleFilter="seachAccountOrder"
         @getText="getText"
+        ref="selected"
         :searchWidth="searchWidth"
       />
     </div>

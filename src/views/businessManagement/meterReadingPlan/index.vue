@@ -2,13 +2,27 @@
   <div class="section-container">
     <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :companyOptions="companyParentOptions" ref="child1" @getText="getText" />
+        <select-head
+          :companyOptions="companyParentOptions"
+          :searchWidth="searchWidth"
+          ref="child1"
+          @getText="getText"
+        />
       </div>
       <div
         class="display-flex justify-content-flex-justify"
         :class="{'plan-table':isShowAdPlanClass }"
       >
-         <el-button  v-show="isShowAdPlan" size="mini" class="cl-search cl-reset" round @click="addPlan"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button
+          v-show="isShowAdPlan"
+          size="mini"
+          class="cl-search cl-reset"
+          round
+          @click="addPlan"
+          style="margin:6px 0;border-color:#00B2A1;color:#00B2A1"
+        >
+          <i class="icon iconfont">&#xe689;</i>添加
+        </el-button>
       </div>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
       <div class="main-padding-20-y" id="table">
@@ -117,8 +131,8 @@ export default {
   data() {
     return {
       total: 0,
+      // 查询条件
       selectHead: {
-        // 查询条件
         page: 1,
         limit: 10,
         SA_WaterFactory_Id: "-1", //水厂Id
@@ -142,7 +156,8 @@ export default {
       isShowAdPlanClass: !this.isShowAdPlan,
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      orderData: {}
+      orderData: {},
+      searchWidth: 1024
     };
   },
   computed: {
@@ -197,6 +212,8 @@ export default {
         73;
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+      this.searchWidth = this.$refs.formHeight.clientWidth;
+     
     });
   },
   methods: {
@@ -287,7 +304,9 @@ export default {
     searchTableList(num) {
       //查询列表
       const that = this;
-      console.log(this.selectHead.warterMeterPlanDate);
+      if (this.companyParentOptions.length == 1) {
+        this.selectHead.SA_WaterFactory_Id = this.companyParentOptions[0].Id;
+      }
       if (this.selectHead.warterMeterPlanDate.length < 1) {
         that.$message({
           message: "计划抄表日期不能为空，请选择!",

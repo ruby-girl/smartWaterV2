@@ -7,25 +7,25 @@
     :visible.sync="dialogVisible"
     width="70%">
     <el-tabs v-model="userType" @tab-click="handleClick">
-      <el-tab-pane label="已分配表册用户" name="1">
-        <div class="allocation-box clearfix">
-          <div class="water-tree fl">
-            <h2>表册</h2>
-            <myTree class="register-tree" ref="myChild" :treeData="oldTreeData"  @changeSecode="changeSecode"></myTree>
-          </div>
-          <div class="water-table fl">
-            <AllocationTable ref="waterTableChild1"></AllocationTable>
-          </div>
-        </div>
-      </el-tab-pane>
       <el-tab-pane label="未分配表册用户" name="2">
         <div class="allocation-box clearfix">
           <div class="water-tree fl">
             <h2>区域</h2>
-            <myTree ref="myChild2" :treeData="oldTreeData2"  @changeSecode="changeSecode2"></myTree>
+            <my-tree ref="myChild2" :treeData="oldTreeData2"  v-on:changeSecode="changeSecode2" :searchtype=searchtype></my-tree>
           </div>
           <div class="water-table fl">
             <AllocationTable ref="waterTableChild2"></AllocationTable>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="已分配表册用户" name="1">
+        <div class="allocation-box clearfix">
+          <div class="water-tree fl">
+            <h2>表册</h2>
+            <my-tree class="register-tree" ref="myChild" :treeData="oldTreeData"  v-on:changeSecode="changeSecode" :searchtype=searchtype :ifLogos="1"></my-tree>
+          </div>
+          <div class="water-table fl">
+            <AllocationTable ref="waterTableChild1"></AllocationTable>
           </div>
         </div>
       </el-tab-pane>
@@ -45,10 +45,12 @@
     components: { myTree, AllocationTable},
     data() {
       return {
+        searchtype:true,
         userType:'1',
         dialogVisible: false,
         oldTreeData:[],//表册
         oldTreeData2:[],//区域
+        cont:true
       }
     },methods:{
       searchFun(){},
@@ -88,19 +90,11 @@
         })
       },
     },
-    created() {
-      this.$nextTick(()=>{
-        this.$refs.myChild.ifLogo = false
-        this.$refs.myChild.ifSearch = false
-        this.$refs.waterTableChild1.$refs.myChild.ifSearch = false
-        this.$refs.waterTableChild1.$refs.myChild.ifLogo = false
-        this.$refs.waterTableChild2.$refs.myChild.ifLogo = false
-        this.$refs.waterTableChild2.$refs.myChild.ifSearch = false
-        this.$refs.myChild2.ifLogo = true
-        this.$refs.myChild2.ifSearch = false
+    watch:{
+      userType(){
         this.GetWFMRRBITreeFun()
         this.getTreeData()
-      })
+      }
     }
   }
 </script>
