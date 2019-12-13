@@ -2,7 +2,7 @@
   <el-form
     :inline="true"
     :model="selectHead"
-   :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
+    :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
     size="small"
     label-width="80px"
     @submit.native.prevent
@@ -114,12 +114,12 @@
       </el-form-item>
     </transition-group>
     <el-form-item>
-      <span class="isShow" :class="{tro:isShow}">
+      <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
         <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
       </span>
       <el-button round type="primary" size="mini" @click="handleFilter">
         <i class="iconfont iconsousuo"></i>
-搜索
+        搜索
       </el-button>
     </el-form-item>
   </el-form>
@@ -151,7 +151,10 @@ export default {
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
         this.show5 = this.showLabel(5, val);
-        this.show6 = this.showLabel(6, val);
+        console.log(this.showLabel(5, val));
+        if (!this.showLabel(5, val)) {
+          this.showBtn = "ture";
+        }
       },
       immediate: true
     }
@@ -169,10 +172,11 @@ export default {
       show3: true,
       show4: true,
       show5: true,
-      show6: true
+      showBtn: false
     };
   },
   created() {
+    console.log(this.$parent);
     this.companyParentOptions = this.$store.state.user.waterWorks;
     if (this.companyParentOptions.length == 1) {
       this.selectHead.SA_WaterFactory_Id = this.companyParentOptions[0].Id;
@@ -184,10 +188,10 @@ export default {
   methods: {
     showLabel(n, w) {
       if (this.companyParentOptions.length == 1) {
-        if (Math.floor((w-180) / 310) > n || this.isShow) return true;
+        if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
         return false;
       } else {
-        if (Math.floor((w-180) / 310) > n + 1 || this.isShow) return true;
+        if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
         return false;
       }
     },
