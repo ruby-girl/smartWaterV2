@@ -10,7 +10,7 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item label="水厂" prop="waterFactoryId" v-if="this.waterWorks.length>1">
+      <el-form-item label="水厂" :label-width="!isShow?'40px':''" prop="waterFactoryId" v-if="this.waterWorks.length>1">
         <el-select
           v-model="selectHead.waterFactoryId"
           placeholder="请选择"

@@ -6,7 +6,7 @@
         <div ref="formHeight">
           <select-head
             :select-head="listQuery"
-            @handleFilter="handleFilter"
+            @handleFilter="getList"
             @getText="getText"
             :searchWidth="searchWidth"
           />
@@ -84,7 +84,7 @@ export default {
         filed: "",
         sort: "",
         waterFactoryId: "-1", //水厂
-        customerQueryType: "1", //查询用户类型
+        customerQueryType: "", //查询用户类型
         customerQueryValue: "", //input值
         userType: "-1", //用户类型
         waterMeterType: "-1", //水表类型
@@ -141,7 +141,7 @@ export default {
         this.listQuery.changeEndTime = "";
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
-      this.handleFilter();
+      this.getList();
     },
     getText(val, model, arr, name) {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
@@ -158,7 +158,10 @@ export default {
       }
     },
     getList(n) {
-      if (!n) this.orderData = Object.assign({}, this.listQuery);
+      if (!n) {
+        this.orderData = Object.assign({}, this.listQuery);
+        this.orderData.page = 1;
+      }
       WaterMeterChangeList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
@@ -174,10 +177,6 @@ export default {
         this.listQuery.page = 1;
         this.getList();
       }
-    },
-    handleFilter() {
-      this.listQuery.page = 1;
-      this.getList();
     },
     excel() {
       //导出
