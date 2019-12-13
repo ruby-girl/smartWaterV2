@@ -10,7 +10,7 @@
           <el-button :disabled="disEdit" round size="mini" class="cl-reset" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe618;</i>编辑</el-button>
           <el-button :disabled="disDel" round size="mini" class="cl-danger" @click="getCheckedNodes(3)"><i class="icon iconfont">&#xe68a;</i>删除</el-button>
         </div>
-        <myTree ref="myChild" :treeData="oldTreeData"></myTree>
+        <myTree ref="myChild" :treeData="oldTreeData"  @changeSecode="changeSecode"></myTree>
         <span v-show="!ifShow" class="telescopic telescopic2" @click="getUp">
           收起
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>

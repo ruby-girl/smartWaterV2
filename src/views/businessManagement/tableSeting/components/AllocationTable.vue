@@ -25,8 +25,8 @@
     <div class="cl-operation1 fr">
       <el-button size="mini" v-show="type=='1'" class="cl-operation-btn" round @click="deleteFun(1)"><i class="icon iconfont">&#xe650;</i> 删除
       </el-button>
-      <el-button size="mini" class="cl-operation-btn" round @click="moveTreeShow=!moveTreeShow">分配至</el-button>
-      <myTree class="moveTree" v-show="moveTreeShow" ref="myChild" :treeData="moveTree"  @changeSecode="moveChangeSecode"></myTree>
+      <el-button size="mini" class="cl-operation-btn" round @click="distributionFun">分配至</el-button>
+      <myTree class="moveTree" v-show="moveTreeShow" ref="myChild" :treeData="moveTree" :searchtype=searchtype  @changeSecode="moveChangeSecode" :ifLogos="1"></myTree>
     </div>
     <el-table :data="tableData" border ref="multipleTable" height="450px" @selection-change="handleSelectionChange"
               @sort-change="sortChanges">
@@ -127,10 +127,11 @@
     components: {Pagination,myTree},
     data() {
       return {
+        searchtype:true,
         rowNums:'',//排序号
         moveTreeShow:false,
         moveTree:[],//移动至表册
-        type:'1',//是否显示区域选择项
+        type:'2',//是否显示区域选择项
         tableData:[],
         areaArry:[],//区域
         dataTypes:[],
@@ -239,27 +240,27 @@
         })
       },
       moveChangeSecode(data){//分配至表册回调函
-        this.moveTreeShow = false
-        this.mop.rbdList = this.multipleSelection
-        this.mop.RegisterBookInfo_Id = data.Id
-        console.log(this.mop)
-
-        this.$confirm("确认移动当前信息？", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-          customClass: "warningBox",
-          showClose: false
-        }).then(() => {
-          RegisterMoveIn(this.mop).then(res => {
-            if (res.code == 0) {
-              promptInfoFun(this,2,res.message)
-              this.searchFun(this.flag)
-            } else {
-              promptInfoFun(this,1,res.message)
-            }
+        if(data.IsResponse){//IsResponse 为true时候 方可点击选择表册
+          this.moveTreeShow = false
+          this.mop.rbdList = this.multipleSelection
+          this.mop.RegisterBookInfo_Id = data.Id
+          this.$confirm("确认移动当前信息？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+            customClass: "warningBox",
+            showClose: false
+          }).then(() => {
+            RegisterMoveIn(this.mop).then(res => {
+              if (res.code == 0) {
+                promptInfoFun(this,2,res.message)
+                this.searchFun(this.flag)
+              } else {
+                promptInfoFun(this,1,res.message)
+              }
+            });
           });
-        });
+        }
       },
       deleteFun(num){//移出已分配表册用户至未分配表册
         if(num==1){//移入默认表册
@@ -274,18 +275,19 @@
         })
       },
       sameRegisterMove(){//本表册移动
-        console.log(this.mop.RegisterBookInfo_Id)
-        this.mop.MeterReaderOrderNum = this.nums//d动态获取
-        return
+        this.mop.MeterReaderOrderNum = parseInt(this.rowNums)//d动态获取
+        this.mop.RegisterBookInfo_Id = this.formRbp.SA_RegisterBookInfo_Id//d动态获取
+        this.mop.rbdList = this.multipleSelection
         SortRegisterBookDetailMoveOut(this.mop).then(res => {
           if (res.code ==0 ) {
             promptInfoFun(this,2,res.message)
+            this.searchFun(this.flag)
           } else {
             promptInfoFun(this,1,res.message)
           }
         })
       },
-      setNums(row){
+      setNums(row){//排序号
         this.rowNums = row.nums
         this.multipleSelection.forEach(item=>{
           item.nums = this.rowNums
@@ -294,6 +296,9 @@
         array.forEach(i=>{
           i.nums = ''
         })
+      },
+      distributionFun(){
+        this.multipleSelection.length<=0 ?  promptInfoFun(this,1,'请选择要移动的数据！') : this.moveTreeShow = !this.moveTreeShow
       }
     }
   }

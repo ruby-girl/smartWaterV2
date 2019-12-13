@@ -308,7 +308,6 @@
     },
     created() {
       this.EnumFunArry = getDictionaryOption('职能')
-      this.WaterFactory = this.$store.state.user.waterWorks
       this.getRoles()
     }
   }

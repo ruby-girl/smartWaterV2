@@ -41,15 +41,14 @@ export default {
       ifLogo:true
     };
   },
-  props: ["treeData"],
+  props: ["treeData",'searchtype','ifLogos'],
   methods: {
     /**
      * 动态添加模板图标
      **/
     renderContent(h, { node, data, store }) {
       if(this.ifSearch||this.ifLogo){
-       // return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class={'icon iconfont ndoe_level iconlevel'+node.level}></i> {node.label} < /span>)
-        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> {node.label} < /span>)
+        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class={'icon iconfont ndoe_level iconlevel'+node.level}></i> {node.label} < /span>)
       }else{
         return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level} title={node.label}>{node.label} < /span>)
       }
@@ -58,14 +57,25 @@ export default {
      * 当前选中需编辑或者新增信息或删除
      * */
     setCurNode(data) {
+      let Nodes = this.$refs.tree.store._getAllNodes();
+      Nodes.forEach(key => {//移除筛选条件加载的默认样式
+        if(key.data.Id!=data.Id){
+          document.getElementById(key.data.Id).classList.remove("matchStyle")
+        }
+      });
       this.selectNode = data;
       data.Id === "0" ? (this.areaId = -1) : (this.areaId = data.Id);
-      this.ifSearch ?  this.$parent.changeSecode(data.Level) : this.$emit('changeSecode',data)
+      this.ifSearch ?  this.$emit('changeSecode',data.Level) :  this.$emit('changeSecode',data)
     },
     getNodeByName() {
-      this.searchText.trim() == ""
-        ? promptInfoFun(this, 1, "公司名称不能为空！")
-        : this.getParentId(this.searchText, this.treeData[0]);
+      let tree = {
+          Id:'',
+          label:'',
+          children:this.treeData
+      }
+      //this.searchText.trim() == "" ? promptInfoFun(this, 1, "公司名称不能为空！") : this.getParentId(this.searchText, this.treeData[0]);
+      this.searchText.trim() == "" ? promptInfoFun(this, 1, "公司名称不能为空！") : this.getParentId(this.searchText, tree);
+
     },
     /**
      * 遍历树状图数据，获取选中ID 及其所有父级ID
@@ -88,6 +98,9 @@ export default {
       this.getChildId(keyword, data, pidArr);
     },
     getChildId(keyword, data, pidArr) {
+      let exp = null
+      if(data.children == exp)
+         data.children = []
       //如果节点有下级节点，则往下遍历获取每一层ID 是否与当前选中ID 相等
       if (data.children.length > 0) {
         data.children.map(item => {
@@ -139,8 +152,6 @@ export default {
         }
       });
 
-
-
       /*展开选中节点*/
       if (this.macthArray.length > 0){
         this.macthArray.forEach(items => {
@@ -169,11 +180,18 @@ export default {
                 document.getElementById(i[0].Id).classList.remove("matchStyle"); //去除过滤选中样式
               }
             });
+            if(theTree.store._getAllNodes()[0].expanded)
             theTree.store._getAllNodes()[0].expanded = true;
           });
         });
       }
     }
+  },
+  mounted() {
+    this.$nextTick(()=>{
+      this.searchtype ? this.ifSearch = false : this.ifSearch = true
+      this.ifLogos == 1 ? this.ifLogo = false : this.ifLogo = true
+    })
   }
 };
 </script>
@@ -192,7 +210,8 @@ export default {
   .back6{background: #E9F5F4;padding-left: 60px}
   .ndoe_level{color: #247A77;font-size: 12px;}
   .matchStyle {
-    color: #b32f00;
+    color: #b32f00 !important;
+    font-weight: bold !important;;
   }
   .el-input-group__append{padding: 0;background: #00b3a1;border: none;
     color: #fefeff;padding: 5px 6px 5px 6px;cursor: pointer}

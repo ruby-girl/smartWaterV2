@@ -112,7 +112,7 @@ export function RegisterMoveIn(data) {
  * */
 export function SortRegisterBookDetailMoveOut(data) {
   return request({
-    url: '/RegisterBookDetail/SortRegisterBookDetailMoveOut',
+    url: '/RegisterBookDetail/SortRegisterBookDetailMove',
     method: 'post',
     data: data
   })
