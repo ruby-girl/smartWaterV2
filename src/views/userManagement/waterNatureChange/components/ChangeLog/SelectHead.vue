@@ -40,7 +40,7 @@
         </el-select>
       </el-form-item>
       <transition-group name="fade">
-        <el-form-item label="水表类型" prop="WaterMeterType" v-show="showLabel(3)||isShow" key="WaterMeterType">
+        <el-form-item label="水表类型" prop="WaterMeterType" v-show="showLabel(2)||isShow" key="WaterMeterType">
           <el-select
             v-model="selectHead.WaterMeterType"
             placeholder="请选择"
@@ -56,7 +56,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="WaterFactoryId" label="水厂" v-show="showLabel(4)||isShow" v-if="this.waterWorks.length>1" key="WaterFactoryId">
+        <el-form-item prop="WaterFactoryId" label="水厂" v-show="showLabel(3)||isShow" v-if="this.waterWorks.length>1" key="WaterFactoryId">
           <el-select
             v-model="selectHead.WaterFactoryId"
             placeholder="请选择"
@@ -72,7 +72,7 @@
             />
           </el-select>
         </el-form-item>
-         <el-form-item prop="OpId" label="操作员" v-show="showLabel(5)||isShow" key="OpId">
+         <el-form-item prop="OpId" label="操作员" v-show="showLabel(4)||isShow" key="OpId">
           <el-select
             v-model="selectHead.OpId"
             placeholder="请选择"
@@ -88,7 +88,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="timevalue" label="变更日期" v-show="showLabel(6)||isShow"  key="timevalue">
+        <el-form-item prop="timevalue" label="变更日期" v-show="showLabel(5)||isShow"  key="timevalue">
       <el-date-picker
          v-model="selectHead.timevalue"
         type="daterange"
@@ -102,8 +102,7 @@
         @keydown.enter.native="handleFilter"
         @change="getTime"
       ></el-date-picker>
-    </el-form-item>
-       
+    </el-form-item>    
       </transition-group>
       <el-form-item>
         <span class="isShow" :class="{tro:isShow}" v-show="ShowIcon">
@@ -156,7 +155,7 @@ export default {
     this.waterType = getDictionaryOption("水表类型");
   },
   mounted() {
-    if (this.showLabel(6)) this.ShowIcon = false;
+    if (this.showLabel(5)) this.ShowIcon = false;
     //如果能全部显示，隐藏按钮
     else this.ShowIcon = true;
   },

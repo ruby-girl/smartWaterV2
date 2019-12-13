@@ -140,7 +140,7 @@ export default {
     this.waterType = getDictionaryOption("水表类型");
   },
   mounted() {
-    if (this.showLabel(6)) this.ShowIcon = false;
+    if (this.showLabel(5)) this.ShowIcon = false;
     //如果能全部显示，隐藏按钮
     else this.ShowIcon = true;
   },
@@ -168,10 +168,10 @@ export default {
     },
     showLabel(n) {
       if (this.waterWorks.length == 1) {
-        if (Math.floor((this.searchWidth - 180) / 270) > n || this.isShow) return true;
+        if (Math.floor((this.searchWidth - 180) / 260) > n || this.isShow) return true;
         return false;
       } else {
-        if (Math.floor((this.searchWidth - 180) / 270) > n + 1 || this.isShow) return true;
+        if (Math.floor((this.searchWidth - 180) / 260) > n + 1 || this.isShow) return true;
         return false;
       }
     },

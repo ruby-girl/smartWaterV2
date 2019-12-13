@@ -171,10 +171,10 @@ export default {
     },
     showLabel(n,w) {
       if (this.waterWorks.length == 1) {
-        if (Math.floor((w-180) / 310) > n || this.isShow) return true;
+        if (Math.floor((w-180) / 260) > n || this.isShow) return true;
         return false;
       } else {
-        if (Math.floor((w-180)/ 310) > n + 1 || this.isShow) return true;
+        if (Math.floor((w-180)/ 260) > n + 1 || this.isShow) return true;
         return false;
       }
     },
@@ -184,7 +184,8 @@ export default {
       this.show2 = this.showLabel(2,val);
       this.show3 = this.showLabel(3,val);
       this.show4 = this.showLabel(4,val);
-      this.showIcon=isShow||!this.showLabel(5,val)
+      this.show5 = this.showLabel(5,val);
+      this.showIcon=isShow||!this.showLabel(6,val)
     },
     getscName(id) {
       this.secNmae = id == 1 ? "用户编号" : "用户姓名";

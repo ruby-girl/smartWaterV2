@@ -178,7 +178,7 @@ export default {
       this.show2 = this.showLabel(2, val);
       this.show3 = this.showLabel(3, val);
       this.show4 = this.showLabel(4, val);
-      this.showIcon = isShow || !this.showLabel(5, val);
+      this.showIcon = isShow || !this.showLabel(4, val);
     },
     getscName(val) {
       this.selectOption.forEach(item => {
