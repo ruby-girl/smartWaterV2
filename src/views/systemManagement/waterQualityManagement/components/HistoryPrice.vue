@@ -178,7 +178,7 @@ export default {
       listQuery: {
         // 查询条件
         page: 1,
-        limit: 10,
+        limit: 20,
         sort: "", //升序
         filed: "", //排序字段
         tableId: "0000013",

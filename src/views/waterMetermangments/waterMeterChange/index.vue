@@ -3,21 +3,26 @@
     <div class="user_box">
       <left-box @getUp="getUp" :ifShow="ifShow"></left-box>
       <div class="user_table">
+        <div ref="formHeight">
+          <select-head
+            :select-head="listQuery"
+            @handleFilter="handleFilter"
+            @getText="getText"
+            :searchWidth="searchWidth"
+          />
+        </div>
         <div class="section-full-container">
-          <div ref="formHeight">
-            <select-head :select-head="listQuery" @handleFilter="handleFilter" @getText="getText" :searchWidth="searchWidth"/>
-          </div>       
-         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"  @excel="excel"/>
+          <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
           <div class="main-padding-20-y">
             <el-table
               :key="tableKey"
-            :data="tableData"
-            border
-            fit
-            :height="tableHeight"
-            style="width: 100%;"
-            :header-cell-style="{'background-color': '#F0F2F5'}"
-            @sort-change="sortChanges"
+              :data="tableData"
+              border
+              fit
+              :height="tableHeight"
+              style="width: 100%;"
+              :header-cell-style="{'background-color': '#F0F2F5'}"
+              @sort-change="sortChanges"
             >
               <el-table-column fixed="left" label="序号" width="60" align="center">
                 <template slot-scope="scope">
@@ -54,14 +59,17 @@
 </template>
 <script>
 import SelectHead from "./components/SelectHead";
-import LeftBox from "./components/Left"
-import {WaterMeterChangeList,AccountCanCellationList_Execl} from "@/api/waterMeterMang";
+import LeftBox from "./components/Left";
+import {
+  WaterMeterChangeList,
+  AccountCanCellationList_Execl
+} from "@/api/waterMeterMang";
 import Pagination from "@/components/Pagination";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips,getText,pushItem } from "@/utils/projectLogic";//搜索条件面包屑
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "waterMeterChange",
-  components: { SelectHead,Pagination,LeftBox,SearchTips},
+  components: { SelectHead, Pagination, LeftBox, SearchTips },
   data() {
     return {
       ifShow: false,
@@ -72,29 +80,29 @@ export default {
       listQuery: {
         // 查询条件
         page: 1,
-        limit: 10,
+        limit: 20,
         filed: "",
         sort: "",
-        waterFactoryId:'-1',//水厂
-        customerQueryType:'1',//查询用户类型
-        customerQueryValue:'',//input值
-        userType:'-1',//用户类型
-        waterMeterType:'-1',//水表类型
-        createUserId:'-1',//换表操作人
-       changeMeterType:'-1',//换表类型
-       changeStartTime:'',//开始时间
-       changeEndTime:'',//结束时间
-       tableId: "0000029",
-       timevalue:[]
+        waterFactoryId: "-1", //水厂
+        customerQueryType: "1", //查询用户类型
+        customerQueryValue: "", //input值
+        userType: "-1", //用户类型
+        waterMeterType: "-1", //水表类型
+        createUserId: "-1", //换表操作人
+        changeMeterType: "-1", //换表类型
+        changeStartTime: "", //开始时间
+        changeEndTime: "", //结束时间
+        tableId: "0000029",
+        timevalue: []
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableData: [],
       checksData: [],
-      tipsData: [],//传入子组件的值
-      tipsDataCopy: [],//表单变化的值
-      orderData:{},
-      searchWidth:1024,//右侧宽度
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
+      orderData: {},
+      searchWidth: 1024 //右侧宽度
     };
   },
   computed: {
@@ -105,28 +113,28 @@ export default {
       return arrayHead;
     }
   },
-  watch:{
-    ifShow(){
-      let _this=this
-      setTimeout(function(){
-        _this.searchWidth=_this.$refs.formHeight.clientWidth
-      },250) 
+  watch: {
+    ifShow() {
+      let _this = this;
+      setTimeout(function() {
+        _this.searchWidth = _this.$refs.formHeight.clientWidth;
+      }, 250);
     }
   },
-   mounted: function() {
+  mounted: function() {
     this.$nextTick(function() {
-      this.getUp(true)
+      this.getUp(true);
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 200;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
-      this.searchWidth=this.$refs.formHeight.clientWidth
+      this.searchWidth = this.$refs.formHeight.clientWidth;
     });
   },
   methods: {
-   delTips(val) {
+    delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
         this.listQuery.changeStartTime = "";
@@ -140,7 +148,7 @@ export default {
       this.tipsDataCopy.push(obj);
     },
     getUp(v) {
-      this.ifShow =v;
+      this.ifShow = v;
       if (this.ifShow) {
         document.getElementsByClassName("user_tree")[0].classList.add("hide");
       } else {
@@ -150,9 +158,9 @@ export default {
       }
     },
     getList(n) {
-      if(!n) this.orderData = Object.assign({}, this.listQuery);
+      if (!n) this.orderData = Object.assign({}, this.listQuery);
       WaterMeterChangeList(this.orderData).then(res => {
-       this.tipsData = pushItem(this.tipsDataCopy);
+        this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -225,7 +233,6 @@ export default {
       flex: 1;
       -webkit-flex: 1;
       background: #fff;
-      padding: 16px;
       position: relative;
       overflow: hidden;
     }
@@ -247,5 +254,8 @@ export default {
       padding: 7px 15px;
     }
   }
+}
+.section-full-container{
+  padding:0 15px 15px 15px;
 }
 </style>

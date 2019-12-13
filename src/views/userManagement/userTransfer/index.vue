@@ -74,7 +74,7 @@ export default {
       listQuery: {
         // 查询条件
         page: 1,
-        limit: 10,
+        limit: 20,
         filed: "",
         sort: "",
        SA_WaterFactory_Id:'-1',//水厂

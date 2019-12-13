@@ -50,12 +50,12 @@ export default {
       tableKey: 0,
       temp: {},
       page: 1,
-      limit: 10,
+      limit: 20,
       selectType: "1", //查询方式
       listQuery: {
         // 查询条件
         page: 1,
-        limit: 10,
+        limit: 20,
         filed: "",
         sort: "",
 
@@ -76,7 +76,7 @@ export default {
       factoryQuery: {
         // 查询条件
         page: 1,
-        limit: 10,
+        limit: 20,
         filed: "",
         sort: "",
         SA_WaterFactory_Id: "-1", //水厂
@@ -206,7 +206,7 @@ export default {
       this.selectType='1'
       this.listQuery={  
         page: 1,
-        limit: 10,
+        limit: 20,
         filed: "",
         sort: "",
         Enumcqt: "1", //用户条件下拉

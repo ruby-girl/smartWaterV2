@@ -125,7 +125,7 @@ export default {
         WaterFactoryId: "-1", //水厂
         StartChangeDate: "",
         EndChangeDate: "",
-        limit: 10,
+        limit: 20,
         page: 1,
         sort: "",
         filed: "",

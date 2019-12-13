@@ -106,7 +106,7 @@
         listQuery: {
           // 查询条件
           page: 1,
-          limit: 10,
+          limit: 20,
           filed: "",
           sort: "",
           CustomerQueryType: "1", //用户类型

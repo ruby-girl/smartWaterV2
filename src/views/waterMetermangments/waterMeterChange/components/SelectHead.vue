@@ -8,8 +8,9 @@
       size="small"
       label-width="75px"
       @submit.native.prevent
+      ref="formHeight"
     >
-      <el-form-item label="水厂" v-if="this.waterWorks.length>1">
+      <el-form-item label="水厂" prop="waterFactoryId" v-if="this.waterWorks.length>1">
         <el-select
           v-model="selectHead.waterFactoryId"
           placeholder="请选择"
@@ -21,7 +22,7 @@
         </el-select>
       </el-form-item>
        <transition-group name="fade">
-      <el-form-item v-show="show1||isShow" key="customerQueryType">
+      <el-form-item prop="customerQueryType" v-show="show1||isShow" key="customerQueryType">
         <el-select
           v-model="selectHead.customerQueryType"
           placeholder="请选择"
@@ -40,7 +41,7 @@
           style="width: 180px;float: left"
         />
       </el-form-item>
-      <el-form-item label="用户类型" v-show="show2||isShow" key="userType">
+      <el-form-item prop="userType" label="用户类型" v-show="show2||isShow" key="userType">
         <el-select
           v-model="selectHead.userType"
           placeholder="请选择"
@@ -51,7 +52,7 @@
           <el-option v-for="item in userType" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="水表类型" v-show="show3||isShow" key="waterMeterType">
+      <el-form-item prop="waterMeterType" label="水表类型" v-show="show3||isShow" key="waterMeterType">
         <el-select
           v-model="selectHead.waterMeterType"
           placeholder="请选择"
@@ -62,7 +63,7 @@
           <el-option v-for="item in waterType" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="换表操作员" v-show="show4||isShow" key="createUserId">
+      <el-form-item prop="createUserId" label="换表操作员" v-show="show4||isShow" key="createUserId">
         <el-select
           v-model="selectHead.createUserId"
           placeholder="请选择"
@@ -78,7 +79,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="换表类型" v-show="show5||isShow" key="changeMeterType">
+      <el-form-item prop="changeMeterType" label="换表类型" v-show="show5||isShow" key="changeMeterType">
         <el-select
           v-model="selectHead.changeMeterType"
           placeholder="请选择"
@@ -89,7 +90,7 @@
           <el-option v-for="item in changeType" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="换表日期" v-show="isShow" key="timevalue">
+      <el-form-item prop="timevalue" label="换表日期" v-show="isShow" key="timevalue">
         <el-date-picker
           v-model="selectHead.timevalue"
           type="daterange"
@@ -111,6 +112,9 @@
         </span>
         <el-button round type="primary" size="mini" @click="handleFilter">
           <i class="iconfont iconsousuo"></i>搜索
+        </el-button>
+        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+          <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
       </el-form-item>
     </el-form>
@@ -214,6 +218,11 @@ export default {
     },
     handleFilter() {
       this.$emit("handleFilter", this.selectHead);
+    },
+     resetting(){//重置
+      this.$refs['formHeight'].resetFields();  
+       this.$parent.tipsDataCopy=[]
+      this.$parent.delTips("timevalue")
     }
   }
 };
@@ -221,17 +230,18 @@ export default {
 <style lang="scss" scoped>
 .position-search-head {
   position: relative;
-  height: 73px;
+  height: 76px;
   .position-absolute-head {
     position: absolute;
-    top: 25px;
+    top: 35px;
     left: 0;
     background: #fff;
-    z-index: 9999;
+    z-index: 1111;
   }
   .head-title {
     color: #777777;
     font-size: 14px;
+    padding: 10px 0 0 10px;
     font-weight: bold;
     margin-bottom: 10px;
   }

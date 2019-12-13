@@ -167,13 +167,13 @@ export default {
         CustomerQueryValue: "",
         CustomerQueryType: "1",
         page: 1,
-        limit: 10,
+        limit: 20,
         tableId: "0000018"
       },
       listQuery: {
         // 表格查询条件
         page: 1,
-        limit: 10,
+        limit: 20,
         filed: "",
         sort: "",
         CustomerId: "",
@@ -248,7 +248,7 @@ export default {
           CustomerQueryValue: this.customerNo,
           CustomerQueryType: "1",
           page: 1,
-          limit: 10,
+          limit: 20,
           tableId: "0000018"
         };
         GetCustomerDataList(obj).then(res => {

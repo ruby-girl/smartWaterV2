@@ -101,7 +101,7 @@ export default {
         AreaId: "-1", //区域
         WaterTypeId: "-1", //水表类型
         WaterPropertyId: "-1", //用水性质
-        limit: 10,
+        limit: 20,
         page: 1,
         sort: "",
         filed: "",

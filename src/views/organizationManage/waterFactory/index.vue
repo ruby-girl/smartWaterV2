@@ -127,7 +127,7 @@
         listQuery: {
           // 查询条件
           page: 1,
-          limit: 10,
+          limit: 20,
           sort: "", //升序
           filed: "", //排序字段
           Id: "-1",//水厂ID,

@@ -115,7 +115,7 @@ export default {
       file: [],
       params: {
         page: 1,
-        Limit: 10,
+        Limit: 20,
         CustomerQueryType: "",
         CustomerQueryValue: ""
       },
