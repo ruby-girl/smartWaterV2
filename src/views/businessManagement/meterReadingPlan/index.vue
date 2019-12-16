@@ -199,12 +199,10 @@ export default {
     });
     that.companyParentOptions = this.$store.state.user.waterWorks;
   },
-  mounted: function() {
+  mounted() {
     this.$nextTick(function() {
       // 自适应表格高度
       const that = this;
-      // console.log(document.getElementsByClassName("section-full-container")[0].offsetHeight)
-      // console.log(document.getElementById("table").offsetTop)
       that.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
@@ -213,20 +211,15 @@ export default {
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.searchWidth = this.$refs.formHeight.clientWidth;
-     
     });
   },
   methods: {
     //删除面包屑
     delTips(val) {
-      if (val == "warterMeterPlanDate") {
-        this.$message({
-          message: "计划抄表日期不能为空!",
-          type: "warning"
-        });
-        return false;
-      }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
+      if (val == "warterMeterPlanDate") {
+        this.getDefaulDate();
+      }
       this.searchTableList();
       //返回的查询条件的属性
     },

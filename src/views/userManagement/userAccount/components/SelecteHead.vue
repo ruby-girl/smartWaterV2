@@ -7,7 +7,7 @@
     label-width="80px"
     @submit.native.prevent
   >
-    <el-form-item v-if="companyShow" label="水厂">
+    <el-form-item v-if="companyShow" label="水厂"  label-width="40px">
       <el-select
         v-model="selectHead.waterFactoryId "
         placeholder="请选择"
@@ -25,7 +25,7 @@
       </el-select>
     </el-form-item>
     <transition-group name="fade">
-      <el-form-item label="用户类型" v-show="show1||isShow" key="userType">
+      <el-form-item label="用户类型" v-show="show1||isShow" key="userType"  label-width="70px">
         <el-select
           v-model="selectHead.userType"
           placeholder="请选择"

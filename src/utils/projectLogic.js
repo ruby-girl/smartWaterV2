@@ -94,14 +94,13 @@ export function getText(val, model, arr, tipsDataCopy, that, name) {
       tipsDataCopy.splice(i, 1);
     }
   }
-  if (arr) {
-    if (val == "-1") {
-      return false
-    } else {
-      obj = that.$refs.searchTips.getArrData(val, model, arr, name);//调用面包屑组件里面的方法
-      return obj
-    }
+  if (arr && val == "-1") {
+    return false
+  } else {
+    obj = that.$refs.searchTips.getArrData(val, model, arr, name);//调用面包屑组件里面的方法
+    return obj
   }
+
 
 }
 // 筛选条件面包屑

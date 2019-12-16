@@ -9,7 +9,7 @@
       label-width="70px"
       @submit.native.prevent
     >
-      <el-form-item label="姓名" v-show="show1||isShow" key="CustomerName">
+      <el-form-item label="姓名" v-show="show1||isShow" key="CustomerName"  label-width="40px">
         <el-input
           v-model="wachMeterData.CustomerName"
           maxlength="20"

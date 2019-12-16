@@ -24,7 +24,7 @@
       </el-select>
     </el-form-item>
     <transition-group name="fade">
-      <el-form-item label="用户类型" v-show="show1||isShow" key="UserType">
+      <el-form-item label="用户类型" v-show="show1||isShow" key="UserType"  label-width="70px">
         <el-select
           v-model="selectHead.UserType"
           placeholder="请选择"

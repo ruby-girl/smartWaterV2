@@ -6,8 +6,9 @@
     size="small"
     label-width="70px"
     @submit.native.prevent
+    ref="formHeight"
   >
-    <el-form-item v-if="companyShow" label="水厂">
+    <el-form-item v-if="companyShow" label="水厂" label-width="40px">
       <el-select
         v-model="selectHead.SA_WaterFactory_Id"
         placeholder="请选择"
@@ -24,7 +25,7 @@
       </el-select>
     </el-form-item>
     <transition-group name="fade">
-      <el-form-item label="计划状态" v-show="show1||isShow" key="enumPlanState">
+      <el-form-item label="计划状态" v-show="show1||isShow" key="enumPlanState" label-width="70px">
         <el-select
           v-model="selectHead.enumPlanState"
           placeholder="请选择"
@@ -70,6 +71,9 @@
         <i class="iconfont iconsousuo"></i>
         搜索
       </el-button>
+      <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <i class="iconfont icon_zhongzhi"></i>重置
+      </el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -100,7 +104,6 @@ export default {
   watch: {
     searchWidth: {
       handler(val, oldVal) {
-        debugger;
         this.show1 = this.showLabel(1, val);
         this.show2 = this.showLabel(2, val);
         if (!this.show2) {
@@ -111,12 +114,17 @@ export default {
     }
   },
   created() {
-    
     if (this.companyOptions.length == 1) {
       this.companyShow = false;
     }
   },
   methods: {
+    resetting() {
+      //重置
+      this.$refs["formHeight"].resetFields();
+      this.$parent.tipsDataCopy = [];
+      this.$parent.delTips("warterMeterPlanDate");
+    },
     showLabel(n, w) {
       if (this.companyOptions.length == 1) {
         if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
