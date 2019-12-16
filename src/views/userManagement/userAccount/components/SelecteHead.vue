@@ -6,8 +6,9 @@
     size="small"
     label-width="80px"
     @submit.native.prevent
+    ref="formHeight"
   >
-    <el-form-item v-if="companyShow" label="水厂"  label-width="40px">
+    <el-form-item v-if="companyShow" label="水厂" label-width="40px" prop="waterFactoryId">
       <el-select
         v-model="selectHead.waterFactoryId "
         placeholder="请选择"
@@ -25,7 +26,13 @@
       </el-select>
     </el-form-item>
     <transition-group name="fade">
-      <el-form-item label="用户类型" v-show="show1||isShow" key="userType"  label-width="70px">
+      <el-form-item
+        label="用户类型"
+        v-show="show1||isShow"
+        key="userType"
+        label-width="70px"
+        prop="userType"
+      >
         <el-select
           v-model="selectHead.userType"
           placeholder="请选择"
@@ -41,7 +48,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="水表类型" v-show="show2||isShow" key="waterMeterType">
+      <el-form-item label="水表类型" v-show="show2||isShow" key="waterMeterType" prop="waterMeterType">
         <el-select
           v-model="selectHead.waterMeterType"
           placeholder="请选择"
@@ -57,7 +64,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="show3||isShow" key="CustomerQueryType">
+      <el-form-item v-show="show3||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
         <el-select
           v-model="selectHead.CustomerQueryType"
           placeholder="请选择"
@@ -80,7 +87,13 @@
           style="width: 180px;float: left"
         />
       </el-form-item>
-      <el-form-item label="销户操作员" label-width="80" v-show="show4||isShow" key="createUserId">
+      <el-form-item
+        label="销户操作员"
+        label-width="80"
+        v-show="show4||isShow"
+        key="createUserId"
+        prop="createUserId"
+      >
         <el-select
           v-model="selectHead.createUserId"
           placeholder="请选择"
@@ -96,7 +109,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="销户日期" v-show="show5||isShow" key="timevalue">
+      <el-form-item label="销户日期" v-show="show5||isShow" key="timevalue" prop="timevalue">
         <el-date-picker
           v-model="selectHead.timevalue"
           type="datetimerange"
@@ -121,6 +134,9 @@
         <i class="iconfont iconsousuo"></i>
         搜索
       </el-button>
+      <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <i class="iconfont icon_zhongzhi"></i>重置
+      </el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -129,12 +145,7 @@ import { getDictionaryOption } from "@/utils/permission"; //获取字典项
 import { getName } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   props: {
-    selectHead: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
+    selectHead: {},
     editUserList: {
       type: Array,
       default: function() {
@@ -174,8 +185,8 @@ export default {
       showBtn: false
     };
   },
+
   created() {
-    console.log(this.$parent);
     this.companyParentOptions = this.$store.state.user.waterWorks;
     if (this.companyParentOptions.length == 1) {
       this.selectHead.SA_WaterFactory_Id = this.companyParentOptions[0].Id;
@@ -185,6 +196,12 @@ export default {
     this.WaterMeterList = getDictionaryOption("水表类型");
   },
   methods: {
+    resetting() {
+      //重置
+      this.$refs["formHeight"].resetFields();
+      this.$parent.$parent.$parent.tipsDataCopy = [];
+      this.$parent.$parent.$parent.delTips("timevalue");
+    },
     showLabel(n, w) {
       if (this.companyParentOptions.length == 1) {
         if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;

@@ -8,15 +8,16 @@
       size="small"
       label-width="70px"
       @submit.native.prevent
+      ref="searcTable"
     >
-      <el-form-item label="用户编号" v-show="show1||isShow" key="CustomerNo">
+      <el-form-item label="用户编号" v-show="show1||isShow" key="CustomerNo" prop="CustomerNo">
         <el-input
           v-model="WLWQueryParam.CustomerNo"
           maxlength="20"
           @change="getText(WLWQueryParam.CustomerNo,'CustomerNo','','用户编号')"
         />
       </el-form-item>
-      <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo">
+      <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
         <el-input
           v-model="WLWQueryParam.WaterMeterNo"
           maxlength="20"
@@ -24,7 +25,7 @@
         />
       </el-form-item>
 
-      <el-form-item label="用户状态" v-show="show3||isShow" key="CustomerMeterState">
+      <el-form-item label="用户状态" v-show="show3||isShow" key="CustomerMeterState" prop="CustomerMeterState">
         <el-select
           v-model="WLWQueryParam.CustomerMeterState"
           placeholder="请选择"
@@ -35,7 +36,7 @@
           <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="开户状态" v-show="show4||isShow" key="CustomerOpenAccountState">
+      <el-form-item label="开户状态" v-show="show4||isShow" key="CustomerOpenAccountState" prop="CustomerOpenAccountState">
         <el-select
           v-model="WLWQueryParam.CustomerOpenAccountState"
           placeholder="请选择"
@@ -46,7 +47,7 @@
           <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="阀门状态" v-show="show5||isShow" key="ValveState">
+      <el-form-item label="阀门状态" v-show="show5||isShow" key="ValveState" prop="ValveState">
         <el-select
           v-model="WLWQueryParam.ValveState"
           placeholder="请选择"
@@ -57,7 +58,7 @@
           <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="水表状态" v-show="show6||isShow" key="MeterState">
+      <el-form-item label="水表状态" v-show="show6||isShow" key="MeterState" prop="MeterState">
         <el-select
           v-model="WLWQueryParam.MeterState"
           placeholder="请选择"
@@ -75,7 +76,9 @@
         <el-button type="primary" size="mini" @click="searchWLWMeterInfo" round>
           <i class="icon iconfont">&#xe694;</i>查询
         </el-button>
-        <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
+         <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+          <i class="iconfont icon_zhongzhi"></i>重置
+        </el-button>
       </el-form-item>
     </el-form>
     <div class="cl-operation1 clearfix">
@@ -308,6 +311,12 @@ export default {
     }
   },
   methods: {
+     resetting() {
+      //重置
+      this.$refs["searcTable"].resetFields();
+      this.tipsDataCopy = [];
+      this.searchWLWMeterInfo()
+    },
     showLabel(n, w) {
       if (Math.floor((w - 180) / 280) >= n || this.isShow) {
         return true;
@@ -325,9 +334,7 @@ export default {
       this.searchWLWMeterInfo();
     },
     getText(val, model, arr, name) {
-      console.log(val, model, arr, name);
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
-      console.log(obj);
       this.tipsDataCopy.push(obj);
     },
     searchWLWMeterInfo(num) {

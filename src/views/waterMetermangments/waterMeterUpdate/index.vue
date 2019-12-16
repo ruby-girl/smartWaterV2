@@ -4,7 +4,7 @@
     <el-container>
       <el-aside width="0">
         <div ref="updateHeight">
-          <upadate-water class="account-user" ref="update"/>
+          <upadate-water class="account-user" ref="update" />
         </div>
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
           水表升级
@@ -208,9 +208,8 @@ export default {
           let asideHeight = document.getElementsByClassName("el-aside")[0]
             .offsetHeight;
           let conentHeight = that.$refs.updateHeight.offsetHeight;
-          if (asideHeight < conentHeight){
+          if (asideHeight < conentHeight) {
             that.$refs.update.showInfo = false;
-
           }
         }, 200);
       } else {
@@ -218,7 +217,6 @@ export default {
         document.getElementsByClassName("el-aside")[0].classList.add("none");
         getTipsChangeWidth(this);
         that.$refs.update.showInfo = true;
-
       }
     },
     //查询记录

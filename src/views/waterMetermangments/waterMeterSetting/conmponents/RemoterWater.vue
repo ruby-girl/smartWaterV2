@@ -32,22 +32,24 @@
         </span>
       </el-aside>
       <el-main>
+        <div ref="formHeight"></div>
         <el-form
           :inline="true"
           :model="YCMeterQueryParam"
-          class="head-search-form form-inline-small-input"
+          :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
           size="small"
           label-width="70px"
           @submit.native.prevent
+          ref="searcTable"
         >
-          <el-form-item label="水表编号">
+          <el-form-item label="水表编号" v-show="show1||isShow" key="CustomerQueryValue" prop="CustomerQueryValue">
             <el-input
               v-model="YCMeterQueryParam.CustomerQueryValue"
               maxlength="20"
               @change="getText(YCMeterQueryParam.CustomerQueryValue,'CustomerQueryValue','','水表编号')"
             />
           </el-form-item>
-          <el-form-item label="阀门状态">
+          <el-form-item label="阀门状态" v-show="show2||isShow" key="ValveState" prop="ValveState">
             <el-select
               v-model="YCMeterQueryParam.ValveState"
               placeholder="请选择"
@@ -62,7 +64,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="开户状态">
+          <el-form-item label="开户状态" v-show="show3||isShow" key="IsOpenAccount" prop="IsOpenAccount">
             <el-select
               v-model="YCMeterQueryParam.IsOpenAccount"
               placeholder="请选择"
@@ -73,7 +75,7 @@
               <el-option label="未开户" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="通讯状态">
+          <el-form-item label="通讯状态" v-show="show4||isShow" key="TrafficStatus" prop="TrafficStatus">
             <el-select
               v-model="YCMeterQueryParam.TrafficStatus"
               placeholder="请选择"
@@ -89,12 +91,25 @@
             </el-select>
           </el-form-item>
           <el-form-item label>
-            <el-button type="primary" size="small" class="cl-search" @click="searchYCWaterList">
-              <i class="icon iconfont">&#xe694;</i>
-              搜索
+            <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
+              <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+            </span>
+            <el-button round type="primary" size="mini" @click="searchYCWaterList">
+              <i class="iconfont iconsousuo"></i>搜索
+            </el-button>
+            <el-button
+              class="btn-resetting"
+              round
+              plain
+              type="primary"
+              size="mini"
+              @click="resetting"
+            >
+              <i class="iconfont icon_zhongzhi"></i>重置
             </el-button>
           </el-form-item>
         </el-form>
+
         <div class="cl-operation1 clearfix">
           <el-button
             type="success"
@@ -309,8 +324,32 @@ export default {
       tipsDataCopy: [], //表单变化的值
       orderData: {},
       showMsg: true,
-      statusList: [{ Id: "0", Name: "已开户" }, { Id: "1", Name: "未开户" }]
+      statusList: [{ Id: "0", Name: "已开户" }, { Id: "1", Name: "未开户" }],
+      screenWidth: null,
+      showBtn: false,
+      isShow: false,
+      show1: true,
+      show2: true,
+      show3: true,
+      show4: true
     };
+  },
+  watch: {
+    screenWidth: {
+      handler(val, oldVal) {
+        this.show1 = this.showLabel(1, val);
+        this.show2 = this.showLabel(2, val);
+        this.show3 = this.showLabel(3, val);
+        this.show4 = this.showLabel(4, val);
+      },
+      immediate: true
+    },
+    ifShow() {
+      let _this = this;
+      setTimeout(function() {
+        _this.searchWidth = _this.$refs.formHeight.clientWidth;
+      }, 200);
+    }
   },
   activated: function() {
     this.getdevice();
@@ -338,6 +377,14 @@ export default {
       this.YCMeterQueryParam.tableId
     ); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    this.$nextTick(() => {
+      this.screenWidth = this.$refs.formHeight.clientWidth;
+      if (Math.floor((this.screenWidth - 180) / 280) < 4) {
+        this.showBtn = true;
+      } else {
+        this.showBtn = false;
+      }
+    });
   },
   computed: {
     tableHeadData: function() {
@@ -354,8 +401,23 @@ export default {
     }
   },
   methods: {
+    resetting() {
+      //重置
+      this.$refs["searcTable"].resetFields();
+      this.tipsDataCopy = [];
+      this.searchYCWaterList()
+    },
+    showLabel(n, w) {
+      if (Math.floor((w - 180) / 280) >= n || this.isShow) {
+        return true;
+      }
+      return false;
+    },
     delTips(val) {
       //返回的查询条件的属性
+      if (val == "CollectorNo") {
+        this.deiKey = -1;
+      }
       this.tipsDataCopy = delTips(
         val,
         this,

@@ -6,8 +6,9 @@
     size="small"
     label-width="80px"
     @submit.native.prevent
+    ref="formHeight"
   >
-    <el-form-item v-if="companyShow" label="水厂" label-width="40px">
+    <el-form-item v-if="companyShow" label="水厂" label-width="40px" prop="SA_WaterFactory_Id">
       <el-select
         v-model="selectHead.SA_WaterFactory_Id "
         placeholder="请选择"
@@ -24,7 +25,13 @@
       </el-select>
     </el-form-item>
     <transition-group name="fade">
-      <el-form-item label="用户类型" v-show="show1||isShow" key="UserType"  label-width="70px">
+      <el-form-item
+        label="用户类型"
+        v-show="show1||isShow"
+        key="UserType"
+        label-width="70px"
+        prop="UserType"
+      >
         <el-select
           v-model="selectHead.UserType"
           placeholder="请选择"
@@ -45,6 +52,7 @@
         label-width="120px"
         v-show="show2||isShow"
         key="OldWaterMeterTypeId"
+        prop="OldWaterMeterTypeId"
       >
         <el-select
           v-model="selectHead.OldWaterMeterTypeId"
@@ -66,6 +74,7 @@
         label-width="120px"
         v-show="show3||isShow"
         key="NewWaterMeterTypeId"
+        prop="NewWaterMeterTypeId"
       >
         <el-select
           v-model="selectHead.NewWaterMeterTypeId"
@@ -82,7 +91,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="show4||isShow" key="CustomerQueryType">
+      <el-form-item v-show="show4||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
         <el-select
           v-model="selectHead.CustomerQueryType"
           placeholder="请选择"
@@ -105,7 +114,13 @@
           style="width: 180px;float: left"
         />
       </el-form-item>
-      <el-form-item label="操作员" label-width="80" v-show="show5||isShow" key="UpgradeEmpId">
+      <el-form-item
+        label="操作员"
+        label-width="80"
+        v-show="show5||isShow"
+        key="UpgradeEmpId"
+        prop="UpgradeEmpId"
+      >
         <el-select
           v-model="selectHead.UpgradeEmpId"
           placeholder="请选择"
@@ -122,7 +137,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="升级日期" v-show="show6||isShow" key="timevalue">
+      <el-form-item label="升级日期" v-show="show6||isShow" key="timevalue" prop="timevalue">
         <el-date-picker
           v-model="selectHead.timevalue"
           type="datetimerange"
@@ -145,6 +160,9 @@
       </span>
       <el-button round type="primary" size="mini" @click="handleFilter">
         <i class="iconfont iconsousuo"></i>搜索
+      </el-button>
+      <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <i class="iconfont icon_zhongzhi"></i>重置
       </el-button>
     </el-form-item>
   </el-form>
@@ -208,12 +226,18 @@ export default {
     this.WaterMeterList = getDictionaryOption("水表类型");
   },
   methods: {
+    resetting() {
+      //重置
+      this.$refs["formHeight"].resetFields();
+      this.$parent.$parent.$parent.tipsDataCopy = [];
+      this.$parent.$parent.$parent.delTips("timevalue");
+    },
     showLabel(n, w) {
       if (this.companyParentOptions.length == 1) {
         if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
         return false;
       } else {
-        if (Math.floor((w - 180) / 280) >= n+1  || this.isShow) return true;
+        if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
         return false;
       }
     },

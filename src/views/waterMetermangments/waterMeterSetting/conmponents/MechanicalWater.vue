@@ -8,8 +8,15 @@
       size="small"
       label-width="70px"
       @submit.native.prevent
+      ref="searcTable"
     >
-      <el-form-item label="姓名" v-show="show1||isShow" key="CustomerName"  label-width="40px">
+      <el-form-item
+        label="姓名"
+        v-show="show1||isShow"
+        prop="CustomerName"
+        key="CustomerName"
+        label-width="40px"
+      >
         <el-input
           v-model="wachMeterData.CustomerName"
           maxlength="20"
@@ -17,14 +24,14 @@
           @change="getText(wachMeterData.CustomerName,'CustomerName','','姓名')"
         />
       </el-form-item>
-      <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo">
+      <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
         <el-input
           v-model="wachMeterData.WaterMeterNo"
           maxlength="20"
           @change="getText(wachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
         />
       </el-form-item>
-      <el-form-item label="水表样式" v-show="show3||isShow" key="wachMeterData">
+      <el-form-item label="水表样式" v-show="show3||isShow" key="wachMeterData" prop="wachMeterData">
         <el-select
           v-model="wachMeterData.wms"
           placeholder="请选择"
@@ -39,7 +46,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户状态" v-show="show4||isShow" key="cs">
+      <el-form-item label="用户状态" v-show="show4||isShow" key="cs" prop="cs">
+        >
         <el-select
           v-model="wachMeterData.cs"
           placeholder="请选择"
@@ -61,7 +69,9 @@
         <el-button type="primary" size="mini" @click="searchWatetJX" round>
           <i class="icon iconfont">&#xe694;</i>查询
         </el-button>
-        <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
+        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+          <i class="iconfont icon_zhongzhi"></i>重置
+        </el-button>
       </el-form-item>
     </el-form>
 
@@ -261,6 +271,12 @@ export default {
     }
   },
   methods: {
+    resetting() {
+      //重置
+      this.$refs["searcTable"].resetFields();
+      this.tipsDataCopy = [];
+      this.searchWatetJX();
+    },
     showLabel(n, w) {
       if (Math.floor((w - 180) / 280) < 4) {
         this.showBtn = true;

@@ -6,6 +6,7 @@
     size="small"
     label-width="70px"
     @submit.native.prevent
+    ref="formHeight"
   >
     <transition-group name="fade">
       <el-form-item v-show="show1||isShow" key="customerQueryType">
@@ -124,6 +125,9 @@
       <el-button type="primary" size="mini" @click="handleFilter" round>
         <i class="icon iconfont">&#xe694;</i>查询
       </el-button>
+      <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <i class="iconfont icon_zhongzhi"></i>重置
+      </el-button>
       <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
     </el-form-item>
   </el-form>
@@ -176,6 +180,12 @@ export default {
     this.securNextStatus = getDictionaryOption("低保户复审状态");
   },
   methods: {
+    resetting() {
+      //重置
+      this.$refs["formHeight"].resetFields();
+      this.$parent.tipsDataCopy = [];
+      this.$parent.delTips("timevalue");
+    },
     showLabel(n, w) {
       if (Math.floor((w - 180) / 280) >= n || this.isShow) {
         return true;

@@ -21,20 +21,6 @@
           />
         </div>
 
-        <!-- <div class="cl-operation1 clearfix">
-          <el-button
-            type="warning"
-            size="small"
-            class="fr c"
-            style="margin-left: 10px;"
-            @click="setCustomData"
-          >
-            <i class="icon iconfont">&#xe678;</i> 表格自定义
-          </el-button>
-          <el-button type="success" size="small" class="fr" @click="excelWaterAccountOrder">
-            <i class="icon iconfont">&#xe683;</i> 导出Excel
-          </el-button>
-        </div>-->
         <search-tips
           :tipsData="tipsData"
           ref="searchTips"
