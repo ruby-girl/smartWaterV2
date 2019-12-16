@@ -72,8 +72,8 @@
       </el-form-item>
       <el-form-item label="过户操作员" prop="OpId" v-show="show3||isShow" key="OpId">
         <el-select
-          @change="getText(selectHead.OpId,'OpId',editUserList,'过户操作员')"
           v-model="selectHead.OpId"
+          @change="getText(selectHead.OpId,'OpId',editUserList,'过户操作员')"    
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
         >
@@ -189,10 +189,10 @@ export default {
     },
     showLabel(n, w) {
       if (this.waterWorks.length == 1) {
-        if (Math.floor((w - 180) / 310) > n || this.isShow) return true;
+        if (Math.floor((w - 180) / 310) > (n-1) || this.isShow) return true;
         return false;
       } else {
-        if (Math.floor((w - 180) / 310) > n + 1 || this.isShow) return true;
+        if (Math.floor((w - 180) / 310) > n || this.isShow) return true;
         return false;
       }
     },

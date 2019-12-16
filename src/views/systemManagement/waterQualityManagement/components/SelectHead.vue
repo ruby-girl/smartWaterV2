@@ -84,7 +84,7 @@ export default {
       this.$emit("getText", val, model, arr, name);
     },
     showLabel(n){
-      if(Math.floor((this.searchWidth-180)/260)>n||this.isShow)
+      if(Math.floor((this.searchWidth-180)/260)>(n-1)||this.isShow)
          return true
       return false
     },
