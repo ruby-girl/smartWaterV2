@@ -188,13 +188,10 @@ export default {
       });
     },
     showLabel(n, w) {
-      if (this.waterWorks.length == 1) {
-        if (Math.floor((w - 180) / 310) > (n-1) || this.isShow) return true;
-        return false;
-      } else {
-        if (Math.floor((w - 180) / 310) > n || this.isShow) return true;
-        return false;
-      }
+      if (this.waterWorks.length == 1) n = n - 1;
+      if (Math.floor((w - 180) / 260) > n || this.isShow)
+        return true;
+      return false;
     },
     getTime(v) {
       let date;

@@ -1,26 +1,16 @@
 <template>
   <!-- 账单详情 -->
   <div class="section-container">
-    <div class="section-full-container">
-      <div ref="formHeight">
+      <div ref="formHeight" class="position-search-head">
         <select-head
-          :select-head-obj="listQuery"
-          @handleFilter="handleFilter"
+          :select-head="listQuery"
+          @handleFilter="getList"
           @toggleShow="toggleShow"
+          @getText="getText"
         />
       </div>
-      <div class="display-flex justify-content-flex-justify">
-        <div></div>
-        <div>
-          <el-button type="success" size="mini" @click="excel">
-            <i class="iconfont icondaochuexcel"></i>导出Excel
-          </el-button>
-          <el-button type="warning" size="mini" @click="setCustomData()">
-            <i class="iconfont iconbiaogezidingyi"></i>表格自定义
-          </el-button>
-        </div>
-      </div>
-      <customTable ref="myChild" />
+       <div class="section-full-container">
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
       <div class="main-padding-20-y">
         <el-table
           :key="tableKey"
@@ -70,7 +60,7 @@
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
-          @pagination="getList"
+          @pagination="getList(1)"
         />
       </div>
       <charges-details :chargesDetailsShow.sync="chargesDetailsShow" :temp="temp"/>
@@ -85,9 +75,12 @@ import ChargesDetails from "../cashCharge/components/ChargesDetails"; //水费�
 import {
   SelectBillDataList,SelectBillDataListToExcel,OrderFeeCancel
 } from "@/api/cashCharge";
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { parseStartTimeFunc, parseEndTimeFunc } from "@/utils/index";
 export default {
   name: "billDetails",
-  components: { SelectHead, Pagination, customTable,ChargesDetails},
+  components: { SelectHead, Pagination,ChargesDetails,SearchTips},
   data() {
     return {
       total: 0,
@@ -113,11 +106,15 @@ export default {
         WaterFactory:"-1",//水厂
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
-        tableId: "0000020"
+        tableId: "0000020",
+        timevalue:[]
       },
       tableData: [],
       checksData: [],
-      chargesDetailsShow:false//费用弹窗
+      chargesDetailsShow:false,//费用弹窗
+       tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
+      orderData:{}
     };
   },
   computed: {
@@ -130,20 +127,44 @@ export default {
   },
   mounted: function() {
     this.$nextTick(function() {
-      // 自适应表格高度
-      this.toggleShow();
-      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+      // 是否需要时间默认值--待确认
+
+      //  let start = parseStartTimeFunc(new Date());
+      // let end = parseEndTimeFunc(new Date());
+      // this.listQuery.editStartTime=start
+      // this.listQuery.editEndTime=end   
+      // this.listQuery.timevalue.push(new Date(start));
+      // this.listQuery.timevalue.push(new Date(end));
+      // this.getText(start+'~'+end, "timevalue", "", "缴费日期");
+      // this.tipsData = pushItem(this.tipsDataCopy);
+      var formHeight = this.$refs.formHeight.offsetHeight;
+      this.tableHeight = document.body.clientHeight - formHeight - 220;
+      this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     });
   },
   methods: {
-    setCustomData() {
-      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
-      if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;
-      else this.tableHeight = this.tableHeight + 80;
+     delTips(val) {
+       if (val == "timevalue") {
+        //当返回的model 为时间数组  置空 时间
+        this.listQuery.editStartTime = "";
+        this.listQuery.editEndTime = "";
+      }
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
+      console.info(this.listQuery)
+      this.getList();
     },
-    getList() {
-      SelectBillDataList(this.listQuery).then(res => {
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
+    getList(n) {
+      if(!n){
+         this.orderData = Object.assign({}, this.listQuery);
+         this.orderData.page=1
+      }
+      SelectBillDataList(this.orderData).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -157,11 +178,6 @@ export default {
         this.listQuery.page = 1;
         this.getList();
       }
-    },
-    handleFilter(v) {
-      this.listQuery=v
-      this.listQuery.page = 1;
-      this.getList();
     },
     reset(r) {
       this.$confirm("是否确认撤销费用？", "提示", {
@@ -203,4 +219,9 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.section-container .section-full-container{
+  padding-top:0 !important;
+}
+</style>
 

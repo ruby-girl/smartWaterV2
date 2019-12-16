@@ -9,21 +9,21 @@
     @submit.native.prevent
     ref="formHeight"
   >
-    <el-form-item label="用水性质" :label-width="!isShow?'64px':''">
+    <el-form-item label="用水性质" prop="WaterPropertyName" :label-width="!isShow?'64px':''">
       <el-input
         v-model="selectHead.WaterPropertyName"
         placeholder="长度1-50"
         maxlength="50"
-        @change="getText(selectHead.WaterPropertyName,'WaterPropertyName','','用水性质')"
+        @blur="getText(selectHead.WaterPropertyName,'WaterPropertyName','','用水性质')"
       />
     </el-form-item>
-    <el-form-item label="是否阶梯">
+    <el-form-item label="是否阶梯" label-width="64px" prop="IsLadder">
       <el-select v-model="selectHead.IsLadder" placeholder="请选择" @keydown.enter.native="handleFilter" @change="getText(selectHead.IsLadder,'IsLadder',isLadderOption,'是否阶梯')">
         <el-option label="全部" value="-1" />
           <el-option v-for="item in isLadderOption" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="用水性质类型"  v-show="showLabel(3)||isShow">
+    <el-form-item label="用水性质类型"  v-show="showLabel(3)||isShow" prop="WaterPropertyType">
       <el-select v-model="selectHead.WaterPropertyType" placeholder="请选择" @keydown.enter.native="handleFilter" @change="getText(selectHead.WaterPropertyType,'WaterPropertyType',typeList,'用水性质类型')">
         <el-option label="全部" value="-1" />
         <el-option v-for="item in typeList" :key="item.Id" :label="item.Name" :value="item.Id" />
@@ -34,10 +34,13 @@
           <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
         </span>
       <el-button round  type="primary" size="mini"  @click="handleFilter"><i class="iconfont iconsousuo"></i>搜索</el-button>
+      <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+          <i class="iconfont icon_zhongzhi"></i>重置
+        </el-button>
     </el-form-item>
   </el-form>
  </div>
-</template>
+</template> 
 <script>
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { getDictionaryOption } from "@/utils/permission";
@@ -90,6 +93,11 @@ export default {
     },
     handleFilter() {
       this.$emit("handleFilter");
+    },
+    resetting(){//重置
+      this.$refs['formHeight'].resetFields();  
+       this.$parent.tipsDataCopy=[]
+       this.$parent.delTips("timevalue")
     }
   }
 };

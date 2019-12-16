@@ -1,6 +1,5 @@
 <template>
-  <div class="section-container">
-    <div class="section-full-container">
+  <div class="section-container"> 
       <div ref="formHeight">
         <select-head
           :select-head="listQuery"
@@ -9,6 +8,7 @@
           :type-list="typeList"
         />
       </div>
+      <div class="section-full-container">
       <div class="display-flex justify-content-flex-justify" style="margin-bottom:7px;">
         <el-button round plain  type="primary" size="mini" @click="add">
           <i class="iconfont icontianjia"></i>添加
@@ -192,9 +192,8 @@ export default {
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
-      var formHeight = this.$refs.formHeight.offsetHeight;
-      const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 220;
+      var formHeight = this.$refs.formHeight.offsetHeight;   
+      this.tableHeight = document.body.clientHeight - formHeight - 220;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.typeList = getDictionaryOption("用水性质类型");
@@ -287,12 +286,13 @@ export default {
       SelectUpdateWaterPropertyBeforeInfo({ id: row.Id }).then(res => {
         this.updateId = row.Id; 
         let obj = ladderChangeArr(res.data); //阶梯转换数组
+       
         let ladder = {
           isLadder: "1",
           NewPriceUseDate: ''
         };
         ladder.isLadder = obj.IsLadder == true ? "1" : "2";
-        obj.WaterPropertyType = obj.WaterPropertyType.toString();
+        obj.WaterPropertyType = res.data.WaterPropertyType.toString();
         this.temp = { ...ladder, ...obj };
         this.dialogStatus = "update";
         this.addDialogFormVisible = true;
@@ -361,6 +361,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.section-container .section-full-container{
+  padding-top:0 !important;
+}
 .color-more-black {
   color: #46494c;
 }

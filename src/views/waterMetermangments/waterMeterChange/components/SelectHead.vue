@@ -174,13 +174,10 @@ export default {
       this.setLabel(this.searchWidth,true)
     },
     showLabel(n,w) {
-      if (this.waterWorks.length == 1) {
-        if (Math.floor((w-180) / 260) > (n-1) || this.isShow) return true;
-        return false;
-      } else {
-        if (Math.floor((w-180)/ 260) > n  || this.isShow) return true;
-        return false;
-      }
+      if (this.waterWorks.length == 1) n = n - 1;
+      if (Math.floor((w - 180) / 260) > n || this.isShow)
+        return true;
+      return false;
     },
        // 计算显示筛选
     setLabel(val,isShow){
