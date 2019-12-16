@@ -42,7 +42,7 @@
         </el-form-item>
         <el-form-item v-show="showInfo&&userInfo.WaterMeterTypeName=='机械表水表'" class="thisLable">
           <u class="thisJD" @click="thisTotalWater">当前阶梯总用水量</u>
-          <el-input v-model="userInfo.TotalYield" disabled class="left-input"></el-input>
+          <el-input v-model="waterDetaileList.TotalYield" disabled class="left-input"></el-input>
         </el-form-item>
         <el-form-item v-show="showInfo" label="账户余额">
           <el-input class="totalMoney left-input" v-model="userInfo.Balance" disabled>
