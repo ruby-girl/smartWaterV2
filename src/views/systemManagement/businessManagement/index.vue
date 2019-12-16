@@ -93,7 +93,7 @@
         height: 100%;
         color: #46494C;
         .el-submenu__title, > .el-menu-item {
-          background: #F0F2F5
+          background: #F0F2F5;
         }
         .el-menu.el-menu--inline .el-menu-item {
           background: #fff;

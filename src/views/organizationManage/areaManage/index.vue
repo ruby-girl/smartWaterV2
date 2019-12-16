@@ -99,14 +99,6 @@
         return arrayHead
       }
     },
-    watch: {
-      customHeight() {//获取自定义模块高度
-        let self = this
-        self.$nextTick(() => {
-          self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-        })
-      }
-    },
     methods: {
       setCustomData() {//表格自定义方法
         this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
@@ -162,7 +154,7 @@
       searchFun() {//查询事件
         BlockAreaGetList(this.sbap).then(res => {
           if (res.code ==0 ) {
-            this.total = res.count;
+            this.total = res.data.length;
             this.tableData = res.data;
             this.tipsData = pushItem(this.tipsDataCopy)
           } else {
@@ -212,7 +204,7 @@
     mounted() {
       this.$refs.searchTips.$refs.myChild.GetTable(this.sbap.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 70
 
     }
   }

@@ -35,7 +35,7 @@
         </template>
         <el-table-column label="操作" width="300px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation3" @click="handleUser(scope.row)">表册用户</a>
+            <a class="operation3" @click="handleUserInfo(scope.row)">表册用户</a>
             <a class="operation1" @click="handleEdit(scope.row)">表册编辑</a>
             <a class="operation4" @click="" @click="handleEmpty(scope.row)">清空</a>
             <a class="operation2" @click="handleDelete(scope.row)">删除</a>
@@ -89,7 +89,6 @@
         tableData: [],//表格数据
         checkAllData: [],
         checksData: [],
-        customHeight: '',//自定义高度
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
       }
@@ -104,14 +103,6 @@
           }
         }
         return arrayHead
-      }
-    },
-    watch: {
-      customHeight() {//获取自定义模块高度
-        let self = this
-        self.$nextTick(() => {
-          self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-        })
       }
     },
     methods: {
@@ -156,24 +147,43 @@
         })
       },
       handleUser(row){//用户表册,type==2时候为定位
-        console.log(row)
         this.$refs.childSchedule.dialogVisible = true
         if(row.SA_RegisterBookInfo_Id == '0'){//未分配表册
           this.$refs.childSchedule.userType = '2'
-          this.$refs.childSchedule.$refs.waterTableChild2.formRbp.ecqt = '1'
           this.$nextTick(()=>{
+            this.$refs.childSchedule.$refs.waterTableChild2.formRbp.ecqt = '1'
             this.$refs.childSchedule.$refs.waterTableChild2.formRbp.Customer = row.CustomerNo
-            this.$refs.childSchedule.$refs.waterTableChild2.getRegister(1)
+            this.$refs.childSchedule.$refs.waterTableChild2.formRbp.SA_RegisterBookInfo_Id = '0'
+            this.$refs.childSchedule.$refs.waterTableChild2.searchFun(2)
           })
         }else {//已分配表册
           this.$refs.childSchedule.userType = '1'
           this.$nextTick(()=>{
-            this.$refs.childSchedule.$refs.myChild.searchText = row.BookName
+            this.$refs.childSchedule.$refs.myChild.searchText = row.SA_RegisterBookInfo_Id
+            this.$refs.childSchedule.$refs.myChild.idType = false
             this.$refs.childSchedule.$refs.myChild.getNodeByName()
             this.$refs.childSchedule.$refs.waterTableChild1.formRbp.ecqt = '1'
             this.$refs.childSchedule.$refs.waterTableChild1.formRbp.Customer = row.CustomerNo
-            this.$refs.childSchedule.$refs.waterTableChild1.formRbp.SA_RegisterBookInfo_Id = row.Id
+            this.$refs.childSchedule.$refs.waterTableChild1.formRbp.SA_RegisterBookInfo_Id = row.SA_RegisterBookInfo_Id
             this.$refs.childSchedule.$refs.waterTableChild1.searchFun(1)
+          })
+        }
+      },
+      handleUserInfo(row){
+        this.$refs.childSchedule.dialogVisible = true
+        if (row.Id == '0') {//未分配
+          this.$nextTick(() => {
+            this.$refs.childSchedule.userType = '2'
+            this.$refs.childSchedule.$refs.waterTableChild2.getRegister(1)
+          })
+        }else{//已分配表册，但是不定位
+          this.$nextTick(() => {
+            this.$refs.childSchedule.$refs.myChild.searchText = row.Id
+            this.$refs.childSchedule.$refs.myChild.idType = false
+            this.$refs.childSchedule.$refs.myChild.getNodeByName()
+            this.$refs.childSchedule.userType = '1'
+            this.$refs.childSchedule.$refs.waterTableChild1.formRbp.SA_RegisterBookInfo_Id = row.Id
+            this.$refs.childSchedule.$refs.waterTableChild1.getRegister(2)
           })
         }
       },
@@ -288,7 +298,7 @@
       let _this = this
       _this.$refs.searchTips.$refs.myChild.GetTable(this.rbp.tableId); // 先获取所有自定义字段赋值
       _this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-      _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
+      _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 70
       _this.getWaterFactoryList()
     }
   }

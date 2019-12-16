@@ -50,11 +50,11 @@
     width: 100%;position: relative;
   .cl-operation1{margin: 35px 0 6px 0;}
     height: 100%;
-    .el-tabs{background: #eff1f4}
+    .el-tabs{background: #eff1f4;height: 100%;}
     .el-tabs__header{margin: 0 !important;}
-    padding: 2px 11px 0 11px;
+    .el-tabs__content{height: calc(100% - 40px);background: #fff;padding-bottom: 20px;}
+    padding: 2px 16px 0 16px;
     >div{background: #fff;}
-    .cl-container{height: calc(100% - 40px);background: #fff;}
     .cl-container > div:first-child{height: auto;padding: 0;width: 100%;position: relative}
   }
 </style>

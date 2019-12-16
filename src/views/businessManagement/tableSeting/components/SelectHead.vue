@@ -9,7 +9,7 @@
     @submit.native.prevent>
     <div style="display: flex">
       <div style="flex:1;float: left">
-          <el-form-item label="水厂" prop="SA_WaterFactory_Id">
+          <el-form-item label="水厂" prop="SA_WaterFactory_Id" :class="!ifMore?'firstItems':''">
             <el-select v-model="rbp.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getMeterRead">
               <el-option label="全部" value="-1" v-if="waterFactory.length>1"></el-option>
               <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>

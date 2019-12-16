@@ -114,8 +114,10 @@
     },
     computed: {
       EndDate: function () {
-        let oneYear = (parseInt(this.param.StartDate.split('-')[0]) + 1).toString();
-        this.param.EndDate = this.param.StartDate.replace(this.param.StartDate.split('-')[0], oneYear).replace('00:00:00', '23:59:59')
+        let n = new Date(this.param.StartDate)
+        const n1 = new Date(n.setDate(n.getDate()-1)).Format('yyyy-MM-dd 23:59:59')
+        let oneYear = (parseInt(n1.split('-')[0]) + 1).toString();
+        this.param.EndDate = n1.replace(n1.split('-')[0], oneYear).replace('00:00:00', '23:59:59')
         return this.param.EndDate
       }
     },

@@ -38,7 +38,8 @@ export default {
       noneArry: [], //获取每次选中没有被包含的节点集合
       areaId: "", //区域ID
       ifFlag: true,
-      ifLogo:true
+      ifLogo:true,
+      idType:true,
     };
   },
   props: ["treeData",'searchtype','ifLogos'],
@@ -67,17 +68,16 @@ export default {
       data.Id === "0" ? (this.areaId = -1) : (this.areaId = data.Id);
       this.ifSearch ?  this.$emit('changeSecode',data.Level) :  this.$emit('changeSecode',data)
     },
-    getNodeByName() {
-      let tree = {
+    getNodeByName() {//type 为1时候为精确Id查询
+     let tree = {
           Id:'',
           label:'',
           children:this.treeData
       }
-      //this.searchText.trim() == "" ? promptInfoFun(this, 1, "公司名称不能为空！") : this.getParentId(this.searchText, this.treeData[0]);
-      this.searchText.trim() == "" ? promptInfoFun(this, 1, "公司名称不能为空！") : this.getParentId(this.searchText, tree);
-
+      this.searchText.trim() == "" ? promptInfoFun(this, 1, "公司名称不能为空！") : this.getParentId(this.searchText, tree)
     },
     /**
+     * 模糊查询名称
      * 遍历树状图数据，获取选中ID 及其所有父级ID
      * String keyword 传入选中ID
      * Object data 树对象
@@ -90,7 +90,7 @@ export default {
       flagArr.push({
         Id: data.Id,
         label: data.label,
-        flag: data.label.indexOf(keyword) != -1
+        flag: this.idType ? data.label.indexOf(keyword) != -1 : data.Id.indexOf(keyword) != -1
       }); //当前节点ID，及label名
       pidArr.push(flagArr);
       data.pidArr = pidArr; //存放当前选中节点ID，，以下同上
@@ -108,7 +108,7 @@ export default {
           flagArr.push({
             Id: item.Id,
             label: item.label,
-            flag: item.label.indexOf(keyword) != -1
+            flag: this.idType ? item.label.indexOf(keyword) != -1 : item.Id.indexOf(keyword) != -1
           });
           let newPidArr = [...pidArr, flagArr];
           item.pidArr = newPidArr;
@@ -151,22 +151,6 @@ export default {
           this.noneArry.push(item.slice(0));
         }
       });
-
-      /*展开选中节点*/
-      if (this.macthArray.length > 0){
-        this.macthArray.forEach(items => {
-          //过来当前模糊查询所匹配节点
-          items.forEach(i => {
-            Nodes.forEach(key => {
-              if (key.data.Id === i[0].Id) {
-                theTree.store._getAllNodes()[0].expanded = true; //默认展开一级节点
-                key.expanded = true;
-                i[0].flag ? document.getElementById(i[0].Id).classList.add("matchStyle") : document.getElementById(i[0].Id).classList.remove("matchStyle"); //动态设置过滤节点样式
-              }
-            });
-          });
-        });
-      }
       /*关闭未选中节点*/
       if (this.noneArry.length > 0){
         this.noneArry.forEach(items => {
@@ -178,10 +162,26 @@ export default {
               if (key.data.Id === i[0].Id) {
                 key.expanded = false;
                 document.getElementById(i[0].Id).classList.remove("matchStyle"); //去除过滤选中样式
+                return
               }
             });
-            if(theTree.store._getAllNodes()[0].expanded)
-            theTree.store._getAllNodes()[0].expanded = true;
+             //theTree.store._getAllNodes()[0].expanded = true;
+          });
+        });
+      }
+      /*展开选中节点*/
+      if (this.macthArray.length > 0){
+        this.macthArray.forEach(items => {
+          //过来当前模糊查询所匹配节点
+          items.forEach(i => {
+            Nodes.forEach(key => {
+              if (key.data.Id === i[0].Id) {
+               //theTree.store._getAllNodes()[0].expanded = true; //默认展开一级节点
+                key.expanded = true;
+                i[0].flag ? document.getElementById(i[0].Id).classList.add("matchStyle") : document.getElementById(i[0].Id).classList.remove("matchStyle"); //动态设置过滤节点样式
+                return
+              }
+            });
           });
         });
       }
@@ -226,10 +226,10 @@ export default {
   overflow: auto;
   .custom-tree-container {
     width: 100%;
-    border: solid 1px #cad9e0;
-    border-top: none;
+    border: none;
     .el-tree {
       color: #777c82;
+      height: 100%;
     }
   }
   .el-tree-node__content {
@@ -239,6 +239,8 @@ export default {
     border-top: solid 1px #cad9e0;
     position: relative;
     padding-left: 0px !important;
+    border-left:solid 1px #cad9e0;
+    border-right:solid 1px #cad9e0;
   }
   .el-tree-node__expand-icon {
     position: absolute;

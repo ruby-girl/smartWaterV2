@@ -18,17 +18,22 @@
                   style="width: 180px;float: left"/>
       </el-form-item>
       <el-form-item label="">
-        <el-button v-show="type=='1'" type="primary" size="mini" @click="searchFun(1)" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
-        <el-button v-show="type=='2'" type="primary" size="mini" @click="getRegister(1)" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
+        <el-button v-show="type==='1'" type="primary" size="mini" @click="searchFun(1)" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
+        <el-button v-show="type==='2'" type="primary" size="mini" @click="searchFun(2)" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
       </el-form-item>
     </el-form>
     <div class="cl-operation1 fr">
       <el-button size="mini" v-show="type=='1'" class="cl-operation-btn" round @click="deleteFun(1)"><i class="icon iconfont">&#xe650;</i> 删除
       </el-button>
       <el-button size="mini" class="cl-operation-btn" round @click="distributionFun">分配至</el-button>
-      <myTree class="moveTree" v-show="moveTreeShow" ref="myChild" :treeData="moveTree" :searchtype=searchtype  @changeSecode="moveChangeSecode" :ifLogos="1"></myTree>
+      <my-tree class="moveTree" v-show="moveTreeShow" ref="myChildFp" :treeData="moveTrees" :searchtype=searchtype  @changeSecode="moveChangeSecode" :ifLogos="1"></my-tree>
     </div>
-    <el-table :data="tableData" border ref="multipleTable" height="450px" @selection-change="handleSelectionChange"
+    <el-table :row-class-name="tableRowClassName"
+              highlight-current-row
+              :data="tableData"
+              border
+              ref="multipleTable" height="450px"
+              @selection-change="handleSelectionChange"
               @sort-change="sortChanges">
       <el-table-column
         type="selection"
@@ -114,24 +119,28 @@
       :page.sync="rbp.page"
       :limit.sync="rbp.limit"
       @pagination="getRegister"/>
+
+    <FormsDialog ref="formsDialog"></FormsDialog>
   </div>
 </template>
 
 <script>
+  import FormsDialog from './FormsDialog'//查询条件组建
   import myTree from "@/components/Tree/index";
   import { GetOrientationList,RegisterDetailGetList, RegisterMoveIn, SortRegisterBookDetailMoveOut } from "@/api/registerBook"
   import Pagination from '@/components/Pagination/index'//分页
   import { promptInfoFun } from "@/utils/index"
   export default {
     name: "AllocationTable",
-    components: {Pagination,myTree},
+    components: {Pagination,myTree,FormsDialog},
+    props:['moveTree'],
     data() {
       return {
         searchtype:true,
         rowNums:'',//排序号
         moveTreeShow:false,
-        moveTree:[],//移动至表册
-        type:'2',//是否显示区域选择项
+        moveTrees:[],//移动至表册
+        type:'1',//是否显示区域选择项
         tableData:[],
         areaArry:[],//区域
         dataTypes:[],
@@ -141,7 +150,6 @@
           page: 1,
           sort: "",
           filed: "",
-          tableId: "",
           ecqt: '1',
           Customer: "",
           SA_WaterFactory_Id: "",
@@ -158,7 +166,6 @@
           page: 1,
           sort: "",
           filed: "",
-          tableId: "",
           ecqt: 1,
           Customer: "",
           SA_RegisterBookDetail_Id: ""
@@ -177,7 +184,9 @@
       searchFun(num) {//定位列表查询
         this.flag = num
         if (this.flag == 1) {
-          if(this.formRbp.Customer==''){
+          if(this.formRbp.SA_RegisterBookInfo_Id.trim() == ''){
+            promptInfoFun(this,1,'请选择表册')
+          }else if(this.formRbp.Customer==''){
             promptInfoFun(this,1,'请输入查询条件')
           }else{
             this.rbp = Object.assign({}, this.formRbp)
@@ -186,15 +195,25 @@
                 res.data.forEach(item=>{
                   item.nums = ''
                 })
-                this.tableData = res.data
-                this.total = res.data.length
+                if(res.data.length==1){
+                   this.formRbp.SA_RegisterBookDetail_Id = res.data[0].Id
+                   this.rbp = Object.assign({}, this.formRbp)
+                   this.getList(this.rbp)
+                }else if(res.data.length>1) {
+                  this.$refs.formsDialog.rbp = this.rbp
+                  this.$refs.formsDialog.total = res.data.length
+                  this.$refs.formsDialog.gridData = res.data
+                  this.$refs.formsDialog.formsVisible = true
+                }else {
+                  promptInfoFun(this, 1, '暂无信息！')
+                }
               } else {
                 promptInfoFun(this, 1, res.message)
               }
             })
           }
         }else {
-          this.getRegister()
+          this.getRegister2()
         }
       },
       sortChanges({prop, order }){//排序
@@ -220,24 +239,45 @@
           return arr.indexOf(v) === arr.lastIndexOf(v);
         });
       },
-      getRegister(num){//未分配表册及已分配表册中未定位表册列表信息
-        if(num==1){//当点击未分配表册时候
-          this.tbdp.SA_RegisterBookInfo_Id = '0'
-        }
+      getRegister2(){//区分是否定位
         this.tbdp.ecqt =  this.formRbp.ecqt
         this.tbdp.Customer =  this.formRbp.Customer
+        this.tbdp.SA_RegisterBookInfo_Id =  this.formRbp.SA_RegisterBookInfo_Id
+        this.tbdp.SA_UserArea_Id =  this.formRbp.SA_UserArea_Id
         this.rbp = Object.assign({},this.tbdp)
-        RegisterDetailGetList(this.rbp).then(res => {
+        this.getList(this.rbp)
+      },
+      getRegister(){//点击左侧柱状图事件未分配表册及已分配表册中未定位表册列表信息
+          this.formRbp.ecqt = '1'
+          this.formRbp.Customer = ''
+          this.tbdp.ecqt =  '1'
+          this.tbdp.Customer =  ''
+          this.tbdp.SA_RegisterBookDetail_Id =  ''
+          this.tbdp.SA_RegisterBookInfo_Id =  this.formRbp.SA_RegisterBookInfo_Id
+          this.tbdp.SA_UserArea_Id =  this.formRbp.SA_UserArea_Id
+          this.rbp = Object.assign({},this.tbdp)
+          this.getList(this.rbp)
+      },
+      getList(param){//定位列表查询公用方法
+        RegisterDetailGetList(param).then(res => {
           if (res.code ==0 ) {
             res.data.rbdList.forEach(item=>{
               item.nums = ''
             })
             this.tableData = res.data.rbdList
             this.total = res.data.rbdList.length
+            if(res.data.IsIsLocation){
+              this.$refs.multipleTable.setCurrentRow(this.tableData[res.data.index]);
+              this.rbp.page = res.data.page
+              this.rbp.count = res.data.count
+            }
           } else {
             promptInfoFun(this,1,res.message)
           }
         })
+      },
+      tableRowClassName({row, rowIndex}) {//为table添加当前行索引
+        row.index = rowIndex;
       },
       moveChangeSecode(data){//分配至表册回调函
         if(data.IsResponse){//IsResponse 为true时候 方可点击选择表册
@@ -299,7 +339,14 @@
       },
       distributionFun(){
         this.multipleSelection.length<=0 ?  promptInfoFun(this,1,'请选择要移动的数据！') : this.moveTreeShow = !this.moveTreeShow
-      }
+        this.moveTrees = this.moveTree
+      },
+      handleUser(row){//用户表册,type==2时候为定位
+        this.formRbp.SA_RegisterBookDetail_Id = row.Id
+        this.formRbp.SA_RegisterBookInfo_Id = this.tbdp.SA_RegisterBookInfo_Id
+        this.rbp = Object.assign({}, this.formRbp)
+        this.getList(this.rbp)
+      },
     }
   }
 </script>

@@ -103,20 +103,6 @@
         return arrayHead
       }
     },
-    watch: {
-      customHeight() {//获取自定义模块高度
-        let self = this
-        self.$nextTick(() => {
-          if (this.screeWidth > 1400) {
-            self.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 300
-          } else {
-            self.tableHeight = 340
-            document.getElementsByClassName('cl-container')[0].style.overflow = 'auto'
-            document.getElementsByClassName('cl-container')[0].style.height = 'auto'
-          }
-        })
-      }
-    },
     methods: {
       handleDelete(row) {//删除方法
         this.$confirm("是否删除当前信息", "提示", {
@@ -269,13 +255,7 @@
       this.$refs.searchTips.$refs.myChild.GetTable(this.param.tableId); // 先获取所有自定义字段赋值
       this.$refs.searchTips.showExcel = false; // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-      if (window.screen.width > 1400) {
-        this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 300
-      } else {
-        this.tableHeight = 340
-        document.getElementsByClassName('cl-container')[0].style.overflow = 'auto'
-        document.getElementsByClassName('cl-container')[0].style.height = 'auto'
-      }
+      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 305
     }
   }
 </script>

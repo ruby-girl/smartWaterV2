@@ -43,9 +43,9 @@
           }
         })
       },
-      setTreeId(index,path){//点击选中切换当前节点
+      setTreeId(index,path){//点击选中切换当前节点，index 匹配栏目ID ，根据path 第一个数据判断当前点击的是哪个数组中的数据
         this.activeNum = index
-        let data = this.data[path[0]].Children
+        let data = this.data[path[0].slice(0,1)].Children
         data.forEach(item=>{
           if(item.Id == index){
             localStorage.setItem('menuId',item.ProcessMenuCode)//实际栏目code

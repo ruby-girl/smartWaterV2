@@ -99,7 +99,7 @@
     components: {customTable, Pagination, addmponent, editmponent, detailmponent, SelectHead, SearchTips},
     data() {
       return {
-        tableHeight: 600,//表格高度
+        tableHeight: null,//表格高度
         queryData: {//查询条件对象
           tableId: '0000003'
         },
@@ -318,6 +318,7 @@
       this.getWaterFactory();
       this.$refs.searchTips.$refs.myChild.GetTable(this.queryData.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 70
     }
   }
 </script>

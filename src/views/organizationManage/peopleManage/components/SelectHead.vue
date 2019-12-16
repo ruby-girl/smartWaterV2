@@ -8,7 +8,7 @@
       size="small"
       label-width="100px"
       @submit.native.prevent>
-      <el-form-item label="部门" prop="SYS_Department_Id">
+      <el-form-item label="部门" prop="SYS_Department_Id" :class="!ifMore?'firstItem':''">
         <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList"
                    @keyup.enter.native="searchFun">
           <el-option label="全部" value="-1"></el-option>

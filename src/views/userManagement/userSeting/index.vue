@@ -267,8 +267,9 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .tree_container {
+  .custom-tree-container{height: calc(100% - 100px);}
   .switch_water {cursor: pointer;
   i{font-size: 12px;margin-right: 3px;}}
   .switch_water{ position: absolute;right: 16px;top:10px;margin: 0;font: normal 13px 'Microsoft YaHei';color: #8F8F8F;}

@@ -1,6 +1,7 @@
 <template>
   <div class="formsDialog">
     <el-dialog
+      :modal="false"
       :close-on-click-modal="false"
       top="25vh"
       title="用户表册定位"
@@ -24,6 +25,7 @@
         @pagination="searchFun"/>
     </el-dialog>
     <el-dialog
+      :modal="false"
       :close-on-click-modal="false"
       top="30vh"
       title="用户表册定位"
@@ -101,5 +103,6 @@
       i{color: #5E920E;font-size: 18px;}
     }
     .my_header .el-dialog__header{background: #5E920E}
+    .my_header .el-dialog__body{background: #fff}
   }
 </style>

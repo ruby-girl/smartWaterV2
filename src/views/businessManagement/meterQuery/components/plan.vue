@@ -214,9 +214,7 @@ export default {
   },
   created() {
     this.$nextTick(()=>{
-      let num  = document.getElementsByClassName("clMeterBox")[0].offsetHeight -
-        document.getElementById("table").offsetTop - 90;
-      this.tableHeight = num
+      this.tableHeight  = document.getElementsByClassName("clMeterBox")[0].offsetHeight - document.getElementById("table").offsetTop - 100;
     })
   }
 };

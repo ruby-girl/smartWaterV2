@@ -5,7 +5,7 @@
       <div class="fr">
         <el-button size="mini" class="cl-operation-btn" round @click="makeCard" ><i class="icon iconfont" >&#xe61a;</i> 制卡</el-button>
         <el-button size="mini" class="cl-operation-btn" round @click="patchCard" ><i class="icon iconfont" >&#xe664;</i> 补卡</el-button>
-        <el-button size="mini" class="cl-operation-btn" round @click="lowApplication" ><i class="icon iconfont">&#xe617;</i> 低保户申请</el-button>
+        <el-button size="mini" class="cl-operation-btn" round @click="lowApplication" :disabled="lowShow" :title="lowShowTitle"><i class="icon iconfont">&#xe617;</i> 低保户申请</el-button>
       </div>
     </div>
     <!--表格自定义组建 s-->
@@ -86,6 +86,8 @@
     components: {Pagination, Statistics, AddDialog, EditDialog, DetailDialog, SearchTips, LowIncome},
     data(){
       return {
+        lowShow:false,
+        lowShowTitle:'',
         curObj:'',
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
@@ -112,14 +114,6 @@
           }
         }
         return arrayHead
-      }
-    },
-    watch: {
-      customHeight() {//自定义模块高度
-        let self = this
-        self.$nextTick(() => {
-          self.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 50
-        })
       }
     },
     methods:{
@@ -236,6 +230,8 @@
       },
       handleCurrentChange(val) {//列表点击事件
         this.curObj = val
+        val.UserTypeName!='普通用户' ? this.lowShow = true : this.lowShow = false
+        val.UserTypeName!='普通用户' ? this.lowShowTitle = '非普通用户，不能申请' : this.lowShowTitle = ''
       },
       /**
        *val 对应绑定的参数
@@ -264,10 +260,7 @@
       this.$refs.searchTips.$refs.myChild.GetTable(this.query.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       _this.$nextTick(() => {
-        _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 65
-        window.onresize = function () {
-          _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 65
-        }
+        _this.tableHeight = document.getElementsByClassName('tree_container')[0].offsetHeight - document.getElementById('table').offsetTop - 70
       })
     }
   }

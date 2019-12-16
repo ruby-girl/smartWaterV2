@@ -14,7 +14,7 @@
             <my-tree ref="myChild2" :treeData="oldTreeData2"  v-on:changeSecode="changeSecode2" :searchtype=searchtype></my-tree>
           </div>
           <div class="water-table fl">
-            <AllocationTable ref="waterTableChild2"></AllocationTable>
+            <AllocationTable ref="waterTableChild2" :moveTree="treeData"></AllocationTable>
           </div>
         </div>
       </el-tab-pane>
@@ -25,7 +25,7 @@
             <my-tree class="register-tree" ref="myChild" :treeData="oldTreeData"  v-on:changeSecode="changeSecode" :searchtype=searchtype :ifLogos="1"></my-tree>
           </div>
           <div class="water-table fl">
-            <AllocationTable ref="waterTableChild1"></AllocationTable>
+            <AllocationTable ref="waterTableChild1" :moveTree="treeData"></AllocationTable>
           </div>
         </div>
       </el-tab-pane>
@@ -50,10 +50,11 @@
         dialogVisible: false,
         oldTreeData:[],//表册
         oldTreeData2:[],//区域
-        cont:true
+        cont:true,
+        treeData:[]
       }
-    },methods:{
-      searchFun(){},
+    },
+    methods:{
       handleClick(){//选项卡切换
         this.userType=='1' ? this.$refs.waterTableChild1.type = this.userType : this.$refs.waterTableChild2.type = this.userType
       },
@@ -61,8 +62,11 @@
         GetWFMRRBITree({'WaterFactoryIdList':[]}).then(res => {
           if (res.code ==0 ) {
             this.oldTreeData = res.data
-            this.$refs.waterTableChild1.moveTree = res.data
-            this.$refs.waterTableChild2.moveTree = res.data
+            this.treeData = JSON.parse(JSON.stringify(res.data))
+            /*this.$nextTick(()=>{
+              this.$refs.waterTableChild1.moveTree = res.data
+              this.$refs.waterTableChild2.moveTree = res.data
+            })*/
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -70,14 +74,14 @@
       },
       changeSecode(data){//点击左侧表册回调
         if(data.IsResponse){
-          this.$refs.waterTableChild1.tbdp.SA_RegisterBookInfo_Id = data.Id
-          this.$refs.waterTableChild1.tbdp.SA_WaterFactory_Id = data.SA_WaterFactory_Id
-          this.$refs.waterTableChild1.searchFun(2)
+          this.$refs.waterTableChild1.formRbp.SA_RegisterBookInfo_Id = data.Id
+          this.$refs.waterTableChild1.formRbp.SA_WaterFactory_Id = data.SA_WaterFactory_Id
+          this.$refs.waterTableChild1.getRegister()
         }
       },
       changeSecode2(data){//点击左侧区域回调
-        this.$refs.waterTableChild2.tbdp.SA_UserArea_Id = data.Id
-        this.$refs.waterTableChild2.tbdp.SA_RegisterBookInfo_Id = '0'
+        this.$refs.waterTableChild2.formRbp.SA_UserArea_Id = data.Id
+        this.$refs.waterTableChild2.formRbp.SA_RegisterBookInfo_Id = '0'
         this.$refs.waterTableChild2.getRegister()
       },
       getTreeData() {//获取全部区域树
@@ -90,11 +94,11 @@
         })
       },
     },
-    watch:{
-      userType(){
+    mounted() {
+      this.$nextTick(()=>{
         this.GetWFMRRBITreeFun()
         this.getTreeData()
-      }
+      })
     }
   }
 </script>

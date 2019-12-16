@@ -24,6 +24,7 @@
   >div:first-child {
     background: #fff;height: inherit;
     padding: 16px;
+    position: relative;
   }
   .cl-inlineItem{
     display: flex;
@@ -96,6 +97,7 @@
 
 .cl-container1{
   >div:first-child {
+    position: relative;
     .cl-searchCont{
       padding: 0px 0px 25px 0px;
       >label{color: #777C82;font-size: 14px;}
@@ -196,3 +198,5 @@
 }
 .cl-danger{color:#FF5656;border: solid 1px #FF5656;i{font-size: 14px !important;margin-right: 2px;}}
 .cl-danger:hover{border: solid 1px #fbc4c4;background: #fef0f0;color: #f56c6c;}
+.firstItem{margin-left: -70px;}
+.firstItems{margin-left: -50px;}

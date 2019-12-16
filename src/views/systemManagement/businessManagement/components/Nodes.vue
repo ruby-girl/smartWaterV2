@@ -75,7 +75,7 @@
         moveTarget:{},//移入节点
         moveObj:[],//正再移入NODE集合
         moveId:'',//移入流程dom ID
-        ifExamine: true,//权限开关冷却标识
+        ifExamine: false,//权限开关冷却标识
         data: [],
         prohibit:false,//是否禁用审核权限开关
         ProcessConfigNode:[],
@@ -90,7 +90,7 @@
         setTimeout(function () {
           _this.prohibit = false
         }, 10000)
-        SetProcessMenuState({id: localStorage.getItem('menuId'),state: this.ifExamine}).then(res => {//审核权限开关
+        SetProcessMenuState({id: localStorage.getItem('menuCode'),state: this.ifExamine}).then(res => {//审核权限开关
           if (res.code ==0 ) {
             promptInfoFun(this,2,res.message)
           } else {
@@ -103,15 +103,16 @@
       getInfo() {//获取数据，动态计算每个流程宽度
         GetProcessConfig({code:localStorage.getItem('menuId')}).then(res => {
           if(res.code==0){
+            this.ifExamine = res.data.ProcessState
             this.ifScoll = false
             let obj2 = {//默认流程操作员空对象
               ConfigType: 0,
               ObjectId: "",
               ObjectName: ""
             }
-            if(res.data.length==0)//该栏目下无流程时清空
-              this.data = res.data
-            res.data.forEach((item, index) => {//该栏目下有流程时，判断流程是否为空，为空需添加默认数据
+            if(res.data.ProcessConfigs.length==0)//该栏目下无流程时清空
+              this.data = res.data.ProcessConfigs
+            res.data.ProcessConfigs.forEach((item, index) => {//该栏目下有流程时，判断流程是否为空，为空需添加默认数据
               let curLine = item.ProcessConfigLine//获取该流程下所有，回归线并绘制
               let exp = null, curData = item.ProcessConfigNode ;
               (item.BusinessStartName == exp || item.BusinessStartName.trim().length==0) ? item.BusinessStartName = '操作员' : item.BusinessStartName = item.BusinessStartName//操作员名称
@@ -140,7 +141,7 @@
                   })
                   localData.push({id:item.ProcessConfigNode[0].Id,name:'审核人组1'})
                   localStorage.setItem(className,JSON.stringify(localData))
-                  this.data = res.data
+                  this.data = res.data.ProcessConfigs
                   this.getWidth(className, 195, curData)//动态计算流程模块实际宽度
                   this.getSort(className)
                   return
@@ -157,7 +158,7 @@
                   })
                 })
                 item.ProcessConfigNode[0].ProcessConfigLine={FromId:'',ToId:''}//清空首个节点回归线
-                this.data = res.data
+                this.data = res.data.ProcessConfigs
                 this.getWidth(className, 195, curData)//动态计算流程模块实际宽度
                 this.getSort(className)
               }
