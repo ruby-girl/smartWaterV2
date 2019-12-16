@@ -238,6 +238,7 @@ export default {
   text-align: center;
   line-height: 16px;
   font-style: normal;
+  margin-left: 80px;
 }
 .waterMa100 {
   margin-left: 100px;
