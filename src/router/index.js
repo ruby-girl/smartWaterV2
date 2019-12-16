@@ -99,6 +99,8 @@ export const asyncRoutes = [
       }
     ]
   },
+
+
   {
     path: '/organizationManage',
     redirect: '/organizationManage/company',
@@ -360,7 +362,36 @@ export const asyncRoutes = [
       },
     ]
   },
-
+  {
+    path: '/myWorkBench',
+    redirect: '/myWorkBench/page',
+    component: Layout,
+    name: "myWorkBench",
+    meta: {
+      title: '我的工作台',
+      icon: 'iconfont iconcaidan-zuzhiguanli',
+      roles: ['1']
+    },
+    children: [{
+      path: 'businessAduit',
+      component: () => import('@/views/myWorkBench/businessAduit/index'),
+      name: 'businessAduit',
+      meta: {
+        title: '业务审核',
+        roles: ['1']
+      }
+    },
+    // {
+    //   path: 'buss',
+    //   component: () => import('@/views/myWorkBench/buss/index'),
+    //   name: 'buss',
+    //   meta: {
+    //     title: '业务审核1',
+    //     roles: ['1']
+    //   }
+    // }
+  ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

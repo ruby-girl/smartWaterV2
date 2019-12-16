@@ -2,7 +2,7 @@
     height: 42px;padding: 0 24px;box-shadow: 1px 1px 5px #cecece;-webkit-box-shadow: 1px 1px 5px #cecece;margin: -16px 0 28px -16px;line-height: 50px;
     width: calc(100% + 32px);
     .el-radio{
-        width: 15%;color: #777C82;
+        width: 15%;color: #777c82;
     }
   
 }
@@ -29,9 +29,13 @@
         color: #FF2907;
     }
 }
+.icon{
+    font-size: 16px;
+    cursor: pointer;
+}
 .editJxWater{
     color: #00B3A1;
-    padding-left: 45px;
+    padding-left: 20px;
 }
 .viewHis{
     color: #777C82;
@@ -49,4 +53,23 @@
         }
     }
 }
-
+.borderClass{
+    border-color: #6DA783;
+    color: #6DA783;
+    font-size: 14px;
+    padding:0 9px;
+    .icon{
+        font-size: 12px;
+        padding-right: 4px;
+    }
+}
+.btn-resetting:hover{
+    color: #00B3A1!important;
+    border-color: #b3e8e3!important;
+    background-color: #e6f7f6!important;
+}
+.borderClass:hover{
+    color: #8ECCA5;
+    border: solid 1px #8ECCA5;
+    background: #F7FCF9;
+}
