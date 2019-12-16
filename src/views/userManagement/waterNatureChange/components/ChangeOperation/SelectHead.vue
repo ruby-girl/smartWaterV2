@@ -85,7 +85,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所属区域" prop="SA_UserArea_Id" v-show="showLabel(5)||isShow" key="SA_UserArea_Id">
-          <treeselect :searchable="false" v-model="selectHead.SA_UserArea_Id" :options="orgTree" />
+          <treeselect placeholder="请选择" :searchable="false" v-model="selectHead.SA_UserArea_Id" :options="orgTree" />
         </el-form-item>
       </transition-group>
       <el-form-item>
@@ -168,10 +168,10 @@ export default {
     },
     showLabel(n) {
       if (this.waterWorks.length == 1) {
-        if (Math.floor((this.searchWidth - 180) / 260) > n || this.isShow) return true;
+        if (Math.floor((this.searchWidth - 180) / 260) > (n-1) || this.isShow) return true;
         return false;
       } else {
-        if (Math.floor((this.searchWidth - 180) / 260) > n + 1 || this.isShow) return true;
+        if (Math.floor((this.searchWidth - 180) / 260) > n || this.isShow) return true;
         return false;
       }
     },

@@ -175,10 +175,10 @@ export default {
     },
     showLabel(n,w) {
       if (this.waterWorks.length == 1) {
-        if (Math.floor((w-180) / 260) > n || this.isShow) return true;
+        if (Math.floor((w-180) / 260) > (n-1) || this.isShow) return true;
         return false;
       } else {
-        if (Math.floor((w-180)/ 260) > n + 1 || this.isShow) return true;
+        if (Math.floor((w-180)/ 260) > n  || this.isShow) return true;
         return false;
       }
     },

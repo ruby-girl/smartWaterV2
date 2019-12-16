@@ -38,47 +38,6 @@
               />
             </div>
           </template>
-          <el-table-column
-            label="操作"
-            align="center"
-            class-name="small-padding"
-            width="313px"
-            fixed="right"
-          >
-            <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center method-font">
-                <div
-                  class="main-color-warn button-width"
-                  @click="constitute(row,1)"
-                  v-permission="['1010106']"
-                >
-                  <a>水价构成</a>
-                </div>
-                <div class="button-width" @click="history(row)" v-permission="['1010105']">
-                  <a>历史水价</a>
-                </div>
-                <div
-                  class="main-color button-width"
-                  @click="handleUpdate(row)"
-                  v-if="row.UseState=='801'"
-                  v-permission="['1010107']"
-                >
-                  <a>水价调整</a>
-                </div>
-                <div
-                  class="color-more-black button-width"
-                  @click="constitute(row,2)"
-                  v-if="row.UseState=='802'"
-                  v-permission="['1010107']"
-                >
-                  <a>撤销水价调整</a>
-                </div>
-                <div class="main-color-red pl-20" @click="cancel(row)" v-permission="['1010105']">
-                  <a>删除</a>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
         </el-table>
         <pagination
           v-show="total>0"

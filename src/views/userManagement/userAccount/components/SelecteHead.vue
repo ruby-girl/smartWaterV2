@@ -151,7 +151,6 @@ export default {
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
         this.show5 = this.showLabel(5, val);
-        console.log(this.showLabel(5, val));
         if (!this.showLabel(5, val)) {
           this.showBtn = "ture";
         }
