@@ -63,10 +63,53 @@
               :label="item.ColDesc"
             />
           </template>
-          <el-table-column label="操作" width="300px" align="center" fixed="right">
+          <el-table-column label="操作" width="200px" align="center" fixed="right">
             <template slot-scope="scope">
-              <span style="display:inline-block;width:72px;">
-                <a
+              <span style="display:inline-block;width:30px;">
+                <el-tooltip
+                  v-show="scope.row.IsCanGenerateOrder"
+                  class="item"
+                  effect="dark"
+                  content="生成费用"
+                  placement="bottom"
+                >
+                  <i class="icon iconfont operation1" @click="generateOrder(scope.row.Id)">&#xe69d;</i>
+                </el-tooltip>
+              </span>
+              <el-tooltip
+                v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
+                class="item"
+                effect="dark"
+                content="数据补录"
+                placement="bottom"
+              >
+                <i class="iconStyle icon iconfont operation2" @click="changeInput(scope.row.Id,true)">&#xe676;</i>
+              </el-tooltip>
+              <el-tooltip
+                v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
+                class="item"
+                effect="dark"
+                content="数据绑定"
+                placement="bottom"
+              >
+                <i
+                  class="iconStyle icon iconfont operation2-1"
+                  @click="changeInput(scope.row.Id,false)"
+                >&#xe675;</i>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
+                <i
+                  class="iconStyle icon iconfont operation3"
+                  @click="meterReadingPlanDetail(scope.row.Id)"
+                >&#xe69d;</i>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
+                <i
+                  class="icon iconfont iconStyle operation4"
+                  @click="delMeterReadingPlan(scope.row.Id)"
+                >&#xe653;</i>
+              </el-tooltip>
+              <!-- <a
                   v-show="scope.row.IsCanGenerateOrder"
                   class="operation1"
                   @click="generateOrder(scope.row.Id)"
@@ -84,7 +127,7 @@
               >数据绑定</a>
               <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
 
-              <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>
+              <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>-->
             </template>
           </el-table-column>
         </el-table>
@@ -393,29 +436,32 @@ export default {
 };
 </script>
 <style  scoped>
+.iconStyle{
+  font-size: 16px;
+  cursor: pointer;
+
+}
 .operation1 {
   color: #ff3d3d;
-  font-size: 13px;
+  font-size: 16px;
   margin: 10px;
+  
 }
 .operation2 {
   color: #00b2a1;
-  font-size: 13px;
   margin: 10px;
 }
 .operation2-1 {
   color: #46494c;
-  font-size: 13px;
   margin: 10px;
 }
 .operation3 {
   color: #b59200;
-  font-size: 13px;
   margin: 10px;
+
 }
 .operation4 {
   color: #ff5656;
-  font-size: 13px;
   margin: 10px;
 }
 .plan-table {

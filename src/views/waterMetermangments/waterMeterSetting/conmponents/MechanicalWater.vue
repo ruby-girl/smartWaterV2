@@ -114,10 +114,14 @@
             <span>{{(wachMeterData.page - 1) * wachMeterData.limit+ scope.$index + 1}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="300px" align="center" fixed="right">
+        <el-table-column label="操作" width="120px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="viewHis" @click="waterMeterJxDetail(scope.row.Id)">查看历史详情</a>
-            <a class="editJxWater" @click="editwaterMeterJx(scope.row.Id)">编辑</a>
+            <el-tooltip class="item" effect="dark" content="查看历史详情" placement="bottom">
+              <i class="icon iconfont viewHis" @click="waterMeterJxDetail(scope.row.Id)">&#xe670;</i>
+            </el-tooltip>
+             <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
+              <i class="icon iconfont editJxWater" @click="waterMeterJxDetail(scope.row.Id)">&#xe69f;</i>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>

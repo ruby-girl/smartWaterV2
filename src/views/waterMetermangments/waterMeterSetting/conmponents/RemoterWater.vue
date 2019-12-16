@@ -42,7 +42,12 @@
           @submit.native.prevent
           ref="searcTable"
         >
-          <el-form-item label="水表编号" v-show="show1||isShow" key="CustomerQueryValue" prop="CustomerQueryValue">
+          <el-form-item
+            label="水表编号"
+            v-show="show1||isShow"
+            key="CustomerQueryValue"
+            prop="CustomerQueryValue"
+          >
             <el-input
               v-model="YCMeterQueryParam.CustomerQueryValue"
               maxlength="20"
@@ -64,7 +69,12 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="开户状态" v-show="show3||isShow" key="IsOpenAccount" prop="IsOpenAccount">
+          <el-form-item
+            label="开户状态"
+            v-show="show3||isShow"
+            key="IsOpenAccount"
+            prop="IsOpenAccount"
+          >
             <el-select
               v-model="YCMeterQueryParam.IsOpenAccount"
               placeholder="请选择"
@@ -75,7 +85,12 @@
               <el-option label="未开户" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="通讯状态" v-show="show4||isShow" key="TrafficStatus" prop="TrafficStatus">
+          <el-form-item
+            label="通讯状态"
+            v-show="show4||isShow"
+            key="TrafficStatus"
+            prop="TrafficStatus"
+          >
             <el-select
               v-model="YCMeterQueryParam.TrafficStatus"
               placeholder="请选择"
@@ -109,45 +124,21 @@
             </el-button>
           </el-form-item>
         </el-form>
-
-        <div class="cl-operation1 clearfix">
-          <el-button
-            type="success"
-            size="small"
-            class="fl"
-            style="background:rgba(51,179,0,1);border-color:rgba(51,179,0,1)"
-            @click="meterRedingYC"
-          >
-            <i class="icon iconfont" style="font-size:12px">&#xe642;</i> 抄表
+        <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
+          <el-button size="mini" class="fl borderClass" round @click="meterRedingYC">
+            <i class="icon iconfont">&#xe642;</i>抄表
           </el-button>
-          <el-button
-            type="success"
-            size="small"
-            class="fl"
-            style="background:rgba(0,178,161,1);border-color:rgba(0,178,161,1)"
-            @click="orderLockYC(1)"
-          >
-            <i class="icon iconfont" style="font-size:12px">&#xe646;</i> 阀门锁定开
+          <el-button size="mini" class="fl borderClass" round @click="orderLockYC(1)">
+            <i class="icon iconfont">&#xe646;</i>阀门锁定开
           </el-button>
-          <el-button
-            type="success"
-            size="small"
-            class="fl"
-            style="background:rgba(229,169,3,1);border-color:rgba(229,169,3,1)"
-            @click="orderLockYC(0)"
-          >
-            <i class="icon iconfont" style="font-size:12px">&#xe643;</i> 阀门锁定关
+          <el-button size="mini" class="fl borderClass" round @click="orderLockYC(0)">
+            <i class="icon iconfont">&#xe643;</i>阀门锁定关
           </el-button>
-          <el-button
-            type="success"
-            size="small"
-            class="fl"
-            style="background:rgba(117,194,0,1);border-color:rgba(117,194,0,1)"
-            @click="orderUnockYC"
-          >
-            <i class="icon iconfont" style="font-size:12px">&#xe645;</i> 解锁
+          <el-button size="mini" class="fl borderClass" round @click="orderUnockYC">
+            <i class="icon iconfont">&#xe645;</i>解锁
           </el-button>
         </div>
+
         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="ExcelYcInfo" />
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -192,16 +183,30 @@
             </template>
             <el-table-column label="操作" width="180px" align="center" fixed="right">
               <template slot-scope="scope">
-                <a
-                  class="viewHis"
+                <el-tooltip
+                  class="item"
                   v-if="scope.row.SA_Customer_Id!=''"
-                  @click="waterMeterYCDetail(scope.row.SA_Customer_Id)"
-                >查看历史详情</a>
-                <a
-                  class="viewHis"
+                  effect="dark"
+                  content="查看历史详情"
+                  placement="bottom"
+                >
+                  <i
+                    class="icon iconfont viewHis"
+                    @click="waterMeterYCDetail(scope.row.SA_Customer_Id)"
+                  >&#xe670;</i>
+                </el-tooltip>
+                <el-tooltip
                   v-if="scope.row.SA_Customer_Id!=''"
-                  @click="instructionsHis(scope.row.Id)"
-                >指令历史</a>
+                  class="item"
+                  effect="dark"
+                  content="指令历史"
+                  placement="bottom"
+                >
+                  <i
+                    class="icon iconfont editJxWater"
+                    @click="instructionsHis(scope.row.Id)"
+                  >&#xe69f;</i>
+                </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
@@ -405,7 +410,7 @@ export default {
       //重置
       this.$refs["searcTable"].resetFields();
       this.tipsDataCopy = [];
-      this.searchYCWaterList()
+      this.searchYCWaterList();
     },
     showLabel(n, w) {
       if (Math.floor((w - 180) / 280) >= n || this.isShow) {

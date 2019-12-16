@@ -107,9 +107,12 @@
             <span>{{(IcwachMeterData.page - 1) * IcwachMeterData.limit+ scope.$index + 1}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150px" align="center" fixed="right">
+        <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="viewHis" @click="waterMeterICDetail(scope.row.Id)">查看历史详情</a>
+             <el-tooltip class="item" effect="dark" content="查看历史详情" placement="bottom">
+              <i class="icon iconfont viewHis" @click="waterMeterICDetail(scope.row.Id)">&#xe670;</i>
+            </el-tooltip>
+           
           </template>
         </el-table-column>
       </el-table>
@@ -333,6 +336,7 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
     },
+    //详情
     waterMeterICDetail(id) {
       let that = this;
       that.viewWaterHistory = true;

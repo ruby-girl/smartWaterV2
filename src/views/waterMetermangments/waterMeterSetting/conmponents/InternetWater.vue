@@ -25,7 +25,12 @@
         />
       </el-form-item>
 
-      <el-form-item label="用户状态" v-show="show3||isShow" key="CustomerMeterState" prop="CustomerMeterState">
+      <el-form-item
+        label="用户状态"
+        v-show="show3||isShow"
+        key="CustomerMeterState"
+        prop="CustomerMeterState"
+      >
         <el-select
           v-model="WLWQueryParam.CustomerMeterState"
           placeholder="请选择"
@@ -36,7 +41,12 @@
           <el-option label="销户" value="2"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="开户状态" v-show="show4||isShow" key="CustomerOpenAccountState" prop="CustomerOpenAccountState">
+      <el-form-item
+        label="开户状态"
+        v-show="show4||isShow"
+        key="CustomerOpenAccountState"
+        prop="CustomerOpenAccountState"
+      >
         <el-select
           v-model="WLWQueryParam.CustomerOpenAccountState"
           placeholder="请选择"
@@ -76,38 +86,20 @@
         <el-button type="primary" size="mini" @click="searchWLWMeterInfo" round>
           <i class="icon iconfont">&#xe694;</i>查询
         </el-button>
-         <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
           <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
       </el-form-item>
     </el-form>
-    <div class="cl-operation1 clearfix">
-      <el-button
-        type="success"
-        size="small"
-        class="fl"
-        style="background:rgba(0,178,161,1);border-color:rgba(0,178,161,1)"
-        @click="orderLockWLWOpen(1)"
-      >
-        <i class="icon iconfont" style="font-size:12px">&#xe646;</i> 阀门锁定开
+    <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
+      <el-button size="mini" class="fl borderClass" round @click="orderLockWLWOpen(1)">
+        <i class="icon iconfont">&#xe646;</i>阀门锁定开
       </el-button>
-      <el-button
-        type="success"
-        size="small"
-        class="fl"
-        style="background:rgba(229,169,3,1);border-color:rgba(229,169,3,1)"
-        @click="orderLockWLWClose(0)"
-      >
-        <i class="icon iconfont" style="font-size:12px">&#xe643;</i> 阀门锁定关
+      <el-button size="mini" class="fl borderClass" round @click="orderLockWLWClose(0)">
+        <i class="icon iconfont">&#xe643;</i>阀门锁定关
       </el-button>
-      <el-button
-        type="success"
-        size="small"
-        class="fl"
-        style="background:rgba(117,194,0,1);border-color:rgba(117,194,0,1)"
-        @click="orderUnockWLW"
-      >
-        <i class="icon iconfont" style="font-size:12px">&#xe645;</i> 解锁
+     <el-button size="mini" class="fl borderClass" round @click="orderUnockWLW(0)">
+        <i class="icon iconfont">&#xe645;</i>解锁
       </el-button>
     </div>
     <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="ExcelWLWInfo" />
@@ -153,13 +145,11 @@
           />
         </template>
 
-        <el-table-column label="操作" width="300px" align="center" fixed="right">
+        <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a
-              class="viewHis"
-              v-if="scope.row.SA_Customer_Id!=''"
-              @click="waterMeterWLWDetail(scope.row.IMSI)"
-            >查看历史详情</a>
+            <el-tooltip class="item" effect="dark" content="查看历史详情" placement="bottom">
+              <i class="icon iconfont viewHis" @click="waterMeterWLWDetail(scope.row.IMSI)">&#xe670;</i>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -311,11 +301,11 @@ export default {
     }
   },
   methods: {
-     resetting() {
+    resetting() {
       //重置
       this.$refs["searcTable"].resetFields();
       this.tipsDataCopy = [];
-      this.searchWLWMeterInfo()
+      this.searchWLWMeterInfo();
     },
     showLabel(n, w) {
       if (Math.floor((w - 180) / 280) >= n || this.isShow) {

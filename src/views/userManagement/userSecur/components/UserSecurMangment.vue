@@ -40,13 +40,16 @@
         <el-table-column label="操作" width="120px" align="center" fixed="right">
           <template slot-scope="scope">
             <div class="icongStyle">
-              <i
-                class="icon iconfont iconbiaodan1"
-                @click="detaile(scope.row.SA_InsuredMessage_Id)"
-                title="详情"
-              ></i>
-              <i class="icon iconfont" @click="goHisWeb(scope.row.CustomerNo)" title="历史详情">&#xe670;</i>
-              <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)" title="复审"></i>
+              <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
+                <i class="icon iconfont iconbiaodan1" @click="detaile(scope.row.SA_InsuredMessage_Id)" ></i>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="历史详情" placement="bottom">
+                <i class="icon iconfont" @click="goHisWeb(scope.row.CustomerNo)" >&#xe670;</i>
+              </el-tooltip>
+               <el-tooltip class="item" effect="dark" content="复审" placement="bottom">
+                 <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)" ></i>
+              </el-tooltip>
+         
             </div>
           </template>
         </el-table-column>

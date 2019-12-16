@@ -41,11 +41,9 @@
         <el-table-column label="操作" width="120px" align="center" fixed="right">
           <template slot-scope="scope">
             <div class="icongStyle">
-              <i
-                class="icon iconfont iconbiaodan1"
-                @click="detaile(scope.row.SA_InsuredMessage_Id)"
-                title="详情"
-              ></i>
+              <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
+                <i class="icon iconfont iconbiaodan1" @click="detaile(scope.row.SA_InsuredMessage_Id)" ></i>
+              </el-tooltip>
             </div>
           </template>
         </el-table-column>
