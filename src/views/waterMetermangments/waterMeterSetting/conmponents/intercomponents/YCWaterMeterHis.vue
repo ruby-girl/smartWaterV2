@@ -21,7 +21,7 @@
     <el-table-column prop="TotalWaterPrice" label="水费" width="150"></el-table-column>
     <el-table-column prop="PollutionDischarge" label="污水费" width="150"></el-table-column>
     <el-table-column prop="PricePaid" label="扣减金额" width="150"></el-table-column>
-    <el-table-column prop="WaterAllowance" label="账户余额" width="200"></el-table-column>
+    <el-table-column prop="Balance" label="账户余额" width="200"></el-table-column>
     <el-table-column prop="WaterAllowance" label="固定减免量" width="200"></el-table-column>
     <el-table-column prop="OrderTime" label="最近一次抄表日期" width="200"></el-table-column>
     <el-table-column label="操作" width="200" fixed="right">

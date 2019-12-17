@@ -346,13 +346,18 @@ export default {
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
+         if (Math.floor((this.screenWidth - 180) / 280) < 4) {
+        this.showBtn = true;
+      } else {
+        this.showBtn = false;
+      }
       },
       immediate: true
     },
     ifShow() {
       let _this = this;
       setTimeout(function() {
-        _this.searchWidth = _this.$refs.formHeight.clientWidth;
+        _this.screenWidth = _this.$refs.formHeight.clientWidth;
       }, 200);
     }
   },
@@ -384,11 +389,7 @@ export default {
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.$nextTick(() => {
       this.screenWidth = this.$refs.formHeight.clientWidth;
-      if (Math.floor((this.screenWidth - 180) / 280) < 4) {
-        this.showBtn = true;
-      } else {
-        this.showBtn = false;
-      }
+     
     });
   },
   computed: {

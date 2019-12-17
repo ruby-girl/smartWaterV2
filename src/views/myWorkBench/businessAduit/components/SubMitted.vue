@@ -34,13 +34,9 @@
         <el-table-column label="操作" width="120px" align="center" fixed="right">
           <template slot-scope="scope">
             <div class="icongStyle">
-              <i
-                class="icon iconfont iconbiaodan1"
-                @click="detaile(scope.row.SA_InsuredMessage_Id)"
-                title="详情"
-              ></i>
-              <i class="icon iconfont" @click="goHisWeb(scope.row.CustomerNo)" title="历史详情">&#xe670;</i>
-              <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)" title="复审"></i>
+              <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
+                <i class="icon iconfont " @click="detaile">&#xe653;;</i>
+              </el-tooltip>
             </div>
           </template>
         </el-table-column>
@@ -56,7 +52,7 @@
   </div>
 </template>
 <script>
-import SubSelected from "../selecteds/SubSelected";
+import SubSelected from "./selecteds/SubSelected";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
@@ -72,7 +68,7 @@ export default {
         applyNo: "", //业务编号
         applyType: "", //申请类型
         timevalue: [], //时间
-        tableId: ""
+        tableId: "0000032"
       }, //查询对象
       checksData: [],
       tableKey: 0,
@@ -138,7 +134,9 @@ export default {
     },
     excelInssud() {
       console.log("导出");
-    }
+    },
+    //详情
+    detaile(){}
   }
 };
 </script>
