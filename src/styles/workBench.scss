@@ -1,0 +1,80 @@
+.work-bench-detail {
+  .el-dialog__body {
+    padding: 14px !important;
+    background: #F5F5F5;
+    >div{
+      display: flex;
+      -webkit-display: flex;
+    }
+    .detail-left{ flex: 1;-webkit-flex: 1;}
+    .detail-right{ width: 236px;margin-left: 12px;overflow: auto;height: 200px}
+    .detail-moduler{padding: 18px 14px;margin: 0 0 10px 0; background: #fff;
+      h2{ font: bold 16px 'Microsoft YaHei';color: #5B5B5B;margin-top: 0;
+        i{display: inline-block;width: 4px;background: #29BEB0;height: 18px;margin: -3px 5px 0 0;vertical-align: middle;}
+      }}
+    .detail-moduler:last-child{margin: 0;}
+    .detail-table-info {
+      width: 100%;position: relative;border: solid 1px #DBE3E8;padding: 0;margin: 0;
+      >li{list-style-type:none;border-bottom: solid 1px #DBE3E8;overflow: hidden;
+        font: normal 14px 'Microsoft YaHei';height: 100%;position: relative;
+      label{color: #777C82;display: block;width: 85px;float: left}
+      span{ display: block;color: #46494C;width: calc(100% - 85px);float: left;max-height: 100px;overflow: auto}
+      }
+      >li:last-child{border: none;}
+      >li > p{float: left;width: 25%;margin: 0;padding: 8px;position: relative;}
+      >li > p:after{
+        content: "";
+        height: 150px;
+        border-right: solid 1px #DBE3E8;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+      }
+      >li > p:last-child{ border: none;}
+      >li > p:last-child:after{ height: 0;}
+      >li:nth-child(2n+1){background: #F0F2F5}
+      >li:nth-child(2n){background: #FAFAFA}
+      li.half{
+        >p{width: 50%;}
+      }
+      li.whole{
+        >p{width: 100%}
+      }
+      li.one-third{
+        p:first-child {width: 25%}
+        p:last-child {width: 75%}
+      }
+      li.third{
+        >p{width: 33.3%;
+        label{color: #777C82;display: block;width:125px;float: left}
+        span{ display: block;color: #46494C;width: calc(100% - 125px);float: left;max-height: 100px;overflow: auto;padding-left: 10%;}
+        }
+      }
+    }
+    .tips{ color: #FF3D3D;
+      font-style: normal;margin: 0 5px;}
+    .contract-detail{ padding: 8px;background: #F0F2F5;width: 350px;
+      label{color: #777C82;width: 90px;display: inline-block;}
+      span{color: #46494C}
+    }
+    .pot {
+      display: inline-block;width: 80px;height: 3px;background: #00B3A1;position: relative;bottom: -4px;margin: 0 12px;
+      i{display: inline-block;
+        width:0;
+        height:0;
+        border-top:5px solid transparent;
+        border-bottom:5px solid transparent;
+        border-left:6px solid #00B3A1;
+        position: absolute;
+        right: -5px;top:-2.5px;
+      }
+      label{font-size: 14px;color: #00B3A1;position: absolute;top: -20px;left: 20px;}
+    }
+    .pot-money{font: bold 16px/15px "Microsoft YaHei";color: #FF3D3D !important;}
+    .to-examine{
+      text-align: center;padding: 14px 0;margin: 0;
+      .pass-btn{background: #fff;color: #00B2A1;border: solid 1px #00B2A1;border-radius: 5px;height: 28px;}
+      .refuse-btn{background: #fff;height: 28px;color: #777C82;border: solid 1px #B8C2CC;}
+    }
+  }
+}
