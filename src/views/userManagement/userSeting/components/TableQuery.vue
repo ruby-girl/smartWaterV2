@@ -36,11 +36,17 @@
           :align="item.Position"
           :label="item.ColDesc"/>
       </template>
-      <el-table-column label="操作" width="200px" align="center" fixed="right">
+      <el-table-column label="操作" width="100px" align="center" fixed="right">
         <template slot-scope="scope">
-          <a style="margin: 10px;color: #B59200" @click="handleDetail(scope.row)">详情</a>
-          <a style="margin: 10px;color: #00B2A1" @click="handleEdit(scope.row)">编辑</a>
-          <a style="margin: 10px;color: #FF3D3D" @click="handleDelete(scope.row)">删除</a>
+          <el-tooltip effect="dark" content="详情" placement="bottom-start">
+            <a style="color: #B59200" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="编辑" placement="bottom-start">
+            <a style="margin:10px;color: #00B2A1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="删除" placement="bottom-start">
+            <a style="color: #FF3D3D" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>

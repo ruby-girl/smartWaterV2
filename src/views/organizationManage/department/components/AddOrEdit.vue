@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :close-on-click-modal="false"
-    top="30vh"
+    top="10vh"
     :title="title"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
@@ -25,7 +25,7 @@
             placeholder="请输入岗位名称"
             maxlength="10"
             size="small"
-            style="width: 230px"/>
+            style="width: 180px"/>
           <label class="el-icon-close" style="color: #777C82;margin-left: 3px;cursor: pointer;"
                  @click="deletePost(index)"></label>
         </el-form-item>

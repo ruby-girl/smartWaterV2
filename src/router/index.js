@@ -365,11 +365,12 @@ export const asyncRoutes = [
   {
     path: '/myWorkBench',
     redirect: '/myWorkBench/page',
+    alwaysShow: true, // will always show the root menu
     component: Layout,
     name: "myWorkBench",
     meta: {
       title: '我的工作台',
-      icon: 'iconfont iconcaidan-zuzhiguanli',
+      icon: 'iconfont icongongzuotai',
       roles: ['1']
     },
     children: [{

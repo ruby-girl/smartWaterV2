@@ -9,7 +9,7 @@
       size="small"
       label-width="70px"
       @submit.native.prevent>
-      <el-form-item label="水厂" v-if="waterFactory.length>1" prop="SA_WaterFactory_Id">
+      <el-form-item label="水厂" v-if="waterFactory.length>1" prop="SA_WaterFactory_Id" :class="!ifMore||screenWidth>1440?'firstItemsOther':''">
         <el-select v-model="param1.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
@@ -27,7 +27,7 @@
         </el-select>
       </el-form-item>
       <transition name="fade">
-        <el-form-item label="抄表状态" v-show="screenWdth<1920?ifMore:true" prop="MeterReadState">
+        <el-form-item label="抄表状态" v-show="screenWdth<1440?ifMore:true" prop="MeterReadState">
           <el-select v-model="param1.MeterReadState" placeholder="请选择" size="small" @change="getText(param1.MeterReadState,'MeterReadState',meterState,'抄表状态')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
@@ -102,26 +102,27 @@
       size="small"
       label-width="70px"
       @submit.native.prevent>
-      <el-form-item label="水厂" v-if="waterFactory.length>1" prop="SA_WaterFactory_Id">
+      <el-form-item label="水厂" v-if="waterFactory.length>1" prop="SA_WaterFactory_Id" :class="!ifMore2||screenWidth>1440?'firstItemsOther':''">
         <el-select v-model="param2.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
+        <el-form-item label="抄表状态" prop="MeterReadState" >
+          <el-select v-model="param2.MeterReadState" placeholder="请选择" size="small"
+                     @change="getText(param2.MeterReadState,'MeterReadState',meterState,'抄表状态')">
+            <el-option label="全部" value="-1"></el-option>
+            <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
+          </el-select>
+        </el-form-item>
       <el-form-item label="抄表员" prop="SA_MeterReader_Id">
         <el-select v-model="param2.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param2.SA_MeterReader_Id,'SA_MeterReader_Id',meterArry,'抄表员')">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="抄表状态" prop="MeterReadState">
-        <el-select v-model="param2.MeterReadState" placeholder="请选择" size="small" @change="getText(param2.MeterReadState,'MeterReadState',meterState,'抄表状态')">
-          <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
-        </el-select>
-      </el-form-item>
       <transition name="fade">
-        <el-form-item label="抄表日期  " v-show="screenWdth<1680?ifMore2:true" prop="meterData">
+        <el-form-item label="抄表日期"  prop="meterData">
           <el-date-picker
             v-model="meterData"
             type="daterange"
@@ -139,7 +140,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="表册" v-show="ifMore2" prop="SA_RegisterBookInfo_Id">
+        <el-form-item label="表册" v-show="screenWdth<1680?ifMore2:true" prop="SA_RegisterBookInfo_Id">
           <el-select v-model="param2.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param2.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formArry,'表册')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>

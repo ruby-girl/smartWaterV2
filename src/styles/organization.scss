@@ -33,10 +33,10 @@
     .cl-label{font-size: 14px;line-height: 30px;color: #777C82;text-align: right;width: 75px;}
     >.el-input, >.el-select{flex: 1;}
   }
-  .operation1{ color: #00B3A1;font-size: 13px;margin: 10px}
-  .operation2{ color: #FF3D3D;font-size: 13px;margin: 10px}
-  .operation3{ color: #B59200;font-size: 13px;margin: 10px}
-  .operation4{ color: #46494C;font-size: 13px;margin: 10px}
+  .operation1{ color: #00B3A1;font-size: 14px;margin: 5px;i{font-size: 14px;}}
+  .operation2{ color: #FF3D3D;font-size: 14px;margin: 5px;i{font-size: 14px;}}
+  .operation3{ color: #B59200;font-size: 14px;margin: 5px;i{font-size: 14px;}}
+  .operation4{ color: #46494C;font-size: 14px;margin: 5px;i{font-size: 14px;}}
   .el-table thead tr th{ background: #F0F2F5}
   .getUpDown{ font-size: 14px;color: #00B3A0;display: inline-block;margin-left: 20px;cursor: pointer}
   .dialogFooter{text-align: center;padding-top: 30px;}
@@ -200,3 +200,5 @@
 .cl-danger:hover{border: solid 1px #fbc4c4;background: #fef0f0;color: #f56c6c;}
 .firstItem{margin-left: -70px;}
 .firstItems{margin-left: -50px;}
+.firstItemsOther{margin-left: -22px;}
+.firstItemsOthers{margin-left: -30px}

@@ -8,7 +8,7 @@
       size="small"
       label-width="100px"
       @submit.native.prevent>
-      <el-form-item label="抄表计划" prop="SA_MeterReadPlan_Id">
+      <el-form-item label="抄表计划" prop="SA_MeterReadPlan_Id" :class="!ifMore?'firstItemsOther':''">
         <el-select v-model="param.SA_MeterReadPlan_Id" placeholder="请选择" size="small" @change="getUserInfo">
           <el-option v-for="(item,index) in planArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
@@ -19,14 +19,14 @@
           <el-option v-for="(item,index) in peopleArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="表册" prop="SA_RegisterBookInfo_Id">
+      <el-form-item label="表册" prop="SA_RegisterBookInfo_Id" >
         <el-select v-model="param.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formsArray,'表册')">
           <el-option label="全部" value="-1" v-if="formsArray.length>1"></el-option>
           <el-option v-for="(item,index) in formsArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <transition name="fade">
-        <el-form-item v-show="ifMore">
+        <el-form-item v-show="screenWidth<1600?ifMore:true">
           <el-select v-model="param.CustomerQueryType" placeholder="请选择" class="user-select-box"
                      style="width: 100px;float: left;margin-left: 30px">
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
@@ -36,7 +36,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="抄表状态" v-show="ifMore" prop="MeterReadState">
+        <el-form-item label="抄表状态" v-show="screenWidth<1920?ifMore:true" prop="MeterReadState">
           <el-select v-model="param.MeterReadState" placeholder="请选择" size="small" @change="getText(param.MeterReadState,'MeterReadState',meterState,'抄表状态')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
@@ -44,8 +44,8 @@
         </el-form-item>
       </transition>
       <el-form-item label="" :class="ifMore?'cl-last-item':''">
-        <i v-show="ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
-        <i v-show="!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
+        <i v-show="screenWidth<=1680&&ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
+        <i v-show="screenWidth<=1680&&!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
         <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
         <el-button round size="mini" class="cl-reset" @click="resetFun()"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
       </el-form-item>
@@ -101,7 +101,7 @@
           tableId: '0000014'
         },
         meterData:[],//表册定位模拟数据
-        screenWdth:'',
+        screenWidth:'',
       }
     },
     methods: {
@@ -192,7 +192,7 @@
       }
     },
     mounted() {
-      this.screenWdth = window.screen.width
+      this.screenWidth = window.screen.width
       this.getplanArray()
       this.meterState = getDictionaryOption('抄表状态')
     }

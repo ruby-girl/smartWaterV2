@@ -33,12 +33,20 @@
             :align="item.Position"
             :label="item.ColDesc"/>
         </template>
-        <el-table-column label="操作" width="300px" align="center" fixed="right">
+        <el-table-column label="操作" width="140px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation3" @click="handleUserInfo(scope.row)">表册用户</a>
-            <a class="operation1" @click="handleEdit(scope.row)">表册编辑</a>
-            <a class="operation4" @click="" @click="handleEmpty(scope.row)">清空</a>
-            <a class="operation2" @click="handleDelete(scope.row)">删除</a>
+            <el-tooltip effect="dark" content="表册用户" placement="bottom-start">
+              <a class="operation3" @click="handleUserInfo(scope.row)"><i class="iconfont icon iconbiaoceshezhi-biaoceyonghu"></i></a>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="表册编辑" placement="bottom-start">
+              <a class="operation1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="清空" placement="bottom-start">
+              <a class="operation4" @click="handleEmpty(scope.row)"><i class="iconfont icon iconbiaoceshezhi-qingkong"></i></a>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="删除" placement="bottom-start">
+              <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>

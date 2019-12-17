@@ -34,10 +34,14 @@
                 :align="item.Position"
                 :label="item.ColDesc"/>
             </template>
-            <el-table-column label="操作" width="200px" align="center" fixed="right">
+            <el-table-column label="操作" width="100px" align="center" fixed="right">
               <template slot-scope="scope">
-                <a class="operation1" @click="handleHistory(scope.row)">查看历史记录</a>
-                <a class="operation2" @click="handleDelete(scope.row)" v-if=" scope.row.MeterReadState != 1402 ">删除</a>
+                <el-tooltip effect="dark" content="查看历史记录" placement="bottom-start">
+                  <a class="operation4" @click="handleHistory(scope.row)"><i class="iconfont icon iconxianjinjiaofei-lishijilu"></i></a>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="删除" placement="bottom-start" v-if=" scope.row.MeterReadState != 1402 ">
+                  <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
+                </el-tooltip>
               </template>
             </el-table-column>
           </el-table>

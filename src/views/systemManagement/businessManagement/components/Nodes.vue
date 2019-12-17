@@ -2,7 +2,7 @@
   <div class="node_box">
     <div class="ifExamine">
       <el-button icon="el-icon-plus" type="primary" size="small" @click="addProcess">新增流程</el-button>
-      <span class="tips">提示：审核人组可拖动至流程进行操作。</span>
+      <span class="tips">提示：审核流程可拖动至流程进行操作。</span>
       <p>是否开启审核 &nbsp;<el-switch v-model="ifExamine" :disabled="prohibit"></el-switch>
       </p>
     </div>
@@ -115,7 +115,7 @@
             res.data.ProcessConfigs.forEach((item, index) => {//该栏目下有流程时，判断流程是否为空，为空需添加默认数据
               let curLine = item.ProcessConfigLine//获取该流程下所有，回归线并绘制
               let exp = null, curData = item.ProcessConfigNode ;
-              (item.BusinessStartName == exp || item.BusinessStartName.trim().length==0) ? item.BusinessStartName = '操作员' : item.BusinessStartName = item.BusinessStartName//操作员名称
+              (item.BusinessStartName == exp || item.BusinessStartName.trim().length==0) ? item.BusinessStartName = '创建人' : item.BusinessStartName = item.BusinessStartName//操作员名称
               let localData = []
               let className = 'teams_node' + (index + 1)
               item.ProcessConfigStart.length === 0 ? item.ProcessConfigStart.push(obj2) : item.ProcessConfigStart = item.ProcessConfigStart
@@ -131,7 +131,7 @@
                       }
                     ],
                     Id: ress.data,
-                    Name: "审核人组1",
+                    Name: "审核流程1",
                     Index: 0
                   }
                   item.ProcessConfigNode.push(obj)
@@ -139,7 +139,7 @@
                     is.Members = is.Member
                     is.ModuleName = is.Name
                   })
-                  localData.push({id:item.ProcessConfigNode[0].Id,name:'审核人组1'})
+                  localData.push({id:item.ProcessConfigNode[0].Id,name:'审核流程1'})
                   localStorage.setItem(className,JSON.stringify(localData))
                   this.data = res.data.ProcessConfigs
                   this.getWidth(className, 195, curData)//动态计算流程模块实际宽度
@@ -221,7 +221,7 @@
         let repeat = true//记录重复拖动标识
         if (type === 1) {//手动
           GetMD5Id().then(res => {
-            let names = '审核人组' + parseInt(obj.length + 1)
+            let names = '审核流程' + parseInt(obj.length + 1)
             this.setProcessNodeIds(res.data,names,'teams_node' + num)
             obj.push({Id: res.data, Name: names, Index: '',Members:[],ModuleName:names,ProcessConfigLine:{FromId:'',ToId:''}})//添加默认值
             this.getWidth('teams_node' + num, 195, obj)//动态计算流程模块实际宽度
@@ -320,7 +320,7 @@
         })
       },
       setFun(item,index,data){//流程审核配置,item 节点对象 index 节点下标 num 流程下标 data 当前流程
-        item.Name.trim() == '' ?  item.Name = '审核人组'+ (index + 1) : item.Name = item.Name
+        item.Name.trim() == '' ?  item.Name = '审核流程'+ (index + 1) : item.Name = item.Name
         let obj = {item: item, type: 1}
         Bus.$emit('NodesSetFun',obj)
         this.$refs.configureChild.getLocalstorageData(data.ProcessConfigNode)

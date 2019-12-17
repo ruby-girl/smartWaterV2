@@ -33,12 +33,16 @@
             :align="item.Position"
             :label="item.ColDesc"/>
         </template>
-        <el-table-column label="操作" width="200px" align="center" fixed="right">
+        <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <a class="operation1" @click="handleEdit(scope.$index, scope.row)">编辑</a>
-            <a class="operation2" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDelete">删除</a>
+            <el-tooltip effect="dark" content="编辑" placement="bottom-start">
+              <a class="operation1" @click="handleEdit(scope.$index, scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
+            </el-tooltip>
+            <el-tooltip effect="dark" content="删除" placement="bottom-start"  v-if="scope.row.isDelete">
+              <a class="operation2" @click="handleDelete(scope.$index, scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
+            </el-tooltip>
             <el-tooltip v-else effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start">
-              <a style="color: #C0C8CC;margin: 10px;">删除</a>
+              <a style="color: #C0C8CC;margin: 10px;"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>
         </el-table-column>

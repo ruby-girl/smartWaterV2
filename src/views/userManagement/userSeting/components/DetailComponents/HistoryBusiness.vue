@@ -108,7 +108,7 @@
       height: calc(100% + 60px);
       border-left: dashed 1px #AAB5C5;
       position: absolute;
-      left: 95px;
+      left: 105px;
       top: 20px;
       margin-left: -1px;
     }
@@ -154,7 +154,7 @@
 
     .icon {
       position: absolute;
-      left: 95px;
+      left: 105px;
       top: 50%;
       width: 34px;
       height: 34px;
@@ -168,11 +168,14 @@
 
     .title {
       text-align: right;
-      margin-right: 95px;
-      width: 60px;
+      margin-right: 85px;
+      width: 70px;
       font: bold 14px/70px 'Microsoft YaHei';
       line-height: 70px;
       display: inline-block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     .content {

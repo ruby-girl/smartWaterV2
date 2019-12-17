@@ -12,65 +12,6 @@
         <el-form ref="form" :model="form" label-width="100px">
           <div class="edit_box_moudler">
             <h3><i></i>人员资料</h3>
-         <!-- <el-row :gutter="50">
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="人员编号:">
-                <span>{{ form.EmpNo }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="人员名称:">
-                <span>{{ form.EmpName }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="性别:">
-                <span>{{ form.Gender }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="出生日期:">
-                <span>{{ form.Birthday }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="电话号码:">
-                <span>{{ form.MobileNumber }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="身份证号:">
-                <span>{{ form.IDNumber }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="入职时间:">
-                <span> {{ form.EnrollingTime }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="邮箱:">
-                <span> {{ form.EmailAddress }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
-              <el-form-item label="岗位状态:">
-                <span>{{ form.JobStatus }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col v-for="(item,index) in form.blList" :key="index" :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-              <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6" style="padding-left: 0">
-                <el-form-item label="部门:">
-                  <span>{{ item.SYS_DepartmentName }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6" style="padding-left: 0;">
-                <el-form-item label="岗位:" style="margin-left: 25px;">
-                  <span>{{ item.OA_JobName }}</span>
-                </el-form-item>
-              </el-col>
-            </el-col>
-          </el-row>-->
             <div class="user_info">
               <ul>
                 <li class="user_line clearfix">
