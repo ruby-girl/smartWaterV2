@@ -1,7 +1,7 @@
 <template>
   <div class="box_sub">
     <div ref="fromHeight">
-      <sub-selected :searchWidth="searchWidth" :selectHead="selectHead" @getText="getText" />
+      <stay-selected :searchWidth="searchWidth" :selectHead="selectHead" @getText="getText" />
     </div>
     <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
     <div class="main-padding-20-y" id="table">
@@ -35,7 +35,7 @@
         <el-table-column label="操作" width="120px" align="center" fixed="right">
           <template slot-scope="scope">
             <div class="icongStyle">
-             <el-tooltip
+              <el-tooltip
                 class="item"
                 popper-class="tooltip"
                 effect="light"
@@ -43,9 +43,9 @@
                 content="详情"
                 placement="bottom"
               >
-                <i class="icon iconfont detaile" @click="detaile">&#xe653;</i>
+                <i class="icon iconfont detaile" @click="detaile">&#xe6a1;</i>
               </el-tooltip>
-             <el-tooltip
+              <el-tooltip
                 class="item"
                 popper-class="tooltip"
                 effect="light"
@@ -75,14 +75,14 @@
   </div>
 </template>
 <script>
-import SubSelected from "./selecteds/SubSelected";
+import StaySelected from "./selecteds/StaySelected";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
 import Step from "./Step"; //流程图
 export default {
-  name: "SubMitted",
-  components: { SubSelected, SearchTips, Pagination, Step },
+  name: "StayAduite",
+  components: { StaySelected, SearchTips, Pagination, Step },
   data() {
     return {
       searchWidth: 1024, //
@@ -91,8 +91,10 @@ export default {
         limit: 10,
         applyNo: "", //业务编号
         applyType: "", //申请类型
+        creater: -1, //创建人
         timevalue: [], //时间
-        tableId: "0000032"
+        tableId: "0000032",
+        SA_WaterFactory_Id: "-1" //水厂
       }, //查询对象
       checksData: [],
       tableKey: 0,
@@ -121,7 +123,7 @@ export default {
           WaterMeterTypeName: "远传表水表"
         },
         {
-          reaId: "17ce4b89-3938-444b-beec-9683a4e010e211",
+          reaId: "17ce4b89-3938-444b-beec-9683a4e010e2",
           AreaName: "根级区域",
           CustomerName: "夏侯渊",
           CustomerNo: "00000368",
@@ -210,7 +212,6 @@ export default {
     toogleExpand(row) {
       const _this = this;
       let $table = _this.$refs.table;
-
       _this.tableData.map((item, index) => {
         $table.toggleRowExpansion(item, false);
       });
@@ -235,7 +236,7 @@ export default {
   }
   .detaile {
     font-size: 16px;
-    color: #b59200;
+    color: #ff3d3d;
     padding-right: 18px;
   }
 }

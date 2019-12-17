@@ -10,7 +10,13 @@
       @submit.native.prevent
       ref="searcTable"
     >
-      <el-form-item label="姓名" v-show="show1||isShow" key="CustomerName" label-width="40px" prop="CustomerName">
+      <el-form-item
+        label="姓名"
+        v-show="show1||isShow"
+        key="CustomerName"
+        label-width="40px"
+        prop="CustomerName"
+      >
         <el-input
           v-model="IcwachMeterData.CustomerName"
           maxlength="20"
@@ -109,10 +115,16 @@
         </el-table-column>
         <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-             <el-tooltip class="item" effect="dark" content="查看历史详情" placement="bottom">
+            <el-tooltip
+              class="item"
+              popper-class="tooltip"
+              effect="light"
+              :visible-arrow="false"
+              content="查看历史详情"
+              placement="bottom"
+            >
               <i class="icon iconfont viewHis" @click="waterMeterICDetail(scope.row.Id)">&#xe670;</i>
             </el-tooltip>
-           
           </template>
         </el-table-column>
       </el-table>

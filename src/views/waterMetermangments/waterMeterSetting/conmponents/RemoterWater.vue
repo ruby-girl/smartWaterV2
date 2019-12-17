@@ -186,7 +186,9 @@
                 <el-tooltip
                   class="item"
                   v-if="scope.row.SA_Customer_Id!=''"
-                  effect="dark"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
                   content="查看历史详情"
                   placement="bottom"
                 >
@@ -198,7 +200,9 @@
                 <el-tooltip
                   v-if="scope.row.SA_Customer_Id!=''"
                   class="item"
-                  effect="dark"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
                   content="指令历史"
                   placement="bottom"
                 >
@@ -346,11 +350,11 @@ export default {
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
-         if (Math.floor((this.screenWidth - 180) / 280) < 4) {
-        this.showBtn = true;
-      } else {
-        this.showBtn = false;
-      }
+        if (Math.floor((this.screenWidth - 180) / 280) < 4) {
+          this.showBtn = true;
+        } else {
+          this.showBtn = false;
+        }
       },
       immediate: true
     },
@@ -389,7 +393,6 @@ export default {
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.$nextTick(() => {
       this.screenWidth = this.$refs.formHeight.clientWidth;
-     
     });
   },
   computed: {
