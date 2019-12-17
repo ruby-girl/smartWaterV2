@@ -85,7 +85,7 @@ export default {
   components: { StaySelected, SearchTips, Pagination, Step },
   data() {
     return {
-      searchWidth: 1024, //
+      searchWidth: null, //
       selectHead: {
         page: 1,
         limit: 10,

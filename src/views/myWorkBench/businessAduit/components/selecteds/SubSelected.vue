@@ -1,4 +1,5 @@
 <template>
+<div class="position-search-head">
   <el-form
     :inline="true"
     :model="selectHead"
@@ -64,6 +65,7 @@
       <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
     </el-form-item>
   </el-form>
+  </div>
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
