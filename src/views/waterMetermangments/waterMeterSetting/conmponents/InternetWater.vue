@@ -98,7 +98,7 @@
       <el-button size="mini" class="fl borderClass" round @click="orderLockWLWClose(0)">
         <i class="icon iconfont">&#xe643;</i>阀门锁定关
       </el-button>
-     <el-button size="mini" class="fl borderClass" round @click="orderUnockWLW(0)">
+      <el-button size="mini" class="fl borderClass" round @click="orderUnockWLW(0)">
         <i class="icon iconfont">&#xe645;</i>解锁
       </el-button>
     </div>
@@ -147,7 +147,14 @@
 
         <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="查看历史详情" placement="bottom">
+            <el-tooltip
+              class="item"
+              popper-class="tooltip"
+              effect="light"
+              :visible-arrow="false"
+              content="查看历史详情"
+              placement="bottom"
+            >
               <i class="icon iconfont viewHis" @click="waterMeterWLWDetail(scope.row.IMSI)">&#xe670;</i>
             </el-tooltip>
           </template>

@@ -8,10 +8,10 @@
     @submit.native.prevent
     ref="formHeight"
   >
-    <el-form-item label="申请状态" v-show="show1||isShow">
+    <el-form-item label="申请状态" v-show="show1||isShow" >
       <el-input maxlength="20" value="申请中" disabled />
     </el-form-item>
-    <el-form-item label="申请类型" v-show="show2||isShow" key="WaterMeter">
+    <el-form-item label="申请类型" v-show="show2||isShow" key="WaterMeter" prop="applyType">
       <el-select
         v-model="selectHead.applyType"
         placeholder="请选择"
@@ -27,7 +27,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="业务编号" v-show="show3||isShow">
+    <el-form-item label="业务编号" v-show="show3||isShow" prop="applyNo">
       <el-input
         v-model="selectHead.applyNo"
         maxlength="20"
