@@ -43,12 +43,7 @@
               ></div>
             </el-tooltip>
           </div>
-          <div v-if="type==1">
-            <el-button type="warning" size="mini" @click="setCustomData()">
-              <i class="iconfont iconbiaogezidingyi"></i>表格自定义
-            </el-button>
-          </div>
-          <div v-else>
+          <div v-if="type==2">
             <el-checkbox :indeterminate="isIndeterminateParent" v-model="checkedAllParent">全选</el-checkbox>
           </div>
         </div>
@@ -65,6 +60,8 @@
           @reset="reset"
           @feeWaiver="feeWaiverFunc"
           @calculatedAmount="calculatedAmount"
+          :tipsData="tipsData"
+          @delTips="delTips"
         ></components>
       </div>
       <!-- IC卡展示内容 -->
@@ -111,6 +108,7 @@ import SelectUser from "@/components/SelectUser";
 import FeeWaiver from "./components/FeeWaiver"; //水费减免弹窗
 import SelectPint from "./components/SelectPint"; //选择打印机
 import PaymentCode from "./components/PaymentCode"; //扫码支付
+import {getText,pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
 import { OrderFeeCancel } from "@/api/cashCharge";
 import { GetCustomerDataList } from "@/api/userSetting"; ////模糊查询用户--结算成功后，重新获取账户余额
 export default {
@@ -132,11 +130,8 @@ export default {
       totalLength: 0,
       paymentNum: 0, //圆圆数字
       tableHeight: 0,
-      // orderId: "", //需要减免的费用单ID
       feeWaiverItem: {},
       payOrderId: [],
-      // orderMoney: 0, //减免前金额
-      // orderType:'',//费用类型
       accountMoney: '0.00', //账户余额
       customerNo: "", //用户编号-结算后，用户编号获取账户余额
       icInfo: {}, //IC卡 卡片详情
@@ -182,6 +177,9 @@ export default {
       // isIC: false,
       // icType: "CreditCardAlready", //默认已刷卡
       unpaidMoney: '0.00', //剩余未缴
+      tipsDataCopy:[],//面包屑
+      tipsData:[],
+      secName:'用户编号'
     };
   },
   mounted: function() {
@@ -197,8 +195,21 @@ export default {
       this.tableHeight = document.body.clientHeight - formHeight -bottomHeight-70;
     },
     getList() {
-      if (this.type == 1) this.$refs.tableTypeCard.getList();
+      if (this.type == 1){
+        this.tipsData = pushItem(this.tipsDataCopy);
+        console.info(this.tipsData)
+        this.$refs.tableTypeCard.getList();
+      } 
       else this.$refs.tableTypeCard.getCardList();
+    },
+    delTips() {
+      this.headQuery.CustomerQueryValue=''
+      this.tipsDataCopy = [];
+      this.clearData();
+    },
+    getText(val, model, arr, name) {  
+      let obj = getText(val, model, arr, this.tipsDataCopy, this.$refs.tableTypeCard, name);
+      this.tipsDataCopy.push(obj);
     },
     // 查询用户缴费单 ---非IC卡
     handleFilter(user) {
@@ -212,6 +223,13 @@ export default {
       this.cardQuery.CustomerId = user.Id;
       this.listQuery.page = 1;
       this.checkedAllParent = false;
+      if(this.headQuery.CustomerQueryType==1){//处理面包屑
+        this.getText(user.customerNo,'customerNo','','用户编号')
+      }else if(this.headQuery.CustomerQueryType==2){
+        this.getText(user.CustomerName,'CustomerName','','姓名/简码')
+      }else if(this.headQuery.CustomerQueryType==6){
+        this.getText(user.SA_WaterMeterNo,'SA_WaterMeterNo','','水表编号')
+      }
       this.getList();
     },
     // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息

@@ -9,6 +9,7 @@
         :paymentNum="paymentNum"
         @handleFilterIcParent="handleFilterIc"
         @clearData="clearData"
+        @getText="getText"
       />
     </div>
     <!-- 表格模式 -->
@@ -43,12 +44,12 @@
               ></div>
             </el-tooltip>
           </div>
-          <div v-if="type==1">
+          <!-- <div v-if="type==1">
             <el-button type="warning" size="mini" @click="setCustomData()">
               <i class="iconfont iconbiaogezidingyi"></i>表格自定义
             </el-button>
-          </div>
-          <div v-else>
+          </div> -->
+          <div  v-if="type==2">
             <el-checkbox
               :indeterminate="isIndeterminateParent"
               v-model="checkedAllParent"
@@ -68,6 +69,7 @@
           @reset="reset"
           @feeWaiver="feeWaiverFunc"
           @calculatedAmount="calculatedAmount"
+          @delTips="delTips"
         ></components>
       </el-col>
       <!-- IC卡展示内容 -->
@@ -167,7 +169,7 @@ export default {
         CustomerQueryValue: "",
         CustomerQueryType: "1",
         page: 1,
-        limit: 20,
+        limit: 10,
         tableId: "0000018"
       },
       listQuery: {
@@ -205,7 +207,8 @@ export default {
       isIC: false,
       icType: "CreditCardAlready", //默认已刷卡
       unpaidMoney: 0, //剩余未缴
-      isNull:true
+      isNull:true,
+      tipsDataCopy:[]//面包屑
     };
   },
   mounted: function() {
@@ -220,6 +223,14 @@ export default {
     getList() {
       if (this.type == 1) this.$refs.tableTypeCard.getList();
       else this.$refs.tableTypeCard.getCardList()
+    },
+    delTips() {
+      this.tipsDataCopy = [];
+      this.getList();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
     },
     // 查询用户缴费单 ---非IC卡
     handleFilter(user) {

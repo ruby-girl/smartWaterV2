@@ -34,14 +34,14 @@
           </template>
           <el-table-column
             label="操作"
-            width="280"
+            width="112"
             align="center"
             fixed="right"
             class-name="small-padding"
           >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center">
-                <div class="main-color-warn" @click="billDetails(row)">
+              <div class="display-flex justify-content-flex-center secur-content">
+                <!-- <div class="main-color-warn" @click="billDetails(row)">
                   <a>账单详情</a>
                 </div>
                 <div class="main-color-red pl-15 pr-15" @click="invoice(row)">
@@ -49,7 +49,37 @@
                 </div>
                 <div @click="pint(row)">
                   <a>票据打印</a>
-                </div>
+                </div> -->
+                <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="账单详情"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconbiaodan1" @click="billDetails(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="数据冲红"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconshoufeichaxun-piaojuchonghong" @click="invoice(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="票据打印"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconshoufeichaxun-piaojudayin" @click="pint(row)"></i>
+              </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -244,6 +274,22 @@ export default {
 <style lang="scss" scoped>
 .section-container .section-full-container{
   padding-top:0 !important;
+}
+.iconshoufeichaxun-piaojudayin{
+  color:#777c82;
+}
+.secur-content {
+    .icon {
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .iconbiaodan1 {
+      color: #b59200;
+    }
+    .iconshoufeichaxun-piaojuchonghong {
+      color: #ff3d3d;
+      padding:0 15px;
+    }
 }
 </style>
 

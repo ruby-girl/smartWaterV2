@@ -24,7 +24,7 @@
           v-model="selectHead.CustomerQueryValue"
           maxlength="20"
           @keyup.enter.native="handleFilter"
-          @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue','',secNmae)"
+          @blur="getText(selectHead.CustomerQueryValue,'CustomerQueryValue','',secNmae)"
           style="width: 180px;float: left"
         />
       </el-form-item>

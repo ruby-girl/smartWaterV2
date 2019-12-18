@@ -15,9 +15,7 @@
            class="user-select-box"
           style="width: 100px;float: left;margin-right:3px;"
           >
-            <el-option label="用户编号" value="1"></el-option>
-            <el-option label="姓名/简码" value="2"></el-option>
-            <el-option label="水表编号" value="6"></el-option>
+            <el-option v-for="item in typeOption" :key="item.Id" :label="item.Name" :value="item.Id" />
           </el-select>
           <el-input
             v-model="selectHead.CustomerQueryValue"
@@ -25,6 +23,7 @@
             placeholder="(长度1-30)"
             @keyup.enter.native="handleFilter"
             style="width: 180px;float: left"
+           
           />
         </el-form-item>
         <el-form-item>
@@ -69,7 +68,12 @@ export default {
     return {
       timevalue: [],
       editUserList: [],
-      user: {}
+      user: {},
+      typeOption:[     
+        { Name: "用户编号", Id: "1" },
+        { Name: "姓名/简码", Id: "2" },
+        { Name: "水表编号", Id: "6" },
+      ]
     };
   },
   methods: {

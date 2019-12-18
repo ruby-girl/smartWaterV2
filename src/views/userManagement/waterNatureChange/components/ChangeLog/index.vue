@@ -124,7 +124,7 @@ export default {
         this.listQuery.EndChangeDate = "";
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
-      this.handleFilter();
+      this.getList();
     },
     getText(val, model, arr, name) {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);

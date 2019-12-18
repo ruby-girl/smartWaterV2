@@ -1,87 +1,107 @@
 <template>
   <div class="section-container">
-   <div class="section-full-container">
-      <div ref="formHeight">
-      <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" />
+    <div ref="formHeight">
+      <select-head :select-head="listQuery" @handleFilter="getList" @getText="getText" />
     </div>
-    <div class="display-flex justify-content-flex-justify">
-      <el-button type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
-      <div>
-        <el-button type="success" size="mini"  @click="excel"><i class="iconfont icondaochuexcel"></i>导出Excel</el-button>
-      <el-button
-        type="warning"
-        size="mini"
-        @click="setCustomData()"
-      ><i class="iconfont iconbiaogezidingyi"></i>表格自定义</el-button>
-      </div>
-    </div>
-    <customTable ref="myChild" />
-    <div class="main-padding-20-y">
-      <el-table
-        :key="tableKey"
-        :data="tableData"
-        border
-        :height="tableHeight"
-        style="width: 100%;"
-        :header-cell-style="{'background-color': '#F0F2F5'}"
-        @sort-change="sortChanges"
-      >
-         <el-table-column fixed="left" label="序号" width="60" align="center">
-            <template slot-scope="scope">
-            <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
-          </template>
+    <div class="section-full-container" style="padding-top:0;">
+      <el-button round plain style="margin-bottom:10px;" type="primary" size="mini" @click="addRole">
+        <i class="iconfont icontianjia"></i>添加
+      </el-button>
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
+      <div class="main-padding-20-y">
+        <el-table
+          :key="tableKey"
+          :data="tableData"
+          border
+          :height="tableHeight"
+          style="width: 100%;"
+          :header-cell-style="{'background-color': '#F0F2F5'}"
+          @sort-change="sortChanges"
+        >
+          <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
+            </template>
           </el-table-column>
-        <template v-for="(item ,index) in tableHead">
-          <el-table-column
-            :key="index"
-            min-width="100px"
-            :prop="item.ColProp"
-            align="center"
-            :sortable="item.IsSortBol?'custom':null"
-            :label="item.ColDesc"
-          />
-        </template>
-        <el-table-column label="操作" align="center" class-name="small-padding">
-          <template slot-scope="{row}">
-            <div class="display-flex justify-content-flex-center">
-              <div class="main-color" @click="handleUpdate(row)">
-                <a>编辑</a>
-              </div>
-              <div  class="main-color-red pl-15" @click="delRow(row)">
-                <a>删除</a>
-              </div>      
-            </div>
+          <template v-for="(item ,index) in tableHead">
+            <el-table-column
+              :key="index"
+              min-width="100px"
+              :prop="item.ColProp"
+              align="center"
+              :sortable="item.IsSortBol?'custom':null"
+              :label="item.ColDesc"
+            />
           </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList"
+          <el-table-column label="操作" align="center" width="112px" class-name="small-padding">
+            <template slot-scope="{row}">
+             <div class="display-flex justify-content-flex-center secur-content">
+                <!-- <div class="main-color" @click="handleUpdate(row)">
+                  <a>编辑</a>
+                </div>
+                <div class="main-color-red pl-15" @click="delRow(row)">
+                  <a>删除</a>
+                </div> -->
+                 <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="编辑"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconsuoyoubiaogelidebianji" @click="handleUpdate(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="删除"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconsuoyoubiaogelideshanchu" @click="delRow(row)"></i>
+              </el-tooltip>
+              </div>
+              
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.page"
+          :limit.sync="listQuery.limit"
+          @pagination="getList(1)"
+        />
+      </div>
+      <!-- 编辑弹窗 -->
+      <Dialog
+        :show.sync="dialogFormVisible"
+        :temp="temp"
+        :dialog-status="dialogStatus"
+        @createData="createData"
+        @updateData="updateData"
       />
     </div>
-    <!-- 编辑弹窗 -->
-    <Dialog
-      :show.sync="dialogFormVisible"
-      :temp="temp"
-      :dialog-status="dialogStatus"
-      @createData="createData"
-      @updateData="updateData"
-    />
-   </div>
   </div>
 </template>
 <script>
 import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import Dialog from "./components/Dialog";
-import customTable from "@/components/CustomTable/index";
-import { getRolesList, addRole, updateRole,deleteRole,exportExcel } from "@/api/role";
+import {
+  getRolesList,
+  addRole,
+  updateRole,
+  deleteRole,
+  exportExcel
+} from "@/api/role";
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
-  name:'RolePermission',
-  components: { SelectHead, Pagination, Dialog, customTable },
+  name: "RolePermission",
+  components: { SelectHead, Pagination, Dialog, SearchTips },
   data() {
     return {
       total: 0,
@@ -92,18 +112,22 @@ export default {
         // 查询条件
         page: 1,
         limit: 20,
-        filed:"",
-        sort:"",
+        filed: "",
+        sort: "",
         roleName: "", // 角色名称
         editUserId: "-1", // 操作人
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
-        tableId: '0000004'
+        tableId: "0000004",
+        timevalue: []
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
       tableData: [],
-      checksData: []
+      checksData: [],
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
+      orderData: {}
     };
   },
   computed: {
@@ -120,37 +144,49 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 220;
-      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-     
+      this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     });
   },
   methods: {
+    delTips(val) {
+      if (val == "timevalue") {
+        //当返回的model 为时间数组  置空 时间
+        this.listQuery.editStartTime = "";
+        this.listQuery.editEndTime = "";
+      }
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
+      this.getList();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
     setCustomData() {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
-      if(this.$refs.myChild.isCustom)
-        this.tableHeight=this.tableHeight-80
-      else
-        this.tableHeight=this.tableHeight+80
+      if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;
+      else this.tableHeight = this.tableHeight + 80;
     },
-    getList() {
-      getRolesList(this.listQuery).then(res => {
-        this.total=res.count
-        this.tableData=res.data
+    getList(n) {
+      if (!n) {
+        this.orderData = Object.assign({}, this.listQuery);
+        this.orderData.page = 1;
+      }
+      getRolesList(this.orderData).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
+        this.total = res.count;
+        this.tableData = res.data;
       });
     },
-    sortChanges({prop, order }){//筛选
-      this.listQuery.filed=prop
-      this.listQuery.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
-      if(this.tableData.length>0){
-        this.listQuery.page=1
-        this.getList()
+    sortChanges({ prop, order }) {
+      //筛选
+      this.listQuery.filed = prop;
+      this.listQuery.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      if (this.tableData.length > 0) {
+        this.listQuery.page = 1;
+        this.getList();
       }
-    },
-    handleFilter(v) {
-      this.listQuery=v
-      this.listQuery.page = 1;
-      this.getList();
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row);
@@ -166,14 +202,14 @@ export default {
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        deleteRole(r.Id).then((res)=>{
+        deleteRole(r.Id).then(res => {
           this.$message({
             message: res.message,
             type: "success",
             duration: 4000
           });
-          this.getList()
-        })
+          this.getList();
+        });
       });
     },
     addRole() {
@@ -193,31 +229,43 @@ export default {
       });
     },
     updateData(dialog) {
-      updateRole(dialog.RoleName,dialog.Id).then(
-        res => {
-          this.$message({
-            message: res.message,
-            type: "success",
-            duration: 4000
-          });
-          this.dialogFormVisible = false;
-          for (const v of this.tableData) {
-            if (v.Id == this.temp.Id) {
-              const index = this.tableData.indexOf(v);
-              this.tableData.splice(index, 1, this.temp);
-              break;
-            }
+      updateRole(dialog.RoleName, dialog.Id).then(res => {
+        this.$message({
+          message: res.message,
+          type: "success",
+          duration: 4000
+        });
+        this.dialogFormVisible = false;
+        for (const v of this.tableData) {
+          if (v.Id == this.temp.Id) {
+            const index = this.tableData.indexOf(v);
+            this.tableData.splice(index, 1, this.temp);
+            break;
           }
-          this.dialogFormVisible = false;
         }
-      );
+        this.dialogFormVisible = false;
+      });
     },
-    excel(){//导出
-      exportExcel(this.listQuery).then((res)=>{      
+    excel() {
+      //导出
+      exportExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
-      })
+      });
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.secur-content {
+    .icon {
+      font-size: 16px;
+      cursor: pointer;
+      color:#00B3A1;
+    }
+    .iconsuoyoubiaogelideshanchu{
+      color: #ff3d3d;
+      padding-left:15px;
+    }
+}
+</style>
 

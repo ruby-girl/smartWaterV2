@@ -1,26 +1,12 @@
 <template>
   <div class="section-container">
-    <div class="section-full-container">
       <div ref="formHeight">
-        <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" :role-list="roleList" />
+        <select-head :select-head="listQuery" @handleFilter="getList" :role-list="roleList" @getText="getText"/>
       </div>
-      <div class="display-flex justify-content-flex-justify">
-        <el-button type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
-        <div>
-          <el-button
-          type="success"
-          size="mini"
-          @click="excel"
-        ><i class="iconfont icondaochuexcel"></i>导出Excel</el-button>
-        <el-button
-          type="warning"
-          size="mini"
-          @click="setCustomData()"
-        ><i class="iconfont iconbiaogezidingyi"></i>表格自定义</el-button>
-        </div>
-      </div>
-      <customTable ref="myChild" />
+       <div class="section-full-container" style="padding-top:0;">
       <div class="main-padding-20-y">
+         <el-button round plain style="margin-bottom:10px;" type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
+          <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
         <el-table
           :key="tableKey"
           :data="tableData"
@@ -74,7 +60,7 @@
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
-          @pagination="getList"
+          @pagination="getList(1)"
         />
       </div>
       <!-- 编辑弹窗 -->
@@ -100,7 +86,8 @@ import Pagination from "@/components/Pagination";
 import EditDialog from "./components/EditDialog";
 import ResetDialog from "./components/ResetDialog";
 import AddDialog from "./components/AddDialog";
-import customTable from "@/components/CustomTable/index";
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   getAccountList,
   getAccountDetail,
@@ -118,7 +105,7 @@ export default {
     SelectHead,
     Pagination,
     EditDialog,
-    customTable,
+    SearchTips,
     AddDialog,
     ResetDialog
   },
@@ -148,14 +135,18 @@ export default {
         editUserId: "-1", // 操作人
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
-        tableId: "0000005"
+        tableId: "0000005",
+        timevalue:[]
       },
       roleList: [], //角色下拉框，传递给组件
       addDialogFormVisible: false, // 新增弹窗
       dialogFormVisible: false, // 编辑弹窗
       resetdialogFormVisible: false, // 重置弹窗
       tableData: [],
-      checksData: []
+      checksData: [],
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [], //表单变化的值
+      orderData: []
     };
   },
   computed: {
@@ -172,14 +163,27 @@ export default {
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
       that.tableHeight = document.body.clientHeight - formHeight - 220;
-      this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+     this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       getRoles().then(res => {
         this.roleList = res.data;
       });
     });
   },
   methods: {
+    delTips(val) {
+      if (val == "timevalue") {
+        //当返回的model 为时间数组  置空 时间
+        this.listQuery.editStartTime = "";
+        this.listQuery.editEndTime = "";
+      }
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
+      this.getList();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
     cellClass({row, column, rowIndex, columnIndex}){
       if(row.UserStatusCode=='ZX'&&column.property=='UserStatus'){
         return 'main-color-red'
@@ -190,8 +194,13 @@ export default {
       if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;
       else this.tableHeight = this.tableHeight + 80;
     },
-    getList() {
-      getAccountList(this.listQuery).then(res => {
+    getList(n) {
+      if (!n) {
+        this.orderData = Object.assign({}, this.listQuery);
+        this.orderData.page = 1;
+      }
+      getAccountList(this.orderData).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -202,11 +211,6 @@ export default {
       this.listQuery.filed = prop;
       this.listQuery.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
-      this.getList();
-    },
-    handleFilter(v) {
-      this.listQuery=v
-      this.listQuery.page = 1;
       this.getList();
     },
     handleUpdate(row) {

@@ -52,12 +52,12 @@
             label="操作"
             align="center"
             class-name="small-padding"
-            width="250px"
+            width="112px"
             fixed="right"
           >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center">
-                <div class="main-color-warn" @click="details(row)">
+              <div class="display-flex justify-content-flex-center secur-content">
+                <!-- <div class="main-color-warn" @click="details(row)">
                   <a>费用详情</a>
                 </div>
                 <div class="pl-15 pr-15" @click="reset(row.Id)">
@@ -65,7 +65,37 @@
                 </div>
                 <div class="main-color" @click="feeWaiverFunc(row)">
                   <a>费用减免</a>
-                </div>
+                </div> -->
+                <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用详情"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconbiaodan1" @click="details(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用撤回"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconchexiao1" @click="reset(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item main-color"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用减免"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconjianmianshui" @click="feeWaiverFunc(row)"></i>
+              </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -195,10 +225,17 @@ export default {
       this.listQuery.SA_WaterFactory_Id = this.factoryId;
       this.listQuery.Star_ArrearsDate = this.query.Star_ArrearsDate;
       this.listQuery.End_ArrearsDate = this.query.End_ArrearsDate;
+      this.listQuery.timevalue=this.query.timevalue
       this.listQuery.Enumot = this.query.Enumot;
       this.listQuery.Enumwm = this.query.Enumwm;
       this.listQuery.Enumut = this.query.Enumut;
-      this.listQuery.Enumcf = this.query.Enumcf;  
+      this.listQuery.Enumcf = this.query.Enumcf;
+      this.getText(this.factoryId, 'SA_WaterFactory_Id', this.$refs.head.waterWorks, '水厂');
+      if(this.query.timevalue.length>0) this.getText(this.query.timevalue, 'timevalue', '', '欠费日期');
+      if(this.query.Enumot!=='-1') this.getText(this.query.Enumot, 'Enumot', this.$refs.head.Enumot, '费用类型');
+      if(this.query.Enumwm!=='-1') this.getText(this.query.Enumwm, 'Enumwm', this.$refs.head.Enumwm, '水表类型');
+      if(this.query.Enumwm!=='-1') this.getText(this.query.Enumwm, 'Enumut', this.$refs.head.Enumut, '用户类型');
+      if(this.query.Enumwm!=='-1') this.getText(this.query.Enumwm, 'Enumcf', this.$refs.head.Enumcf, '费用状态');
       this.getList();
     },
     delTips(val) {
@@ -328,6 +365,19 @@ export default {
 .button-width {
   width: 80px;
   text-align: center;
+}
+.iconchexiao1{
+  color:#777c82;
+  padding:0 15px;
+}
+.secur-content {
+    .icon {
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .iconbiaodan1 {
+      color: #b59200;
+    }
 }
 </style>
 

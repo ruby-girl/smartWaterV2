@@ -1,7 +1,8 @@
 <template>
   <!-- 表格样式-费用展示 -->
   <div>
-    <customTable ref="myChild" />
+    <!-- <customTable ref="myChild" /> -->
+    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"/>
     <div class="main-padding-20-y">
       <el-table
         :key="tableKey"
@@ -44,8 +45,47 @@
           class-name="small-padding"
         >
           <template slot-scope="{row}">
-            <div class="display-flex justify-content-flex-center">
-              <div class="main-color-warn" @click="details(row)">
+            <div class="display-flex justify-content-flex-center secur-content">
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用详情"
+                placement="bottom"
+              >
+                <i
+                  class="icon iconfont iconbiaodan1"
+                  @click="details(row)"
+                ></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用撤回"
+                placement="bottom"
+              >
+                <i
+                  class="icon iconfont iconchexiao1"
+                 @click="reset(row)"
+                ></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用减免"
+                placement="bottom"
+              >
+                <i
+                  class="icon iconfont iconjianmianshui"
+                  @click="feeWaiver(row)"
+                ></i>
+              </el-tooltip>
+              <!-- <div class="main-color-warn" @click="details(row)">
                 <a>费用详情</a>
               </div>
               <div class="pl-15" @click="reset(row)">
@@ -53,7 +93,7 @@
               </div>
               <div class="main-color pl-15" @click="feeWaiver(row)">
                 <a>费用减免</a>
-              </div>
+              </div> -->
             </div>
           </template>
         </el-table-column>
@@ -71,8 +111,10 @@
 <script>
 import Pagination from "@/components/Pagination";
 import { legalTime } from "@/utils/index";
-import customTable from "@/components/CustomTable/index";
+// import customTable from "@/components/CustomTable/index";
 import { GetOrder } from "@/api/cashCharge";
+import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   props: {
     listQuery: {
@@ -87,10 +129,13 @@ export default {
     },
     totalLength:{}
   },
-  components: { Pagination, customTable },
+  components: { Pagination,SearchTips },
   mounted() {
-    this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+    // this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+    // this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+      this.$refs.searchTips.showExcel = false; // 先获取所有自定义字段赋值
+      this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
   },
   computed: {
     tableHead: function() {
@@ -109,6 +154,9 @@ export default {
     };
   },
   methods: {
+    delTips() {
+     this.$emit("delTips")
+    }, 
     sortChanges({ prop, order }) {
       //筛选
       this.listQuery.filed = prop;

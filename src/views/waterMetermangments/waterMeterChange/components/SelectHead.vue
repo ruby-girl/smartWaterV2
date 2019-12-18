@@ -214,7 +214,7 @@ export default {
       this.$emit("getText", date, "timevalue", "", "换表日期");
     },
     handleFilter() {
-      this.$emit("handleFilter", this.selectHead);
+      this.$emit("handleFilter");
     },
      resetting(){//重置
       this.$refs['formHeight'].resetFields();  

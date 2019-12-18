@@ -36,7 +36,7 @@
       </el-select>
     </el-form-item>
     <transition-group name="fade">
-      <el-form-item label="水表类型" prop="WaterTypeId" v-show="show1||isShow" key="customerQueryType">
+      <el-form-item label="水表类型" prop="WaterTypeId" v-show="show2||isShow" key="customerQueryType">
         <el-select
           @change="getText(selectHead.WaterTypeId,'WaterTypeId',waterType,'水表类型')"
           v-model="selectHead.WaterTypeId"
@@ -47,7 +47,7 @@
           <el-option v-for="item in waterType" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
-      <el-form-item prop="Customer" v-show="show2||isShow" key="Customer">
+      <el-form-item prop="Customer" v-show="show3||isShow" key="Customer">
         <el-select
           v-model="selectHead.TransferCustomer"
           placeholder="请选择"
@@ -70,7 +70,7 @@
           style="width: 180px;float: left"
         />
       </el-form-item>
-      <el-form-item label="过户操作员" prop="OpId" v-show="show3||isShow" key="OpId">
+      <el-form-item label="过户操作员" prop="OpId" v-show="show4||isShow" key="OpId">
         <el-select
           v-model="selectHead.OpId"
           @change="getText(selectHead.OpId,'OpId',editUserList,'过户操作员')"    
@@ -86,7 +86,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="过户日期" prop="timevalue" v-show="show4||isShow" key="timevalue">
+      <el-form-item label="过户日期" prop="timevalue" v-show="show5||isShow" key="timevalue">
         <el-date-picker
           v-model="selectHead.timevalue"
           type="daterange"
@@ -145,6 +145,7 @@ export default {
       show2: false,
       show3: false,
       show4: false,
+      show5: false,
       selectOption: [
         { Name: "原用户姓名", Id: "3301" },
         { Name: "新用户姓名", Id: "3302" },
@@ -178,7 +179,8 @@ export default {
       this.show2 = this.showLabel(2, val);
       this.show3 = this.showLabel(3, val);
       this.show4 = this.showLabel(4, val);
-      this.showIcon = isShow || !this.showLabel(4, val);
+      this.show5 = this.showLabel(5, val);
+      this.showIcon = isShow || !this.showLabel(5, val);
     },
     getscName(val) {
       this.selectOption.forEach(item => {
@@ -190,7 +192,7 @@ export default {
     },
     showLabel(n, w) {
       if (this.waterWorks.length == 1) n = n - 1;
-      if (Math.floor((w - 180) / 260) > n || this.isShow)
+      if (Math.floor((w - 180) / 310) > n || this.isShow)
         return true;
       return false;
     },

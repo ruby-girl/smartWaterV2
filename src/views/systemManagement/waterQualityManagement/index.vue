@@ -47,12 +47,12 @@
             label="操作"
             align="center"
             class-name="small-padding"
-            width="313px"
+            width="150px"
             fixed="right"
           >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center method-font">
-                <div
+              <div class="display-flex  justify-content-flex-justify method-font secur-content" style="padding:0 15px;">
+                <!-- <div
                   class="main-color-warn button-width"
                   @click="constitute(row,1)"
                   v-permission="['1010106']"
@@ -80,7 +80,59 @@
                 </div>
                 <div class="main-color-red pl-20" @click="cancel(row)" v-permission="['1010105']">
                   <a>删除</a>
-                </div>
+                </div> -->
+                <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="水价构成"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconyongshuixingzhishezhi-shuijiagoucheng"  @click="constitute(row,1)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="历史水价"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconyongshuixingzhishezhi-lishishuijia" @click="history(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="水价调整"
+                placement="bottom"
+                v-if="row.UseState=='801'"
+              >
+                <i class="icon iconfont iconyongshuixingzhishezhi-shuijiatiaozheng"  @click="handleUpdate(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="撤销水价调整"
+                placement="bottom"
+                v-if="row.UseState=='802'"
+              >
+                <i class="icon iconfont iconyongshuixingzhishezhi-chexiaoshuijiatiaozheng" @click="constitute(row,2)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="删除"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconsuoyoubiaogelideshanchu" @click="cancel(row)"></i>
+              </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -370,6 +422,25 @@ export default {
 .button-width {
   width: 80px;
   text-align: center;
+}
+.secur-content {
+    .icon {
+      font-size: 16px;
+      color:#777c82;
+      cursor: pointer;
+    }
+    .iconyongshuixingzhishezhi-shuijiagoucheng {
+      color: #b59200 !important;
+    }
+    .iconyongshuixingzhishezhi-shuijiatiaozheng {
+      color: #00B2A1 !important;
+    }
+    .iconyongshuixingzhishezhi-chexiaoshuijiatiaozheng{
+      color:#46494C !important;
+    }
+    .iconsuoyoubiaogelideshanchu{
+       color: #ff3d3d !important;
+    }
 }
 </style>
 

@@ -2,7 +2,7 @@
   <div class="tree_container">
     <div class="user_box">
       <left-box @getUp="getUp" :ifShow="ifShow"></left-box>
-      <div class="user_table">
+      <div class="user_table" style="padding:0;">
         <div ref="formHeight">
           <select-head
             :select-head="listQuery"

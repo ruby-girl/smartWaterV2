@@ -38,19 +38,39 @@
           </template>
           <el-table-column
             label="操作"
-            width="200"
+            width="112"
             align="center"
             fixed="right"
             class-name="small-padding"
           >
             <template slot-scope="{row}">
-              <div class="display-flex">
-                <div class="main-color-warn pl-15" @click="details(row)">
+              <div class="display-flex justify-content-flex-center secur-content">
+                <!-- <div class="main-color-warn pl-15" @click="details(row)">
                   <a>费用详情</a>
                 </div>
                 <div class="pl-15" @click="reset(row)">
-                  <a>费用撤销</a>
-                </div>             
+                  <a>费用撤销</a> 
+                </div>              -->
+                <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用详情"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconbiaodan1" @click="details(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用撤销"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconchexiao1" @click="reset(row)"></i>
+              </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -222,6 +242,19 @@ export default {
 <style lang="scss" scoped>
 .section-container .section-full-container{
   padding-top:0 !important;
+}
+.iconchexiao1{
+  color:#777c82;
+  padding:0 15px;
+}
+.secur-content {
+    .icon {
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .iconbiaodan1 {
+      color: #b59200;
+    }
 }
 </style>
 

@@ -1,28 +1,12 @@
 <template>
-  <div class="section-container">
-    <div class="section-full-container">
+  <div class="section-container">   
       <div ref="formHeight">
-        <select-head :select-head-obj="listQuery" @handleFilter="handleFilter" :role-list="roleList"/>
-      </div>
-      <div class="display-flex justify-content-flex-justify">
-        <el-button type="primary" size="mini" @click="addWaterFactory"><i class="iconfont icontianjia"></i>添加
+        <select-head :select-head-obj="listQuery" @handleFilter="getList" :role-list="roleList" @getText="getText"/>
+      </div>  
+       <div class="section-full-container" style="padding-top:0;">
+          <el-button style="margin-bottom:10px;" type="primary" size="mini" @click="addWaterFactory"><i class="iconfont icontianjia"></i>添加
         </el-button>
-        <div>
-          <el-button
-            type="success"
-            size="mini"
-            @click="excel"
-          ><i class="iconfont icondaochuexcel"></i>导出Excel
-          </el-button>
-          <el-button
-            type="warning"
-            size="mini"
-            @click="setCustomData()"
-          ><i class="iconfont iconbiaogezidingyi"></i>表格自定义
-          </el-button>
-        </div>
-      </div>
-      <customTable ref="myChild"/>
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
       <div class="main-padding-20-y">
         <el-table
           :key="tableKey"
@@ -56,17 +40,37 @@
             label="操作"
             align="center"
             class-name="small-padding"
-            min-width="150px"
+            width="112px"
             fixed="right"
           >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center">
-                <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']">
+              <div class="display-flex justify-content-flex-center secur-content">
+                <!-- <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']">
                   <a>编辑</a>
                 </div>
                 <div class="main-color-red pl-15" @click="deleteRow(row)" v-permission="['1010105']">
                   <a>删除</a>
-                </div>
+                </div> -->
+                <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="编辑"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconsuoyoubiaogelidebianji" @click="handleUpdate(row)"></i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="删除"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconsuoyoubiaogelideshanchu" @click="deleteRow(row)"></i>
+              </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -76,7 +80,7 @@
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
-          @pagination="getList"
+          @pagination="getList(1)"
         />
       </div>
       <!-- 新增、编辑弹窗 -->
@@ -94,7 +98,8 @@
   import SelectHead from "./components/SelectHead";
   import Pagination from "@/components/Pagination";
   import Dialog from "./components/Dialog";
-  import customTable from "@/components/CustomTable/index";
+ import SearchTips from "@/components/SearchTips/index";
+import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
   import {
     waterFactoryGetList,
     waterFactoryUpDate,
@@ -110,7 +115,7 @@
     components: {
       SelectHead,
       Pagination,
-      customTable,
+      SearchTips,
       Dialog,
     },
     data() {
@@ -135,12 +140,16 @@
           editUserId: "-1", // 操作人
           editStartTime: "", // 操作时间起
           editEndTime: "", // 操作时间止
-          tableId: "0000006"
+          tableId: "0000006",
+          timevalue:[]
         },
         roleList: [], //角色下拉框，传递给组件
         dialogFormVisible: false, // 新增/编辑弹窗
         tableData: [],
-        checksData: []
+        checksData: [],
+         tipsData: [], //传入子组件的值
+       tipsDataCopy: [], //表单变化的值
+       orderData: {}
       };
     },
     computed: {
@@ -156,15 +165,28 @@
         // 自适应表格高度
         var formHeight = this.$refs.formHeight.offsetHeight;
         const that = this;
-        that.tableHeight = document.body.clientHeight - formHeight - 220;
-        this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-        this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+        that.tableHeight = document.body.clientHeight - formHeight - 200;
+       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
         getRoles().then(res => {
           this.roleList = res.data;
         });
       });
     },
     methods: {
+    delTips(val) {
+      if (val == "timevalue") {
+        //当返回的model 为时间数组  置空 时间
+        this.listQuery.editStartTime = "";
+        this.listQuery.editEndTime = "";
+      }
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
+      this.getList();
+    },
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+      this.tipsDataCopy.push(obj);
+    },
       cellClass({row, column, rowIndex, columnIndex}) {
         if (row.UserStatusCode == 'ZX' && column.property == 'UserStatus') {
           return 'main-color-red'
@@ -175,8 +197,13 @@
         if (this.$refs.myChild.isCustom) this.tableHeight = this.tableHeight - 80;
         else this.tableHeight = this.tableHeight + 80;
       },
-      getList() {
-        waterFactoryGetList(this.listQuery).then(res => {
+      getList(n) {
+        if (!n) {
+        this.orderData = Object.assign({}, this.listQuery);
+        this.orderData.page = 1;
+      }
+        waterFactoryGetList(this.orderData).then(res => {
+          this.tipsData = pushItem(this.tipsDataCopy);
           this.total = res.count;
           this.tableData = res.data;
         });
@@ -255,4 +282,16 @@
     }
   };
 </script>
-
+<style lang="scss" scoped>
+.secur-content {
+    .icon {
+      font-size: 16px;
+      cursor: pointer;
+      color:#00B3A1;
+    }
+    .iconsuoyoubiaogelideshanchu{
+      color: #ff3d3d;
+      padding-left:15px;
+    }
+}
+</style>
