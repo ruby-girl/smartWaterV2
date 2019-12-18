@@ -4,8 +4,7 @@
       <el-tab-pane label="用水性质变更" name="1">
         <change-operation />
       </el-tab-pane>
-      <el-tab-pane label="变更记录" name="2">
-       
+      <el-tab-pane label="变更记录" name="2">    
        <change-log />
       </el-tab-pane>
     </el-tabs>  
@@ -21,14 +20,6 @@ import ChangeOperation from "./components/ChangeOperation"
       return {
         typeCheck:'1',
       };
-    },
-    methods: {
-      handleClick(){
-        
-      },
-    },
-    mounted() {
-       
     }
   };
 </script>

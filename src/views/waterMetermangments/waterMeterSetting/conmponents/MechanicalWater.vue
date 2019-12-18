@@ -116,11 +116,28 @@
         </el-table-column>
         <el-table-column label="操作" width="120px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="查看历史详情" placement="bottom">
+            <el-tooltip
+              class="item"
+              popper-class="tooltip"
+              effect="light"
+              :visible-arrow="false"
+              content="查看历史详情"
+              placement="bottom"
+            >
               <i class="icon iconfont viewHis" @click="waterMeterJxDetail(scope.row.Id)">&#xe670;</i>
             </el-tooltip>
-             <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
-              <i class="icon iconfont editJxWater" @click="waterMeterJxDetail(scope.row.Id)">&#xe69f;</i>
+            <el-tooltip
+              class="item"
+              popper-class="tooltip"
+              effect="light"
+              :visible-arrow="false"
+              content="编辑"
+              placement="bottom"
+            >
+              <i
+                class="icon iconfont editJxWater"
+                @click="waterMeterJxDetail(scope.row.Id)"
+              >&#xe69f;</i>
             </el-tooltip>
           </template>
         </el-table-column>

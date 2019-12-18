@@ -8,10 +8,23 @@
     @submit.native.prevent
     ref="formHeight"
   >
-    <el-form-item label="申请状态" v-show="show1||isShow" >
-      <el-input maxlength="20" value="申请中" disabled />
+    <el-form-item v-if="companyOptions.length!=1" label="所属水厂" prop="SA_WaterFactory_Id">
+      <el-select
+        v-model="selectHead.SA_WaterFactory_Id"
+        placeholder="请选择"
+        @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'所属水厂')"
+      >
+        <el-option label="全部" value="-1"></el-option>
+        <el-option
+          v-for="item in companyOptions"
+          :key="item.Id"
+          :label="item.Name"
+          :value="item.Id"
+        ></el-option>
+      </el-select>
     </el-form-item>
-    <el-form-item label="申请类型" v-show="show2||isShow" key="WaterMeter" prop="applyType">
+    <el-form-item label="申请类型" v-show="show1||isShow" prop="applyType">
       <el-select
         v-model="selectHead.applyType"
         placeholder="请选择"
@@ -27,7 +40,7 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="业务编号" v-show="show3||isShow" prop="applyNo">
+    <el-form-item label="业务编号" v-show="show2||isShow" prop="applyNo">
       <el-input
         v-model="selectHead.applyNo"
         maxlength="20"
@@ -35,6 +48,23 @@
         @change="getText(selectHead.applyNo ,'applyNo','','业务编号')"
       />
     </el-form-item>
+    <el-form-item label="创建人" v-show="show3||isShow" prop="creater">
+      <el-select
+        v-model="selectHead.creater"
+        placeholder="请选择"
+        @keydown.enter.native="handleFilter"
+        @change="getText(selectHead.creater ,'creater',WaterMeterList,'创建人')"
+      >
+        <el-option label="全部" :value="-1" />
+        <el-option
+          v-for="item in WaterMeterList"
+          :key="item.Id"
+          :label="item.Name"
+          :value="Number(item.Id)"
+        />
+      </el-select>
+    </el-form-item>
+
     <el-form-item label="申请日期" label-width="80px" v-show="show4||isShow">
       <el-date-picker
         v-model="selectHead.timevalue"
@@ -68,7 +98,7 @@
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
 export default {
-  name: "SubSelected",
+  name: "StaySelected",
   props: {
     selectHead: {
       type: Object,
@@ -85,8 +115,14 @@ export default {
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
-        if (Math.floor((val - 180) / 280) >= 4) {
-          this.showBtn = false;
+        if (this.companyOptions.length == 1) {
+          if (Math.floor((val - 180) / 280) >= 4) {
+            this.showBtn = false;
+          }
+        } else {
+          if (Math.floor((val - 180) / 280) >= 3) {
+            this.showBtn = false;
+          }
         }
       },
       immediate: true
@@ -98,17 +134,23 @@ export default {
       WaterMeterList: [], //
       securStatus: [],
       securNextStatus: [],
+      companyOptions: [], //水厂
       isShow: false,
       show1: true,
       show2: true,
       show3: true,
       show4: true,
-      show5: true,
-      show6: true,
+
       showBtn: true //查询展开
     };
   },
-  created() {},
+  created() {
+    this.companyOptions = this.$store.state.user.waterWorks;
+    console.log( this.companyOptions)
+    if (this.companyOptions.length == 1) {
+        this.selectHead.SA_WaterFactory_Id=this.companyOptions[0].Id;
+    }
+  },
   methods: {
     resetting() {
       //重置
@@ -117,10 +159,17 @@ export default {
       this.$parent.delTips("timevalue");
     },
     showLabel(n, w) {
-      if (Math.floor((w - 180) / 280) >= n || this.isShow) {
-        return true;
+      if (this.companyOptions.length == 1) {
+        if (Math.floor((w - 180) / 280) >= n || this.isShow) {
+          return true;
+        }
+        return false;
+      } else {
+        if (Math.floor((w - 180) / 280) >= n - 1 || this.isShow) {
+          return true;
+        }
+        return false;
       }
-      return false;
     },
 
     getText(val, model, arr, name) {
@@ -142,8 +191,8 @@ export default {
       }
     },
     handleFilter() {
-     this.$parent.searchTableList()
-    //   this.$emit("handleFilter");
+      this.$parent.searchTableList();
+      //   this.$emit("handleFilter");
       // this.$parent.seachAccountOrder()
     }
   }

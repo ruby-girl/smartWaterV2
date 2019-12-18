@@ -17,51 +17,51 @@
         label-width="60px"
         @submit.native.prevent
       >
-      <el-tabs v-model="activeName">
-    <el-tab-pane label="水费" name="frist"> <el-row>
-          <el-form-item :label="feeWaiverItem.OrderTypeStr">
-            <el-input v-model="feeWaiverItem.PriceSurplus" disabled />
-          </el-form-item>
-          <div class="inline-box">
-            <div>减免为</div>
-            <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
-          </div>
-          <el-form-item>
-            <el-input
-              v-model="inputValue"
-              @blur="changeTwoDecimal_x($event)"
-              @keyup.native="money($event)"
-              maxlength="8"
-            />
-          </el-form-item>
-        </el-row></el-tab-pane>
-    <el-tab-pane label="违约金" name="two">
-      <el-row v-if="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee>0">
-          <el-form-item label="违约金">
-            <el-input v-model="feeWaiverItem.LateFee" disabled />
-          </el-form-item>
-          <div class="inline-box">
-            <div>减免为</div>
-            <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
-          </div>
-          <el-form-item>
-            <el-input
-              v-model="lateFeeValue"
-              @blur="changeTwoDecimal_x($event)"
-              @keyup.native="money($event)"
-              maxlength="8"
-            />
-          </el-form-item>
-        </el-row>
-    </el-tab-pane>
-   
-  </el-tabs>
-       
-        
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="水费" name="frist">
+            <el-row class="tab-container-y">
+              <el-form-item :label="feeWaiverItem.OrderTypeStr">
+                <el-input v-model="feeWaiverItem.PriceSurplus" disabled />
+              </el-form-item>
+              <div class="inline-box">
+                <div>减免为</div>
+                <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
+              </div>
+              <el-form-item>
+                <el-input
+                  v-model="inputValue"
+                  @blur="changeTwoDecimal_x($event)"
+                  @keyup.native="money($event)"
+                  maxlength="8"
+                />
+              </el-form-item>
+            </el-row>
+          </el-tab-pane>
+          <el-tab-pane label="违约金" name="two">
+            <el-row  class="tab-container-y">
+              <el-form-item label="违约金">
+                <el-input v-model="feeWaiverItem.LateFee" disabled />
+              </el-form-item>
+              <div class="inline-box">
+                <div>减免为</div>
+                <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
+              </div>
+              <el-form-item>
+                <el-input
+                  v-model="lateFeeValue"
+                  @blur="changeTwoDecimal_x($event)"
+                  @keyup.native="money($event)"
+                  maxlength="8"
+                  :disabled="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee==0?true:false"
+                />
+              </el-form-item>
+            </el-row>
+          </el-tab-pane>
+        </el-tabs>
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="feeWaiver">确认</el-button>
+      <el-button size="mini" type="primary" @click="feeWaiver" :disabled="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee==0&&activeName=='two'?true:false">确认</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
@@ -96,13 +96,16 @@ export default {
       dialogFormVisible: false,
       inputValue: "",
       lateFeeValue: "", //违约金金额
-      activeName:'frist'
+      activeName: "frist"
     };
   },
   methods: {
     //   减免请求
     feeWaiver() {
-      if (parseFloat(this.inputValue) >parseFloat(this.feeWaiverItem.PriceSurplus)) {
+      if (
+        parseFloat(this.inputValue) >
+        parseFloat(this.feeWaiverItem.PriceSurplus)
+      ) {
         this.$message({
           message: "减免后金额不能大于总费用",
           type: "error",
@@ -121,18 +124,22 @@ export default {
         return true;
       });
       // 如果有违约金
-      if (this.feeWaiverItem.OrderType == 2001 &&this.feeWaiverItem.LateFee > 0 && water) {
+      if (
+        this.feeWaiverItem.OrderType == 2001 &&
+        this.feeWaiverItem.LateFee > 0 &&
+        water
+      ) {
         OrderAfterOverdueFeeWaiver({
-        SA_Order_Id: this.feeWaiverItem.Id,
-        AfterOverdueFee: this.lateFeeValue
-      }).then(res => {
+          SA_Order_Id: this.feeWaiverItem.Id,
+          AfterOverdueFee: this.lateFeeValue
+        }).then(res => {
           this.$message({
             message: "减免成功",
             type: "success",
             duration: 4000
           });
-          this.inputValue=''
-          this.lateFeeValue=''
+          this.inputValue = "";
+          this.lateFeeValue = "";
           this.dialogFormVisible = false;
           this.$emit("getList");
         });
@@ -142,8 +149,8 @@ export default {
           type: "success",
           duration: 4000
         });
-        this.inputValue=''
-        this.lateFeeValue=''
+        this.inputValue = "";
+        this.lateFeeValue = "";
         this.dialogFormVisible = false;
         this.$emit("getList");
       }
@@ -161,18 +168,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 /deep/ .dialog-background .el-dialog__body {
-  background: #f5f5f5;
-  padding: 25px 20px 0 20px;
+  background: #eee;
+  padding: 0px 20px 0 20px;
 }
 /deep/ .el-dialog__footer {
-  background: #f5f5f5 !important;
+  background: #eee !important;
   .dialog-footer {
-    background: #f5f5f5 !important;
+    background: #eee !important;
   }
 }
 .feewaiver-box {
-  background: #fff;
-  padding: 25px 20px;
   padding-bottom: 10px;
 }
 .inline-box {
@@ -184,6 +189,9 @@ export default {
     color: #00b3a1;
     margin-bottom: -5px;
   }
+}
+.tab-container-y{
+  padding:20px;
 }
 </style>
 

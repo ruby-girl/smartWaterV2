@@ -200,6 +200,7 @@ export default {
       this.customerQueryTypeOption.forEach(item => {
         if (item.Id == val) {
           this.secNmae = item.Name;
+          this.getText(this.selectHead.CustomerQueryValue,'CustomerQueryValue','',item.Name)
         }
       });
     },

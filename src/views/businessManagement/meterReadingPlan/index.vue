@@ -69,26 +69,35 @@
                 <el-tooltip
                   v-show="scope.row.IsCanGenerateOrder"
                   class="item"
-                  effect="dark"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
                   content="生成费用"
                   placement="bottom"
                 >
-                  <i class="icon iconfont operation1" @click="generateOrder(scope.row.Id)">&#xe69d;</i>
+                  <i class="iconStyle icon iconfont operation1" @click="generateOrder(scope.row.Id)">&#xe69d;</i>
                 </el-tooltip>
               </span>
               <el-tooltip
                 v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
                 class="item"
-                effect="dark"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
                 content="数据补录"
                 placement="bottom"
               >
-                <i class="iconStyle icon iconfont operation2" @click="changeInput(scope.row.Id,true)">&#xe676;</i>
+                <i
+                  class="iconStyle icon iconfont operation2"
+                  @click="changeInput(scope.row.Id,true)"
+                >&#xe676;</i>
               </el-tooltip>
               <el-tooltip
                 v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
                 class="item"
-                effect="dark"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
                 content="数据绑定"
                 placement="bottom"
               >
@@ -103,7 +112,14 @@
                   @click="meterReadingPlanDetail(scope.row.Id)"
                 >&#xe69d;</i>
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="删除"
+                placement="bottom"
+              >
                 <i
                   class="icon iconfont iconStyle operation4"
                   @click="delMeterReadingPlan(scope.row.Id)"
@@ -436,16 +452,14 @@ export default {
 };
 </script>
 <style  scoped>
-.iconStyle{
+.iconStyle {
   font-size: 16px;
   cursor: pointer;
-
 }
 .operation1 {
   color: #ff3d3d;
   font-size: 16px;
   margin: 10px;
-  
 }
 .operation2 {
   color: #00b2a1;
@@ -458,7 +472,6 @@ export default {
 .operation3 {
   color: #b59200;
   margin: 10px;
-
 }
 .operation4 {
   color: #ff5656;

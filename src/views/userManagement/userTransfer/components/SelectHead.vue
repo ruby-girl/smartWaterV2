@@ -184,6 +184,7 @@ export default {
       this.selectOption.forEach(item => {
         if (item.Id == val) {
           this.secNmae = item.Name;
+          this.getText(this.selectHead.Customer,'Customer','',item.Name)
         }
       });
     },

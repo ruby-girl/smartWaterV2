@@ -28,7 +28,7 @@ export function ICReadCardInfo(callback) {
   }
 }
 
-// 获取筛选条件，区域树形
+// 获取筛选条件，区域树形 --再次赋值Id,Name 面包屑getText需要用
 function mapTree(org) {
   const haveChildren =
     Array.isArray(org.children) && org.children.length > 0;
@@ -37,13 +37,17 @@ function mapTree(org) {
       //分别将我们查询出来的值做出改变他的key
       label: org.label,
       id: org.Id,
+      Id:org.Id,
+      Name:org.label,
       //判断它是否存在子集，若果存在就进行再次进行遍历操作，知道不存在子集便对其他的元素进行操作
       children: org.children.map(i => mapTree(i))
     };
   } else {
     return {
       label: org.label,
-      id: org.Id
+      id: org.Id,
+      Id:org.Id,
+      Name:org.label
     }
   }
 }
@@ -51,7 +55,9 @@ export function getOrgTree(callback, id) {
   let orgTreeAll =
   {
     id: '-1',
-    label: '全部'
+    label: '全部',
+    Id:'-1',
+    Name:'全部'
   }
   GetAreaListNotPNode({ pid: id }).then(res => {
     let resResult = res.data
