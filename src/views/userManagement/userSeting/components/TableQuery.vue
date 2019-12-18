@@ -183,7 +183,7 @@
           }
           GetICWriteCard(param).then(res => {//写卡
             if (res.code == 0) {
-              let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data));
+              let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
               if (ress != undefined && ress != "") {
                 let dataJosn = JSON.parse(ress)//cs 制卡返回数据
                 if(dataJosn.Result){
@@ -227,7 +227,7 @@
       getMakeCard(param){//补卡
         GetICReplaceWriteCardInfo(param).then(res => {//补卡
           if (res.code == 0) {
-            let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data));
+            let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
             if (ress != undefined && ress != "") {
               let dataJosn = JSON.parse(ress)//cs 制卡返回数据
               if(dataJosn.Result){
