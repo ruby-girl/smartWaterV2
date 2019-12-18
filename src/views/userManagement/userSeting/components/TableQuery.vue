@@ -79,7 +79,6 @@
   import EditDialog from './EditDialog'
   import DetailDialog from './DetailDialog'
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-  import { WriteCardInfo } from "@/utils/projectLogic"; //IC卡写卡
   import {
     GetICWriteCard,
     RollBackICWriteCard,
@@ -172,60 +171,74 @@
         this.$refs.addDialog.dialogVisible = true;
       },
       makeCard(){//制卡
-        let param = {
-          customerId:'',//用户ID
-          receipts:false,//实收
-          payType:1,//缴费方式(参考字典码)
-          printerType:1,//打印方式,无打印 = -1,小票 = 2801,发票 = 2802,
-          payCode:''//支付码（付款码支付时该参数使用）
-        }
-        GetICWriteCard(param).then(res => {//写卡
-          if (res.code == 0) {
-            let resultCard = JSON.stringify(res.data);
-            WriteCardInfo(resultCard, function (tempJson) {
-              if (tempJson != undefined && tempJson != "") {
-                if (tempJson.Result) {//写卡成功
-                  promptInfoFun(this, 2, res.message);
-                }
-                else {
-                  //写卡失败
-                  promptInfoFun(this, 1, res.message);
-                  //写卡失败回滚
-                  RollBackICWriteCard({businessId:''}).then(res => {
-                  })
-                }
-              }
-            });
-          } else {
-            promptInfoFun(this, 1, res.message);
+        if(this.curObj == '' || typeof (this.curObj) == undefined){
+          promptInfoFun(this, 1, '请选择用户！')
+        } else {
+          let param = {
+            customerId:this.curObj.Id,//用户ID
+            receipts:0,//实收
+            payType:1,//缴费方式(参考字典码)
+            printerType:1,//打印方式,无打印 = -1,小票 = 2801,发票 = 2802,
+            payCode:''//支付码（付款码支付时该参数使用）
           }
-        });
+          GetICWriteCard(param).then(res => {//写卡
+            if (res.code == 0) {
+              let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data));
+              if (ress != undefined && ress != "") {
+                let dataJosn = JSON.parse(ress)//cs 制卡返回数据
+                if(dataJosn.Result){
+                  promptInfoFun(this, 2, '制卡成功');
+                } else {
+                  RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
+                  promptInfoFun(this, 1, dataJosn.ErrMsg);
+                }
+              } else {
+                promptInfoFun(this, 1, '读取错误');
+              }
+            } else {
+              promptInfoFun(this, 1, res.message);
+            }
+          });
+        }
       },
       patchCard(){//补卡
-        let param = {
-          customerId:'',//用户ID
-          receipts:false,//实收
-          payType:1,//缴费方式(参考字典码)
-          printerType:1,//打印方式,无打印 = -1,小票 = 2801,发票 = 2802,
-          payCode:''//支付码（付款码支付时该参数使用）
+        if(this.curObj == '' || typeof (this.curObj) == undefined){
+          promptInfoFun(this, 1, '请选择用户！')
+        } else {
+          let param = {
+            customerId: this.curObj.Id,//用户ID
+            isCard: ''
+          }
+          this.$confirm("是否已刷卡？", "提示", {
+            confirmButtonText: "已刷卡",
+            cancelButtonText: "未刷卡",
+            iconClass:"el-icon-question questionIcon",
+            customClass: "warningBox",
+            showClose: false
+          }).then(() => {
+            param.isCard = true
+            this.getMakeCard(param)
+          }).catch(() => {
+            param.isCard = false
+            this.getMakeCard(param)
+          });
         }
+      },
+      getMakeCard(param){//补卡
         GetICReplaceWriteCardInfo(param).then(res => {//补卡
           if (res.code == 0) {
-            let resultCard = JSON.stringify(res.data);
-            WriteCardInfo(resultCard, function (tempJson) {
-              if (tempJson != undefined && tempJson != "") {
-                if (tempJson.Result) {//写卡成功
-                  promptInfoFun(this, 2, res.message);
-                }
-                else {
-                  //写卡失败
-                  promptInfoFun(this, 1, res.message);
-                  //补卡失败回滚
-                  RollBacICkReplaceWriteCardInfo({businessId:''}).then(res => {
-                  })
-                }
+            let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data));
+            if (ress != undefined && ress != "") {
+              let dataJosn = JSON.parse(ress)//cs 制卡返回数据
+              if(dataJosn.Result){
+                promptInfoFun(this, 2, '制卡成功');
+              } else {
+                RollBacICkReplaceWriteCardInfo({businessId:res.data.BusinessId}).then(res => {})
+                promptInfoFun(this, 1, dataJosn.ErrMsg);
               }
-            });
+            } else {
+              promptInfoFun(this, 1, '读取错误');
+            }
           } else {
             promptInfoFun(this, 1, res.message);
           }

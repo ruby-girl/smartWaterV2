@@ -113,12 +113,17 @@
              <h2><i></i>附件信息</h2>
              <file-list :files="files"></file-list>
            </div>
+           <p class="to-examine" v-show="!ifDetail">
+             <el-button class="pass-btn" type="primary" icon="el-icon-check" size="mini">审核通过</el-button>
+             <el-button class="refuse-btn" type="primary" icon="el-icon-close" size="mini" @click="failPassFun">审核不通过</el-button>
+           </p>
          </div>
          <!--右侧流程信息-->
          <div class="detail-right">
            <process-examine></process-examine>
          </div>
       </div>
+    <fail-reason ref="failReson"></fail-reason>
   </el-dialog>
 </template>
 
@@ -128,17 +133,19 @@
   import YcMeter from "./waterTypes/YcMeter"
   import fileList from '@/components/FileList'
   import ProcessExamine from '@/components/ProcessExamine'
+  import FailReason from "./FailReason"
 
   export default {
     name: "WatreMeterAccount",
-    components:{ fileList, ProcessExamine, MechanicsMater, YcMeter },
+    components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason },
     data() {
       return {
         dialogVisible: true,
         files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
         index:0,
         componentsArr:['MechanicsMater','YcMeter'],
-        screenWidth:''
+        screenWidth:'',
+        ifDetail:true
       }
     },
     computed:{
@@ -149,12 +156,17 @@
     methods:{
       handleClose(){
         this.dialogVisible = false
+      },
+      failPassFun(){//审核不通过
+        this.$refs.failReson.dialogVisible = true
       }
     },
     mounted() {
       this.screenWidth = window.screen.width
       this.$nextTick(()=>{
-        document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight + 'px'
+        let num = 10
+        this.ifDetail ? num = 10: num = 66
+        document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
       })
     }
   }

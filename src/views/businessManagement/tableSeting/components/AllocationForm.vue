@@ -63,10 +63,6 @@
           if (res.code ==0 ) {
             this.oldTreeData = res.data
             this.treeData = JSON.parse(JSON.stringify(res.data))
-            /*this.$nextTick(()=>{
-              this.$refs.waterTableChild1.moveTree = res.data
-              this.$refs.waterTableChild2.moveTree = res.data
-            })*/
           } else {
             promptInfoFun(this,1,res.message)
           }

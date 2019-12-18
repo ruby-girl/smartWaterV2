@@ -2,7 +2,7 @@
   <el-dialog
     class="work-bench-detail"
     :close-on-click-modal="false"
-    top="10vh"
+    top="5vh"
     title="审核详情"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
@@ -98,12 +98,17 @@
           <h2><i></i>附件信息</h2>
           <file-list :files="files"></file-list>
         </div>
+        <p class="to-examine" v-show="!ifDetail">
+          <el-button class="pass-btn" type="primary" icon="el-icon-check" size="mini">审核通过</el-button>
+          <el-button class="refuse-btn" type="primary" icon="el-icon-close" size="mini" @click="failPassFun">审核不通过</el-button>
+        </p>
       </div>
       <!--右侧流程信息-->
       <div class="detail-right">
         <process-examine></process-examine>
       </div>
     </div>
+    <fail-reason ref="failReson"></fail-reason>
   </el-dialog>
 </template>
 
@@ -113,10 +118,11 @@
   import YcMeter from "./waterTypes/YcMeter"
   import fileList from '@/components/FileList'
   import ProcessExamine from '@/components/ProcessExamine'
+  import FailReason from "./FailReason"
 
   export default {
     name: "Transfer",
-    components:{ fileList, ProcessExamine, MechanicsMater, YcMeter },
+    components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason },
     data() {
       return {
         dialogVisible: true,
@@ -124,6 +130,7 @@
         index:1,
         componentsArr:['MechanicsMater','YcMeter'],
         screenWidth:'',
+        ifDetail:true
       }
     },
     computed:{
@@ -134,12 +141,17 @@
     methods:{
       handleClose(){
         this.dialogVisible = false
+      },
+      failPassFun(){//审核不通过
+        this.$refs.failReson.dialogVisible = true
       }
     },
     mounted() {
       this.screenWidth = window.screen.width
       this.$nextTick(()=>{
-        document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight + 'px'
+        let num = 10
+        this.ifDetail ? num = 10: num = 66
+        document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
       })
     }
   }

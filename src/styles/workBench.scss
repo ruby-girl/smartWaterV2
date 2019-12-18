@@ -73,8 +73,11 @@
     .pot-money{font: bold 16px/15px "Microsoft YaHei";color: #FF3D3D !important;}
     .to-examine{
       text-align: center;padding: 14px 0;margin: 0;
-      .pass-btn{background: #fff;color: #00B2A1;border: solid 1px #00B2A1;border-radius: 5px;height: 28px;}
+      .pass-btn{background: #fff;color: #00B2A1;border: solid 1px #00B2A1;border-radius: 5px;height: 28px;margin-left: 124px;}
       .refuse-btn{background: #fff;height: 28px;color: #777C82;border: solid 1px #B8C2CC;}
     }
+  }
+  .fail-reason .el-dialog {
+    height: 293px;
   }
 }
