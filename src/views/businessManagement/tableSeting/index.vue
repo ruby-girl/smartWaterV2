@@ -61,7 +61,7 @@
     <!--编辑或新增窗口 s-->
     <Dialog ref="childDialog"></Dialog>
     <!--表册分配 s-->
-    <AllocationForm ref="childSchedule"></AllocationForm>
+    <AllocationForm ref="childSchedule"  @fatherMethod="searchFun"></AllocationForm>
     <!--表册用户定位弹窗 s-->
     <FormsDialog ref="formsDialog"></FormsDialog>
     <!--用户定位-->

@@ -230,15 +230,13 @@
        * param  对应搜索条件的对象名
        */
       delTips(val) {
-        if (val == "meterData") {
-          //返回日期 置空
-          this.param.ReadDateStart = "";
-          this.param.ReadDateEnd = "";
-        } else if (val == "InputTimeStart") {
-          this.param.InputTimeStart = "";
-          this.param.InputTimeEnd = "";
+        if (val == "SA_MeterReadPlan_Id") {
+          promptInfoFun(this, 1, '抄表计划不能为空')
+          return false
+        } else if(val=='SA_RegisterBookInfo_Id'){
+          promptInfoFun(this, 1, '表册不能为空')
+          return false
         }
-
         this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()
       },

@@ -21,7 +21,6 @@
               <span>{{(selectHead.page - 1) *selectHead.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
-
           <template v-for="(item ,index) in tableHeadData">
             <el-table-column
               :key="index"
@@ -41,8 +40,7 @@
                   effect="light"
                   :visible-arrow="false"
                   content="详情"
-                  placement="bottom"
-                >
+                  placement="bottom">
                   <i class="icon iconfont detaile" @click="detaile">&#xe653;</i>
                 </el-tooltip>
                 <el-tooltip
@@ -51,8 +49,7 @@
                   effect="light"
                   :visible-arrow="false"
                   content="审核环节"
-                  placement="bottom"
-                >
+                  placement="bottom">
                   <i class="icon iconfont" @click="toogleExpand(scope.row)">&#xe6a5;</i>
                 </el-tooltip>
               </div>
@@ -86,7 +83,7 @@ export default {
   components: { SubSelected, SearchTips, Pagination, Step },
   data() {
     return {
-      searchWidth: 1024, //
+      searchWidth: 1024,
       selectHead: {
         page: 1,
         limit: 10,

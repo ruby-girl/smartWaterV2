@@ -6,7 +6,7 @@
       :model="param"
       :class="ifMore?'head-search-form form-inline-small-input meter-head on':'head-search-form form-inline-small-input meter-head'"
       size="small"
-      label-width="100px"
+      label-width="70px"
       @submit.native.prevent>
       <el-form-item label="抄表计划" prop="SA_MeterReadPlan_Id" :class="!ifMore?'firstItemsOther':''">
         <el-select v-model="param.SA_MeterReadPlan_Id" placeholder="请选择" size="small" @change="getUserInfo">
@@ -32,7 +32,7 @@
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
           </el-select>
           <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)"
-                    style="width: 180px;float: left"  @blur="setText(param.CustomerQueryValue,'CustomerQueryValue',userTypes)"/>
+                    style="width: 180px;float: left;margin-left: 10px;"  @blur="setText(param.CustomerQueryValue,'CustomerQueryValue',userTypes)"/>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -89,7 +89,7 @@
         meterState:[],//抄表状态
         param:{//分页搜索条件
           page: 1,
-          limit: 10,
+          limit: 20,
           filed: '',
           sort: "",
           SA_MeterReadPlan_Id: '',//抄表计划ID

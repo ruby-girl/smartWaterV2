@@ -5,9 +5,9 @@
     :model="sbap"
     :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
     size="small"
-    label-width="100px"
+    label-width="70px"
     @submit.native.prevent>
-    <el-form-item label="片区" prop="BlockAreaName" style="margin-left: -70px">
+    <el-form-item label="片区" prop="BlockAreaName" style="margin-left: -40px">
       <el-input v-model="sbap.BlockAreaName" maxlength="20" placeholder="片区名称(长度20)" @keyup.enter.native="searchFun" @change="getText(sbap.BlockAreaName,'BlockAreaName','','片区')"/>
     </el-form-item>
     <el-form-item label="操作人" prop="editUserId">
@@ -17,7 +17,7 @@
       </el-select>
     </el-form-item>
     <transition name="fade">
-      <el-form-item label="操作时间" prop="createStartTimes" v-show="screenWdth<1600?ifMore:true">
+      <el-form-item label="操作时间" prop="createStartTimes" >
         <el-date-picker
           :editable="false"
           @keydown.enter.native="searchFun"
@@ -29,15 +29,14 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          :default-time="['00:00:00', '23:59:59']"
+          value-format="yyyy-MM-dd"
           @change="getTime1"
         />
       </el-form-item>
     </transition>
     <el-form-item label="">
-      <i v-show="screenWdth<1600&&ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
-      <i v-show="screenWdth<1600&&!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
+      <!--<i v-show="screenWdth<1600&&ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
+      <i v-show="screenWdth<1600&&!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>-->
       <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
       <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
     </el-form-item>
@@ -54,7 +53,7 @@
         ifMore:false,
         sbap:{
           page: 1,
-          limit: 10,
+          limit: 20,
           filed:'',
           sort:"",
           BlockAreaName: '',//片区名称
@@ -79,8 +78,8 @@
       getTime1(data) {
         this.getText(this.createStartTimes,'createStartTimes','','操作时间')
         if(data !=null){
-          this.sbap.editStartTime = data[0]
-          this.sbap.editEndTime = data[1]
+          this.sbap.editStartTime = data[0]+ " 00:00:00"
+          this.sbap.editEndTime = data[1]+ " 23:59:59"
         }else{
           this.sbap.editStartTime = ''
           this.sbap.editEndTime = ''

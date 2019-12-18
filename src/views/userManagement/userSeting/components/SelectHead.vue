@@ -6,22 +6,20 @@
       :model="query"
       :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
       size="small"
-      label-width="80px"
+      label-width="70px"
       @submit.native.prevent>
       <el-form-item prop="CustomerQueryValue">
         <el-select v-model="query.CustomerQueryType" placeholder="请选择" class="short-select-item" style="width: 100px;float: left;">
           <el-option v-for="(item,index) in dataTypes" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
-        <el-input v-model="query.CustomerQueryValue" maxlength="50" placeholder="(长度1-50)" style="width: 180px;float: left" @blur="setText(query.CustomerQueryValue,'CustomerQueryValue',userType)"/>
+        <el-input v-model="query.CustomerQueryValue" maxlength="50" placeholder="(长度1-50)" style="width: 180px;float: left;margin-left: 10px;" @blur="setText(query.CustomerQueryValue,'CustomerQueryValue',userType)"/>
       </el-form-item>
-      <transition name="fade">
-      <el-form-item label="用户类型" prop="UserType"  v-show="screenWdth<1600?ifMore:true">
+      <el-form-item label="用户类型" prop="UserType" >
         <el-select v-model="query.UserType" placeholder="请选择" size="small" @change="getText(query.UserType,'UserType',userType,'用户类型')">
           <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      </transition>
       <transition name="fade">
         <el-form-item label="用户状态" prop="UserState" v-show="screenWdth<1600?ifMore:true">
           <el-select v-model="query.UserState" placeholder="请选择" size="small" @change="getText(query.UserState,'UserState',userStaus,'用户状态')">
@@ -72,7 +70,7 @@
           UserState: "-1",
           AreaId: "-1",
           WaterTypeId: -1,
-          limit: 10,
+          limit: 20,
           page: 1,
           sort: "",
           filed: "",

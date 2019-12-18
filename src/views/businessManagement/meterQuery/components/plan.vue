@@ -184,13 +184,20 @@ export default {
      * param  对应搜索条件的对象名
      */
     delTips(val) {
-      if (val == "meterData") {
-        //返回日期 置空
-        this.param.ReadDateStart = "";
-        this.param.ReadDateEnd = "";
-      } else if (val == "InputTimeStart") {
+      if(val=="SA_MeterReadPlan_Id"){
+        promptInfoFun(this, 1, '抄表计划不能为空');
+        return false
+      } else if (val == "meterData") {
+        promptInfoFun(this, 1, '抄表日期不能为空');
+        return false
+      } else if (val == "InputData") {
         this.param.InputTimeStart = "";
         this.param.InputTimeEnd = "";
+        if(this.typeCheck==1){
+          this.$refs.childSelect.InputData = []
+        }else {
+          this.$refs.childSelect.InputData2 = []
+        }
       }
       this.typeCheck == 1 ?  this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, 'param1'):this.tipsDataCopy2 = delTips(val, this.$refs.childSelect, this.tipsDataCopy2, 'param2') //返回删除后的数据传给组件
       this.searchFun()

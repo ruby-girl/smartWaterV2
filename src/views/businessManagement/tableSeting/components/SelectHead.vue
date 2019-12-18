@@ -5,11 +5,11 @@
     :model="rbp"
     :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
     size="small"
-    label-width="80px"
+    label-width="70px"
     @submit.native.prevent>
     <div style="display: flex">
       <div style="flex:1;float: left">
-          <el-form-item label="水厂" prop="SA_WaterFactory_Id" :class="!ifMore||screenWidth>1440?'firstItems':''">
+          <el-form-item label="水厂" prop="SA_WaterFactory_Id" :class="!ifMore||screenWidth>1440?'firstItem':''">
             <el-select v-model="rbp.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getMeterRead">
               <el-option label="全部" value="-1" v-if="waterFactory.length>1"></el-option>
               <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
@@ -62,7 +62,7 @@
       return {
         rbp:{
           page: 1,
-          limit: 10,
+          limit: 20,
           filed:'',
           sort:"",
           SA_WaterFactory_Id: "",

@@ -84,7 +84,7 @@
         total: 0,
         jp: {//查询条件对象
           page: 1,
-          limit: 10,
+          limit: 20,
           filed:'',
           sort:"",
           SYS_Department_Id: '-1',

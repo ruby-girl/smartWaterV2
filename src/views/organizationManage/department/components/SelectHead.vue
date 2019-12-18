@@ -4,9 +4,9 @@
     :model="dp"
     class="head-search-form form-inline-small-input search-head-otherbox"
     size="small"
-    label-width="100px"
+    label-width="70px"
     @submit.native.prevent>
-    <el-form-item label="部门" style="margin-left: -70px">
+    <el-form-item label="部门" style="margin-left: -40px">
       <el-select v-model="dp.Id" placeholder="请选择" size="small" @change="getText(dp.Id,'Id',postArray,'部门')">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
@@ -42,7 +42,7 @@
               editUserId: "",
               editStartTime: "",
               editEndTime: "",
-              limit: 10,
+              limit: 20,
               page: 1,
               sort: "",
               filed: "",

@@ -6,7 +6,7 @@
       :model="queryData"
       :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
       size="small"
-      label-width="100px"
+      label-width="70px"
       @submit.native.prevent>
       <el-form-item label="部门" prop="SYS_Department_Id" :class="!ifMore?'firstItem':''">
         <el-select v-model="queryData.SYS_Department_Id" placeholder="请选择" size="small" @change="getPostList"
@@ -31,8 +31,7 @@
           />
         </el-select>
       </el-form-item>
-      <transition name="fade">
-      <el-form-item label="人员" v-show="screenWdth<1400?ifMore:true" prop="EmpNo">
+      <el-form-item label="人员" prop="EmpNo">
         <el-input
           @change="getText(queryData.EmpNo,'EmpNo','','人员')"
           @keyup.enter.native="searchFun"
@@ -42,9 +41,8 @@
           size="small"
         />
       </el-form-item>
-      </transition>
       <transition name="fade">
-        <el-form-item label="岗位状态 " v-show="screenWdth<=1680?ifMore:true" prop="JobStatus">
+        <el-form-item label="岗位状态 " v-show="screenWdth<1440?ifMore:true" prop="JobStatus">
           <el-select v-model="queryData.JobStatus" placeholder="请选择" size="small" @keyup.enter.native="searchFun"  @change="getText(queryData.JobStatus,'JobStatus',jobsArray,'岗位状态')">
             <el-option v-for="(item,index) in jobsArray" :key="index" :label="item.Name" :value="item.Id"></el-option>
           </el-select>
@@ -126,9 +124,8 @@
             range-separator="~"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
             format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             @change="getTime2"
           />
         </el-form-item>
@@ -145,9 +142,8 @@
             range-separator="~"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
             format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             @change="getTime1"
           />
         </el-form-item>
@@ -164,9 +160,8 @@
             range-separator="~"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
-            format="yyyy-MM-dd HH:mm:ss"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
             @change="getTime3"
           />
         </el-form-item>
@@ -203,7 +198,7 @@
         ifMore: false,//判断是否查询隐藏条件
         queryData: {
           page: 1,
-          limit: 10,
+          limit: 20,
           filed:'',
           sort:"",
           SYS_Department_Id: '-1',//部门
@@ -247,8 +242,8 @@
       getTime1(data) {
         this.getText(this.EntryTime,'EntryTime','','入职时间')
         if (data != null) {
-          this.queryData.EnrollingTime = data[0]
-          this.queryData.EnrollingTimeEnd = data[1]
+          this.queryData.EnrollingTime = data[0]+ " 00:00:00"
+          this.queryData.EnrollingTimeEnd = data[1]+ " 23:59:59"
         } else {
           this.queryData.EnrollingTime = ''
           this.queryData.EnrollingTimeEnd = ''
@@ -257,8 +252,8 @@
       getTime2(data) {
       this.getText(this.birthdayTime,'birthdayTime','','出生日期')
         if (data != null) {
-          this.queryData.Birthday = data[0]
-          this.queryData.BirthdayEnd = data[1]
+          this.queryData.Birthday = data[0]+ " 00:00:00"
+          this.queryData.BirthdayEnd = data[1]+ " 23:59:59"
         } else {
           this.queryData.Birthday = ''
           this.queryData.BirthdayEnd = ''
@@ -267,8 +262,8 @@
       getTime3(data) {
         this.getText(this.operationTime,'operationTime','','操作时间')
         if (data != null) {
-          this.queryData.editStartTime = data[0]
-          this.queryData.editEndTime = data[1]
+          this.queryData.editStartTime = data[0]+ " 00:00:00"
+          this.queryData.editEndTime = data[1]+ " 23:59:59"
         } else {
           this.queryData.editStartTime = ''
           this.queryData.editEndTime = ''

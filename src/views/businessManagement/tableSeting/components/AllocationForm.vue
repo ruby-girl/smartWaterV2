@@ -5,6 +5,7 @@
     :close-on-click-modal="false"
     top="10vh"
     :visible.sync="dialogVisible"
+    :before-close="handleClose"
     width="70%">
     <el-tabs v-model="userType" @tab-click="handleClick">
       <el-tab-pane label="未分配表册用户" name="2">
@@ -89,6 +90,10 @@
           }
         })
       },
+      handleClose(){
+        this.dialogVisible = false
+        this.$emit('fatherMethod')
+      }
     },
     mounted() {
       this.$nextTick(()=>{

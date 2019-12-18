@@ -26,10 +26,10 @@
   import ChangeNature from "./components/detailPage/ChangeNature";
   import AddNature from "./components/detailPage/AddNature";
   import BreachContract from "./components/detailPage/BreachContract";
-  import SubMitted from "./components/SubMitted";
-  import StayAduite from "./components/StayAduite";
-  import HaveAduite from "./components/HaveAduite";
-  import AduiteSelect from "./components/AduiteSelect";
+  import SubMitted from "./components/SubMitted";//我提交的
+  import StayAduite from "./components/StayAduite";//待我审核
+  import HaveAduite from "./components/HaveAduite";//我已审核
+  import AduiteSelect from "./components/AduiteSelect";//审核查询
 
   export default {
     name: "businessAduit",

@@ -15,7 +15,7 @@
           <el-option label="电话" value="4"/>
         </el-select>
         <el-input v-model="formRbp.Customer" maxlength="50" placeholder="(长度1-50)"
-                  style="width: 180px;float: left"/>
+                  style="width: 180px;float: left;margin-left: 10px;"/>
       </el-form-item>
       <el-form-item label="">
         <el-button v-show="type==='1'" type="primary" size="mini" @click="searchFun(1)" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
@@ -23,9 +23,9 @@
       </el-form-item>
     </el-form>
     <div class="cl-operation1 fr">
-      <el-button size="mini" v-show="type=='1'" class="cl-operation-btn" round @click="deleteFun(1)"><i class="icon iconfont">&#xe650;</i> 删除
+      <el-button size="mini" v-show="type=='1'" class="cl-operation-btn" round @click="deleteFun(1)"><i class="icon iconfont">&#xe63c;</i> 删除
       </el-button>
-      <el-button size="mini" class="cl-operation-btn" round @click="distributionFun">分配至</el-button>
+      <el-button size="mini" class="cl-operation-btn" round @click="distributionFun"><i class="icon iconfont">&#xe66d;</i> 分配至</el-button>
       <my-tree class="moveTree" v-show="moveTreeShow" ref="myChildFp" :treeData="moveTrees" :searchtype=searchtype  @changeSecode="moveChangeSecode" :ifLogos="1"></my-tree>
     </div>
     <el-table :row-class-name="tableRowClassName"

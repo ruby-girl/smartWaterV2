@@ -27,7 +27,7 @@
         </el-select>
       </el-form-item>
       <transition name="fade">
-        <el-form-item label="抄表状态" v-show="screenWdth<1440?ifMore:true" prop="MeterReadState">
+        <el-form-item label="抄表状态"  prop="MeterReadState">
           <el-select v-model="param1.MeterReadState" placeholder="请选择" size="small" @change="getText(param1.MeterReadState,'MeterReadState',meterState,'抄表状态')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in meterState" :key="index" :label="item.Name" :value="item.Id"/>
@@ -49,7 +49,7 @@
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
           </el-select>
           <el-input v-model="param1.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
-                    style="width: 180px;float: left" @blur="setText(param.CustomerQueryValue,'CustomerQueryValue',userTypes)"/>
+                    style="width: 180px;float: left;margin-left: 10px;" @blur="setText(param.CustomerQueryValue,'CustomerQueryValue',userTypes)"/>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -75,9 +75,8 @@
             range-separator="~"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
             format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             @keydown.enter.native="handleFilter"
             @change="getTime1"
           />
@@ -131,9 +130,8 @@
             range-separator="~"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
             format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             @keydown.enter.native="handleFilter"
             @change="getTime"
           />
@@ -154,7 +152,7 @@
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
           </el-select>
           <el-input v-model="param2.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
-                    style="width: 180px;float: left"  @change="getText(param2.CustomerQueryValue,'CustomerQueryValue','',param2.CustomerQueryType)"/>
+                    style="width: 180px;float: left;margin-left: 10px;"  @change="getText(param2.CustomerQueryValue,'CustomerQueryValue','',param2.CustomerQueryType)"/>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -171,7 +169,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="录入日期  " v-show="ifMore2" prop="InputData2">
+        <el-form-item label="录入日期" v-show="ifMore2" prop="InputData2">
           <el-date-picker
             v-model="InputData2"
             type="daterange"
@@ -180,9 +178,8 @@
             range-separator="~"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
             format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             @keydown.enter.native="handleFilter"
             @change="getTime3"
           />
@@ -231,7 +228,7 @@
           MeterReadState: "-1", //抄表状态 = ['1401', '1402', '-1']
           InputTimeStart: "", //录入时间
           InputTimeEnd: "",
-          limit: 10,
+          limit: 20,
           page: 1,
           sort: "",
           filed: "",
@@ -252,7 +249,7 @@
           MeterReadState: "-1", //抄表状态 = ['1401', '1402', '-1']
           InputTimeStart: "", //录入时间
           InputTimeEnd: "",
-          limit: 10,
+          limit: 20,
           page: 1,
           sort: "",
           filed: "",
@@ -288,8 +285,8 @@
         this.getText(this.meterData,'meterData','','抄表日期')
         const date = this.meterData;
         if (date) {
-          this.param2.ReadDateStart = date[0];
-          this.param2.ReadDateEnd = date[1];
+          this.param2.ReadDateStart = date[0]+ " 00:00:00";
+          this.param2.ReadDateEnd = date[1]+ " 23:59:59";
         } else {
           this.param2.ReadDateStart = "";
           this.param2.ReadDateEnd = "";
@@ -299,8 +296,8 @@
         this.getText(this.InputData,'InputData','','录入日期')
         const date = this.InputData;
         if (date) {
-          this.param1.InputTimeStart = date[0];
-          this.param1.InputTimeEnd = date[1];
+          this.param1.InputTimeStart = date[0]+ " 00:00:00";
+          this.param1.InputTimeEnd = date[1]+ " 23:59:59";
         } else {
           this.param1.InputTimeStart = "";
           this.param1.InputTimeEnd = "";
@@ -310,8 +307,8 @@
        this.getText(this.InputData2,'InputData2','','录入日期')
         const date = this.InputData2;
         if (date) {
-          this.param2.InputTimeStart = date[0];
-          this.param2.InputTimeEnd = date[1];
+          this.param2.InputTimeStart = date[0]+ " 00:00:00";
+          this.param2.InputTimeEnd = date[1]+ " 23:59:59";
         } else {
           this.param2.InputTimeStart = "";
           this.param2.InputTimeEnd = "";
