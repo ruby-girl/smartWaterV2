@@ -60,6 +60,12 @@ export default {
     };
   },
   watch: {
+    user:{
+      handler(val, oldVal) {
+        console.info('zujian',val)
+      },
+      immediate: true
+    },
     accountShow(v) {
       this.dialogFormVisible = v;
     },
@@ -67,7 +73,7 @@ export default {
       if (val === oldVal) {
         return;
       }
-      this.$emit("update:show", val);
+      this.$emit("update:accountShow", val);
     }
   },
   created() {
@@ -77,6 +83,14 @@ export default {
   },
   methods: {
     accountBalancesFunc(){
+      if(this.user.IsBalanceDeposit&&!this.user.OperatorEmpId){
+        this.$message({
+            message: "余额转存，需选择经办人!",
+            type: "error",
+            duration: 4000
+          });
+          return
+      }
       this.$emit("accountBalancesFunc",this.user)
     }
   }
@@ -88,6 +102,7 @@ export default {
 }
 .account-box {
   background: #f5f5f5;
+  padding: 15px 0 5px 0;
 }
 </style>
 

@@ -15,7 +15,7 @@
     <div class="container-bottom-box">
       <!-- 左边表格 -->
       <div class="cash-padding-bg" :style="{'height':tableHeight+'px'}">
-        <div class="display-flex justify-content-flex-justify">
+        <div class="display-flex justify-content-flex-justify" style="margin-bottom:10px;">
           <div class="display-flex">
             <el-tooltip
               popper-class="tooltip"
@@ -224,7 +224,7 @@ export default {
       this.listQuery.page = 1;
       this.checkedAllParent = false;
       if(this.headQuery.CustomerQueryType==1){//处理面包屑
-        this.getText(user.customerNo,'customerNo','','用户编号')
+        this.getText(user.CustomerNo,'customerNo','','用户编号')
       }else if(this.headQuery.CustomerQueryType==2){
         this.getText(user.CustomerName,'CustomerName','','姓名/简码')
       }else if(this.headQuery.CustomerQueryType==6){

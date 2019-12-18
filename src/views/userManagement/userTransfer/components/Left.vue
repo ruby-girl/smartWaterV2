@@ -188,6 +188,7 @@ export default {
     },
     IsBalanceDepositFunc() {      
       this.accountShow = true;
+      console.info(this.user)
     },
      //进行过户操作
     accountBalancesFunc(user) { 
@@ -247,6 +248,7 @@ export default {
       this.newUser.CustomerId=id
       IsTransfer({ CustomerId: id }).then(res => {
         this.user.BalanceValue=res.data.Balance
+        this.newUser.BalanceValue=res.data.Balance
         this.IsArrearageRes = res.data;
       });
     },
