@@ -1,4 +1,5 @@
 <template>
+<div class="position-search-head">
   <el-form
     :inline="true"
     :model="selectHead"
@@ -76,6 +77,7 @@
       </el-button>
     </el-form-item>
   </el-form>
+</div>
 </template>
 <script>
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框

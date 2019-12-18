@@ -1,4 +1,5 @@
 <template>
+ <div class="position-search-head">
   <el-form
     :inline="true"
     :model="selectHead"
@@ -166,6 +167,7 @@
       </el-button>
     </el-form-item>
   </el-form>
+ </div>
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
@@ -274,7 +276,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .el-form {
-  margin-top: 17px;
+  // margin-top: 17px;
 }
 </style>
 
