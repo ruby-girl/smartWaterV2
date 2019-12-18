@@ -29,8 +29,8 @@
         <el-input v-model="formData.PeopleNo" size="small" :disabled="true" />
       </el-form-item>
       <el-form-item label="用户类型  " prop="UserType">
-        <el-select v-model="formData.UserType" placeholder=" " size="small" :disabled="true">
-          <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id"/>
+        <el-select v-model="formData.UserType" placeholder=" " size="small">
+          <el-option v-for="(item,index) in userType" v-show="item.Id!=1201"  :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="证件号  " prop="IdentityNo">
@@ -133,7 +133,8 @@
         upload: {//上传文件集合
           file: []
         },
-        ec:{}//更新用户对象
+        ec:{},//更新用户对象
+        backFile:[]//审核失败回滚上传文件数据
       }
     },
     methods: {
@@ -210,6 +211,10 @@
       },
       /************************编辑保存提交*********************/
       submitForm(formName){
+        let backIds = []
+        this.backFile.forEach(item=>{
+          backIds.push(item.Id)
+        })
         let _this = this
         this.ec = {
           Id: this.formData.Id,
@@ -219,7 +224,8 @@
           SA_UserArea_Id: this.formData.SA_UserArea_Id,
           Remark: this.formData.Remark,
           Idarr: [],
-          TaxpayerNumber: this.formData.TaxpayerNumber
+          TaxpayerNumber: this.formData.TaxpayerNumber,
+          backIdarr:backIds
         }
         for (let j = 0; j < this.upload.file.length; j++) {//获取上传文件ID集合
           this.ec.Idarr.push(this.upload.file[j].id)
@@ -258,6 +264,7 @@
       getInfo(id) {//根据id获取详情
         GetBlObjById({CusId: id}).then(res => {
           if (res.code == 0) {
+            this.backFile = JSON.parse(JSON.stringify(res.data.saList))
             res.data.UserType = JSON.stringify(res.data.UserType)
             this.formData = res.data
             let fileList = res.data.saList//已经上传文件信息

@@ -1,140 +1,155 @@
 <template>
   <div class="mac-contianer">
     <div ref="formHeight"></div>
-    <el-form
-      :inline="true"
-      :model="IcwachMeterData"
-      :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
-      size="small"
-      label-width="70px"
-      @submit.native.prevent
-      ref="searcTable"
-    >
-      <el-form-item
-        label="姓名"
-        v-show="show1||isShow"
-        key="CustomerName"
-        label-width="40px"
-        prop="CustomerName"
+    <div class="position-search-head">
+      <el-form
+        :inline="true"
+        :model="IcwachMeterData"
+        :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
+        size="small"
+        label-width="70px"
+        @submit.native.prevent
+        ref="searcTable"
       >
-        <el-input
-          v-model="IcwachMeterData.CustomerName"
-          maxlength="20"
-          placeholder="(长度1-30)"
-          @change="getText(IcwachMeterData.CustomerName,'CustomerName','','姓名')"
-        />
-      </el-form-item>
-      <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
-        <el-input
-          v-model="IcwachMeterData.WaterMeterNo"
-          maxlength="20"
-          @change="getText(IcwachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
-        />
-      </el-form-item>
-      <el-form-item label="水表样式" v-show="show3||isShow" key="wms" prop="wms">
-        <el-select
-          v-model="IcwachMeterData.wms"
-          placeholder="请选择"
-          @change="getText(IcwachMeterData.wms,'wms',waterMeterList,'水表样式')"
+        <el-form-item
+          label="姓名"
+          v-show="show1||isShow"
+          key="CustomerName"
+          :label-width="isShow?'70px':'40px'"
+          prop="CustomerName"
         >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option
-            v-for="item in waterMeterList"
-            :label="item.Name"
-            :value="item.Id"
-            :key="item.Name"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="用户状态" v-show="show4||isShow" key="cs" prop="cs">
-        <el-select
-          v-model="IcwachMeterData.cs"
-          placeholder="请选择"
-          @change="getText(IcwachMeterData.cs,'cs',openStatus,'用户状态')"
-        >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option
-            v-for="item in openStatus"
-            :label="item.Name"
-            :value="item.Id"
-            :key="item.Name"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
-          <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
-        </span>
-        <el-button type="primary" size="mini" @click="searchFun" round>
-          <i class="icon iconfont">&#xe694;</i>查询
-        </el-button>
-        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
-          <i class="iconfont icon_zhongzhi"></i>重置
-        </el-button>
-      </el-form-item>
-    </el-form>
-
-    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelWaterMeter" />
-    <div class="main-padding-20-y" id="table">
-      <el-table
-        :key="tableKey"
-        :data="tableData"
-        border
-        fit
-        :height="tableHeight"
-        style="width: 100%;"
-        :header-cell-style="{'background-color': '#F0F2F5'}"
-        :cell-style="{'padding':'5px 0'}"
-        @sort-change="sortChanges"
-      >
-        <template v-for="(item ,index) in tableHeadData">
-          <el-table-column
-            v-if="item.IsFreeze"
-            :key="index"
-            min-width="170px"
-            :sortable="item.IsSortBol?'custom':null"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
-            :fixed="item.Freeze"
+          <el-input
+            v-model="IcwachMeterData.CustomerName"
+            maxlength="20"
+            placeholder="(长度1-30)"
+            @change="getText(IcwachMeterData.CustomerName,'CustomerName','','姓名')"
           />
-          <el-table-column
-            v-else
-            :key="index"
-            min-width="170px"
-            sortable="custom"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
+        </el-form-item>
+        <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
+          <el-input
+            v-model="IcwachMeterData.WaterMeterNo"
+            maxlength="20"
+            @change="getText(IcwachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
           />
-        </template>
-        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
-          <template slot-scope="scope">
-            <span>{{(IcwachMeterData.page - 1) * IcwachMeterData.limit+ scope.$index + 1}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="100px" align="center" fixed="right">
-          <template slot-scope="scope">
-            <el-tooltip
-              class="item"
-              popper-class="tooltip"
-              effect="light"
-              :visible-arrow="false"
-              content="查看历史详情"
-              placement="bottom"
-            >
-              <i class="icon iconfont viewHis" @click="waterMeterICDetail(scope.row.Id)">&#xe670;</i>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="IcwachMeterData.page"
-        :limit.sync="IcwachMeterData.limit"
-        @pagination="searchFun('0')"
+        </el-form-item>
+        <el-form-item label="水表样式" v-show="show3||isShow" key="wms" prop="wms">
+          <el-select
+            v-model="IcwachMeterData.wms"
+            placeholder="请选择"
+            @change="getText(IcwachMeterData.wms,'wms',waterMeterList,'水表样式')"
+          >
+            <el-option label="全部" value="-1"></el-option>
+            <el-option
+              v-for="item in waterMeterList"
+              :label="item.Name"
+              :value="item.Id"
+              :key="item.Name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="用户状态" v-show="show4||isShow" key="cs" prop="cs">
+          <el-select
+            v-model="IcwachMeterData.cs"
+            placeholder="请选择"
+            @change="getText(IcwachMeterData.cs,'cs',openStatus,'用户状态')"
+          >
+            <el-option label="全部" value="-1"></el-option>
+            <el-option
+              v-for="item in openStatus"
+              :label="item.Name"
+              :value="item.Id"
+              :key="item.Name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
+            <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+          </span>
+          <el-button type="primary" size="mini" @click="searchFun" round>
+            <i class="icon iconfont">&#xe694;</i>查询
+          </el-button>
+          <el-button
+            class="btn-resetting"
+            round
+            plain
+            type="primary"
+            size="mini"
+            @click="resetting"
+          >
+            <i class="iconfont icon_zhongzhi"></i>重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="contanier">
+      <search-tips
+        :tipsData="tipsData"
+        ref="searchTips"
+        @delTips="delTips"
+        @excel="excelWaterMeter"
       />
+      <div class="main-padding-20-y" id="table">
+        <el-table
+          :key="tableKey"
+          :data="tableData"
+          border
+          fit
+          :height="tableHeight"
+          style="width: 100%;"
+          :header-cell-style="{'background-color': '#F0F2F5'}"
+          :cell-style="{'padding':'5px 0'}"
+          @sort-change="sortChanges"
+        >
+          <template v-for="(item ,index) in tableHeadData">
+            <el-table-column
+              v-if="item.IsFreeze"
+              :key="index"
+              min-width="170px"
+              :sortable="item.IsSortBol?'custom':null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+              :fixed="item.Freeze"
+            />
+            <el-table-column
+              v-else
+              :key="index"
+              min-width="170px"
+              sortable="custom"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+            />
+          </template>
+          <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(IcwachMeterData.page - 1) * IcwachMeterData.limit+ scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="100px" align="center" fixed="right">
+            <template slot-scope="scope">
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="查看历史详情"
+                placement="bottom"
+              >
+                <i class="icon iconfont viewHis" @click="waterMeterICDetail(scope.row.Id)">&#xe670;</i>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="IcwachMeterData.page"
+          :limit.sync="IcwachMeterData.limit"
+          @pagination="searchFun('0')"
+        />
+      </div>
     </div>
     <el-dialog
       title="历史详情"

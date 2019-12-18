@@ -211,7 +211,6 @@ export default {
         if (res.code == 0) {
           this.$refs.tableChild.total = res.count;
           this.$refs.tableChild.tableData = res.data;
-          console.log(res.data)
         } else {
           promptInfoFun(this, 1, res.message);
         }

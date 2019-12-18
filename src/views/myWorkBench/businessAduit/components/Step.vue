@@ -2,9 +2,9 @@
   <el-steps :active="milepostActive" align-center>
     <el-step
       v-for="(value, key) in milepost"
-      :class="`${milepostActive>key+1 ? stepActive: ''} ${value.description=='审核不通过' ? 'errorClass': ''} ${value.id==1 ? 'finishBorder': ''}` "
+      :class="`${milepostActive>key+1 ? stepActive: ''} ${value.description=='审核不通过' ? 'errorClass': ''} ${value.id==1&&isBorder==true ? 'finishBorder': ''}` "
       :title="value.title"
-      :description="value.description"
+      :description="value.id==1?'我已审核':value.description"
       :icon="value.description=='审核不通过'?'el-icon-error':'el-icon-success'"
     ></el-step>
     <img v-if="milepostActive==milepost.length" class="passImg" :src="imgIcon" />
@@ -18,9 +18,9 @@ export default {
     return {
       // 数组对象
       milepost: [
-        {id:1, title: "审核环节一", description: "已审核" },
+        { id: 1, title: "审核环节一", description: "已审核" },
         { title: "审核环节二", description: "已审核" },
-        {id:1, title: "审核环节三", description: "已审核" },
+        { id: 1, title: "审核环节三", description: "已审核" },
         { title: "审核环节四", description: "审核不通过" },
         { title: "审核环节五", description: "待审核" }
       ],
@@ -29,8 +29,14 @@ export default {
       imgIcon: imgIcon,
       // 动态添加类名
       stepActive: "stepActive",
-      myAduit: 2
+      myAduit: 2,
+      isBorder: false
     };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.isBorder = this.$parent.$parent.$parent.isBorde;
+    });
   }
 };
 </script>
@@ -39,9 +45,8 @@ export default {
   padding: 20px;
   padding-left: 100px;
   padding-right: 120px;
-  
 }
-.passImg{
+.passImg {
   width: 80px;
   height: 80px;
   position: relative;

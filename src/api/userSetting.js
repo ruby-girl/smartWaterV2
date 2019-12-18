@@ -225,8 +225,8 @@ export function GetICReadCardInfo(data){
 export function GetICWriteCard(data){
   return request({
     url: '/Customer/GetICWriteCard',
-    method: 'get',
-    params: data
+    method: 'post',
+    data: data
   })
 }
 /**

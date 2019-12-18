@@ -4,7 +4,7 @@
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <div class="table-setting">
         <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
-        <el-button size="mini" class="cl-operation-btn fr" round @click="allocationForm" ><i class="icon iconfont">&#xe617;</i> 表册分配</el-button>
+        <el-button size="mini" class="cl-operation-btn fr" round @click="allocationForm" ><i class="icon iconfont">&#xe6ab;</i> 表册分配</el-button>
       </div>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border
@@ -35,16 +35,16 @@
         </template>
         <el-table-column label="操作" width="140px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip effect="dark" content="表册用户" placement="bottom-start">
+            <el-tooltip effect="light" content="表册用户" placement="bottom-start">
               <a class="operation3" @click="handleUserInfo(scope.row)"><i class="iconfont icon iconbiaoceshezhi-biaoceyonghu"></i></a>
             </el-tooltip>
-            <el-tooltip effect="dark" content="表册编辑" placement="bottom-start">
+            <el-tooltip effect="light" content="表册编辑" placement="bottom-start">
               <a class="operation1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
             </el-tooltip>
-            <el-tooltip effect="dark" content="清空" placement="bottom-start">
+            <el-tooltip effect="light" content="清空" placement="bottom-start">
               <a class="operation4" @click="handleEmpty(scope.row)"><i class="iconfont icon iconbiaoceshezhi-qingkong"></i></a>
             </el-tooltip>
-            <el-tooltip effect="dark" content="删除" placement="bottom-start">
+            <el-tooltip effect="light" content="删除" placement="bottom-start">
               <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>

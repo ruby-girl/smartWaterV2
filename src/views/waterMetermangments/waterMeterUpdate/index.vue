@@ -13,7 +13,7 @@
       </el-aside>
 
       <el-main>
-        <h3>升级查询</h3>
+        <h3 style="padding-left:14px;padding-top:14px">升级查询</h3>
         <div ref="formHeight">
           <selecte-head
             :editUserList="editUserList"
@@ -23,59 +23,61 @@
             :searchWidth="searchWidth"
           />
         </div>
-        <search-tips
-          :tipsData="tipsData"
-          ref="searchTips"
-          @delTips="delTips"
-          @excel="excelWaterAccountOrder"
-        />
-        <!-- <customTable ref="myChild" /> -->
-        <div class="main-padding-20-y" id="table">
-          <el-table
-            :key="tableKey"
-            :data="tableData"
-            border
-            fit
-            :height="tableHeight"
-            style="width: 100%;"
-            :header-cell-style="{'background-color': '#F0F2F5'}"
-            @sort-change="sortChanges"
-          >
-            <el-table-column fixed="left" label="序号" width="60" align="center">
-              <template slot-scope="scope">
-                <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
-              </template>
-            </el-table-column>
-
-            <template v-for="(item ,index) in tableHeadData">
-              <el-table-column
-                v-if="item.IsFreeze"
-                :key="index"
-                min-width="190px"
-                :sortable="item.IsSortBol?'custom':null"
-                :prop="item.ColProp"
-                :align="item.Position"
-                :label="item.ColDesc"
-                :fixed="item.Freeze"
-              />
-              <el-table-column
-                v-else
-                :key="index"
-                min-width="190px"
-                sortable="custom"
-                :prop="item.ColProp"
-                :align="item.Position"
-                :label="item.ColDesc"
-              />
-            </template>
-          </el-table>
-          <pagination
-            v-show="total>0"
-            :total="total"
-            :page.sync="listQuery.page"
-            :limit.sync="listQuery.limit"
-            @pagination="seachAccountOrder('0')"
+        <div class="contanier">
+          <search-tips
+            :tipsData="tipsData"
+            ref="searchTips"
+            @delTips="delTips"
+            @excel="excelWaterAccountOrder"
           />
+          <!-- <customTable ref="myChild" /> -->
+          <div class="main-padding-20-y" id="table">
+            <el-table
+              :key="tableKey"
+              :data="tableData"
+              border
+              fit
+              :height="tableHeight"
+              style="width: 100%;"
+              :header-cell-style="{'background-color': '#F0F2F5'}"
+              @sort-change="sortChanges"
+            >
+              <el-table-column fixed="left" label="序号" width="60" align="center">
+                <template slot-scope="scope">
+                  <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
+                </template>
+              </el-table-column>
+
+              <template v-for="(item ,index) in tableHeadData">
+                <el-table-column
+                  v-if="item.IsFreeze"
+                  :key="index"
+                  min-width="190px"
+                  :sortable="item.IsSortBol?'custom':null"
+                  :prop="item.ColProp"
+                  :align="item.Position"
+                  :label="item.ColDesc"
+                  :fixed="item.Freeze"
+                />
+                <el-table-column
+                  v-else
+                  :key="index"
+                  min-width="190px"
+                  sortable="custom"
+                  :prop="item.ColProp"
+                  :align="item.Position"
+                  :label="item.ColDesc"
+                />
+              </template>
+            </el-table>
+            <pagination
+              v-show="total>0"
+              :total="total"
+              :page.sync="listQuery.page"
+              :limit.sync="listQuery.limit"
+              @pagination="seachAccountOrder('0')"
+            />
+          </div>
         </div>
         <span v-show="!ifShow" class="telescopic telescopic1" @click="closeAccount">
           水表升级
@@ -289,8 +291,12 @@ export default {
 
     .el-main {
       background: #fff;
-      padding: 7px 14px;
+      padding: 0;
       position: relative;
+    }
+    .contanier {
+      padding: 14px;
+      padding-top: 0;
     }
   }
   h3 {

@@ -74,10 +74,11 @@ export default {
     /deep/.el-tabs__header {
       background: #eee;
       margin: 0;
+      padding-left: 14px;
     }
-    /deep/.el-tabs__content {
-      padding: 14px 12px;
-    }
+    // /deep/.el-tabs__content {
+    //   padding: 14px 12px;
+    // }
   }
 }
 </style>

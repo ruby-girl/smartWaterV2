@@ -9,123 +9,128 @@
           @getText="getText"
         />
       </div>
-      <div
-        class="display-flex justify-content-flex-justify"
-        :class="{'plan-table':isShowAdPlanClass }"
-      >
-        <el-button
-          v-show="isShowAdPlan"
-          size="mini"
-          class="cl-search cl-reset"
-          round
-          @click="addPlan"
-          style="margin:6px 0;border-color:#00B2A1;color:#00B2A1"
+      <div class="contanier">
+        <div
+          class="display-flex justify-content-flex-justify"
+          :class="{'plan-table':isShowAdPlanClass }"
         >
-          <i class="icon iconfont">&#xe689;</i>添加
-        </el-button>
-      </div>
-      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
-      <div class="main-padding-20-y" id="table">
-        <el-table
-          :key="tableKey"
-          :data="tableData"
-          border
-          fit
-          :height="tableHeight"
-          style="width: 100%;"
-          :header-cell-style="{'background-color': '#F0F2F5'}"
-          :cell-style="{'padding':'5px 0'}"
-          @sort-change="sortChanges"
-        >
-          <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
-            <template slot-scope="scope">
-              <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
+          <el-button
+            v-show="isShowAdPlan"
+            size="mini"
+            class="cl-search cl-reset"
+            round
+            @click="addPlan"
+            style="margin:6px 0;border-color:#00B2A1;color:#00B2A1"
+          >
+            <i class="icon iconfont">&#xe689;</i>添加
+          </el-button>
+        </div>
+
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
+        <div class="main-padding-20-y" id="table">
+          <el-table
+            :key="tableKey"
+            :data="tableData"
+            border
+            fit
+            :height="tableHeight"
+            style="width: 100%;"
+            :header-cell-style="{'background-color': '#F0F2F5'}"
+            :cell-style="{'padding':'5px 0'}"
+            @sort-change="sortChanges"
+          >
+            <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+              <template slot-scope="scope">
+                <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
+              </template>
+            </el-table-column>
+            <template v-for="(item ,index) in tableHeadData">
+              <el-table-column
+                v-if="item.IsFreeze"
+                :key="index"
+                min-width="230px"
+                :sortable="item.IsSortBol?'custom':null"
+                :prop="item.ColProp"
+                :align="item.Position"
+                :label="item.ColDesc"
+                :fixed="item.Freeze"
+              />
+              <el-table-column
+                v-else
+                :key="index"
+                min-width="230px"
+                sortable="custom"
+                :prop="item.ColProp"
+                :align="item.Position"
+                :label="item.ColDesc"
+              />
             </template>
-          </el-table-column>
-          <template v-for="(item ,index) in tableHeadData">
-            <el-table-column
-              v-if="item.IsFreeze"
-              :key="index"
-              min-width="230px"
-              :sortable="item.IsSortBol?'custom':null"
-              :prop="item.ColProp"
-              :align="item.Position"
-              :label="item.ColDesc"
-              :fixed="item.Freeze"
-            />
-            <el-table-column
-              v-else
-              :key="index"
-              min-width="230px"
-              sortable="custom"
-              :prop="item.ColProp"
-              :align="item.Position"
-              :label="item.ColDesc"
-            />
-          </template>
-          <el-table-column label="操作" width="200px" align="center" fixed="right">
-            <template slot-scope="scope">
-              <span style="display:inline-block;width:30px;">
+            <el-table-column label="操作" width="200px" align="center" fixed="right">
+              <template slot-scope="scope">
+                <span style="display:inline-block;width:30px;">
+                  <el-tooltip
+                    v-show="scope.row.IsCanGenerateOrder"
+                    class="item"
+                    popper-class="tooltip"
+                    effect="light"
+                    :visible-arrow="false"
+                    content="生成费用"
+                    placement="bottom"
+                  >
+                    <i
+                      class="iconStyle icon iconfont operation1"
+                      @click="generateOrder(scope.row.Id)"
+                    >&#xe69d;</i>
+                  </el-tooltip>
+                </span>
                 <el-tooltip
-                  v-show="scope.row.IsCanGenerateOrder"
+                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
                   class="item"
                   popper-class="tooltip"
                   effect="light"
                   :visible-arrow="false"
-                  content="生成费用"
+                  content="数据补录"
                   placement="bottom"
                 >
-                  <i class="iconStyle icon iconfont operation1" @click="generateOrder(scope.row.Id)">&#xe69d;</i>
+                  <i
+                    class="iconStyle icon iconfont operation2"
+                    @click="changeInput(scope.row.Id,true)"
+                  >&#xe676;</i>
                 </el-tooltip>
-              </span>
-              <el-tooltip
-                v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="数据补录"
-                placement="bottom"
-              >
-                <i
-                  class="iconStyle icon iconfont operation2"
-                  @click="changeInput(scope.row.Id,true)"
-                >&#xe676;</i>
-              </el-tooltip>
-              <el-tooltip
-                v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="数据绑定"
-                placement="bottom"
-              >
-                <i
-                  class="iconStyle icon iconfont operation2-1"
-                  @click="changeInput(scope.row.Id,false)"
-                >&#xe675;</i>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
-                <i
-                  class="iconStyle icon iconfont operation3"
-                  @click="meterReadingPlanDetail(scope.row.Id)"
-                >&#xe69d;</i>
-              </el-tooltip>
-              <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="删除"
-                placement="bottom"
-              >
-                <i
-                  class="icon iconfont iconStyle operation4"
-                  @click="delMeterReadingPlan(scope.row.Id)"
-                >&#xe653;</i>
-              </el-tooltip>
-              <!-- <a
+                <el-tooltip
+                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
+                  class="item"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="数据绑定"
+                  placement="bottom"
+                >
+                  <i
+                    class="iconStyle icon iconfont operation2-1"
+                    @click="changeInput(scope.row.Id,false)"
+                  >&#xe675;</i>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
+                  <i
+                    class="iconStyle icon iconfont operation3"
+                    @click="meterReadingPlanDetail(scope.row.Id)"
+                  >&#xe69d;</i>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="删除"
+                  placement="bottom"
+                >
+                  <i
+                    class="icon iconfont iconStyle operation4"
+                    @click="delMeterReadingPlan(scope.row.Id)"
+                  >&#xe653;</i>
+                </el-tooltip>
+                <!-- <a
                   v-show="scope.row.IsCanGenerateOrder"
                   class="operation1"
                   @click="generateOrder(scope.row.Id)"
@@ -143,17 +148,18 @@
               >数据绑定</a>
               <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
 
-              <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>-->
-            </template>
-          </el-table-column>
-        </el-table>
-        <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="selectHead.page"
-          :limit.sync="selectHead.limit"
-          @pagination="searchTableList('0')"
-        />
+                <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>-->
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination
+            v-show="total>0"
+            :total="total"
+            :page.sync="selectHead.page"
+            :limit.sync="selectHead.limit"
+            @pagination="searchTableList('0')"
+          />
+        </div>
       </div>
       <Add-ReadingPlan
         :add-show.sync="addDialogFormVisible"
@@ -452,6 +458,13 @@ export default {
 };
 </script>
 <style  scoped>
+.section-full-container {
+  padding: 0;
+}
+.contanier {
+  padding: 14px;
+  padding-top: 0;
+}
 .iconStyle {
   font-size: 16px;
   cursor: pointer;
