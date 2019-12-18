@@ -101,8 +101,11 @@
   };
 </script>
 <style lang="scss" scoped>
-  /deep/ .el-tabs__header {
-    padding-left: 14px;
+  /deep/ .el-tabs__nav{
+    padding-left: 14px!important;
+  }
+  /deep/ .el-tabs__active-bar{
+    margin-left: 14px;
   }
 </style>
 

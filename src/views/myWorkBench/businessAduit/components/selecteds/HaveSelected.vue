@@ -5,7 +5,7 @@
       :model="selectHead"
       :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
       size="small"
-      label-width="70px"
+      label-width="64px"
       @submit.native.prevent
       ref="formHeight"
     >
@@ -30,7 +30,7 @@
           v-model="selectHead.applyType"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterMeter ,'WaterMeter',WaterMeterList,'申请状态')"
+          @change="getText(selectHead.WaterMeter ,'WaterMeter',WaterMeterList,'申请类型')"
         >
           <el-option label="全部" :value="-1" />
           <el-option
