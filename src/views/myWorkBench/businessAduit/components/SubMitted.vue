@@ -3,74 +3,76 @@
     <div ref="fromHeight">
       <sub-selected :searchWidth="searchWidth" :selectHead="selectHead" @getText="getText" />
     </div>
-    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
-    <div class="main-padding-20-y" id="table">
-      <el-table
-        :key="tableKey"
-        :data="tableData"
-        ref="table"
-        border
-        fit
-        :height="tableHeight"
-        style="width: 100%;"
-        :header-cell-style="{'background-color': '#F0F2F5'}"
-        @sort-change="sortChanges"
-      >
-        <el-table-column fixed="left" label="序号" width="60" align="center">
-          <template slot-scope="scope">
-            <span>{{(selectHead.page - 1) *selectHead.limit+ scope.$index + 1}}</span>
-          </template>
-        </el-table-column>
+    <div class="contanier">
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
+      <div class="main-padding-20-y" id="table">
+        <el-table
+          :key="tableKey"
+          :data="tableData"
+          ref="table"
+          border
+          fit
+          :height="tableHeight"
+          style="width: 100%;"
+          :header-cell-style="{'background-color': '#F0F2F5'}"
+          @sort-change="sortChanges"
+        >
+          <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(selectHead.page - 1) *selectHead.limit+ scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
 
-        <template v-for="(item ,index) in tableHeadData">
-          <el-table-column
-            :key="index"
-            min-width="190px"
-            :sortable="item.IsSortBol?'custom':null"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
-          />
-        </template>
-        <el-table-column label="操作" width="120px" align="center" fixed="right">
-          <template slot-scope="scope">
-            <div class="icongStyle">
-             <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="详情"
-                placement="bottom"
-              >
-                <i class="icon iconfont detaile" @click="detaile">&#xe653;</i>
-              </el-tooltip>
-             <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="审核环节"
-                placement="bottom"
-              >
-                <i class="icon iconfont" @click="toogleExpand(scope.row)">&#xe6a5;</i>
-              </el-tooltip>
-            </div>
+          <template v-for="(item ,index) in tableHeadData">
+            <el-table-column
+              :key="index"
+              min-width="190px"
+              :sortable="item.IsSortBol?'custom':null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+            />
           </template>
-        </el-table-column>
-        <el-table-column type="expand" fixed="right" width="1">
-          <template slot-scope="props">
-            <step />
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="selectHead.page"
-        :limit.sync="selectHead.limit"
-        @pagination="seachAccountOrder('0')"
-      />
+          <el-table-column label="操作" width="120px" align="center" fixed="right">
+            <template slot-scope="scope">
+              <div class="icongStyle">
+                <el-tooltip
+                  class="item"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="详情"
+                  placement="bottom"
+                >
+                  <i class="icon iconfont detaile" @click="detaile">&#xe653;</i>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="审核环节"
+                  placement="bottom"
+                >
+                  <i class="icon iconfont" @click="toogleExpand(scope.row)">&#xe6a5;</i>
+                </el-tooltip>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column type="expand" fixed="right" width="1">
+            <template slot-scope="props">
+              <step />
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="selectHead.page"
+          :limit.sync="selectHead.limit"
+          @pagination="seachAccountOrder('0')"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -227,11 +229,15 @@ export default {
 </script>
 <style lang="scss" scoped>
 .box_sub {
-  padding: 12px;
+  // padding: 12px;
   .icon {
     color: #00b2a1;
     cursor: pointer;
     font-size: 14px;
+  }
+  .contanier {
+    padding: 14px;
+    padding-top: 0;
   }
   .detaile {
     font-size: 16px;

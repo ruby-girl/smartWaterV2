@@ -9,7 +9,7 @@
     @submit.native.prevent
     ref="formHeight"
   >
-    <el-form-item v-if="companyShow" label="水厂" label-width="40px">
+    <el-form-item v-if="companyShow" label="水厂" :label-width="isShow?'70px':'40px'">
       <el-select
         v-model="selectHead.SA_WaterFactory_Id"
         placeholder="请选择"
@@ -44,7 +44,7 @@
       </el-form-item>
       <el-form-item
         label="计划抄表日期"
-        label-width="110px"
+        label-width="90px"
         v-show="show2||isShow"
         key="warterMeterPlanDate"
       >

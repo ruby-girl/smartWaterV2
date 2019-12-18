@@ -1,7 +1,7 @@
 <template>
   <div class="box_sub">
     <div ref="fromHeight">
-      <stay-selected :searchWidth="searchWidth" :selectHead="selectHead" @getText="getText" />
+      <aduite-selected :searchWidth="searchWidth" :selectHead="selectHead" @getText="getText" />
     </div>
     <div class="contanier">
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
@@ -44,7 +44,7 @@
                   content="详情"
                   placement="bottom"
                 >
-                  <i class="icon iconfont detaile" @click="detaile">&#xe6a1;</i>
+                  <i class="icon iconfont detaile" @click="detaile">&#xe653;</i>
                 </el-tooltip>
                 <el-tooltip
                   class="item"
@@ -77,14 +77,14 @@
   </div>
 </template>
 <script>
-import StaySelected from "./selecteds/StaySelected";
+import AduiteSelected from "./selecteds/AduiteSelected";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
 import Step from "./Step"; //流程图
 export default {
-  name: "StayAduite",
-  components: { StaySelected, SearchTips, Pagination, Step },
+  name: "AduiteSelect",
+  components: { AduiteSelected, SearchTips, Pagination, Step },
   data() {
     return {
       searchWidth: null, //
@@ -95,6 +95,7 @@ export default {
         applyType: "", //申请类型
         creater: -1, //创建人
         timevalue: [], //时间
+        timevalue1: [], //时间
         tableId: "0000032",
         SA_WaterFactory_Id: "-1" //水厂
       }, //查询对象

@@ -1,172 +1,187 @@
 <template>
   <div class="mac-contianer">
     <div ref="formHeight"></div>
-    <el-form
-      :inline="true"
-      :model="WLWQueryParam"
-      :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
-      size="small"
-      label-width="70px"
-      @submit.native.prevent
-      ref="searcTable"
-    >
-      <el-form-item label="用户编号" v-show="show1||isShow" key="CustomerNo" prop="CustomerNo">
-        <el-input
-          v-model="WLWQueryParam.CustomerNo"
-          maxlength="20"
-          @change="getText(WLWQueryParam.CustomerNo,'CustomerNo','','用户编号')"
-        />
-      </el-form-item>
-      <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
-        <el-input
-          v-model="WLWQueryParam.WaterMeterNo"
-          maxlength="20"
-          @change="getText(WLWQueryParam.WaterMeterNo,'WaterMeterNo','','水表编号')"
-        />
-      </el-form-item>
+    <div class="position-search-head">
+      <el-form
+        :inline="true"
+        :model="WLWQueryParam"
+        :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
+        size="small"
+        label-width="70px"
+        @submit.native.prevent
+        ref="searcTable"
+        style="width:100%"
+      >
+        <el-form-item label="用户编号" v-show="show1||isShow" key="CustomerNo" prop="CustomerNo">
+          <el-input
+            v-model="WLWQueryParam.CustomerNo"
+            maxlength="20"
+            @change="getText(WLWQueryParam.CustomerNo,'CustomerNo','','用户编号')"
+          />
+        </el-form-item>
+        <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
+          <el-input
+            v-model="WLWQueryParam.WaterMeterNo"
+            maxlength="20"
+            @change="getText(WLWQueryParam.WaterMeterNo,'WaterMeterNo','','水表编号')"
+          />
+        </el-form-item>
 
-      <el-form-item
-        label="用户状态"
-        v-show="show3||isShow"
-        key="CustomerMeterState"
-        prop="CustomerMeterState"
-      >
-        <el-select
-          v-model="WLWQueryParam.CustomerMeterState"
-          placeholder="请选择"
-          @change="getText(WLWQueryParam.CustomerMeterState,'CustomerMeterState',statusList,'用户状态')"
+        <el-form-item
+          label="用户状态"
+          v-show="show3||isShow"
+          key="CustomerMeterState"
+          prop="CustomerMeterState"
         >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option label="已开户" value="1"></el-option>
-          <el-option label="销户" value="2"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item
-        label="开户状态"
-        v-show="show4||isShow"
-        key="CustomerOpenAccountState"
-        prop="CustomerOpenAccountState"
-      >
-        <el-select
-          v-model="WLWQueryParam.CustomerOpenAccountState"
-          placeholder="请选择"
-          @change="getText(WLWQueryParam.CustomerOpenAccountState,'CustomerOpenAccountState',statusList,'开户状态')"
+          <el-select
+            v-model="WLWQueryParam.CustomerMeterState"
+            placeholder="请选择"
+            @change="getText(WLWQueryParam.CustomerMeterState,'CustomerMeterState',statusList,'用户状态')"
+          >
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="已开户" value="1"></el-option>
+            <el-option label="销户" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="开户状态"
+          v-show="show4||isShow"
+          key="CustomerOpenAccountState"
+          prop="CustomerOpenAccountState"
         >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option label="已开户" value="1"></el-option>
-          <el-option label="销户" value="2"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="阀门状态" v-show="show5||isShow" key="ValveState" prop="ValveState">
-        <el-select
-          v-model="WLWQueryParam.ValveState"
-          placeholder="请选择"
-          @change="getText(WLWQueryParam.ValveState,'ValveState',statusList,'阀门状态')"
-        >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option label="已开户" value="1"></el-option>
-          <el-option label="销户" value="2"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="水表状态" v-show="show6||isShow" key="MeterState" prop="MeterState">
-        <el-select
-          v-model="WLWQueryParam.MeterState"
-          placeholder="请选择"
-          @change="getText(WLWQueryParam.MeterState,'MeterState',statusList,'水表状态')"
-        >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option label="已开户" value="1"></el-option>
-          <el-option label="销户" value="2"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
-          <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
-        </span>
-        <el-button type="primary" size="mini" @click="searchWLWMeterInfo" round>
-          <i class="icon iconfont">&#xe694;</i>查询
-        </el-button>
-        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
-          <i class="iconfont icon_zhongzhi"></i>重置
-        </el-button>
-      </el-form-item>
-    </el-form>
-    <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
-      <el-button size="mini" class="fl borderClass" round @click="orderLockWLWOpen(1)">
-        <i class="icon iconfont">&#xe646;</i>阀门锁定开
-      </el-button>
-      <el-button size="mini" class="fl borderClass" round @click="orderLockWLWClose(0)">
-        <i class="icon iconfont">&#xe643;</i>阀门锁定关
-      </el-button>
-      <el-button size="mini" class="fl borderClass" round @click="orderUnockWLW(0)">
-        <i class="icon iconfont">&#xe645;</i>解锁
-      </el-button>
+          <el-select
+            v-model="WLWQueryParam.CustomerOpenAccountState"
+            placeholder="请选择"
+            @change="getText(WLWQueryParam.CustomerOpenAccountState,'CustomerOpenAccountState',statusList,'开户状态')"
+          >
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="已开户" value="1"></el-option>
+            <el-option label="销户" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="阀门状态" v-show="show5||isShow" key="ValveState" prop="ValveState">
+          <el-select
+            v-model="WLWQueryParam.ValveState"
+            placeholder="请选择"
+            @change="getText(WLWQueryParam.ValveState,'ValveState',statusList,'阀门状态')"
+          >
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="已开户" value="1"></el-option>
+            <el-option label="销户" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="水表状态" v-show="show6||isShow" key="MeterState" prop="MeterState">
+          <el-select
+            v-model="WLWQueryParam.MeterState"
+            placeholder="请选择"
+            @change="getText(WLWQueryParam.MeterState,'MeterState',statusList,'水表状态')"
+          >
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="已开户" value="1"></el-option>
+            <el-option label="销户" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
+            <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+          </span>
+          <el-button type="primary" size="mini" @click="searchWLWMeterInfo" round>
+            <i class="icon iconfont">&#xe694;</i>查询
+          </el-button>
+          <el-button
+            class="btn-resetting"
+            round
+            plain
+            type="primary"
+            size="mini"
+            @click="resetting"
+          >
+            <i class="iconfont icon_zhongzhi"></i>重置
+          </el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="ExcelWLWInfo" />
-    <Static class="static-height" :ErrorList="ErrorList" />
-    <div class="main-padding-20-y" id="table">
-      <el-table
-        :key="tableKey"
-        :data="tableData"
-        border
-        fit
-        :height="tableHeight"
-        style="width: 100%;"
-        :header-cell-style="{'background-color': '#F0F2F5'}"
-        :cell-style="{'padding':'5px 0'}"
-        highlight-current-row
-        @current-change="handleCurrentChange"
-        @sort-change="sortChanges"
-      >
-        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
-          <template slot-scope="scope">
-            <span>{{(WLWQueryParam.page - 1) * WLWQueryParam.limit+ scope.$index + 1}}</span>
+    <div class="contanier">
+      <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
+        <el-button size="mini" class="fl borderClass" round @click="orderLockWLWOpen(1)">
+          <i class="icon iconfont">&#xe646;</i>阀门锁定开
+        </el-button>
+        <el-button size="mini" class="fl borderClass" round @click="orderLockWLWClose(0)">
+          <i class="icon iconfont">&#xe643;</i>阀门锁定关
+        </el-button>
+        <el-button size="mini" class="fl borderClass" round @click="orderUnockWLW(0)">
+          <i class="icon iconfont">&#xe645;</i>解锁
+        </el-button>
+      </div>
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="ExcelWLWInfo" />
+      <Static class="static-height" :ErrorList="ErrorList" />
+      <div class="main-padding-20-y" id="table">
+        <el-table
+          :key="tableKey"
+          :data="tableData"
+          border
+          fit
+          :height="tableHeight"
+          style="width: 100%;"
+          :header-cell-style="{'background-color': '#F0F2F5'}"
+          :cell-style="{'padding':'5px 0'}"
+          highlight-current-row
+          @current-change="handleCurrentChange"
+          @sort-change="sortChanges"
+        >
+          <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(WLWQueryParam.page - 1) * WLWQueryParam.limit+ scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
+          <template v-for="(item ,index) in tableHeadData">
+            <el-table-column
+              v-if="item.IsFreeze"
+              :key="index"
+              min-width="150px"
+              :sortable="item.IsSortBol?'custom':null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+              :fixed="item.Freeze"
+            />
+            <el-table-column
+              v-else
+              :key="index"
+              min-width="150px"
+              sortable="custom"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+            />
           </template>
-        </el-table-column>
-        <template v-for="(item ,index) in tableHeadData">
-          <el-table-column
-            v-if="item.IsFreeze"
-            :key="index"
-            min-width="150px"
-            :sortable="item.IsSortBol?'custom':null"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
-            :fixed="item.Freeze"
-          />
-          <el-table-column
-            v-else
-            :key="index"
-            min-width="150px"
-            sortable="custom"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
-          />
-        </template>
 
-        <el-table-column label="操作" width="100px" align="center" fixed="right">
-          <template slot-scope="scope">
-            <el-tooltip
-              class="item"
-              popper-class="tooltip"
-              effect="light"
-              :visible-arrow="false"
-              content="查看历史详情"
-              placement="bottom"
-            >
-              <i class="icon iconfont viewHis" @click="waterMeterWLWDetail(scope.row.IMSI)">&#xe670;</i>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="WLWQueryParam.page"
-        :limit.sync="WLWQueryParam.limit"
-        @pagination="searchWLWMeterInfo('0')"
-      />
+          <el-table-column label="操作" width="100px" align="center" fixed="right">
+            <template slot-scope="scope">
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="查看历史详情"
+                placement="bottom"
+              >
+                <i
+                  class="icon iconfont viewHis"
+                  @click="waterMeterWLWDetail(scope.row.IMSI)"
+                >&#xe670;</i>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="WLWQueryParam.page"
+          :limit.sync="WLWQueryParam.limit"
+          @pagination="searchWLWMeterInfo('0')"
+        />
+      </div>
     </div>
     <el-dialog
       title="历史详情"
@@ -285,7 +300,7 @@ export default {
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.$nextTick(() => {
       this.screenWidth = this.$refs.formHeight.clientWidth;
-      if (Math.floor((this.screenWidth - 180) / 280) < 6) {
+      if (Math.floor((this.screenWidth - 180) / 280) <=6) {
         this.showBtn = true;
       } else {
         this.showBtn = false;

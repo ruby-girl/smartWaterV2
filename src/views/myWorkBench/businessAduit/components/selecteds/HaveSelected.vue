@@ -65,8 +65,23 @@
           />
         </el-select>
       </el-form-item>
-
-      <el-form-item label="申请日期"  v-show="show4||isShow">
+      <el-form-item label="审核状态" v-show="show4||isShow" prop="aduitAdvise">
+        <el-select
+          v-model="selectHead.aduitAdvise"
+          placeholder="请选择"
+          @keydown.enter.native="handleFilter"
+          @change="getText(selectHead.aduitAdvise ,'aduitAdvise',WaterMeterList,'审核意见')"
+        >
+          <el-option label="全部" :value="-1" />
+          <el-option
+            v-for="item in WaterMeterList"
+            :key="item.Id"
+            :label="item.Name"
+            :value="Number(item.Id)"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="申请日期" v-show="show5||isShow">
         <el-date-picker
           v-model="selectHead.timevalue"
           type="datetimerange"
@@ -78,7 +93,23 @@
           :default-time="['00:00:00', '23:59:59']"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          @change="getTime"
+          @change="getTime(selectHead.timevalue,'timevalue')"
+          @keydown.enter.native="handleFilter"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="审核日期" v-show="show6||isShow">
+        <el-date-picker
+          v-model="selectHead.timevalue1"
+          type="datetimerange"
+          :editable="false"
+          :unlink-panels="true"
+          range-separator="~"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          @change="getTime(selectHead.timevalue1,'timevalue1')"
           @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
@@ -100,7 +131,7 @@
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
 export default {
-  name: "StaySelected",
+  name: "HaveSelected",
   props: {
     selectHead: {
       type: Object,
@@ -113,17 +144,19 @@ export default {
   watch: {
     searchWidth: {
       handler(val, oldVal) {
-         this.showBtn = true;
+        this.showBtn = true;
         this.show1 = this.showLabel(1, val);
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
+        this.show5 = this.showLabel(5, val);
+        this.show6 = this.showLabel(6, val);
         if (this.companyOptions.length == 1) {
-          if (Math.floor((val - 180) / 280) >= 5) {
+          if (Math.floor((val - 180) / 280) >= 6) {
             this.showBtn = false;
           }
         } else {
-          if (Math.floor((val - 180) / 280) >= 4) {
+          if (Math.floor((val - 180) / 280) >= 7) {
             this.showBtn = false;
           }
         }
@@ -143,6 +176,8 @@ export default {
       show2: true,
       show3: true,
       show4: true,
+      show5: true,
+      show6: true,
 
       showBtn: true //查询展开
     };
@@ -178,18 +213,28 @@ export default {
       this.$emit("getText", val, model, arr, name);
     },
     //日期格式化
-    getTime(v) {
+    getTime(v, n) {
       let date;
       if (v) {
         this.selectHead.StartTime = v[0];
         this.selectHead.EndTime = v[1];
         date = this.selectHead.StartTime + "~" + this.selectHead.EndTime;
-        this.$emit("getText", date, "timevalue", "", "申请日期");
+        if (n == "timevalue1") {
+          this.$emit("getText", date, n, "", "审核日期");
+        }
+        if (n == "timevalue") {
+          this.$emit("getText", date, n, "", "申请日期");
+        }
       } else {
         this.selectHead.StartTime = "";
         this.selectHead.EndTime = "";
         date = "";
-        this.$emit("getText", date, "timevalue", "", "申请日期");
+        if (n == "timevalue1") {
+          this.$emit("getText", date, n, "", "审核日期");
+        }
+        if (n == "timevalue") {
+          this.$emit("getText", date, n, "", "申请日期");
+        }
       }
     },
     handleFilter() {

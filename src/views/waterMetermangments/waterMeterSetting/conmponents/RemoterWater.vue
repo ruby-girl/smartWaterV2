@@ -33,194 +33,203 @@
       </el-aside>
       <el-main>
         <div ref="formHeight"></div>
-        <el-form
-          :inline="true"
-          :model="YCMeterQueryParam"
-          :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
-          size="small"
-          label-width="70px"
-          @submit.native.prevent
-          ref="searcTable"
-        >
-          <el-form-item
-            label="水表编号"
-            v-show="show1||isShow"
-            key="CustomerQueryValue"
-            prop="CustomerQueryValue"
+        <div class="position-search-head">
+          <el-form
+            :inline="true"
+            :model="YCMeterQueryParam"
+            :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
+            size="small"
+            label-width="70px"
+            @submit.native.prevent
+            ref="searcTable"
           >
-            <el-input
-              v-model="YCMeterQueryParam.CustomerQueryValue"
-              maxlength="20"
-              @change="getText(YCMeterQueryParam.CustomerQueryValue,'CustomerQueryValue','','水表编号')"
-            />
-          </el-form-item>
-          <el-form-item label="阀门状态" v-show="show2||isShow" key="ValveState" prop="ValveState">
-            <el-select
-              v-model="YCMeterQueryParam.ValveState"
-              placeholder="请选择"
-              @change="getText(YCMeterQueryParam.ValveState,'ValveState',ValveStateList,'阀门状态')"
+            <el-form-item
+              label="水表编号"
+              v-show="show1||isShow"
+              key="CustomerQueryValue"
+              prop="CustomerQueryValue"
             >
-              <el-option label="全部" value="-1"></el-option>
-              <el-option
-                v-for="item in ValveStateList"
-                :label="item.Name"
-                :value="item.Id"
-                :key="item.Name"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            label="开户状态"
-            v-show="show3||isShow"
-            key="IsOpenAccount"
-            prop="IsOpenAccount"
-          >
-            <el-select
-              v-model="YCMeterQueryParam.IsOpenAccount"
-              placeholder="请选择"
-              @change="getText(YCMeterQueryParam.IsOpenAccount,'IsOpenAccount',statusList,'开户状态')"
+              <el-input
+                v-model="YCMeterQueryParam.CustomerQueryValue"
+                maxlength="20"
+                @change="getText(YCMeterQueryParam.CustomerQueryValue,'CustomerQueryValue','','水表编号')"
+              />
+            </el-form-item>
+            <el-form-item label="阀门状态" v-show="show2||isShow" key="ValveState" prop="ValveState">
+              <el-select
+                v-model="YCMeterQueryParam.ValveState"
+                placeholder="请选择"
+                @change="getText(YCMeterQueryParam.ValveState,'ValveState',ValveStateList,'阀门状态')"
+              >
+                <el-option label="全部" value="-1"></el-option>
+                <el-option
+                  v-for="item in ValveStateList"
+                  :label="item.Name"
+                  :value="item.Id"
+                  :key="item.Name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              label="开户状态"
+              v-show="show3||isShow"
+              key="IsOpenAccount"
+              prop="IsOpenAccount"
             >
-              <el-option label="全部" value="-1"></el-option>
-              <el-option label="已开户" value="0"></el-option>
-              <el-option label="未开户" value="1"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            label="通讯状态"
-            v-show="show4||isShow"
-            key="TrafficStatus"
-            prop="TrafficStatus"
-          >
-            <el-select
-              v-model="YCMeterQueryParam.TrafficStatus"
-              placeholder="请选择"
-              @change="getText(YCMeterQueryParam.TrafficStatus,'TrafficStatus',TrafficStatusList,'通讯状态')"
+              <el-select
+                v-model="YCMeterQueryParam.IsOpenAccount"
+                placeholder="请选择"
+                @change="getText(YCMeterQueryParam.IsOpenAccount,'IsOpenAccount',statusList,'开户状态')"
+              >
+                <el-option label="全部" value="-1"></el-option>
+                <el-option label="已开户" value="0"></el-option>
+                <el-option label="未开户" value="1"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              label="通讯状态"
+              v-show="show4||isShow"
+              key="TrafficStatus"
+              prop="TrafficStatus"
             >
-              <el-option label="全部" value="-1"></el-option>
-              <el-option
-                v-for="item in TrafficStatusList"
-                :label="item.Name"
-                :value="item.Id"
-                :key="item.Name"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label>
-            <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
-              <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
-            </span>
-            <el-button round type="primary" size="mini" @click="searchYCWaterList">
-              <i class="iconfont iconsousuo"></i>搜索
-            </el-button>
-            <el-button
-              class="btn-resetting"
-              round
-              plain
-              type="primary"
-              size="mini"
-              @click="resetting"
-            >
-              <i class="iconfont icon_zhongzhi"></i>重置
-            </el-button>
-          </el-form-item>
-        </el-form>
-        <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
-          <el-button size="mini" class="fl borderClass" round @click="meterRedingYC">
-            <i class="icon iconfont">&#xe642;</i>抄表
-          </el-button>
-          <el-button size="mini" class="fl borderClass" round @click="orderLockYC(1)">
-            <i class="icon iconfont">&#xe646;</i>阀门锁定开
-          </el-button>
-          <el-button size="mini" class="fl borderClass" round @click="orderLockYC(0)">
-            <i class="icon iconfont">&#xe643;</i>阀门锁定关
-          </el-button>
-          <el-button size="mini" class="fl borderClass" round @click="orderUnockYC">
-            <i class="icon iconfont">&#xe645;</i>解锁
-          </el-button>
+              <el-select
+                v-model="YCMeterQueryParam.TrafficStatus"
+                placeholder="请选择"
+                @change="getText(YCMeterQueryParam.TrafficStatus,'TrafficStatus',TrafficStatusList,'通讯状态')"
+              >
+                <el-option label="全部" value="-1"></el-option>
+                <el-option
+                  v-for="item in TrafficStatusList"
+                  :label="item.Name"
+                  :value="item.Id"
+                  :key="item.Name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label>
+              <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
+                <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+              </span>
+              <el-button round type="primary" size="mini" @click="searchYCWaterList">
+                <i class="iconfont iconsousuo"></i>搜索
+              </el-button>
+              <el-button
+                class="btn-resetting"
+                round
+                plain
+                type="primary"
+                size="mini"
+                @click="resetting"
+              >
+                <i class="iconfont icon_zhongzhi"></i>重置
+              </el-button>
+            </el-form-item>
+          </el-form>
         </div>
+        <div class="contanier">
+          <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
+            <el-button size="mini" class="fl borderClass" round @click="meterRedingYC">
+              <i class="icon iconfont">&#xe642;</i>抄表
+            </el-button>
+            <el-button size="mini" class="fl borderClass" round @click="orderLockYC(1)">
+              <i class="icon iconfont">&#xe646;</i>阀门锁定开
+            </el-button>
+            <el-button size="mini" class="fl borderClass" round @click="orderLockYC(0)">
+              <i class="icon iconfont">&#xe643;</i>阀门锁定关
+            </el-button>
+            <el-button size="mini" class="fl borderClass" round @click="orderUnockYC">
+              <i class="icon iconfont">&#xe645;</i>解锁
+            </el-button>
+          </div>
 
-        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="ExcelYcInfo" />
-        <div class="main-padding-20-y" id="table">
-          <el-table
-            :key="tableKey"
-            :data="tableData"
-            border
-            fit
-            :height="tableHeight"
-            style="width: 100%;"
-            :header-cell-style="{'background-color': '#F0F2F5'}"
-            :cell-style="{'padding':'5px 0'}"
-            @selection-change="selectionChange"
-            @sort-change="sortChanges"
-          >
-            <el-table-column type="selection" fixed="left" width="55"></el-table-column>
-            <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
-              <template slot-scope="scope">
-                <span>{{(YCMeterQueryParam.page - 1) * YCMeterQueryParam.limit+ scope.$index + 1}}</span>
-              </template>
-            </el-table-column>
-
-            <template v-for="(item ,index) in tableHeadData">
-              <el-table-column
-                v-if="item.IsFreeze"
-                :key="index"
-                min-width="170px"
-                :sortable="item.IsSortBol?'custom':null"
-                :prop="item.ColProp"
-                :align="item.Position"
-                :label="item.ColDesc"
-                :fixed="item.Freeze"
-              />
-              <el-table-column
-                v-else
-                :key="index"
-                min-width="170px"
-                sortable="custom"
-                :prop="item.ColProp"
-                :align="item.Position"
-                :label="item.ColDesc"
-              />
-            </template>
-            <el-table-column label="操作" width="180px" align="center" fixed="right">
-              <template slot-scope="scope">
-                <el-tooltip
-                  class="item"
-                  v-if="scope.row.SA_Customer_Id!=''"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="查看历史详情"
-                  placement="bottom"
-                >
-                  <i
-                    class="icon iconfont viewHis"
-                    @click="waterMeterYCDetail(scope.row.SA_Customer_Id)"
-                  >&#xe670;</i>
-                </el-tooltip>
-                <el-tooltip
-                  v-if="scope.row.SA_Customer_Id!=''"
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="指令历史"
-                  placement="bottom"
-                >
-                  <i
-                    class="icon iconfont editJxWater"
-                    @click="instructionsHis(scope.row.Id)"
-                  >&#xe69f;</i>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-          </el-table>
-          <pagination
-            v-show="total>0"
-            :total="total"
-            :page.sync="YCMeterQueryParam.page"
-            :limit.sync="YCMeterQueryParam.limit"
-            @pagination="searchYCWaterList('0')"
+          <search-tips
+            :tipsData="tipsData"
+            ref="searchTips"
+            @delTips="delTips"
+            @excel="ExcelYcInfo"
           />
+          <div class="main-padding-20-y" id="table">
+            <el-table
+              :key="tableKey"
+              :data="tableData"
+              border
+              fit
+              :height="tableHeight"
+              style="width: 100%;"
+              :header-cell-style="{'background-color': '#F0F2F5'}"
+              :cell-style="{'padding':'5px 0'}"
+              @selection-change="selectionChange"
+              @sort-change="sortChanges"
+            >
+              <el-table-column type="selection" fixed="left" width="55"></el-table-column>
+              <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+                <template slot-scope="scope">
+                  <span>{{(YCMeterQueryParam.page - 1) * YCMeterQueryParam.limit+ scope.$index + 1}}</span>
+                </template>
+              </el-table-column>
+
+              <template v-for="(item ,index) in tableHeadData">
+                <el-table-column
+                  v-if="item.IsFreeze"
+                  :key="index"
+                  min-width="170px"
+                  :sortable="item.IsSortBol?'custom':null"
+                  :prop="item.ColProp"
+                  :align="item.Position"
+                  :label="item.ColDesc"
+                  :fixed="item.Freeze"
+                />
+                <el-table-column
+                  v-else
+                  :key="index"
+                  min-width="170px"
+                  sortable="custom"
+                  :prop="item.ColProp"
+                  :align="item.Position"
+                  :label="item.ColDesc"
+                />
+              </template>
+              <el-table-column label="操作" width="180px" align="center" fixed="right">
+                <template slot-scope="scope">
+                  <el-tooltip
+                    class="item"
+                    v-if="scope.row.SA_Customer_Id!=''"
+                    popper-class="tooltip"
+                    effect="light"
+                    :visible-arrow="false"
+                    content="查看历史详情"
+                    placement="bottom"
+                  >
+                    <i
+                      class="icon iconfont viewHis"
+                      @click="waterMeterYCDetail(scope.row.SA_Customer_Id)"
+                    >&#xe670;</i>
+                  </el-tooltip>
+                  <el-tooltip
+                    v-if="scope.row.SA_Customer_Id!=''"
+                    class="item"
+                    popper-class="tooltip"
+                    effect="light"
+                    :visible-arrow="false"
+                    content="指令历史"
+                    placement="bottom"
+                  >
+                    <i
+                      class="icon iconfont editJxWater"
+                      @click="instructionsHis(scope.row.Id)"
+                    >&#xe69f;</i>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+            </el-table>
+            <pagination
+              v-show="total>0"
+              :total="total"
+              :page.sync="YCMeterQueryParam.page"
+              :limit.sync="YCMeterQueryParam.limit"
+              @pagination="searchYCWaterList('0')"
+            />
+          </div>
         </div>
         <el-dialog
           title="历史详情"
@@ -656,7 +665,7 @@ export default {
   user-select: none;
   .el-container {
     background: #eee;
-    padding-top: 10px !important;
+    // padding-top: 10px !important;
     .el-aside {
       padding: 0;
       margin: 0;
@@ -734,10 +743,10 @@ export default {
       }
     }
     .el-main {
-      padding: 13px;
       background: #fff;
       margin-left: 0px;
       position: relative;
+      padding: 0;
     }
     .telescopic {
       position: absolute;
