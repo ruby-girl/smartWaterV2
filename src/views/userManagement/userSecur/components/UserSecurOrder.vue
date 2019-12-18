@@ -9,62 +9,64 @@
         :searchWidth="searchWidth"
       />
     </div>
-    <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
-    <!-- <customTable ref="myChild" /> -->
-    <div class="main-padding-20-y" id="table">
-      <el-table
-        :key="tableKey"
-        :data="tableData"
-        border
-        fit
-        :height="tableHeight"
-        style="width: 100%;"
-        :header-cell-style="{'background-color': '#F0F2F5'}"
-        @sort-change="sortChanges"
-      >
-        <el-table-column fixed="left" label="序号" width="60" align="center">
-          <template slot-scope="scope">
-            <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
-          </template>
-        </el-table-column>
+    <div class="contanier">
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
+      <!-- <customTable ref="myChild" /> -->
+      <div class="main-padding-20-y" id="table">
+        <el-table
+          :key="tableKey"
+          :data="tableData"
+          border
+          fit
+          :height="tableHeight"
+          style="width: 100%;"
+          :header-cell-style="{'background-color': '#F0F2F5'}"
+          @sort-change="sortChanges"
+        >
+          <el-table-column fixed="left" label="序号" width="60" align="center">
+            <template slot-scope="scope">
+              <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
 
-        <template v-for="(item ,index) in tableHeadData">
-          <el-table-column
-            :key="index"
-            min-width="190px"
-            :sortable="item.IsSortBol?'custom':null"
-            :prop="item.ColProp"
-            :align="item.Position"
-            :label="item.ColDesc"
-          />
-        </template>
-        <el-table-column label="操作" width="120px" align="center" fixed="right">
-          <template slot-scope="scope">
-            <div class="icongStyle">
-              <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="详情"
-                placement="bottom"
-              >
-                <i
-                  class="icon iconfont iconbiaodan1"
-                  @click="detaile(scope.row.SA_InsuredMessage_Id)"
-                ></i>
-              </el-tooltip>
-            </div>
+          <template v-for="(item ,index) in tableHeadData">
+            <el-table-column
+              :key="index"
+              min-width="190px"
+              :sortable="item.IsSortBol?'custom':null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+            />
           </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="seachAccountOrder('0')"
-      />
+          <el-table-column label="操作" width="120px" align="center" fixed="right">
+            <template slot-scope="scope">
+              <div class="icongStyle">
+                <el-tooltip
+                  class="item"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="详情"
+                  placement="bottom"
+                >
+                  <i
+                    class="icon iconfont iconbiaodan1"
+                    @click="detaile(scope.row.SA_InsuredMessage_Id)"
+                  ></i>
+                </el-tooltip>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.page"
+          :limit.sync="listQuery.limit"
+          @pagination="seachAccountOrder('0')"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -188,6 +190,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .secur-content {
+  .contanier {
+    padding: 14px;
+    padding-top: 0;
+  }
   .icongStyle {
     .icon {
       font-size: 16px;

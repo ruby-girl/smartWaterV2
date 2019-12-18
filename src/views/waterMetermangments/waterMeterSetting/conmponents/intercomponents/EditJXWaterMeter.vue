@@ -15,7 +15,7 @@
       label-width="150px"
       :rules="rules"
     >
-      <el-form-item label="姓名：" prop="customerName">
+      <el-form-item label="姓名：" prop="CustomerName">
         <el-input v-model="EditJxData.CustomerName" maxlength="30" placeholder="(长度1-30)" />
       </el-form-item>
       <el-form-item label="用户编号：" prop="CustomerNo">
@@ -112,7 +112,7 @@ export default {
       editId: "",
       rules: {
         //表单 验证
-        customerName: [
+        CustomerName: [
           { required: true, message: "请输入用户姓名", trigger: "blur" },
           { min: 1, max: 30, message: "长度在 1 到 30个字符", trigger: "blur" }
         ],
@@ -189,3 +189,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.el-form-item{
+  margin-bottom: 20px;
+}
+</style>
