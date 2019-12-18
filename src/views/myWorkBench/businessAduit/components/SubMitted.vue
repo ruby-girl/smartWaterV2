@@ -15,8 +15,7 @@
           :height="tableHeight"
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
-          @sort-change="sortChanges"
-        >
+          @sort-change="sortChanges">
           <el-table-column fixed="left" label="序号" width="60" align="center">
             <template slot-scope="scope">
               <span>{{(selectHead.page - 1) *selectHead.limit+ scope.$index + 1}}</span>

@@ -38,13 +38,13 @@
       </template>
       <el-table-column label="操作" width="100px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip effect="dark" content="详情" placement="bottom-start">
+          <el-tooltip effect="light" content="详情" placement="bottom-start">
             <a style="color: #B59200" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
           </el-tooltip>
-          <el-tooltip effect="dark" content="编辑" placement="bottom-start">
+          <el-tooltip effect="light" content="编辑" placement="bottom-start">
             <a style="margin:10px;color: #00B2A1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
           </el-tooltip>
-          <el-tooltip effect="dark" content="删除" placement="bottom-start">
+          <el-tooltip effect="light" content="删除" placement="bottom-start">
             <a style="color: #FF3D3D" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
           </el-tooltip>
         </template>

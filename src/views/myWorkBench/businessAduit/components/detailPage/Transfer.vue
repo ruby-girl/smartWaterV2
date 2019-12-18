@@ -125,7 +125,7 @@
     components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason },
     data() {
       return {
-        dialogVisible: true,
+        dialogVisible: false,
         files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
         index:1,
         componentsArr:['MechanicsMater','YcMeter'],

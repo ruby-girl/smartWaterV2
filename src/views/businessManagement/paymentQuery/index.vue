@@ -138,7 +138,7 @@ export default {
       let start = parseStartTimeFunc(new Date());
       let end = parseEndTimeFunc(new Date());
       this.listQuery.editStartTime=start
-      this.listQuery.editEndTime=end   
+      this.listQuery.editEndTime=end
       this.listQuery.timevalue.push(new Date(start));
       this.listQuery.timevalue.push(new Date(end));
       this.getText(start+'~'+end, "timevalue", "", "缴费日期");

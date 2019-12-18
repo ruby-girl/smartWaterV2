@@ -134,7 +134,7 @@
     components:{ fileList, ProcessExamine, FailReason },
     data() {
       return {
-        dialogVisible: true,
+        dialogVisible: false,
         files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
         screenWidth:'',
         ifDetail:true

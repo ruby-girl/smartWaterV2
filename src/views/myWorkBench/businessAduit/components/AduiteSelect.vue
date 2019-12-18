@@ -43,7 +43,7 @@
                   :visible-arrow="false"
                   content="详情"
                   placement="bottom"
-                >
+                    >
                   <i class="icon iconfont detaile" @click="detaile">&#xe653;</i>
                 </el-tooltip>
                 <el-tooltip
@@ -53,7 +53,7 @@
                   :visible-arrow="false"
                   content="审核环节"
                   placement="bottom"
-                >
+                   >
                   <i class="icon iconfont" @click="toogleExpand(scope.row)">&#xe6a5;</i>
                 </el-tooltip>
               </div>
