@@ -136,9 +136,7 @@ export default {
     },
     refreshSelectedTag(view) {
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
-        console.log(view)
         const { fullPath } = view
-        console.log(fullPath)
         this.$nextTick(() => {
           this.$router.replace({
             path: '/redirect' + fullPath
@@ -147,11 +145,29 @@ export default {
       })
     },
     closeSelectedTag(view) {
-      this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
-        if (this.isActive(view)) {
-          this.toLastView(visitedViews, view)
-        }
-      })
+      if(view.title=='业务流程管理'){
+        this.$confirm("请确认业务流程管理是否还有未保存的流程配置！", "提示", {
+          confirmButtonText: "确认关闭",
+          cancelButtonText: " 取消关闭",
+          iconClass: "el-icon-question questionIcon",
+          customClass: "warningBox",
+          showClose: false
+        }).then(() => {
+          this.$store.dispatch('tagsView/delView', view).then(({visitedViews}) => {
+            if (this.isActive(view)) {
+              this.toLastView(visitedViews, view)
+            }
+          })
+        }).catch(() => {
+          return false
+        });
+      }else {
+        this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
+          if (this.isActive(view)) {
+            this.toLastView(visitedViews, view)
+          }
+        })
+      }
     },
     closeOthersTags() {
       this.$router.push(this.selectedTag)

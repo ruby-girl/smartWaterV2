@@ -91,10 +91,11 @@
     background: #000;
     cursor: pointer;
   }
-  .table-setting {margin: 46px 0 15px 0;}
+  .table-setting {margin: 46px 0 10px 0;}
   .table-setting-box{width: 100%;position: relative}
-}
 
+}
+.el-form-item__error{padding-top: 1px}
 .cl-container1{
   >div:first-child {
     position: relative;
@@ -202,3 +203,5 @@
 .firstItems{margin-left: -40px;}
 .firstItemsOther{margin-left: 5px;}
 .firstItemsOthers{margin-left: -30px}
+.el-message-box__header .el-message-box__close{ color: #fff;vertical-align: middle;margin-top: -7px;}
+.el-message-box__header .el-message-box__close:hover{color: #fff;}

@@ -76,7 +76,7 @@
         })
       },
       setFun(item,index){//审核人详情配置
-        item.ModuleName.trim() == '' ?  item.ModuleName = '审核组'+ (index + 1) : item.ModuleName = item.ModuleName
+        item.ModuleName.trim() == '' ?  item.ModuleName = '审核环节模板'+ (index + 1) : item.ModuleName = item.ModuleName
         let obj = {item: item, type: 2}
         Bus.$emit('NodesSetFun',obj)
       },
@@ -84,7 +84,7 @@
         GetProcessModuleInfo().then(res => {
           if (res.code ==0 ) {
             res.data.forEach((item,index)=>{
-              item.ModuleName.trim() == '' ? item.ModuleName = '审核组'+ (index+1) : item.ModuleName = item.ModuleName
+              item.ModuleName.trim() == '' ? item.ModuleName = '审核环节模板'+ (index+1) : item.ModuleName = item.ModuleName
             })
             this.teams = res.data
             this.getWidth('teamWidth',160)

@@ -1,14 +1,14 @@
 <template>
   <div class="node_box">
     <div class="ifExamine">
-      <el-button icon="el-icon-plus" type="primary" size="small" @click="addProcess">新增流程</el-button>
-      <span class="tips">提示：审核流程可拖动至流程进行操作。</span>
+      <el-button icon="el-icon-plus" type="primary" size="small" @click="addProcess" :disabled="isHasNode">创建流程</el-button>
+      <span class="tips">提示：审核环节可拖动至流程进行操作。</span>
       <p>是否开启审核 &nbsp;<el-switch v-model="ifExamine" :disabled="prohibit"></el-switch>
       </p>
     </div>
     <div class="team_item">
       <!--流程 s-->
-      <div v-for="(item,index) in data" :key="index">
+      <div v-for="(item,index) in data" :key="index" v-show="index<1">
         <div>
           <ul :id="'teams_node'+ (index+1)" class="teams_node clearfix" :data-id="index" :data-num="item.Id">
             <li class="item_cont">
@@ -72,6 +72,7 @@
     components: {copyDialog: copyDialog, configureDialog: configureDialog},
     data() {
       return {
+        isHasNode:false,
         moveTarget:{},//移入节点
         moveObj:[],//正再移入NODE集合
         moveId:'',//移入流程dom ID
@@ -80,7 +81,8 @@
         prohibit:false,//是否禁用审核权限开关
         ProcessConfigNode:[],
         ProcessConfigLine:[],
-        ifScoll:false
+        ifScoll:false,
+        oldData:[],//用于新增流程时候 筛选重复创建人
       }
     },
     watch: {
@@ -92,7 +94,7 @@
         }, 10000)
         SetProcessMenuState({id: localStorage.getItem('menuCode'),state: this.ifExamine}).then(res => {//审核权限开关
           if (res.code ==0 ) {
-            promptInfoFun(this,2,res.message)
+           // promptInfoFun(this,2,res.message)
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -103,6 +105,8 @@
       getInfo() {//获取数据，动态计算每个流程宽度
         GetProcessConfig({code:localStorage.getItem('menuId')}).then(res => {
           if(res.code==0){
+            res.data.ProcessConfigs.length > 0 ? this.isHasNode = true :  this.isHasNode = false //数流程数据则不能创建流程
+            this.oldData = res.data.ProcessConfigs
             this.ifExamine = res.data.ProcessState
             this.ifScoll = false
             let obj2 = {//默认流程操作员空对象
@@ -131,7 +135,7 @@
                       }
                     ],
                     Id: ress.data,
-                    Name: "审核流程1",
+                    Name: "审核环节1",
                     Index: 0
                   }
                   item.ProcessConfigNode.push(obj)
@@ -139,7 +143,7 @@
                     is.Members = is.Member
                     is.ModuleName = is.Name
                   })
-                  localData.push({id:item.ProcessConfigNode[0].Id,name:'审核流程1'})
+                  localData.push({id:item.ProcessConfigNode[0].Id,name:'审核环节1'})
                   localStorage.setItem(className,JSON.stringify(localData))
                   this.data = res.data.ProcessConfigs
                   this.getWidth(className, 195, curData)//动态计算流程模块实际宽度
@@ -221,7 +225,7 @@
         let repeat = true//记录重复拖动标识
         if (type === 1) {//手动
           GetMD5Id().then(res => {
-            let names = '审核流程' + parseInt(obj.length + 1)
+            let names = '审核环节' + parseInt(obj.length + 1)
             this.setProcessNodeIds(res.data,names,'teams_node' + num)
             obj.push({Id: res.data, Name: names, Index: '',Members:[],ModuleName:names,ProcessConfigLine:{FromId:'',ToId:''}})//添加默认值
             this.getWidth('teams_node' + num, 195, obj)//动态计算流程模块实际宽度
@@ -320,7 +324,7 @@
         })
       },
       setFun(item,index,data){//流程审核配置,item 节点对象 index 节点下标 num 流程下标 data 当前流程
-        item.Name.trim() == '' ?  item.Name = '审核流程'+ (index + 1) : item.Name = item.Name
+        item.Name.trim() == '' ?  item.Name = '审核环节'+ (index + 1) : item.Name = item.Name
         let obj = {item: item, type: 1}
         Bus.$emit('NodesSetFun',obj)
         this.$refs.configureChild.getLocalstorageData(data.ProcessConfigNode)

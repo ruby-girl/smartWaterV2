@@ -2,7 +2,7 @@
   <div class="cl-treeBox">
     <el-input placeholder="请输入内容" v-show="ifSearch" v-model="searchText" size="mini" style="margin: 18px 0">
       <template slot="append">
-        <span @click="getNodeByName"><i class="icon iconfont">&#xe694;</i>搜索</span>
+        <span @click="getNodeByName" style="color: #fff"><i class="icon iconfont">&#xe694;</i>搜索</span>
       </template>
     </el-input>
     <div class="custom-tree-container">
@@ -213,7 +213,7 @@ export default {
     color: #b32f00 !important;
     font-weight: bold !important;;
   }
-  .el-input-group__append{padding: 0;background: #00b3a1;border: none;
+  .el-input-group__append{padding: 0;background: #00b3a1 !important;border: none;
     color: #fefeff;padding: 5px 6px 5px 6px;cursor: pointer}
   > p {
     font: bold 16px/38px "Microsoft YaHei";

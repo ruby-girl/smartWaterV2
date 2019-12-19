@@ -26,7 +26,7 @@
         <el-input v-model="formData.Tel " size="small"/>
       </el-form-item>
       <el-form-item label="人口  " prop="PeopleNo">
-        <el-input v-model="formData.PeopleNo" size="small" :disabled="true" />
+        <el-input v-model="formData.PeopleNo" size="small" :disabled="isMorePeople==1?true:false" />
       </el-form-item>
       <el-form-item label="用户类型  " prop="UserType">
         <el-select v-model="formData.UserType" placeholder=" " size="small">
@@ -92,6 +92,7 @@
   import {DeleteList} from "@/api/upload"
   import Bus from '@/utils/bus'
   import { ComboBoxListByWaterFactory } from "@/api/registerBook"//根据水厂获取表册
+  import { GetConfigValueByKey } from "@/api/index"
 
   export default {
     name: "EditDialog",
@@ -134,7 +135,8 @@
           file: []
         },
         ec:{},//更新用户对象
-        backFile:[]//审核失败回滚上传文件数据
+        backFile:[],//审核失败回滚上传文件数据
+        isMorePeople:0//人口可否编辑标识
       }
     },
     methods: {
@@ -277,12 +279,22 @@
             promptInfoFun(this,1,res.message)
           }
         })
+      },
+      getisMorePeople(){//获取人口是否可编辑
+        GetConfigValueByKey({configkey:'IsMorePeople'}).then(res => {
+          if (res.code ==0 ) {
+            this.isMorePeople = parseInt(res.data)
+          } else {
+            promptInfoFun(this,1,res.message)
+          }
+        })
       }
     },
     mounted() {
       this.userType = getDictionaryOption('用户类型')
       this.getWater()
       this.GetWaterProperty()
+      this.getisMorePeople()
     }
   }
 </script>

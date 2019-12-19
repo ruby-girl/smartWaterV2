@@ -16,7 +16,7 @@
             <el-form-item label="人员名称" prop="EmpName">
               <el-input v-model.trim="jp.EmpName" size="small" maxlength="10" placeholder="请输入人员名称"/>
             </el-form-item>
-            <el-form-item label="性别">
+            <el-form-item label="性别" prop="Gender">
               <el-select v-model="jp.Gender" placeholder="请选择" size="small">
                 <el-option label="女" value="女"/>
                 <el-option label="男" value="男"/>
@@ -118,6 +118,9 @@
         EnumFunArry:[],//职能
         editVisible:false,//编辑弹窗隐藏标识
         rules: {
+          Gender:[
+            {required: true, message: '请选择性别', trigger: 'change'}
+          ],
           EmpName: [
             {required: true, message: '请输入人员名称', trigger: 'blur'},
             {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}

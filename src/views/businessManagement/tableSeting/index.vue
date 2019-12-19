@@ -3,8 +3,8 @@
     <div class="table-setting-box">
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <div class="table-setting">
-        <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
-        <el-button size="mini" class="cl-operation-btn fr" round @click="allocationForm" ><i class="icon iconfont">&#xe6ab;</i> 表册分配</el-button>
+        <el-button size="mini" type="primary" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" class="cl-operation-btn" round @click="allocationForm" ><i class="icon iconfont">&#xe6ab;</i> 表册分配</el-button>
       </div>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border

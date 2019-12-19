@@ -35,7 +35,7 @@
 <style lang="scss">
   .statistics {
     width: 100%;text-align: center;
-    border-top: solid 1px #e6ebf5;border-left: solid 1px #e6ebf5;border-right: solid 1px #e6ebf5;margin-bottom: 0;padding:5px 0 0 0;
+    border-top: solid 1px #e6ebf5;border-left: solid 1px #e6ebf5;border-right: solid 1px #e6ebf5;margin:10px 0 0 0;padding:5px 0 0 0;
     .total {
       color: #33B300;
 

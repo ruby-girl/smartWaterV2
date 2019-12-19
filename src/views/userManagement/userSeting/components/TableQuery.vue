@@ -1,12 +1,14 @@
 <template>
   <div class="tr_container">
     <div class="cl-operation1">
-      <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
-      <div class="fr">
-        <el-button size="mini" class="cl-operation-btn" round @click="makeCard" ><i class="icon iconfont" >&#xe61a;</i> 制卡</el-button>
-        <el-button size="mini" class="cl-operation-btn" round @click="patchCard" ><i class="icon iconfont" >&#xe664;</i> 补卡</el-button>
-        <el-button size="mini" class="cl-operation-btn" round @click="lowApplication" :disabled="lowShow" :title="lowShowTitle"><i class="icon iconfont">&#xe617;</i> 低保户申请</el-button>
-      </div>
+      <el-button size="mini" type="primary" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+      <el-button size="mini" class="cl-operation-btn" round @click="makeCard"><i class="icon iconfont">&#xe61a;</i> 制卡
+      </el-button>
+      <el-button size="mini" class="cl-operation-btn" round @click="patchCard"><i class="icon iconfont">&#xe664;</i> 补卡
+      </el-button>
+      <el-button size="mini" class="cl-operation-btn" round @click="lowApplication" :disabled="lowShow"
+                 :title="lowShowTitle"><i class="icon iconfont">&#xe617;</i> 低保户申请
+      </el-button>
     </div>
     <!--表格自定义组建 s-->
     <Statistics :StatisticsData="StatisticsData"></Statistics>
@@ -66,6 +68,8 @@
     <DetailDialog ref="detailDialog"></DetailDialog>
     <!--低保户申请-->
     <LowIncome ref="lowIncomeDialog" :curObj="curObj"></LowIncome>
+    <!--是否已刷卡-->
+    <CreditCard ref="CreditCard"></CreditCard>
   </div>
 </template>
 
@@ -78,17 +82,13 @@
   import AddDialog from './AddDialog'
   import EditDialog from './EditDialog'
   import DetailDialog from './DetailDialog'
+  import CreditCard from './CreditCard'
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-  import {
-    GetICWriteCard,
-    RollBackICWriteCard,
-    GetICReplaceWriteCardInfo,
-    RollBacICkReplaceWriteCardInfo,
-  } from "@/api/userSetting";
+  import { GetICWriteCard, RollBackICWriteCard, GetICReplaceWriteCardInfo, RollBacICkReplaceWriteCardInfo, DelCustomerInfo} from "@/api/userSetting";
 
   export default {
     name: "TableQuery",
-    components: {Pagination, Statistics, AddDialog, EditDialog, DetailDialog, SearchTips, LowIncome},
+    components: {Pagination, Statistics, AddDialog, EditDialog, DetailDialog, SearchTips, LowIncome, CreditCard},
     data(){
       return {
         lowShow:false,
@@ -164,6 +164,9 @@
           customClass: "warningBox",
           showClose: false
         }).then(() => {
+          DelCustomerInfo({customerId:row.Id}).then(res => {//写卡
+            res.code==0 ? (promptInfoFun(this, 2, res.message), this.searchFun()):promptInfoFun(this, 1, res.message)
+          })
         })
       },
       /******************新增用户*********************/
@@ -183,17 +186,21 @@
           }
           GetICWriteCard(param).then(res => {//写卡
             if (res.code == 0) {
-              let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
-              if (ress != undefined && ress != "") {
-                let dataJosn = JSON.parse(ress)//cs 制卡返回数据
-                if(dataJosn.Result){
-                  promptInfoFun(this, 2, '制卡成功');
+              try {
+                let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
+                if (ress != undefined && ress != "") {
+                  let dataJosn = JSON.parse(ress)//cs 制卡返回数据
+                  if(dataJosn.Result){
+                    promptInfoFun(this, 2, '制卡成功');
+                  } else {
+                    RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
+                    promptInfoFun(this, 1, dataJosn.ErrMsg);
+                  }
                 } else {
-                  RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
-                  promptInfoFun(this, 1, dataJosn.ErrMsg);
+                  promptInfoFun(this, 1, '读取错误');
                 }
-              } else {
-                promptInfoFun(this, 1, '读取错误');
+              } catch (e) {
+                promptInfoFun(this, 1, e);
               }
             } else {
               promptInfoFun(this, 1, res.message);
@@ -207,37 +214,41 @@
         } else {
           let param = {
             customerId: this.curObj.Id,//用户ID
-            isCard: ''
+            isCard: false
           }
-          this.$confirm("是否已刷卡？", "提示", {
-            confirmButtonText: "已刷卡",
-            cancelButtonText: "未刷卡",
-            iconClass:"el-icon-question questionIcon",
-            customClass: "warningBox",
-            showClose: false
-          }).then(() => {
-            param.isCard = true
+          if(this.curObj.WaterMeterTypeId == 1102){//IC卡弹窗
+            this.$refs.CreditCard.dialogVisible = true
+          } else {
             this.getMakeCard(param)
-          }).catch(() => {
-            param.isCard = false
-            this.getMakeCard(param)
-          });
+          }
         }
+      },
+      getCardStatus(type){//从子元素获取补卡刷卡状态
+        let param = {
+          customerId: this.curObj.Id,//用户ID
+          isCard: false
+        }
+        param.isCard = type
+        this.getMakeCard(param)
       },
       getMakeCard(param){//补卡
         GetICReplaceWriteCardInfo(param).then(res => {//补卡
           if (res.code == 0) {
-            let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
-            if (ress != undefined && ress != "") {
-              let dataJosn = JSON.parse(ress)//cs 制卡返回数据
-              if(dataJosn.Result){
-                promptInfoFun(this, 2, '制卡成功');
+            try {
+              let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
+              if (ress != undefined && ress != "") {
+                let dataJosn = JSON.parse(ress)//cs 制卡返回数据
+                if(dataJosn.Result){
+                  promptInfoFun(this, 2, '补卡成功');
+                } else {
+                  RollBacICkReplaceWriteCardInfo({businessId:res.data.BusinessId}).then(res => {})
+                  promptInfoFun(this, 1, dataJosn.ErrMsg);
+                }
               } else {
-                RollBacICkReplaceWriteCardInfo({businessId:res.data.BusinessId}).then(res => {})
-                promptInfoFun(this, 1, dataJosn.ErrMsg);
+                promptInfoFun(this, 1, '读取错误');
               }
-            } else {
-              promptInfoFun(this, 1, '读取错误');
+            } catch (err) {
+              promptInfoFun(this, 1, err);
             }
           } else {
             promptInfoFun(this, 1, res.message);
@@ -286,7 +297,7 @@
 </script>
 <style lang="scss">
   .tr_container{
-    .cl-operation1{margin: 46px 0 14px 0;}
+    .cl-operation1{margin: 46px 0 0 0;}
     .el-table thead tr th {
       background: #F0F2F5 !important;
     }

@@ -3,9 +3,8 @@
     <div>
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <div class="table-setting">
-        <el-button size="mini" class="cl-search cl-reset" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" type="primary" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
       </div>
-
       <!--列表组建 s-->
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">

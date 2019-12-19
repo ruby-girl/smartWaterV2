@@ -7,6 +7,7 @@ export function login(data) {
     data
   })
 }
+
 // 获取配置项
 export function getDictionaryItem() {
   return request({
@@ -41,5 +42,14 @@ export function GetFirstPageRoleInfo() {
   return request({
     url: '/FirstPage/GetFirstPageRoleInfo',
     method: 'post',
+  })
+}
+
+//根据配置建在数据库全局配置表中获取配置值
+export function GetConfigValueByKey(data) {
+  return request({
+    url: '/GlobalConfig/GetConfigValueByKey',
+    method: 'get',
+    params: data
   })
 }

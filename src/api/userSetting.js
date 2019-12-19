@@ -260,7 +260,16 @@ export function RollBacICkReplaceWriteCardInfo(data){
   })
 }
 
-
+/**
+ * 用户设置删除
+ * */
+export function DelCustomerInfo(data){
+  return request({
+    url: '/Customer/DelCustomerInfo',
+    method: 'post',
+    params: data
+  })
+}
 
 
 

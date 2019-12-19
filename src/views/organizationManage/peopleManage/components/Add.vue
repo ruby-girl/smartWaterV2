@@ -129,6 +129,9 @@
             {required: true, message: '请输入人员名称', trigger: 'blur'},
             {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
           ],
+          Gender:[
+            {required: true, message: '请选择性别', trigger: 'change'}
+          ],
           SYS_Department_Id: [
             {required: true, message: '请选择部门', trigger: 'change'}
           ],

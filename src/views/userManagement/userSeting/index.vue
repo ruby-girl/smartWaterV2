@@ -161,7 +161,6 @@ export default {
             selectNode.Level <= 1
           ) {
             _this.disDel = false;
-            // promptInfoFun(this, 1, "请选择需要编辑的区域！");
             return;
           }
           this.$confirm("是否确认删除该区域？", "提示", {
