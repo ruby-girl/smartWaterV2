@@ -361,6 +361,7 @@ export default {
     color: #ff5656;
     font-size: 40px;
     font-weight: bold;
+    padding-right: 5px;
     &:focus {
       outline: none;   
     }
@@ -457,7 +458,7 @@ export default {
   padding: 10px 0 10px 10px;
   background: #fff;
   // border:1px solid #aaa;
-  z-index: 1000000;
+  z-index: 111;
   box-shadow:2px 0px 8px rgba(0,0,0,0.16);
 }
 .position-user-left{

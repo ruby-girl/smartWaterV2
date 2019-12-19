@@ -8,9 +8,9 @@
           :type-list="typeList"
         />
       </div>
-      <div class="section-full-container">
-      <div class="display-flex justify-content-flex-justify" style="margin-bottom:7px;">
-        <el-button round plain  type="primary" size="mini" @click="add">
+      <div class="section-full-container tips-container">
+      <div class="display-flex justify-content-flex-justify">
+        <el-button round plain class="btn-add" size="mini" @click="add">
           <i class="iconfont icontianjia"></i>添加
         </el-button>
       </div>
@@ -245,7 +245,7 @@ export default {
     this.$nextTick(function() {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;   
-      this.tableHeight = document.body.clientHeight - formHeight - 220;
+      this.tableHeight = document.body.clientHeight - formHeight - 200;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.typeList = getDictionaryOption("用水性质类型");

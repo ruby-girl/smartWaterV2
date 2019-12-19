@@ -487,17 +487,13 @@ div::-webkit-scrollbar-thumb {
     background: #eee;
   }
 }
-// .btn-resetting{
-
-
-// }
-.btn-resetting{
-  background: #fff !important;
-  border-color:$menuText !important;
-  &:hover{
-    color:$menuText !important;
-    opacity: 0.8;
+.edit-item-className{color: red}
+.btn-add{color:#00B2A1;border: solid 1px #00B2A1;
+  i{font-size: 14px !important;margin-right: 2px;}
+}
+.tips-container{
+  /deep/ .searchTips{
+    margin-top:10px !important;
   }
 }
-.edit-item-className{color: red}
 

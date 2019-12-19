@@ -158,7 +158,7 @@ export default {
       // this.getText(start+'~'+end, "timevalue", "", "缴费日期");
       // this.tipsData = pushItem(this.tipsDataCopy);
       var formHeight = this.$refs.formHeight.offsetHeight;
-      this.tableHeight = document.body.clientHeight - formHeight - 220;
+      this.tableHeight = document.body.clientHeight - formHeight - 160;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     });
@@ -171,7 +171,6 @@ export default {
         this.listQuery.editEndTime = "";
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
-      console.info(this.listQuery)
       this.getList();
     },
     getText(val, model, arr, name) {

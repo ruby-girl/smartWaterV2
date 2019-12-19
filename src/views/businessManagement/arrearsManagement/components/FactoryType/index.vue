@@ -5,6 +5,7 @@
         :select-head="listQuery"
         @handleFilter="getList"
         @getText="getText"
+        ref="head"
       />
     </div>
     <div class="section-full-container">
@@ -120,8 +121,8 @@ export default {
   },
   mounted: function() {
     this.$nextTick(function() {
-      // 自适应表格高度
-      this.tableHeight = document.body.clientHeight - 260;
+      // 自适应表格高度 
+      this.tableHeight = document.body.clientHeight - 245;   
        this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
        this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     });

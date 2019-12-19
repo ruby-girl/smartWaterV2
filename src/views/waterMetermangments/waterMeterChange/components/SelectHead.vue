@@ -22,7 +22,7 @@
         </el-select>
       </el-form-item>
        <transition-group name="fade">
-      <el-form-item prop="customerQueryType" v-show="show1||isShow" key="customerQueryType">
+      <el-form-item prop="customerQueryValue" v-show="show1||isShow" key="customerQueryType">
         <el-select
           v-model="selectHead.customerQueryType"
           placeholder="请选择"
@@ -110,12 +110,10 @@
         <span class="isShow" :class="{tro:isShow}">
           <i class="icon iconfont iconjianqu3" @click="toggle"></i>
         </span>
-        <el-button round type="primary" size="mini" @click="handleFilter">
-          <i class="iconfont iconsousuo"></i>搜索
-        </el-button>
-        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
-          <i class="iconfont icon_zhongzhi"></i>重置
-        </el-button>
+        <el-button type="primary" size="mini" round @click="handleFilter">
+        <i class="iconfont iconsousuo"></i>搜索
+      </el-button>
+       <el-button size="mini" class="btn-add" round  @click="resetting"><i class="iconfont icon_zhongzhi"></i>重置</el-button>
       </el-form-item>
     </el-form>
   </div>

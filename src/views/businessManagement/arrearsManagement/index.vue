@@ -1,5 +1,5 @@
 <template>
-  <div class="section-container" >
+  <div class="section-container" style="padding-top:0;">
       <el-tabs v-model="typeCheck" @tab-click="handleClick">
       <el-tab-pane label="按用户查询" name="1">
          <user-type :query="query" :factoryId="factoryId" :date="newDate"/>

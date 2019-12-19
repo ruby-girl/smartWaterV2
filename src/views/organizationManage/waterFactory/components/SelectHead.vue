@@ -7,8 +7,9 @@
     size="small"
     label-width="80px"
     @submit.native.prevent
+    ref="formHeight"
   >
-    <el-form-item label="水厂 " :label-width="!isShow?'40px':''">
+    <el-form-item label="水厂 " :label-width="!isShow?'40px':''" prop="WaterWorksName">
       <el-input
         maxlength="20"
         v-model="selectHead.WaterWorksName"
@@ -17,7 +18,7 @@
         @blur="getText(selectHead.WaterWorksName,'WaterWorksName','','水厂')"
       />
     </el-form-item>
-    <el-form-item label="操作人 ">
+    <el-form-item label="操作人 " prop="editUserId">
       <el-select
         v-model="selectHead.editUserId"
         placeholder="请选择"
@@ -28,7 +29,7 @@
         <el-option v-for="item in editUserList" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="操作时间 " v-show="searchWidth>1040||isShow">
+    <el-form-item label="操作时间 " v-show="searchWidth>1040||isShow" prop="timevalue">
       <el-date-picker
         v-model="selectHead.timevalue"
         type="daterange"
@@ -47,9 +48,10 @@
       <span class="isShow" :class="{tro:isShow}" v-show="ShowIcon">
           <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
         </span>
-      <el-button type="primary" size="mini" @click="handleFilter">
+      <el-button type="primary" size="mini" round @click="handleFilter">
         <i class="iconfont iconsousuo"></i>搜索
       </el-button>
+       <el-button size="mini" class="btn-add" round  @click="resetting"><i class="iconfont icon_zhongzhi"></i>重置</el-button>
     </el-form-item>
   </el-form>
 </div>
@@ -100,6 +102,11 @@ export default {
     },
     handleFilter() {
       this.$emit("handleFilter");
+    },
+    resetting(){
+       this.$refs['formHeight'].resetFields();  
+       this.$parent.tipsDataCopy=[]
+      this.$parent.delTips("timevalue")
     }
   }
 };

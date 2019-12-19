@@ -108,12 +108,10 @@
         <span class="isShow" :class="{tro:isShow}" v-show="ShowIcon">
           <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
         </span>
-        <el-button round type="primary" size="mini" @click="handleFilter">
-          <i class="iconfont iconsousuo"></i>搜索
-        </el-button>
-        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
-          <i class="iconfont icon_zhongzhi"></i>重置
-        </el-button>
+        <el-button type="primary" size="mini" round @click="handleFilter">
+        <i class="iconfont iconsousuo"></i>搜索
+      </el-button>
+       <el-button size="mini" class="btn-add" round  @click="resetting"><i class="iconfont icon_zhongzhi"></i>重置</el-button>
       </el-form-item>
     </el-form>
   </div>

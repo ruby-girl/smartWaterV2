@@ -27,12 +27,10 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="mini" @click="handleFilter">
+          <el-button type="primary" size="mini" round @click="handleFilter">
             <i class="iconfont iconsousuo"></i>搜索
           </el-button>
-          <el-button type="success" size="mini" @click="handleFilterIC">
-            <i class="iconfont iconduka"></i>读卡
-          </el-button>
+          <el-button size="mini" class="special-btn" round @click="handleFilterIC"><i class="iconfont iconduka"></i>读卡</el-button>
         </el-form-item>
       </el-form>
       <div class="payment-records" @click="toPaymentQuery">

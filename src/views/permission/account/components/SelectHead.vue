@@ -77,7 +77,7 @@
           <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
         </span>
       <el-button type="primary" round  size="mini"  @click="handleFilter"><i class="iconfont iconsousuo"></i>搜索</el-button>
-      <el-button type="primary" round plain size="mini"  @click="resetting"><i class="iconfont iconsousuo"></i>重置</el-button>
+      <el-button size="mini" class="btn-add" round  @click="resetting"><i class="iconfont icon_zhongzhi"></i>重置</el-button>
     </el-form-item>
   </el-form>
   </div>

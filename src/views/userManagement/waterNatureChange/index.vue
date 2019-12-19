@@ -1,6 +1,6 @@
 <template>
-  <div class="section-container" >
-      <el-tabs v-model="typeCheck" @tab-click="handleClick">
+  <div class="section-container" style="padding-top:0;">
+      <el-tabs v-model="typeCheck">
       <el-tab-pane label="用水性质变更" name="1">
         <change-operation />
       </el-tab-pane>

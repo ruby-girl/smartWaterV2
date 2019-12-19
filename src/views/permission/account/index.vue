@@ -4,9 +4,9 @@
         <select-head :select-head="listQuery" @handleFilter="getList" :role-list="roleList" @getText="getText"/>
       </div>
        <div class="section-full-container" style="padding-top:0;">
-      <div class="main-padding-20-y">
-         <el-button round plain style="margin-bottom:10px;" type="primary" size="mini"  @click="addRole"><i class="iconfont icontianjia"></i>添加</el-button>
-          <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
+      <div class="main-padding-20-y tips-container">
+        <el-button size="mini" class="btn-add" round @click="addRole"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
         <el-table
           :key="tableKey"
           :data="tableData"
@@ -162,7 +162,7 @@ export default {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;
       const that = this;
-      that.tableHeight = document.body.clientHeight - formHeight - 220;
+      that.tableHeight = document.body.clientHeight - formHeight - 200;
      this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       getRoles().then(res => {

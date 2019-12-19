@@ -110,7 +110,7 @@ export default {
   mounted: function() {
     this.$nextTick(function() {
       // 自适应表格高度
-      this.tableHeight = document.body.clientHeight - 260;
+      this.tableHeight = document.body.clientHeight - 245;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.typeList = getDictionaryOption("用水性质类型");

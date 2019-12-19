@@ -1,10 +1,10 @@
 <template>
   <div class="section-container">   
       <div ref="formHeight">
-        <select-head :select-head-obj="listQuery" @handleFilter="getList" :role-list="roleList" @getText="getText"/>
+        <select-head :select-head="listQuery" @handleFilter="getList" :role-list="roleList" @getText="getText"/>
       </div>  
-       <div class="section-full-container" style="padding-top:0;">
-          <el-button style="margin-bottom:10px;" type="primary" size="mini" @click="addWaterFactory"><i class="iconfont icontianjia"></i>添加
+       <div class="section-full-container tips-container" style="padding-top:0;">
+          <el-button size="mini" class="btn-add" round @click="addWaterFactory"><i class="iconfont icontianjia"></i>添加
         </el-button>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
       <div class="main-padding-20-y">
@@ -22,8 +22,7 @@
           <el-table-column fixed="left" label="序号" width="60" align="center">
             <template
                slot-scope="scope">
-                          <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
-                        
+              <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>                
             </template>
           </el-table-column>
           <template v-for="(item ,index) in tableHead">
@@ -214,12 +213,6 @@ import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条�
         this.listQuery.filed = prop;
         this.listQuery.sort =
           order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
-        this.getList();
-      },
-      handleFilter(v) {
-        console.info(v)
-        this.listQuery=v
-        this.listQuery.page = 1;
         this.getList();
       },
       handleUpdate(row) {

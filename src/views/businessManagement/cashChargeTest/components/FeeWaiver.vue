@@ -38,7 +38,7 @@
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="违约金" name="two">
-            <el-row  class="tab-container-y">
+            <el-row class="tab-container-y">
               <el-form-item label="违约金">
                 <el-input v-model="feeWaiverItem.LateFee" disabled />
               </el-form-item>
@@ -61,7 +61,12 @@
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="feeWaiver" :disabled="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee==0&&activeName=='two'?true:false">确认</el-button>
+      <el-button
+        size="mini"
+        type="primary"
+        @click="feeWaiver"
+        :disabled="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee==0&&activeName=='two'?true:false"
+      >确认</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
@@ -100,50 +105,51 @@ export default {
     };
   },
   methods: {
-    //   减免请求
     feeWaiver() {
+      if (this.activeName == "two") {
+        this.OrderAfterOverdueFeeWaiverFunc(); //违约金减免
+      } else {
+        this.OrderFeeWaiverFunc();
+      }
+    },
+    OrderFeeWaiverFunc() {//水费减免
       if (
         parseFloat(this.inputValue) >
         parseFloat(this.feeWaiverItem.PriceSurplus)
       ) {
         this.$message({
-          message: "减免后金额不能大于总费用",
+          message: "减免后金额不能大于减免前金额！",
           type: "error",
           duration: 4000
         });
         return;
       }
-      this.OrderFeeWaiverFunc();
-      // 减免违约金
-    },
-    async OrderFeeWaiverFunc() {
-      let water = await OrderFeeWaiver({
+      OrderFeeWaiver({
         SA_Order_Id: this.feeWaiverItem.Id,
         AfterFee: this.inputValue
       }).then(res => {
-        return true;
+        this.inputValue = "";
+        this.lateFeeValue = "";
+        this.dialogFormVisible = false;
+        this.$emit("getList");
       });
-      // 如果有违约金
+    },
+    // 违约金减免
+    OrderAfterOverdueFeeWaiverFunc() {
       if (
-        this.feeWaiverItem.OrderType == 2001 &&
-        this.feeWaiverItem.LateFee > 0 &&
-        water
+        parseFloat(this.lateFeeValue) > parseFloat(this.feeWaiverItem.LateFee)
       ) {
-        OrderAfterOverdueFeeWaiver({
-          SA_Order_Id: this.feeWaiverItem.Id,
-          AfterOverdueFee: this.lateFeeValue
-        }).then(res => {
-          this.$message({
-            message: "减免成功",
-            type: "success",
-            duration: 4000
-          });
-          this.inputValue = "";
-          this.lateFeeValue = "";
-          this.dialogFormVisible = false;
-          this.$emit("getList");
+        this.$message({
+          message: "减免后金额不能大于减免前金额！",
+          type: "error",
+          duration: 4000
         });
-      } else {
+        return;
+      }
+      OrderAfterOverdueFeeWaiver({
+        SA_Order_Id: this.feeWaiverItem.Id,
+        AfterOverdueFee: this.lateFeeValue
+      }).then(res => {
         this.$message({
           message: "减免成功",
           type: "success",
@@ -153,7 +159,7 @@ export default {
         this.lateFeeValue = "";
         this.dialogFormVisible = false;
         this.$emit("getList");
-      }
+      });
     },
     // 输入金额保留2位
     money(e) {
@@ -161,7 +167,7 @@ export default {
     },
     // 补齐小数
     changeTwoDecimal_x(e, n) {
-      e.target.value = changeTwoDecimal(e.target.value);
+      // e.target.value = changeTwoDecimal(e.target.value);
     }
   }
 };
@@ -190,7 +196,7 @@ export default {
     margin-bottom: -5px;
   }
 }
-.tab-container-y{
-  padding:20px;
+.tab-container-y {
+  padding: 20px;
 }
 </style>
