@@ -5,10 +5,10 @@
         :select-head="headQuery"
         @handleFilter="handleFilter"
         :headUser="headUser"
-        :icInfo.sync="icInfo"
         :paymentNum="paymentNum"
         @handleFilterIcParent="handleFilterIc"
         @clearData="clearData"
+        :cardInfo.sync="cardInfo"
       />
     </div>
     <!-- 表格模式 -->
@@ -78,6 +78,8 @@
           :totalLength="totalLength"
           @getCustomer="getCustomer"
           :headUser="headUser"
+          :isIc="isIC"
+          :cardInfo="cardInfo"
         />
     </div>
     </div>
@@ -134,7 +136,10 @@ export default {
       payOrderId: [],
       accountMoney: '0.00', //账户余额
       customerNo: "", //用户编号-结算后，用户编号获取账户余额
-      icInfo: {}, //IC卡 卡片详情
+      cardInfo: {
+        RechargeMoney:'',
+        RechargeCount:''
+      }, //IC卡 卡片详情
       headQuery: {
         CustomerQueryValue: "",
         CustomerQueryType: "1",
@@ -174,8 +179,8 @@ export default {
       feeWaiverShow: false, //费用减免弹窗
       selectPintShow: false, //选择打印机
       paymentCodeShow: false, //扫码支付弹窗
-      // isIC: false,
-      // icType: "CreditCardAlready", //默认已刷卡
+      isIC: false,
+      icType: "CreditCardAlready", //默认已刷卡
       unpaidMoney: '0.00', //剩余未缴
       tipsDataCopy:[],//面包屑
       tipsData:[],
@@ -197,7 +202,6 @@ export default {
     getList() {
       if (this.type == 1){
         this.tipsData = pushItem(this.tipsDataCopy);
-        console.info(this.tipsData)
         this.$refs.tableTypeCard.getList();
       } 
       else this.$refs.tableTypeCard.getCardList();
@@ -232,9 +236,17 @@ export default {
       }
       this.getList();
     },
-    // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息
+    // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息 resInfo用户信息  resData卡片信息
     handleFilterIc(user) {
+      this.headUser = user;
       this.isIC = true;
+      this.customerNo = user.CustomerNo;
+      this.accountMoney = user.Balance;
+      this.listQuery.CustomerId = user.Id;
+      this.cardQuery.CustomerId = user.Id;
+      this.listQuery.page = 1;
+      this.checkedAllParent = false;
+      this.getList();
     },
     // 结算成功后重新获取账户余额 --如果是IC卡需要再次读卡。查询缴费记录的数据+1
     getCustomer() {
@@ -317,9 +329,6 @@ export default {
     // 费用减免
     feeWaiverFunc(item) {
       this.feeWaiverItem = item;
-      // this.orderId = id;
-      // this.orderMoney = num;
-      // this.orderType=type
       this.feeWaiverShow = true;
     },
     // 选择打印机

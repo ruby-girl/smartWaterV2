@@ -6,11 +6,11 @@
      <el-col  :lg="8" :xl="8" class="user-box hidden-md-and-down">
        <!-- IC卡 -->
         <div v-if="isIc">
-         <zebra-table label-left="姓名" label-right="是否刷卡" value-left="201" value-right="10" :isGray="true" color="#46494C" />
-         <zebra-table label-left="水表类型" label-right="充值金额" value-left="201" value-right="10" :isGray="false" color="#46494C" />
-         <zebra-table label-left="水表编号" label-right="充值次数" value-left="201" value-right="10" :isGray="true"color="#46494C" />
-         <zebra-table label-left="电话" label-right="剩余未缴" value-left="201" value-right="10" :isGray="false" color="#FF4646" font-weight="bold"/>
-         <zebra-table label-left="地址" label-right="账户余额" value-left="201" value-right="10" :isGray="true" color="#00B3A1" font-weight="bold"/>
+         <zebra-table label-left="姓名" label-right="是否刷卡":value-left="headUser.CustomerName" :value-right="isFirst==0?'未刷卡':'已刷卡'" :isGray="true" color="#46494C" />
+         <zebra-table label-left="水表类型" label-right="充值金额" :value-left="headUser.WaterMeterTypeName" :value-right="cardInfo.RechargeMoney" :isGray="false" color="#46494C" />
+         <zebra-table label-left="水表编号" label-right="充值次数" :value-left="headUser.CardNo" :value-right="cardInfo.RechargeCount" :isGray="true"color="#46494C" />
+         <zebra-table label-left="电话" label-right="剩余未缴" :value-left="headUser.Tel" :value-right="unpaidMoney" :isGray="false" color="#FF4646" font-weight="bold"/>
+         <zebra-table label-left="地址" label-right="账户余额" :value-left="headUser.Address" :value-right="accountMoney" :isGray="true" color="#00B3A1" font-weight="bold"/>
         </div>
         <!-- 非IC卡 -->
         <el-row  v-else>
@@ -34,11 +34,11 @@
          <div class="position-user-left" style="margin-right:5px;" @click="userShow=true">用户信息</div>
           <transition-group name="fade">
          <div v-show="isIc&&userShow" class="flex-1 position-user-border" key="user">
-         <zebra-table label-left="姓名" label-right="是否刷卡" value-left="201" value-right="10" :isGray="true" color="#46494C" />
-         <zebra-table label-left="水表类型" label-right="充值金额" value-left="201" value-right="10" :isGray="false" color="#46494C" />
-         <zebra-table label-left="水表编号" label-right="充值次数" value-left="201" value-right="10" :isGray="true"color="#46494C" />
-         <zebra-table label-left="电话" label-right="剩余未缴" value-left="201" value-right="10" :isGray="false" color="#FF4646" font-weight="bold"/>
-         <zebra-table label-left="地址" label-right="账户余额" value-left="201" value-right="10" :isGray="true" color="#00B3A1" font-weight="bold"/>
+         <zebra-table label-left="姓名" label-right="是否刷卡" :value-left="headUser.CustomerName" :value-right="isFirst==0?'未刷卡':'已刷卡'" :isGray="true" color="#46494C" />
+         <zebra-table label-left="水表类型" label-right="充值金额" :value-left="headUser.WaterMeterTypeName" :value-right="cardInfo.RechargeMoney" :isGray="false" color="#46494C" />
+         <zebra-table label-left="水表编号" label-right="充值次数" :value-left="headUser.CardNo" :value-right="cardInfo.RechargeCount" :isGray="true"color="#46494C" />
+         <zebra-table label-left="电话" label-right="剩余未缴" :value-left="headUser.Tel" :value-right="unpaidMoney" :isGray="false" color="#FF4646" font-weight="bold"/>
+         <zebra-table label-left="地址" label-right="账户余额" :value-left="headUser.Address" :value-right="accountMoney" :isGray="true" color="#00B3A1" font-weight="bold"/>
         </div>
         <!-- 非IC卡 -->
         <el-row class="flex-1 position-user-border"  v-show="!isIc&&userShow"  key="noIc">
@@ -138,7 +138,7 @@
 </template>
 <script>
 import { debounce, updateMoney, changeTwoDecimal } from "@/utils/index";
-import {Settlement} from "@/api/cashCharge"
+import {Settlement,ICSettlement} from "@/api/cashCharge"
 import ZebraTable from "./IcType/ZebraTable";
 import SpecialZebraTable from "./IcType/SpecialZebraTable";
 import 'element-ui/lib/theme-chalk/display.css';
@@ -152,15 +152,25 @@ export default {
     totalLength:{},//用户所有未缴费状态的数据个数-需求（当用户有未缴纳的费用时，不可单独进行预存操作）
     payOrderId:{},//结算的费用单ID
     customerId:{},//用户ID
+    isIc:{},//是否为IC卡
+    cardInfo:{},//IC卡卡片信息
      accountMoney:{
       default: 0.00
      }//账户余额
   },
  watch:{
    headUser:{
-      handler() {
+      handler(v) {
         let _this=this
+        console.log('isIC',this.isIc)
+        console.info('geren xinxi',v)
        setTimeout(function(){
+          //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false
+          // this.cardInfo.CardType 0：未刷卡 1：已刷卡
+        if(this.isIc){
+          if(_this.cardInfo.RechargeCount==1&&_this.cardInfo.RechargeMoney&&_this.cardInfo.CardType==0) _this.isFirst=true;
+        else _this.isFirst=false;
+        }
          _this.$refs.myInput.select()
        },200)
       },
@@ -179,7 +189,6 @@ export default {
   },
   data() {
     return {
-      isIc:false,
       radio: 1,
       paymentType: 2701,
       isAccount: false,
@@ -192,7 +201,8 @@ export default {
       settingShow:false,
       inputWidth:100,
       lineHeight:91,
-      userShow:false
+      userShow:false,
+      isFirst:false,//IC卡参数
     };
   },
   mounted() {
@@ -234,8 +244,7 @@ export default {
       let _this=this
       setTimeout(function(){
         _this.$refs.myInput.select()
-      },200)
-     
+      },200)    
     },
     // 输入金额保留2位
     money(e) {
@@ -277,6 +286,10 @@ export default {
     // 结算
     pay() {
       let receipts=parseFloat(this.num)-parseFloat(this.surplus)
+      if(isIc){//iC卡结算调用另一方法
+        this.IcPay(receipts)
+        return
+      }
       let obj={
         customerId:this.customerId,
         orderId:this.payOrderId,
@@ -285,9 +298,37 @@ export default {
         balanceDeduction:this.balanceDeduction,//账户抵扣
         isAccount:this.isAccount,
         payType:this.paymentType
-      }
-       
+      }      
       Settlement(obj).then(res=>{
+         this.$message({
+          message: "操作成功",
+          type: "success",
+          duration: 4000
+        });
+        // 金额清零--s
+         this.num=''
+         this.surplus=0.00
+         this.$emit("update:unpaidMoney", 0.00)
+         this.needMoney=0.00
+          // 金额清零--e
+        this.$emit("update:isIndeterminateParent", false);
+        this.$emit("update:checkedAllParent", false);//结算完成后，父元素全选置为false，卡片获取列表再设置全选
+        this.$emit("getCustomer"); //重新获取列表数据和账户余额        
+      })
+    },
+    // 如果是IC卡结算
+    IcPay(receipts){
+        let obj={
+        customerId:this.customerId,
+        orderId:this.payOrderId,
+        receivable:this.unpaidMoney,//剩余未缴
+        receipts:receipts,//实收  
+        isAccount:this.isAccount,
+        payType:this.paymentType,
+        printerType:'',//打印方式 无打印 = -1,小票 = 2801,发票 = 2802, 
+        isFirst:this.isFirst//当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false
+      }  
+      ICSettlement(obj).then(res=>{
          this.$message({
           message: "操作成功",
           type: "success",

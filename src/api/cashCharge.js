@@ -61,6 +61,14 @@ export function Settlement(data){
   })
 }
 
+// IC卡结算
+export function ICSettlement(data){
+  return request({
+    url: '/PayMent/ICSettlement',
+    method: 'post',
+    data: data
+  })
+}
 // 收费查询--------
 
 //列表

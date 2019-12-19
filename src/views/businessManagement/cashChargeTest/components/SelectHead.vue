@@ -55,6 +55,7 @@ export default {
     headUser: {
       type: Object
     },
+    cardInfo:{},//卡片详情
     paymentNum:{}
   },
   watch: {
@@ -85,7 +86,21 @@ export default {
         this.$emit("clearData");
         return;
       }
-      GetCustomerDataList(this.selectHead).then(res => {
+      
+    },
+    // 查询用户信息
+    getUser(info){
+      let postData={} 
+      if(info){
+        this.$emit("update:cardInfo",info.UserCard)
+        postData.CustomerQueryValue=info.UserCard.CardNo;
+        postData.CustomerQueryType="8";
+        postData.page=1;
+        postData.limit=20
+      }else{ 
+        postData=Object.assign({},this.selectHead)
+      }
+      GetCustomerDataList(postData).then(res => {
         if (res.data.length == 0) {
           this.$message({
             message: "未查询到用户！",
@@ -96,7 +111,8 @@ export default {
           this.$emit("clearData");
         } else if (res.data.length == 1) {
           this.user = res.data[0];
-          this.$emit("handleFilter", res.data[0]);
+          if(info) this.$emit("handleFilterIcParent", res.data[0]);
+          else this.$emit("handleFilter", res.data[0]);
         } else {
           this.$parent.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
         }
@@ -104,17 +120,15 @@ export default {
     },
     handleFilterIC() {
       try {
-        // resInfo用户信息  resData卡片信息
-        // ICReadCardInfo((resInfo,resData)=>{
-        //   console.log('头部咯')
-        //   console.log(resData)
-        //this.$emit("handleFilterIcParent", resInfo,resData) 
-        // })
         // 读卡
-          ICReadCardInfo((resData)=>{
-          console.log('头部咯')
-          console.log(resData)
-          this.$emit("handleFilterIcParent", resData)      
+        ICReadCardInfo((resData)=>{
+          let resIcInfo;
+          if(resData.data.ProductType=='2'){
+            resIcInfo=resData.data.ProductTwoModel
+          }else{
+            resIcInfo=resData.data.ProductOneModel
+          }
+          this.getUser(resIcInfo)    
         })
       } catch (error) {
         console.log("请在CS端操作1");
