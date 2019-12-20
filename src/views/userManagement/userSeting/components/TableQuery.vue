@@ -84,7 +84,8 @@
   import DetailDialog from './DetailDialog'
   import CreditCard from './CreditCard'
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-  import { GetICWriteCard, RollBackICWriteCard, GetICReplaceWriteCardInfo, RollBacICkReplaceWriteCardInfo, DelCustomerInfo} from "@/api/userSetting";
+  import { DelCustomerInfo} from "@/api/userSetting";
+  import { getMarkCard, getPatchCard } from "@/utils/projectLogic"; //IC卡读卡
 
   export default {
     name: "TableQuery",
@@ -184,28 +185,7 @@
             printerType:1,//打印方式,无打印 = -1,小票 = 2801,发票 = 2802,
             payCode:''//支付码（付款码支付时该参数使用）
           }
-          GetICWriteCard(param).then(res => {//写卡
-            if (res.code == 0) {
-              try {
-                let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
-                if (ress != undefined && ress != "") {
-                  let dataJosn = JSON.parse(ress)//cs 制卡返回数据
-                  if(dataJosn.Result){
-                    promptInfoFun(this, 2, '制卡成功');
-                  } else {
-                    RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
-                    promptInfoFun(this, 1, dataJosn.ErrMsg);
-                  }
-                } else {
-                  promptInfoFun(this, 1, '读取错误');
-                }
-              } catch (e) {
-                promptInfoFun(this, 1, e);
-              }
-            } else {
-              promptInfoFun(this, 1, res.message);
-            }
-          });
+          getMarkCard(param,this)
         }
       },
       patchCard(){//补卡
@@ -219,7 +199,7 @@
           if(this.curObj.WaterMeterTypeId == 1102){//IC卡弹窗
             this.$refs.CreditCard.dialogVisible = true
           } else {
-            this.getMakeCard(param)
+            getPatchCard(param,this)
           }
         }
       },
@@ -229,31 +209,7 @@
           isCard: false
         }
         param.isCard = type
-        this.getMakeCard(param)
-      },
-      getMakeCard(param){//补卡
-        GetICReplaceWriteCardInfo(param).then(res => {//补卡
-          if (res.code == 0) {
-            try {
-              let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
-              if (ress != undefined && ress != "") {
-                let dataJosn = JSON.parse(ress)//cs 制卡返回数据
-                if(dataJosn.Result){
-                  promptInfoFun(this, 2, '补卡成功');
-                } else {
-                  RollBacICkReplaceWriteCardInfo({businessId:res.data.BusinessId}).then(res => {})
-                  promptInfoFun(this, 1, dataJosn.ErrMsg);
-                }
-              } else {
-                promptInfoFun(this, 1, '读取错误');
-              }
-            } catch (err) {
-              promptInfoFun(this, 1, err);
-            }
-          } else {
-            promptInfoFun(this, 1, res.message);
-          }
-        });
+        getPatchCard(param,this)
       },
       lowApplication() {//低保户申请
         this.curObj == '' || typeof (this.curObj) == undefined ? promptInfoFun(this, 1, '请选择用户！') : this.$refs.lowIncomeDialog.dialogVisible = true
