@@ -1,6 +1,16 @@
 <template>
   <el-steps :active="milepostActive" align-center>
     <el-step
+      v-for="(value, key) in linkCont"
+      :class="`${milepostActive>key+1 ? stepActive: ''} ${value.AuditLinkState&&value.AuditState==false ? 'errorClass': ''} ${value.id==1&&isBorder==true ? 'finishBorder': ''}` "
+      :title="value.AuditLinkName"
+      :description="value.AuditLinkState&&value.AuditState==true?'我已审核':'审核不通过'"
+      :icon="value.AuditLinkState&&value.AuditState==false?'el-icon-error':'el-icon-success'"
+    ></el-step>
+    <img v-if="milepostActive==linkCont.length" class="passImg" :src="imgIcon" />
+  </el-steps>
+ <!-- <el-steps :active="milepostActive" align-center>
+    <el-step
       v-for="(value, key) in milepost"
       :class="`${milepostActive>key+1 ? stepActive: ''} ${value.description=='审核不通过' ? 'errorClass': ''} ${value.id==1&&isBorder==true ? 'finishBorder': ''}` "
       :title="value.title"
@@ -8,14 +18,51 @@
       :icon="value.description=='审核不通过'?'el-icon-error':'el-icon-success'"
     ></el-step>
     <img v-if="milepostActive==milepost.length" class="passImg" :src="imgIcon" />
-  </el-steps>
+  </el-steps>-->
 </template>
 <script>
 import imgIcon from "@/assets/imgs/pass.png";
 export default {
   name: "Step",
+  /*props:['linkCont','processId'],*/
   data() {
     return {
+      linkCont:[
+        {
+          AuditLinkId:1,
+          AuditLinkName:'环节1',
+          AuditLinkState:true,//审核环节状态 true 已审核 false 待审
+          AuditState:true,//审核操作状态 true 通过 false 不通过
+          AuditLinkUserId:'执行人1',//环节执行人
+          AuditLinkSort:1,//审核环节序号*/
+        },
+        {
+          AuditLinkId:2,
+          AuditLinkName:'环节2',
+          AuditLinkState:true,//审核环节状态 true 已审核 false 待审
+          AuditState:false,//审核操作状态 true 通过 false 不通过
+          AuditLinkUserId:'执行人2',//环节执行人
+          AuditLinkSort:1,//审核环节序号*/
+        },
+        {
+          AuditLinkId:3,
+          AuditLinkName:'环节3',
+          AuditLinkState:true,//审核环节状态 true 已审核 false 待审
+          AuditState:false,//审核操作状态 true 通过 false 不通过
+          AuditLinkUserId:'执行人3',//环节执行人
+          AuditLinkSort:1,//审核环节序号*/
+        }
+      ],
+      c:{
+        /*AuditLinkId (string, optional),//审核环节编号
+          AuditLinkName (string, optional),//审核环节名称
+          AuditLinkState (boolean, optional),//审核环节状态 true 已审核 false 待审
+          AuditState (boolean, optional)//审核操作状态 true 通过 false 不通过
+
+          AuditLinkUserId (string, optional),//环节执行人
+          AuditLinkSort (string, optional),//审核环节序号*/
+
+      },
       // 数组对象
       milepost: [
         { id: 1, title: "审核环节一", description: "已审核" },

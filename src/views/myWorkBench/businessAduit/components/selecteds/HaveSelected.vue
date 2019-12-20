@@ -68,8 +68,7 @@
           v-model="query.VerifyState"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(query.VerifyState ,'VerifyState',auditOpinionArry,'审核意见')"
-        >
+          @change="getText(query.VerifyState ,'VerifyState',auditOpinionArry,'审核意见')">
           <el-option label="全部" :value="-1" />
           <el-option
             v-for="item in auditOpinionArry"
@@ -126,6 +125,8 @@
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
+import { ComboBoxListZhuanYong } from '@/api/operationFlow'
+import { promptInfoFun } from "@/utils/index"
 export default {
   name: "HaveSelected",
   props: {
@@ -184,8 +185,8 @@ export default {
         editUserId: "",
         editStartTime: "",
         editEndTime: "",
-        limit: 1,
-        page: 20,
+        limit: 20,
+        page: 1,
         sort: "",
         filed: "",
         tableId: "0000036"
@@ -210,6 +211,7 @@ export default {
     if (this.companyOptions.length == 1) {
       this.query.WaterFactoryId = this.companyOptions[0].Id;
     }
+    this.getCreateUser()
   },
   methods: {
     resetting() {
@@ -231,7 +233,6 @@ export default {
         return false;
       }
     },
-
     getText(val, model, arr, name) {
       this.$emit("getText", val, model, arr, name);
     },
@@ -267,6 +268,15 @@ export default {
     handleFilter() {
       this.$parent.query = Object.assign({},this.query)
       this.$parent.searchTableList();
+    },
+    getCreateUser(){
+      ComboBoxListZhuanYong({'PId':''}).then(res => {
+        if (res.code ==0 ) {
+          this.createUserArry = res.data;
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      })
     }
   }
 };

@@ -138,8 +138,8 @@ export default {
         editUserId: "",
         editStartTime: "",
         editEndTime: "",
-        limit: 1,
-        page: 20,
+        limit: 20,
+        page: 1,
         sort: "",
         filed: "",
         tableId: "0000035"

@@ -2,7 +2,7 @@
   <div class="position-search-head">
     <el-form
       :inline="true"
-      :model="selectHead"
+      :model="query"
       :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
       size="small"
       label-width="64px"
@@ -11,10 +11,10 @@
     >
       <el-form-item v-if="companyOptions.length!=1" label="所属水厂" prop="SA_WaterFactory_Id">
         <el-select
-          v-model="selectHead.SA_WaterFactory_Id"
+          v-model="query.WaterFactoryId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'所属水厂')"
+          @change="getText(query.WaterFactoryId,'WaterFactoryId',companyOptions,'所属水厂')"
         >
           <el-option label="全部" value="-1"></el-option>
           <el-option
@@ -27,14 +27,14 @@
       </el-form-item>
       <el-form-item label="申请类型" v-show="show1||isShow" prop="applyType">
         <el-select
-          v-model="selectHead.applyType"
+          v-model="query.ProcessMenuCode "
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterMeter ,'WaterMeter',WaterMeterList,'申请类型')"
+          @change="getText(query.ProcessMenuCode  ,'ProcessMenuCode ',applyArray,'申请类型')"
         >
           <el-option label="全部" :value="-1" />
           <el-option
-            v-for="item in WaterMeterList"
+            v-for="item in applyArray"
             :key="item.Id"
             :label="item.Name"
             :value="Number(item.Id)"
@@ -43,22 +43,22 @@
       </el-form-item>
       <el-form-item label="业务编号" v-show="show2||isShow" prop="applyNo">
         <el-input
-          v-model="selectHead.applyNo"
+          v-model="query.FlowNo "
           maxlength="20"
           @keyup.enter.native="handleFilter"
-          @change="getText(selectHead.applyNo ,'applyNo','','业务编号')"
+          @change="getText(query.FlowNo  ,'FlowNo ','','业务编号')"
         />
       </el-form-item>
       <el-form-item label="创建人" v-show="show3||isShow" prop="creater">
         <el-select
-          v-model="selectHead.creater"
+          v-model="query.createUserId "
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.creater ,'creater',WaterMeterList,'创建人')"
+          @change="getText(query.createUserId  ,'createUserId ',creareUserArry,'创建人')"
         >
           <el-option label="全部" :value="-1" />
           <el-option
-            v-for="item in WaterMeterList"
+            v-for="item in creareUserArry"
             :key="item.Id"
             :label="item.Name"
             :value="Number(item.Id)"
@@ -67,14 +67,14 @@
       </el-form-item>
       <el-form-item label="审核状态" v-show="show4||isShow" prop="aduitAdvise">
         <el-select
-          v-model="selectHead.aduitAdvise"
+          v-model="query.aduitAdvise"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.aduitAdvise ,'aduitAdvise',WaterMeterList,'审核意见')"
+          @change="getText(query.VerifyState  ,'VerifyState ',auditStatusArry,'审核意见')"
         >
           <el-option label="全部" :value="-1" />
           <el-option
-            v-for="item in WaterMeterList"
+            v-for="item in auditStatusArry"
             :key="item.Id"
             :label="item.Name"
             :value="Number(item.Id)"
@@ -83,7 +83,7 @@
       </el-form-item>
       <el-form-item label="申请日期"  v-show="show5||isShow">
         <el-date-picker
-          v-model="selectHead.timevalue"
+          v-model="query.timevalue"
           type="datetimerange"
           :editable="false"
           :unlink-panels="true"
@@ -93,13 +93,13 @@
           :default-time="['00:00:00', '23:59:59']"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          @change="getTime(selectHead.timevalue,'timevalue')"
+          @change="getTime(query.timevalue,'timevalue')"
           @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="审核日期" v-show="show6||isShow">
         <el-date-picker
-          v-model="selectHead.timevalue1"
+          v-model="query.timevalue1"
           type="datetimerange"
           :editable="false"
           :unlink-panels="true"
@@ -109,7 +109,7 @@
           :default-time="['00:00:00', '23:59:59']"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          @change="getTime(selectHead.timevalue1,'timevalue1')"
+          @change="getTime(query.timevalue1,'timevalue1')"
           @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
@@ -123,22 +123,17 @@
         <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
           <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
-        <!-- <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button> -->
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
+import { ComboBoxListZhuanYong } from '@/api/operationFlow'
+import { promptInfoFun } from "@/utils/index"
 export default {
   name: "AduiteSelected",
   props: {
-    selectHead: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
     searchWidth: {}
   },
   watch: {
@@ -166,6 +161,27 @@ export default {
   },
   data() {
     return {
+      auditStatusArry:[],//审核状态
+      creareUserArry:[],
+      applyArray: [], //申请类型
+      query:{
+        ProcessState: 0,
+        VerifyState: 0,
+        WaterFactoryId: "",
+        ProcessMenuCode: 2900,
+        FlowNo: "",
+        createUserId: "",
+        createStartTime: "",
+        createEndTime: "",
+        editUserId: "",
+        editStartTime: "",
+        editEndTime: "",
+        limit: 20,
+        page: 1,
+        sort: "",
+        filed: "",
+        tableId: "0000037"
+      },
       secNmae: "",
       WaterMeterList: [], //
       securStatus: [],
@@ -185,10 +201,21 @@ export default {
   created() {
     this.companyOptions = this.$store.state.user.waterWorks;
     if (this.companyOptions.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.companyOptions[0].Id;
+      this.query.WaterFactoryId = this.companyOptions[0].Id;
     }
+    this.applyArray = getDictionaryOption('流程编码')
+    this.getCreateUser()
   },
   methods: {
+  getCreateUser(){
+    ComboBoxListZhuanYong({'PId':''}).then(res => {
+      if (res.code ==0 ) {
+        this.creareUserArry = res.data;
+      } else {
+        promptInfoFun(this, 1, res.message);
+      }
+    })
+  },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
@@ -216,9 +243,9 @@ export default {
     getTime(v, n) {
       let date;
       if (v) {
-        this.selectHead.StartTime = v[0];
-        this.selectHead.EndTime = v[1];
-        date = this.selectHead.StartTime + "~" + this.selectHead.EndTime;
+        this.query.StartTime = v[0];
+        this.query.EndTime = v[1];
+        date = this.query.StartTime + "~" + this.query.EndTime;
         if (n == "timevalue1") {
           this.$emit("getText", date, n, "", "审核日期");
         }
@@ -226,8 +253,8 @@ export default {
           this.$emit("getText", date, n, "", "申请日期");
         }
       } else {
-        this.selectHead.StartTime = "";
-        this.selectHead.EndTime = "";
+        this.query.StartTime = "";
+        this.query.EndTime = "";
         date = "";
         if (n == "timevalue1") {
           this.$emit("getText", date, n, "", "审核日期");
@@ -238,9 +265,8 @@ export default {
       }
     },
     handleFilter() {
+      this.$parent.query = Object.assign({},this.query)
       this.$parent.searchTableList();
-      //   this.$emit("handleFilter");
-      // this.$parent.seachAccountOrder()
     }
   }
 };

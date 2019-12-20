@@ -18,7 +18,7 @@
           @sort-change="sortChanges">
           <el-table-column fixed="left" label="序号" width="60" align="center">
             <template slot-scope="scope">
-              <span>{{(selectHead.page - 1) *selectHead.limit+ scope.$index + 1}}</span>
+              <span>{{(query.page - 1) *query.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
           <template v-for="(item ,index) in tableHeadData">
@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column type="expand" fixed="right" width="1">
             <template slot-scope="props">
-              <step />
+              <step :linkCont="linkCont" :processId="processId"/>
             </template>
           </el-table-column>
         </el-table>
@@ -73,7 +73,7 @@
   </div>
 </template>
 <script>
-  import {GetInfosBySubmission, GetAuditDetail} from '@/api/workBenck'
+  import {GetInfosBySubmission, GetAuditDetail, GetAuditLink} from '@/api/workBenck'
   import { promptInfoFun} from "@/utils/index"
   import SubSelected from "./selecteds/SubSelected";
   import {delTips, getText, pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
@@ -85,6 +85,8 @@ export default {
   components: { SubSelected, SearchTips, Pagination, Step },
   data() {
     return {
+      processId:'',
+      linkCont:[],//查看审核环节
       searchWidth: 1024,
       query: {
         ProcessState: 0,
@@ -141,10 +143,10 @@ export default {
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
-        this.selectHead.StartTime = "";
-        this.selectHead.StartTime = "";
+        this.query.StartTime = "";
+        this.query.StartTime = "";
       }
-      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query");
       this.searchTableList();
     },
     getText(val, model, arr, name) {
@@ -153,17 +155,15 @@ export default {
     },
     sortChanges({ column, prop, order }) {
       //排序
-      this.selectHead.page = 1;
-      this.selectHead.filed = prop;
-      this.selectHead.sort =
+      this.query.page = 1;
+      this.query.filed = prop;
+      this.query.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.searchTableList();
     },
     //查询
     searchTableList() {
       GetInfosBySubmission(this.query).then(res => {
-        console.log(res)
-        console.log("======================")
         if (res.code ==0 ) {
           this.total = res.count;
           this.tableData = res.data;
@@ -182,7 +182,6 @@ export default {
     toogleExpand(row) {
       const _this = this;
       let $table = _this.$refs.table;
-
       _this.tableData.map((item, index) => {
         $table.toggleRowExpansion(item, false);
       });
@@ -193,6 +192,15 @@ export default {
       }
       this.rotate = row.reaId;
       $table.toggleRowExpansion(row);
+      this.processId = row.Id
+      GetAuditLink({Id:row.Id}).then(res => {
+        if (res.code ==0 ) {
+          console.log(res)
+          this.linkCont = res.data
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      })
     }
   }
 };
