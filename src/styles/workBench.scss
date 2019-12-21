@@ -18,7 +18,7 @@
       >li{list-style-type:none;border-bottom: solid 1px #DBE3E8;overflow: hidden;
         font: normal 14px 'Microsoft YaHei';height: 100%;position: relative;
       label{color: #777C82;display: block;width: 85px;float: left}
-      span{ display: block;color: #46494C;width: calc(100% - 85px);float: left;max-height: 100px;overflow: auto}
+      span{ display: block;color: #46494C;width: calc(100% - 85px);float: left;max-height: 100px;overflow-y: auto;overflow-x: hidden}
       }
       >li:last-child{border: none;}
       >li > p{float: left;width: 25%;margin: 0;padding: 8px;position: relative;}

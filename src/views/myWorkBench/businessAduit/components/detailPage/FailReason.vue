@@ -36,6 +36,7 @@
     methods:{
       onSubmit(){
         this.form.remark !='' ? this.dialogVisible = false :  promptInfoFun(this,1,'请输入审核不通过的原因')
+        this.$parent.successPassFun(2)
       },
       handleClosed(){
         this.dialogVisible = false

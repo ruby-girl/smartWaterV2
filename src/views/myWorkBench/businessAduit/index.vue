@@ -1,6 +1,5 @@
 <template>
   <div class="section-container secur-setting">
-    <component :is="currentView"></component>
     <el-tabs v-model="typeCheck" @tab-click="changeTab">
       <el-tab-pane label="我提交的" name="1">
         <sub-mitted v-if="mit"/>
@@ -18,14 +17,6 @@
   </div>
 </template>
 <script>
-  import meterAccount from "./components/detailPage/WatreMeterAccount";
-  import EditAccount from "./components/detailPage/EditAccount";
-  import LowInsureApply from "./components/detailPage/LowInsureApply";
-  import Transfer from "./components/detailPage/Transfer";
-  import SalesAccount from "./components/detailPage/SalesAccount";
-  import ChangeNature from "./components/detailPage/ChangeNature";
-  import AddNature from "./components/detailPage/AddNature";
-  import BreachContract from "./components/detailPage/BreachContract";
   import SubMitted from "./components/SubMitted";//我提交的
   import StayAduite from "./components/StayAduite";//待我审核
   import HaveAduite from "./components/HaveAduite";//我已审核
@@ -35,14 +26,6 @@
     name: "businessAduit",
     components: {
       SubMitted,
-      meterAccount,
-      EditAccount,
-      LowInsureApply,
-      Transfer,
-      SalesAccount,
-      ChangeNature,
-      AddNature,
-      BreachContract,
       StayAduite,
       HaveAduite,
       AduiteSelect
@@ -50,27 +33,11 @@
     data() {
       return {
         typeCheck: "1",
-        index: 0,
-        componentsArr: [
-          "EditAccount",
-          "meterAccount",
-          "LowInsureApply",
-          "Transfer",
-          "SalesAccount",
-          "ChangeNature",
-          "AddNature",
-          "BreachContract"
-        ],
         mit: true,
         aduite: false,
         finish: false,
         search: false
       };
-    },
-    computed: {
-      currentView() {
-        return this.componentsArr[this.index];
-      }
     },
     methods: {
       //切换tab

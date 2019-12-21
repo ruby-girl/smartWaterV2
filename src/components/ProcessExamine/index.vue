@@ -7,7 +7,7 @@
       <span>2019-11-05 10:17:08</span>
     </li>
     <li class="fail">
-      <i class="icon iconfont iconyishenhe point"></i>
+      <i class="icon iconfont iconshenhebutongguo point"></i>
       <h3>审核不通过</h3>
       <p>待财务部、人事部审核</p>
       <span>2019-11-05 10:17:08</span>
@@ -30,7 +30,36 @@
 
 <script>
   export default {
-    name: "ProcessExamine"
+    name: "ProcessExamine",
+   // props:['auditLink'],
+    props:['curObj'],
+    data(){
+      return {
+        auditLink:[
+          {
+            ExecUserName: '流程执行人姓名' ,
+            ProcessMenuCode: 1 ,
+            SYS_BusiFlow_Id: '111' ,
+            SYS_Process_Id: '流程配置Id' ,
+            SYS_Process_HashCode: '流程配置哈希值' ,
+            VerifyState: false ,
+            RecordState: 0,//记录状态 0未开始 1进行中 2已完成 ,
+            SYS_ProcessNo_Id: '111' ,
+            FlowName: '流程名称' ,
+            ExecUserId: '1' ,
+            Sort: 1,
+            FlowSort: 1 ,
+            Remark: '备注' ,
+            Id: 'afff',
+            CreateTime: 'Desc' ,
+            CreateUserId: '11',
+            EditTime: 'sss',
+            EditUserId: 'sdf',
+            DataState:'ad'
+          }
+        ]
+      }
+    }
   }
 </script>
 
@@ -43,6 +72,7 @@
     overflow: auto;
     margin: 0;
     li{list-style-type: none;width: 100%;position: relative;padding-left: 19px;padding-bottom: 50px;
+      .icon{background: #fff;}
       .point{
         position: absolute;top: 0px;left: -7px;color: #A6AAAE;
       }

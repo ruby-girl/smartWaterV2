@@ -119,16 +119,16 @@
           </ul>
         </div>
         <p class="to-examine" v-show="!ifDetail">
-          <el-button class="pass-btn" type="primary" icon="el-icon-check" size="mini">审核通过</el-button>
-          <el-button class="refuse-btn" type="primary" icon="el-icon-close" size="mini" @click="failPassFun">审核不通过</el-button>
+          <el-button class="pass-btn" type="primary" icon="el-icon-check" size="mini" @click="successPassFun(1)">审核通过</el-button>
+          <el-button class="refuse-btn" type="primary" icon="el-icon-close" size="mini" @click="failPassFun()">审核不通过</el-button>
         </p>
       </div>
       <!--右侧流程信息-->
       <div class="detail-right">
-        <process-examine></process-examine>
+        <process-examine :auditLink="auditLink" :curObj="curObj"></process-examine>
       </div>
     </div>
-    <fail-reason ref="failReson"></fail-reason>
+    <fail-reason ref="remarkChild"></fail-reason>
   </el-dialog>
 </template>
 
@@ -139,18 +139,22 @@
   import fileList from '@/components/FileList'
   import ProcessExamine from '@/components/ProcessExamine'
   import FailReason from "./FailReason"
+  import { ProcessOperation } from '@/api/workBenck'
+  import { promptInfoFun } from "@/utils/index"
 
   export default {
     name: "ChangeNature",
     components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason },
     data() {
       return {
+        auditLink:[],
         dialogVisible: false,
         files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
         index:1,
         componentsArr:['MechanicsMater','YcMeter'],
         screenWidth:'',
-        ifDetail:true
+        ifDetail:true,
+        curObj:{}//当前点击列对象
       }
     },
     computed:{
@@ -158,21 +162,42 @@
         return this.componentsArr[this.index];
       }
     },
+    watch:{
+      dialogVisible(val){
+        if(val){
+          this.$nextTick(()=>{
+            let num = 10
+            this.ifDetail ? num = 10: num = 66
+            document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
+          })
+        }
+      }
+    },
     methods:{
       handleClose(){
         this.dialogVisible = false
       },
-      failPassFun(){//审核不通过
-        this.$refs.failReson.dialogVisible = true
+      failPassFun(){
+        this.$refs.remarkChild.dialogVisible = true
+      },
+      successPassFun(type){//审核
+        let query = {
+          flow:this.curObj,
+          OperationState:type==1 ? true : false,
+          OperationRemark:this.$refs.remarkChild.form.remark
+        }
+        ProcessOperation(query).then(res => {
+          if (res.code ==0 ) {
+            promptInfoFun(this, 2, res.message);
+            this.dialogVisible = true
+          } else {
+            promptInfoFun(this, 1, res.message);
+          }
+        })
       }
     },
     mounted() {
       this.screenWidth = window.screen.width
-      this.$nextTick(()=>{
-        let num = 10
-        this.ifDetail ? num = 10: num = 66
-        document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
-      })
     }
   }
 </script>

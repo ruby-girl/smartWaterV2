@@ -44,7 +44,7 @@
                   content="详情"
                   placement="bottom"
                 >
-                  <i class="icon iconfont detaile" @click="detaile">&#xe6a1;</i>
+                  <i class="icon iconfont detaile" @click="detaile(scope.row)">&#xe6a1;</i>
                 </el-tooltip>
                 <el-tooltip
                   class="item"
@@ -61,7 +61,7 @@
           </el-table-column>
           <el-table-column type="expand" fixed="right" width="1">
             <template slot-scope="props">
-              <step />
+              <step :linkCont="linkCont" :processId="processId" :personId="personId"/>
             </template>
           </el-table-column>
         </el-table>
@@ -74,21 +74,52 @@
         />
       </div>
     </div>
+    <component :is="currentView" ref="detailChild"></component>
   </div>
 </template>
 <script>
-  import {GetInfosByToBeAudited, GetAuditDetail} from '@/api/workBenck'
+  import meterAccount from "./detailPage/WatreMeterAccount";
+  import EditAccount from "./detailPage/EditAccount";
+  import LowInsureApply from "./detailPage/LowInsureApply";
+  import Transfer from "./detailPage/Transfer";
+  import SalesAccount from "./detailPage/SalesAccount";
+  import ChangeNature from "./detailPage/ChangeNature";
+  import AddNature from "./detailPage/AddNature";
+  import BreachContract from "./detailPage/BreachContract";
+  import {GetInfosByToBeAudited, GetAuditDetail, GetAuditLink, GetAuditRecord} from '@/api/workBenck'
   import {promptInfoFun} from "@/utils/index"
   import StaySelected from "./selecteds/StaySelected";
   import {delTips, getText, pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
   import SearchTips from "@/components/SearchTips/index";
   import Pagination from "@/components/Pagination";
   import Step from "./Step"; //流程图
+
 export default {
   name: "StayAduite",
-  components: { StaySelected, SearchTips, Pagination, Step },
+  components: { StaySelected, SearchTips, Pagination, Step, meterAccount,
+    EditAccount,
+    LowInsureApply,
+    Transfer,
+    SalesAccount,
+    ChangeNature,
+    AddNature,
+    BreachContract },
   data() {
     return {
+      index: 0,
+      componentsArr: [
+        "EditAccount",//编辑开户
+        "meterAccount",//用户开户
+        "LowInsureApply",//低保户申请
+        "Transfer",//过户
+        "SalesAccount",//销户
+        "ChangeNature",//用水性质变更
+        "AddNature",//添加用水性质申请
+        "BreachContract"//违约金减免
+      ],
+      personId:'',
+      processId:'',
+      linkCont:[],//查看审核环节
       searchWidth: null,
       query: {
         ProcessState: 0,
@@ -130,6 +161,9 @@ export default {
         }
       }
       return arrayHead;
+    },
+    currentView() {
+      return this.componentsArr[this.index];
     }
   },
   mounted() {
@@ -167,8 +201,6 @@ export default {
     //查询
     searchTableList() {
       GetInfosByToBeAudited(this.query).then(res => {
-        console.log(res)
-        console.log("======================")
         if (res.code ==0 ) {
           this.total = res.count;
           this.tableData = res.data;
@@ -182,7 +214,43 @@ export default {
       console.log("导出");
     },
     //详情
-    detaile() {},
+    detaile(row) {
+      switch (row.ProcessMenuCode) {
+        case 2901://用户开户
+          this.index = 1
+          break
+        case 2902://用户销户
+          this.index = 4
+          break
+        case 2903://用户过户
+          this.index = 3
+          break
+        case 2904://用户变更用水性质
+          this.index = 5
+          break
+        case 2905://低保户申请
+          this.index = 2
+          break
+        case 2906://水费减免
+          this.index = 1111
+          break
+        case 2907://违约金减免
+          this.index = 7
+          break
+        //缺少编辑开户申请 和添加用书性质变更
+      }
+      this.$refs.detailChild.ifDetail = false //true 为详情 false为编辑
+      this.$refs.detailChild.curObj = row
+      this.$refs.detailChild.dialogVisible = true
+      return
+      GetAuditRecord({Id:row.Id}).then(res => {//详情右侧审核流程
+        if (res.code ==0 ) {
+          this.$refs.detailChild.auditLink = res.data
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      })
+    },
     //审核环节
     toogleExpand(row) {
       const _this = this;
@@ -197,6 +265,15 @@ export default {
       }
       this.rotate = row.reaId;
       $table.toggleRowExpansion(row);
+      this.processId = row.Id
+      this.personId = row.CreateUserId
+      GetAuditLink({Id:row.Id}).then(res => {
+        if (res.code ==0 ) {
+          this.linkCont = res.data
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      })
     }
   }
 };
