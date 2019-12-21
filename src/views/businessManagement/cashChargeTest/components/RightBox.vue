@@ -6,9 +6,9 @@
      <el-col  :lg="8" :xl="8" class="user-box hidden-md-and-down">
        <!-- IC卡 -->
         <div v-if="isIc">
-         <zebra-table label-left="姓名" label-right="是否刷卡":value-left="headUser.CustomerName" :value-right="isFirst==0?'否':'是'" :isGray="true" color="#46494C" />
-         <zebra-table label-left="水表类型" label-right="充值金额" :value-left="headUser.WaterMeterTypeName" :value-right="cardInfo.RechargeMoney" :isGray="false" color="#46494C" />
-         <zebra-table label-left="水表编号" label-right="充值次数" :value-left="headUser.CardNo" :value-right="cardInfo.RechargeCount" :isGray="true"color="#46494C" />
+         <zebra-table label-left="姓名" label-right="是否刷卡":value-left="headUser.CustomerName" :value-right="cardInfo.CardType==0?'否':'是'" :isGray="true" color="#46494C" />
+         <zebra-table label-left="水表类型" label-right="充值金额" :value-left="headUser.WaterMeterTypeName" :value-right="cardInfo.UserCard.RechargeMoney" :isGray="false" color="#46494C" />
+         <zebra-table label-left="水表编号" label-right="充值次数" :value-left="headUser.CardNo" :value-right="cardInfo.UserCard.RechargeCount" :isGray="true"color="#46494C" />
          <zebra-table label-left="电话" label-right="剩余未缴" :value-left="headUser.Tel" :value-right="unpaidMoney" :isGray="false" color="#FF4646" font-weight="bold"/>
          <zebra-table label-left="地址" label-right="账户余额" :value-left="headUser.Address" :value-right="accountMoney" :isGray="true" color="#00B3A1" font-weight="bold"/>
         </div>
@@ -34,9 +34,9 @@
          <div class="position-user-left" style="margin-right:5px;" @click="userShow=true">用户信息</div>
           <transition-group name="fade">
          <div v-show="isIc&&userShow" class="flex-1 position-user-border" key="user">
-         <zebra-table label-left="姓名" label-right="是否刷卡" :value-left="headUser.CustomerName" :value-right="isFirst==0?'否':'是'" :isGray="true" color="#46494C" />
-         <zebra-table label-left="水表类型" label-right="充值金额" :value-left="headUser.WaterMeterTypeName" :value-right="cardInfo.RechargeMoney" :isGray="false" color="#46494C" />
-         <zebra-table label-left="水表编号" label-right="充值次数" :value-left="headUser.CardNo" :value-right="cardInfo.RechargeCount" :isGray="true"color="#46494C" />
+         <zebra-table label-left="姓名" label-right="是否刷卡" :value-left="headUser.CustomerName" :value-right="cardInfo.CardType==0?'否':'是'" :isGray="true" color="#46494C" />
+         <zebra-table label-left="水表类型" label-right="充值金额" :value-left="headUser.WaterMeterTypeName" :value-right="cardInfo.UserCard.RechargeMoney" :isGray="false" color="#46494C" />
+         <zebra-table label-left="水表编号" label-right="充值次数" :value-left="headUser.CardNo" :value-right="cardInfo.UserCard.RechargeCount" :isGray="true"color="#46494C" />
          <zebra-table label-left="电话" label-right="剩余未缴" :value-left="headUser.Tel" :value-right="unpaidMoney" :isGray="false" color="#FF4646" font-weight="bold"/>
          <zebra-table label-left="地址" label-right="账户余额" :value-left="headUser.Address" :value-right="accountMoney" :isGray="true" color="#00B3A1" font-weight="bold"/>
         </div>
@@ -173,7 +173,7 @@ export default {
        setTimeout(function(){
           //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡       
         if(_this.isIc){
-          if(_this.cardInfo.RechargeCount==1&&_this.cardInfo.RechargeMoney&&_this.cardInfo.CardType==0) _this.isFirst=true;
+          if(_this.cardInfo.UserCard.uRechargeCount==1&&_this.cardInfo.UserCard.RechargeMoney&&_this.cardInfo.CardType==0) _this.isFirst=true;
           else _this.isFirst=false;
         }
          _this.$refs.myInput.select()
@@ -286,13 +286,30 @@ export default {
           duration: 4000
         });
         return false
-      }
+      }    
       this.pay();//结算
+    },
+    icTest(){//IC卡结算前验证
+      if(this.cardInfo.CardType==0){//如果为未刷卡，不允许充值
+        this.$message({
+          message: "未刷卡状态下不允许充值！",
+          type: "error",
+          duration: 4000
+        });
+        return false
+      }
+      if(this.cardInfo.UserCard.MeterDiameter>50){//50<bore 大口径须充值10的倍数 25<bore<=50 精确到整数位
+         if(!this.testBigBore()) return false
+      }else if(25<this.cardInfo.UserCard.MeterDiameter<=50){//25<bore<=50 精确到整数位
+          if(!this.testMediumBore()) return false
+      }
+      return true
     },
     // 结算
     pay() {
       let receipts=parseFloat(this.num)-parseFloat(this.surplus)
       if(this.isIc){//iC卡结算调用另一方法
+        if(!this.icTest()) return false;//相关口径充值金额限制验证
         this.IcPay(receipts)
         return
       }
@@ -322,6 +339,7 @@ export default {
         this.$emit("getCustomer"); //重新获取列表数据和账户余额        
       })
     },
+
     // 如果是IC卡结算
     IcPay(receipts){
         let obj={
@@ -350,7 +368,7 @@ export default {
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", false);//结算完成后，父元素全选置为false，卡片获取列表再设置全选
         this.$emit("getCustomer"); //重新获取列表数据和账户余额     
-        this.wCard()//写卡  待确认什么情况下不写卡？
+        this.wCard()//写卡  如果实收金额（input值-应收）=0，不写卡
       })      
     },
     // IC卡结算成功后，进行写卡操作
@@ -381,6 +399,28 @@ export default {
         });
          this.surplus=0.00
         return false;
+      }
+      return true
+    },
+    testBigBore(){//50<bore 大口径须充值10的倍数
+      if(parseFloat(this.num)>0&&parseFloat(this.num)%10!==0){
+        this.$message({
+          message: "大口径水表，充值金额须为10的倍数！",
+          type: "error",
+          duration: 4000
+        });
+        return false
+      }
+      return true
+    },
+    testMediumBore(){//25<bore<=50 精确到整数位
+      if(parseFloat(this.num)>0&&parseFloat(this.num)%1!==0){
+        this.$message({
+          message: "中等口径水表，充值金额须为整数！",
+          type: "error",
+          duration: 4000
+        });
+        return false
       }
       return true
     },

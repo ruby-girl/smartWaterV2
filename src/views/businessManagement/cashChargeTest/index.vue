@@ -137,8 +137,8 @@ export default {
       accountMoney: '0.00', //账户余额
       customerNo: "", //用户编号-结算后，用户编号获取账户余额
       cardInfo: {
-        RechargeMoney:'',
-        RechargeCount:''
+        // RechargeMoney:'',
+        // RechargeCount:''
       }, //IC卡 卡片详情
       headQuery: {
         CustomerQueryValue: "",

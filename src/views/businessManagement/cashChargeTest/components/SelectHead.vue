@@ -92,7 +92,7 @@ export default {
     getUser(info){
       let postData={} 
       if(info){
-        this.$emit("update:cardInfo",info.UserCard)
+        this.$emit("update:cardInfo",info)
         postData.CustomerQueryValue=info.UserCard.CardNo;
         postData.CustomerQueryType="8";
         postData.page=1;

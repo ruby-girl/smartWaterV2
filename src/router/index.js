@@ -381,17 +381,29 @@ export const asyncRoutes = [
         title: '业务审核',
         roles: ['1']
       }
-    },
-    // {
-    //   path: 'buss',
-    //   component: () => import('@/views/myWorkBench/buss/index'),
-    //   name: 'buss',
-    //   meta: {
-    //     title: '业务审核1',
-    //     roles: ['1']
-    //   }
-    // }
+    }
   ]
+  },
+  {
+    path: '/systemConfig',
+    redirect: '/systemConfig/basicConfig',
+    alwaysShow: true, // will always show the root menu
+    component: Layout,
+    name: "systemConfig",
+    meta: {
+      title: '系统配置',
+      icon: 'iconfont icongongzuotai',
+      roles: ['1']
+    },
+    children: [{
+      path: 'basicConfig',
+      component: () => import('@/views/systemConfiguration/basicConfiguration/index'),
+      name: 'basicConfig',
+      meta: {
+        title: '基础功能设置',
+        roles: ['1']
+      }
+    }]
   },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
