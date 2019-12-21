@@ -65,25 +65,17 @@
               >
                 <i class="icon iconfont iconchexiao1" @click="reset(row)"></i>
               </el-tooltip>
+              <!-- 费用类型仅为水费，OrderType==2001，才能进行减免 -->
               <el-tooltip
-                class="item main-color"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="费用减免"
+                :class="{'item main-color':true,'main-color-disabled':row.OrderType==2001?false:true}"
+                :popper-class="row.OrderType==2001?'tooltip':''"
+                :effect="row.OrderType==2001?'light':'dark'"
+                :visible-arrow="row.OrderType==2001?false:true"
+                :content="row.OrderType==2001?'费用减免':'非水费类型不允许减免'"
                 placement="bottom"
               >
                 <i class="icon iconfont iconjianmianshui" @click="feeWaiver(row)"></i>
               </el-tooltip>
-              <!-- <div class="main-color-warn" @click="details(row)">
-                <a>费用详情</a>
-              </div>
-              <div class="pl-15" @click="reset(row)">
-                <a>费用撤回</a>
-              </div>
-              <div class="main-color pl-15" @click="feeWaiver(row)">
-                <a>费用减免</a>
-              </div> -->
             </div>
           </template>
         </el-table-column>
@@ -156,7 +148,6 @@ export default {
       }
     },
     getList() {
-      console.info('表格组件=',this.tipsData)
       //表格
       GetOrder(this.listQuery).then(res => {
         this.total = res.count;

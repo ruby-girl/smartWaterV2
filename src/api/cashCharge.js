@@ -69,6 +69,15 @@ export function ICSettlement(data){
     data: data
   })
 }
+
+// IC卡结算失败回滚
+export function RollBackICSettlement(data){
+  return request({
+    url: '/PayMent/RollBackICSettlement',
+    method: 'post',
+    data: data
+  })
+}
 // 收费查询--------
 
 //列表

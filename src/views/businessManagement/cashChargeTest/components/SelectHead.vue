@@ -86,7 +86,7 @@ export default {
         this.$emit("clearData");
         return;
       }
-      
+      this.getUser()
     },
     // 查询用户信息
     getUser(info){

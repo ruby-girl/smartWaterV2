@@ -217,6 +217,7 @@ export default {
     },
     // 查询用户缴费单 ---非IC卡
     handleFilter(user) {
+      if(this.inputIsIc(user)) return false //查询出来的用户如果为IC卡，提示须读卡
       // user-当前选择/查询的用户信息
       this.isIC = false;
       user.Balance=parseFloat(user.Balance).toFixed(2)
@@ -236,6 +237,18 @@ export default {
       }
       this.getList();
     },
+    // 查询出来的用户如果为IC卡，提示须读卡
+    inputIsIc(user){
+      if(user.WaterMeterTypeId==1102){
+        this.$message({
+            message: '此用户为IC卡用户，请读取卡片！',
+            type: "error",
+            duration: 4000
+          });
+          return true
+      }
+      return false
+    },
     // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息 resInfo用户信息  resData卡片信息
     handleFilterIc(user) {
       this.headUser = user;
@@ -246,6 +259,8 @@ export default {
       this.cardQuery.CustomerId = user.Id;
       this.listQuery.page = 1;
       this.checkedAllParent = false;
+      this.tipsDataCopy = [];
+      this.headQuery.CustomerQueryValue=""//输入框清空
       this.getList();
     },
     // 结算成功后重新获取账户余额 --如果是IC卡需要再次读卡。查询缴费记录的数据+1
@@ -337,9 +352,7 @@ export default {
     },
     // 选择支付方式
     selectPayment(i) {
-      if (i == 2) {
-        this.paymentCodeShow = true;
-      }
+      if (i == 2) this.paymentCodeShow = true;
     },
     // 未查询到用户
     clearData() {

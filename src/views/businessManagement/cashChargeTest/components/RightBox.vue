@@ -6,7 +6,7 @@
      <el-col  :lg="8" :xl="8" class="user-box hidden-md-and-down">
        <!-- IC卡 -->
         <div v-if="isIc">
-         <zebra-table label-left="姓名" label-right="是否刷卡":value-left="headUser.CustomerName" :value-right="isFirst==0?'未刷卡':'已刷卡'" :isGray="true" color="#46494C" />
+         <zebra-table label-left="姓名" label-right="是否刷卡":value-left="headUser.CustomerName" :value-right="isFirst==0?'否':'是'" :isGray="true" color="#46494C" />
          <zebra-table label-left="水表类型" label-right="充值金额" :value-left="headUser.WaterMeterTypeName" :value-right="cardInfo.RechargeMoney" :isGray="false" color="#46494C" />
          <zebra-table label-left="水表编号" label-right="充值次数" :value-left="headUser.CardNo" :value-right="cardInfo.RechargeCount" :isGray="true"color="#46494C" />
          <zebra-table label-left="电话" label-right="剩余未缴" :value-left="headUser.Tel" :value-right="unpaidMoney" :isGray="false" color="#FF4646" font-weight="bold"/>
@@ -34,7 +34,7 @@
          <div class="position-user-left" style="margin-right:5px;" @click="userShow=true">用户信息</div>
           <transition-group name="fade">
          <div v-show="isIc&&userShow" class="flex-1 position-user-border" key="user">
-         <zebra-table label-left="姓名" label-right="是否刷卡" :value-left="headUser.CustomerName" :value-right="isFirst==0?'未刷卡':'已刷卡'" :isGray="true" color="#46494C" />
+         <zebra-table label-left="姓名" label-right="是否刷卡" :value-left="headUser.CustomerName" :value-right="isFirst==0?'否':'是'" :isGray="true" color="#46494C" />
          <zebra-table label-left="水表类型" label-right="充值金额" :value-left="headUser.WaterMeterTypeName" :value-right="cardInfo.RechargeMoney" :isGray="false" color="#46494C" />
          <zebra-table label-left="水表编号" label-right="充值次数" :value-left="headUser.CardNo" :value-right="cardInfo.RechargeCount" :isGray="true"color="#46494C" />
          <zebra-table label-left="电话" label-right="剩余未缴" :value-left="headUser.Tel" :value-right="unpaidMoney" :isGray="false" color="#FF4646" font-weight="bold"/>
@@ -92,29 +92,36 @@
       <!-- 结算 -->
       <el-col :md="12" :lg="6" :xl="6" class="pay-type-box">
         <div style="text-align:right" class="pointer" @click="settingShow=true"><i class="iconfont iconshezhi1"></i></div>
-        <div style="font-size: 14px;">选择缴费方式</div>
-        <div class="display-flex align-items-center justify-content-flex-justify">
-          <div :class="{'cash-assets':true,'cash-assets-scan-active':paymentType==2?true:false}"
-           @click="paymentMethod(2)">
-            <i class="iconfont iconsaoma"></i>
-            <span>扫码</span>
-          </div>
-          <div
-            :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==2701?true:false}"
-            @click="paymentMethod(2701)">
-              <i class="iconfont iconxianjin"></i>
-              <span>现金</span>
-          </div>        
-        </div>
-          <button class="pay-btn" @click="mydebounce()">结算</button>
-          <div class="setting-box" v-show="settingShow">
-            <div class="display-flex save-account">
+        <!-- <div style="font-size: 14px;">选择缴费方式</div> -->
+        <div class="display-flex save-account">
               <span> 是否存入账户:&emsp;</span>
               <el-radio-group v-model="isAccount">
                 <el-radio :label="true">是</el-radio>
                 <el-radio :label="false">否</el-radio>
               </el-radio-group>
             </div>
+        <div class="display-flex align-items-center justify-content-flex-justify">
+          <el-button :class="{'cash-assets':true,'cash-assets-scan-active':paymentType==2?true:false}"
+           @click="paymentMethod(2)">
+            <i class="iconfont iconsaoma"></i>
+            <span>扫码</span>
+          </el-button>
+          <el-button
+            :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==2701?true:false}"
+            @click="paymentMethod(2701)">
+              <i class="iconfont iconxianjin"></i>
+              <span>现金</span>
+          </el-button>        
+        </div>
+        <el-button class="pay-btn" @click="mydebounce()">结算</el-button>
+          <div class="setting-box" v-show="settingShow">
+            <!-- <div class="display-flex save-account">
+              <span> 是否存入账户:&emsp;</span>
+              <el-radio-group v-model="isAccount">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+              </el-radio-group>
+            </div> -->
             <div class="pint-item">
               <el-radio v-model="radio" :label="1">打印小票</el-radio>
               <span @click="selectPint" style="font-size:13px;">
@@ -138,7 +145,8 @@
 </template>
 <script>
 import { debounce, updateMoney, changeTwoDecimal } from "@/utils/index";
-import {Settlement,ICSettlement} from "@/api/cashCharge"
+import {Settlement,ICSettlement,RollBackICSettlement} from "@/api/cashCharge"
+import {WriteCardInfo} from "@/utils/projectLogic"
 import ZebraTable from "./IcType/ZebraTable";
 import SpecialZebraTable from "./IcType/SpecialZebraTable";
 import 'element-ui/lib/theme-chalk/display.css';
@@ -162,14 +170,11 @@ export default {
    headUser:{
       handler(v) {
         let _this=this
-        console.log('isIC',this.isIc)
-        console.info('geren xinxi',v)
        setTimeout(function(){
-          //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false
-          // this.cardInfo.CardType 0：未刷卡 1：已刷卡
-        if(this.isIc){
+          //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡       
+        if(_this.isIc){
           if(_this.cardInfo.RechargeCount==1&&_this.cardInfo.RechargeMoney&&_this.cardInfo.CardType==0) _this.isFirst=true;
-        else _this.isFirst=false;
+          else _this.isFirst=false;
         }
          _this.$refs.myInput.select()
        },200)
@@ -203,6 +208,7 @@ export default {
       lineHeight:91,
       userShow:false,
       isFirst:false,//IC卡参数
+      resCardInfo:{}//结算成功后，后端返回的卡片信息，CardInfo：传递给CS，BusinessId：如果写卡失败，传递给回滚接口
     };
   },
   mounted() {
@@ -286,7 +292,7 @@ export default {
     // 结算
     pay() {
       let receipts=parseFloat(this.num)-parseFloat(this.surplus)
-      if(isIc){//iC卡结算调用另一方法
+      if(this.isIc){//iC卡结算调用另一方法
         this.IcPay(receipts)
         return
       }
@@ -329,6 +335,7 @@ export default {
         isFirst:this.isFirst//当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false
       }  
       ICSettlement(obj).then(res=>{
+         this.resCardInfo=res.data//{CardInfo:{},BusinessId:''}
          this.$message({
           message: "操作成功",
           type: "success",
@@ -342,8 +349,20 @@ export default {
           // 金额清零--e
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", false);//结算完成后，父元素全选置为false，卡片获取列表再设置全选
-        this.$emit("getCustomer"); //重新获取列表数据和账户余额        
-      })
+        this.$emit("getCustomer"); //重新获取列表数据和账户余额     
+        this.wCard()//写卡  待确认什么情况下不写卡？
+      })      
+    },
+    // IC卡结算成功后，进行写卡操作
+    wCard(){
+       try {       
+        WriteCardInfo(this.resCardInfo,(errorRes)=>{ // 读卡
+            // 错误回调，执行回滚
+            RollBackICSettlement({businessId:errorRes.businessId})
+        })
+      } catch (error) {
+        console.log("请在CS端操作1");
+      }
     },
     // 补齐小数-
     changeTwoDecimal_x() {
@@ -469,9 +488,10 @@ export default {
   text-align: center;
   color: #fff;
   width: 100%;
-  padding: 11px 0;
+  padding: 18px 0;
   outline: none;
   border: none;
+  font-size:16px;
   cursor: pointer;
   &:hover {
     background: #ff8c00;

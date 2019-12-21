@@ -23,7 +23,28 @@ export function ICReadCardInfo(callback) {
     }
   }
 }
-
+//IC写卡 objJson:卡片信息 callback:写卡失败后回调
+export function WriteCardInfo(objJson, callback) {
+  let res = window.FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(objJson));
+  if (res != undefined && res != "") {
+    let rJSON = JSON.parse(res)//处理后的res
+    // let resData = eval('(' + rJSON.Data + ')')//处理后的Data
+    if (rJSON.Result) {
+      this.$message({
+        message: "写卡成功",
+        type: "success",
+        duration: 4000
+      });
+    } else {
+      this.$message({
+        message: "写卡错误！",
+        type: "error",
+        duration: 4000
+      });
+      callback(objJson)
+    }
+  }
+}
 // 获取筛选条件，区域树形 --再次赋值Id,Name 面包屑getText需要用
 function mapTree(org) {
   const haveChildren =
@@ -144,23 +165,7 @@ export function getName(id) {
   return name
 }
 
-//IC制卡
-export function WriteCardInfo(objJson, callback) {
-  if (typeof jsObj == "undefined") {
-    this.$message({
-      message: "写卡接口初始化失败！",
-      type: "error",
-      duration: 4000
-    });
-    return;
-  }
-  let ret = jsObj.WriteCardInfo(objJson);
-  let tempJson = JSON.parse(ret);
-  //return tempJson;
-  if (typeof (callback) === "function") {
-    callback(tempJson);
-  }
-}
+
 // 阶梯计数1个月---获取几个月后的日期
 export function getTimeOption(time, n) {
   var d = new Date(time);

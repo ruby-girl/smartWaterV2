@@ -1,6 +1,6 @@
 <template>
   <div class="position-search-head">
-    <div class="head-title">换表查询</div>
+    <el-row ><el-col><span class="head-title">换表查询</span></el-col></el-row>
     <el-form
       :inline="true"
       :model="selectHead"
