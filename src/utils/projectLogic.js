@@ -45,6 +45,68 @@ export function WriteCardInfo(objJson, callback) {
     }
   }
 }
+/**
+ * 用户制卡
+ * param customerId 用户ID
+ * obj vue 实列
+ * */
+import { GetICWriteCard, RollBackICWriteCard, GetICReplaceWriteCardInfo, RollBacICkReplaceWriteCardInfo } from "@/api/userSetting";
+import { promptInfoFun } from "@/utils/index"
+export function getMarkCard(param,obj){
+  GetICWriteCard(param).then(res => {//写卡
+    if (res.code == 0) {
+      try {
+        let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
+        if (ress != undefined && ress != "") {
+          let dataJosn = JSON.parse(ress)//cs 制卡返回数据
+          if(dataJosn.Result){
+            promptInfoFun(obj, 2, '制卡成功');
+          } else {
+            RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
+            promptInfoFun(obj, 1, dataJosn.ErrMsg);
+          }
+        } else {
+          promptInfoFun(obj, 1, "读取错误!");
+        }
+      } catch (e) {
+        promptInfoFun(obj, 1, '请在CS端操作');
+      }
+    } else {
+      promptInfoFun(obj, 1, res.message);
+    }
+  });
+}
+/**
+ * 用户补卡
+ * param customerId 用户ID
+ * isCard 是否已刷卡
+ * obj vue 实列
+ * */
+export function getPatchCard(param,obj){
+  GetICReplaceWriteCardInfo(param).then(res => {//补卡
+    if (res.code == 0) {
+      try {
+        let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
+        if (ress != undefined && ress != "") {
+          let dataJosn = JSON.parse(ress)//cs 制卡返回数据
+          if(dataJosn.Result){
+            promptInfoFun(obj, 2, '补卡成功');
+          } else {
+            RollBacICkReplaceWriteCardInfo({businessId:res.data.BusinessId}).then(res => {})
+            promptInfoFun(obj, 1, dataJosn.ErrMsg);
+          }
+        } else {
+          promptInfoFun(obj, 1, '读取错误');
+        }
+      } catch (err) {
+        promptInfoFun(obj, 1, '请在CS端操作');
+      }
+    } else {
+      promptInfoFun(obj, 1, res.message);
+    }
+  });
+}
+
 // 获取筛选条件，区域树形 --再次赋值Id,Name 面包屑getText需要用
 function mapTree(org) {
   const haveChildren =

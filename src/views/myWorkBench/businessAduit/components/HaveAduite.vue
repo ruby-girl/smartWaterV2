@@ -4,12 +4,12 @@
       <have-selected
         ref="MyAduite"
         :searchWidth="searchWidth"
-        :selectHead="selectHead"
+        :query="query"
         @getText="getText"
       />
     </div>
     <div class="contanier">
-      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud"/>
       <div class="main-padding-20-y" id="table">
         <el-table
           :key="tableKey"
@@ -20,11 +20,10 @@
           :height="tableHeight"
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
-          @sort-change="sortChanges"
-        >
+          @sort-change="sortChanges">
           <el-table-column fixed="left" label="序号" width="60" align="center">
             <template slot-scope="scope">
-              <span>{{(selectHead.page - 1) *selectHead.limit+ scope.$index + 1}}</span>
+              <span>{{(query.page - 1) *query.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
 
@@ -66,190 +65,165 @@
           </el-table-column>
           <el-table-column type="expand" fixed="right" width="1">
             <template slot-scope="props">
-              <step ref="step" />
+              <step ref="step"/>
             </template>
           </el-table-column>
         </el-table>
         <pagination
           v-show="total>0"
           :total="total"
-          :page.sync="selectHead.page"
-          :limit.sync="selectHead.limit"
-          @pagination="seachAccountOrder('0')"
+          :page.sync="query.page"
+          :limit.sync="query.limit"
+          @pagination="searchTableList()"
         />
       </div>
     </div>
   </div>
 </template>
 <script>
-import HaveSelected from "./selecteds/HaveSelected";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import SearchTips from "@/components/SearchTips/index";
-import Pagination from "@/components/Pagination";
-import Step from "./Step"; //流程图
-export default {
-  name: "HaveAduite",
-  components: { HaveSelected, SearchTips, Pagination, Step },
-  data() {
-    return {
-      searchWidth: null, //
-      selectHead: {
-        page: 1,
-        limit: 10,
-        applyNo: "", //业务编号
-        applyType: "", //申请类型
-        creater: -1, //创建人
-        timevalue: [], //时间
-        timevalue1: [], //时间
-        tableId: "0000032",
-        SA_WaterFactory_Id: "-1" //水厂
-      }, //查询对象
-      checksData: [],
-      tableKey: 0,
-      tableData: [
-        {
-          reaId: "17ce4b89-3938-444b-beec-9683a4e010e2",
-          AreaName: "根级区域",
-          CustomerName: "夏侯渊",
-          CustomerNo: "00000368",
-          EndDate: "2021-12-09 23:59:59",
-          FS_EndDate: null,
-          FS_StartDate: null,
-          InsuredState: 1501,
-          InsuredStateName: "生效中",
-          NameCode: "xhy",
-          OpenAccountDate: "2019-12-11 16:02:48",
-          OperEmpName: "系统",
-          OperTime: "2020-12-08 16:05:09",
-          RecheckState: 3501,
-          RecheckStateName: "/",
-          SA_InsuredMessage_Id: "35fd7450-c996-45e8-9e22-e84448409515",
-          StartDate: "2020-12-10 00:00:00",
-          UseWaterTypeName: "居民用水1",
-          WaterFactoryName: "王强水厂",
-          WaterMeterTypeId: 1103,
-          WaterMeterTypeName: "远传表水表"
-        },
-        {
-          reaId: "17ce4b89-3938-444b-beec-9683a4e010e2",
-          AreaName: "根级区域",
-          CustomerName: "夏侯渊",
-          CustomerNo: "00000368",
-          EndDate: "2021-12-09 23:59:59",
-          FS_EndDate: null,
-          FS_StartDate: null,
-          InsuredState: 1501,
-          InsuredStateName: "生效中",
-          NameCode: "xhy",
-          OpenAccountDate: "2019-12-11 16:02:48",
-          OperEmpName: "系统",
-          OperTime: "2020-12-08 16:05:09",
-          RecheckState: 3501,
-          RecheckStateName: "/",
-          SA_InsuredMessage_Id: "35fd7450-c996-45e8-9e22-e84448409515",
-          StartDate: "2020-12-10 00:00:00",
-          UseWaterTypeName: "居民用水1",
-          WaterFactoryName: "王强水厂",
-          WaterMeterTypeId: 1103,
-          WaterMeterTypeName: "远传表水表"
+  import {GetBusinessFlowRecordByCurrentUser, GetAuditDetail} from '@/api/workBenck'
+  import {promptInfoFun} from "@/utils/index"
+  import HaveSelected from "./selecteds/HaveSelected";
+  import {delTips, getText, pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
+  import SearchTips from "@/components/SearchTips/index";
+  import Pagination from "@/components/Pagination";
+  import Step from "./Step"; //流程图
+  export default {
+    name: "HaveAduite",
+    components: {HaveSelected, SearchTips, Pagination, Step},
+    data() {
+      return {
+        searchWidth: null,
+        query: {
+          ProcessState: 0,
+          VerifyState: 0,
+          WaterFactoryId: "",
+          ProcessMenuCode: 0,
+          FlowNo: "",
+          createUserId: "",
+          createStartTime: "",
+          createEndTime: "",
+          editUserId: "",
+          editStartTime: "",
+          editEndTime: "",
+          limit: 0,
+          page: 0,
+          sort: "",
+          filed: "",
+          tableId: "0000036"
+        }, //查询对象
+        checksData: [],
+        tableKey: 0,
+        tableData: [],
+        tableHeight: null,
+        total: 0,
+        tipsData: [], //面包屑数据
+        tipsDataCopy: [], //表单变化的值
+        isBorde: true,
+        orderData: {} //搜索存储对象
+      };
+    },
+    computed: {
+      tableHeadData: function () {
+        //获取表头信息
+        const arrayHead = [];
+        const data = this.checksData;
+        for (let i = 0; i < data.length; i++) {
+          // 过滤选中列
+          if (data[i].IsCheck) {
+            arrayHead.push(data[i]);
+          }
         }
-      ],
-      tableHeight: null,
-      total: 0,
-      tipsData: [], //面包屑数据
-      tipsDataCopy: [], //表单变化的值
-      isBorde: true,
-      orderData: {} //搜索存储对象
-    };
-  },
-  computed: {
-    tableHeadData: function() {
-      //获取表头信息
-      const arrayHead = [];
-      const data = this.checksData;
-      for (let i = 0; i < data.length; i++) {
-        // 过滤选中列
-        if (data[i].IsCheck) {
-          arrayHead.push(data[i]);
+        return arrayHead;
+      }
+    },
+    mounted() {
+      this.tableHeight =
+        document.getElementsByClassName("el-tabs")[0].offsetHeight -
+        document.getElementById("table").offsetTop -
+        98;
+      this.$refs.searchTips.$refs.myChild.GetTable(this.query.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+      this.searchWidth = this.$refs.fromHeight.clientWidth;
+    },
+    methods: {
+      //删除面包屑
+      delTips(val) {
+        if (val == "timevalue") {
+          //当返回的model 为时间数组  置空 时间
+          this.query.StartTime = "";
+          this.query.StartTime = "";
         }
+        this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query");
+        this.searchTableList();
+      },
+      getText(val, model, arr, name) {
+        let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+        this.tipsDataCopy.push(obj);
+      },
+      sortChanges({column, prop, order}) {
+        //排序
+        this.query.page = 1;
+        this.query.filed = prop;
+        this.query.sort =
+          order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+        this.searchTableList();
+      },
+      //查询
+      searchTableList() {//我已经审核
+        GetBusinessFlowRecordByCurrentUser(this.query).then(res => {
+          console.log(res)
+          console.log("======================")
+          if (res.code ==0 ) {
+            this.total = res.count;
+            this.tableData = res.data;
+            this.tipsData = pushItem(this.tipsDataCopy)
+          } else {
+            promptInfoFun(this, 1, res.message);
+          }
+        })
+      },
+      excelInssud() {
+        console.log("导出");
+      },
+      //详情
+      detaile() {
+      },
+      //审核环节
+      toogleExpand(row) {
+        const _this = this;
+        let $table = _this.$refs.table;
+        _this.tableData.map((item, index) => {
+          $table.toggleRowExpansion(item, false);
+        });
+        if (this.rotate == row.reaId) {
+          $table.toggleRowExpansion(row, false);
+          this.rotate = "";
+          return false;
+        }
+        this.rotate = row.reaId;
+        $table.toggleRowExpansion(row);
       }
-      return arrayHead;
     }
-  },
-  mounted() {
-    this.tableHeight =
-      document.getElementsByClassName("el-tabs")[0].offsetHeight -
-      document.getElementById("table").offsetTop -
-      98;
-    this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
-    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
-    this.searchWidth = this.$refs.fromHeight.clientWidth;
-  },
-  methods: {
-    //删除面包屑
-    delTips(val) {
-      if (val == "timevalue") {
-        //当返回的model 为时间数组  置空 时间
-        this.selectHead.StartTime = "";
-        this.selectHead.StartTime = "";
-      }
-      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
-      this.searchTableList();
-    },
-    getText(val, model, arr, name) {
-      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
-      this.tipsDataCopy.push(obj);
-    },
-    sortChanges({ column, prop, order }) {
-      //排序
-      this.selectHead.page = 1;
-      this.selectHead.filed = prop;
-      this.selectHead.sort =
-        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
-      this.searchTableList();
-    },
-    //查询
-    searchTableList() {
-      this.tipsData = pushItem(this.tipsDataCopy);
-    },
-    excelInssud() {
-      console.log("导出");
-    },
-    //详情
-    detaile() {},
-    //审核环节
-    toogleExpand(row) {
-      const _this = this;
-      let $table = _this.$refs.table;
-      _this.tableData.map((item, index) => {
-        $table.toggleRowExpansion(item, false);
-      });
-      if (this.rotate == row.reaId) {
-        $table.toggleRowExpansion(row, false);
-        this.rotate = "";
-        return false;
-      }
-      this.rotate = row.reaId;
-      $table.toggleRowExpansion(row);
-    }
-  }
-};
+  };
 </script>
 <style lang="scss" scoped>
-.box_sub {
-  .contanier {
-    padding: 14px;
-    padding-top: 0;
+  .box_sub {
+    .contanier {
+      padding: 14px;
+      padding-top: 0;
+    }
+
+    .icon {
+      color: #00b2a1;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .detaile {
+      font-size: 16px;
+      color: #b59200;
+      padding-right: 18px;
+    }
   }
-  .icon {
-    color: #00b2a1;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .detaile {
-    font-size: 16px;
-    color: #b59200;
-    padding-right: 18px;
-  }
-}
 </style>

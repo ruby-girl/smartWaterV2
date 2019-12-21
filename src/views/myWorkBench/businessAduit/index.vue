@@ -50,7 +50,7 @@
     data() {
       return {
         typeCheck: "1",
-        index: 7,
+        index: 0,
         componentsArr: [
           "EditAccount",
           "meterAccount",

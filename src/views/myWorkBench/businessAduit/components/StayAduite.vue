@@ -1,7 +1,7 @@
 <template>
   <div class="box_sub">
     <div ref="fromHeight">
-      <stay-selected :searchWidth="searchWidth" :selectHead="selectHead" @getText="getText" />
+      <stay-selected :searchWidth="searchWidth" :query="query" @getText="getText" />
     </div>
     <div class="contanier">
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
@@ -19,7 +19,7 @@
         >
           <el-table-column fixed="left" label="序号" width="60" align="center">
             <template slot-scope="scope">
-              <span>{{(selectHead.page - 1) *selectHead.limit+ scope.$index + 1}}</span>
+              <span>{{(query.page - 1) *query.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
 
@@ -68,86 +68,49 @@
         <pagination
           v-show="total>0"
           :total="total"
-          :page.sync="selectHead.page"
-          :limit.sync="selectHead.limit"
-          @pagination="seachAccountOrder('0')"
+          :page.sync="query.page"
+          :limit.sync="query.limit"
+          @pagination="searchTableList()"
         />
       </div>
     </div>
   </div>
 </template>
 <script>
-import StaySelected from "./selecteds/StaySelected";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import SearchTips from "@/components/SearchTips/index";
-import Pagination from "@/components/Pagination";
-import Step from "./Step"; //流程图
+  import {GetInfosByToBeAudited, GetAuditDetail} from '@/api/workBenck'
+  import {promptInfoFun} from "@/utils/index"
+  import StaySelected from "./selecteds/StaySelected";
+  import {delTips, getText, pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
+  import SearchTips from "@/components/SearchTips/index";
+  import Pagination from "@/components/Pagination";
+  import Step from "./Step"; //流程图
 export default {
   name: "StayAduite",
   components: { StaySelected, SearchTips, Pagination, Step },
   data() {
     return {
-      searchWidth: null, //
-      selectHead: {
-        page: 1,
-        limit: 10,
-        applyNo: "", //业务编号
-        applyType: "", //申请类型
-        creater: -1, //创建人
-        timevalue: [], //时间
-        tableId: "0000032",
-        SA_WaterFactory_Id: "-1" //水厂
+      searchWidth: null,
+      query: {
+        ProcessState: 0,
+        VerifyState: 0,
+        WaterFactoryId: "",
+        ProcessMenuCode: 0,
+        FlowNo: "",
+        createUserId: "",
+        createStartTime: "",
+        createEndTime: "",
+        editUserId: "",
+        editStartTime: "",
+        editEndTime: "",
+        limit: 0,
+        page: 0,
+        sort: "",
+        filed: "",
+        tableId: "0000035"
       }, //查询对象
       checksData: [],
       tableKey: 0,
-      tableData: [
-        {
-          reaId: "17ce4b89-3938-444b-beec-9683a4e010e2",
-          AreaName: "根级区域",
-          CustomerName: "夏侯渊",
-          CustomerNo: "00000368",
-          EndDate: "2021-12-09 23:59:59",
-          FS_EndDate: null,
-          FS_StartDate: null,
-          InsuredState: 1501,
-          InsuredStateName: "生效中",
-          NameCode: "xhy",
-          OpenAccountDate: "2019-12-11 16:02:48",
-          OperEmpName: "系统",
-          OperTime: "2020-12-08 16:05:09",
-          RecheckState: 3501,
-          RecheckStateName: "/",
-          SA_InsuredMessage_Id: "35fd7450-c996-45e8-9e22-e84448409515",
-          StartDate: "2020-12-10 00:00:00",
-          UseWaterTypeName: "居民用水1",
-          WaterFactoryName: "王强水厂",
-          WaterMeterTypeId: 1103,
-          WaterMeterTypeName: "远传表水表"
-        },
-        {
-          reaId: "17ce4b89-3938-444b-beec-9683a4e010e2",
-          AreaName: "根级区域",
-          CustomerName: "夏侯渊",
-          CustomerNo: "00000368",
-          EndDate: "2021-12-09 23:59:59",
-          FS_EndDate: null,
-          FS_StartDate: null,
-          InsuredState: 1501,
-          InsuredStateName: "生效中",
-          NameCode: "xhy",
-          OpenAccountDate: "2019-12-11 16:02:48",
-          OperEmpName: "系统",
-          OperTime: "2020-12-08 16:05:09",
-          RecheckState: 3501,
-          RecheckStateName: "/",
-          SA_InsuredMessage_Id: "35fd7450-c996-45e8-9e22-e84448409515",
-          StartDate: "2020-12-10 00:00:00",
-          UseWaterTypeName: "居民用水1",
-          WaterFactoryName: "王强水厂",
-          WaterMeterTypeId: 1103,
-          WaterMeterTypeName: "远传表水表"
-        }
-      ],
+      tableData: [],
       tableHeight: null,
       total: 0,
       tipsData: [], //面包屑数据
@@ -174,7 +137,7 @@ export default {
       document.getElementsByClassName("el-tabs")[0].offsetHeight -
       document.getElementById("table").offsetTop -
       98;
-    this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
+    this.$refs.searchTips.$refs.myChild.GetTable(this.query.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.searchWidth = this.$refs.fromHeight.clientWidth;
   },
@@ -183,10 +146,10 @@ export default {
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
-        this.selectHead.StartTime = "";
-        this.selectHead.StartTime = "";
+        this.query.StartTime = "";
+        this.query.StartTime = "";
       }
-      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query");
       this.searchTableList();
     },
     getText(val, model, arr, name) {
@@ -195,15 +158,25 @@ export default {
     },
     sortChanges({ column, prop, order }) {
       //排序
-      this.selectHead.page = 1;
-      this.selectHead.filed = prop;
-      this.selectHead.sort =
+      this.query.page = 1;
+      this.query.filed = prop;
+      this.query.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.searchTableList();
     },
     //查询
     searchTableList() {
-      this.tipsData = pushItem(this.tipsDataCopy);
+      GetInfosByToBeAudited(this.query).then(res => {
+        console.log(res)
+        console.log("======================")
+        if (res.code ==0 ) {
+          this.total = res.count;
+          this.tableData = res.data;
+          this.tipsData = pushItem(this.tipsDataCopy)
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      })
     },
     excelInssud() {
       console.log("导出");
