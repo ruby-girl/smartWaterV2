@@ -1,5 +1,5 @@
 <template>
-  <div class="section-container secur-setting">
+  <div class="section-container my-aduite">
     <el-tabs v-model="typeCheck" @tab-click="changeTab">
       <el-tab-pane label="我提交的" name="1">
         <sub-mitted v-if="mit"/>
@@ -68,12 +68,9 @@
   };
 </script>
 <style lang="scss" scoped>
-  /deep/ .el-tabs__nav{
-    padding-left: 14px!important;
-  }
-  /deep/ .el-tabs__active-bar{
-    margin-left: 14px;
-  }
+.my-aduite{
+  padding-top: 0;
+}
 </style>
 
 

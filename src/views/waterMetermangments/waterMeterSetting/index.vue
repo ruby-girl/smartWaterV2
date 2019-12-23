@@ -2,11 +2,7 @@
   <div class="section-container water-setting">
     <el-tabs v-model="typeCheck" @tab-click="tabClick">
       <el-tab-pane label="机械水表" name="1">
-        <mechanical-water
-          :waterMeterList="waterMeterList"
-          :openStatus="openStatus"
-          v-if="JXWater"
-        />
+        <mechanical-water :waterMeterList="waterMeterList" :openStatus="openStatus" v-if="JXWater" />
       </el-tab-pane>
       <el-tab-pane label="IC卡表" name="2">
         <ic-water :waterMeterList="waterMeterList" :openStatus="openStatus" v-if="ICWater" />
@@ -38,7 +34,7 @@ export default {
       JXWater: true,
       ICWater: false,
       YCWater: false,
-      WLWWater: false,
+      WLWWater: false
     };
   },
   created() {
@@ -107,3 +103,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.water-setting {
+  padding-top: 0;
+}
+</style>

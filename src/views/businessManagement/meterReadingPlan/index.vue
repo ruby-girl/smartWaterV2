@@ -20,7 +20,7 @@
             class="cl-search cl-reset"
             round
             @click="addPlan"
-            style="margin:6px 0;border-color:#00B2A1;color:#00B2A1"
+            style="margin:7px 0;border-color:#00B2A1;color:#00B2A1"
           >
             <i class="icon iconfont">&#xe689;</i>添加
           </el-button>

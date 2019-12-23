@@ -68,13 +68,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .secur-setting {
+  padding-top: 0;
   .el-tabs {
     background: #fff;
     height: 100%;
     /deep/.el-tabs__header {
       background: #eee;
       margin: 0;
-      padding-left: 14px;
     }
     // /deep/.el-tabs__content {
     //   padding: 14px 12px;
