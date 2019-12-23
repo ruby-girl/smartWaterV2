@@ -108,7 +108,7 @@
             </el-form-item>
             <el-form-item label>
               <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
-                <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+                <i class="icon iconfont iconjianqu3" @click="toggClick"></i>
               </span>
               <el-button round type="primary" size="mini" @click="searchYCWaterList">
                 <i class="iconfont iconsousuo"></i>搜索
@@ -355,15 +355,7 @@ export default {
   watch: {
     screenWidth: {
       handler(val, oldVal) {
-        this.show1 = this.showLabel(1, val);
-        this.show2 = this.showLabel(2, val);
-        this.show3 = this.showLabel(3, val);
-        this.show4 = this.showLabel(4, val);
-        if (Math.floor((this.screenWidth - 180) / 280) < 4) {
-          this.showBtn = true;
-        } else {
-          this.showBtn = false;
-        }
+        this.isShowSelect(val);
       },
       immediate: true
     },
@@ -449,6 +441,17 @@ export default {
       this.tipsDataCopy.push(obj);
       if (obj.name && model == "CollectorNo") {
         this.searchYCWaterList();
+      }
+    },
+    isShowSelect(val) {
+      this.show1 = this.showLabel(1, val);
+      this.show2 = this.showLabel(2, val);
+      this.show3 = this.showLabel(3, val);
+      this.show4 = this.showLabel(4, val);
+      if (Math.floor((this.screenWidth - 180) / 280) < 4) {
+        this.showBtn = true;
+      } else {
+        this.showBtn = false;
       }
     },
     closeAccount() {
@@ -655,6 +658,10 @@ export default {
           });
         }
       });
+    },
+    toggClick() {
+      this.isShow = !this.isShow;
+      this.isShowSelect(this.screenWidth);
     }
   }
 };
