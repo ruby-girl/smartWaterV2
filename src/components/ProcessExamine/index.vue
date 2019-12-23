@@ -1,6 +1,20 @@
 <template>
   <ul class="process-examine-container">
-    <li>
+
+
+    <li v-for="(item,index) in auditLink" :key="index"
+        :class="`${item.RecordState==0 ? '':''} ${item.RecordState==2&&item.VerifyState==true ? 'on':''} ${item.RecordState==2&&item.VerifyState==false ? 'fail':''}` ">
+      <i class="icon iconfont iconyishenhe point"></i>
+      <h3 v-if="item.RecordState==0">待审核</h3>
+      <h3 v-else-if="item.RecordState==2&&item.VerifyState==true">已审核</h3>
+      <h3 v-else-if="item.RecordState==2&&item.VerifyState==false">审核失败</h3>
+      <p>{{ item.ExecUserName }}审核</p>
+      <span>{{ item.EditTime }}</span>
+    </li>
+
+
+
+   <!-- <li>
       <i class="icon iconfont iconyishenhe point"></i>
       <h3>待审核</h3>
       <p>待财务部、人事部审核</p>
@@ -24,7 +38,7 @@
       <p>待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核
       </p>
       <span>2019-11-05 10:17:08</span>
-    </li>
+    </li>-->
   </ul>
 </template>
 
@@ -42,8 +56,8 @@
             SYS_BusiFlow_Id: '111' ,
             SYS_Process_Id: '流程配置Id' ,
             SYS_Process_HashCode: '流程配置哈希值' ,
-            VerifyState: false ,
-            RecordState: 0,//记录状态 0未开始 1进行中 2已完成 ,
+            VerifyState: true ,//审核状态
+            RecordState: 2,//记录状态 0未开始 1进行中 2已完成 ,
             SYS_ProcessNo_Id: '111' ,
             FlowName: '流程名称' ,
             ExecUserId: '1' ,

@@ -164,7 +164,7 @@
         ProcessOperation(query).then(res => {
           if (res.code ==0 ) {
             promptInfoFun(this, 2, res.message);
-            this.dialogVisible = true
+            this.dialogVisible = false
           } else {
             promptInfoFun(this, 1, res.message);
           }

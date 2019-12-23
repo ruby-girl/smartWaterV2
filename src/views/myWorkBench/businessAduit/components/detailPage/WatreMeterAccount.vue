@@ -15,19 +15,19 @@
                <li class="clearfix">
                  <p>
                    <label>申请类型</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ detailData.Info.ProcessName }}</span>
                  </p>
                  <p>
                    <label>申请时间</label>
-                   <span>1988-12-01 12:00:00</span>
+                   <span>{{ detailData.Info.CreateTime }}</span>
                  </p>
                  <p>
                    <label>创建人</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ detailData.Info.CreateUserName}}</span>
                  </p>
                  <p>
                    <label>所属水厂</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ detailData.Info.WaterFactoryName}}</span>
                  </p>
                </li>
              </ul>
@@ -142,7 +142,8 @@
     components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason },
     data() {
       return {
-        auditLink:[],
+        detailData:[],//详情信息
+        auditLink:[],//右侧审核流程
         dialogVisible: false,
         files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
         index:0,
@@ -184,7 +185,7 @@
         ProcessOperation(query).then(res => {
           if (res.code ==0 ) {
             promptInfoFun(this, 2, res.message);
-            this.dialogVisible = true
+            this.dialogVisible = false
           } else {
             promptInfoFun(this, 1, res.message);
           }

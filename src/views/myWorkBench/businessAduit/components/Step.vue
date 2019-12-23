@@ -22,7 +22,7 @@
    </el-steps>-->
 </template>
 <script>
-  import imgIcon from "@/assets/imgs/pass.png";
+  import imgIcon from "@/assets/imgs/pass.png"
 
   export default {
     name: "Step",
@@ -83,7 +83,7 @@
         })
       }
     }
-  };
+  }
 </script>
 <style lang="scss">
   .classOne .el-step__description {

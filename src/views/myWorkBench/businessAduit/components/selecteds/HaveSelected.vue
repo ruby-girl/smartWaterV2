@@ -30,13 +30,11 @@
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
           @change="getText(query.ProcessMenuCode ,'ProcessMenuCode',applyArray,'申请类型')">
-          <el-option label="全部" :value="-1" />
           <el-option
             v-for="item in applyArray"
             :key="item.Id"
-            :label="item.Name"
-            :value="Number(item.Id)"
-          />
+            :label="item.Id=='2900'? '全部':item.Name"
+            :value="Number(item.Id)" />
         </el-select>
       </el-form-item>
       <el-form-item label="业务编号" v-show="show2||isShow" prop="applyNo">

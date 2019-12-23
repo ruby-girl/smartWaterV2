@@ -214,29 +214,45 @@ export default {
         case 2901://用户开户
           this.index = 1
           break
-        case 2902://用户销户
-          this.index = 4
-          break
-        case 2903://用户过户
-          this.index = 3
-          break
-        case 2904://用户变更用水性质
-          this.index = 5
-          break
-        case 2905://低保户申请
+        case 2902://低保户申请
           this.index = 2
           break
-        case 2906://水费减免
-          this.index = 1111
+        case 2903://编辑开户
+          this.index = 0
           break
-        case 2907://违约金减免
+        case 2904://用户过户
+          this.index = 3
+          break
+        case 2905://用户销户
+          this.index = 4
+          break
+        case 2906://低保户复审
+          this.index = 2
+          break
+        case 2907://用户变更用水性质
+          this.index = 5
+          break
+        case 2908://添加用水性质
+          this.index = 6
+          break
+        case 2911://违约金减免
           this.index = 7
           break
-        //缺少编辑开户申请 和添加用书性质变更
       }
       this.$refs.detailChild.ifDetail = true //true 为详情 false为编辑
       this.$refs.detailChild.curObj = row
       this.$refs.detailChild.dialogVisible = true
+      console.log(row)
+      GetAuditDetail({Id:row.Id,BusinessId:row.BusinessId,Code:row.ProcessMenuCode}).then(res => {//详情信息
+        if (res.code ==0 ) {
+          console.log(res.data)
+          console.log("-------------------------------")
+          this.$refs.detailChild.detailData = res.data
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      })
+
       return
       GetAuditRecord({Id:row.Id}).then(res => {//详情右侧审核流程
         if (res.code ==0 ) {
