@@ -387,7 +387,14 @@ export default {
     },
     exportList() {
       //导出
-      exportPlanList(this.selectHead).then(res => {
+      if(Object.keys(this.orderData).length==0){
+         this.$message({
+          message: "请查询之后再操作",
+          type: "warning"
+        });
+         return false;
+      }
+      exportPlanList(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },

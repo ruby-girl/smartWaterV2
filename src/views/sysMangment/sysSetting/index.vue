@@ -1,5 +1,7 @@
 <template>
-  <h1>短信设置</h1>
+  <div class="section-container">
+    
+  </div>
 </template>
 <script>
 export default {

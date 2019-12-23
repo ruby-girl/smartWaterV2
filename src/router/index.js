@@ -99,25 +99,29 @@ export const asyncRoutes = [
       }
     ]
   },
-
   {
     path: '/sysMangment',
     redirect: '/sysMangment/page',
+    alwaysShow: true, // will always show the root menu
     component: Layout,
+    name: "sysMangment",
     meta: {
       title: '短信管理',
-      icon: 'iconfont iconcaidan-zuzhiguanli',
+      icon: 'iconfont icongongzuotai',
       roles: ['1']
     },
-    children: [
-      {
-        path: 'sysSetting',
-        name: 'sysSetting',
-        component: () => import('@/views/sysMangment/sysSetting/index'),
-        meta: { title: '短信设置', roles: ['1'] }
-      },
+    children: [{
+      path: 'sysSetting',
+      component: () => import('@/views/sysMangment/sysSetting/index'),
+      name: 'sysSetting',
+      meta: {
+        title: '短信设置',
+        roles: ['1']
+      }
+    }
     ]
   },
+
   {
     path: '/organizationManage',
     redirect: '/organizationManage/company',

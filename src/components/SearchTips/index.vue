@@ -53,7 +53,7 @@ export default {
         this.widthData1 = null;
         this.showBtn = false;
       } else {
-        this.widthData1 = length * 150;
+        this.widthData1 = length * 150+50;
         if (this.widthData1 > parseInt(this.widthData)) {
           this.showBtn = true;
         }
