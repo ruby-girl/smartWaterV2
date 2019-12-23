@@ -100,7 +100,24 @@ export const asyncRoutes = [
     ]
   },
 
-
+  {
+    path: '/sysMangment',
+    redirect: '/sysMangment/page',
+    component: Layout,
+    meta: {
+      title: '短信管理',
+      icon: 'iconfont iconcaidan-zuzhiguanli',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: 'sysSetting',
+        name: 'sysSetting',
+        component: () => import('@/views/sysMangment/sysSetting/index'),
+        meta: { title: '短信设置', roles: ['1'] }
+      },
+    ]
+  },
   {
     path: '/organizationManage',
     redirect: '/organizationManage/company',
@@ -382,7 +399,7 @@ export const asyncRoutes = [
         roles: ['1']
       }
     }
-  ]
+    ]
   },
   {
     path: '/systemConfig',
