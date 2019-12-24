@@ -212,6 +212,11 @@ export default {
           let conentHeight = that.$refs.updateHeight.offsetHeight;
           if (asideHeight < conentHeight) {
             that.$refs.update.showInfo = false;
+            that.$refs.update.showSelect = true;
+
+          }else {
+              that.$refs.update.showInfo = true;
+            that.$refs.update.showSelect = false;
           }
         }, 200);
       } else {

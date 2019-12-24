@@ -6,14 +6,8 @@
       </div>
       <div class="contanier">
         <div class="display-flex justify-content-flex-justify">
-          <el-button
-            size="mini"
-            class="cl-search cl-reset"
-            round
-            @click="addPlan"
-            style="margin:7px 0;border-color:#00B2A1;color:#00B2A1"
-          >
-            <i class="icon iconfont">&#xe689;</i>添加
+          <el-button size="mini" class="fl borderClass" round @click="addPlan">
+            <i class="icon iconfont">&#xe6a0;</i>删除
           </el-button>
         </div>
         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
@@ -121,9 +115,6 @@
           />
         </div>
       </div>
-      <Add-ReadingPlan
-        :add-show.sync="addDialogFormVisible"
-      />
     </div>
   </div>
 </template>
@@ -132,13 +123,11 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import AddReadingPlan from "./components/AddReadingPlan";
 export default {
-  name: "sysSetting",
+  name: "smsStaues",
   components: {
     SelectHead,
     Pagination,
-    AddReadingPlan,
     SearchTips
   },
   data() {
@@ -242,7 +231,7 @@ export default {
   }
 };
 </script>
-<style  scoped>
+<style lang="scss"  scoped>
 .section-full-container {
   padding: 0;
 }
@@ -282,5 +271,22 @@ export default {
   position: absolute;
   right: 0px;
   overflow: hidden;
+}
+.borderClass {
+  border-color: #6da783;
+  color: #6da783;
+  font-size: 14px;
+  .icon {
+    font-size: 12px;
+    padding-right: 4px;
+  }
+}
+.borderClass:hover{
+    color: #8ECCA5;
+    border: solid 1px #8ECCA5;
+    background: #F7FCF9;
+}
+.display-flex{
+    margin: 7px 0;
 }
 </style>

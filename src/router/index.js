@@ -118,7 +118,25 @@ export const asyncRoutes = [
         title: '短信设置',
         roles: ['1']
       }
-    }
+    },
+    {
+      path: 'smsStaues',
+      component: () => import('@/views/sysMangment/smsStaues/index'),
+      name: 'smsStaues',
+      meta: {
+        title: '短信状态查询',
+        roles: ['1']
+      }
+    },
+    {
+      path: 'sendManua',
+      component: () => import('@/views/sysMangment/sendManua/index'),
+      name: 'sendManua',
+      meta: {
+        title: '手动发送短信',
+        roles: ['1']
+      }
+    },
     ]
   },
 

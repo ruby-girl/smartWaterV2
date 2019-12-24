@@ -128,7 +128,7 @@
                   <i
                     class="icon iconfont iconStyle operation4"
                     @click="delMeterReadingPlan(scope.row.Id)"
-                  >&#xe653;</i>
+                  >&#xe6a0;</i>
                 </el-tooltip>
                 <!-- <a
                   v-show="scope.row.IsCanGenerateOrder"
@@ -281,10 +281,14 @@ export default {
   methods: {
     //删除面包屑
     delTips(val) {
-      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
       if (val == "warterMeterPlanDate") {
-        this.getDefaulDate();
+        this.$message({
+          message: "计划抄表日期不能为空",
+          type: "warning"
+        });
+        return false;
       }
+      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
       this.searchTableList();
       //返回的查询条件的属性
     },
@@ -387,12 +391,12 @@ export default {
     },
     exportList() {
       //导出
-      if(Object.keys(this.orderData).length==0){
-         this.$message({
+      if (Object.keys(this.orderData).length == 0) {
+        this.$message({
           message: "请查询之后再操作",
           type: "warning"
         });
-         return false;
+        return false;
       }
       exportPlanList(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;

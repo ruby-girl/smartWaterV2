@@ -27,7 +27,7 @@
         </ul>
         <p class="boxMsg" v-if="showMsg">暂无数据</p>
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
-          用户详情
+          设备详情
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
         </span>
       </el-aside>
@@ -256,7 +256,7 @@
           />
         </el-dialog>
         <span v-show="!ifShow" class="telescopic telescopic1" @click="closeAccount">
-          用户详情
+          设备详情
           <i class="iconfont iconshouqi1" style="font-size: 12px;"></i>
         </span>
       </el-main>

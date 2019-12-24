@@ -56,7 +56,7 @@
           <el-input v-model="userInfo.AreaName" disabled class="left-input"></el-input>
         </el-form-item>
       </el-form>
-      <p class="showInfo" :class="{tro:showInfo}">
+      <p class="showInfo" v-if="showSelect" :class="{tro:showInfo}">
         <i class="icon iconfont iconjianqu3" @click="showInfo=!showInfo"></i>
       </p>
     </div>
@@ -249,6 +249,7 @@ export default {
       },
       userList: [], //回车查询数据列表
       showInfo: true,
+      showSelect:false,
       UpgradeWaterNeedInfo: {
         meter2Param: {
           MeterDiameter: "", //水表口径
