@@ -25,6 +25,10 @@ export default {
       },
       immediate: true
     },
+    valueItem(v){
+      console.info('按钮',v)
+      this.$emit('update:swithValue', v)
+    }
   },
   data(){
       return {
