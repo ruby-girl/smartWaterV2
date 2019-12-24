@@ -17,6 +17,7 @@
     <div v-show="ifImg" class="cl-image-viewer">
       <div class="cl-image-viewer__mask" @click="ifImg=false"/>
       <img :src="curSrc" alt="">
+      <i class="el-icon-circle-close" @click="ifImg=false"></i>
     </div>
     <!--全屏预览图片 s-->
     <el-dialog
@@ -156,7 +157,16 @@
         transform: translate(-50%, -50%);
       }
     }
-
+    .cl-image-viewer{
+      i{
+        font-size: 40px;
+        color: #ddd;
+        cursor: pointer;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+      }
+    }
     .cl-image-viewer__mask {
       position: absolute;
       width: 100%;

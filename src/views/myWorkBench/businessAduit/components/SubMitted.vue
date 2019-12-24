@@ -210,50 +210,52 @@ export default {
     },
     //详情
     detaile(row) {
-      switch (row.ProcessMenuCode) {
-        case 2901://用户开户
-          this.index = 1
-          break
-        case 2902://低保户申请
-          this.index = 2
-          break
-        case 2903://编辑开户
-          this.index = 0
-          break
-        case 2904://用户过户
-          this.index = 3
-          break
-        case 2905://用户销户
-          this.index = 4
-          break
-        case 2906://低保户复审
-          this.index = 2
-          break
-        case 2907://用户变更用水性质
-          this.index = 5
-          break
-        case 2908://添加用水性质
-          this.index = 6
-          break
-        case 2911://违约金减免
-          this.index = 7
-          break
-      }
-      this.$refs.detailChild.ifDetail = true //true 为详情 false为编辑
-      this.$refs.detailChild.curObj = row
-      this.$refs.detailChild.dialogVisible = true
-      console.log(row)
       GetAuditDetail({Id:row.Id,BusinessId:row.BusinessId,Code:row.ProcessMenuCode}).then(res => {//详情信息
         if (res.code ==0 ) {
-          console.log(res.data)
-          console.log("-------------------------------")
-          this.$refs.detailChild.detailData = res.data
+          switch (row.ProcessMenuCode) {
+            case 2901://用户开户
+              this.index = 1
+              this.getUserAccount(res.data,row)
+              break
+            case 2902://低保户申请
+              this.index = 2
+              this.$nextTick(()=>{
+                this.$refs.detailChild.ifIcWter = true//区分机械表与IC表信息
+              })
+              this.getLowAccount(res.data,row)
+              break
+            case 2903://编辑开户
+              this.index = 0
+              this.getEditUserAccount(res.data,row)
+              break
+            case 2904://用户过户
+              this.index = 3
+              this.getTransferAccount(res.data,row)
+              break
+            case 2905://用户销户
+              this.index = 4
+              break
+            case 2906://低保户复审
+              this.index = 2
+              this.$nextTick(()=>{
+                this.$refs.detailChild.ifIcWter = false//区分机械表与IC表信息
+              })
+              this.getLowAccount(res.data,row)
+              break
+            case 2907://用户变更用水性质
+              this.index = 5
+              break
+            case 2908://添加用水性质
+              this.index = 6
+              break
+            case 2911://违约金减免
+              this.index = 7
+              break
+          }
         } else {
           promptInfoFun(this, 1, res.message);
         }
       })
-
-      return
       GetAuditRecord({Id:row.Id}).then(res => {//详情右侧审核流程
         if (res.code ==0 ) {
           this.$refs.detailChild.auditLink = res.data
@@ -262,8 +264,56 @@ export default {
         }
       })
     },
-    //审核环节
-    toogleExpand(row) {
+    getUserAccount(data,row){//用户开户
+      let waterType = data.Data.bl.WaterMeterTypeId
+      this.$nextTick(()=>{
+        this.$refs.detailChild.detailData = data
+        this.$refs.detailChild.dialogVisible = true
+        this.$refs.detailChild.ifDetail = true //true 为详情 false为编辑
+        this.$refs.detailChild.curObj = row
+        switch (waterType) {
+          case 1101://机械
+            this.$refs.detailChild.index = 0
+            this.$refs.detailChild.ifIcWter = false//区分机械表与IC表信息
+            break
+          case 1102://IC
+            this.$refs.detailChild.index = 0
+            this.$refs.detailChild.ifIcWter = true//区分机械表与IC表信息
+
+            break
+          case 1103://远传
+            this.$refs.detailChild.index = 1
+            break
+          case 1104://物联
+            this.$refs.detailChild.index = 2
+            break
+        }
+      })
+    },
+    getLowAccount(data,row){//低保户申请
+      this.$nextTick(()=>{
+        this.$refs.detailChild.detailData = data
+        this.$refs.detailChild.dialogVisible = true
+        this.$refs.detailChild.curObj = row
+      })
+    },
+    getEditUserAccount(data,row){//编辑用户开户
+      console.log(data)
+      this.$nextTick(()=>{
+        this.$refs.detailChild.detailData = data
+        this.$refs.detailChild.dialogVisible = true
+        this.$refs.detailChild.curObj = row
+      })
+    },
+    getTransferAccount(data,row){//过户
+      console.log(row)
+      this.$nextTick(()=>{
+        this.$refs.detailChild.detailData = data
+        this.$refs.detailChild.dialogVisible = true
+        this.$refs.detailChild.curObj = row
+      })
+    },
+    toogleExpand(row) { //审核环节
       const _this = this;
       let $table = _this.$refs.table;
       _this.tableData.map((item, index) => {

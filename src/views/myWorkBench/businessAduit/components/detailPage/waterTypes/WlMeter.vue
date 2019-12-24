@@ -10,37 +10,29 @@
         <span>{{ waterData.WaterMeterNo }}</span>
       </p>
       <p>
-        <label>集中器号</label>
-        <span>{{ waterData.ConcentratorNo }}</span>
+        <label>报警量</label>
+        <span>{{ waterData.WaterAmountAlarm }}</span>
       </p>
       <p>
-        <label>采集器号</label>
-        <span>{{ waterData.CollectorNo }}</span>
+        <label>透支量</label>
+        <span>{{ waterData.WaterAmountOverdraft  }}</span>
       </p>
     </li>
     <li class="clearfix">
       <p>
-        <label>报警金额</label>
-        <span>{{ waterData.AlarmMoney }}</span>
-      </p>
-      <p>
-        <label>透支金额</label>
-        <span>{{ waterData.OverdraftMoney }}</span>
-      </p>
-      <p>
         <label>当前读数</label>
-        <span>{{ waterData.ReadNum }}</span>
+        <span>{{ waterData.TotalCumulateWater }}</span>
       </p>
       <p>
         <label>水表样式</label>
         <span>{{ waterData.WaterMeterStyle=='1701'?'立式水表': '水平水表' }}</span>
       </p>
-    </li>
-    <li class="clearfix one-third">
       <p>
         <label>水表口径</label>
         <span>{{ waterData.MeterDiameter }}</span>
       </p>
+    </li>
+    <li class="clearfix one-third">
       <p>
         <label>安装位置</label>
         <span>{{ waterData.InstallAddress }}</span>
@@ -60,6 +52,6 @@
 
   export default {
     props: ['waterData'],
-    name: "YcMeter"
+    name: "WlMeter"
   }
 </script>

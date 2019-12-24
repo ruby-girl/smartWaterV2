@@ -1,7 +1,5 @@
 <template>
   <ul class="process-examine-container">
-
-
     <li v-for="(item,index) in auditLink" :key="index"
         :class="`${item.RecordState==0 ? '':''} ${item.RecordState==2&&item.VerifyState==true ? 'on':''} ${item.RecordState==2&&item.VerifyState==false ? 'fail':''}` ">
       <i class="icon iconfont iconyishenhe point"></i>
@@ -11,45 +9,16 @@
       <p>{{ item.ExecUserName }}审核</p>
       <span>{{ item.EditTime }}</span>
     </li>
-
-
-
-   <!-- <li>
-      <i class="icon iconfont iconyishenhe point"></i>
-      <h3>待审核</h3>
-      <p>待财务部、人事部审核</p>
-      <span>2019-11-05 10:17:08</span>
-    </li>
-    <li class="fail">
-      <i class="icon iconfont iconshenhebutongguo point"></i>
-      <h3>审核不通过</h3>
-      <p>待财务部、人事部审核</p>
-      <span>2019-11-05 10:17:08</span>
-    </li>
-    <li class="on">
-      <i class="icon iconfont iconyishenhe point"></i>
-      <h3>已审核</h3>
-      <p>待财务部、人事部审核</p>
-      <span>2019-11-05 10:17:08</span>
-    </li>
-    <li class="on">
-      <i class="icon iconfont iconyishenhe point"></i>
-      <h3>已提交</h3>
-      <p>待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核待财务部、人事部审核
-      </p>
-      <span>2019-11-05 10:17:08</span>
-    </li>-->
   </ul>
 </template>
 
 <script>
   export default {
     name: "ProcessExamine",
-   // props:['auditLink'],
-    props:['curObj'],
+    props:['auditLink','curObj'],
     data(){
       return {
-        auditLink:[
+   /*     auditLink:[
           {
             ExecUserName: '流程执行人姓名' ,
             ProcessMenuCode: 1 ,
@@ -71,7 +40,7 @@
             EditUserId: 'sdf',
             DataState:'ad'
           }
-        ]
+        ]*/
       }
     }
   }

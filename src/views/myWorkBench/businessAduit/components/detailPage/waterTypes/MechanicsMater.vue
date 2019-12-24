@@ -3,39 +3,39 @@
     <li class="clearfix">
       <p>
         <label>水表类型</label>
-        <span>编辑开户申请</span>
+        <span>{{ waterData.WaterMeterTypeStr }}</span>
       </p>
       <p>
         <label>水表编号</label>
-        <span>1988-12-01 12:00:00</span>
+        <span>{{ waterData.WaterMeterNo }}</span>
       </p>
       <p>
         <label>水表样式</label>
-        <span>编辑开户申请</span>
+        <span>{{ waterData.WaterMeterStyle=='1701'?'立式水表': '水平水表' }}</span>
       </p>
       <p>
         <label>口径（mm）</label>
-        <span>编辑开户申请</span>
+        <span>{{ waterData.MeterDiameter }}</span>
       </p>
     </li>
     <li class="clearfix one-third">
-      <p v-show="!ifIC">
+      <p v-show="!ifIcWter">
         <label>起始读数</label>
-        <span>编辑开户申请</span>
+        <span>{{ waterData.StarReadNum }}</span>
       </p>
-      <p v-show="ifIC">
+      <p v-show="ifIcWter">
         <label>报警金额</label>
-        <span>编辑开户申请</span>
+        <span>{{ waterData.WaterYield }}</span>
       </p>
       <p>
         <label>安装位置</label>
-        <span>1988-12-01 12:00:00</span>
+        <span>{{ waterData.InstallAddress }}</span>
       </p>
     </li>
     <li class="clearfix whole">
       <p>
         <label>备注</label>
-        <span>编辑开户申请</span>
+        <span>{{ waterData.Remark }}</span>
       </p>
     </li>
   </ul>
@@ -46,9 +46,10 @@
 
   export default {
     name: "MechanicsMater",
+    props:['waterData','ifIcWter'],
     data() {
       return {
-        ifIC:false,//为true时Ic卡显示
+        //ifIC:false,//为true时Ic卡显示
       }
     }
   }

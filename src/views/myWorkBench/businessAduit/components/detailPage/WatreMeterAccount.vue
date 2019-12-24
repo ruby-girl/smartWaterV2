@@ -15,19 +15,19 @@
                <li class="clearfix">
                  <p>
                    <label>申请类型</label>
-                   <span>{{ detailData.Info.ProcessName }}</span>
+                   <span>{{ applyInfoData.ProcessName }}</span>
                  </p>
                  <p>
                    <label>申请时间</label>
-                   <span>{{ detailData.Info.CreateTime }}</span>
+                   <span>{{ applyInfoData.CreateTime }}</span>
                  </p>
                  <p>
                    <label>创建人</label>
-                   <span>{{ detailData.Info.CreateUserName}}</span>
+                   <span>{{ applyInfoData.CreateUserName}}</span>
                  </p>
                  <p>
                    <label>所属水厂</label>
-                   <span>{{ detailData.Info.WaterFactoryName}}</span>
+                   <span>{{ applyInfoData.WaterFactoryName}}</span>
                  </p>
                </li>
              </ul>
@@ -38,76 +38,76 @@
                <li class="clearfix">
                  <p>
                    <label>水厂</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ userInfoData.SA_WaterFactoryName}}</span>
                  </p>
                  <p>
                    <label>用户编号</label>
-                   <span>1988-12-01 12:00:00</span>
+                   <span>{{ userInfoData.CustomerNo}}</span>
                  </p>
                  <p>
                    <label>姓名</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ userInfoData.CustomerName}}</span>
                  </p>
                  <p>
                    <label>简码</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ userInfoData.NameCode}}</span>
                  </p>
                </li>
                <li class="clearfix">
                <p>
                  <label>人口</label>
-                 <span>编辑开户申请</span>
+                 <span>{{ userInfoData.PeopleNo}}</span>
                </p>
                <p>
                  <label>用户类型</label>
-                 <span>1988-12-01 12:00:00</span>
+                 <span>{{ userInfoData.UserTypeStr}}</span>
                </p>
                <p>
                  <label>用水性质</label>
-                 <span>编辑开户申请</span>
+                 <span>{{ userInfoData.SA_UseWaterType}}</span>
                </p>
                <p>
                  <label>表册</label>
-                 <span>编辑开户申请</span>
+                 <span>{{ userInfoData.WaterMeterTypeStr}}</span>
                </p>
              </li>
                <li class="clearfix half">
                  <p>
                    <label>电话</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ userInfoData.Tel}}</span>
                  </p>
                  <p>
                    <label>纳税人识别号</label>
-                   <span>1988-12-01 12:00:00</span>
+                   <span>{{ userInfoData.TaxpayerNumber}}</span>
                  </p>
                </li>
                <li class="clearfix half">
                  <p>
                    <label>区域</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ userInfoData.SA_UserAreaName}}</span>
                  </p>
                  <p>
                    <label>证件号</label>
-                   <span>1988-12-01 12:00:00</span>
+                   <span>{{ userInfoData.IdentityNo }}</span>
                  </p>
                </li>
                <li class="clearfix whole">
                  <p>
                    <label>地址</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ userInfoData.Address}}</span>
                  </p>
                </li>
                <li class="clearfix whole">
                  <p>
                    <label>备注</label>
-                   <span>编辑开户申请</span>
+                   <span>{{ userInfoData.Remark}}</span>
                  </p>
                </li>
              </ul>
            </div>
            <div class="detail-moduler">
              <h2><i></i>水表信息</h2>
-             <component :is="currentView"></component>
+             <component :is="currentView" ref="waterChild" :ifIcWter="ifIcWter" :waterData="waterInfoData"></component>
            </div>
            <div class="detail-moduler">
              <h2><i></i>附件信息</h2>
@@ -129,28 +129,34 @@
 
 <script>
   import "@/styles/workBench.scss";
-  import MechanicsMater from "./waterTypes/MechanicsMater"
-  import YcMeter from "./waterTypes/YcMeter"
+  import MechanicsMater from "./waterTypes/MechanicsMater"//机械 IC
+  import YcMeter from "./waterTypes/YcMeter"//物联 远传
+  import WlMeter from "./waterTypes/WlMeter"//物联 远传
   import fileList from '@/components/FileList'
   import ProcessExamine from '@/components/ProcessExamine'
   import FailReason from "./FailReason"
   import { ProcessOperation } from '@/api/workBenck'
   import { promptInfoFun } from "@/utils/index"
+  import { getFileFun } from "@/utils/projectLogic"
 
   export default {
     name: "WatreMeterAccount",
-    components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason },
+    components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason , WlMeter},
     data() {
       return {
-        detailData:[],//详情信息
+        detailData:{},//详情信息
+        userInfoData:{},//用户信息
+        waterInfoData:{},//水表信息
+        applyInfoData:{},//水表信息
         auditLink:[],//右侧审核流程
         dialogVisible: false,
-        files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
+        files:[],//附件
         index:0,
-        componentsArr:['MechanicsMater','YcMeter'],
+        componentsArr:['MechanicsMater','YcMeter','WlMeter'],
         screenWidth:'',
         ifDetail:true,
-        curObj:{}//当前点击列对象
+        curObj:{},
+        ifIcWter:true//当前点击列对象
       }
     },
     computed:{
@@ -167,6 +173,15 @@
             document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
           })
         }
+      },
+      detailData (newVal){//获取附件信息
+        if(newVal.Data.bl.saList&&newVal.Data.bl.saList.length>0)
+        this.files = getFileFun(newVal.Data.bl.saList,this)
+
+        this.userInfoData = newVal.Data.bl
+        this.waterInfoData = newVal.Data.sw
+        this.waterInfoData.WaterMeterTypeStr = newVal.Data.bl.WaterMeterTypeStr
+        this.applyInfoData = newVal.Info
       }
     },
     methods:{

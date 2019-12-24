@@ -266,3 +266,30 @@ export function threeTimeOption(time) {
   }
   return arr
 }
+
+export function getFileFun(data,object){//获取附件信息,data 详情接口返回salist 数据集合 obejec vue对象
+  let files = []
+  let fileData = data
+  let obj = {}
+  for(let i=0;i<fileData.length;i++){//区分不同文件类型设置不同展示样式
+    let thisType;
+    const Suffix = fileData[i].FileExtName.split('.')[1]
+    if (Suffix === 'docx' || Suffix === 'doc') {
+      thisType = 1
+    } else if (Suffix === 'xlsx' || Suffix === 'xls') {
+      thisType = 2
+    } else if (Suffix === 'pdf') {
+      thisType = 3
+    }else {
+      thisType = 0
+    }
+    obj = {
+      id: fileData[i].Id,
+      name:fileData[i].FileName,
+      type: thisType,
+      url: object.baseUrl + (fileData[i].RelativePath).replace("~",""),
+    }
+    files.push(obj)
+    return files
+  }
+}

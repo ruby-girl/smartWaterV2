@@ -15,19 +15,19 @@
             <li class="clearfix">
               <p>
                 <label>申请类型</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.ProcessName}}</span>
               </p>
               <p>
                 <label>申请时间</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ applyInfoData.CreateTime}}</span>
               </p>
               <p>
                 <label>创建人</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.CreateUserName}}</span>
               </p>
               <p>
                 <label>所属水厂</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.WaterFactoryName}}</span>
               </p>
             </li>
           </ul>
@@ -38,37 +38,37 @@
             <li class="clearfix">
               <p>
                 <label>用户编号</label>
-                <span>编辑开户申请</span>
+                <span>{{ customInfoData.CustomerNo }}</span>
               </p>
               <p>
                 <label>姓名</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ customInfoData.CustomerName }}</span>
               </p>
               <p>
                 <label>水厂</label>
-                <span>张三 李四</span>
+                <span>{{ customInfoData.SA_WaterFactoryName }}</span>
               </p>
               <p>
                 <label>所属区域</label>
-                <span>编辑开户申请</span>
+                <span>{{ customInfoData.SA_UserAreaName }}</span>
               </p>
             </li>
             <li class="clearfix">
               <p>
                 <label>水表类型</label>
-                <span>2</span>
+                <span>{{ customInfoData.WaterMeterTypeStr }}</span>
               </p>
               <p>
                 <label>用水性质</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ customInfoData.SA_UseWaterType }}</span>
               </p>
               <p>
                 <label>电话</label>
-                <span>编辑开户申请</span>
+                <span>{{ customInfoData.Tel }}</span>
               </p>
               <p>
-                <label>申请时间</label>
-                <span>编辑开户申请</span>
+                <label>开户时间</label>
+                <span>{{ customInfoData.OperAccountDate }}</span>
               </p>
             </li>
           </ul>
@@ -76,35 +76,35 @@
         <div class="detail-moduler">
           <h2><i></i>低保户资质</h2>
           <file-list :files="files"></file-list>
-          <ul class="detail-table-info" v-show="!review">
+          <ul class="detail-table-info" v-show="ifIcWter">
             <li class="clearfix whole">
               <p>
                 <label>生效日期</label>
-                <span>编辑开户申请</span>
+                <span>{{ newInsuredInfoData.StartDate }} - {{ newInsuredInfoData.EndDate }}</span>
               </p>
             </li>
             <li class="clearfix whole">
               <p>
                 <label>备注</label>
-                <span style="height: 65px;">编辑开户申请</span>
+                <span style="height: 65px;">{{ customInfoData.Remark }}</span>
               </p>
             </li>
           </ul>
-          <ul class="detail-table-info" v-show="review">
+          <ul class="detail-table-info" v-show="!ifIcWter">
             <li class="clearfix half">
               <p>
                 <label>生效日期</label>
-                <span style="padding-left: 20px;">编辑开户申请</span>
+                <span style="padding-left: 20px;">{{ newInsuredInfoData.StartDate }} - {{ newInsuredInfoData.EndDate }}</span>
               </p>
               <p>
-                <label>次日生效日期</label>
-                <span style="padding-left: 20px;">编辑开户申请</span>
+                <label>次年生效日期</label>
+                <span style="padding-left: 20px;">{{ newInsuredInfoData.FS_StartDate }} - {{ newInsuredInfoData.FS_EndDate }}</span>
               </p>
             </li>
             <li class="clearfix whole">
               <p>
                 <label>备注</label>
-                <span style="height: 65px;">编辑开户申请</span>
+                <span style="height: 65px;">{{ customInfoData.Remark }}</span>
               </p>
             </li>
           </ul>
@@ -132,6 +132,7 @@
   import FailReason from "./FailReason"
   import { ProcessOperation } from '@/api/workBenck'
   import { promptInfoFun } from "@/utils/index"
+  import { getFileFun } from "@/utils/projectLogic"
 
   export default {
     name: "LowInsureApply",
@@ -140,12 +141,17 @@
       return {
         auditLink:[],
         dialogVisible: false,
-        files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
+        files:[],
         index:1,
         componentsArr:['MechanicsMater','YcMeter'],
         screenWidth:'',
-        review:true,//低保户复审
-        ifDetail:true
+        ifIcWter:true,//初审复审 区分生效日期显示
+        ifDetail:true,
+        curObj:{},
+        detailData:{},
+        applyInfoData:{},//申请信息
+        customInfoData:{},
+        newInsuredInfoData:{},
       }
     },
     computed:{
@@ -162,6 +168,13 @@
             document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
           })
         }
+      },
+      detailData(newVal) {//获取附件信息
+        if (newVal.Data.SaList && newVal.Data.SaList.length > 0)
+          this.files = getFileFun(newVal.Data.SaList, this)
+        this.applyInfoData = newVal.Info
+        this.customInfoData = newVal.Data.bl
+        this.newInsuredInfoData = newVal.Data.insuredMessage
       }
     },
     methods:{
