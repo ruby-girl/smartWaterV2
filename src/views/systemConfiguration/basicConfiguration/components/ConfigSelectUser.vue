@@ -54,7 +54,7 @@
             @change="handleCheckAllChange"
             v-show="data.length>0"
           >全选</el-checkbox>
-          <el-checkbox-group v-model="checkList" @change="handlecheckListChange">
+          <el-checkbox-group v-model="checkedArr" @change="handlecheckitemChange">
             <el-checkbox v-for="(item,index) in data" :label="item.Id" :key="index">
               <div>{{item.Name}}</div>
             </el-checkbox>
@@ -115,7 +115,7 @@ export default {
       departmentOption: [],
       customerQueryTypeOption: [],
       dialogFormVisible: true,
-      checkList: ["1"],
+      checkedArr: ["1"],
       allId: [], //所有数据的ID
       data: []
     };
@@ -143,11 +143,11 @@ export default {
       if (this.checkAll) {
         this.checkAll = true;
         this.isIndeterminate = false;
-        this.checkList = Object.assign([], this.allId);
+        this.checkedArr = Object.assign([], this.allId);
       } else {
         this.checkAll = false;
         this.isIndeterminate = false;
-        this.checkList = [];
+        this.checkedArr = [];
       }
       this.setCheckAllData();
     },
@@ -172,26 +172,26 @@ export default {
       //根据选中的ID获取数据详情，用来展示选中的人员
       this.checkAllData = [];
       this.data.forEach(item => {
-        this.checkList.forEach(i => {
+        this.checkedArr.forEach(i => {
           if (item.Id == i) {
             this.checkAllData.push(item);
           }
         });
       });
     },
-    handlecheckListChange() {
+    handlecheckitemChange() {
       this.setCheckAllData();
-      if (this.checkList !== this.allId && this.checkList.length < 1) {
+      if (this.checkedArr !== this.allId && this.checkedArr.length < 1) {
         this.checkAll = false;
         this.isIndeterminate = false;
         return;
       }
-      if (this.checkList == this.allId && this.checkList.length > 0) {
+      if (this.checkedArr == this.allId && this.checkedArr.length > 0) {
         this.checkAll = true;
         this.isIndeterminate = false;
         return;
       }
-      if (this.checkList !== this.allId && this.checkList.length > 0) {
+      if (this.checkedArr !== this.allId && this.checkedArr.length > 0) {
         this.checkAll = false;
         this.isIndeterminate = true;
         return;
