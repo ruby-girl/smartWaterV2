@@ -15,19 +15,19 @@
             <li class="clearfix">
               <p>
                 <label>申请类型</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.ProcessName }}</span>
               </p>
               <p>
                 <label>申请时间</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ applyInfoData.CreateTime }}</span>
               </p>
               <p>
                 <label>创建人</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.CreateUserName }}</span>
               </p>
               <p>
                 <label>所属水厂</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.WaterFactoryName }}</span>
               </p>
             </li>
           </ul>
@@ -38,69 +38,69 @@
             <li class="clearfix">
               <p>
                 <label>水厂</label>
-                <span>编辑开户申请</span>
+                <span>{{ editUserInfo.SA_WaterFactoryName }}</span>
               </p>
               <p>
                 <label>用户编号</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ editUserInfo.CustomerNo }}</span>
               </p>
               <p>
                 <label>姓名</label>
-                <span>张三 <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">李四</i></span>
+                <span>{{ editUserInfo.CustomerName }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips"> {{ oldEditUserInfo.CustomerName }}</i></span>
               </p>
               <p>
                 <label>简码</label>
-                <span>编辑开户申请</span>
+                <span>{{ editUserInfo.NameCode }} </span>
               </p>
             </li>
             <li class="clearfix">
               <p>
                 <label>人口</label>
-                <span>2 <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">5</i></span>
+                <span>{{ editUserInfo.PeopleNo }}  <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ oldEditUserInfo.PeopleNo }}</i></span>
               </p>
               <p>
                 <label>用户类型</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ editUserInfo.UserTypeStr }}</span>
               </p>
               <p>
                 <label>用水性质</label>
-                <span>编辑开户申请</span>
+                <span>{{ editUserInfo.PeopleNo }}</span>
               </p>
               <p>
                 <label>表册</label>
-                <span>编辑开户申请</span>
+                <span>{{ editUserInfo.RegisterBookInfoName }}</span>
               </p>
             </li>
             <li class="clearfix half">
               <p>
                 <label>电话</label>
-                <span>编辑开户申请</span>
+                <span>{{ editUserInfo.Tel }}</span>
               </p>
               <p>
                 <label>纳税人识别号</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ editUserInfo.TaxpayerNumber }}</span>
               </p>
             </li>
             <li class="clearfix half">
               <p>
                 <label>区域</label>
-                <span>编辑开户申请</span>
+                <span>{{ editUserInfo.SA_UserAreaName }}</span>
               </p>
               <p>
                 <label>证件号</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ editUserInfo.IdentityNo }}</span>
               </p>
             </li>
             <li class="clearfix whole">
               <p>
                 <label>地址</label>
-                <span>编辑开户申请</span>
+                <span>{{ editUserInfo.Address }}</span>
               </p>
             </li>
             <li class="clearfix whole">
               <p>
                 <label>备注</label>
-                <span>编辑开户申请</span>
+                <span>{{ editUserInfo.Remark }}</span>
               </p>
             </li>
           </ul>
@@ -130,6 +130,7 @@
   import FailReason from "./FailReason"
   import { ProcessOperation } from '@/api/workBenck'
   import { promptInfoFun } from "@/utils/index"
+  import { getFileFun } from "@/utils/projectLogic"
 
   export default {
     name: "EditAccount",
@@ -138,10 +139,14 @@
       return {
         auditLink:[],//审核环节
         dialogVisible: false,
-        files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
+        files:[],
         screenWidth:'',
         ifDetail:true,
-        curObj:{}//当前点击列对象
+        curObj:{},//当前点击列对象
+        detailData:{},//详情信息
+        editUserInfo:{},//新用户信息
+        oldEditUserInfo:{},//老用户信息信息
+        applyInfoData:{},//水表信息
       }
     },
     methods:{
@@ -176,6 +181,14 @@
             document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
           })
         }
+      },
+      detailData (newVal){//获取附件信息
+        if(newVal.Data.saList&&newVal.Data.saList.length>0)
+          this.files = getFileFun(newVal.Data.saList,this)
+
+        this.editUserInfo = newVal.Data.newobj
+        this.oldEditUserInfo = newVal.Data.oldobj
+        this.applyInfoData = newVal.Info
       }
     },
     mounted() {

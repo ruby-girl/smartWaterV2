@@ -210,6 +210,7 @@ export default {
       this.query.WaterFactoryId = this.companyOptions[0].Id;
     }
     this.getCreateUser()
+    this.applyArray = getDictionaryOption('流程编码')
   },
   methods: {
     resetting() {
