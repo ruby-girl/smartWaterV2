@@ -15,19 +15,19 @@
             <li class="clearfix">
               <p>
                 <label>申请类型</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.ProcessName }}</span>
               </p>
               <p>
                 <label>申请时间</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ applyInfoData.CreateTime }}</span>
               </p>
               <p>
                 <label>创建人</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.CreateUserName }}</span>
               </p>
               <p>
                 <label>申请状态</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.SqState }}</span>
               </p>
             </li>
           </ul>
@@ -38,35 +38,35 @@
             <li class="clearfix">
               <p>
                 <label>姓名</label>
-                <span>编辑开户申请</span>
+                <span>{{ userInfoData.CustomerName }}</span>
               </p>
               <p>
                 <label>电话</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ userInfoData.Tel }}</span>
               </p>
               <p>
                 <label>用户编号</label>
-                <span>张三 李四</span>
+                <span>{{ userInfoData.CustomerNo }}</span>
               </p>
               <p>
                 <label>证件号</label>
-                <span>编辑开户申请</span>
+                <span>{{ userInfoData.IdentityNo }}</span>
               </p>
             </li>
             <li class="clearfix one-third">
               <p>
                 <label style="color: #FF3D3D">账户金额(元)</label>
-                <span style="color: #FF3D3D">2</span>
+                <span style="color: #FF3D3D">{{ userInfoData.Balance }}</span>
               </p>
               <p>
                 <label>地址</label>
-                <span>2</span>
+                <span>{{ userInfoData.Address }}</span>
               </p>
             </li>
             <li class="clearfix whole">
               <p>
                 <label>备注</label>
-                <span>2</span>
+                <span>{{ userInfoData.Remark }}</span>
               </p>
             </li>
           </ul>
@@ -77,19 +77,15 @@
             <li class="clearfix">
               <p>
                 <label>水表编号</label>
-                <span>编辑开户申请</span>
+                <span>{{ waterInfoData.waterMeterNo }}</span>
               </p>
               <p>
                 <label>水表类型</label>
-                <span>1988-12-01 12:00:00</span>
-              </p>
-              <p>
-                <label style="color: #FF3D3D">表端余额</label>
-                <span style="color: #FF3D3D">张三 李四</span>
+                <span>{{ waterInfoData.waterMeterTypeName }}</span>
               </p>
               <p>
                 <label>经办人</label>
-                <span>编辑开户申请</span>
+                <span>{{ waterInfoData.operatorName }}</span>
               </p>
             </li>
           </ul>
@@ -129,7 +125,11 @@
         componentsArr:['MechanicsMater','YcMeter'],
         screenWidth:'',
         ifDetail:true,
-        curObj:{}//当前点击列对象
+        curObj:{},//当前点击列对象
+        detailData:{},//详情信息
+        userInfoData:{},//用户信息
+        waterInfoData:{},//水表信息
+        applyInfoData:{},//水表信息
       }
     },
     computed:{
@@ -146,6 +146,11 @@
             document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
           })
         }
+      },
+      detailData (newVal){//获取附件信息
+        this.userInfoData = newVal.Data.customer
+        this.waterInfoData = newVal.Data
+        this.applyInfoData = newVal.Info
       }
     },
     methods:{

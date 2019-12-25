@@ -1,6 +1,5 @@
 <template>
   <div class="left_box">
-    <h3>水表升级</h3>
     <div class="user_info">
       <div class="display-flex align-items-center justify-content-flex-justify">
         <h4>原水表信息</h4>

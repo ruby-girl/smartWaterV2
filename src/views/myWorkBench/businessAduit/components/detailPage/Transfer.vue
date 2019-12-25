@@ -15,19 +15,19 @@
             <li class="clearfix">
               <p>
                 <label>申请类型</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.ProcessName }}</span>
               </p>
               <p>
                 <label>申请时间</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ applyInfoData.CreateTime }}</span>
               </p>
               <p>
                 <label>创建人</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.CreateUserName }}</span>
               </p>
               <p>
                 <label>申请状态</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.SqState }}</span>
               </p>
             </li>
           </ul>
@@ -38,25 +38,25 @@
             <li class="clearfix">
               <p>
                 <label>姓名</label>
-                <span>编辑开户申请</span>
+                <span>{{ userInfoData.OldCustomerName }}</span>
               </p>
               <p>
                 <label>电话</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ userInfoData.OldTel }}</span>
               </p>
               <p>
                 <label>用户编号</label>
-                <span>张三 李四</span>
+                <span>{{ userInfoData.CustomerNo }}</span>
               </p>
               <p>
                 <label>证件号</label>
-                <span>编辑开户申请</span>
+                <span>{{ userInfoData.OldIdentityNo }}</span>
               </p>
             </li>
             <li class="clearfix">
               <p class="whole">
                 <label>地址</label>
-                <span>2</span>
+                <span>{{ userInfoData.OldAddreass }}</span>
               </p>
             </li>
           </ul>
@@ -67,29 +67,29 @@
             <li class="clearfix">
               <p>
                 <label>姓名</label>
-                <span>编辑开户申请</span>
+                <span>{{ userInfoData.NewCustomerName }}</span>
               </p>
               <p>
                 <label>人口</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ userInfoData.NewPeopleNo }}</span>
               </p>
               <p>
                 <label>电话</label>
-                <span>张三 李四</span>
+                <span>{{ userInfoData.NewTel }}</span>
               </p>
               <p>
                 <label>证件号</label>
-                <span>编辑开户申请</span>
+                <span>{{ userInfoData.NewIdentityNo }}</span>
               </p>
             </li>
             <li class="clearfix one-third">
               <p>
                 <label>经办人</label>
-                <span>2</span>
+                <span>{{ userInfoData.OperatorEmp }}</span>
               </p>
               <p>
                 <label>备注</label>
-                <span>2</span>
+                <span>{{ userInfoData.NewRemark }}</span>
               </p>
             </li>
           </ul>
@@ -121,6 +121,7 @@
   import FailReason from "./FailReason"
   import { ProcessOperation } from '@/api/workBenck'
   import { promptInfoFun } from "@/utils/index"
+  import { getFileFun } from "@/utils/projectLogic"
 
   export default {
     name: "Transfer",
@@ -129,12 +130,15 @@
       return {
         auditLink:[],
         dialogVisible: false,
-        files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
+        files:[],
         index:1,
         componentsArr:['MechanicsMater','YcMeter'],
         screenWidth:'',
         ifDetail:true,
-        curObj:{}//当前点击列对象
+        curObj:{},//当前点击列对象
+        detailData:{},//详情信息
+        userInfoData:{},//水表信息
+        applyInfoData:{},//水表信息
       }
     },
     computed:{
@@ -151,6 +155,13 @@
             document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
           })
         }
+      },
+      detailData (newVal){//获取附件信息
+        if(newVal.Data.saList&&newVal.Data.saList.length>0)
+          this.files = getFileFun(newVal.Data.saList,this)
+
+        this.userInfoData = newVal.Data
+        this.applyInfoData = newVal.Info
       }
     },
     methods:{

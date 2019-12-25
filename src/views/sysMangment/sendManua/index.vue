@@ -15,6 +15,7 @@
         </div>
         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
         <div class="main-padding-20-y" id="table">
+        
           <el-table
             :key="tableKey"
             :data="tableData"
@@ -149,6 +150,40 @@ export default {
         warterMeterPlanDate: [],
         tableId: "0000008"
       },
+      arr: [
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" }
+      ],
+      arrData: [
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" },
+        { name: "che" }
+      ],
       checksData: [],
       tableData: [],
       total: 0,
@@ -289,5 +324,4 @@ export default {
   border: solid 1px #8ecca5;
   background: #f7fcf9;
 }
-
 </style>

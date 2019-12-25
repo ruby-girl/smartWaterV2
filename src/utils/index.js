@@ -204,7 +204,7 @@ export function parseStartTime(time, cFormat) {
 }
 
 /**
- * 
+ *
  * @param {String} time 时间
  * @param {String} day 起始日
  * @param {String} cFormat 格式

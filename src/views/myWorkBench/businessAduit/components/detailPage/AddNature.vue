@@ -15,19 +15,19 @@
             <li class="clearfix">
               <p>
                 <label>申请类型</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.ProcessName }}</span>
               </p>
               <p>
                 <label>申请时间</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ applyInfoData.CreateTime }}</span>
               </p>
               <p>
                 <label>创建人</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.CreateUserName }}</span>
               </p>
               <p>
                 <label>所属水厂</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.WaterFactoryName }}</span>
               </p>
             </li>
           </ul>
@@ -38,77 +38,49 @@
             <li class="clearfix third">
               <p>
                 <label>用水性质</label>
-                <span>测试用水</span>
+                <span>{{ waterInfoData.UseWaterTypeName  }}</span>
               </p>
               <p>
                 <label>用水性质类型</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ waterInfoData.WaterPropertyTypeName }}</span>
               </p>
               <p>
                 <label>阶梯结算月数</label>
-                <span>张三</span>
+                <span>{{ waterInfoData.LadderResetTime }}</span>
               </p>
             </li>
             <li class="clearfix third">
               <p>
                 <label>污水费</label>
-                <span>测试用水</span>
+                <span>{{ waterInfoData.SewagePrice }}</span>
               </p>
               <p>
                 <label>其他费用1(元)</label>
-                <span>1988-12-01</span>
+                <span>{{ waterInfoData.OtherPrice1  }}</span>
               </p>
               <p>
                 <label>其他费用2(元)</label>
-                <span>张三</span>
+                <span>{{ waterInfoData.OtherPrice2 }}</span>
               </p>
             </li>
-            <li class="clearfix third">
+            <li class="clearfix third" v-for="(item,index) in temp.ladder.slice(0,temp.LadderNumber)" :key="index">
               <p>
-                <label>1阶单价(元/吨)</label>
-                <span>1988-12-01</span>
+                <label>{{index+1}}阶单价(元/吨)</label>
+                <span>{{ item.LadderPrice }}(元/吨)</span>
               </p>
               <p>
-                <label>1阶起始量(吨)</label>
-                <span>1988-12-01</span>
+                <label>{{index+1}}阶起始量(吨)</label>
+                <span>{{item.LadderWaterNum}}吨</span>
               </p>
               <p>
-                <label>1阶合计单价(元/吨)</label>
-                <span style="color: #FF3D3D;font-weight: bold">张三</span>
-              </p>
-            </li>
-            <li class="clearfix third">
-              <p>
-                <label>2阶单价(元/吨)</label>
-                <span>1988-12-01</span>
-              </p>
-              <p>
-                <label>2阶起始量(吨)</label>
-                <span>1988-12-01</span>
-              </p>
-              <p>
-                <label>2阶合计单价(元/吨)</label>
-                <span style="color: #FF3D3D;font-weight: bold">张三</span>
-              </p>
-            </li>
-            <li class="clearfix third">
-              <p>
-                <label>3阶单价(元/吨)</label>
-                <span>1988-12-01</span>
-              </p>
-              <p>
-                <label>3阶起始量(吨)</label>
-                <span>1988-12-01</span>
-              </p>
-              <p>
-                <label>3阶合计单价(元/吨)</label>
-                <span style="color: #FF3D3D;font-weight: bold">张三</span>
+                <label>{{index+1}}阶合计单价(元/吨)</label>
+                <span style="color: #FF3D3D;font-weight: bold">{{item.TotalPrice}}吨</span>
               </p>
             </li>
             <li class="clearfix whole">
               <p>
-                <label>开始执行日期</label>
-                <span>1988-12-01</span>
+                <label>开始执行日期 </label>
+                <span style="padding-left: 6%;"> {{ waterInfoData.StartPlanDate }}</span>
               </p>
             </li>
           </ul>
@@ -136,6 +108,8 @@
   import FailReason from "./FailReason"
   import { ProcessOperation } from '@/api/workBenck'
   import { promptInfoFun } from "@/utils/index"
+  import { getFileFun } from "@/utils/projectLogic"
+  import { ladderChangeArr } from "@/utils/index"
 
   export default {
     name: "AddNature",
@@ -143,13 +117,24 @@
     data() {
       return {
         dialogVisible: false,
-        files:[{type:1,name:'swewe'},{type:2,name:'rrrr'},],
+        files:[],
         index:1,
         componentsArr:['MechanicsMater','YcMeter'],
         screenWidth:'',
         ifDetail:true,
         curObj:{},//当前点击列对象
-        auditLink:[]
+        auditLink:[],
+        detailData:{},//详情信息
+        waterInfoData:{},//水表信息
+        applyInfoData:{},//水表信息
+        temp: {
+          LadderNumber: 3,
+          ladder: [
+            {'LadderPrice': 0, 'LadderWaterNum': 0, 'TotalPrice': 0},
+            {'LadderPrice': 0, 'LadderWaterNum': 0, 'TotalPrice': 0},
+            {'LadderPrice': 0, 'LadderWaterNum': 0, 'TotalPrice': 0}
+          ]
+        },
       }
     },
     computed:{
@@ -166,6 +151,12 @@
             document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
           })
         }
+      },
+      detailData (newVal){//获取附件信息
+        this.waterInfoData = newVal.Data.WaterPropertyHis
+        this.applyInfoData = newVal.Info
+        this.temp = ladderChangeArr(newVal.Data.WaterPropertyHis)
+        this.temp.LadderNumber = newVal.Data.WaterPropertyHis.LadderNumber
       }
     },
     methods:{

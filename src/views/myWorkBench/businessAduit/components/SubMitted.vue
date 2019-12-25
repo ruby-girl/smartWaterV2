@@ -89,6 +89,7 @@
   import SearchTips from "@/components/SearchTips/index";
   import Pagination from "@/components/Pagination";
   import Step from "./Step"; //流程图
+  import { ladderChangeObj } from "@/utils/index"
 
 export default {
   name: "SubMitted",
@@ -222,31 +223,34 @@ export default {
               this.$nextTick(()=>{
                 this.$refs.detailChild.ifIcWter = true//区分机械表与IC表信息
               })
-              this.getLowAccount(res.data,row)
+              this.getAddNature(res.data,row)
               break
             case 2903://编辑开户
               this.index = 0
-              this.getEditUserAccount(res.data,row)
+              this.getAddNature(res.data,row)
               break
             case 2904://用户过户
               this.index = 3
-              this.getTransferAccount(res.data,row)
+              this.getAddNature(res.data,row)
               break
             case 2905://用户销户
               this.index = 4
+              this.getAddNature(res.data,row)
               break
             case 2906://低保户复审
               this.index = 2
               this.$nextTick(()=>{
                 this.$refs.detailChild.ifIcWter = false//区分机械表与IC表信息
               })
-              this.getLowAccount(res.data,row)
+              this.getAddNature(res.data,row)
               break
             case 2907://用户变更用水性质
               this.index = 5
+              this.getAddNature(res.data,row)
               break
             case 2908://添加用水性质
               this.index = 6
+              this.getAddNature(res.data,row)
               break
             case 2911://违约金减免
               this.index = 7
@@ -290,26 +294,11 @@ export default {
         }
       })
     },
-    getLowAccount(data,row){//低保户申请
-      this.$nextTick(()=>{
+    getAddNature(data,row){//公用详情方法
+       this.$nextTick(()=>{
         this.$refs.detailChild.detailData = data
         this.$refs.detailChild.dialogVisible = true
-        this.$refs.detailChild.curObj = row
-      })
-    },
-    getEditUserAccount(data,row){//编辑用户开户
-      console.log(data)
-      this.$nextTick(()=>{
-        this.$refs.detailChild.detailData = data
-        this.$refs.detailChild.dialogVisible = true
-        this.$refs.detailChild.curObj = row
-      })
-    },
-    getTransferAccount(data,row){//过户
-      console.log(row)
-      this.$nextTick(()=>{
-        this.$refs.detailChild.detailData = data
-        this.$refs.detailChild.dialogVisible = true
+         this.$refs.detailChild.ifDetail = true //true 为详情 false为编辑
         this.$refs.detailChild.curObj = row
       })
     },
