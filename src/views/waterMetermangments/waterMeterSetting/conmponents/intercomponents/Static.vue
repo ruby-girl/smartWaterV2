@@ -1,7 +1,7 @@
 <template>
   <div class="int_static">
     <el-row :gutter="40">
-      <el-col :span="2" style="padding-right:0" class="firstCl">
+      <el-col :span="2"  :xs="3" :sm="3" :md="3" :lg="2" :xl="2" style="padding-right:0" class="firstCl">
         <div class="fl" style="padding-left:10px;">
           <div class="num">{{ErrorData.AllMeterNumber}}</div>
           <div>共计</div>

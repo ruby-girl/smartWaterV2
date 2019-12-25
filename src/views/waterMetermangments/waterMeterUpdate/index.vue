@@ -13,7 +13,6 @@
       </el-aside>
 
       <el-main>
-        <h3 style="padding-left:14px;padding-top:14px">升级查询</h3>
         <div ref="formHeight">
           <selecte-head
             :editUserList="editUserList"
