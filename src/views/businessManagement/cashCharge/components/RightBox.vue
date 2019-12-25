@@ -2,24 +2,27 @@
   <!--右侧缴费操作 -->
   <div>
     <div class="right-detail-box">
-      <div>剩余未缴：{{unpaidMoney}}元</div>
-      <div>账户余额：<span class="main-color font-weight">{{accountMoney}}</span>元</div>
-      <div class="filter-container">应收金额：{{needMoney}}元</div>
-      <div class="display-flex align-items-center filter-container flex-wrap">
-        <div class="main-color-pink">实收金额：</div>
-        <div class="right-detail-input">
-          <input
+      <div class="display-flex align-items-center justify-content-flex-justify right-font-18"><div>剩余未缴:</div><div class="right-big-font"><span class="right-small-font">¥</span>{{unpaidMoney}}</div></div>
+      <div class="display-flex align-items-center justify-content-flex-justify right-font-18"><div>账户余额：</div><div class="main-color font-weight right-big-font"><span class="right-small-font">¥</span>{{accountMoney}}</div></div>
+      <div class="display-flex align-items-center justify-content-flex-justify filter-container right-font-18"><div>应收金额：</div><div class="right-big-font"><span class="right-small-font">¥</span>{{needMoney}}</div></div>
+      <div class="display-flex align-items-center justify-content-flex-justify filter-container flex-wrap">
+        <div class="main-color-pink"><span class="right-font-20">实收金额：</span></div>
+        <div :class="{'right-detail-input-active':isFocus,'right-detail-input display-flex justify-content-flex-end align-items-flex-end':true}">
+           <span class="main-color-pink">¥</span>
+          <input :style="{'width':inputWidth+'px'}"
             type="text"
             v-model="num"
             @blur="changeTwoDecimal_x()"
             @keyup="money($event)"
+            @focus="isFocus=true"
+             @keyup.enter="mydebounce()"
             ref="myInput"
-          />
-           <span class="main-color-pink">元</span>
+            maxlength="7"
+          />         
         </div>
        
       </div>
-      <div v-show="isAccount==false" style="height:28px;">&#12288;&#12288;找零：{{surplus}}元</div>
+      <div v-show="isAccount==false" style="height:28px;"><span class="right-font-18">&#12288;&#12288;找零：</span>{{surplus}}元</div>
     </div>
     <div class="display-flex save-account">
       <span>
@@ -30,12 +33,6 @@
       <el-radio :label="false">否</el-radio>
     </el-radio-group>
     </div>
-    <!-- <div class="right-detail-box account-height">
-      <div>
-        账户金额：
-        <span class="main-color-pink">{{account}}</span>元
-      </div>
-    </div> -->
     <div class="main-more-black-color pint-type">
       <div>
         <el-radio v-model="radio" :label="1">打印小票</el-radio>
@@ -71,12 +68,12 @@
 </template>
 <script>
 import { debounce, updateMoney, changeTwoDecimal } from "@/utils/index";
-import {Settlement} from "@/api/cashCharge"
+import {Settlement,ICSettlement,RollBackICSettlement} from "@/api/cashCharge"
 export default {
   props: {
     unpaidMoney: {//剩余未缴
       type: Number,
-      default: 0
+      default: '0.00'
     },
     totalLength:{},//用户所有未缴费状态的数据个数-需求（当用户有未缴纳的费用时，不可单独进行预存操作）
     payOrderId:{},//结算的费用单ID
@@ -94,18 +91,23 @@ export default {
       //  this.isAccount =v;
        if(!this.testMoney()) return false
       this.surplusFunc();
-    }
+    },
+     num(v){
+      this.inputWidth=v.length*25<100?100:v.length*25
+    },
   },
   data() {
     return {
       radio: 1,
       paymentType: 2701,
       isAccount: true,
-      num: "",
-      needMoney: 0, //应缴金额    
-      surplus: 0, //找零
+      num: "0.00",
+      inputWidth:100,
+      needMoney: '0.00', //应缴金额    
+      surplus: '0.00', //找零
       balanceDeduction:0,//账户抵扣
-      saveAccount:0//zanshi
+      saveAccount:0,//zanshi
+      isFocus:false
     };
   },
   mounted() {
@@ -149,7 +151,7 @@ export default {
     },
     // 输入金额保留2位
     money(e) {
-      e.target.value = updateMoney(e.target.value);
+       e.target.value = updateMoney(e.target.value);
     },
     selectPint() {
       this.$emit("selectPint", "");
@@ -174,18 +176,18 @@ export default {
       }
        this.changeTwoDecimal_x();//补齐小数-   
       if(!this.testMoney()) return false//验证金额
+      if(parseFloat(this.num)==parseFloat(this.surplus)){
+         this.$message({
+          message: "请注意实收金额实际为0！",
+          type: "error",
+          duration: 4000
+        });
+        return false
+      }    
       this.pay();//结算
     },
     // 结算
     pay() {
-      // if(this.paymentType==2){
-      //    this.$message({
-      //     message: "扫码支付暂未开通，敬请期待！",
-      //     type: "error",
-      //     duration: 4000
-      //   });
-      //   return false
-      // }
       let receipts=parseFloat(this.num)-parseFloat(this.surplus)
       let obj={
         customerId:this.customerId,
@@ -206,13 +208,55 @@ export default {
         // 金额清零--s
          this.num=''
          this.surplus=0
-         this.$emit("update:unpaidMoney", 0)
+         this.$emit("update:unpaidMoney", '0.00')
          this.needMoney=0
           // 金额清零--e
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", false);//结算完成后，父元素全选置为false，卡片获取列表再设置全选
         this.$emit("getCustomer"); //重新获取列表数据和账户余额        
       })
+    },
+       // 如果是IC卡结算
+    IcPay(receipts){
+        let obj={
+        customerId:this.customerId,
+        orderId:this.payOrderId,
+        receivable:this.unpaidMoney,//剩余未缴
+        receipts:receipts,//实收  
+        isAccount:this.isAccount,
+        payType:this.paymentType,
+        printerType:'',//打印方式 无打印 = -1,小票 = 2801,发票 = 2802, 
+        isFirst:this.isFirst//当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false
+      }  
+      ICSettlement(obj).then(res=>{
+         this.resCardInfo=res.data//{CardInfo:{},BusinessId:''}
+         this.$message({
+          message: "操作成功",
+          type: "success",
+          duration: 4000
+        });
+        // 金额清零--s
+         this.num=''
+         this.surplus=0.00
+         this.$emit("update:unpaidMoney", 0.00)
+         this.needMoney=0.00
+          // 金额清零--e
+        this.$emit("update:isIndeterminateParent", false);
+        this.$emit("update:checkedAllParent", false);//结算完成后，父元素全选置为false，卡片获取列表再设置全选
+        this.$emit("getCustomer"); //重新获取列表数据和账户余额     
+        this.wCard()//写卡  如果实收金额（input值-应收）=0，不写卡
+      })      
+    },
+    // IC卡结算成功后，进行写卡操作
+    wCard(){
+       try {       
+        WriteCardInfo(this.resCardInfo,(errorRes)=>{ // 读卡
+            // 错误回调，执行回滚
+            RollBackICSettlement({businessId:errorRes.businessId})
+        })
+      } catch (error) {
+        console.log("请在CS端操作1");
+      }
     },
     // 补齐小数-
     changeTwoDecimal_x() {
@@ -245,15 +289,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .right-detail-box {
-  background: #f5f5f5;
-  padding: 0 17px;
   padding-bottom: 15px;
   > div {
-    line-height: 33px;
+    line-height: 45px;
     color: #46494c;
   }
 }
 .right-detail-input {
+  position: relative;
   > input {
     height: 50px;
     width: 156px;
@@ -265,8 +308,10 @@ export default {
     padding-left: 5px;
     &:focus {
       outline: none;
-      border: 2px solid #ff5656;
     }
+  }
+  .position-num{
+    position: absolute;
   }
 }
 .save-account {
@@ -350,6 +395,41 @@ export default {
 .cash-assets-scan-active {
   background: #33b300;
   color: #fff !important;
+}
+.right-font-18{
+  font-size: 18px;
+}
+.right-small-font{
+  display: inline-block;
+  padding-right: 5px;
+  font-size: 14px;
+}
+.right-big-font{
+  font-size: 22px;
+}
+.right-font-20{
+  font-size: 20px;
+}
+.right-detail-input {
+  position: relative;
+   border: 1px solid #ff5656;
+   color: #ff5656;
+   width:209px;
+  > input {
+    height: 73px;
+    border:none;
+    text-align: right;
+    color: #ff5656;
+    font-size: 40px;
+    font-weight: bold;
+    padding-right: 5px;
+    &:focus {
+      outline: none;   
+    }
+  }
+}
+.right-detail-input-active{
+  border: 2px solid #ff5656;
 }
 </style>
 

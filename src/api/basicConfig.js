@@ -7,3 +7,10 @@ export function ComboBoxListByBice(data) {//获取操作人下拉框(账户无�
       params:data
     })
 }
+export function AddWaterProperty(data) {//获取操作人下拉框(账户无分页)
+  return request({
+    url: '/BasicConfigManage/AddWaterProperty',
+    method: 'post',
+    data:data
+  })
+}

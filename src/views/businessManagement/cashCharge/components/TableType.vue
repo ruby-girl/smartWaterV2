@@ -150,7 +150,8 @@ export default {
       tableKey: 1,
       tableData: [],
       checksData: [],
-      total: 0
+      total: 0,
+      tipsData:[]
     };
   },
   methods: {

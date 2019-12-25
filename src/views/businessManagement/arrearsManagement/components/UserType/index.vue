@@ -95,7 +95,7 @@
                 :content="row.OrderType==2001?'费用减免':'非水费类型不允许减免'"
                 placement="bottom"
               >
-                <i class="icon iconfont iconjianmianshui" @click="feeWaiverFunc(row)"></i>
+                <i class="icon iconfont iconjianmianshui" @click="row.OrderType==2001?feeWaiverFunc(row):''"></i>
               </el-tooltip>
               </div>
             </template>
@@ -267,10 +267,16 @@ export default {
       GetList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.total = res.count;
+         
         if (res.data.ot) {
           this.tableTotal[0].num = res.data.ot.OrderCount;
           this.tableTotal[1].num = res.data.ot.PriceSurplus;
         }
+        res.data.list.forEach(item => {
+          if (item.ChargeFlag == 1003) {
+            item.tooltip = "费用审核中，不允许勾选";
+          }
+        });
         this.tableData = res.data.list;
       });
     },

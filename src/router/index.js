@@ -231,9 +231,9 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'cashChargeTest',
-        component: () => import('@/views/businessManagement/cashChargeTest/index'),
-        name: 'cashChargeTest',
+        path: 'cashCharge',
+        component: () => import('@/views/businessManagement/cashCharge/index'),
+        name: 'cashCharge',
         meta: {
           title: '现金收费',
           roles: ['1']

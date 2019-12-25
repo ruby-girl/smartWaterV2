@@ -5,14 +5,14 @@
         <div class="border-bottom">
           <config-title title="系统配置" />
           <switch-item label="开启多人口家庭用水量" :swithValue.sync="postData.BasicParam.IsMorePeople" />
-          <div class="font-small">
+          <div class="font-small" v-show="postData.BasicParam.IsMorePeople==true?true:false">
             人口基数为
-            <input type="text" class="config-input" />人时，每个阶梯结算周期内，增加各阶梯水量
-            <input type="text" class="config-input" />吨；每增加
-            <input type="text" class="config-input" />人，
+            <input type="text" class="config-input" v-model="postData.BasicParam.PopulationBase"/>人时，每个阶梯结算周期内，增加各阶梯水量
+            <input type="text" class="config-input" v-model="postData.BasicParam.PeopleAddYield"/>吨；每增加
+            <input type="text" class="config-input" v-model="postData.BasicParam.AddPeopleNum"/>人，
             <div>
               增加各阶梯水量
-              <input type="text" class="config-input" />吨。（此配置只针对居民用水）
+              <input type="text" class="config-input" v-model="postData.BasicParam.AddPeopleNumAddYield"/>吨。（此配置只针对居民用水）
             </div>
           </div>
         </div>
@@ -21,9 +21,9 @@
             label="开启固定减免"
             :swithValue.sync="postData.BasicParam.InsuredMessageWaterAllowance"
           />
-          <div class="pr-15 font-small">
+          <div class="pr-15 font-small" v-show="postData.BasicParam.InsuredMessageWaterAllowance==true?true:false">
             低保户
-            <input type="text" class="config-input" />吨/户表.月
+            <input type="text" class="config-input" v-model="postData.BasicParam.AddPeopleNumAddYield"/>吨/户表.月
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
         <div class="border-bottom">
           <config-title title="费用设置" />
           <switch-item label="是否开启违约金" :swithValue.sync="postData.BasicParam.OverdueFineState" />
-          <div class="font-small">
+          <div class="font-small"  v-show="postData.BasicParam.OverdueFineState==true?true:false">
             费用生成月的下
             <el-select v-model="postData.OverdueParam.Month" size="small" class="small-select">
               <el-option value="1">1</el-option>
@@ -59,10 +59,10 @@
           </div>
         </div>
         <div class="pt-15">
-          <switch-item label="开启垃圾费" :swithValue="postData.BasicParam.IsGarbage" />
-          <div class="pr-15 font-small">
+          <switch-item label="开启垃圾费" :swithValue.sync="postData.BasicParam.IsGarbage" />
+          <div class="pr-15 font-small" v-show="postData.BasicParam.IsGarbage==true?true:false">
             每月收费
-            <input type="text" class="config-input" />元。
+            <input type="text" class="config-input" v-model="postData.BasicParam.GarbageCost"/>元。
           </div>
         </div>
       </div>
@@ -72,9 +72,9 @@
           <config-title title="提醒设置" />
           <switch-item
             label="低保户生效日期到期消息提醒"
-            :swithValue="postData.BasicParam.IsInsuredMessageNotify"
+            :swithValue.sync="postData.BasicParam.IsInsuredMessageNotify"
           />
-          <div class="font-small">
+          <div class="font-small" v-show="postData.BasicParam.IsInsuredMessageNotify==true?true:false">
             低保户到期前
             <el-select
               v-model="postData.BasicParam.InsuredMessageRecheckMonth"
@@ -98,9 +98,9 @@
         <div class="pt-15">
           <switch-item
             label="当带阀水表用户当日用水量高于预警量是,发送预警消息"
-            :swithValue="postData.BasicParam.IsWaterYieldAlarmMsg"
+            :swithValue.sync="postData.BasicParam.IsWaterYieldAlarmMsg"
           />
-          <div class="font-small">
+          <div class="font-small" v-show="postData.BasicParam.IsWaterYieldAlarmMsg==true?true:false">
             是否发送短信至用户
             <el-select size="small" class="small-select" v-model="postData.BasicParam.IsSendToCustomer">
               <el-option label="是" value="1"></el-option>
@@ -136,12 +136,14 @@
       </div>
       <!-- 水表设置 -->
       <div class="box-item">
-        <div class="border-bottom">
+        <div class="border-bottom" style="padding-bottom: 5px;">
           <config-title title="水表设置" />
-          <switch-item label="支持非卡表用户开卡" :swithValue="postData.BasicParam.IsOpenCard" />
-          <switch-item label="远传表欠费关阀" :swithValue="postData.BasicParam.IsCloseValve" />
+          <div class="box-item-bottom-border">
+             <switch-item label="支持非卡表用户开卡" :swithValue.sync="postData.BasicParam.IsOpenCard" />
+          </div>
+          <switch-item label="远传表欠费关阀" :swithValue.sync="postData.BasicParam.IsCloseValve" />
         </div>
-        <div class="pt-15">
+        <div class="pt-15" v-show="postData.BasicParam.IsCloseValve==true?true:false">
           <div>远传表不关阀时间</div>
           <div class="font-small">
             节假日是否开阀
@@ -166,7 +168,7 @@
       </div>
       <config-select-user
       :show.sync="selectUserShow"
-      :ReceiveSortMsgEmp="postData.BasicParam.ReceiveSortMsgEmp"
+      :ReceiveSortMsgEmp.sync="postData.BasicParam.ReceiveSortMsgEmp"
     />
     </div> 
   </div>
@@ -175,6 +177,7 @@
 import ConfigTitle from "./components/ConfigTitle";
 import SwitchItem from "./components/SwitchItem";
 import ConfigSelectUser from "./components/ConfigSelectUser";
+import {AddWaterProperty} from "@/api/basicConfig"
 export default {
   name: "basicConfig",
   components: { SwitchItem, ConfigTitle, ConfigSelectUser },
@@ -234,12 +237,15 @@ export default {
       AlarmVal:'',//预警值，
       caliberSize:15,//水表口径
       timevalue: "",
-      selectUserShow: true
+      selectUserShow: false
     };
   },
   methods: {
     confirm() {
-      console.info(this.OverdueFineState);
+      console.info('人员',this.postData.BasicParam.ReceiveSortMsgEmp);
+      AddWaterProperty(this.postData).then(res=>{
+        
+      })
     },
     cancel() {}
   }
@@ -287,6 +293,11 @@ export default {
   background: #fff;
   border-bottom: 5px solid #eee;
   margin-bottom: 10px;
+  .box-item-bottom-border{
+    border-bottom: 1px solid #d3d6e0;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+  }
 }
 .add-btn-config {
   border: 1px solid #00b2a1;

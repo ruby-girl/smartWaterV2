@@ -4,7 +4,7 @@
     title="选择工作人员"
     :visible.sync="dialogFormVisible"
     :close-on-click-modal="false"
-    top="30vh"
+    top="20vh"
     width="680px"
     center
   >
@@ -54,8 +54,13 @@
             @change="handleCheckAllChange"
             v-show="data.length>0"
           >全选</el-checkbox>
-          <el-checkbox-group v-model="checkedArr" @change="handlecheckitemChange">
-            <el-checkbox v-for="(item,index) in data" :label="item.Id" :key="index">
+          <el-checkbox-group v-model="checkedArr">
+            <el-checkbox
+              v-for="(item,index) in data"
+              :label="item.Id"
+              :key="index"
+              @change="handlecheckitemChange(item.Id)"
+            >
               <div>{{item.Name}}</div>
             </el-checkbox>
           </el-checkbox-group>
@@ -65,7 +70,7 @@
           <div
             class="display-flex align-items-center justify-content-flex-justify flex-wrap secur-content"
           >
-            <div v-for="item in checkAllData" >
+            <div v-for="item in checkAllData">
               <el-tooltip
                 class="item"
                 popper-class="tooltip"
@@ -86,7 +91,7 @@
       </div>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary">确认</el-button>
+      <el-button size="mini" type="primary" @click="confirm">确认</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
@@ -114,7 +119,7 @@ export default {
       isIndeterminate: false,
       departmentOption: [],
       customerQueryTypeOption: [],
-      dialogFormVisible: true,
+      dialogFormVisible: false,
       checkedArr: ["1"],
       allId: [], //所有数据的ID
       data: []
@@ -138,7 +143,6 @@ export default {
     }
   },
   methods: {
-    updateData() {},
     handleCheckAllChange() {
       if (this.checkAll) {
         this.checkAll = true;
@@ -166,10 +170,34 @@ export default {
         this.allId = this.data.map(item => {
           return item.Id;
         });
+        this.allId = [...new Set(this.allId)]; //后端返回的数据会有重复的ID：一个用户多个岗位
+        let newArr = this.getArrEqual(this.allId, this.checkedArr); //如果现在所有的选中项包含 新请求回来的数据，处理全选复选框
+        if (newArr.length == this.allId.length) {
+          //如果所有的重复数据 等于 新数据=全选
+          this.checkAll = true;
+          this.isIndeterminate = false;
+        } else if (newArr.length > 0) {
+          this.checkAll = false;
+          this.isIndeterminate = true;
+        } else {
+          this.checkAll = false;
+          this.isIndeterminate = false;
+        }
       });
     },
-    setCheckAllData() {
-      //根据选中的ID获取数据详情，用来展示选中的人员
+    // 获取2个数组相同的值
+    getArrEqual(arr1, arr2) {
+      let newArr = [];
+      for (let i = 0; i < arr2.length; i++) {
+        for (let j = 0; j < arr1.length; j++) {
+          if (arr1[j] === arr2[i]) {
+            newArr.push(arr1[j]);
+          }
+        }
+      }
+      return newArr;
+    },
+    setCheckAllData() {//根据选中的ID获取数据详情，用来展示选中的人员--数据回填  
       this.checkAllData = [];
       this.data.forEach(item => {
         this.checkedArr.forEach(i => {
@@ -179,26 +207,66 @@ export default {
         });
       });
     },
-    handlecheckitemChange() {
-      this.setCheckAllData();
-      if (this.checkedArr !== this.allId && this.checkedArr.length < 1) {
+    setRightBox(id) {// 删除or增加数据到右侧
+      let isHave = this.checkedArr.some(item => {
+        return item == id;
+      });
+      if (isHave) { //如果包含，处理右侧需要展示的对象数组 checkAllData
+        this.data.forEach(item => {
+          if (item.Id == id) {
+            this.checkAllData.push(item);
+          }
+        });
+      } else { //删除右侧数据
+        this.checkAllData = this.checkAllData.filter(item => {
+          return item.Id !== id;
+        });
+      }
+    },
+    handlecheckitemChange(id) {
+      this.setRightBox(id);
+      if (
+        this.checkedArr.length !== this.allId.length &&
+        this.checkedArr.length < 1
+      ) {
         this.checkAll = false;
         this.isIndeterminate = false;
         return;
       }
-      if (this.checkedArr == this.allId && this.checkedArr.length > 0) {
+      if (
+        this.checkedArr.length == this.allId.length &&
+        this.checkedArr.length > 0
+      ) {
         this.checkAll = true;
         this.isIndeterminate = false;
         return;
       }
-      if (this.checkedArr !== this.allId && this.checkedArr.length > 0) {
+      if (
+        this.checkedArr.length !== this.allId.length &&
+        this.checkedArr.length > 0
+      ) {
         this.checkAll = false;
         this.isIndeterminate = true;
         return;
       }
     },
-    delItem(id){//删除选中的
-
+    delItem(id) { //删除选中的
+      this.checkedArr = this.checkedArr.filter(item => {
+        return item !== id;
+      });
+      this.setRightBox(id);
+    },
+    confirm() {
+      if(this.checkedArr.length<1){
+        this.$message({
+            message: '当前未勾选工作人员！',
+            type: "error",
+            duration: 4000
+          });
+          return
+      }
+      this.dialogFormVisible=false
+      this.$emit("update:ReceiveSortMsgEmp", this.checkedArr);
     }
   }
 };
@@ -221,9 +289,11 @@ export default {
   .config-dialog-right {
     padding: 10px;
     line-height: 30px;
+    overflow-y: auto;
     .config-label-name-box {
       background: #f5f5f5;
       padding: 0 5px;
+      margin-bottom: 5px;
     }
     .config-label-name {
       width: 120px;

@@ -15,7 +15,7 @@
     <!-- 表格模式 -->
     <el-row :gutter="10" class="container-bottom-box display-flex">
       <!-- 左边表格 -->
-      <el-col :md="14" :lg="16" :xl="16" class="cash-padding-bg" v-if="!isIC">
+      <el-col :md="14" :lg="17" :xl="18" class="cash-padding-bg" v-if="!isIC">
         <div class="display-flex justify-content-flex-justify">
           <div class="display-flex">
             <el-tooltip
@@ -75,8 +75,8 @@
       <!-- IC卡展示内容 -->
       <el-col
         :md="14"
-        :lg="16"
-        :xl="16"
+        :lg="17"
+        :xl="18"
         class="cash-padding-bg ic-container"
         v-if="isIC"
         :style="{'height':saveTableHeight+'px'}"
@@ -87,8 +87,8 @@
       <!-- 右 -->
       <el-col
         :md="10"
-        :lg="8"
-        :xl="8"
+        :lg="7"
+        :xl="6"
         class="cash-padding-bg cash-right-box"
         :style="{'height':saveTableHeight+'px'}"
       >
@@ -216,7 +216,7 @@ export default {
       // 自适应表格高度 getBoundingClientRect().height比dom.offsetHeight性能更好
       var formHeight = this.$refs.formHeight.getBoundingClientRect().height;
       this.tableHeight = document.body.clientHeight - formHeight - 230;
-      this.saveTableHeight = document.body.clientHeight - formHeight - 100;
+      this.saveTableHeight = document.body.clientHeight - formHeight - 80;
     });
   },
   methods: {
