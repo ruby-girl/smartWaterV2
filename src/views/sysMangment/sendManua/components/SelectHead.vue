@@ -9,7 +9,7 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item v-show="show1||isShow" key="customerQueryType">
+      <el-form-item v-show="show1||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
         <el-select
           v-model="selectHead.CustomerQueryType"
           placeholder="请选择"
@@ -32,12 +32,12 @@
           style="width: 180px;float: left"
         />
       </el-form-item>
-      <el-form-item label="水表类型" v-show="show2||isShow">
+      <el-form-item label="水表类型" v-show="show2||isShow" prop="WaterTypeId">
         <el-select
-          v-model="selectHead.WaterMeter "
+          v-model="selectHead.WaterTypeId "
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterMeter ,'WaterMeter',WaterMeterList,'水表类型')"
+          @change="getText(selectHead.WaterTypeId ,'WaterTypeId',WaterMeterList,'水表类型')"
         >
           <el-option label="全部" :value="-1" />
           <el-option
@@ -48,12 +48,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="区域选择" v-show="show3||isShow">
+      <el-form-item label="区域选择" v-show="show3||isShow" prop="AreaId">
         <el-select
-          v-model="selectHead.WaterMeter "
+          v-model="selectHead.AreaId "
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterMeter ,'WaterMeter',WaterMeterList,'区域选择')"
+          @change="getText(selectHead.AreaId ,'AreaId',WaterMeterList,'区域选择')"
         >
           <el-option label="全部" :value="-1" />
           <el-option
@@ -83,6 +83,7 @@
 <script>
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { getDictionaryOption } from "@/utils/permission";
+import { getName } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   props: {
     searchWidth: {}
@@ -99,41 +100,8 @@ export default {
       show1: true,
       show2: true,
       show3: true,
-  
       showBtn: false,
-      templateType: [
-        //模板类型
-        {
-          Id: "0",
-          Name: "系统"
-        },
-        {
-          Id: "1",
-          Name: "自定义"
-        }
-      ],
-      sendType: [
-        //模板类型
-        {
-          Id: "0",
-          Name: "自动发送"
-        },
-        {
-          Id: "1",
-          Name: "手动发送"
-        }
-      ],
-      sendTime: [
-        //模板类型
-        {
-          Id: "0",
-          Name: "及时发送"
-        },
-        {
-          Id: "1",
-          Name: "定时发送"
-        }
-      ]
+      secNmae: ""
     };
   },
   watch: {
@@ -142,7 +110,7 @@ export default {
         this.show1 = this.showLabel(1, val);
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
-       
+
         if (Math.floor((val - 200) / 280) >= 3) {
           this.showBtn = false;
         } else {
@@ -156,11 +124,13 @@ export default {
     this.WaterMeterList = getDictionaryOption("水表类型");
   },
   methods: {
+    getscName(id) {
+      this.secNmae = getName(id);
+    },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
-      this.$parent.delTips("warterMeterPlanDate");
     },
     showLabel(n, w) {
       if (Math.floor((w - 200) / 280) >= n || this.isShow) {
@@ -173,25 +143,6 @@ export default {
     },
     getText(val, model, arr, name) {
       this.$emit("getText", val, model, arr, name);
-    },
-    getTime() {
-      //时间格式化
-      const date = this.selectHead.warterMeterPlanDate;
-      let date1;
-      if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
-        date1 =
-          this.selectHead.createStartTime.split(" ")[0] +
-          "~" +
-          this.selectHead.createEndTime.split(" ")[0];
-        this.$emit("getText", date1, "warterMeterPlanDate", "", "升级日期");
-      } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
-        date1 = "";
-        this.$emit("getText", date1, "warterMeterPlanDate", "", "升级日期");
-      }
     }
   },
   mounted() {

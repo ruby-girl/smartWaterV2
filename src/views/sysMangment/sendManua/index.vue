@@ -6,16 +6,15 @@
       </div>
       <div class="contanier">
         <div class="cl-operation1 clearfix" style="margin-bottom:7px;">
-          <el-button size="mini" class="fl borderClass" round @click="addPlan">
+          <el-button size="mini" class="fl borderClass" round @click="send">
             <i class="icon iconfont">&#xe6b0;</i>发送
           </el-button>
-          <el-button size="mini" class="fl borderClass" round @click="addPlan">
+          <el-button size="mini" class="fl borderClass" round @click="sendAll">
             <i class="icon iconfont">&#xe6b2;</i>发送全部用户
           </el-button>
         </div>
         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
         <div class="main-padding-20-y" id="table">
-        
           <el-table
             :key="tableKey"
             :data="tableData"
@@ -25,7 +24,9 @@
             style="width: 100%;"
             :header-cell-style="{'background-color': '#F0F2F5'}"
             :cell-style="{'padding':'5px 0'}"
+            @selection-change="selectionChange"
           >
+            <el-table-column type="selection" width="55" fixed="left"></el-table-column>
             <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
               <template slot-scope="scope">
                 <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
@@ -42,73 +43,6 @@
                 :fixed="item.Freeze"
               />
             </template>
-            <el-table-column label="操作" width="200px" align="center" fixed="right">
-              <template slot-scope="scope">
-                <span style="display:inline-block;width:30px;">
-                  <el-tooltip
-                    v-show="scope.row.IsCanGenerateOrder"
-                    class="item"
-                    popper-class="tooltip"
-                    effect="light"
-                    :visible-arrow="false"
-                    content="生成费用"
-                    placement="bottom"
-                  >
-                    <i
-                      class="iconStyle icon iconfont operation1"
-                      @click="generateOrder(scope.row.Id)"
-                    >&#xe69d;</i>
-                  </el-tooltip>
-                </span>
-                <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="数据补录"
-                  placement="bottom"
-                >
-                  <i
-                    class="iconStyle icon iconfont operation2"
-                    @click="changeInput(scope.row.Id,true)"
-                  >&#xe676;</i>
-                </el-tooltip>
-                <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="数据绑定"
-                  placement="bottom"
-                >
-                  <i
-                    class="iconStyle icon iconfont operation2-1"
-                    @click="changeInput(scope.row.Id,false)"
-                  >&#xe675;</i>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
-                  <i
-                    class="iconStyle icon iconfont operation3"
-                    @click="meterReadingPlanDetail(scope.row.Id)"
-                  >&#xe69d;</i>
-                </el-tooltip>
-                <el-tooltip
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="删除"
-                  placement="bottom"
-                >
-                  <i
-                    class="icon iconfont iconStyle operation4"
-                    @click="delMeterReadingPlan(scope.row.Id)"
-                  >&#xe653;</i>
-                </el-tooltip>
-              </template>
-            </el-table-column>
           </el-table>
           <pagination
             v-show="total>0"
@@ -127,6 +61,7 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { getSMSList,sendShorMsg,sendShorMsgAll } from "@/api/shotMsg";
 export default {
   name: "sendManua",
   components: {
@@ -141,60 +76,25 @@ export default {
       selectHead: {
         page: 1,
         limit: 10,
-        SA_WaterFactory_Id: "-1", //水厂Id
-        createStartTime: "", //计划开始日期
-        createEndTime: "", //计划结束日期
-        enumPlanState: "-1", //抄表计划状态
+        CustomerQueryType: "",
+        CustomerQueryValue: "",
+        WaterTypeId: "", //水表类型
+        AreaId: "", //q区域
         sort: "", //升序
         filed: "", //排序字段
-        warterMeterPlanDate: [],
-        tableId: "0000008"
+        tableId: "0000016"
       },
-      arr: [
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" }
-      ],
-      arrData: [
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" },
-        { name: "che" }
-      ],
+
       checksData: [],
       tableData: [],
       total: 0,
       tableKey: 0,
       tableHeight: 0,
-      addDialogFormVisible: false,
-      isShowAdPlanClass: !this.isShowAdPlan,
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
-      searchWidth: 1024
+      searchWidth: 1024,
+      ids: []
     };
   },
   computed: {
@@ -245,8 +145,11 @@ export default {
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
       }
-
-      this.tipsData = pushItem(this.tipsDataCopy);
+      getSMSList(this.orderData).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
+        this.tableData = res.data;
+        this.total = res.count;
+      });
     },
     exportList() {
       //导出
@@ -261,10 +164,23 @@ export default {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
-
-    //新增抄表计划
-    addPlan() {
-      this.addDialogFormVisible = true;
+    selectionChange(selection) {
+      this.ids = [];
+      if (selection.length) {
+        selection.forEach(element => {
+          this.ids.push(element.Id);
+        });
+      }
+    },
+    send() {//templateId
+      sendShorMsg({cusIds:this.ids}).then(res=>{
+        console.log(res)
+      })
+    },
+    sendAll(){
+      sendShorMsgAll( this.orderData ).then(res=>{
+        console.log(res)
+      })
     }
   }
 };

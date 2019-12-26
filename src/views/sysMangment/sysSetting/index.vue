@@ -11,7 +11,8 @@
             class="cl-search cl-reset"
             round
             @click="addPlan"
-            style="margin:7px 0;border-color:#00B2A1;color:#00B2A1"
+            type="primary"
+            style="margin:7px 0;"
           >
             <i class="icon iconfont">&#xe689;</i>添加
           </el-button>
@@ -22,13 +23,14 @@
             :key="tableKey"
             :data="tableData"
             border
+           
             fit
             :height="tableHeight"
             style="width: 100%;"
             :header-cell-style="{'background-color': '#F0F2F5'}"
             :cell-style="{'padding':'5px 0'}"
           >
-            <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+            <el-table-column type="index" fixed="left" label="#" width="60" align="center">
               <template slot-scope="scope">
                 <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
               </template>
@@ -42,59 +44,31 @@
                 :align="item.Position"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
+                 :show-overflow-tooltip="true"
               />
             </template>
             <el-table-column label="操作" width="200px" align="center" fixed="right">
               <template slot-scope="scope">
-                <span style="display:inline-block;width:30px;">
-                  <el-tooltip
-                    v-show="scope.row.IsCanGenerateOrder"
-                    class="item"
-                    popper-class="tooltip"
-                    effect="light"
-                    :visible-arrow="false"
-                    content="生成费用"
-                    placement="bottom"
-                  >
-                    <i
-                      class="iconStyle icon iconfont operation1"
-                      @click="generateOrder(scope.row.Id)"
-                    >&#xe69d;</i>
-                  </el-tooltip>
-                </span>
                 <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
                   class="item"
-                  popper-class="tooltip"
                   effect="light"
                   :visible-arrow="false"
-                  content="数据补录"
+                  content="详情"
                   placement="bottom"
                 >
-                  <i
-                    class="iconStyle icon iconfont operation2"
-                    @click="changeInput(scope.row.Id,true)"
-                  >&#xe676;</i>
-                </el-tooltip>
-                <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="数据绑定"
-                  placement="bottom"
-                >
-                  <i
-                    class="iconStyle icon iconfont operation2-1"
-                    @click="changeInput(scope.row.Id,false)"
-                  >&#xe675;</i>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
                   <i
                     class="iconStyle icon iconfont operation3"
-                    @click="meterReadingPlanDetail(scope.row.Id)"
-                  >&#xe69d;</i>
+                    @click="Detail(scope.row.Id)"
+                  >&#xe653;</i>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="编辑"
+                  placement="bottom"
+                >
+                  <i class="iconStyle icon iconfont operation5" @click="edit(scope.row.Id)">&#xe69f;</i>
                 </el-tooltip>
                 <el-tooltip
                   class="item"
@@ -106,8 +80,8 @@
                 >
                   <i
                     class="icon iconfont iconStyle operation4"
-                    @click="delMeterReadingPlan(scope.row.Id)"
-                  >&#xe653;</i>
+                    @click="delTem(scope.row.Id)"
+                  >&#xe6a0;</i>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -121,8 +95,11 @@
           />
         </div>
       </div>
-      <Add-ReadingPlan
-        :add-show.sync="addDialogFormVisible"
+      <Add-template :add-show.sync="addDialogFormVisible" />
+      <edit-template :edit-show.sync="editDialogFormVisible" :editModel="editModel" />
+      <detaile-template
+        :detaile-show.sync="detaileDialogFormVisible"
+        :ShortMsgTempParam="detaileModel"
       />
     </div>
   </div>
@@ -132,14 +109,19 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import AddReadingPlan from "./components/AddReadingPlan";
+import AddTemplate from "./components/AddTemplate";
+import DetaileTemplate from "./components/DetaileTemplate";
+import EditTemplate from "./components/EditTemplate";
+import { getSettingList, delTemplate, detaileTemplate } from "@/api/shotMsg";
 export default {
   name: "sysSetting",
   components: {
     SelectHead,
     Pagination,
-    AddReadingPlan,
-    SearchTips
+    AddTemplate,
+    SearchTips,
+    DetaileTemplate,
+    EditTemplate
   },
   data() {
     return {
@@ -148,14 +130,16 @@ export default {
       selectHead: {
         page: 1,
         limit: 10,
-        SA_WaterFactory_Id: "-1", //水厂Id
-        createStartTime: "", //计划开始日期
-        createEndTime: "", //计划结束日期
-        enumPlanState: "-1", //抄表计划状态
+        isSysTemplate: "", //模板类型
+        templateName: "", //模板名称
+        sendMethod: "", //发送方式
+        sendModality: "", //发送时间
+        timerSendStartTime: "", //计划结束日期
+        timerSendEndTime: "", //抄表计划状态
         sort: "", //升序
         filed: "", //排序字段
         warterMeterPlanDate: [],
-        tableId: "0000008"
+        tableId: "0000066"
       },
       checksData: [],
       tableData: [],
@@ -163,11 +147,14 @@ export default {
       tableKey: 0,
       tableHeight: 0,
       addDialogFormVisible: false,
-      isShowAdPlanClass: !this.isShowAdPlan,
+      detaileDialogFormVisible: false,
+      editDialogFormVisible: false,
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
-      searchWidth: 1024
+      searchWidth: 1024,
+      detaileModel: {},
+      editModel: {}
     };
   },
   computed: {
@@ -218,8 +205,11 @@ export default {
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
       }
-
-      this.tipsData = pushItem(this.tipsDataCopy);
+      getSettingList(this.orderData).then(res => {
+        this.tableData = res.data;
+        this.total = res.count;
+        this.tipsData = pushItem(this.tipsDataCopy);
+      });
     },
     exportList() {
       //导出
@@ -238,6 +228,48 @@ export default {
     //新增抄表计划
     addPlan() {
       this.addDialogFormVisible = true;
+    },
+    //详情
+    Detail(id) {
+      this.detaileDialogFormVisible = true;
+      detaileTemplate({ tempId: id }).then(res => {
+        this.detaileModel = res.data;
+      });
+    },
+    //删除
+    delTem(id) {
+      let that = this;
+      this.$confirm("是否删除当前模板信息", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        customClass: "warningBox",
+        showClose: false
+      })
+        .then(() => {
+          delTemplate({ tempId: id }).then(res => {
+            if (res.code == 0) {
+              that.$message({
+                message: res.message ? res.message : "删除成功",
+                type: "success"
+              });
+              that.searchTableList();
+            } else {
+              that.$message({
+                message: res.message,
+                type: "warning"
+              });
+            }
+          });
+        })
+        .catch(() => {});
+    },
+    //编辑
+    edit(id) {
+      this.editDialogFormVisible = true;
+      detaileTemplate({ tempId: id }).then(res => {
+        this.editModel = res.data;
+      });
     }
   }
 };
@@ -273,6 +305,10 @@ export default {
 }
 .operation4 {
   color: #ff5656;
+  margin: 10px;
+}
+.operation5 {
+  color: #00b2a1;
   margin: 10px;
 }
 .plan-table {

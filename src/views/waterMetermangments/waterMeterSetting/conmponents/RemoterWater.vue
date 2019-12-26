@@ -170,7 +170,6 @@
 
               <template v-for="(item ,index) in tableHeadData">
                 <el-table-column
-                  v-if="item.IsFreeze"
                   :key="index"
                   min-width="170px"
                   :sortable="item.IsSortBol?'custom':null"
@@ -179,15 +178,7 @@
                   :label="item.ColDesc"
                   :fixed="item.Freeze"
                 />
-                <el-table-column
-                  v-else
-                  :key="index"
-                  min-width="170px"
-                  sortable="custom"
-                  :prop="item.ColProp"
-                  :align="item.Position"
-                  :label="item.ColDesc"
-                />
+              
               </template>
               <el-table-column label="操作" width="180px" align="center" fixed="right">
                 <template slot-scope="scope">

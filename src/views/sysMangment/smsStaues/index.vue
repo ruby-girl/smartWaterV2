@@ -5,11 +5,6 @@
         <select-head :searchWidth="searchWidth" @getText="getText" />
       </div>
       <div class="contanier">
-        <div class="display-flex justify-content-flex-justify">
-          <el-button size="mini" class="fl borderClass" round @click="addPlan">
-            <i class="icon iconfont">&#xe6a0;</i>删除
-          </el-button>
-        </div>
         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -123,6 +118,7 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { getSelectList } from "@/api/shotMsg";
 export default {
   name: "smsStaues",
   components: {
@@ -137,14 +133,18 @@ export default {
       selectHead: {
         page: 1,
         limit: 10,
-        SA_WaterFactory_Id: "-1", //水厂Id
-        createStartTime: "", //计划开始日期
-        createEndTime: "", //计划结束日期
-        enumPlanState: "-1", //抄表计划状态
+        SendState: "", //短信状态
+        TemplateId: "", //模板名称
+        TimerStartTime: "", //定时发送时间
+        TimerEndTime: "",
+        WaterMeterType: -1, //水表类型
+        AreaId: -1, //区域
+        CustomerQueryType : "",
+        CustomerQueryValue: "",
         sort: "", //升序
         filed: "", //排序字段
         warterMeterPlanDate: [],
-        tableId: "0000008"
+        tableId: "0000067"
       },
       checksData: [],
       tableData: [],
@@ -203,12 +203,14 @@ export default {
     searchTableList(num) {
       //查询列表
       const that = this;
-
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
       }
-
-      this.tipsData = pushItem(this.tipsDataCopy);
+      getSelectList(this.orderData ).then(res=>{
+        this.tipsData = pushItem(this.tipsDataCopy);
+       this.tableData = res.data;
+        this.total = res.count;
+      })
     },
     exportList() {
       //导出
@@ -281,12 +283,12 @@ export default {
     padding-right: 4px;
   }
 }
-.borderClass:hover{
-    color: #8ECCA5;
-    border: solid 1px #8ECCA5;
-    background: #F7FCF9;
+.borderClass:hover {
+  color: #8ecca5;
+  border: solid 1px #8ecca5;
+  background: #f7fcf9;
 }
-.display-flex{
-    margin: 7px 0;
+.display-flex {
+  margin: 7px 0;
 }
 </style>

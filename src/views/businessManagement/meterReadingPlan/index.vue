@@ -13,14 +13,15 @@
         <div
           class="display-flex justify-content-flex-justify"
           :class="{'plan-table':isShowAdPlanClass }"
-        >
+        > 
           <el-button
             v-show="isShowAdPlan"
             size="mini"
             class="cl-search cl-reset"
             round
+            type="primary"
             @click="addPlan"
-            style="margin:7px 0;border-color:#00B2A1;color:#00B2A1"
+            style="margin:7px 0;"
           >
             <i class="icon iconfont">&#xe689;</i>添加
           </el-button>

@@ -9,30 +9,30 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item label="模板名称" v-show="show1||isShow">
+      <el-form-item label="模板名称" v-show="show1||isShow" prop="templateName">
         <el-select
-          v-model="selectHead.SA_WaterFactory_Id"
+          v-model="selectHead.templateName"
+          filterable
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'模板名称')"
+          @change="getText(selectHead.templateName,'templateName',templateNmaeList,'模板名称')"
         >
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value></el-option>
           <el-option
-            v-for="item in companyOptions"
+            v-for="item in templateNmaeList"
             :key="item.Id"
             :label="item.Name"
             :value="item.Id"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="模板类型" v-show="show2||isShow" key="templateType" label-width="70px">
+      <el-form-item label="模板类型" v-show="show2||isShow" prop="templateType" label-width="70px">
         <el-select
-          v-model="selectHead.templateType"
+          v-model="selectHead.isSysTemplate"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.templateType,'templateType',templateType,'模板类型')"
+          @change="getText(selectHead.isSysTemplate,'isSysTemplate',templateType,'模板类型')"
         >
-          <el-option label="请选择" value></el-option>
           <el-option
             v-for="item in templateType"
             :key="item.Id"
@@ -41,43 +41,31 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="发送方式" v-show="show3||isShow" key="sendType" label-width="70px">
+      <el-form-item label="发送方式" v-show="show3||isShow" prop="sendMethod" label-width="70px">
         <el-select
-          v-model="selectHead.sendType"
+          v-model="selectHead.sendMethod"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.sendType,'sendType',sendType,'发送方式')"
+          @change="getText(selectHead.sendMethod,'sendMethod',sendType,'发送方式')"
         >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option
-            v-for="item in sendType"
-            :key="item.Id"
-            :label="item.Name"
-            :value="item.Id"
-          ></el-option>
+          <el-option v-for="item in sendType" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="发送时间" v-show="show4||isShow" key="sendTime" label-width="70px">
+      <el-form-item label="发送时间" v-show="show4||isShow" prop="sendModality" label-width="70px">
         <el-select
-          v-model="selectHead.sendTime"
+          v-model="selectHead.sendModality"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.sendTime,'sendTime',sendTime,'发送方式')"
+          @change="getText(selectHead.sendModality,'sendModality',sendTime,'发送方式')"
         >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option
-            v-for="item in sendTime"
-            :key="item.Id"
-            :label="item.Name"
-            :value="item.Id"
-          ></el-option>
+          <el-option v-for="item in sendTime" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item
         label="定时发送时间"
         label-width="90px"
         v-show="show5||isShow"
-        key="warterMeterPlanDate"
+        prop="warterMeterPlanDate"
       >
         <el-date-picker
           v-model="selectHead.warterMeterPlanDate"
@@ -110,7 +98,7 @@
   </div>
 </template>
 <script>
-import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import { getTemplateName } from "@/api/shotMsg"; //获取模板列表
 import { getDictionaryOption } from "@/utils/permission";
 export default {
   props: {
@@ -130,36 +118,37 @@ export default {
       show4: true,
       show5: true,
       showBtn: false,
+      templateNmaeList: [],
       templateType: [
         //模板类型
         {
-          Id: "0",
+          Id: 1,
           Name: "系统"
         },
         {
-          Id: "1",
+          Id: 0,
           Name: "自定义"
         }
       ],
       sendType: [
         //模板类型
         {
-          Id: "0",
+          Id: 1,
           Name: "自动发送"
         },
         {
-          Id: "1",
+          Id: 0,
           Name: "手动发送"
         }
       ],
       sendTime: [
         //模板类型
         {
-          Id: "0",
+          Id: 0,
           Name: "及时发送"
         },
         {
-          Id: "1",
+          Id: 1,
           Name: "定时发送"
         }
       ]
@@ -207,22 +196,36 @@ export default {
       const date = this.selectHead.warterMeterPlanDate;
       let date1;
       if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
+        this.selectHead.timerSendStartTime = date[0];
+        this.selectHead.timerSendEndTime = date[1];
         date1 =
-          this.selectHead.createStartTime.split(" ")[0] +
+          this.selectHead.timerSendStartTime.split(" ")[0] +
           "~" +
-          this.selectHead.createEndTime.split(" ")[0];
-        this.$emit("getText", date1, "warterMeterPlanDate", "", "升级日期");
+          this.selectHead.timerSendEndTime.split(" ")[0];
+        this.$emit("getText", date1, "warterMeterPlanDate", "", "定时发送日期");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
+        this.selectHead.timerSendStartTime = "";
+        this.selectHead.timerSendEndTime = "";
         date1 = "";
-        this.$emit("getText", date1, "warterMeterPlanDate", "", "升级日期");
+        this.$emit("getText", date1, "warterMeterPlanDate", "", "定时发送日期");
       }
+    },
+    //获取模板名称
+    getNameList() {
+      getTemplateName({ isSysTemplate: "" }).then(res => {
+        this.templateNmaeList = [];
+        res.data.forEach(element => {
+          let obj = {
+            Id: element.Id,
+            Name: element.TemplateName
+          };
+          this.templateNmaeList.push(obj);
+        });
+      });
     }
   },
   mounted() {
+    this.getNameList();
     this.selectHead = this.$parent.selectHead;
     this.planStateOptions = [];
     this.planStateOptions = getDictionaryOption("抄表计划状态");
