@@ -87,3 +87,58 @@ export function ProcessOperation(data) {
     data: data
   })
 }
+
+/**
+ * 当前登陆人信息
+ * */
+export function GetCurrInfo(data) {
+  return request({
+    url: '/MyWorkbench/GetCurrInfo',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 提交导出
+ * */
+export function GetInfosBySubmissionExcel(data) {
+  return request({
+    url: '/MyWorkbench/GetInfosBySubmissionExcel',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 待审核导出
+ * */
+export function GetInfosByToBeAuditedExcel(data) {
+  return request({
+    url: '/MyWorkbench/GetInfosByToBeAuditedExcel',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 查询审核导出
+ * */
+export function GetAuditedInfoExcel(data) {
+  return request({
+    url: '/MyWorkbench/GetAuditedInfoExcel',
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 我已审核导出
+ * */
+export function GetBusinessFlowRecordByCurrentUserExcel(data) {
+  return request({
+    url: '/MyWorkbench/GetBusinessFlowRecordByCurrentUserExcel',
+    method: 'post',
+    data: data
+  })
+}

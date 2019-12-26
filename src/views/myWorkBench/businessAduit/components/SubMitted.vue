@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column type="expand" fixed="right" width="1">
             <template slot-scope="props">
-              <step :linkCont="linkCont" :processId="processId" :personId="personId"/>
+              <step :linkCont="linkCont" :processId="processId" :haveExamine="haveExamine"/>
             </template>
           </el-table-column>
         </el-table>
@@ -70,7 +70,7 @@
         />
       </div>
     </div>
-    <component :is="currentView" ref="detailChild"></component>
+    <component :is="currentView" ref="detailChild" :auditLink="auditLink"></component>
   </div>
 </template>
 <script>
@@ -82,7 +82,7 @@
   import ChangeNature from "./detailPage/ChangeNature";
   import AddNature from "./detailPage/AddNature";
   import BreachContract from "./detailPage/BreachContract";
-  import {GetInfosBySubmission, GetAuditDetail, GetAuditLink, GetAuditRecord} from '@/api/workBenck'
+  import {GetInfosBySubmission, GetAuditDetail, GetAuditLink, GetAuditRecord, GetInfosBySubmissionExcel} from '@/api/workBenck'
   import { promptInfoFun} from "@/utils/index"
   import SubSelected from "./selecteds/SubSelected";
   import {delTips, getText, pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
@@ -103,6 +103,7 @@ export default {
     BreachContract },
   data() {
     return {
+      auditLink:'',//详情右侧流程
       index: 0,
       componentsArr: [
         "EditAccount",//编辑开户
@@ -114,7 +115,7 @@ export default {
         "AddNature",//添加用水性质申请
         "BreachContract"//违约金减免
       ],
-      personId:'',
+      haveExamine:'',
       processId:'',
       linkCont:[],//查看审核环节
       searchWidth: 1024,
@@ -207,7 +208,9 @@ export default {
       })
     },
     excelInssud() {
-      console.log("导出");
+      GetInfosBySubmissionExcel(this.query).then(res => {//详情右侧审核流程
+        window.location.href = `${this.common.excelPath}${res.data}`;
+      })
     },
     //详情
     detaile(row) {
@@ -262,7 +265,7 @@ export default {
       })
       GetAuditRecord({Id:row.Id}).then(res => {//详情右侧审核流程
         if (res.code ==0 ) {
-          this.$refs.detailChild.auditLink = res.data
+          this.auditLink = res.data
         } else {
           promptInfoFun(this, 1, res.message);
         }
@@ -316,7 +319,7 @@ export default {
       this.rotate = row.reaId;
       $table.toggleRowExpansion(row);
       this.processId = row.Id
-      this.personId = row.CreateUserId
+      this.haveExamine = false
       GetAuditLink({Id:row.Id}).then(res => {//审核流程环境
         if (res.code ==0 ) {
           this.linkCont = res.data

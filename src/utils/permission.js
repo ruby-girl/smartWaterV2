@@ -26,6 +26,12 @@ export  function checkPermission(value) {
 export function getDictionaryOption(value) {//获取具体的字典项
   if(store.getters.dictionaryItem.length>0){
     let items = store.getters.dictionaryItem.filter(item => {
+      if(item.Id=='口径类型'){
+        let data = item.CboList
+        data.forEach(items=>{
+          items.Name = items.Name.replace('口径','')
+        })
+      }
       return item.Id == value
     })
     // if(all==true){

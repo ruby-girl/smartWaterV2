@@ -137,9 +137,9 @@
   export default {
     name: "LowInsureApply",
     components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason },
+    props:['auditLink'],
     data() {
       return {
-        auditLink:[],
         dialogVisible: false,
         files:[],
         index:1,

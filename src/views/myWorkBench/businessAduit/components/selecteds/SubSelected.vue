@@ -11,7 +11,7 @@
       <el-form-item label="申请状态" v-show="show1||isShow">
         <el-input maxlength="20" value="申请中" disabled />
       </el-form-item>
-      <el-form-item label="申请类型" v-show="show2||isShow" key="WaterMeter" prop="applyType">
+      <el-form-item label="申请类型" v-show="show2||isShow" key="WaterMeter" prop="ProcessMenuCode">
         <el-select
           v-model="query.ProcessMenuCode"
           placeholder="请选择"
@@ -24,7 +24,7 @@
             :value="Number(item.Id)" />
         </el-select>
       </el-form-item>
-      <el-form-item label="业务编号" v-show="show3||isShow" prop="applyNo">
+      <el-form-item label="业务编号" v-show="show3||isShow" prop="FlowNo">
         <el-input
           v-model="query.FlowNo"
           maxlength="20"
@@ -121,7 +121,13 @@ export default {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
+      this.query.ProcessMenuCode = 2900
+      this.query.FlowNo = ''
+      this.query.createStartTime = ''
+      this.query.createEndTime = ''
+      this.query.timevalue = []
       this.$parent.delTips("timevalue");
+      this.handleFilter();
     },
     showLabel(n, w) {
       if (Math.floor((w - 180) / 280) >= n || this.isShow) {

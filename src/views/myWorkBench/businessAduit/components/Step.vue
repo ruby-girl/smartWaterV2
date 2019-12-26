@@ -10,69 +10,51 @@
     ></el-step>
     <img v-if="milepostActive==linkCont.length" class="passImg" :src="imgIcon"/>
   </el-steps>
-  <!-- <el-steps :active="milepostActive" align-center>
-     <el-step
-       v-for="(value, key) in milepost"
-       :class="`${milepostActive>key+1 ? stepActive: ''} ${value.description=='审核不通过' ? 'errorClass': ''} ${value.id==1&&isBorder==true ? 'finishBorder': ''}` "
-       :title="value.title"
-       :description="value.id==1?'我已审核':value.description"
-       :icon="value.description=='审核不通过'?'el-icon-error':'el-icon-success'"
-     ></el-step>
-     <img v-if="milepostActive==milepost.length" class="passImg" :src="imgIcon" />
-   </el-steps>-->
 </template>
 <script>
   import imgIcon from "@/assets/imgs/pass.png"
 
   export default {
     name: "Step",
-    props: ['linkCont', 'processId', 'personId'],
+    props: ['linkCont', 'processId', 'haveExamine'],
     data() {
       return {
-        // 数组对象
-        milepost: [
-          {id: 1, title: "审核环节一", description: "已审核"},
-          {title: "审核环节二", description: "已审核"},
-          {id: 1, title: "审核环节三", description: "已审核"},
-          {title: "审核环节四", description: "审核不通过"},
-          {title: "审核环节五", description: "待审核"}
-        ],
-        // 默认步骤数
         imgIcon: imgIcon,
-        // 动态添加类名
         myAduit: 2,
         isBorder: false,
-        milepostActive:0
+        milepostActive:0,
+        userLoginId:localStorage.getItem('currntLoginUserId')
       }
     },
     watch: {
       linkCont(val) {
-        val.forEach((item, index) => {
-          if (item.AuditLinkState) {//根据最后一个已审核节点 判断当前流程审核节点所在位置
-            this.milepostActive = index + 1
+        for (let i= val.length-1;i>=0;i--) {
+          if (val[i].AuditLinkState) {
+            this.milepostActive = i + 1
+            break
           }
-          if (index + 1 < this.milepostActive) {//小于当前匹配节点后的显示 图标成功或者失败
-            if (item.AuditLinkState && item.AuditState) {
-              if (item.AuditLinkUserId == this.personId) {//筛选当前操作人匹配项
-                if (item.AuditLinkState && item.AuditState) {//true 为审核通过 false 审核不通过
-                  item.className = 'classOne'//控制字体颜色
-                  item.iconName = 'el-icon-success'
-                  item.description = '我已审核'
-                } else {
-                  item.className = 'classTwo'//控制字体颜色
-                  item.iconName = 'el-icon-error'
-                  item.description = '我审核不通过'
-                }
-              } else {
-                if (item.AuditLinkState && item.AuditState) {//true 为审核通过 false 审核不通过
-                  item.className = 'classOne'//控制字体颜色
-                  item.iconName = 'el-icon-success'
-                  item.description = '已审核'
-                } else {
-                  item.className = 'classTwo'//控制字体颜色
-                  item.iconName = 'el-icon-error'
-                  item.description = '审核不通过'
-                }
+        }
+        val.forEach((item, index) => {
+          if (item.AuditLinkState) {//已审核
+            if (item.AuditState) {//审核通过
+              if (item.AuditLinkUserId == this.userLoginId) {
+                this.haveExamine ? ((this.processId == item.AuditLinkId)?item.className = 'classOne finishBorder':item.className = 'classOne') : item.className = 'classOne'
+                item.iconName = 'el-icon-success'
+                item.description = '我已审核'
+              }else {
+                item.className = 'classOne'//控制字体颜色
+                item.iconName = 'el-icon-success'
+                item.description = '已审核'
+              }
+            }else {
+              if (item.AuditLinkUserId == this.userLoginId) {
+                this.haveExamine ? ((this.processId == item.AuditLinkId)?item.className = 'classTwo finishBorder':item.className = 'classTwo') : item.className = 'classTwo'
+                item.iconName = 'el-icon-error'
+                item.description = '我审核不通过'
+              }else {
+                item.className = 'classTwo'//控制字体颜色
+                item.iconName = 'el-icon-error'
+                item.description = '审核不通过'
               }
             }
           } else {//待审核
@@ -124,7 +106,7 @@
   }
 
   .el-step.is-horizontal {
-    flex-basis: 8% !important;
+    flex-basis: 10% !important;
   }
 
   .el-step__line-inner {

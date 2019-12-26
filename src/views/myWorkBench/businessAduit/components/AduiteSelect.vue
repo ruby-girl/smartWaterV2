@@ -15,14 +15,12 @@
           :height="tableHeight"
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
-          @sort-change="sortChanges"
-        >
+          @sort-change="sortChanges">
           <el-table-column fixed="left" label="序号" width="60" align="center">
             <template slot-scope="scope">
               <span>{{(query.page - 1) *query.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
-
           <template v-for="(item ,index) in tableHeadData">
             <el-table-column
               :key="index"
@@ -42,8 +40,7 @@
                   effect="light"
                   :visible-arrow="false"
                   content="详情"
-                  placement="bottom"
-                >
+                  placement="bottom">
                   <i class="icon iconfont detaile" @click="detaile(scope.row)">&#xe653;</i>
                 </el-tooltip>
                 <el-tooltip
@@ -61,7 +58,7 @@
           </el-table-column>
           <el-table-column type="expand" fixed="right" width="1">
             <template slot-scope="props">
-              <step :linkCont="linkCont" :processId="processId" :personId="personId"/>
+              <step :linkCont="linkCont" :processId="processId" :haveExamine="haveExamine"/>
             </template>
           </el-table-column>
         </el-table>
@@ -74,7 +71,7 @@
         />
       </div>
     </div>
-    <component :is="currentView" ref="detailChild"></component>
+    <component :is="currentView" ref="detailChild" :auditLink="auditLink"></component>
   </div>
 </template>
 <script>
@@ -86,7 +83,7 @@
   import ChangeNature from "./detailPage/ChangeNature";
   import AddNature from "./detailPage/AddNature";
   import BreachContract from "./detailPage/BreachContract";
-  import {GetAuditedInfo, GetAuditDetail, GetAuditLink, GetAuditRecord} from '@/api/workBenck'
+  import {GetAuditedInfo, GetAuditDetail, GetAuditLink, GetAuditRecord, GetAuditedInfoExcel} from '@/api/workBenck'
   import {promptInfoFun} from "@/utils/index"
   import AduiteSelected from "./selecteds/AduiteSelected";
   import {delTips, getText, pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
@@ -106,6 +103,7 @@
       BreachContract},
     data() {
       return {
+        auditLink:[],
         index: 0,
         componentsArr: [
           "EditAccount",//编辑开户
@@ -117,7 +115,7 @@
           "AddNature",//添加用水性质申请
           "BreachContract"//违约金减免
         ],
-        personId:'',
+        haveExamine:'',
         processId:'',
         linkCont:[],//查看审核环节
         searchWidth: null,
@@ -211,7 +209,9 @@
         })
       },
       excelInssud() {
-        console.log("导出");
+        GetAuditedInfoExcel(this.query).then(res => {//详情右侧审核流程
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        })
       },
       //详情
       detaile(row) {
@@ -266,7 +266,7 @@
         })
         GetAuditRecord({Id:row.Id}).then(res => {//详情右侧审核流程
           if (res.code ==0 ) {
-            this.$refs.detailChild.auditLink = res.data
+            this.auditLink = res.data
           } else {
             promptInfoFun(this, 1, res.message);
           }
@@ -320,7 +320,7 @@
         this.rotate = row.reaId;
         $table.toggleRowExpansion(row);
         this.processId = row.Id
-        this.personId = row.CreateUserId
+        this.haveExamine = false
         GetAuditLink({Id:row.Id}).then(res => {//审核流程环境
           if (res.code ==0 ) {
             this.linkCont = res.data

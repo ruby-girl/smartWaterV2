@@ -142,13 +142,13 @@
   export default {
     name: "WatreMeterAccount",
     components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason , WlMeter},
+    props:['auditLink'],
     data() {
       return {
         detailData:{},//详情信息
         userInfoData:{},//用户信息
         waterInfoData:{},//水表信息
         applyInfoData:{},//水表信息
-        auditLink:[],//右侧审核流程
         dialogVisible: false,
         files:[],//附件
         index:0,

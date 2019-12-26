@@ -21,6 +21,8 @@
   import StayAduite from "./components/StayAduite";//待我审核
   import HaveAduite from "./components/HaveAduite";//我已审核
   import AduiteSelect from "./components/AduiteSelect";//审核查询
+  import {GetCurrInfo} from '@/api/workBenck'
+  import {promptInfoFun} from "@/utils/index"
 
   export default {
     name: "businessAduit",
@@ -63,7 +65,20 @@
           this.finish = false;
           this.search = true;
         }
+      },
+      getLoginInfo(){
+        GetCurrInfo().then(res => {//审核流程环境
+        if (res.code ==0 ) {
+          localStorage.setItem('currntLoginUserId',res.data)
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      })
+
       }
+    },
+    created() {
+      this.getLoginInfo()
     }
   };
 </script>

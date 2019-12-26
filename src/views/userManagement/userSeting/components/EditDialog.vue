@@ -29,7 +29,7 @@
         <el-input v-model="formData.PeopleNo" size="small" :disabled="isMorePeople==1?true:false" />
       </el-form-item>
       <el-form-item label="用户类型  " prop="UserType">
-        <el-select v-model="formData.UserType" placeholder=" " size="small">
+        <el-select v-model="formData.UserType" placeholder=" " size="small" :disabled="formData.UserType==1201">
           <el-option v-for="(item,index) in userType" v-show="item.Id!=1201"  :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -60,7 +60,7 @@
         <el-input v-model="formData.Balance " size="small" :disabled="true" />
       </el-form-item>
 
-      <el-form-item label="地址  " class="cl_allArea">
+      <el-form-item label="地址" class="cl_allArea">
         <el-input type="textarea" v-model="formData.Address" max-length="500" @input="descInput('Address')"
                   rows="1"></el-input>
         <span>{{Address}}/500</span>
@@ -227,7 +227,9 @@
           Remark: this.formData.Remark,
           Idarr: [],
           TaxpayerNumber: this.formData.TaxpayerNumber,
-          backIdarr:backIds
+          backIdarr:backIds,
+          Addreass: this.formData.Address,
+          UserType: parseInt(this.formData.UserType)
         }
         for (let j = 0; j < this.upload.file.length; j++) {//获取上传文件ID集合
           this.ec.Idarr.push(this.upload.file[j].id)

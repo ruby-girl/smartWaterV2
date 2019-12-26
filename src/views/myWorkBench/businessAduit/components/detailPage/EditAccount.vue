@@ -38,69 +38,83 @@
             <li class="clearfix">
               <p>
                 <label>水厂</label>
-                <span>{{ editUserInfo.SA_WaterFactoryName }}</span>
+                <span>{{ oldEditUserInfo.SA_WaterFactoryName }}</span>
               </p>
               <p>
                 <label>用户编号</label>
-                <span>{{ editUserInfo.CustomerNo }}</span>
+                <span>{{ oldEditUserInfo.CustomerNo }}</span>
               </p>
               <p>
                 <label>姓名</label>
-                <span>{{ editUserInfo.CustomerName }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips"> {{ oldEditUserInfo.CustomerName }}</i></span>
+                <span>{{ oldEditUserInfo.CustomerName }}
+                  <i class="iconfont icon iconbiangeng tips" style="font-size: 12px" v-show="editUserInfo.CustomerName!=oldEditUserInfo.CustomerName"></i>
+                  <i class="tips" v-show="editUserInfo.CustomerName!=oldEditUserInfo.CustomerName"> {{ editUserInfo.CustomerName }}</i></span>
               </p>
               <p>
                 <label>简码</label>
-                <span>{{ editUserInfo.NameCode }} </span>
+                <span>{{ oldEditUserInfo.NameCode }} </span>
               </p>
             </li>
             <li class="clearfix">
               <p>
                 <label>人口</label>
-                <span>{{ editUserInfo.PeopleNo }}  <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ oldEditUserInfo.PeopleNo }}</i></span>
+                <span>{{ oldEditUserInfo.PeopleNo }}</span>
               </p>
               <p>
                 <label>用户类型</label>
-                <span>{{ editUserInfo.UserTypeStr }}</span>
+                <span>{{ oldEditUserInfo.UserTypeStr }}</span>
               </p>
               <p>
                 <label>用水性质</label>
-                <span>{{ editUserInfo.PeopleNo }}</span>
+                <span>{{ oldEditUserInfo.PeopleNo }}</span>
               </p>
               <p>
                 <label>表册</label>
-                <span>{{ editUserInfo.RegisterBookInfoName }}</span>
+                <span>{{ oldEditUserInfo.RegisterBookInfoName }}</span>
               </p>
             </li>
             <li class="clearfix half">
               <p>
                 <label>电话</label>
-                <span>{{ editUserInfo.Tel }}</span>
+                <span>{{ oldEditUserInfo.Tel }}
+                <i class="iconfont icon iconbiangeng tips" style="font-size: 12px" v-show="editUserInfo.Tel!=oldEditUserInfo.Tel"></i>
+                <i class="tips" v-show="editUserInfo.Tel!=oldEditUserInfo.Tel"> {{ editUserInfo.Tel }}</i></span>
               </p>
               <p>
                 <label>纳税人识别号</label>
-                <span>{{ editUserInfo.TaxpayerNumber }}</span>
+                <span>{{ oldEditUserInfo.TaxpayerNumber }}
+                <i class="iconfont icon iconbiangeng tips" style="font-size: 12px" v-show="editUserInfo.TaxpayerNumber!=oldEditUserInfo.TaxpayerNumber"></i>
+                <i class="tips" v-show="editUserInfo.TaxpayerNumber!=oldEditUserInfo.TaxpayerNumber"> {{ editUserInfo.TaxpayerNumber }}</i></span>
               </p>
             </li>
             <li class="clearfix half">
               <p>
                 <label>区域</label>
-                <span>{{ editUserInfo.SA_UserAreaName }}</span>
+                <span>{{ oldEditUserInfo.SA_UserAreaName }}
+                <i class="iconfont icon iconbiangeng tips" style="font-size: 12px" v-show="editUserInfo.SA_UserAreaName!=oldEditUserInfo.SA_UserAreaName"></i>
+                <i class="tips" v-show="editUserInfo.SA_UserAreaName!=oldEditUserInfo.SA_UserAreaName"> {{ editUserInfo.SA_UserAreaName }}</i></span>
               </p>
               <p>
                 <label>证件号</label>
-                <span>{{ editUserInfo.IdentityNo }}</span>
+                <span>{{ oldEditUserInfo.IdentityNo }}
+                <i class="iconfont icon iconbiangeng tips" style="font-size: 12px" v-show="editUserInfo.IdentityNo!=oldEditUserInfo.IdentityNo"></i>
+                <i class="tips" v-show="editUserInfo.IdentityNo!=oldEditUserInfo.IdentityNo"> {{ editUserInfo.IdentityNo }}</i></span>
               </p>
             </li>
             <li class="clearfix whole">
               <p>
                 <label>地址</label>
-                <span>{{ editUserInfo.Address }}</span>
+                <span>{{ oldEditUserInfo.Address }}
+                <i class="iconfont icon iconbiangeng tips" style="font-size: 12px" v-show="editUserInfo.Address!=oldEditUserInfo.Address"></i>
+                <i class="tips" v-show="editUserInfo.Address!=oldEditUserInfo.Address"> {{ editUserInfo.Address }}</i></span>
               </p>
             </li>
             <li class="clearfix whole">
               <p>
                 <label>备注</label>
-                <span>{{ editUserInfo.Remark }}</span>
+                <span>{{ oldEditUserInfo.Remark }}
+                <i class="iconfont icon iconbiangeng tips" style="font-size: 12px" v-show="editUserInfo.Remark!=oldEditUserInfo.Remark"></i>
+                <i class="tips" v-show="editUserInfo.Remark!=oldEditUserInfo.Remark"> {{ editUserInfo.Remark }}</i></span>
               </p>
             </li>
           </ul>
@@ -135,9 +149,9 @@
   export default {
     name: "EditAccount",
     components:{ fileList, ProcessExamine, FailReason },
+    props:['auditLink'],
     data() {
       return {
-        auditLink:[],//审核环节
         dialogVisible: false,
         files:[],
         screenWidth:'',
@@ -183,8 +197,8 @@
         }
       },
       detailData (newVal){//获取附件信息
-        if(newVal.Data.saList&&newVal.Data.saList.length>0)
-          this.files = getFileFun(newVal.Data.saList,this)
+        if(newVal.Data.newobj.saList&&newVal.Data.newobj.saList.length>0)
+          this.files = getFileFun(newVal.Data.newobj.saList,this)
 
         this.editUserInfo = newVal.Data.newobj
         this.oldEditUserInfo = newVal.Data.oldobj

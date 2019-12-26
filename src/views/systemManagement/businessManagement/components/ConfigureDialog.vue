@@ -85,6 +85,8 @@
     components:{CheckNodes:CheckNodes},
     data() {
       return {
+        num:'',
+        backupsModule:{},//备份当前更改节点数据
         nodeIds:[],//暂存本地流程节点所有ID
         activeName:'1',
         choseItem:[],
@@ -119,7 +121,7 @@
           role:'',
           person:''
         },
-        processID:''//当前流程ID
+        processID:'',//当前流程ID
       }
     },
     methods: {
@@ -289,7 +291,6 @@
           data: this.module,//新修改流程节点信息
           type:1
         }
-
         Bus.$emit('saveProcessNodeInfo',newProcessInfo)//暂存整个流程所有节点信息
         this.configVisible = false
         this.resetFun()
@@ -341,6 +342,8 @@
         }
         this.type = msg.type
         this.module = msg.item
+        this.num = msg.num
+        this.backupsModule = msg.data
         this.form.ModuleName = msg.item.ModuleName
         switch (msg.type) {
           case 1:

@@ -114,6 +114,7 @@
   export default {
     name: "AddNature",
     components:{ fileList, ProcessExamine, MechanicsMater, YcMeter, FailReason },
+    props:['auditLink'],
     data() {
       return {
         dialogVisible: false,
@@ -123,7 +124,6 @@
         screenWidth:'',
         ifDetail:true,
         curObj:{},//当前点击列对象
-        auditLink:[],
         detailData:{},//详情信息
         waterInfoData:{},//水表信息
         applyInfoData:{},//水表信息

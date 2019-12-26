@@ -14,7 +14,7 @@
             <li class="item_cont">
               <div>
                 <p><i class="iconfont iconliuchengkaishi"></i>{{item.BusinessStartName}}</p>
-                <span class="btnSpan btnSpanLeft" @click="peopleFun(item)">配置</span>
+                <span class="btnSpan btnSpanLeft" @click="peopleFun(item,item,index+1)">配置</span>
               </div>
               <i class="iconfont iconchangjiantou"></i>
             </li>
@@ -22,7 +22,7 @@
             <li class="item_cont" v-for="(items,indexs) in item.ProcessConfigNode" :key="indexs">
               <div class="item_cont_box">
                 <p>{{ items.Name }}</p>
-                <span class="btnSpan btnSpanLeft" @click="setFun(items,indexs,item)">
+                <span class="btnSpan btnSpanLeft" @click="setFun(items,indexs,item,index+1)">
                   {{items.Members.length >0 ?'配置':'未配置'}}
                 </span>
                 <span class="btnSpan btnSpanRight" v-show=" indexs > 0" @click="deleteProcessId(item,items,index+1)">删除</span>
@@ -44,14 +44,13 @@
         </div>
         <p class="team_btn">
           <i :class="'iconfont iconbaocun disablepointer contralSee' + (index+1)" title="保存" @click="saveNode(item.Id)"></i>
-          <i :class="'iconfont iconchexiao disablepointer contralSee' + (index+1)" title="撤销" @click="resetNode(item,(index+1))"></i>
+          <i :class="'iconfont iconchexiao disablepointer contralSee' + (index+1)" title="撤销" :id="'resetNode'+(index+1)" @click="resetNode(item,(index+1))"></i>
           <i class="iconfont iconfuzhi onPointer" title="复制" @click="copyFun(item)"></i>
           <i class="iconfont iconlajitong onPointer" title="删除" @click="deleteProcess(item.Id)"></i>
         </p>
       </div>
       <!--流程 e-->
     </div>
-
     <!--复制弹窗-->
     <copy-dialog ref="copyChild"></copy-dialog>
     <!--配置弹窗-->
@@ -72,6 +71,7 @@
     components: {copyDialog: copyDialog, configureDialog: configureDialog},
     data() {
       return {
+        haveNoData:false,
         isHasNode:false,
         moveTarget:{},//移入节点
         moveObj:[],//正再移入NODE集合
@@ -86,25 +86,34 @@
       }
     },
     watch: {
-      ifExamine() {
-        let _this = this
-        _this.prohibit = true
-        setTimeout(function () {
-          _this.prohibit = false
-        }, 10000)
+      ifExamine() {//审核按钮冷却时间
+        if(!this.haveNoData){//true 是可以点击，false 时候为无数据，不可操作
+          let _this = this
+          _this.prohibit = true//审核按钮冷却时间
+          setTimeout(function () {
+            _this.prohibit = false
+          }, 10000)
+        }
         SetProcessMenuState({id: localStorage.getItem('menuCode'),state: this.ifExamine}).then(res => {//审核权限开关
           if (res.code ==0 ) {
-           // promptInfoFun(this,2,res.message)
           } else {
             promptInfoFun(this,1,res.message)
           }
         })
+      },
+      haveNoData(newVal){//无数据时不可点击
+        newVal ? this.prohibit = true : this.prohibit = false
       }
     },
     methods: {
       getInfo() {//获取数据，动态计算每个流程宽度
         GetProcessConfig({code:localStorage.getItem('menuId')}).then(res => {
           if(res.code==0){
+            if(res.data.ProcessConfigs == 0){//控制审核按钮权限
+              this.haveNoData = true
+            } else {
+              (res.data.ProcessConfigs[0].ProcessConfigStart.length<=0||res.data.ProcessConfigs[0].ProcessConfigNode.length<=0)?this.haveNoData = true:this.haveNoData = false
+            }
             res.data.ProcessConfigs.length > 0 ? this.isHasNode = true :  this.isHasNode = false //数流程数据则不能创建流程
             this.oldData = res.data.ProcessConfigs
             this.ifExamine = res.data.ProcessState
@@ -323,19 +332,19 @@
           }
         })
       },
-      setFun(item,index,data){//流程审核配置,item 节点对象 index 节点下标 num 流程下标 data 当前流程
+      setFun(item,index,data,num){//流程审核配置,item 节点对象 index 节点下标 num 流程下标 data 当前流程,num 流程下标
         item.Name.trim() == '' ?  item.Name = '审核环节'+ (index + 1) : item.Name = item.Name
-        let obj = {item: item, type: 1}
+        let obj = {item: item, type: 1,num:num,data:data}
         Bus.$emit('NodesSetFun',obj)
         this.$refs.configureChild.getLocalstorageData(data.ProcessConfigNode)
         this.$refs.configureChild.processID = data.Id//存储当前流程id
       },
-      peopleFun(data){//操作员配置 data 流程对象
+      peopleFun(data,items,num){//操作员配置 data 流程对象
         let item = {
           ModuleName:data.BusinessStartName,
           Members:data.ProcessConfigStart
         }
-        let obj = {item: item, type: 3}
+        let obj = {item: item, type: 3,num:num,data,items}
         Bus.$emit('NodesSetFun',obj)
         this.$refs.configureChild.processID = data.Id//存储当前流程id
       },
@@ -364,7 +373,7 @@
         })
       },
       saveNode(id){//流程保存
-        let lines = [],nodes = [],stop = false
+        let lines = [],nodes = []
         let updataProcess = [],processConfig ={}
         this.data.forEach(item=>{
           if(item.Id === id){
@@ -390,9 +399,6 @@
                 }
                 obj.Member.push(memberObj)
               })
-              if(obj.Member.length==0){
-                stop = true
-              }
               nodes.push(obj)
             })
             processConfig = {
@@ -406,7 +412,6 @@
               BusinessProcessName: updataProcess.BusinessProcessName,
               BusinessStartName: updataProcess.BusinessStartName
             }
-            if (!stop){//为true 时证明流程中有配置的节点，并组织保存操作
               UpdateProcessConfig(processConfig).then(res => {
               if(res.code==0){
                 promptInfoFun(this,2,res.message)
@@ -416,14 +421,11 @@
                 this.getInfo()
               }
             })
-            } else {
-              promptInfoFun(this,1,'未配置节点不能进行操作！')
-            }
           }
       })
       },
       resetNode(item,num){//撤销操作
-        let oldData = JSON.parse(localStorage.getItem('oldProcessInfo'))//从本地获取原始数据
+        let oldData = JSON.parse(localStorage.getItem('oldProcessInfo')).ProcessConfigs//从本地获取原始数据
         oldData.forEach((items,index)=>{
           if(items.Id == item.Id){
             this.data[index].BusinessStartName = items.BusinessStartName
