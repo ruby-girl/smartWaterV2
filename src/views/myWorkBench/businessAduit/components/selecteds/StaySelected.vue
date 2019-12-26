@@ -36,7 +36,8 @@
             v-for="item in applyArray"
             :key="item.Id"
             :label="item.Id=='2900'? '全部':item.Name"
-            :value="Number(item.Id)" />
+            :value="Number(item.Id)"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="业务编号" v-show="show2||isShow" prop="FlowNo">
@@ -64,9 +65,9 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="申请日期"  v-show="show4||isShow">
+      <el-form-item label="申请日期" v-show="show4||isShow">
         <el-date-picker
-          v-model="query.timevalue"
+          v-model="timevalue"
           type="datetimerange"
           :editable="false"
           :unlink-panels="true"
@@ -103,7 +104,7 @@ export default {
   watch: {
     searchWidth: {
       handler(val, oldVal) {
-         this.showBtn = true;
+        this.showBtn = true;
         this.show1 = this.showLabel(1, val);
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
@@ -152,31 +153,25 @@ export default {
       show2: true,
       show3: true,
       show4: true,
+      timevalue: [],
       showBtn: true //查询展开
     };
   },
   created() {
-    this.companyOptions = this.$store.state.user.waterWorks;//水厂
+    this.companyOptions = this.$store.state.user.waterWorks; //水厂
     if (this.companyOptions.length == 1) {
       this.query.WaterFactoryId = this.companyOptions[0].Id;
     }
-    this.applyArray = getDictionaryOption('流程编码')//申请类型
+    this.applyArray = getDictionaryOption("流程编码"); //申请类型
   },
   methods: {
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
-      if (this.companyOptions.length == 1) {
-        this.query.WaterFactoryId = this.companyOptions[0].Id;
-      }
-      this.query.ProcessMenuCode = 2900
-      this.query.FlowNo = ''
-      this.query.createUserId = ''
-      this.query.createStartTime = ''
-      this.query.createEndTime = ''
-      this.query.timevalue = []
-      this.$parent.delTips("timevalue");
+      this.timevalue = [];
+      this.query.createStartTime = "";
+      this.query.createEndTime = "";
       this.handleFilter();
     },
     showLabel(n, w) {
@@ -212,7 +207,8 @@ export default {
       }
     },
     handleFilter() {
-      this.$parent.query = Object.assign({},this.query)
+     
+      this.$parent.query = Object.assign({}, this.query);
       this.$parent.searchTableList();
     }
   }

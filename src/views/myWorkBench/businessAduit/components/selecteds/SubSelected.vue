@@ -32,9 +32,9 @@
           @change="getText(query.FlowNo ,'FlowNo','','业务编号')"
         />
       </el-form-item>
-      <el-form-item label="申请日期" v-show="show4||isShow">
+      <el-form-item label="申请日期" v-show="show4||isShow" >
         <el-date-picker
-          v-model="query.timevalue"
+          v-model="timevalue"
           type="datetimerange"
           :editable="false"
           :unlink-panels="true"
@@ -110,7 +110,8 @@ export default {
       show4: true,
       show5: true,
       show6: true,
-      showBtn: true //查询展开
+      showBtn: true, //查询展开
+      timevalue:[]
     };
   },
   created() {
@@ -121,12 +122,9 @@ export default {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
-      this.query.ProcessMenuCode = 2900
-      this.query.FlowNo = ''
+      this.timevalue = []
       this.query.createStartTime = ''
       this.query.createEndTime = ''
-      this.query.timevalue = []
-      this.$parent.delTips("timevalue");
       this.handleFilter();
     },
     showLabel(n, w) {

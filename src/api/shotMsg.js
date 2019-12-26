@@ -72,16 +72,16 @@ export function getSMSList(data) {
 //发送短信
 export function sendShorMsg(data) {
     return request({
-        url: '/ShorMsg/HanderSendShortMsgToCheckedCus',
+        url: '/ShorMsg/HanderSendShortMsgToCheckedCus?templateId=' + data.templateId,
         method: 'post',
-        data
+        data: data.cusIds
     })
-} 
+}
 //群发
 export function sendShorMsgAll(data) {
     return request({
-        url: '/ShorMsg/HanderSendShortMsgToWhere',
+        url: '/ShorMsg/HanderSendShortMsgToWhere?templateId=' + data.templateId,
         method: 'post',
-        data
+        data: data.obj
     })
 }

@@ -53,21 +53,25 @@
           />
         </div>
       </div>
+      <change-template ref="change" />
     </div>
   </div>
 </template>
 <script>
-import SelectHead from "./components/SelectHead"; //查询条件组件
+import SelectHead from "./components/SelectHead"; //查询条件组件ChangeTemplate
+import ChangeTemplate from "./components/ChangeTemplate"; //查询条件组件
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import { getSMSList,sendShorMsg,sendShorMsgAll } from "@/api/shotMsg";
+import { getSMSList, sendShorMsg, sendShorMsgAll } from "@/api/shotMsg";
+
 export default {
   name: "sendManua",
   components: {
     SelectHead,
     Pagination,
-    SearchTips
+    SearchTips,
+    ChangeTemplate
   },
   data() {
     return {
@@ -172,15 +176,54 @@ export default {
         });
       }
     },
-    send() {//templateId
-      sendShorMsg({cusIds:this.ids}).then(res=>{
-        console.log(res)
-      })
+    send() {
+      if (this.ids.length == 0) {
+        this.$message({
+          type: "warning",
+          message: "请选择数据后在操作"
+        });
+        return false;
+      }
+      this.$refs.change.AdialogFormVisible = true;
+      this.$refs.change.allSend = true;
     },
-    sendAll(){
-      sendShorMsgAll( this.orderData ).then(res=>{
-        console.log(res)
-      })
+    sendAll() {
+      if (Object.keys(this.orderData).length == 0) {
+        this.$message({
+          message: "请查询之后再操作",
+          type: "warning"
+        });
+        return false;
+      }
+      this.$refs.change.AdialogFormVisible = true;
+      this.$refs.change.allSend = false;
+    },
+    sendList(id) {
+      //templateId
+
+      sendShorMsg({ cusIds: this.ids, templateId: id }).then(res => {
+        if (res.code == 0) {
+          this.$message({
+            type: "success",
+            message: res.message ? res.message : "操作成功"
+          });
+          this.$refs.change.AdialogFormVisible = false;
+          this.searchTableList();
+        }
+      });
+    },
+    sendAllList(id) {
+      this.$refs.change.allSend = false;
+      sendShorMsgAll({ obj: this.orderData, templateId: id }).then(res => {
+        if (res.code == 0) {
+          this.$message({
+            type: "success",
+            message: res.message ? res.message : "操作成功"
+          });
+          this.$refs.change.AdialogFormVisible = false;
+          this.searchTableList();
+        }
+      });
     }
   }
 };

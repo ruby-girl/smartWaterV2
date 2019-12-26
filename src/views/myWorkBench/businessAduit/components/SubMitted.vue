@@ -1,7 +1,7 @@
 <template>
   <div class="box_sub">
     <div ref="fromHeight">
-      <sub-selected :searchWidth="searchWidth" @getText="getText" />
+      <sub-selected :searchWidth="searchWidth" @getText="getText" ref='selectChild'/>
     </div>
     <div class="contanier">
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud" />
@@ -123,7 +123,7 @@ export default {
         ProcessState: 0,
         VerifyState: 0,
         WaterFactoryId: "",
-        ProcessMenuCode: 0,
+        ProcessMenuCode: 2900,
         FlowNo: "",
         createUserId: "",
         createStartTime: "",
@@ -135,7 +135,7 @@ export default {
         page: 20,
         sort: "",
         filed: "",
-        tableId: "0000034"
+        tableId: "0000034",
       }, //查询对象
       checksData: [],
       tableKey: 0,
@@ -177,11 +177,11 @@ export default {
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
-        this.query.StartTime = "";
-        this.query.StartTime = "";
+        this.$refs.selectChild.query.createStartTime = "";
+        this.$refs.selectChild.query.createEndTime = "";
       }
-      this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query");
-      this.searchTableList();
+      this.tipsDataCopy = delTips(val, this.$refs.selectChild, this.tipsDataCopy, "query");
+     this.$refs.selectChild.handleFilter()
     },
     getText(val, model, arr, name) {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
