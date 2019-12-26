@@ -1,16 +1,22 @@
 import request from '@/utils/request'
 
-export function ComboBoxListByBice(data) {//获取操作人下拉框(账户无分页)
+export function ComboBoxListByBice(data) {//获取操作人下拉框(账户无分页)--部门+岗位+姓名 拼接
     return request({
       url: '/Employee/ComboBoxListByBice',
       method: 'post',
       params:data
     })
 }
-export function AddWaterProperty(data) {//获取操作人下拉框(账户无分页)
+export function AddBasicConfigInfo(data) {//获取操作人下拉框(账户无分页)
   return request({
-    url: '/BasicConfigManage/AddWaterProperty',
+    url: '/BasicConfigManage/AddBasicConfigInfo',
     method: 'post',
     data:data
+  })
+}
+export function GetBasicConfigVal() {//获取操作人下拉框(账户无分页)
+  return request({
+    url: '/BasicConfigManage/GetBasicConfigVal',
+    method: 'get'
   })
 }

@@ -4,26 +4,34 @@
       <div class="box-item">
         <div class="border-bottom">
           <config-title title="系统配置" />
-          <switch-item label="开启多人口家庭用水量" :swithValue.sync="postData.BasicParam.IsMorePeople" />
-          <div class="font-small" v-show="postData.BasicParam.IsMorePeople==true?true:false">
+          <switch-item label="开启多人口家庭用水量" :swithValue.sync="postData.IsMorePeople" />
+          <div class="font-small" v-show="postData.IsMorePeople=='1'?true:false">
             人口基数为
-            <input type="text" class="config-input" v-model="postData.BasicParam.PopulationBase"/>人时，每个阶梯结算周期内，增加各阶梯水量
-            <input type="text" class="config-input" v-model="postData.BasicParam.PeopleAddYield"/>吨；每增加
-            <input type="text" class="config-input" v-model="postData.BasicParam.AddPeopleNum"/>人，
+            <input type="text" class="config-input" v-model="postData.PopulationBase" />人时，每个阶梯结算周期内，增加各阶梯水量
+            <input
+              type="text"
+              class="config-input"
+              v-model="postData.PeopleAddYield"
+            />吨；每增加
+            <input type="text" class="config-input" v-model="postData.AddPeopleNum" />人，
             <div>
               增加各阶梯水量
-              <input type="text" class="config-input" v-model="postData.BasicParam.AddPeopleNumAddYield"/>吨。（此配置只针对居民用水）
+              <input
+                type="text"
+                class="config-input"
+                v-model="postData.AddPeopleNumAddYield"
+              />吨。（此配置只针对居民用水）
             </div>
           </div>
         </div>
         <div class="pt-15">
-          <switch-item
-            label="开启固定减免"
-            :swithValue.sync="postData.BasicParam.InsuredMessageWaterAllowance"
-          />
-          <div class="pr-15 font-small" v-show="postData.BasicParam.InsuredMessageWaterAllowance==true?true:false">
+          <switch-item label="开启固定减免" :swithValue.sync="postData.IsInsuredMessageWaterAllowance" />
+          <div
+            class="pr-15 font-small"
+            v-show="postData.InsuredMessageWaterAllowance=='1'?true:false"
+          >
             低保户
-            <input type="text" class="config-input" v-model="postData.BasicParam.AddPeopleNumAddYield"/>吨/户表.月
+            <input type="text" class="config-input" v-model="postData.AddPeopleNumAddYield" />吨/户表.月
           </div>
         </div>
       </div>
@@ -31,8 +39,8 @@
       <div class="box-item">
         <div class="border-bottom">
           <config-title title="费用设置" />
-          <switch-item label="是否开启违约金" :swithValue.sync="postData.BasicParam.OverdueFineState" />
-          <div class="font-small"  v-show="postData.BasicParam.OverdueFineState==true?true:false">
+          <switch-item label="是否开启违约金" :swithValue.sync="postData.OverdueFineState" />
+          <div class="font-small" v-show="postData.OverdueFineState=='1'?true:false">
             费用生成月的下
             <el-select v-model="postData.OverdueParam.Month" size="small" class="small-select">
               <el-option value="1">1</el-option>
@@ -59,10 +67,10 @@
           </div>
         </div>
         <div class="pt-15">
-          <switch-item label="开启垃圾费" :swithValue.sync="postData.BasicParam.IsGarbage" />
-          <div class="pr-15 font-small" v-show="postData.BasicParam.IsGarbage==true?true:false">
+          <switch-item label="开启垃圾费" :swithValue.sync="postData.IsGarbage" />
+          <div class="pr-15 font-small" v-show="postData.IsGarbage=='1'?true:false">
             每月收费
-            <input type="text" class="config-input" v-model="postData.BasicParam.GarbageCost"/>元。
+            <input type="text" class="config-input" v-model="postData.GarbageCost" />元。
           </div>
         </div>
       </div>
@@ -70,14 +78,11 @@
       <div class="box-item">
         <div class="border-bottom">
           <config-title title="提醒设置" />
-          <switch-item
-            label="低保户生效日期到期消息提醒"
-            :swithValue.sync="postData.BasicParam.IsInsuredMessageNotify"
-          />
-          <div class="font-small" v-show="postData.BasicParam.IsInsuredMessageNotify==true?true:false">
+          <switch-item label="低保户生效日期到期消息提醒" :swithValue.sync="postData.IsInsuredMessageNotify" />
+          <div class="font-small" v-show="postData.IsInsuredMessageNotify=='1'?true:false">
             低保户到期前
             <el-select
-              v-model="postData.BasicParam.InsuredMessageRecheckMonth"
+              v-model="postData.InsuredMessageRecheckMonth"
               size="small"
               class="small-select"
             >
@@ -86,51 +91,57 @@
               <el-option value="3">3</el-option>
             </el-select>月进行对用户发送短信提醒，短信模板
             <el-select
-              v-model="postData.BasicParam.InsuredMessageShortMsgTempleteId"
+              v-model="postData.InsuredMessageShortMsgTempleteId"
               size="small"
               class="medium-select"
             >
-              <el-option value="1">1</el-option>
-              <el-option value="2">2</el-option>
+              <el-option :value="item.Id" v-for="item in templateNmaeList" :key="item.Id">{{item.TemplateName}}</el-option>]
             </el-select>
           </div>
         </div>
         <div class="pt-15">
           <switch-item
             label="当带阀水表用户当日用水量高于预警量是,发送预警消息"
-            :swithValue.sync="postData.BasicParam.IsWaterYieldAlarmMsg"
+            :swithValue.sync="postData.IsWaterYieldAlarmMsg"
           />
-          <div class="font-small" v-show="postData.BasicParam.IsWaterYieldAlarmMsg==true?true:false">
+          <div class="font-small" v-show="postData.IsWaterYieldAlarmMsg=='1'?true:false">
             是否发送短信至用户
-            <el-select size="small" class="small-select" v-model="postData.BasicParam.IsSendToCustomer">
+            <el-select size="small" class="small-select" v-model="postData.IsSendToCustomer">
               <el-option label="是" value="1"></el-option>
               <el-option label="否" value="0"></el-option>
-            </el-select>请选择收短信的<span class="text-decoration" @click="selectUserShow=true">工作人员</span>，短信模板
-            <el-select size="small" class="medium-select" v-model="postData.BasicParam.WaterYeildAlarmShortMsgTempleteId">
-              <el-option value="1">1</el-option>
-              <el-option value="2">2</el-option>
+            </el-select>请选择收短信的
+            <span class="text-decoration" @click="selectUserShow=true">工作人员</span>，短信模板
+            <el-select
+              size="small"
+              class="medium-select"
+              v-model="postData.WaterYeildAlarmShortMsgTempleteId"
+            >
+              <el-option :value="item.Id" v-for="item in templateNmaeList" :key="item.Id">{{item.TemplateName}}</el-option>
             </el-select>
-            <div>
+            <!-- 增加的预警列表 s -->
+            <div v-for="(item,i) in postData.CaliberAlarmVal">
               当水表口径为
               <el-select
+                @change="filterCaliberSize()"
                 size="small"
-                v-model="caliberSize"
-                class="medium-select"
-              > 
-                <el-option value="15">15</el-option>
-                <el-option value="20">20</el-option>
-                <el-option value="25">25</el-option>
-                <el-option value="40">40</el-option>
-                <el-option value="50">50</el-option>
-                <el-option value="65">65</el-option>
-                <el-option value="80">80</el-option>
-                <el-option value="100">100</el-option>
-                <el-option value="150">150</el-option>
-                <el-option value="200">200</el-option>
+                v-model="item.caliberSize"
+                :class="{'small-select':true,'error-border':item.isError}"
+              >
+                <el-option :value="i" v-for="i in item.option" :key="i+1">{{i}}</el-option>
               </el-select>时，预警量为
-              <input type="text" class="config-input" v-model="AlarmVal"/>
-              <i class="iconfont iconicon-test main-color"></i>
+              <input type="text" class="config-input" v-model="item.AlarmVal" />
+              <i
+                class="iconfont iconicon-test main-color pointer"
+                v-show="i==postData.CaliberAlarmVal.length-1"
+                @click="pushCaliberAlarmVal"
+              ></i>
+              <i
+                class="iconfont icon- main-color pointer"
+                v-show="i!==postData.CaliberAlarmVal.length-1"
+                @click="delCaliberAlarmVal(i)"
+              ></i>
             </div>
+            <!-- 增加的预警列表 e -->
           </div>
         </div>
       </div>
@@ -139,26 +150,45 @@
         <div class="border-bottom" style="padding-bottom: 5px;">
           <config-title title="水表设置" />
           <div class="box-item-bottom-border">
-             <switch-item label="支持非卡表用户开卡" :swithValue.sync="postData.BasicParam.IsOpenCard" />
+            <switch-item label="支持非卡表用户开卡" :swithValue.sync="postData.IsOpenCard" />
           </div>
-          <switch-item label="远传表欠费关阀" :swithValue.sync="postData.BasicParam.IsCloseValve" />
+          <switch-item label="远传表欠费关阀" :swithValue.sync="postData.IsCloseValve" />
         </div>
-        <div class="pt-15" v-show="postData.BasicParam.IsCloseValve==true?true:false">
+        <div class="pt-15" v-show="postData.IsCloseValve=='1'?true:false">
           <div>远传表不关阀时间</div>
           <div class="font-small">
             节假日是否开阀
-            <el-select
-              size="small"
-              v-model="postData.BasicParam.IsHolidayNotCloseValve"
-              class="small-select"
-            >
+            <el-select size="small" v-model="postData.IsHolidayNotCloseValve" class="small-select">
               <el-option label="是" value="1"></el-option>
               <el-option label="否" value="0"></el-option>
             </el-select>
           </div>
-          <div class="font-small">
-            自定义开阀
-            <el-date-picker v-model="timevalue" type="datetime" size="small" placeholder="选择日期时间"></el-date-picker>
+          <div class="font-small" v-for="(item,i) in postData.NotColseTimes">
+            <span v-show="i==0">自定义开阀</span>
+            <span v-show="i!==0">&emsp;&emsp;&emsp;&emsp;&emsp;</span>
+            <el-date-picker
+              v-model="item.timevalue"
+              type="datetimerange"
+              :editable="false"
+              :unlink-panels="true"
+              range-separator="~"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              @change="getTime(i)"
+            ></el-date-picker>
+            <i
+              class="iconfont iconicon-test main-color pointer"
+              v-show="i==postData.NotColseTimes.length-1"
+              @click="pushTime"
+            ></i>
+            <i
+              class="iconfont icon- main-color pointer"
+              v-show="i!==postData.NotColseTimes.length-1"
+              @click="delTime(i)"
+            ></i>
           </div>
         </div>
       </div>
@@ -167,87 +197,142 @@
         <el-button size="mini" @click="cancel">取消</el-button>
       </div>
       <config-select-user
-      :show.sync="selectUserShow"
-      :ReceiveSortMsgEmp.sync="postData.BasicParam.ReceiveSortMsgEmp"
-    />
-    </div> 
+        :show.sync="selectUserShow"
+        :ReceiveSortMsgEmp.sync="postData.ReceiveSortMsgEmp"
+      />
+    </div>
   </div>
 </template>
 <script>
+let checkedOption=[];//已经选中的口径
+let option=[15, 20, 25, 40, 50, 65, 80, 100, 150, 200]
 import ConfigTitle from "./components/ConfigTitle";
 import SwitchItem from "./components/SwitchItem";
 import ConfigSelectUser from "./components/ConfigSelectUser";
-import {AddWaterProperty} from "@/api/basicConfig"
+import { AddBasicConfigInfo,GetBasicConfigVal } from "@/api/basicConfig";
+import { getTemplateName } from "@/api/shotMsg"; //获取模板下拉框
 export default {
   name: "basicConfig",
   components: { SwitchItem, ConfigTitle, ConfigSelectUser },
   data() {
     return {
       postData: {
-        BasicParam: {
-          IsMorePeople: true,
-          PopulationBase: 1, //人口基数 ,
-          PeopleAddYield: "", //每个阶梯结算周期内，增加各阶梯水量xx吨 ,
-          AddPeopleNum: "", //每增加XX人 ,
-          AddPeopleNumAddYield: "", //各阶梯增加水量xx吨 ,
-          InsuredMessageWaterAllowance: true, //是否开启低保户固定减免 1否 0是 true是 false否 ,
-          OverdueFineState: true, //是否开启违约金 1否 0是 true是 false否 ,
-          OverdueParam: "", //违约金计算公式 ,
-          IsGarbage: true, //是否开启垃圾费 1否 0是 true是 false否 ,
-          GarbageDateType: "", //垃圾费收取方式，按年收取 YEAR，按月收取 MONTH ,
-          GarbageCost: "", //垃圾费
-          IsInsuredMessageNotify: true, //是否开启低保户到期消息提醒 0关 1开 true开 false关 ,
-          InsuredMessageRecheckMonth: '1', //低保户到期前 x月进行对用户发送短信提醒
-          InsuredMessageShortMsgTempleteId: "", //短信模板
-          IsWaterYieldAlarmMsg: true, // 当带阀水表用户当日用水量高于预警量时，是否发送预警消息 0否 1是 true是 false否 ,
-          IsSendToCustomer: '1', //当带阀水表用户当日用水量高于预警量时，是否发送短信至用户 0否 1是 true是 false否 ,
-          ReceiveSortMsgEmp: "", //接受短信的员工Id列表 用逗号分隔 ,
-          WaterYeildAlarmShortMsgTempleteId: "", //预计发送短信的模板 ,
-          CaliberAlarmVal: "", //水表口径及对应的报警值 ,例[{caliberSize:20,AlarmVal:110},{caliberSize:25,AlarmVal:120}]
-          IsOpenCard: true, //是否开启制卡和补卡 支持非卡表用户开卡 true是 false否 ,
-          IsCloseValve: true, //远传表欠费是否关阀 0否 1是 true是 false否 ,
-          IsHolidayNotCloseValve: '1', //远传表节假日是否不关阀 0否 1是 true是 false否 ,
-          NotColseTimes: "" //自定义不关阀时间
-        },
+        IsMorePeople: "1", //是否开启多人口
+        PopulationBase: "", //人口基数
+        PeopleAddYield: "", //每个阶梯结算周期内，增加各阶梯水量xx吨 ,
+        AddPeopleNum: "", //每增加XX人 ,
+        AddPeopleNumAddYield: "", //各阶梯增加水量xx吨 ,
+        IsInsuredMessageWaterAllowance: "1", //是否开启低保户固定减免 1否 0是 true是 false否 ,
+        InsuredMessageWaterAllowance: "", //低保户水量固定减免
+        OverdueFineState: "1", //是否开启违约金 1否 0是 true是 false否 ,
         OverdueParam: {
-          OverdueFineTimeType: "1", //违约金类型 0：费用生成后N天开始执行(公式一) 1：N月后的Y日开始执行(公式二) ,
-          Day: "", //费用生成后N天开始执行 ,
-          Month: '1', // N月后的Y日开始执行 ,
-          MonthDay: '2', //N月后的Y日开始执行 ,
-          InterestRate: "", //违约金利率‰ ,
-          OverdueFineUpBound: "" //违约金上限=本金*n％
+          //违约金计算公式 ,
+          OverdueFineTimeType: "1",
+          Day: 0,
+          Month: '',
+          MonthDay: '',
+          InterestRate: '',
+          OverdueFineUpBound: '' //违约金上限
         },
-        WaterCaliberAlarmValue: {
-          CaliberSize: "", //口径大小
-          AlarmVal: "", //报警值 ,
-          Id: "", //
-          CreateTime: "",
-          CreateUserId: "", //创建人ID
-          EditTime: "",
-          EditUserId: "", //修改人ID
-          DataState: "" //是否有效
-        },
-        NotColseValveTime: {
-          Id: "",
-          StartTime: "",
-          EndTime: "",
-          DataState: "" //数据状态
-        }
+        IsGarbage: "1", //是否开启垃圾费 1否 0是 true是 false否 ,
+        GarbageCost: "", //垃圾费
+        IsInsuredMessageNotify: "1", //是否开启低保户到期消息提醒 0关 1开 true开 false关 ,
+        InsuredMessageRecheckMonth: "", //低保户到期前 x月进行对用户发送短信提醒
+        InsuredMessageShortMsgTempleteId: "", //短信模板
+        IsWaterYieldAlarmMsg: "1", // 当带阀水表用户当日用水量高于预警量时，是否发送预警消息 0否 1是 true是 false否 ,
+        IsSendToCustomer: "1", //当带阀水表用户当日用水量高于预警量时，是否发送短信至用户 0否 1是 true是 false否 ,
+        ReceiveSortMsgEmp: "", //接受短信的员工Id列表 用逗号分隔 ,
+        WaterYeildAlarmShortMsgTempleteId: "", //预计发送短信的模板 ,
+        CaliberAlarmVal: [
+          {
+            caliberSize: "",
+            AlarmVal: "",
+            option: [15, 20, 25, 40, 50, 65, 80, 100, 150, 200]
+          }
+        ], //水表口径及对应的报警值 ,例[{caliberSize:20,AlarmVal:110},{caliberSize:25,AlarmVal:120}]
+        IsOpenCard: "1", //是否开启制卡和补卡 支持非卡表用户开卡 true是 false否 ,
+        IsCloseValve: "1", //远传表欠费是否关阀 0否 1是 true是 false否 ,
+        IsHolidayNotCloseValve: "1", //远传表节假日是否不关阀 0否 1是 true是 false否 ,
+        NotColseTimes: [
+          //自定义不关阀时间
+          {
+            StartTime: "",
+            EndTime: "",
+            timevalue: []
+          }
+        ]
       },
-      AlarmVal:'',//预警值，
-      caliberSize:15,//水表口径
       timevalue: "",
-      selectUserShow: false
+      editStartTime: "",
+      editEndTime: "",
+      selectUserShow: false,
+      templateNmaeList:[]
     };
+  },
+  mounted(){
+    getTemplateName({ isSysTemplate: "" }).then(res=>{
+      this.templateNmaeList=res.data
+    })
+    GetBasicConfigVal().then(res=>{
+      this.postData=res.data
+    })
   },
   methods: {
     confirm() {
-      console.info('人员',this.postData.BasicParam.ReceiveSortMsgEmp);
-      AddWaterProperty(this.postData).then(res=>{
-        
-      })
+      AddBasicConfigInfo(this.postData).then(res => {});
     },
-    cancel() {}
+    cancel() {},
+    getTime(n) {
+      this.postData.NotColseTimes.forEach((item, i) => {
+        if (n == i) {
+          item.StartTime = item.timevalue[0];
+          item.EndTime = item.timevalue[1];
+        }
+      });
+    },
+    // 处理自定开阀时间   s
+    pushTime() {
+      let obj = {
+        StartTime: "",
+        EndTime: ""
+      };
+      this.postData.NotColseTimes.push(obj);
+    },
+    delTime(i) {
+      this.postData.NotColseTimes = this.postData.NotColseTimes.filter(
+        (item, index) => {
+          return index !== i;
+        }
+      );
+    },
+    // 处理口径 预警数组
+    pushCaliberAlarmVal() {
+     this.filterCaliberSize()
+      let obj = {
+        caliberSize: "",
+        AlarmVal: "",
+        option: []
+      };
+      obj.option = option.filter(key => !checkedOption.includes(key));//处理新增加里可以选择的下拉框的值
+      this.postData.CaliberAlarmVal.push(obj);
+    },
+    delCaliberAlarmVal(i) {
+      this.postData.CaliberAlarmVal = this.postData.CaliberAlarmVal.filter(
+        (item, index) => {
+          return index !== i;
+        }
+      );
+    },
+    // 判断口径是否有相同的,处理所有下拉框可选值
+    filterCaliberSize() {
+      checkedOption = [];
+       this.postData.CaliberAlarmVal.forEach((item, index) => {
+        checkedOption.push(item.caliberSize);
+      });//先获取已选定的全部口径
+      this.postData.CaliberAlarmVal.forEach((item, index) => {       
+        item.option = option.filter(key => !checkedOption.includes(key)||key==item.caliberSize); //重新计算已经添加的组里下拉框选项
+      });
+    }
   }
 };
 </script>
@@ -293,7 +378,7 @@ export default {
   background: #fff;
   border-bottom: 5px solid #eee;
   margin-bottom: 10px;
-  .box-item-bottom-border{
+  .box-item-bottom-border {
     border-bottom: 1px solid #d3d6e0;
     margin-bottom: 5px;
     padding-bottom: 5px;
@@ -310,10 +395,13 @@ export default {
   padding-bottom: 10px;
   background: #eee;
 }
-.text-decoration{
+.text-decoration {
   border-bottom: 1px solid #00b2a1;
-  color:#00b2a1;
+  color: #00b2a1;
   cursor: pointer;
+}
+.error-border {
+  border: 1px solid #f56c6c;
 }
 </style>
 

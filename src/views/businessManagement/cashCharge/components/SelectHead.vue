@@ -24,7 +24,6 @@
             placeholder="(长度1-30)"
             @keyup.enter.native="handleFilter"
             style="width: 180px;float: left"
-            @blur="getText(selectHead.CustomerQueryValue,'CustomerQueryValue','',secName)"
           />
         </el-form-item>
         <el-form-item>

@@ -162,7 +162,7 @@ export default {
       payOrderId: [],
       // orderMoney: 0, //减免前金额
       // orderType:'',//费用类型
-      accountMoney: 0, //账户余额
+      accountMoney: '0.00', //账户余额
       customerNo: "", //用户编号-结算后，用户编号获取账户余额
       icInfo: {}, //IC卡 卡片详情
       headQuery: {
@@ -206,7 +206,7 @@ export default {
       paymentCodeShow: false, //扫码支付弹窗
       isIC: false,
       icType: "CreditCardAlready", //默认已刷卡
-      unpaidMoney: 0, //剩余未缴
+      unpaidMoney: '0.00', //剩余未缴
       isNull:true,
       tipsDataCopy:[]//面包屑
     };

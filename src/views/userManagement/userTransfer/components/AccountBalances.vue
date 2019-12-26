@@ -20,7 +20,7 @@
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="经办人">
+        <el-form-item label="经办人" v-show="user.IsBalanceDeposit==false">
           <el-select v-model="user.OperatorEmpId">
             <el-option
               v-for="item in editUserList"

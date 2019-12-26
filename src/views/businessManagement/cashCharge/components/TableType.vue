@@ -40,7 +40,7 @@
         <el-table-column
           label="操作"
           fixed="right"
-          min-width="220"
+          min-width="112"
           align="center"
           class-name="small-padding"
         >
@@ -73,11 +73,11 @@
                 ></i>
               </el-tooltip>
               <el-tooltip
-                class="item"
+                :class="{'item':true,'main-color-disabled':row.ChargeFlag==1003||row.OrderType!==2001?true:false}"
                 popper-class="tooltip"
                 effect="light"
                 :visible-arrow="false"
-                content="费用减免"
+                :content="row.ChargeFlag==1003?'费用审核中，无法进行减免操作':row.OrderType!==2001?'非水费类型不能进行减免':'费用减免'"
                 placement="bottom"
               >
                 <i
@@ -85,15 +85,6 @@
                   @click="feeWaiver(row)"
                 ></i>
               </el-tooltip>
-              <!-- <div class="main-color-warn" @click="details(row)">
-                <a>费用详情</a>
-              </div>
-              <div class="pl-15" @click="reset(row)">
-                <a>费用撤回</a>
-              </div>
-              <div class="main-color pl-15" @click="feeWaiver(row)">
-                <a>费用减免</a>
-              </div> -->
             </div>
           </template>
         </el-table-column>
@@ -202,6 +193,7 @@ export default {
       this.$emit("reset",row.Id);
     },
     feeWaiver(row) {
+      if(row.ChargeFlag==1003||row.OrderType!==2001) return;
       this.$emit("feeWaiver",row);
     }
   }
@@ -218,6 +210,19 @@ export default {
     margin: 1px;
     background: #aaa;
   }
+}
+.iconchexiao1{
+  color:#777c82;
+  padding:0 15px;
+}
+.secur-content {
+    .icon {
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .iconbiaodan1 {
+      color: #b59200;
+    }
 }
 </style>
 

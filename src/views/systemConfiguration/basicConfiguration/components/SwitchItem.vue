@@ -21,13 +21,16 @@ export default {
   watch:{
     swithValue:{
        handler(val, oldVal) {
-       this.valueItem=val
+         if(val=='1') this.valueItem=true
+         else this.valueItem=false
       },
       immediate: true
     },
     valueItem(v){
-      console.info('按钮',v)
-      this.$emit('update:swithValue', v)
+      let value;
+      if(v) value='1'
+      else value='0';
+      this.$emit('update:swithValue', value)
     }
   },
   data(){
