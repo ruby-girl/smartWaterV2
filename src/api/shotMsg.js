@@ -60,6 +60,22 @@ export function getSelectList(data) {
         data
     })
 }
+//剩余短信
+export function getAllNum(data) {
+    return request({
+        url: '/ShorMsg/SelectAccountShortMsgNum',
+        method: 'post',
+        data
+    })
+}
+//查询已用短信
+export function getSendNum(data) {
+    return request({
+        url: '/ShorMsg/SelectSendAccountShortMsgNum',
+        method: 'post',
+        data
+    })
+}
 /* ********  手动发送短信 *********** */
 //获取列表信息
 export function getSMSList(data) {

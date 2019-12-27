@@ -193,7 +193,7 @@ export default {
     },
     getTime() {
       //时间格式化
-      const date = this.selectHead.warterMeterPlanDate;
+      let date = this.selectHead.warterMeterPlanDate;
       let date1;
       if (date) {
         this.selectHead.timerSendStartTime = date[0];

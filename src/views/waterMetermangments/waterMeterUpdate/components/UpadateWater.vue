@@ -69,8 +69,8 @@
             class="left-input"
             @change="switchWater(UpgradeWaterNeedInfo.WaterType)"
           >
-            <el-option label="IC卡水表" value="1102" />
-            <el-option label="远传水表" value="1103" />
+            <el-option label="IC卡水表" v-if="userInfo.WaterMeterTypeId=='1101'" value="1102" />
+            <el-option label="远传水表"  v-if="userInfo.WaterMeterTypeId=='1101'||userInfo.WaterMeterTypeId=='1102'" value="1103" />
             <el-option label="物联网水表" value="1104" />
           </el-select>
         </el-form-item>

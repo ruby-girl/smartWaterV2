@@ -4,7 +4,8 @@
       <div ref="formHeight">
         <select-head :searchWidth="searchWidth" @getText="getText" />
       </div>
-      <div class="contanier">
+      <div class="contanier"> 
+        <p class="notice">提示：当前短信剩余{{surpNum}}条，已用{{sendNum}}条</p>
         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -118,7 +119,7 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import { getSelectList } from "@/api/shotMsg";
+import { getSelectList, getAllNum, getSendNum } from "@/api/shotMsg";
 export default {
   name: "smsStaues",
   components: {
@@ -139,7 +140,7 @@ export default {
         TimerEndTime: "",
         WaterMeterType: -1, //水表类型
         AreaId: -1, //区域
-        CustomerQueryType : "",
+        CustomerQueryType: "",
         CustomerQueryValue: "",
         sort: "", //升序
         filed: "", //排序字段
@@ -156,7 +157,9 @@ export default {
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
-      searchWidth: 1024
+      searchWidth: 1024,
+      surpNum: 0, //剩余
+      sendNum: 0 //已发
     };
   },
   computed: {
@@ -175,7 +178,7 @@ export default {
   },
   mounted() {
     this.$nextTick(function() {
-      this.$refs.searchTips.showExcel=false
+      this.$refs.searchTips.showExcel = false;
       // 自适应表格高度
       const that = this;
       that.tableHeight =
@@ -186,6 +189,7 @@ export default {
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.searchWidth = this.$refs.formHeight.clientWidth;
+      this.getNum();
     });
   },
   methods: {
@@ -207,11 +211,11 @@ export default {
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
       }
-      getSelectList(this.orderData ).then(res=>{
+      getSelectList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
-       this.tableData = res.data;
+        this.tableData = res.data;
         this.total = res.count;
-      })
+      });
     },
     exportList() {
       //导出
@@ -226,7 +230,23 @@ export default {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
-
+    getNum() {
+      // surpNum: 0, //剩余
+      // sendNum: 0 //已发
+      //已发
+      getSendNum().then(res => {
+        console.log(res);
+        if (res.code == 0) {
+          this.sendNum = res.data;
+        }
+      });
+      //剩余
+      getAllNum().then(res => {
+        if (res.code == 0) {
+          this.sendNum = res.data;
+        }
+      });
+    },
     //新增抄表计划
     addPlan() {
       this.addDialogFormVisible = true;
@@ -235,6 +255,16 @@ export default {
 };
 </script>
 <style lang="scss"  scoped>
+.notice {
+  margin: 0;
+  margin-bottom: 11px;
+  padding: 0;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  line-height: 19px;
+  color: rgba(255, 61, 61, 1);
+}
 .section-full-container {
   padding: 0;
 }

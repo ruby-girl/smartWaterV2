@@ -20,15 +20,15 @@
         >
           <el-input
             v-model="wachMeterData.CustomerName"
-            maxlength="20"
-            placeholder="(长度1-30)"
+            maxlength="10"
+            placeholder="(长度1-10)"
             @change="getText(wachMeterData.CustomerName,'CustomerName','','姓名')"
           />
         </el-form-item>
         <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
           <el-input
             v-model="wachMeterData.WaterMeterNo"
-            maxlength="20"
+            maxlength="50"
             @change="getText(wachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
           />
         </el-form-item>
@@ -226,6 +226,7 @@ export default {
   },
   data() {
     return {
+     
       viewWaterHistory: false, //历史
       wachMeterData: {
         page: 1,

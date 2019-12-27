@@ -20,15 +20,15 @@
         >
           <el-input
             v-model="IcwachMeterData.CustomerName"
-            maxlength="20"
-            placeholder="(长度1-30)"
+            maxlength="10"
+            placeholder="(长度1-10)"
             @change="getText(IcwachMeterData.CustomerName,'CustomerName','','姓名')"
           />
         </el-form-item>
         <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
           <el-input
             v-model="IcwachMeterData.WaterMeterNo"
-            maxlength="20"
+            maxlength="50"
             @change="getText(IcwachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
           />
         </el-form-item>
