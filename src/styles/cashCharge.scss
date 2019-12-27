@@ -3,6 +3,7 @@
     > div {
       line-height: 45px;
       color: #46494c;
+      padding: 0 5px;
     }
   }
   .right-detail-input {
@@ -121,7 +122,7 @@
     position: relative;
     border: 1px solid #ff5656;
     color: #ff5656;
-    width: 209px;
+    min-width: 145px;
     > input {
       height: 73px;
       border: none;

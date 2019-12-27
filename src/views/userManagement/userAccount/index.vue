@@ -221,7 +221,14 @@ export default {
     },
     //导出
     excelWaterAccountOrder() {
-      excelWaterAccount(this.listQuery).then(res => {
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
+      excelWaterAccount(this.orderData).then(res => {
         if (res.code == 0) {
           window.location.href = `${this.common.excelPath}${res.data}`;
         } else {
@@ -259,7 +266,7 @@ export default {
       padding: 0;
     }
     .contanier {
-       padding: 14px;
+      padding: 14px;
       padding-top: 0;
     }
   }

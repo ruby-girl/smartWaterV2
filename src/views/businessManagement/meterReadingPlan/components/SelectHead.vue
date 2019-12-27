@@ -144,21 +144,21 @@ export default {
     },
     getTime() {
       //时间格式化
-      const date = this.selectHead.warterMeterPlanDate;
-      let date1;
+      let date = this.selectHead.warterMeterPlanDate;
+      let dateStipe;
       if (date) {
         this.selectHead.createStartTime = date[0];
         this.selectHead.createEndTime = date[1];
-        date1 =
+        dateStipe =
           this.selectHead.createStartTime.split(" ")[0] +
           "~" +
           this.selectHead.createEndTime.split(" ")[0];
-        this.$emit("getText", date1, "warterMeterPlanDate", "", "升级日期");
+        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "升级日期");
       } else {
         this.selectHead.createStartTime = "";
         this.selectHead.createEndTime = "";
-        date1 = "";
-        this.$emit("getText", date1, "warterMeterPlanDate", "", "升级日期");
+        dateStipe = "";
+        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "升级日期");
       }
     }
   },

@@ -300,7 +300,7 @@ export default {
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.$nextTick(() => {
       this.screenWidth = this.$refs.formHeight.clientWidth;
-      if (Math.floor((this.screenWidth - 180) / 280) <=6) {
+      if (Math.floor((this.screenWidth - 180) / 280) <= 6) {
         this.showBtn = true;
       } else {
         this.showBtn = false;
@@ -386,8 +386,15 @@ export default {
     },
     ExcelWLWInfo() {
       //导出
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
       let that = this;
-      excelWLWWaterInfo(that.WLWQueryParam).then(res => {
+      excelWLWWaterInfo(that.orderData).then(res => {
         if (res.code == 0) {
           window.location.href = `${this.common.excelPath}${res.data}`;
           that.$message({

@@ -20,15 +20,15 @@
         >
           <el-input
             v-model="wachMeterData.CustomerName"
-            maxlength="20"
-            placeholder="(长度1-30)"
+            maxlength="10"
+            placeholder="(长度1-10)"
             @change="getText(wachMeterData.CustomerName,'CustomerName','','姓名')"
           />
         </el-form-item>
         <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
           <el-input
             v-model="wachMeterData.WaterMeterNo"
-            maxlength="20"
+            maxlength="50"
             @change="getText(wachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
           />
         </el-form-item>
@@ -48,7 +48,6 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用户状态" v-show="show4||isShow" key="cs" prop="cs">
-          
           <el-select
             v-model="wachMeterData.cs"
             placeholder="请选择"
@@ -227,6 +226,7 @@ export default {
   },
   data() {
     return {
+     
       viewWaterHistory: false, //历史
       wachMeterData: {
         page: 1,
@@ -395,8 +395,15 @@ export default {
       });
     },
     excelWaterMeter() {
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
       let that = this;
-      excelJXMeterWater(that.wachMeterData).then(res => {
+      excelJXMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
           window.location.href = `${this.common.excelPath}${res.data}`;
           that.$message({

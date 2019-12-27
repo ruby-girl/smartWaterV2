@@ -16,7 +16,7 @@
       :rules="rules"
     >
       <el-form-item label="姓名：" prop="CustomerName">
-        <el-input v-model="EditJxData.CustomerName" maxlength="30" placeholder="(长度1-30)" />
+        <el-input v-model="EditJxData.CustomerName" disabled maxlength="10" placeholder="(长度1-10)" />
       </el-form-item>
       <el-form-item label="用户编号：" prop="CustomerNo">
         <el-input v-model="EditJxData.CustomerNo" maxlength="20" />

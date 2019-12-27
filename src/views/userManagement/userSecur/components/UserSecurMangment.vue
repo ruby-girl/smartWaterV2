@@ -72,6 +72,7 @@
                   content="复审"
                   placement="bottom"
                 >
+                  <!-- <i  v-if="scope.row.RecheckStateName!='待复审'" class="icon iconfont iconlianhe1" style="color:#ccc;"></i> -->
                   <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)"></i>
                 </el-tooltip>
               </div>
@@ -190,6 +191,13 @@ export default {
     },
     //导出
     excelInssud() {
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
       excelInssured(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

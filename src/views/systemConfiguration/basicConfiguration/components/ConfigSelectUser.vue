@@ -7,6 +7,8 @@
     top="20vh"
     width="680px"
     center
+    @closed="close"
+    @open="open"
   >
     <div class="config-dialog-body">
       <div class="config-dialog-head">
@@ -120,16 +122,19 @@ export default {
       departmentOption: [],
       customerQueryTypeOption: [],
       dialogFormVisible: false,
-      checkedArr: ["1"],
+      checkedArr: [],
       allId: [], //所有数据的ID
-      data: []
+      data: [],
+      allData:[]//所有的人员信息
     };
   },
   mounted() {
-    ComboBoxList().then(res => {
-      //部门
+    ComboBoxList().then(res => { //部门 
       this.departmentOption = res.data;
     });
+    ComboBoxListByBice(this.user).then(res => {//。此刻this.user={ DepartmentId: "",JobId: ""}获取所有的人员，用来初始化回填显示已经选中的人员
+      this.allData=res.data
+    })  
   },
   watch: {
     show() {
@@ -143,6 +148,19 @@ export default {
     }
   },
   methods: {
+    open(){
+      this.checkedArr = this.ReceiveSortMsgEmp;
+      //打开弹窗 回填显示已经选中的人员（左侧无人员展示）。此刻this.user={ DepartmentId: "",JobId: ""}获取所有的人员
+      this.setCheckAllData(this.allData); 
+    },
+    close(){
+      this.checkedArr=this.ReceiveSortMsgEmp//关闭弹窗，不保存 勾选的数据
+      this.user={
+         DepartmentId: "",
+        JobId: ""
+      }
+      this.data=[]
+    },
     handleCheckAllChange() {
       if (this.checkAll) {
         this.checkAll = true;
@@ -153,7 +171,7 @@ export default {
         this.isIndeterminate = false;
         this.checkedArr = [];
       }
-      this.setCheckAllData();
+      this.setCheckAllData(this.data);
     },
     getUser(type) {
       //获取具体人员
@@ -197,9 +215,9 @@ export default {
       }
       return newArr;
     },
-    setCheckAllData() {//根据选中的ID获取数据详情，用来展示选中的人员--数据回填  
+    setCheckAllData(arr) {//根据选中的ID获取数据详情，用来展示选中的人员--数据回填  
       this.checkAllData = [];
-      this.data.forEach(item => {
+      arr.forEach(item => {
         this.checkedArr.forEach(i => {
           if (item.Id == i) {
             this.checkAllData.push(item);
@@ -254,12 +272,12 @@ export default {
       this.checkedArr = this.checkedArr.filter(item => {
         return item !== id;
       });
-      this.setRightBox(id);
+      this.handlecheckitemChange(id)
     },
     confirm() {
       if(this.checkedArr.length<1){
         this.$message({
-            message: '当前未勾选工作人员！',
+            message: '请勾选工作人员接收短信的工作人员！',
             type: "error",
             duration: 4000
           });
