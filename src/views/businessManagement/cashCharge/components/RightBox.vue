@@ -2,15 +2,15 @@
   <!--右侧缴费操作 -->
   <div>
     <div class="right-detail-box">
-      <div class="display-flex align-items-center justify-content-flex-justify right-font-18">
+      <!-- <div class="display-flex align-items-center justify-content-flex-justify right-font-18">
         <div>剩余未缴</div>
         <div class="right-big-font">
           <span class="right-small-font">¥</span>
           {{unpaidMoney}}
         </div>
-      </div>
-      <div class="display-flex align-items-center justify-content-flex-justify right-font-18">
-        <div>账户余额</div>
+      </div> -->
+      <div class="display-flex align-items-center justify-content-flex-justify right-font-18" style="background:#f5f5f5;">
+        <div>账户金额</div>
         <div class="main-color right-big-font">
           <span class="right-small-font">¥</span>
           {{accountMoney}}
@@ -138,7 +138,7 @@ export default {
       this.surplusFunc();
     },
     num(v) {
-      this.inputWidth = v.length * 19 < 100 ? 100 : v.length * 19;
+      this.inputWidth = v.length * 18 < 100 ? 100 : v.length * 18;
     }
   },
   data() {

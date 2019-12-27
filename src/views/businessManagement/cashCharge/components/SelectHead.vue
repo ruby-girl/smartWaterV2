@@ -9,21 +9,21 @@
         label-width="80px"
         @submit.native.prevent
       >
-        <el-form-item label="用户：" label-width="65px">
+        <el-form-item label="">
           <el-select
             v-model="selectHead.CustomerQueryType"
             placeholder="请选择"
-            style="width: 100px;float: left"
-             @change="getscName(selectHead.CustomerQueryType)"
+           class="user-select-box"
+          style="width: 100px;float: left;margin-right:3px;"
           >
-           <el-option v-for="item in typeOption" :key="item.Id" :label="item.Name" :value="item.Id" />
+            <el-option v-for="item in typeOption" :key="item.Id" :label="item.Name" :value="item.Id" />
           </el-select>
           <el-input
             v-model="selectHead.CustomerQueryValue"
             maxlength="20"
             placeholder="(长度1-30)"
             @keyup.enter.native="handleFilter"
-            style="width: 180px;float: left"
+            style="width: 180px;float: left"       
           />
         </el-form-item>
         <el-form-item>

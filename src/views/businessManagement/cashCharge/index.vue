@@ -1,6 +1,6 @@
 <template>
   <div class="section-container">
-    <div ref="formHeight" class="cash-padding-bg padding-20">
+    <div ref="formHeight" class="cash-padding-bg">
       <select-head
         :select-head="headQuery"
         @handleFilter="handleFilter"
@@ -367,12 +367,12 @@ export default {
   margin: 0 !important;
 }
 .cash-padding-bg {
-  padding: 20px !important;
+  padding: 12px !important;
   background: #fff;
 }
-.padding-20 {
-  padding: 20px !important;
-}
+// .padding-20 {
+//   padding: 20px !important;
+// }
 .cash-right-box {
   border-left: 15px solid #eff1f4;
   padding: 15px;
