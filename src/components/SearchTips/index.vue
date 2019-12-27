@@ -145,7 +145,7 @@ export default {
   overflow: hidden;
   padding-left: 5px;
   height: 34px;
-  border: 1px solid rgba(216, 226, 231, 1);
+  border: 1px solid #e6ebf5;
   opacity: 1;
   line-height: 34px;
   .icon:hover {

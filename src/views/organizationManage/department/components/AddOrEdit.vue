@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :close-on-click-modal="false"
-    top="10vh"
+    top="30vh"
     :title="title"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
@@ -10,7 +10,7 @@
       <el-form-item label="部门 " prop="DeptName">
         <el-input
           v-model.trim="jp.DeptName"
-          placeholder="请输入部门名称"
+          placeholder="长度1-10内"
           maxlength="10"
           size="small"
           style="width: 230px"/>

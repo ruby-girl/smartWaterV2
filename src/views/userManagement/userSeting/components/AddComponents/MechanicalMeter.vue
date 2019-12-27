@@ -13,7 +13,7 @@
           <el-input :disabled="true" v-model="formData.CustomerNo" size="small"/>
         </el-form-item>
         <el-form-item label="姓名 " prop="CustomerName">
-          <el-input v-model="formData.CustomerName" placeholder="长度（1-30）" max-length="30" size="small" @blur="getJMFun"/>
+          <el-input v-model="formData.CustomerName" placeholder="长度（1-30）" maxlength="30" size="small" @blur="getJMFun"/>
         </el-form-item>
         <el-form-item label="简码 " prop="NameCode">
           <el-input :disabled="true" v-model="formData.NameCode" size="small"/>
@@ -53,11 +53,11 @@
           <el-input v-model.trim="formData.TaxpayerNumber " size="small"/>
         </el-form-item>
         <el-form-item label="地址 " class="cl_allArea" prop="Address">
-          <el-input type="textarea" v-model="formData.Address" max-length="500" @input="descInput('Address')" rows="1"></el-input>
+          <el-input type="textarea" v-model="formData.Address" maxlength="500" @input="descInput('Address')" rows="1"></el-input>
           <span>{{Address}}/500</span>
         </el-form-item>
         <el-form-item label="备注 " class="cl_allArea" prop="Remark">
-          <el-input type="textarea" v-model="formData.Remark" max-length="500" @input="descInput('Remark')"></el-input>
+          <el-input type="textarea" v-model="formData.Remark" maxlength="500" @input="descInput('Remark')"></el-input>
           <span>{{Remark}}/500</span>
         </el-form-item>
       </el-form>
@@ -90,11 +90,11 @@
         </el-form-item>
         <!--IC表 e-->
         <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
-          <el-input type="textarea" v-model="formData.InstallAddress" max-length="500" @input="descInput('InstallAddress')" rows="1"></el-input>
+          <el-input type="textarea" v-model="formData.InstallAddress" maxlength="500" @input="descInput('InstallAddress')" rows="1"></el-input>
           <span>{{InstallAddress}}/500</span>
         </el-form-item>
         <el-form-item label="备注 " class="cl_allArea" prop="WaterRemark">
-          <el-input type="textarea" v-model="formData.WaterRemark" max-length="500" @input="descInput('WaterRemark')"></el-input>
+          <el-input type="textarea" v-model="formData.WaterRemark" maxlength="500" @input="descInput('WaterRemark')"></el-input>
           <span>{{WaterRemark}}/500</span>
         </el-form-item>
       </el-form>

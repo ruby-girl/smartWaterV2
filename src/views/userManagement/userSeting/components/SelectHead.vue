@@ -12,7 +12,7 @@
         <el-select v-model="query.CustomerQueryType" placeholder="请选择" class="short-select-item" style="width: 100px;float: left;">
           <el-option v-for="(item,index) in dataTypes" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
-        <el-input v-model="query.CustomerQueryValue" maxlength="50" placeholder="(长度1-50)" style="width: 180px;float: left;margin-left: 10px;" @blur="setText(query.CustomerQueryValue,'CustomerQueryValue',userType)"/>
+        <el-input v-model="query.CustomerQueryValue" maxlength="30" placeholder="(长度1-30)" style="width: 180px;float: left;margin-left: 10px;" @blur="setText(query.CustomerQueryValue,'CustomerQueryValue',userType)"/>
       </el-form-item>
       <el-form-item label="用户类型" prop="UserType" >
         <el-select v-model="query.UserType" placeholder="请选择" size="small" @change="getText(query.UserType,'UserType',userType,'用户类型')">

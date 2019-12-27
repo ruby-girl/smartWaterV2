@@ -229,18 +229,20 @@ export default {
     border: none;
     .el-tree {
       color: #777c82;
-      height: 100%;
+      max-height: 100%;
+      border-bottom: solid 1px #e6ebf5;
+      overflow-y: auto;
     }
   }
   .el-tree-node__content {
     height: 38px;
     font-size: 14px;
     color: #46494c;
-    border-top: solid 1px #cad9e0;
+    border-top: solid 1px #e6ebf5;
     position: relative;
     padding-left: 0px !important;
-    border-left:solid 1px #cad9e0;
-    border-right:solid 1px #cad9e0;
+    border-left:solid 1px #e6ebf5;
+    border-right:solid 1px #e6ebf5;
   }
   .el-tree-node__expand-icon {
     position: absolute;

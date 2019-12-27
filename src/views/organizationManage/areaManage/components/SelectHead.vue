@@ -8,7 +8,7 @@
     label-width="70px"
     @submit.native.prevent>
     <el-form-item label="片区" prop="BlockAreaName" style="margin-left: -40px">
-      <el-input v-model="sbap.BlockAreaName" maxlength="20" placeholder="片区名称(长度20)" @keyup.enter.native="searchFun" @change="getText(sbap.BlockAreaName,'BlockAreaName','','片区')"/>
+      <el-input v-model="sbap.BlockAreaName" maxlength="20" placeholder="片区 (长度1-20内)" @keyup.enter.native="searchFun" @change="getText(sbap.BlockAreaName,'BlockAreaName','','片区')"/>
     </el-form-item>
     <el-form-item label="操作人" prop="editUserId">
       <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">

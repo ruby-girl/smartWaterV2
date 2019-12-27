@@ -111,6 +111,14 @@
         this.customHeight = this.$refs.myChild.isCustom
       },
       exportExcel() {//导出事件
+        if(this.tableData.length<=0){
+          this.$message({
+            message: '暂无导出数据',
+            type: 'warning',
+            duration: 4000
+          });
+          return false
+        }
         GetList_Execl(this.dp).then(res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         })

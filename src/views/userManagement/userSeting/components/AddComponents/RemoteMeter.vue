@@ -13,7 +13,7 @@
           <el-input :disabled="true" v-model="ycData.CustomerNo" size="small"/>
         </el-form-item>
         <el-form-item label="姓名 " prop="CustomerName">
-          <el-input v-model.trim="ycData.CustomerName" placeholder="长度（1-30）" max-length="30" size="small"  @blur="getJMFun"/>
+          <el-input v-model.trim="ycData.CustomerName" placeholder="长度（1-30）" maxlength="30" size="small"  @blur="getJMFun"/>
         </el-form-item>
         <el-form-item label="简码 " prop="NameCode">
           <el-input :disabled="true" v-model="ycData.NameCode" size="small"/>
@@ -48,11 +48,11 @@
           <el-input v-model.trim="ycData.TaxpayerNumber " size="small"/>
         </el-form-item>
         <el-form-item label="地址 " class="cl_allArea" prop="Address">
-          <el-input type="textarea" v-model="ycData.Address" max-length="500" @input="descInput('Address')" rows="1"></el-input>
+          <el-input type="textarea" v-model="ycData.Address" maxlength="500" @input="descInput('Address')" rows="1"></el-input>
           <span>{{Address}}/500</span>
         </el-form-item>
         <el-form-item label="备注 " class="cl_allArea" prop="UserRemark">
-          <el-input type="textarea" v-model="ycData.UserRemark" max-length="500" @input="descInput('UserRemark')"></el-input>
+          <el-input type="textarea" v-model="ycData.UserRemark" maxlength="500" @input="descInput('UserRemark')"></el-input>
           <span>{{UserRemark}}/500</span>
         </el-form-item>
       </el-form>

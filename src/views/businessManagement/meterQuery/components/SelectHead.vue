@@ -151,7 +151,7 @@
                      style="width: 100px;float: left;margin-left: 30px">
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
           </el-select>
-          <el-input v-model="param2.CustomerQueryValue" maxlength="20" placeholder="(长度1-10)"
+          <el-input v-model="param2.CustomerQueryValue" maxlength="30" placeholder="(长度1-30)"
                     style="width: 180px;float: left;margin-left: 10px;"  @change="getText(param2.CustomerQueryValue,'CustomerQueryValue','',param2.CustomerQueryType)"/>
         </el-form-item>
       </transition>

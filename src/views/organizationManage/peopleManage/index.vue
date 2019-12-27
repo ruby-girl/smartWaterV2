@@ -153,6 +153,14 @@
         this.customHeight = this.$refs.myChild.isCustom
       },
       exportExcel() {//导出事件
+        if(this.tableData.length<=0){
+          this.$message({
+            message: '暂无导出数据',
+            type: 'warning',
+            duration: 4000
+          });
+          return false
+        }
         let jp;
         if (!this.$refs.childSelect.ifMore) {//此时查询条件不包含隐藏字段
           jp = {

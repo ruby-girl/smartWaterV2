@@ -44,7 +44,7 @@
             <a style="color: #B59200" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
           </el-tooltip>
           <el-tooltip effect="light" content="编辑" placement="bottom-start">
-            <a style="margin:10px;color: #00B2A1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
+            <a style="margin:0 6px;color: #00B2A1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
           </el-tooltip>
           <el-tooltip effect="light" content="删除" placement="bottom-start">
             <a style="color: #FF3D3D" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
@@ -125,6 +125,10 @@
     methods:{
       /******************导出，触发父级方法**********************/
       exportExcel() {
+        if(this.tableData.length<=0){
+          promptInfoFun(this,1,'暂无导出数据')
+          return false
+        }
         this.$parent.userInfoExcel()
       },
       /******************查询，触发父级查询方法**********************/
@@ -253,6 +257,7 @@
 </script>
 <style lang="scss">
   .tr_container{
+    .searchTips{border-bottom: none;}
     .cl-operation1{margin: 46px 0 0 0;}
     .el-table thead tr th {
       background: #F0F2F5 !important;

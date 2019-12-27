@@ -197,8 +197,8 @@
 .cl-reset{color:#00B2A1;border: solid 1px #00B2A1;
   i{font-size: 14px !important;margin-right: 2px;}
 }
-.cl-danger{color:#FF5656;border: solid 1px #FF5656;i{font-size: 14px !important;margin-right: 2px;}}
-.cl-danger:hover{border: solid 1px #fbc4c4;background: #fef0f0;color: #f56c6c;}
+.cl-danger{color:#FF5656 !important;background: #fff !important;border: solid 1px #FF5656 !important;i{font-size: 14px !important;margin-right: 2px;}}
+.cl-danger:hover, .cl-danger:focus{border: solid 1px #fbc4c4 !important;background: #fef0f0 !important;color: #f56c6c !important;}
 .firstItem{margin-left: -40px;}
 .firstItems{margin-left: -40px;}
 .firstItemsOther{margin-left: 5px;}

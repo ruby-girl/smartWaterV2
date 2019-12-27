@@ -115,6 +115,10 @@
     },
     methods: {
       exportExcel() {//导出事件
+        if(this.tableData.length<=0){
+          promptInfoFun(this,1,'暂无导出数据')
+          return false
+        }
         GetRegisterList_Execl(this.rbp).then(res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         })

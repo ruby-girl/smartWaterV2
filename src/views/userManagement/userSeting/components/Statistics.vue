@@ -54,7 +54,7 @@
       font-size: 14px;
       color: #46494C;
       line-height: 35px;
-      margin-bottom: 7px;
+      margin-bottom: 2px;
       margin-right: 100px;
       display: inline-block;
 

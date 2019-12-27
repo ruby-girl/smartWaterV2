@@ -13,7 +13,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="岗位">
-      <el-input v-model="dp.JobName" maxlength="20" placeholder="角色名称(长度20)" @change="getText(dp.JobName,'JobName','','岗位')"/>
+      <el-input v-model="dp.JobName" maxlength="20" placeholder="请输入岗位名称" @change="getText(dp.JobName,'JobName','','岗位')"/>
     </el-form-item>
     <el-form-item label="">
       <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>

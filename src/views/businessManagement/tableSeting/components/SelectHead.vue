@@ -31,13 +31,13 @@
         </transition>
         <transition name="fade">
           <el-form-item label="表册编号" v-show="screenWidth<1600?ifMore:true" prop="BookNo">
-            <el-input v-model="rbp.BookNo" maxlength="20" placeholder="片区名称(长度20)"
+            <el-input v-model="rbp.BookNo" maxlength="20" placeholder="请输入表册编号"
                       @keyup.enter.native="handleFilter" @change="getText(rbp.BookNo,'BookNo','','表册编号')"/>
           </el-form-item>
         </transition>
         <transition name="fade">
           <el-form-item label="表册名称" v-show="screenWidth<=1680?ifMore:true" prop="BookName">
-            <el-input v-model="rbp.BookName" maxlength="20" placeholder="片区名称(长度20)" @change="getText(rbp.BookName,'BookName','','表册名称')"/>
+            <el-input v-model="rbp.BookName" maxlength="20" placeholder="请输入表册名称" @change="getText(rbp.BookName,'BookName','','表册名称')"/>
           </el-form-item>
         </transition>
         <el-form-item label="">

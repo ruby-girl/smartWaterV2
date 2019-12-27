@@ -10,8 +10,8 @@
       <el-form-item label="表册名称" prop="BookName">
         <el-input
           v-model.trim="rb.BookName"
-          placeholder="(长度1-20内)"
-          maxlength="20"
+          placeholder="(长度1-50内)"
+          maxlength="50"
           size="small"/>
       </el-form-item>
       <!--根据操作人员权限判断是否可以选择水厂-->

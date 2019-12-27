@@ -74,7 +74,6 @@ export default {
     }
   },
   methods: {
-
     /**
      * 伸缩功能
      * */
@@ -280,9 +279,6 @@ export default {
       border-color: rgba(199, 199, 199, 1) !important;
       color: #fff !important;
     }
-  }
-  .icon {
-    font-size: 14px;
   }
   background: #eff1f4;
   .telescopic {

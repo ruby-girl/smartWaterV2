@@ -137,8 +137,11 @@ export default {
         }
       });
     },
-    exportExcel() {
-      //导出
+    exportExcel() { //导出
+      if(this.tableData.length<=0){
+        promptInfoFun(this,1,'暂无导出数据')
+        return false
+      }
       MeterReadPlanExport(this.param).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

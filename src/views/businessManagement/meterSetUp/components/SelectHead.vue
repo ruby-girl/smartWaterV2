@@ -31,7 +31,7 @@
                      style="width: 100px;float: left;margin-left: 30px">
             <el-option v-for="(item,index) in userTypes" :label="item.name" :value="item.Id" :key="index"></el-option>
           </el-select>
-          <el-input v-model="param.CustomerQueryValue" maxlength="20" placeholder="(长度1-30)"
+          <el-input v-model="param.CustomerQueryValue" maxlength="30" placeholder="(长度1-30)"
                     style="width: 180px;float: left;margin-left: 10px;"  @blur="setText(param.CustomerQueryValue,'CustomerQueryValue',userTypes)"/>
         </el-form-item>
       </transition>
