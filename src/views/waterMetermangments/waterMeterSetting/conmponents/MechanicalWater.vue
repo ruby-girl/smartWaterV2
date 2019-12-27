@@ -48,7 +48,6 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用户状态" v-show="show4||isShow" key="cs" prop="cs">
-          
           <el-select
             v-model="wachMeterData.cs"
             placeholder="请选择"
@@ -395,8 +394,15 @@ export default {
       });
     },
     excelWaterMeter() {
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
       let that = this;
-      excelJXMeterWater(that.wachMeterData).then(res => {
+      excelJXMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
           window.location.href = `${this.common.excelPath}${res.data}`;
           that.$message({

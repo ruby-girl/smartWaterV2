@@ -392,9 +392,9 @@ export default {
     },
     exportList() {
       //导出
-      if (Object.keys(this.orderData).length == 0) {
+    if (this.tableData.length == 0) {
         this.$message({
-          message: "请查询之后再操作",
+          message: "暂无导出数据",
           type: "warning"
         });
         return false;

@@ -212,9 +212,8 @@ export default {
           if (asideHeight < conentHeight) {
             that.$refs.update.showInfo = false;
             that.$refs.update.showSelect = true;
-
-          }else {
-              that.$refs.update.showInfo = true;
+          } else {
+            that.$refs.update.showInfo = true;
             that.$refs.update.showSelect = false;
           }
         }, 200);
@@ -257,7 +256,14 @@ export default {
     },
     //导出
     excelWaterAccountOrder() {
-      ExcelUpgradeRecordList(this.listQuery).then(res => {
+       if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
+      ExcelUpgradeRecordList(this.orderData).then(res => {
         if (res.code == 0) {
           window.location.href = `${this.common.excelPath}${res.data}`;
         } else {

@@ -173,6 +173,7 @@ export default {
   },
   mounted() {
     this.$nextTick(function() {
+      this.$refs.searchTips.showExcel=false
       // 自适应表格高度
       const that = this;
       that.tableHeight =

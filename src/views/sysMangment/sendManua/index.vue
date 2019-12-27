@@ -127,6 +127,7 @@ export default {
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.searchWidth = this.$refs.formHeight.clientWidth;
+      this.$refs.searchTips.showExcel=false
     });
   },
   methods: {

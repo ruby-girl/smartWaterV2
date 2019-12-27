@@ -342,8 +342,15 @@ export default {
       this.searchFun();
     },
     excelWaterMeter() {
+       if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
       let that = this;
-      excelICMeterWater(that.IcwachMeterData).then(res => {
+      excelICMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
           window.location.href = `${this.common.excelPath}${res.data}`;
           that.$message({

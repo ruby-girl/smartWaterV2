@@ -190,6 +190,13 @@ export default {
     },
     //导出
     excelInssud() {
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
       excelInssured(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

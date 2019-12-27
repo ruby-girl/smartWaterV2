@@ -237,6 +237,13 @@ export default {
       });
     },
     excelInssud() {
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
       GetBusinessFlowRecordByCurrentUserExcel(this.query).then(res => {
         //详情右侧审核流程
         window.location.href = `${this.common.excelPath}${res.data}`;

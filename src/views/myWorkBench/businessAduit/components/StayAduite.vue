@@ -197,7 +197,7 @@ export default {
     //删除面包屑
     delTips(val) {
       if (val == "timevalue") {
-        this.$refs.selectChild.timevalue=[]
+        this.$refs.selectChild.timevalue = [];
         //当返回的model 为时间数组  置空 时间
         this.$refs.selectChild.query.createStartTime = "";
         this.$refs.selectChild.query.createEndTime = "";
@@ -209,7 +209,6 @@ export default {
         "query"
       );
       this.$refs.selectChild.handleFilter();
-  
     },
     getText(val, model, arr, name) {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
@@ -236,6 +235,13 @@ export default {
       });
     },
     excelInssud() {
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "暂无导出数据",
+          type: "warning"
+        });
+        return false;
+      }
       GetInfosByToBeAuditedExcel(this.query).then(res => {
         //详情右侧审核流程
         window.location.href = `${this.common.excelPath}${res.data}`;
