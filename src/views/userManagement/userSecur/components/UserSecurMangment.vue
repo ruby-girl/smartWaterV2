@@ -72,6 +72,7 @@
                   content="复审"
                   placement="bottom"
                 >
+                  <!-- <i  v-if="scope.row.RecheckStateName!='待复审'" class="icon iconfont iconlianhe1" style="color:#ccc;"></i> -->
                   <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)"></i>
                 </el-tooltip>
               </div>

@@ -194,20 +194,20 @@ export default {
     getTime() {
       //时间格式化
       let date = this.selectHead.warterMeterPlanDate;
-      let date1;
+      let dateStipe;
       if (date) {
         this.selectHead.timerSendStartTime = date[0];
         this.selectHead.timerSendEndTime = date[1];
-        date1 =
+        dateStipe =
           this.selectHead.timerSendStartTime.split(" ")[0] +
           "~" +
           this.selectHead.timerSendEndTime.split(" ")[0];
-        this.$emit("getText", date1, "warterMeterPlanDate", "", "定时发送日期");
+        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "定时发送日期");
       } else {
         this.selectHead.timerSendStartTime = "";
         this.selectHead.timerSendEndTime = "";
-        date1 = "";
-        this.$emit("getText", date1, "warterMeterPlanDate", "", "定时发送日期");
+        dateStipe = "";
+        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "定时发送日期");
       }
     },
     //获取模板名称
