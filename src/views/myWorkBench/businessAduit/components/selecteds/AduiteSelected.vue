@@ -25,7 +25,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="申请类型" v-show="show1||isShow" prop="applyType">
+      <el-form-item label="申请类型" v-show="show1||isShow" prop="ProcessMenuCode">
         <el-select
           v-model="query.ProcessMenuCode "
           placeholder="请选择"
@@ -36,10 +36,11 @@
             v-for="item in applyArray"
             :key="item.Id"
             :label="item.Id=='2900'? '全部':item.Name"
-            :value="Number(item.Id)" />
+            :value="Number(item.Id)"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="业务编号" v-show="show2||isShow" prop="applyNo">
+      <el-form-item label="业务编号" v-show="show2||isShow" prop="FlowNo">
         <el-input
           v-model="query.FlowNo "
           maxlength="20"
@@ -47,7 +48,7 @@
           @change="getText(query.FlowNo  ,'FlowNo ','','业务编号')"
         />
       </el-form-item>
-      <el-form-item label="创建人" v-show="show3||isShow" prop="creater">
+      <el-form-item label="创建人" v-show="show3||isShow" prop="createUserId">
         <el-select
           v-model="query.createUserId "
           placeholder="请选择"
@@ -59,7 +60,7 @@
             v-for="item in creareUserArry"
             :key="item.Id"
             :label="item.Name"
-            :value="Number(item.Id)"
+            :value="item.Id"
           />
         </el-select>
       </el-form-item>
@@ -79,9 +80,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="申请日期"  v-show="show5||isShow">
+      <el-form-item label="申请日期" v-show="show5||isShow">
         <el-date-picker
-          v-model="query.timevalue"
+          v-model="timevalue"
           type="datetimerange"
           :editable="false"
           :unlink-panels="true"
@@ -91,13 +92,13 @@
           :default-time="['00:00:00', '23:59:59']"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          @change="getTime(query.timevalue,'timevalue')"
+          @change="getTime(timevalue,'timevalue')"
           @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="审核日期" v-show="show6||isShow">
         <el-date-picker
-          v-model="query.timevalue1"
+          v-model="timevalue1"
           type="datetimerange"
           :editable="false"
           :unlink-panels="true"
@@ -107,7 +108,7 @@
           :default-time="['00:00:00', '23:59:59']"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          @change="getTime(query.timevalue1,'timevalue1')"
+          @change="getTime(timevalue1,'timevalue1')"
           @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
@@ -127,8 +128,8 @@
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
-import { ComboBoxListZhuanYong } from '@/api/operationFlow'
-import { promptInfoFun } from "@/utils/index"
+import { ComboBoxListZhuanYong } from "@/api/operationFlow";
+import { promptInfoFun } from "@/utils/index";
 export default {
   name: "AduiteSelected",
   props: {
@@ -159,10 +160,10 @@ export default {
   },
   data() {
     return {
-      auditStatusArry:[],//审核状态
-      creareUserArry:[],
+      auditStatusArry: [], //审核状态
+      creareUserArry: [],
       applyArray: [], //申请类型
-      query:{
+      query: {
         ProcessState: 0,
         VerifyState: 0,
         WaterFactoryId: "",
@@ -192,7 +193,8 @@ export default {
       show4: true,
       show5: true,
       show6: true,
-
+      timevalue: [],
+      timevalue1: [],
       showBtn: true //查询展开
     };
   },
@@ -201,24 +203,30 @@ export default {
     if (this.companyOptions.length == 1) {
       this.query.WaterFactoryId = this.companyOptions[0].Id;
     }
-    this.applyArray = getDictionaryOption('流程编码')
-    this.getCreateUser()
+    this.applyArray = getDictionaryOption("流程编码");
+    this.getCreateUser();
   },
   methods: {
-  getCreateUser(){
-    ComboBoxListZhuanYong({'PId':''}).then(res => {
-      if (res.code ==0 ) {
-        this.creareUserArry = res.data;
-      } else {
-        promptInfoFun(this, 1, res.message);
-      }
-    })
-  },
+    getCreateUser() {
+      ComboBoxListZhuanYong({ PId: "" }).then(res => {
+        if (res.code == 0) {
+          this.creareUserArry = res.data;
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      });
+    },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
-      this.$parent.delTips("timevalue");
+      this.timevalue = [];
+      this.timevalue1 = [];
+      this.query.createStartTime = "";
+      this.query.createEndTime = "";
+      this.query.editStartTime = "";
+      this.query.editEndTime = "";
+      this.handleFilter();
     },
     showLabel(n, w) {
       if (this.companyOptions.length == 1) {
@@ -263,7 +271,7 @@ export default {
       }
     },
     handleFilter() {
-      this.$parent.query = Object.assign({},this.query)
+      this.$parent.query = Object.assign({}, this.query);
       this.$parent.searchTableList();
     }
   }

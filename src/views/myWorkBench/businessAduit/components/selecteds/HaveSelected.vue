@@ -14,7 +14,8 @@
           v-model="query.WaterFactoryId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(query.WaterFactoryId,'WaterFactoryId',companyOptions,'所属水厂')">
+          @change="getText(query.WaterFactoryId,'WaterFactoryId',companyOptions,'所属水厂')"
+        >
           <el-option label="全部" value="-1"></el-option>
           <el-option
             v-for="item in companyOptions"
@@ -24,20 +25,22 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="申请类型" v-show="show1||isShow" prop="applyType">
+      <el-form-item label="申请类型" v-show="show1||isShow" prop="ProcessMenuCode">
         <el-select
           v-model="query.ProcessMenuCode"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(query.ProcessMenuCode ,'ProcessMenuCode',applyArray,'申请类型')">
+          @change="getText(query.ProcessMenuCode ,'ProcessMenuCode',applyArray,'申请类型')"
+        >
           <el-option
             v-for="item in applyArray"
             :key="item.Id"
             :label="item.Id=='2900'? '全部':item.Name"
-            :value="Number(item.Id)" />
+            :value="Number(item.Id)"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="业务编号" v-show="show2||isShow" prop="applyNo">
+      <el-form-item label="业务编号" v-show="show2||isShow" prop="FlowNo">
         <el-input
           v-model="query.FlowNo"
           maxlength="20"
@@ -45,7 +48,7 @@
           @change="getText(query.FlowNo ,'FlowNo','','业务编号')"
         />
       </el-form-item>
-      <el-form-item label="创建人" v-show="show3||isShow" prop="creater">
+      <el-form-item label="创建人" v-show="show3||isShow" prop="createUserId">
         <el-select
           v-model="query.createUserId"
           placeholder="请选择"
@@ -57,16 +60,17 @@
             v-for="item in createUserArry"
             :key="item.Id"
             :label="item.Name"
-            :value="Number(item.Id)"
+            :value="item.Id"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="审核意见" v-show="show4||isShow" prop="aduitAdvise">
+      <el-form-item label="审核意见" v-show="show4||isShow" prop="VerifyState">
         <el-select
           v-model="query.VerifyState"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(query.VerifyState ,'VerifyState',auditOpinionArry,'审核意见')">
+          @change="getText(query.VerifyState ,'VerifyState',auditOpinionArry,'审核意见')"
+        >
           <el-option label="全部" :value="-1" />
           <el-option
             v-for="item in auditOpinionArry"
@@ -78,7 +82,7 @@
       </el-form-item>
       <el-form-item label="申请日期" v-show="show5||isShow">
         <el-date-picker
-          v-model="query.timevalue"
+          v-model="timevalue"
           type="datetimerange"
           :editable="false"
           :unlink-panels="true"
@@ -88,13 +92,13 @@
           :default-time="['00:00:00', '23:59:59']"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          @change="getTime(query.timevalue,'timevalue')"
+          @change="getTime(timevalue,'timevalue')"
           @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="审核日期" v-show="show6||isShow">
         <el-date-picker
-          v-model="query.timevalue1"
+          v-model="timevalue1"
           type="datetimerange"
           :editable="false"
           :unlink-panels="true"
@@ -103,7 +107,7 @@
           end-placeholder="结束日期"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
-          @change="getTime(query.timevalue1,'timevalue1')"
+          @change="getTime(timevalue1,'timevalue1')"
           @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
@@ -123,8 +127,8 @@
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
-import { ComboBoxListZhuanYong } from '@/api/operationFlow'
-import { promptInfoFun } from "@/utils/index"
+import { ComboBoxListZhuanYong } from "@/api/operationFlow";
+import { promptInfoFun } from "@/utils/index";
 export default {
   name: "HaveSelected",
   props: {
@@ -157,20 +161,20 @@ export default {
     return {
       auditOpinionArry: [
         {
-          Id: '0',
-          Name: '全部'
+          Id: "0",
+          Name: "全部"
         },
         {
-          Id: '1',
-          Name: '已通过'
+          Id: "1",
+          Name: "已通过"
         },
         {
-          Id: '2',
-          Name: '未通过'
+          Id: "2",
+          Name: "未通过"
         }
       ],
-      createUserArry:[],
-      applyArray:[],
+      createUserArry: [],
+      applyArray: [],
       query: {
         ProcessState: 0,
         VerifyState: 0,
@@ -201,6 +205,8 @@ export default {
       show4: true,
       show5: true,
       show6: true,
+      timevalue: [],
+      timevalue1: [],
       showBtn: true //查询展开
     };
   },
@@ -209,15 +215,21 @@ export default {
     if (this.companyOptions.length == 1) {
       this.query.WaterFactoryId = this.companyOptions[0].Id;
     }
-    this.getCreateUser()
-    this.applyArray = getDictionaryOption('流程编码')
+    this.getCreateUser();
+    this.applyArray = getDictionaryOption("流程编码");
   },
   methods: {
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
-      this.$parent.delTips("timevalue");
+      this.timevalue = [];
+      this.timevalue1 = [];
+      this.query.createStartTime = "";
+      this.query.createEndTime = "";
+      this.query.editStartTime = "";
+      this.query.editEndTime = "";
+      this.handleFilter();
     },
     showLabel(n, w) {
       if (this.companyOptions.length == 1) {
@@ -238,44 +250,44 @@ export default {
     //日期格式化
     getTime(v, n) {
       let date;
-      if(v){
-        if(n=='timevalue'){
+      if (v) {
+        if (n == "timevalue") {
           this.query.createStartTime = v[0] + "00:00:00";
           this.query.createEndTime = v[1] + "23:59:59";
           date = this.query.createStartTime + "~" + this.query.createEndTime;
           this.$emit("getText", date, n, "", "申请日期");
-        }else {
+        } else {
           this.query.editStartTime = v[0] + "00:00:00";
           this.query.editEndTime = v[1] + "23:59:59";
           date = this.query.editStartTime + "~" + this.query.editEndTime;
           this.$emit("getText", date, n, "", "审核日期");
         }
-      }else {
-        if(n=='timevalue'){
-          this.query.createStartTime = '';
-          this.query.createEndTime = '';
-          date = '';
+      } else {
+        if (n == "timevalue") {
+          this.query.createStartTime = "";
+          this.query.createEndTime = "";
+          date = "";
           this.$emit("getText", date, n, "", "申请日期");
-        }else {
-          this.query.editStartTime = '';
-          this.query.editEndTime = '';
-          date = ''
+        } else {
+          this.query.editStartTime = "";
+          this.query.editEndTime = "";
+          date = "";
           this.$emit("getText", date, n, "", "审核日期");
         }
       }
     },
     handleFilter() {
-      this.$parent.query = Object.assign({},this.query)
+      this.$parent.query = Object.assign({}, this.query);
       this.$parent.searchTableList();
     },
-    getCreateUser(){
-      ComboBoxListZhuanYong({'PId':''}).then(res => {
-        if (res.code ==0 ) {
+    getCreateUser() {
+      ComboBoxListZhuanYong({ PId: "" }).then(res => {
+        if (res.code == 0) {
           this.createUserArry = res.data;
         } else {
           promptInfoFun(this, 1, res.message);
         }
-      })
+      });
     }
   }
 };

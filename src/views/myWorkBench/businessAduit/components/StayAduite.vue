@@ -197,6 +197,7 @@ export default {
     //删除面包屑
     delTips(val) {
       if (val == "timevalue") {
+        this.$refs.MyAduite.timevalue=[]
         //当返回的model 为时间数组  置空 时间
         this.$refs.selectChild.query.createStartTime = "";
         this.$refs.selectChild.query.createEndTime = "";

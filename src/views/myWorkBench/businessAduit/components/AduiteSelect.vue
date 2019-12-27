@@ -1,7 +1,7 @@
 <template>
   <div class="box_sub">
     <div ref="fromHeight">
-      <aduite-selected :searchWidth="searchWidth" :query="query" @getText="getText"/>
+      <aduite-selected ref="MyAduite" :searchWidth="searchWidth" :query="query" @getText="getText"/>
     </div>
     <div class="contanier">
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excelInssud"/>
@@ -176,13 +176,25 @@
     methods: {
       //删除面包屑
       delTips(val) {
-        if (val == "timevalue") {
-          //当返回的model 为时间数组  置空 时间
-          this.query.StartTime = "";
-          this.query.StartTime = "";
-        }
-        this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "query");
-        this.searchTableList();
+         if (val == "timevalue") {
+        this.$refs.MyAduite.timevalue=[]
+        //当返回的model 为时间数组  置空 时间
+        this.$refs.MyAduite.query.createStartTime = "";
+        this.$refs.MyAduite.query.createEndTime = "";
+      }
+      if (val == "timevalue1") {
+        this.$refs.MyAduite.timevalue1=[]
+        //当返回的model 为时间数组  置空 时间
+        this.$refs.MyAduite.query.editStartTime = "";
+        this.$refs.MyAduite.query.editEndTime = "";
+      }
+      this.tipsDataCopy = delTips(
+        val,
+        this.$refs.MyAduite,
+        this.tipsDataCopy,
+        "query"
+      );
+      this.$refs.MyAduite.handleFilter();
       },
       getText(val, model, arr, name) {
         let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
