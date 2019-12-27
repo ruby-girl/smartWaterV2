@@ -53,28 +53,31 @@ export function WriteCardInfo(objJson, callback) {
 import { GetICWriteCard, RollBackICWriteCard, GetICReplaceWriteCardInfo, RollBacICkReplaceWriteCardInfo } from "@/api/userSetting";
 import { promptInfoFun } from "@/utils/index"
 export function getMarkCard(param,obj){
-  GetICWriteCard(param).then(res => {//写卡
-    if (res.code == 0) {
-      try {
-        let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
-        if (ress != undefined && ress != "") {
-          let dataJosn = JSON.parse(ress)//cs 制卡返回数据
-          if(dataJosn.Result){
-            promptInfoFun(obj, 2, '制卡成功');
+  try {
+    if(FXYB_WEB_CS_ICCard){
+      GetICWriteCard(param).then(res => {//写卡
+        if (res.code == 0) {
+          let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
+          if (ress != undefined && ress != "") {
+            let dataJosn = JSON.parse(ress)//cs 制卡返回数据
+            if(dataJosn.Result){
+              promptInfoFun(obj, 2, '制卡成功');
+            } else {
+              RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
+              promptInfoFun(obj, 1, dataJosn.ErrMsg);
+            }
           } else {
-            RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
-            promptInfoFun(obj, 1, dataJosn.ErrMsg);
+            promptInfoFun(obj, 1, "读取错误!");
           }
         } else {
-          promptInfoFun(obj, 1, "读取错误!");
+          promptInfoFun(obj, 1, res.message);
         }
-      } catch (e) {
-        promptInfoFun(obj, 1, '请在CS端操作');
-      }
-    } else {
-      promptInfoFun(obj, 1, res.message);
+      });
     }
-  });
+  }catch (e) {
+    promptInfoFun(obj, 1, '请在CS端操作');
+    return
+  }
 }
 /**
  * 用户补卡
@@ -83,28 +86,31 @@ export function getMarkCard(param,obj){
  * obj vue 实列
  * */
 export function getPatchCard(param,obj){
-  GetICReplaceWriteCardInfo(param).then(res => {//补卡
-    if (res.code == 0) {
-      try {
-        let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
-        if (ress != undefined && ress != "") {
-          let dataJosn = JSON.parse(ress)//cs 制卡返回数据
-          if(dataJosn.Result){
-            promptInfoFun(obj, 2, '补卡成功');
+  try {
+    if(FXYB_WEB_CS_ICCard){
+      GetICReplaceWriteCardInfo(param).then(res => {//补卡
+        if (res.code == 0) {
+          let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
+          if (ress != undefined && ress != "") {
+            let dataJosn = JSON.parse(ress)//cs 制卡返回数据
+            if(dataJosn.Result){
+              promptInfoFun(obj, 2, '补卡成功');
+            } else {
+              RollBacICkReplaceWriteCardInfo({businessId:res.data.BusinessId}).then(res => {})
+              promptInfoFun(obj, 1, dataJosn.ErrMsg);
+            }
           } else {
-            RollBacICkReplaceWriteCardInfo({businessId:res.data.BusinessId}).then(res => {})
-            promptInfoFun(obj, 1, dataJosn.ErrMsg);
+            promptInfoFun(obj, 1, '读取错误');
           }
         } else {
-          promptInfoFun(obj, 1, '读取错误');
+          promptInfoFun(obj, 1, res.message);
         }
-      } catch (err) {
-        promptInfoFun(obj, 1, '请在CS端操作');
-      }
-    } else {
-      promptInfoFun(obj, 1, res.message);
+      });
     }
-  });
+  }catch (e) {
+    promptInfoFun(obj, 1, '请在CS端操作');
+    return
+  }
 }
 
 // 获取筛选条件，区域树形 --再次赋值Id,Name 面包屑getText需要用

@@ -103,7 +103,8 @@
         align="center"
         width="88">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.nums" placeholder="" size="mini" @keyup.enter.native="sameRegisterMove" @blur="setNums(scope.row)"></el-input>
+          <el-input v-model="scope.row.nums" placeholder="" size="mini" @keyup.enter.native="sameRegisterMove(scope.row)" @blur="setNums(scope.row)"
+                    onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" ></el-input>
         </template>
       </el-table-column>
     </el-table>
@@ -314,8 +315,8 @@
           }
         })
       },
-      sameRegisterMove(){//本表册移动
-        this.mop.MeterReaderOrderNum = parseInt(this.rowNums)//d动态获取
+      sameRegisterMove(row){//本表册移动
+        this.mop.MeterReaderOrderNum = parseInt(row.nums)//d动态获取
         this.mop.RegisterBookInfo_Id = this.formRbp.SA_RegisterBookInfo_Id//d动态获取
         this.mop.rbdList = this.multipleSelection
         SortRegisterBookDetailMoveOut(this.mop).then(res => {
