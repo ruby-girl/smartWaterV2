@@ -58,7 +58,7 @@
       </el-form-item>
       <el-form-item class="timePicker">
         <el-select v-model="ShortMsgTempParam.TimerSendStartTime" placeholder="请选择">
-          <el-option v-for="item in 24" :label="item<10?'0'+item:item" :value="item"></el-option>
+          <el-option v-for="item in 24"  :key="item" :label="item<10?'0'+item:item" :value="item"></el-option>
         </el-select>
       </el-form-item>
       <span style="display: inline-block;line-height: 28px;margin-top: 18px; margin-right: 10px">~</span>
@@ -67,6 +67,7 @@
           <el-option
             v-for="item in 24"
             :label="item<10?'0'+item:item"
+             :key="item"
             :value="item"
             :disabled="item<=ShortMsgTempParam.TimerSendStartTime"
           ></el-option>
