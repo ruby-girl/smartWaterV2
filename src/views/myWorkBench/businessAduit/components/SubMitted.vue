@@ -177,7 +177,7 @@ export default {
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
-        this.$refs.MyAduite.timevalue=[]
+        this.$refs.selectChild.timevalue=[]
         this.$refs.selectChild.query.createStartTime = "";
         this.$refs.selectChild.query.createEndTime = "";
       }
