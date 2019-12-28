@@ -85,7 +85,7 @@
                   </el-tooltip>
                 </span>
                 <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
+                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
                   class="item"
                   popper-class="tooltip"
                   effect="light"
@@ -95,11 +95,11 @@
                 >
                   <i
                     class="iconStyle icon iconfont operation2"
-                    @click="changeInput(scope.row.Id,true)"
+                    @click="changeInput(scope.row.Id,false)"
                   >&#xe676;</i>
                 </el-tooltip>
                 <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
+                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
                   class="item"
                   popper-class="tooltip"
                   effect="light"
@@ -109,7 +109,7 @@
                 >
                   <i
                     class="iconStyle icon iconfont operation2-1"
-                    @click="changeInput(scope.row.Id,false)"
+                    @click="changeInput(scope.row.Id,true)"
                   >&#xe675;</i>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="详情" placement="bottom">

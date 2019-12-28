@@ -178,7 +178,8 @@
 
 <script>
   import '@/styles/organization.scss'
-  import {ComboBoxList, linkComboBoxList, GetRoleNameList} from "@/api/organize"
+  import {ComboBoxList, linkComboBoxList} from "@/api/organize"
+  import { ComboBoxListZhuanYong } from "@/api/operationFlow"
 
   export default {
     name: "SelectHead",
@@ -309,7 +310,7 @@
        * 获取操作员下拉
        * */
       GetRoleNameList() {
-        GetRoleNameList().then(res => {
+        ComboBoxListZhuanYong().then(res => {
           if (res.code == 0) {
             this.operationArray = res.data;
           } else {

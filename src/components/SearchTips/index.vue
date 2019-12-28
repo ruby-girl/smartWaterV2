@@ -23,6 +23,7 @@
     <div class="tipsBtn fr">
       <i v-if="showExcel" class="icon iconfont" @click="excel" title="导出excel">&#xe64f;</i>
       <i
+        v-if="showTabBtn"
         class="icon iconfont"
         :class="{thisTableClass:thisTable}"
         @click="setCustomData"
@@ -53,7 +54,7 @@ export default {
         this.widthData1 = null;
         this.showBtn = false;
       } else {
-        this.widthData1 = length * 150+300;
+        this.widthData1 = length * 150 + 300;
         if (this.widthData1 > parseInt(this.widthData)) {
           this.showBtn = true;
         }
@@ -69,7 +70,8 @@ export default {
       thisTable: false,
       tipsDataCopy: [],
       showBtn: false,
-      showExcel: true //是否有导出按钮
+      showExcel: true, //是否有导出按钮
+      showTabBtn:true,//是否有自定义按钮
     };
   },
   methods: {
