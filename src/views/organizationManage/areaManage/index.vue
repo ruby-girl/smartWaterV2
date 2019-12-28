@@ -164,8 +164,8 @@
       },
       searchFun() {//查询事件
         BlockAreaGetList(this.sbap).then(res => {
-          if (res.code ==0 ) {
-            this.total = res.data.length;
+          if (res.code == 0 ) {
+            this.total = res.count;
             this.tableData = res.data;
             this.tipsData = pushItem(this.tipsDataCopy)
           } else {

@@ -139,7 +139,6 @@ export const asyncRoutes = [
     },
     ]
   },
-
   {
     path: '/organizationManage',
     redirect: '/organizationManage/company',
@@ -341,7 +340,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
   {
     path: '/userManagement',
     component: Layout,
@@ -444,6 +442,8 @@ export const asyncRoutes = [
       }
     }]
   },
+
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

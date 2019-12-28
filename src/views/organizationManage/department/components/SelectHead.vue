@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import { GetLoginNameList } from "@/api/user"
+    import { ComboBoxListZhuanYong } from "@/api/operationFlow"
     import { ComboBoxList } from "@/api/organize"// 请求方法
     import { promptInfoFun } from "@/utils/index";
     export default {
@@ -76,7 +76,7 @@
          * 获取操作人信息
          * */
         GetLoginNameList() {
-          GetLoginNameList().then(res => {
+          ComboBoxListZhuanYong().then(res => {
             if (res.code ==0 ) {
               this.operatorArray = res.data;
             } else {
