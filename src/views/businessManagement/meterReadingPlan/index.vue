@@ -85,7 +85,7 @@
                   </el-tooltip>
                 </span>
                 <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
+                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
                   class="item"
                   popper-class="tooltip"
                   effect="light"
@@ -99,7 +99,7 @@
                   >&#xe676;</i>
                 </el-tooltip>
                 <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
+                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
                   class="item"
                   popper-class="tooltip"
                   effect="light"
