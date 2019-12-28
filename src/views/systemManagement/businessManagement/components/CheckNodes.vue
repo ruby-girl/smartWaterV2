@@ -87,25 +87,25 @@
             dataType = newVal[1].ProcessMemberType
 
             switch (dataType) {//回填全部样式
-              case 3001:
+              case 3001://部门
                 this.checkAll1 =  this.checkList1.length == newVal.length;
                 let checkedCount = this.checkList1.length
                 this.isIndeterminate1 = checkedCount > 0 && checkedCount < newVal.length;//控制全选按钮样式
                 break
-              case 3002:
+              case 3002://岗位
                 this.checkAll2 =  this.checkList2.length == newVal.length;
                 let checkedCount2 = this.checkList2.length
                 this.isIndeterminate2 = checkedCount2 > 0 && checkedCount2 < newVal.length;//控制全选按钮样式
                 break
-              case 3003:
-                this.checkAll3 =  this.checkList3.length == newVal.length;
-                let checkedCount3 = this.checkList3.length
-                this.isIndeterminate3 = checkedCount3 > 0 && checkedCount3 < newVal.length;//控制全选按钮样式
-                break
-              case 3004:
+              case 3003://角色
                 this.checkAll4 =  this.checkList4.length == newVal.length;
                 let checkedCount4 = this.checkList4.length
                 this.isIndeterminate4 = checkedCount4 > 0 && checkedCount4 < newVal.length;//控制全选按钮样式
+                break
+              case 3004://姓名
+                this.checkAll3 =  this.checkList3.length == newVal.length;
+                let checkedCount3 = this.checkList3.length
+                this.isIndeterminate3 = checkedCount3 > 0 && checkedCount3 < newVal.length;//控制全选按钮样式
                 break
             }
           }
@@ -226,11 +226,13 @@
         this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.data.length;//控制全选按钮样式
       },
       handlecheckListChange3(value) {//非全选
+        alert(3)
         let checkedCount = value.length;
         this.checkAll3 = checkedCount === this.data.length;
         this.isIndeterminate3 = checkedCount > 0 && checkedCount < this.data.length;//控制全选按钮样式
       },
       handlecheckListChange4(value) {//非全选
+        alert(4)
         let checkedCount = value.length;
         this.checkAll4 = checkedCount === this.data.length;
         this.isIndeterminate4 = checkedCount > 0 && checkedCount < this.data.length;//控制全选按钮样式
