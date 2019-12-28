@@ -281,13 +281,6 @@ export default {
       this.checkedAllParent = false;
       this.isIndeterminateParent = false;
     },
-    setCustomData() {
-      this.$refs.tableTypeCard.$refs.myChild.isCustom = !this.$refs
-        .tableTypeCard.$refs.myChild.isCustom;
-      if (this.$refs.tableTypeCard.$refs.myChild.isCustom)
-        this.tableHeight = this.tableHeight - 105;
-      else this.tableHeight = this.tableHeight + 105;
-    },
     // parentChange(v) {
     //   this.isIndeterminateParent = false;
     //   // this.$refs.tableTypeCard.$refs.myCard.changeParent();
@@ -363,7 +356,7 @@ export default {
 <style lang="scss" scoped>
 .container-bottom-box {
   border-top: 15px solid #eff1f4;
-  height: calc(100vh - 205px);
+  height: calc(100vh - 190px);
   margin: 0 !important;
 }
 .cash-padding-bg {

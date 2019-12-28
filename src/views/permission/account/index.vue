@@ -37,20 +37,43 @@
             label="操作"
             align="center"
             class-name="small-padding"
-            min-width="150px"
+            width="140px"
             fixed="right"
           >
             <template slot-scope="{row}">
-              <div class="display-flex justify-content-flex-center" v-if="row.UserStatusCode=='101'">
-                <div class="main-color" @click="handleUpdate(row)" v-permission="['1010106']">
-                  <a>编辑</a>
-                </div>
-                <div class="main-color-red pl-15" @click="cancel(row)" v-permission="['1010105']">
-                  <a>注销</a>
-                </div>
-                <div class="main-color pl-15" @click="reset(row)" v-permission="['1010107']">
-                  <a>重置密码</a>
-                </div>
+              <div class="display-flex  justify-content-flex-justify secur-content">
+                <el-tooltip
+                :class="{'main-color':row.UserStatusCode=='101'}"
+                :popper-class="row.UserStatusCode=='101'?'tooltip':''"
+                :effect="row.UserStatusCode=='101'?'light':'dark'"
+                :visible-arrow="row.UserStatusCode=='101'?false:true"
+                :content="row.UserStatusCode=='101'?'编辑':'该账号异常不允许操作'"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconsuoyoubiaogelidebianji" @click="row.UserStatusCode=='101'?handleUpdate(row):''"></i>
+              </el-tooltip>
+              <el-tooltip
+                :class="{'main-color-pink':row.UserStatusCode=='101'?true:false}"
+               :popper-class="row.UserStatusCode=='101'?'tooltip':''"
+                :effect="row.UserStatusCode=='101'?'light':'dark'"
+                :visible-arrow="row.UserStatusCode=='101'?false:true"
+                :content="row.UserStatusCode=='101'?'注销':'该账号异常不允许操作'"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconzhuxiao" @click="row.UserStatusCode=='101'?cancel(row):''"></i>
+              </el-tooltip>
+          
+              
+              <el-tooltip
+                :class="{'main-color':row.UserStatusCode=='101'}"
+               :popper-class="row.UserStatusCode=='101'?'tooltip':''"
+                :effect="row.UserStatusCode=='101'?'light':'dark'"
+                :visible-arrow="row.UserStatusCode=='101'?false:true"
+                :content="row.UserStatusCode=='101'?'重置密码':'该账号异常不允许操作'"
+                placement="bottom"
+              >
+                <i class="icon iconfont icon_zhongzhi1" @click="row.UserStatusCode=='101'?reset(row):''"></i>
+              </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -288,4 +311,13 @@ export default {
   }
 };
 </script>
-
+<style lang="scss" scoped>
+.secur-content {
+  padding: 0 20px;
+    .icon {
+      font-size: 16px;
+      color:#D8E2E7;
+      cursor: pointer;
+    }
+}
+</style>

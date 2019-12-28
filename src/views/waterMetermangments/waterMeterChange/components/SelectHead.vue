@@ -1,6 +1,6 @@
 <template>
   <div class="position-search-head">
-    <el-row ><el-col><span class="head-title">换表查询</span></el-col></el-row>
+    <!-- <el-row ><el-col><span class="head-title">换表查询</span></el-col></el-row> -->
     <el-form
       :inline="true"
       :model="selectHead"
@@ -225,10 +225,10 @@ export default {
 <style lang="scss" scoped>
 .position-search-head {
   position: relative;
-  height: 76px;
+  height: 56px;
   .position-absolute-head {
     position: absolute;
-    top: 35px;
+    top: 15px;
     left: 0;
     background: #fff;
     z-index: 1111;

@@ -1,7 +1,7 @@
 <template>
   <!--左侧树形菜单-->
   <div class="user_tree head-search-form">
-    <div class="type-title">用户过户</div>
+    <!-- <div class="type-title">用户过户</div> -->
     <div class="transfer-container">
       <div class="display-flex align-items-center justify-content-flex-justify">
         <div class="font-weight pl-15 top-title">原用户信息</div>
@@ -32,7 +32,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="transfer-container" style="margin-top:13px;">
+    <div class="transfer-container">
       <div class="display-flex align-items-center justify-content-flex-justify">
         <div class="font-weight pl-15 top-title">新用户信息</div>
       </div>
@@ -387,6 +387,7 @@ font-size: 14px;
 .transfer-container {
   padding: 10px 13px 5px 2px;
   background: #f5f5f5;
+  margin-top: 15px;
   /deep/ .el-form-item {
     margin-bottom: 10px;
   }

@@ -65,7 +65,6 @@
             content="实收金额-（剩余未缴-账户余额）=找零"
             placement="bottom"
           >
-            <i class="iconfont icontishixunwen prompting-icon"></i>
           </el-tooltip>
         </div>
       </div>
@@ -78,9 +77,8 @@
           <el-radio :label="false">否</el-radio>
         </el-radio-group>
       </div>
-      <i class="iconfont iconshezhi set-pint-btn"></i>
-    </div>
-    <div class="main-more-black-color pint-type">
+      <i class="iconfont iconshezhi set-pint-btn" @click="pintShow=true"></i>
+      <div class="main-more-black-color pint-type" v-show="pintShow">
       <div>
         <el-radio v-model="radio" :label="1">打印小票</el-radio>
         <span @click="selectPint">
@@ -93,7 +91,13 @@
           <i class="iconfont icondayinji"></i>&ensp;设置打印机
         </span>
       </div>
+      <div class="text-center app-container">
+        <el-button type="primary" size="mini" @click="pintShow=false">确定</el-button>
+        <el-button size="mini"  @click="pintShow=false">取消</el-button>
+      </div>
     </div>
+    </div>
+    
     <div class="display-flex align-items-center justify-content-flex-justify">
       <div
         :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==2701?true:false}"
@@ -152,7 +156,8 @@ export default {
       surplus: "0.00", //找零
       balanceDeduction: 0, //账户抵扣
       saveAccount: 0, //zanshi
-      isFocus: false
+      isFocus: false,
+      pintShow:false
     };
   },
   mounted() {

@@ -26,10 +26,12 @@
     }
   }
   .save-account {
-    padding: 8px 0;
-    font-size: 13px;
+    padding: 15px 5px;
+    font-size: 14px;
     margin: 8px 0;
     color: #46494c;
+    background: #f5f5f5;
+    position: relative;
   }
   .account-height {
     height: 54px;
@@ -41,9 +43,15 @@
     }
   }
   .pint-type {
-    padding: 10px 0 10px 17px;
+    padding: 10px 0 10px 10px;
     line-height: 30px;
     font-size: 13px;
+    position: absolute;
+    right:30px;
+    top:20px;
+    background: #fff;
+    width:239px;
+    z-index: 111;
     span {
       cursor: pointer;
     }
@@ -53,7 +61,7 @@
     text-align: center;
     color: #fff;
     width: 100%;
-    padding: 11px 0;
+    padding: 18px 0;
     outline: none;
     border: none;
     cursor: pointer;
@@ -71,7 +79,7 @@
   .cash-assets {
     width: 47%;
     text-align: center;
-    padding: 10px 0;
+    padding: 14px 0;
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 20px;
@@ -122,7 +130,7 @@
     position: relative;
     border: 1px solid #ff5656;
     color: #ff5656;
-    min-width: 145px;
+    width: 226px;
     > input {
       height: 73px;
       border: none;
@@ -142,8 +150,4 @@
   .money-icon {
     position: relative;
     bottom: -5px;
-  }
-  .prompting-icon{
-    position: relative;
-    right:4px;
   }

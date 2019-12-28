@@ -1,7 +1,7 @@
 <template>
   <!--左侧树形菜单-->
   <div class="user_tree">
-    <div class="type-title">水表换表</div>
+    <!-- <div class="type-title">水表换表</div> -->
      <el-tabs v-model="activeName">
     <el-tab-pane label="以旧换新" name="first">
       <old-for-new></old-for-new>

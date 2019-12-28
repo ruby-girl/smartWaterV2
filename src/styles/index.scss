@@ -288,7 +288,7 @@ aside {
 }
 // 字体颜色
 .main-color{
-  color:$blue;
+  color:$blue !important;
 }
 .main-color-fff{
   color:#fff;
@@ -300,13 +300,13 @@ aside {
   color:$orange;
 }
 .main-color-disabled{
-  color:#B6B7B8;
+  color:#B6B7B8 !important;
 }
 .main-color-tiffany{
   color:$tiffany;
 }
 .main-color-pink{
-  color:$pink;
+  color:$pink !important;
 }
 .main-color-warn{
   color:$warn;
