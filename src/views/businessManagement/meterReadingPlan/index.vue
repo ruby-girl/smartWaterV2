@@ -95,7 +95,7 @@
                 >
                   <i
                     class="iconStyle icon iconfont operation2"
-                    @click="changeInput(scope.row.Id,true)"
+                    @click="changeInput(scope.row.Id,false)"
                   >&#xe676;</i>
                 </el-tooltip>
                 <el-tooltip
@@ -109,7 +109,7 @@
                 >
                   <i
                     class="iconStyle icon iconfont operation2-1"
-                    @click="changeInput(scope.row.Id,false)"
+                    @click="changeInput(scope.row.Id,true)"
                   >&#xe675;</i>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
