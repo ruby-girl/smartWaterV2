@@ -93,7 +93,10 @@
   }
   .table-setting {margin: 46px 0 10px 0;}
   .table-setting-box{width: 100%;position: relative}
-
+  .multiColumn{
+      width: calc(100% + 20px);margin: 0 0 0 -10px;border-bottom: solid 1px #e6ebf5;height: 30px;line-height: 30px;
+  }
+  .multiColumn:last-child{border: none;}
 }
 .el-form-item__error{padding-top: 1px}
 .cl-container1{

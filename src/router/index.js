@@ -442,6 +442,65 @@ export const asyncRoutes = [
       }
     }]
   },
+  {
+    path: '/reportStatistics',
+    redirect: '/reportStatistics/page',
+    alwaysShow: true, // will always show the root menu
+    component: Layout,
+    name: "reportStatistics",
+    meta: {
+      title: '报表统计',
+      icon: 'iconfont icongongzuotai',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: 'standardRate',
+        component: () => import('@/views/reportStatistics/standardRate/index'),
+        name: 'standardRate',
+        meta: {
+          title: '抄表率统计',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'userStatistics',
+        component: () => import('@/views/reportStatistics/userStatistics/index'),
+        name: 'userStatistics',
+        meta: {
+          title: '用户统计',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'feeStatistics',
+        component: () => import('@/views/reportStatistics/feeStatistics/index'),
+        name: 'feeStatistics',
+        meta: {
+          title: '收费统计',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'garbageFeeStatistics',
+        component: () => import('@/views/reportStatistics/garbageFeeStatistics/index'),
+        name: 'garbageFeeStatistics',
+        meta: {
+          title: '垃圾费用统计',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'waterStatistics',
+        component: () => import('@/views/reportStatistics/waterStatistics/index'),
+        name: 'waterStatistics',
+        meta: {
+          title: '用水性质同统计',
+          roles: ['1']
+        }
+      }
+    ]
+  },
 
 
   // 404 page must be placed at the end !!!
