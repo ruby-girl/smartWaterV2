@@ -2,7 +2,7 @@
   <div class="tree_container">
     <div class="user_box">
       <left-box @getUp="getUp" :ifShow="ifShow"></left-box>
-      <div class="user_table">
+      <div class="user_table el-main">
         <div >
           <div ref="formHeight" class="position-search-head">
             <select-head :select-head="listQuery" @handleFilter="getList" @getText="getText" :searchWidth="searchWidth"/>
@@ -58,7 +58,7 @@
 import SelectHead from "./components/SelectHead";
 import LeftBox from "./components/Left"
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport,getTipsChangeWidth} from "@/utils/projectLogic"; //搜索条件面包屑
 import {TransferCustomerList,TransferCustomerList_Execl} from "@/api/userAccount";
 import Pagination from "@/components/Pagination";
 export default {
@@ -144,16 +144,19 @@ export default {
       this.ifShow =v;
       if (this.ifShow) {
         document.getElementsByClassName("user_tree")[0].classList.add("hide");
+        getTipsChangeWidth(this);
       } else {
         document
           .getElementsByClassName("user_tree")[0]
           .classList.remove("hide");
+          getTipsChangeWidth(this);
       }
     },
     getList(n) {
       if (!n) {
         this.orderData = Object.assign({}, this.listQuery);
         this.orderData.page = 1;
+        this.listQuery.page = 1;
       }
       TransferCustomerList(this.orderData).then(res => {
          this.tipsData = pushItem(this.tipsDataCopy);
@@ -173,6 +176,7 @@ export default {
     },
     excel() {
       //导出
+       if(!isExport(this.tableData)) return
       TransferCustomerList_Execl(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
@@ -225,7 +229,7 @@ export default {
       flex: 1;
       -webkit-flex: 1;
       background: #fff;
-      // padding: 16px;
+       padding: 0 !important;
       position: relative;
       overflow: hidden;
     }

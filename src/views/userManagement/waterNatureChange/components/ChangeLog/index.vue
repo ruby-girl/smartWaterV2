@@ -55,7 +55,7 @@ import SelectHead from "./SelectHead";
 import Pagination from "@/components/Pagination";
 import { getDictionaryOption } from "@/utils/permission";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
 import { SelectWaterPropertyChangeList } from "@/api/system";
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
@@ -134,6 +134,7 @@ export default {
       if (!n) {
         this.orderData = Object.assign({}, this.listQuery);
         this.orderData.page = 1;
+        this.listQuery.page = 1;
       }
       SelectWaterPropertyChangeList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -151,6 +152,7 @@ export default {
     },
     //导出
     excel() {
+      if(!isExport(this.tableData)) return
       GetWaterPropertyList_OutExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

@@ -60,12 +60,6 @@ export default {
     };
   },
   watch: {
-    user:{
-      handler(val, oldVal) {
-        console.info('zujian',val)
-      },
-      immediate: true
-    },
     accountShow(v) {
       this.dialogFormVisible = v;
     },

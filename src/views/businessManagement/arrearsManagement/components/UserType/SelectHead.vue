@@ -13,7 +13,7 @@
         v-model="selectHead.Enumcqt"
         placeholder="请选择"
         class="short-select-item"
-        style="width: 100px;float: left"
+        style="width: 100px;float: left;margin-right:3px"
         @change="getscName(selectHead.Enumcqt)"
       >
         <el-option v-for="item in EnumcqtOption" :key="item.Id" :label="item.Name" :value="item.Id" />
@@ -130,7 +130,7 @@
         <i class="iconfont iconsousuo"></i>搜索
       </el-button>
        <el-button size="mini" class="btn-add" round  @click="resetting"><i class="iconfont icon_zhongzhi"></i>重置</el-button>
-      <el-button size="mini" class="special-btn" round @click="OrdersFeeCancels()">撤销所选欠费</el-button>
+      <!-- <el-button size="mini" class="special-btn" round @click="OrdersFeeCancels()">撤销所选欠费</el-button> -->
     </el-form-item>
   </el-form>
 </template>
@@ -305,10 +305,6 @@ export default {
     // 输入金额保留2位
     money(e) {
       e.target.value = updateMoney(e.target.value);
-    },
-      // 批量撤销
-    OrdersFeeCancels(){
-      this.$emit("OrdersFeeCancels");
     }
   }
 };

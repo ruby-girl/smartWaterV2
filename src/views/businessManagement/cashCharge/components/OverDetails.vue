@@ -8,34 +8,31 @@
     center
     custom-class="dialog-background"
     :close-on-click-modal="false"
+    @open="getDetail"
   >
     <!-- 其它费用 -->
     <div class="details-box-item display-flex align-items-center justify-content-flex-justify">
       <div class="details-left">
-        <div>2019</div>
+        <div>{{detail.YearMonth}}</div>
         <div>其它费用</div>
       </div>
       <div class="ladder-box display-flex flex-1">      
         <div class="display-flex align-items-center ladder-item">
-          <span>制卡费：</span>
-          <span class="color-more-pink">10.00</span>元
-        </div>
-        <div class="reduction-box">
-          <span>临时减免：</span>
-          <input type="text" />
-          <button>确定</button>
+          <span>{{temp.OrderTypeStr}}：</span>
+          <span class="main-color-red font-weight pr-15 pl-15">{{detail.Money}}</span>元
         </div>
       </div>
     </div>
     
     <div class="totle-box">
       <span class="color-more-black">合计应收：</span>
-      <span class="font-weight main-color-red totle-num">60.00元</span>
-      <span>(制卡费)</span>    
+      <span class="font-weight main-color-red totle-num">{{detail.Money}}元</span>
+      <span>({{temp.OrderTypeStr}})</span>    
     </div>
   </el-dialog>
 </template>
 <script>
+import { SelectFeeDetail } from "@/api/cashCharge";
 export default {
   props: {
     overDetailsShow: {
@@ -59,11 +56,21 @@ export default {
   },
   data() {
     return {
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      detail: {
+        olf: {},
+        orr: {
+          total: 0
+        }
+      }
     };
   },
   methods: {
-    getList() {}
+     getDetail() {
+      SelectFeeDetail({ billId: this.temp.Id }).then(res => {
+        this.detail = res.data   
+      });
+    }
   }
 };
 </script>
@@ -77,7 +84,7 @@ export default {
 }
 .details-box-item {
   background: #fff;
-  padding: 20px 0;
+  padding: 28px 0;
   border-bottom: 10px solid #f5f5f5;
 }
 .ladder-item {
@@ -92,7 +99,7 @@ export default {
   font-size: 16px;
 }
 .ladder-box {
-  padding: 0 30px;
+  padding: 0 54px;
   border-left: 1px solid #d9d9d9;
   border-right: 1px solid #d9d9d9;
 }
@@ -124,7 +131,7 @@ export default {
   }
 }
 .totle-box{
-    padding:5px 0 20px 0;
+    padding:25px 0 40px 0;
 }
 .totle-num{
     font-size: 18px;

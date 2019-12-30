@@ -185,7 +185,7 @@ export default {
     },
     showLabel(n) {
       if (this.waterWorks.length == 1) n = n - 1;
-      if (Math.floor((this.searchWidth - 180) / 260) > n || this.isShow)
+      if (Math.floor((this.searchWidth - 180) / 310) > n || this.isShow)
         return true;
       return false;
     },

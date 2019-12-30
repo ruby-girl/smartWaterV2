@@ -11,7 +11,7 @@
             :searchWidth="searchWidth"
           />
         </div>
-        <div class="section-full-container">
+        <div class="section-full-container el-main">
           <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
           <div class="main-padding-20-y">
             <el-table
@@ -66,7 +66,7 @@ import {
 } from "@/api/waterMeterMang";
 import Pagination from "@/components/Pagination";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport,getTipsChangeWidth } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "waterMeterChange",
   components: { SelectHead, Pagination, LeftBox, SearchTips },
@@ -151,15 +151,18 @@ export default {
       this.ifShow = v;
       if (this.ifShow) {
         document.getElementsByClassName("user_tree")[0].classList.add("hide");
+        getTipsChangeWidth(this);
       } else {
         document
           .getElementsByClassName("user_tree")[0]
           .classList.remove("hide");
+          getTipsChangeWidth(this);
       }
     },
     getList(n) {
       if (!n) {
         this.orderData = Object.assign({}, this.listQuery);
+        this.listQuery.page = 1;
         this.orderData.page = 1;
       }
       WaterMeterChangeList(this.orderData).then(res => {
@@ -180,6 +183,7 @@ export default {
     },
     excel() {
       //导出
+      if(!isExport(this.tableData)) return
       AccountCanCellationList_Execl(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

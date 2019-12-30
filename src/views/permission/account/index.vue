@@ -220,6 +220,7 @@ export default {
     getList(n) {
       if (!n) {
         this.orderData = Object.assign({}, this.listQuery);
+        this.listQuery.page = 1;
         this.orderData.page = 1;
       }
       getAccountList(this.orderData).then(res => {

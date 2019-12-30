@@ -172,7 +172,7 @@ import HistoryPrice from "./components/HistoryPrice";
 import WaterConstitute from "./components/WaterConstitute";
 import { getDictionaryOption } from "@/utils/permission";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips,getText,pushItem} from "@/utils/projectLogic";//搜索条件面包屑
+import { delTips,getText,pushItem,isExport} from "@/utils/projectLogic";//搜索条件面包屑
 import {
   addWaterQuality,
   delWaterQuality,
@@ -275,6 +275,7 @@ export default {
       if(!n){
          this.orderData = Object.assign({}, this.listQuery);
          this.orderData.page=1
+         this.listQuery.page = 1;
       }
       getWaterQualityList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -394,6 +395,7 @@ export default {
     },
     //导出
     excel() {
+      if(!isExport(this.tableData)) return
       GetWaterPropertyList_OutExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

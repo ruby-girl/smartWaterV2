@@ -84,6 +84,7 @@
         />
       </div>
       <charges-details :chargesDetailsShow.sync="chargesDetailsShow" :temp="temp"/>
+      <over-details :overDetailsShow.sync="overDetailsShow" :temp="temp"/>
     </div>
   </div>
 </template>
@@ -92,15 +93,16 @@ import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import customTable from "@/components/CustomTable/index";
 import ChargesDetails from "../cashCharge/components/ChargesDetails"; //水费详情弹窗-共用现金收费的费用详情
+import OverDetails from "../cashCharge/components/OverDetails"; //除水费外其它费用详情弹窗
 import {
   SelectBillDataList,SelectBillDataListToExcel,OrderFeeCancel
 } from "@/api/cashCharge";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
 import { parseStartTimeFunc, parseEndTimeFunc } from "@/utils/index";
 export default {
   name: "billDetails",
-  components: { SelectHead, Pagination,ChargesDetails,SearchTips},
+  components: { SelectHead, Pagination,ChargesDetails,SearchTips,OverDetails},
   data() {
     return {
       total: 0,
@@ -133,6 +135,7 @@ export default {
       tableData: [],
       checksData: [],
       chargesDetailsShow:false,//费用弹窗
+      overDetailsShow:false,
        tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData:{}
@@ -190,6 +193,7 @@ export default {
       }
       if(!n){
          this.orderData = Object.assign({}, this.listQuery);
+         this.listQuery.page = 1;
          this.orderData.page=1
       }
       SelectBillDataList(this.orderData).then(res => {
@@ -228,6 +232,7 @@ export default {
     },
     excel() {
       //导出
+      if(!isExport(this.tableData)) return
       SelectBillDataListToExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
@@ -241,10 +246,14 @@ export default {
       }, 350);
     },
     // 费用详情
-    details(item){
-      this.temp=item
-      this.chargesDetailsShow=true
-    }
+     details(item) {
+      this.temp = item;
+      if(item.OrderType==2001){
+        this.chargesDetailsShow = true;
+      }else{
+        this.overDetailsShow = true;
+      }
+    },
   }
 };
 </script>

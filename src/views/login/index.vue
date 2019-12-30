@@ -159,7 +159,7 @@ export default {
    let optionList=[]
    try {
      optionList=window.FXYB_WEB_CS_Account.GetAccount()
-     this.mac=window.FXYB_WEB_CS_Account.mac
+     this.mac=window.FXYB_WEB_CS_Account.MAC
    } catch (error) {
      console.log('请在CS端操作')
    }
@@ -194,6 +194,7 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
+        console.log('mac',this.mac)
         if (valid) {
           let postData = {
             LoginName: this.loginForm.username,

@@ -5,11 +5,14 @@
         :select-head="listQuery"
         @handleFilter="getList"
         @getText="getText"
-        @OrdersFeeCancels="OrdersFeeCancelsFunc"
         ref="head"
       />
+      <div>
+        
+      </div>
     </div>
     <div class="section-full-container">
+      <el-button size="mini" class="special-btn" style="margin-bottom:10px" round @click="OrdersFeeCancelsFunc()">撤销所选欠费</el-button>
       <mytable-total :list="tableTotal"></mytable-total>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
       <div class="main-padding-20-y">
@@ -112,6 +115,7 @@
     </div>
     <!-- 费用详情弹窗 -->
     <charges-details :chargesDetailsShow.sync="chargesDetailsShow" :temp="temp" />
+    <over-details :overDetailsShow.sync="overDetailsShow" :temp="temp"/>
     <!-- 费用减免 -->
     <fee-waiver
       :feeWaiverShow.sync="feeWaiverShow"
@@ -126,8 +130,9 @@ import Pagination from "@/components/Pagination";
 import SearchTips from "@/components/SearchTips/index";
 import { GetList, OrdersFeeCancels, GetList_execl } from "@/api/cashCharge";
 import MytableTotal from "@/components/TableTotal/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
 import ChargesDetails from "../../../cashCharge/components/ChargesDetails"; //水费详情弹窗-共用现金收费的费用详情
+import OverDetails from "../../../cashCharge/components/OverDetails"; //除水费外其它费用详情弹窗
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 import FeeWaiver from "../../../cashCharge/components/FeeWaiver"; //水费减免弹窗
 export default {
@@ -139,7 +144,8 @@ export default {
     SearchTips,
     FeeWaiver,
     ChargesDetails,
-    MytableTotal
+    MytableTotal,
+    OverDetails
   },
   props: {
     query: {},
@@ -161,6 +167,7 @@ export default {
       temp: {},
       selectPintShow: false, //票据打印弹窗
       chargesDetailsShow: false,
+      overDetailsShow:false,
       feeWaiverItem: {},
       feeWaiverShow: false,
       totalUser: 0,
@@ -263,6 +270,7 @@ export default {
       if (!n) {
         this.orderData = Object.assign({}, this.listQuery);
         this.orderData.page = 1;
+        this.listQuery.page = 1;
       }
       GetList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -290,13 +298,18 @@ export default {
     },
     //导出
     excel() {
+      if(!isExport(this.tableData)) return
       GetList_execl(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
-    details(row) {
-      this.temp = row;
-      this.chargesDetailsShow = true;
+    details(item) {
+      this.temp = item;
+      if(item.OrderType==2001){
+        this.chargesDetailsShow = true;
+      }else{
+        this.overDetailsShow = true;
+      }
     },
     // 费用撤回
     reset(id) {

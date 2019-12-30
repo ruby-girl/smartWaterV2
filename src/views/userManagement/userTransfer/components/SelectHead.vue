@@ -53,7 +53,7 @@
           placeholder="请选择"
           @change="getscName(selectHead.TransferCustomer)"
           class="user-select-box"
-          style="width: 110px;float: left;margin-right:3px;"
+          style="width: 100px;float: left;margin-right:3px;"
         >
           <el-option
             v-for="item in selectOption"

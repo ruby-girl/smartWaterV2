@@ -4,7 +4,7 @@
     title="费用详情"
     :visible.sync="dialogFormVisible"
     top="20vh"
-    width="792px"
+    width="892px"
     center
     custom-class="dialog-background"
     :close-on-click-modal="false"
@@ -17,16 +17,16 @@
     >{{temp.ChargeFlag==1003?'审核中':temp.ChargeFlag==1004?'已撤销':''}}</div>
     <div class="details-box-item display-flex align-items-center justify-content-flex-justify">
       <div class="details-left">
-        <div>2019-09</div>
+        <div>{{detail.YearMonth}}</div>
         <div>水费详情</div>
       </div>
       <div class="details-left-box">
         <div class="display-flex align-items-center">
-          <span>水费：</span>
+          <span class="lable-box">水费：</span>
           <span class="font-weight main-color-red">{{detail.TotalWaterPrice}}元</span>
         </div>
       </div>
-      <div class="ladder-box flex-1">
+      <div class="lable-box-more-padding flex-1">
         <!-- 循环阶梯 -->
         <div class="display-flex align-items-center ladder-item" v-for="(item,i) in detail.ladder">
           <div class="display-flex ladder-left">
@@ -35,7 +35,7 @@
           </div>
           <div>
             {{i+1}}阶水费：
-            <span class="color-more-black">{{item.TotalPrice}}</span>元
+            <span class="color-more-black">{{item.TotalPrice}}10</span>元
           </div>
         </div>
       </div>
@@ -51,11 +51,11 @@
         :style="{'borderRight':detail.olf.LeteFee>0?'1px solid #d9d9d9':'none'}"
       >
         <div class="display-flex align-items-center">
-          <span>违约金：</span>
+          <span class="lable-box">违约金：</span>
           <span class="font-weight main-color-red">{{detail.olf.LeteFee}}元</span>
         </div>
       </div>
-      <div class="ladder-box flex-1">
+      <div class="lable-box-more-padding flex-1">
         <div class="display-flex align-items-center ladder-item" v-if="detail.olf.LeteFee>0">
           <div>
             欠费金额&nbsp;*&nbsp;逾期
@@ -72,15 +72,15 @@
       </div>
       <div class="ladder-box flex-1 border-left">
         <div class="ladder-item">
-          账户扣减：
+          <span class="lable-box">账户扣减：</span>
           <span class="font-weight main-color">{{detail.orr.PricePaid}}</span>元
         </div>
         <div class="ladder-item">
-          违约金减免：
+          <span class="lable-box">违约金减免：</span>
           <span class="font-weight main-color">{{detail.orr.LeteFeeFree}}</span>元
         </div>
         <div class="ladder-item">
-          水费减免：
+          <span class="lable-box">水费减免：</span>
           <span v-if="detail.orr.WaterAllowanceMoeny&&detail.orr.FreePrice">
             <span class="font-weight main-color">{{detail.orr.WaterAllowanceMoeny}}</span>
             <span>（固定减免)+</span>
@@ -179,7 +179,7 @@ export default {
   padding: 15px 20px 0 20px;
 }
 .ladder-left {
-  padding-right: 60px;
+  width:230px;
 }
 .details-box-item {
   background: #fff;
@@ -210,7 +210,7 @@ export default {
 }
 .details-left-box {
   width: 230px;
-  padding: 40px 20px 40px 30px;
+  padding: 40px 20px 40px 21px;
   border-left: 1px solid #d9d9d9;
   border-right: 1px solid #d9d9d9;
 }
@@ -218,7 +218,10 @@ export default {
   border-left: 1px solid #d9d9d9;
 }
 .ladder-box {
-  padding: 0 30px;
+  padding: 0 21px;
+}
+.lable-box-more-padding{
+  padding: 0 65px;
 }
 .color-more-black {
   color: #46494c;
@@ -237,6 +240,11 @@ export default {
 .charges-state {
   font-size: 16px;
   padding-bottom: 15px;
+}
+.lable-box{
+  display: inline-block;
+  width:84px;
+  text-align: right;
 }
 </style>
 

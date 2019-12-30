@@ -316,7 +316,7 @@ export function isExport(data){
     Message({
       message: '当前列表无数据，不可导出！',
       type: 'warning',
-      duration: 5 * 1000
+      duration:3500
   })
     return false
   }
