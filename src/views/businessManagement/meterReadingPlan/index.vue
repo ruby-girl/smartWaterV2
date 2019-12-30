@@ -13,7 +13,7 @@
         <div
           class="display-flex justify-content-flex-justify"
           :class="{'plan-table':isShowAdPlanClass }"
-        > 
+        >
           <el-button
             v-show="isShowAdPlan"
             size="mini"
@@ -272,8 +272,8 @@ export default {
       that.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
-        document.getElementById("table").offsetTop -
-        73;
+        document.getElementById("table").offsetTop -47
+        
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.searchWidth = this.$refs.formHeight.clientWidth;
@@ -380,6 +380,9 @@ export default {
       this.$refs.child1.getTime();
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
+        this.orderData.page = 1;
+      } else {
+        this.orderData.page = this.selectHead.page;
       }
 
       searchPlanList(this.orderData).then(res => {
@@ -392,9 +395,10 @@ export default {
     },
     exportList() {
       //导出
-    if (this.tableData.length == 0) {
+      if (this.tableData.length == 0) {
         this.$message({
-          message: "暂无导出数据",
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
           type: "warning"
         });
         return false;

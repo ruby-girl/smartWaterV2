@@ -122,8 +122,7 @@ export default {
       that.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
-        document.getElementById("table").offsetTop -
-        73;
+        document.getElementById("table").offsetTop -47 
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.searchWidth = this.$refs.formHeight.clientWidth;
@@ -149,6 +148,9 @@ export default {
 
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
+        this.orderData.page = 1;
+      }else {
+        this.orderData.page =this.selectHead.page
       }
       getSMSList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);

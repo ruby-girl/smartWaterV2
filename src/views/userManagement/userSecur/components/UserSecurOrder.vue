@@ -161,7 +161,11 @@ export default {
       }
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
+        this.orderData.page = 1;
+      } else {
+        this.orderData.page = this.listQuery.page;
       }
+
       getInssuredHis(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.tableData = res.data;
@@ -170,9 +174,10 @@ export default {
     },
     //导出
     excelInssud() {
-     if (this.tableData.length == 0) {
+      if (this.tableData.length == 0) {
         this.$message({
-          message: "暂无导出数据",
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
           type: "warning"
         });
         return false;

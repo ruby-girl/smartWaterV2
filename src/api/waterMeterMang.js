@@ -199,18 +199,19 @@ export function getWLWaterInfo(data) {//根据物联网编号  获取水表信�
     params: data
   })
 }
-export function UpgradeInfo(data) {//根据物联网编号  获取水表信息
+export function UpgradeInfo(data) {//升级
   return request({
-    url: "/WaterMeterUpgrade/SubmitUpgradeInfo",
+    url: "/WaterMeterUpgrade/SubmitUpgradeInfo?balance=" + data.balance,
     method: 'POST',
-    data
+    data: data.UpgradeWaterNeedInfo
+    
   })
 }
 export function getUpgradeRecordList(data) {//获取升级记录
   return request({
     url: "/WaterMeterUpgrade/SelectUpgradeRecordList",
     method: 'POST',
-    data
+    data: data
   })
 }
 export function ExcelUpgradeRecordList(data) {//导出升级记录
@@ -227,6 +228,7 @@ export function checkResidueMon(data) {//检查是否欠费
     params: data
   })
 }
+//
 export function checkMeterRecord(data) {//检查是否存在未抄表
   return request({
     url: "/WaterMeterUpgrade/CheckMeterRecord",

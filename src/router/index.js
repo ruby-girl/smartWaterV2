@@ -498,7 +498,43 @@ export const asyncRoutes = [
           title: '用水性质同统计',
           roles: ['1']
         }
-      }
+      },
+      {
+        path: 'abnormalStatistics',
+        component: () => import('@/views/reportStatistics/abnormalStatistics/index'),
+        name: 'abnormalStatistics',
+        meta: {
+          title: '异常监管统计',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'proSalesStatistics',
+        component: () => import('@/views/reportStatistics/proSalesStatistics/index'),
+        name: 'proSalesStatistics',
+        meta: {
+          title: '产销差统计',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'userBusinessStatistics',
+        component: () => import('@/views/reportStatistics/userBusinessStatistics/index'),
+        name: 'userBusinessStatistics',
+        meta: {
+          title: '用户业务办理统计',
+          roles: ['1']
+        }
+      },
+      {
+        path: 'waterConStatistics',
+        component: () => import('@/views/reportStatistics/waterConStatistics/index'),
+        name: 'waterConStatistics',
+        meta: {
+          title: '用水量统计',
+          roles: ['1']
+        }
+      },
     ]
   },
 

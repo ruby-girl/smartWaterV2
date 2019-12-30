@@ -258,10 +258,9 @@ export default {
     };
   },
   mounted() {
-    this.tableHeight =
+  this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
-      document.getElementsByClassName("el-form")[0].offsetHeight -
-      194;
+      document.getElementById("table").offsetTop -98
     this.$refs.searchTips.$refs.myChild.GetTable(this.IcwachMeterData.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.$nextTick(() => {
@@ -317,8 +316,12 @@ export default {
     },
     searchFun(num) {
       let that = this;
-      if (num != "0") {
+
+      if (num != 0) {
         this.orderData = Object.assign({}, this.IcwachMeterData);
+        this.orderData.page = 1;
+      } else {
+        this.orderData.page = this.IcwachMeterData.page;
       }
       searICMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
@@ -342,9 +345,10 @@ export default {
       this.searchFun();
     },
     excelWaterMeter() {
-       if (this.tableData.length == 0) {
+      if (this.tableData.length == 0) {
         this.$message({
-          message: "暂无导出数据",
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
           type: "warning"
         });
         return false;
