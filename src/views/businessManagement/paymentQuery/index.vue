@@ -261,8 +261,7 @@ export default {
       this.$router.push({
         path: "/businessManagement/billDetails",
         query: {
-          PayMentId: row.Id,
-          date: new Date()
+          PayMentId: row.Id
         }
       });
     }
