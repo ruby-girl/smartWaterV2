@@ -155,7 +155,7 @@
       exportExcel() {//导出事件
         if(this.tableData.length<=0){
           this.$message({
-            message: '暂无导出数据',
+            message: '当前列表无数据，不可导出',
             type: 'warning',
             duration: 4000
           });

@@ -116,7 +116,7 @@
     methods: {
       exportExcel() {//导出事件
         if(this.tableData.length<=0){
-          promptInfoFun(this,1,'暂无导出数据')
+          promptInfoFun(this,1,'当前列表无数据，不可导出')
           return false
         }
         GetRegisterList_Execl(this.rbp).then(res => {

@@ -126,7 +126,7 @@
       /******************导出，触发父级方法**********************/
       exportExcel() {
         if(this.tableData.length<=0){
-          promptInfoFun(this,1,'暂无导出数据')
+          promptInfoFun(this,1,'当前列表无数据，不可导出')
           return false
         }
         this.$parent.userInfoExcel()

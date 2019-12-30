@@ -13,34 +13,18 @@
         <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="抄表计划" prop="editUserId">
+    <el-form-item label="用户类型" prop="editUserId">
       <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="抄表员" prop="editUserId">
+    <el-form-item label="用水性质" prop="editUserId">
       <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <transition name="fade">
-      <el-form-item label="抄表计划日期" prop="createStartTimes" v-show="screenWdth<1600?ifMore:true">
-        <el-date-picker
-          :editable="false"
-          @keydown.enter.native="searchFun"
-          v-model="createStartTimes"
-          :unlink-panels="true"
-          size="small"
-          type="monthrange"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          @change="getTime1"
-        />
-      </el-form-item>
-    </transition>
     <el-form-item label="">
       <i v-show="screenWdth<1600&&ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
       <i v-show="screenWdth<1600&&!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>

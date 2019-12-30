@@ -94,11 +94,9 @@
             _this.prohibit = false
           }, 10000)
         }
-        SetProcessMenuState({id: localStorage.getItem('menuCode'),state: this.ifExamine}).then(res => {//审核权限开关
-          if (res.code ==0 ) {
-          } else {
-            promptInfoFun(this,1,res.message)
-          }
+        SetProcessMenuState({id: localStorage.getItem('menuCode'), state: this.ifExamine}).then(res => {//审核权限开关
+        }).catch(()=>{
+           this.ifExamine = true //有正在进行的进程 不可关闭该流程
         })
       },
       haveNoData(newVal){//无数据时不可点击

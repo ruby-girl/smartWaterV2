@@ -107,7 +107,7 @@ export const asyncRoutes = [
     name: "sysMangment",
     meta: {
       title: '短信管理',
-      icon: 'iconfont icongongzuotai',
+      icon: 'iconfont iconxiaoxixinxiduanxintixingyoujiantongzhisixin',
       roles: ['1']
     },
     children: [{
@@ -167,12 +167,6 @@ export const asyncRoutes = [
         component: () => import('@/views/organizationManage/department/index'),
         meta: { title: '部门管理', roles: ['1'] }
       },
-      /* {
-         path: 'postManage',
-         name: 'postManage',
-         component: () => import('@/views/organizationManage/postManage/index'),
-         meta: { title: '岗位管理', roles: ['1'] }
-       },*/
       {
         path: 'peopleManage',
         name: 'peopleManage',
@@ -429,7 +423,7 @@ export const asyncRoutes = [
     name: "systemConfig",
     meta: {
       title: '系统配置',
-      icon: 'iconfont icongongzuotai',
+      icon: 'iconfont iconpeizhi',
       roles: ['1']
     },
     children: [{
@@ -450,7 +444,7 @@ export const asyncRoutes = [
     name: "reportStatistics",
     meta: {
       title: '报表统计',
-      icon: 'iconfont icongongzuotai',
+      icon: 'iconfont iconbaobiaotongji',
       roles: ['1']
     },
     children: [
@@ -495,7 +489,7 @@ export const asyncRoutes = [
         component: () => import('@/views/reportStatistics/waterStatistics/index'),
         name: 'waterStatistics',
         meta: {
-          title: '用水性质同统计',
+          title: '用水性质统计',
           roles: ['1']
         }
       }

@@ -71,7 +71,6 @@
   import Pagination from '@/components/Pagination/index'//分页组建
   import { GetList, Delete, GetList_Execl,GetEditObjById } from "@/api/organize"
   import { parseTime, promptInfoFun } from "@/utils/index"
-  let editObj = {};//编辑需要用到的全局变量
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
   export default {
@@ -113,7 +112,7 @@
       exportExcel() {//导出事件
         if(this.tableData.length<=0){
           this.$message({
-            message: '暂无导出数据',
+            message: '当前列表无数据，不可导出',
             type: 'warning',
             duration: 4000
           });

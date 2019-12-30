@@ -108,13 +108,6 @@
           min-width="200px">
         </el-table-column>
       </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="sbap.page"
-        :limit.sync="sbap.limit"
-        @pagination="searchFun"/>
-      <!--列表组建 e-->
     </div>
   </div>
 </template>
@@ -123,30 +116,24 @@
   import SearchTips from "@/components/SearchTips/index";
   import '@/styles/organization.scss'
   import SelectHead from './components/SelectHead'//查询条件组建
-  import Pagination from '@/components/Pagination/index'//分页
   import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"
   import { promptInfoFun } from "@/utils/index"
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
   export default {
     name: 'standardRate',
-    components: { Pagination, SelectHead, SearchTips },
+    components: { SelectHead, SearchTips },
     data() {
       return {
-        ID:'',
-        waterFactory:[],//水厂数据集合
         tableHeight: null,//表格高度
-        total: 0,
         sbap: {},
         tableData: [{date:111,name:['小民族','刷卡啊额','安慰让我额']}],//表格数据
-        checkAllData: [],
-        checksData: [],
-        customHeight: '',//自定义高度
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
       }
     },
     methods: {
+      /*当前列表无数据，不可导出*/
       exportExcel() {//导出事件
         if(this.tableData.length<=0){
           promptInfoFun(this,1,res.message)
@@ -159,7 +146,6 @@
       searchFun() {//查询事件
         BlockAreaGetList(this.sbap).then(res => {
           if (res.code == 0 ) {
-            this.total = res.count;
             this.tableData = res.data;
             this.tipsData = pushItem(this.tipsDataCopy)
           } else {
@@ -182,11 +168,6 @@
        * param  对应搜索条件的对象名
        */
       delTips(val) {
-        if(val=='createStartTimes'){
-          this.$refs.childSelect.createStartTimes = []
-          this.$refs.childSelect.sbap.editStartTime = ''
-          this.$refs.childSelect.sbap.editEndTime = ''
-        }
         this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "sbap"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()
       },
@@ -204,7 +185,7 @@
     },
     mounted() {
       this.$refs.searchTips.showTabBtn = false//隐藏自定义按钮
-      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 70
+      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 40
 
     }
   }

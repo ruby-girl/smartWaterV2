@@ -97,6 +97,11 @@
       width: calc(100% + 20px);margin: 0 0 0 -10px;border-bottom: solid 1px #e6ebf5;height: 30px;line-height: 30px;
   }
   .multiColumn:last-child{border: none;}
+  .userSeeMoreInfo {
+    text-decoration: underline
+  }
+  .el-date-editor--monthrange{width: 250px}
+  .legacyArrears{ position: absolute;top: 76px;margin: 0;font-size: 14px;right: 100px;color: #777c82;}
 }
 .el-form-item__error{padding-top: 1px}
 .cl-container1{
