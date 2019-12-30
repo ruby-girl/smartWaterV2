@@ -225,10 +225,21 @@ export default {
     },
     getList() {
       if (this.type == 1){
+        this.handelTips()
         this.tipsData = pushItem(this.tipsDataCopy);
         this.$refs.tableTypeCard.getList();
-      } 
-      else this.$refs.tableTypeCard.getCardList()
+      }else{  
+        this.$refs.tableTypeCard.getCardList()
+      }   
+    },
+    handelTips(){
+      if(this.headQuery.CustomerQueryType==1&&this.type==1){//处理面包屑
+        this.getText(this.headUser.CustomerNo,'customerNo','','用户编号')
+      }else if(this.headQuery.CustomerQueryType==2&&this.type==1){
+        this.getText(this.headUser.CustomerName,'CustomerName','','姓名/简码')
+      }else if(this.headQuery.CustomerQueryType==6&&this.type==1){
+        this.getText(this.headUser.SA_WaterMeterNo,'SA_WaterMeterNo','','水表编号')
+      }
     },
     delTips() {
       this.tipsDataCopy = [];
@@ -249,13 +260,7 @@ export default {
       this.cardQuery.CustomerId = user.Id;
       this.listQuery.page = 1;
       this.checkedAllParent = false;
-      if(this.headQuery.CustomerQueryType==1){//处理面包屑
-        this.getText(user.CustomerNo,'customerNo','','用户编号')
-      }else if(this.headQuery.CustomerQueryType==2){
-        this.getText(user.CustomerName,'CustomerName','','姓名/简码')
-      }else if(this.headQuery.CustomerQueryType==6){
-        this.getText(user.SA_WaterMeterNo,'SA_WaterMeterNo','','水表编号')
-      }
+      this.handelTips()
       this.getList();
     },
     // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息 resInfo用户信息  resData卡片信息
@@ -361,7 +366,10 @@ export default {
      Object.assign(this.$data, this.$options.data())
      this.getHeight()
      this.listQuery.page = 1;
-      if (this.type == 1) this.$refs.tableTypeCard.tableData = [];
+      if (this.type == 1){
+        this.$refs.tableTypeCard.tableData = [];
+        this.$refs.tableTypeCard.total=0
+      }
       else this.$refs.tableTypeCard.cardData = [];
     }
   }

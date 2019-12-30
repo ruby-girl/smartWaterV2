@@ -43,9 +43,7 @@
     </div>
 
     <el-row class="head-bottom-box">
-      <el-col :md="8" :lg="3" :xl="2">
-        姓名:
-        <span>{{user.CustomerName}}</span>
+      <el-col :md="8" :lg="3" :xl="2"><span>姓名:</span><span>{{user.CustomerName}}</span>
       </el-col>
       <el-col :md="8" :lg="4" :xl="3">
         水表类型:
@@ -231,6 +229,7 @@ export default {
   background: #f5f5f5;
   padding: 15px;
   line-height: 30px;
+  font-size: 14px;
 }
 
 </style>

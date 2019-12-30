@@ -77,7 +77,7 @@
                 popper-class="tooltip"
                 effect="light"
                 :visible-arrow="false"
-                :content="row.ChargeFlag==1003?'费用审核中，无法进行减免操作':row.OrderType!==2001?'非水费类型不能进行减免':'费用减免'"
+                :content="row.ChargeFlag==1003?'费用审核中，无法进行减免':row.OrderType!==2001?'非水费类型不能进行减免':'费用减免'"
                 placement="bottom"
               >
                 <i

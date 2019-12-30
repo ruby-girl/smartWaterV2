@@ -145,7 +145,7 @@ export default {
         { Name: "用户编号", Id: "1" },
         { Name: "姓名/简码", Id: "2" },
         { Name: "水表编号", Id: "3" },
-        { Name: "交易流水号", Id: "4" }
+        { Name: "交易流水号", Id: "7" }
       ],
       payMentTypeOption:[
         { Name: "现金", Id: "2701" },

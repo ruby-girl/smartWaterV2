@@ -98,7 +98,7 @@
   import Pagination from "@/components/Pagination";
   import Dialog from "./components/Dialog";
  import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
   import {
     waterFactoryGetList,
     waterFactoryUpDate,
@@ -268,6 +268,7 @@ import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条�
       },
       excel() {
         //导出
+        if(!isExport(this.tableData)) return
         waterFactoryExcel(this.listQuery).then(res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         });

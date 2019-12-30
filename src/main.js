@@ -26,18 +26,7 @@ import VueDND from 'awe-dnd'//拖动
 Vue.prototype.baseUrl='http://192.168.2.216:10002'
 import axios from 'axios'
 Vue.prototype.$http = axios
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online! ! !
- */
-// import { mockXHR } from '../mock'
-// if (process.env.NODE_ENV === 'production') {
-//   mockXHR()
-// }
+
 Vue.prototype.common = commonJS;
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size

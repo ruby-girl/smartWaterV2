@@ -149,6 +149,17 @@ export default {
     },
     num(v) {
       this.inputWidth = v.length * 18 < 100 ? 100 : v.length * 18;
+      if (this.isAccount || !this.num) this.surplus = "0.00";
+      else{
+        let surplus;
+       surplus =((parseFloat(this.num) * 1000 - parseFloat(this.unpaidMoney) * 1000) /
+          1000).toFixed(2);
+          if(surplus){
+            this.surplus=surplus
+          }else{
+            this.surplus = "0.00";
+          }
+      }
     }
   },
   data() {

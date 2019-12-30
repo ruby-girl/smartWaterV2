@@ -208,7 +208,7 @@
           <switch-item label="远传表欠费关阀" :swithValue.sync="postData.IsCloseValve" />
         </div>
         <div class="pt-15" v-show="postData.IsCloseValve=='1'?true:false">
-          <div>远传表不关阀时间</div>
+          <div><span>远传表不关阀时间</span></div>
           <div class="font-small">
             节假日是否开阀
             <el-select size="small" v-model="postData.IsHolidayNotCloseValve" class="small-select">
