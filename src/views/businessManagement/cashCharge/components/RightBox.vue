@@ -10,7 +10,7 @@
         </div>
       </div> -->
       <div class="display-flex align-items-center justify-content-flex-justify right-font-18" style="background:#f5f5f5;">
-        <div>账户金额</div>
+        <div>账户余额</div>
         <div class="main-color right-big-font">
           <span class="right-small-font">¥</span>
           {{accountMoney}}
@@ -19,10 +19,11 @@
       <div
         class="display-flex align-items-center justify-content-flex-justify filter-container right-font-18"
       >
+      <!-- 勾选的费用单金额=应收金额（剩余未缴） -->
         <div>应收金额</div>
         <div class="right-big-font">
           <span class="right-small-font">¥</span>
-          {{needMoney}}
+          {{unpaidMoney}}
         </div>
       </div>
       <div
@@ -134,7 +135,12 @@ export default {
   // accountMoney//账户余额
   watch: {
     unpaidMoney(v) {
-      this.calculationReceivable();
+      this.num=v
+      let _this=this
+      setTimeout(function() {
+        _this.$refs.myInput.select();
+      }, 200);
+      // this.calculationReceivable();
     },
     isAccount(v) {
       //  this.isAccount =v;
@@ -143,6 +149,17 @@ export default {
     },
     num(v) {
       this.inputWidth = v.length * 18 < 100 ? 100 : v.length * 18;
+      if (this.isAccount || !this.num) this.surplus = "0.00";
+      else{
+        let surplus;
+       surplus =((parseFloat(this.num) * 1000 - parseFloat(this.unpaidMoney) * 1000) /
+          1000).toFixed(2);
+          if(surplus){
+            this.surplus=surplus
+          }else{
+            this.surplus = "0.00";
+          }
+      }
     }
   },
   data() {
@@ -152,7 +169,6 @@ export default {
       isAccount: true,
       num: "0.00",
       inputWidth: 100,
-      needMoney: "0.00", //应缴金额
       surplus: "0.00", //找零
       balanceDeduction: 0, //账户抵扣
       saveAccount: 0, //zanshi
@@ -180,27 +196,27 @@ export default {
       this.$emit("selectPayment", i);
     },
     // 计算应收
-    calculationReceivable() {
-      // 应缴金额=账户余额-剩余未缴
-      let needMoney =
-        (parseFloat(this.accountMoney) * 1000 -
-          parseFloat(this.unpaidMoney) * 1000) /
-        1000;
-      if (needMoney > 0) {
-        this.needMoney = 0;
-        this.num = "";
-        this.balanceDeduction = this.unpaidMoney; //计算账户抵扣了多少钱
-      } else {
-        this.needMoney = Math.abs(needMoney).toFixed(2);
-        this.num = Math.abs(needMoney).toFixed(2);
+    // calculationReceivable() {
+    //   // 应缴金额=账户余额-剩余未缴
+    //   let unpaidMoney =
+    //     (parseFloat(this.accountMoney) * 1000 -
+    //       parseFloat(this.unpaidMoney) * 1000) /
+    //     1000;
+    //   if (unpaidMoney > 0) {
+    //     this.unpaidMoney = 0;
+    //     this.num = "";
+    //     this.balanceDeduction = this.unpaidMoney; //计算账户抵扣了多少钱
+    //   } else {
+    //     this.unpaidMoney = Math.abs(unpaidMoney).toFixed(2);
+    //     this.num = Math.abs(unpaidMoney).toFixed(2);
 
-        this.balanceDeduction = this.accountMoney;
-      }
-      let _this = this;
-      setTimeout(function() {
-        _this.$refs.myInput.select();
-      }, 200);
-    },
+    //     this.balanceDeduction = this.accountMoney;
+    //   }
+    //   let _this = this;
+    //   setTimeout(function() {
+    //     _this.$refs.myInput.select();
+    //   }, 200);
+    // },
     // 输入金额保留2位
     money(e) {
       e.target.value = updateMoney(e.target.value);
@@ -247,7 +263,6 @@ export default {
         receivable: this.unpaidMoney, //剩余未缴
         receipts: receipts, //实收
         balanceDeduction: this.balanceDeduction, //账户抵扣
-        isAccount: this.isAccount,
         payType: this.paymentType
       };
 
@@ -261,7 +276,7 @@ export default {
         this.num = "";
         this.surplus = "0.00";
         this.$emit("update:unpaidMoney", "0.00");
-        this.needMoney = 0;
+        this.unpaidMoney = 0;
         // 金额清零--e
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", false); //结算完成后，父元素全选置为false，卡片获取列表再设置全选
@@ -275,7 +290,6 @@ export default {
         orderId: this.payOrderId,
         receivable: this.unpaidMoney, //剩余未缴
         receipts: receipts, //实收
-        isAccount: this.isAccount,
         payType: this.paymentType,
         printerType: "", //打印方式 无打印 = -1,小票 = 2801,发票 = 2802,
         isFirst: this.isFirst //当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false
@@ -291,7 +305,7 @@ export default {
         this.num = "";
         this.surplus = "0.00";
         this.$emit("update:unpaidMoney", "0.00");
-        this.needMoney = "0.00";
+        this.unpaidMoney = "0.00";
         // 金额清零--e
         this.$emit("update:isIndeterminateParent", false);
         this.$emit("update:checkedAllParent", false); //结算完成后，父元素全选置为false，卡片获取列表再设置全选
@@ -320,7 +334,7 @@ export default {
     },
     // 判断输入金额不能小于应缴金额
     testMoney() {
-      if (parseFloat(this.num) < parseFloat(this.needMoney)) {
+      if (parseFloat(this.num) < parseFloat(this.unpaidMoney)) {
         this.$message({
           message: "实收金额不能小于应收金额",
           type: "error",
@@ -336,7 +350,7 @@ export default {
       if (this.isAccount || !this.num) this.surplus = "0.00";
       else
         this.surplus =
-          (parseFloat(this.num) * 1000 - parseFloat(this.needMoney) * 1000) /
+          (parseFloat(this.num) * 1000 - parseFloat(this.unpaidMoney) * 1000) /
           1000;
       this.surplus = changeTwoDecimal(this.surplus); //补齐小数
     }

@@ -36,12 +36,6 @@
           <el-table-column label="操作" align="center" width="112px" class-name="small-padding">
             <template slot-scope="{row}">
              <div class="display-flex justify-content-flex-center secur-content">
-                <!-- <div class="main-color" @click="handleUpdate(row)">
-                  <a>编辑</a>
-                </div>
-                <div class="main-color-red pl-15" @click="delRow(row)">
-                  <a>删除</a>
-                </div> -->
                  <el-tooltip
                 class="item"
                 popper-class="tooltip"
@@ -98,7 +92,7 @@ import {
   exportExcel
 } from "@/api/role";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "RolePermission",
   components: { SelectHead, Pagination, Dialog, SearchTips },
@@ -248,6 +242,7 @@ export default {
     },
     excel() {
       //导出
+      if(!isExport(this.tableData)) return
       exportExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

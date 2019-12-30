@@ -8,10 +8,9 @@
         <div class="display-flex justify-content-flex-justify">
           <el-button
             size="mini"
-            class="cl-search cl-reset"
+            class="cl-search cl-reset sysClass"
             round
             @click="addPlan"
-            type="primary"
             style="margin:7px 0;"
           >
             <i class="icon iconfont">&#xe689;</i>添加
@@ -23,12 +22,10 @@
             :key="tableKey"
             :data="tableData"
             border
-           
             fit
             :height="tableHeight"
             style="width: 100%;"
             :header-cell-style="{'background-color': '#F0F2F5'}"
-            :cell-style="{'padding':'5px 0'}"
           >
             <el-table-column type="index" fixed="left" label="#" width="60" align="center">
               <template slot-scope="scope">
@@ -44,7 +41,7 @@
                 :align="item.Position"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
-                 :show-overflow-tooltip="true"
+                :show-overflow-tooltip="true"
               />
             </template>
             <el-table-column label="操作" width="200px" align="center" fixed="right">
@@ -173,14 +170,19 @@ export default {
   },
   mounted() {
     this.$nextTick(function() {
-      this.$refs.searchTips.showExcel=false
+      this.$refs.searchTips.showExcel = false;
       // 自适应表格高度
       const that = this;
+      console.log(
+        document.getElementsByClassName("section-full-container")[0]
+          .offsetHeight
+      );
+      console.log(document.getElementById("table").offsetTop);
       that.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
         document.getElementById("table").offsetTop -
-        73;
+        47;
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.searchWidth = this.$refs.formHeight.clientWidth;
@@ -202,9 +204,11 @@ export default {
     searchTableList(num) {
       //查询列表
       const that = this;
-
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
+        this.orderData.page = 1;
+      } else {
+        this.orderData.page = this.selectHead.page;
       }
       getSettingList(this.orderData).then(res => {
         this.tableData = res.data;
@@ -319,5 +323,15 @@ export default {
   position: absolute;
   right: 0px;
   overflow: hidden;
+}
+.sysClass {
+  color: #fff;
+  background-color: #00b3a1;
+  border-color: #00b3a1;
+}
+.sysClass:hover {
+  background: #33c2b4;
+  border-color: #33c2b4;
+  color: #fff;
 }
 </style>

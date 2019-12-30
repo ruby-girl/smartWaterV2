@@ -127,7 +127,8 @@ export default {
         editStartTime: "", // 操作时间起
         editEndTime: "", // 操作时间止
         tableId: "0000020",
-        timevalue:[]
+        timevalue:[],
+        PayMentId:''//收费查询跳转至账单详情，带入ID
       },
       tableData: [],
       checksData: [],
@@ -145,25 +146,31 @@ export default {
       return arrayHead;
     }
   },
+  watch: {
+     $route: {
+    handler: function(val, oldVal){
+      if(this.$route.query.PayMentId){
+        Object.assign(this.$data, this.$options.data())
+        this.getHeight()
+       this.listQuery.PayMentId=this.$route.query.PayMentId
+       this.getList(0,this.listQuery.PayMentId)
+      }
+    },
+    deep: true
+  }
+    },
   mounted: function() {
     this.$nextTick(function() {
-      // 是否需要时间默认值--待确认
-
-      //  let start = parseStartTimeFunc(new Date());
-      // let end = parseEndTimeFunc(new Date());
-      // this.listQuery.editStartTime=start
-      // this.listQuery.editEndTime=end   
-      // this.listQuery.timevalue.push(new Date(start));
-      // this.listQuery.timevalue.push(new Date(end));
-      // this.getText(start+'~'+end, "timevalue", "", "缴费日期");
-      // this.tipsData = pushItem(this.tipsDataCopy);
-      var formHeight = this.$refs.formHeight.offsetHeight;
-      this.tableHeight = document.body.clientHeight - formHeight - 160;
-      this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+      this.getHeight()
     });
   },
   methods: {
+    getHeight(){
+        var formHeight = this.$refs.formHeight.offsetHeight;
+      this.tableHeight = document.body.clientHeight - formHeight - 160;
+      this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
+    },
      delTips(val) {
        if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
@@ -177,7 +184,10 @@ export default {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
-    getList(n) {
+    getList(n,isQuery) {
+      if(!isQuery){
+         this.listQuery.PayMentId=''
+      }
       if(!n){
          this.orderData = Object.assign({}, this.listQuery);
          this.orderData.page=1

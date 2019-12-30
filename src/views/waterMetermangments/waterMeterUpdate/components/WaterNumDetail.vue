@@ -99,19 +99,6 @@ export default {
       waterDetaileList: {}
     };
   },
-  mounted() {},
-  computed: {
-    //计算总用水量情况
-    totalWaterYield: function() {
-      return (
-        this.WaterYield1 +
-        this.WaterYield2 +
-        this.WaterYield3 +
-        this.WaterYield4 +
-        this.WaterYield5
-      );
-    }
-  },
   methods: {
     handleClose() {
       //水量详情关闭
@@ -167,7 +154,7 @@ export default {
     }
     .startNum{
       display: inline-block;
-      width: 150px;
+      width: 300px;
     }
   }
   // li:nth-child(2n){text-align: right}

@@ -1,3 +1,4 @@
+import {Message} from 'element-ui'
 /**
  * @param {string} callback 回调方法
  * resInfo 卡片信息 包含几代卡片，通过为几代卡片分别从MOdel里获取卡号
@@ -5,21 +6,31 @@
 // IC卡读卡
 import { GetICReadCardInfo } from "@/api/userSetting"; //IC卡读卡
 import { GetAreaListNotPNode } from "@/api/userArea"; //区域列表
-export function ICReadCardInfo(callback) {
+export function ICReadCardInfo(callback,errorCallBack) {
   let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo();
   if (res != undefined && res != "") {
     let rJSON = JSON.parse(res)//处理后的res
     // let resData = eval('(' + rJSON.Data + ')')//处理后的Data
     if (rJSON.Result) {
-      GetICReadCardInfo({ jsonData: rJSON.Data }).then(resInfo => {
-        callback(resInfo)
+      GetICReadCardInfo({ jsonData: rJSON.Data }).then(resData => {
+        let resIcInfo;
+        if(resData.data.ProductType=='2'){
+          resIcInfo=resData.data.ProductTwoModel
+        }else{
+          resIcInfo=resData.data.ProductOneModel
+        }
+        callback(resIcInfo)
+      }).catch(resError=>{    
+        if(errorCallBack){
+          errorCallBack(resError)
+        }
       })
     } else {
-      this.$message({
-        message: "读取错误！",
-        type: "error",
+      Message.error({
+        message: '读取错误',
+        type: 'error',
         duration: 4000
-      });
+      })
     }
   }
 }
@@ -30,17 +41,17 @@ export function WriteCardInfo(objJson, callback) {
     let rJSON = JSON.parse(res)//处理后的res
     // let resData = eval('(' + rJSON.Data + ')')//处理后的Data
     if (rJSON.Result) {
-      this.$message({
-        message: "写卡成功",
-        type: "success",
+      Message.success({
+        message: '写卡成功',
+        type: 'success',
         duration: 4000
-      });
+      })
     } else {
-      this.$message({
-        message: "写卡错误！",
-        type: "error",
+      Message.error({
+        message: '写卡错误！',
+        type: 'error',
         duration: 4000
-      });
+      })
       callback(objJson)
     }
   }
@@ -298,4 +309,16 @@ export function getFileFun(data,object){//获取附件信息,data 详情接口�
     files.push(obj)
     return files
   }
+}
+// 表格无数据，禁止导出
+export function isExport(data){
+  if(data.length<1){
+    Message({
+      message: '当前列表无数据，不可导出！',
+      type: 'warning',
+      duration: 5 * 1000
+  })
+    return false
+  }
+  return true
 }

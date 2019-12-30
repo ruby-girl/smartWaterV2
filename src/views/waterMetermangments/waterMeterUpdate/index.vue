@@ -232,8 +232,12 @@ export default {
         this.listQuery.EndUpgradeDate =
           this.listQuery.EndUpgradeDate.split(" ")[0] + " 23:58:59";
       }
-      if (num != "0") {
+
+      if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
+        this.orderData.page = 1;
+      } else {
+        this.orderData.page = this.listQuery.page;
       }
       getUpgradeRecordList(this.orderData).then(res => {
         if (res.code == 0) {
@@ -256,9 +260,10 @@ export default {
     },
     //导出
     excelWaterAccountOrder() {
-       if (this.tableData.length == 0) {
+      if (this.tableData.length == 0) {
         this.$message({
-          message: "暂无导出数据",
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
           type: "warning"
         });
         return false;

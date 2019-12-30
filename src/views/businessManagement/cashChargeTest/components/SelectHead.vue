@@ -122,13 +122,7 @@ export default {
       try {
         // 读卡
         ICReadCardInfo((resData)=>{
-          let resIcInfo;
-          if(resData.data.ProductType=='2'){
-            resIcInfo=resData.data.ProductTwoModel
-          }else{
-            resIcInfo=resData.data.ProductOneModel
-          }
-          this.getUser(resIcInfo)    
+          this.getUser(resData)    
         })
       } catch (error) {
         console.log("请在CS端操作1");

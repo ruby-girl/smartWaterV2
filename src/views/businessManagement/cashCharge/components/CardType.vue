@@ -153,7 +153,7 @@ export default {
           this.cardData.push(obj);
         });
         this.IsDisable();
-      });
+      }); 
     },
     // 处理能勾选的数据
     IsDisable() {
@@ -332,8 +332,9 @@ export default {
   }
 }
 .no-data {
-  color: #46494c;
-  padding-top: 40px;
+  color: #909399;
+  padding-top: 20vh;
+  font-size: 14px;
 }
 .item-time-head {
   background: #9cb85c;

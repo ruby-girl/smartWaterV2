@@ -43,9 +43,7 @@
     </div>
 
     <el-row class="head-bottom-box">
-      <el-col :md="8" :lg="3" :xl="2">
-        姓名:
-        <span>{{user.CustomerName}}</span>
+      <el-col :md="8" :lg="3" :xl="2"><span>姓名:</span><span>{{user.CustomerName}}</span>
       </el-col>
       <el-col :md="8" :lg="4" :xl="3">
         水表类型:
@@ -138,23 +136,48 @@ export default {
         }
       });
     },
-    handleFilterIC() {
+     handleFilterIC() {
       try {
-        // resInfo用户信息  resData卡片信息
-        // ICReadCardInfo((resInfo,resData)=>{
-        //   console.log('头部咯')
-        //   console.log(resData)
-        //this.$emit("handleFilterIcParent", resInfo,resData) 
-        // })
         // 读卡
-          ICReadCardInfo((resData)=>{
-          console.log('头部咯')
-          console.log(resData)
-          this.$emit("handleFilterIcParent", resData)      
+        ICReadCardInfo((resData)=>{
+          this.getUser(resData)    
+        },error=>{
+           this.user={}
+          this.$emit("clearData");
         })
       } catch (error) {
         console.log("请在CS端操作1");
       }
+    },
+     // 查询用户信息
+    getUser(info){
+      let postData={} 
+      if(info){
+        this.$emit("update:cardInfo",info)
+        postData.CustomerQueryValue=info.UserCard.CardNo;
+        postData.CustomerQueryType="8";
+        postData.page=1;
+        postData.limit=20
+      }else{ 
+        postData=Object.assign({},this.selectHead)
+      }
+      GetCustomerDataList(postData).then(res => {
+        if (res.data.length == 0) {
+          this.$message({
+            message: "未查询到用户！",
+            type: "error",
+            duration: 4000
+          });
+          this.user={}
+          this.$emit("clearData");
+        } else if (res.data.length == 1) {
+          this.user = res.data[0];
+          if(info) this.$emit("handleFilterIcParent", res.data[0]);
+          else this.$emit("handleFilter", res.data[0]);
+        } else {
+          this.$parent.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
+        }
+      });
     },
     toPaymentQuery() {
       this.paymentNum=''
@@ -206,6 +229,7 @@ export default {
   background: #f5f5f5;
   padding: 15px;
   line-height: 30px;
+  font-size: 14px;
 }
 
 </style>

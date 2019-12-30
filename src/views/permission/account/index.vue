@@ -47,7 +47,7 @@
                 :popper-class="row.UserStatusCode=='101'?'tooltip':''"
                 :effect="row.UserStatusCode=='101'?'light':'dark'"
                 :visible-arrow="row.UserStatusCode=='101'?false:true"
-                :content="row.UserStatusCode=='101'?'编辑':'该账号异常不允许操作'"
+                :content="row.UserStatusCode=='101'?'编辑':'该账号异常禁止操作'"
                 placement="bottom"
               >
                 <i class="icon iconfont iconsuoyoubiaogelidebianji" @click="row.UserStatusCode=='101'?handleUpdate(row):''"></i>
@@ -57,7 +57,7 @@
                :popper-class="row.UserStatusCode=='101'?'tooltip':''"
                 :effect="row.UserStatusCode=='101'?'light':'dark'"
                 :visible-arrow="row.UserStatusCode=='101'?false:true"
-                :content="row.UserStatusCode=='101'?'注销':'该账号异常不允许操作'"
+                :content="row.UserStatusCode=='101'?'注销':'该账号异常禁止操作'"
                 placement="bottom"
               >
                 <i class="icon iconfont iconzhuxiao" @click="row.UserStatusCode=='101'?cancel(row):''"></i>
@@ -69,7 +69,7 @@
                :popper-class="row.UserStatusCode=='101'?'tooltip':''"
                 :effect="row.UserStatusCode=='101'?'light':'dark'"
                 :visible-arrow="row.UserStatusCode=='101'?false:true"
-                :content="row.UserStatusCode=='101'?'重置密码':'该账号异常不允许操作'"
+                :content="row.UserStatusCode=='101'?'重置密码':'该账号异常禁止操作'"
                 placement="bottom"
               >
                 <i class="icon iconfont icon_zhongzhi1" @click="row.UserStatusCode=='101'?reset(row):''"></i>
@@ -110,7 +110,7 @@ import EditDialog from "./components/EditDialog";
 import ResetDialog from "./components/ResetDialog";
 import AddDialog from "./components/AddDialog";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   getAccountList,
   getAccountDetail,
@@ -303,7 +303,7 @@ export default {
       this.resetdialogFormVisible = true;
     },
     excel() {
-      //导出
+     if(!isExport(this.tableData)) return
       exportExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

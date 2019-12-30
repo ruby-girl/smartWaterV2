@@ -61,7 +61,7 @@
     </div>
     <div class="waterInfo">
       <h4>升级后水表信息</h4>
-      <el-form ref="waterInfo" :model="userInfo" label-width="70px">
+      <el-form ref="waterInfo" :model="waterInfo" label-width="70px">
         <el-form-item label="水表类型">
           <el-select
             v-model="UpgradeWaterNeedInfo.WaterType"
@@ -70,7 +70,11 @@
             @change="switchWater(UpgradeWaterNeedInfo.WaterType)"
           >
             <el-option label="IC卡水表" v-if="userInfo.WaterMeterTypeId=='1101'" value="1102" />
-            <el-option label="远传水表"  v-if="userInfo.WaterMeterTypeId=='1101'||userInfo.WaterMeterTypeId=='1102'" value="1103" />
+            <el-option
+              label="远传水表"
+              v-if="userInfo.WaterMeterTypeId=='1101'||userInfo.WaterMeterTypeId=='1102'"
+              value="1103"
+            />
             <el-option label="物联网水表" value="1104" />
           </el-select>
         </el-form-item>
@@ -118,7 +122,7 @@
             <el-input
               class="totalMoney left-input"
               disabled
-              v-model="UpgradeWaterNeedInfo.meter2Param.MeterBalance"
+              v-model="UpgradeWaterNeedInfo.NewWaterBalance"
             >
               <template slot="append">元</template>
             </el-input>
@@ -157,7 +161,7 @@
             <el-input
               class="totalMoney left-input"
               disabled
-              v-model="UpgradeWaterNeedInfo.meter3Param.MeterBalance"
+              v-model="UpgradeWaterNeedInfo.NewWaterBalance"
             >
               <template slot="append">元</template>
             </el-input>
@@ -190,7 +194,7 @@
             <el-input
               class="totalMoney left-input"
               disabled
-              v-model="UpgradeWaterNeedInfo.meter4Param.MeterBalance"
+              v-model="UpgradeWaterNeedInfo.NewWaterBalance"
             >
               <template slot="append">元</template>
             </el-input>
@@ -248,7 +252,7 @@ export default {
       },
       userList: [], //回车查询数据列表
       showInfo: true,
-      showSelect:false,
+      showSelect: false,
       UpgradeWaterNeedInfo: {
         meter2Param: {
           MeterDiameter: "", //水表口径
@@ -281,7 +285,7 @@ export default {
       },
       waerMeterDirSize: [], //水表口径
       waterStyleList: [], //水表样式
-      waterDetaileList:{}
+      waterDetaileList: {}
     };
   },
 
@@ -314,8 +318,14 @@ export default {
     },
     //升级
     updateWater() {
-      UpgradeInfo(this.UpgradeWaterNeedInfo).then(res => {
-        console.log(res);
+      UpgradeInfo({UpgradeWaterNeedInfo:this.UpgradeWaterNeedInfo,balance:this.UpgradeWaterNeedInfo.NewWaterBalance}).then(res => {
+         this.$message({
+            message: data.message?data.message:"升级成功",
+            type: "warning"
+          });
+          this.UpgradeWaterNeedInfo=this.$options.UpgradeWaterNeedInfo
+          this. userInf={}
+          this. waterInfo={}
       });
     },
     //切换升级水表
@@ -323,35 +333,38 @@ export default {
       this.waterInfo = {};
       this.UpgradeWaterNeedInfo = this.$options.data().UpgradeWaterNeedInfo;
       this.UpgradeWaterNeedInfo.WaterType = num;
-      this.UpgradeWaterNeedInfo.meter2Param.MeterBalance = this.userInfo.Balance;
-      this.UpgradeWaterNeedInfo.meter3Param.MeterBalance = this.userInfo.Balance;
-      this.UpgradeWaterNeedInfo.meter4Param.MeterBalance = this.userInfo.Balance;
+      this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
     },
     getWlWWater(num) {
       getWLWaterInfo({ WaterMeterNo: num }).then(res => {
-        this.userInfo = res.data;
-        this.UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm = this.userInfo.WaterAmountAlarm;
-        this.UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft = this.userInfo.WaterAmountOverdraft;
-        this.UpgradeWaterNeedInfo.meter4Param.IMSI = this.userInfo.IMSI;
+        this.waterInfo = res.data;
+        this.UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm = this.waterInfo.WaterAmountAlarm;
+        this.UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft = this.waterInfo.WaterAmountOverdraft;
+        this.UpgradeWaterNeedInfo.meter4Param.IMSI = this.waterInfo.IMSI;
+        this.UpgradeWaterNeedInfo.WaterMeterId = this.waterInfo.Id;
       });
     },
     getYCWater(num) {
       //远传表水表信息
       getYCWaterInfo({ WaterMeterNo: num }).then(res => {
-        this.userInfo = res.data;
-        this.UpgradeWaterNeedInfo.meter3Param.ConcentratorNo = this.userInfo.ConcentratorNo;
-        this.UpgradeWaterNeedInfo.meter3Param.CollectorNo = this.userInfo.CollectorNo;
-        this.UpgradeWaterNeedInfo.meter3Param.MeterDiameter = this.userInfo.MeterDiameter;
+        this.waterInfo = res.data;
+        this.UpgradeWaterNeedInfo.meter3Param.ConcentratorNo = this.waterInfo.ConcentratorNo;
+        this.UpgradeWaterNeedInfo.meter3Param.CollectorNo = this.waterInfo.CollectorNo;
+        this.UpgradeWaterNeedInfo.meter3Param.MeterDiameter = this.waterInfo.MeterDiameter;
       });
     },
     //当前用水量
     thisTotalWater() {
       this.thisWaterMerter.customerId = this.userInfo.Id;
       this.thisWaterMerter.useWaterTypeId = this.userInfo.SA_UseWaterType_Id;
-      
+
       getWaterTotalNum(this.thisWaterMerter).then(res => {
-        this.waterDetaileList=res.data
-        this.$refs.numDetaile.dialogVisible = true;
+        if (res.data == null) {
+          this.$set(this.waterDetaileList,'TotalYield',0)
+        } else {
+          this.waterDetaileList = res.data;
+          this.$refs.numDetaile.dialogVisible = true;
+        }
       });
     },
     //回车模糊查询
@@ -362,6 +375,20 @@ export default {
       this.params.CustomerQueryType = num;
       this.params.CustomerQueryValue = val;
       GetCustomerDataList(this.params).then(res => {
+        if (res.data[0].WaterMeterTypeName == "IC卡表水表") {
+          this.$message({
+            message: "卡表用户请先读卡",
+            type: "warning"
+          });
+          return false;
+        }
+        if (res.data[0].WaterMeterTypeName == "物联网水表") {
+          this.$message({
+            message: "物联网表暂不支持水表升级功能",
+            type: "warning"
+          });
+          return false;
+        }
         if (res.code == 0) {
           this.userInfo = {};
           this.waterInfo = {};
@@ -376,18 +403,11 @@ export default {
             this.userList = res.data;
             this.selectUserShow = true;
           } else {
-            if (res.data[0].WaterMeterTypeName == "IC卡表水表") {
-              this.$message({
-                message: "卡表用户请先读卡",
-                type: "warning"
-              });
-              return false;
-            } else {
+         
               this.userInfo = res.data[0];
-              this.UpgradeWaterNeedInfo.meter2Param.MeterBalance = this.userInfo.Balance;
-              this.UpgradeWaterNeedInfo.meter3Param.MeterBalance = this.userInfo.Balance;
-              this.UpgradeWaterNeedInfo.meter4Param.MeterBalance = this.userInfo.Balance;
-            }
+              this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
+              this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+     
           }
           // this.getWaterMeterInfo(res.data[0].Id);
         }
@@ -395,7 +415,7 @@ export default {
     },
     //ic卡 输入表端余额
     IcMoneyChange(num) {
-      this.UpgradeWaterNeedInfo.meter2Param.MeterBalance =
+      this.UpgradeWaterNeedInfo.NewWaterBalance =
         Number(this.userInfo.Balance) + Number(num);
     },
     //选择用户信息
@@ -409,9 +429,7 @@ export default {
       } else {
         this.userInfo = val;
         this.selectUserShow = false;
-        this.UpgradeWaterNeedInfo.meter2Param.MeterBalance = this.userInfo.Balance;
-        this.UpgradeWaterNeedInfo.meter3Param.MeterBalance = this.userInfo.Balance;
-        this.UpgradeWaterNeedInfo.meter4Param.MeterBalance = this.userInfo.Balance;
+        this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
       }
       // this.getWaterMeterInfo(res.data[0].Id);
     },
@@ -420,7 +438,6 @@ export default {
       getWaterInfo({ customerId: id }).then(res => {
         if (res.code == 0) {
           this.waterInfo = res.data;
-          // this.totalMoney = this.waterInfo.MeterBalance + this.userInfo.Balance;
         } else {
           this.$message({
             type: "warning",

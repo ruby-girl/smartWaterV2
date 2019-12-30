@@ -77,7 +77,7 @@
                 popper-class="tooltip"
                 effect="light"
                 :visible-arrow="false"
-                :content="row.ChargeFlag==1003?'费用审核中，无法进行减免操作':row.OrderType!==2001?'非水费类型不能进行减免':'费用减免'"
+                :content="row.ChargeFlag==1003?'费用审核中，无法进行减免':row.OrderType!==2001?'非水费类型不能进行减免':'费用减免'"
                 placement="bottom"
               >
                 <i
@@ -105,7 +105,7 @@ import { legalTime } from "@/utils/index";
 // import customTable from "@/components/CustomTable/index";
 import { GetOrder } from "@/api/cashCharge";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+// import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   props: {
     listQuery: {
@@ -118,6 +118,7 @@ export default {
       type: Number,
       default: 100
     },
+    tipsData:{},
     totalLength:{}
   },
   components: { Pagination,SearchTips },
@@ -141,8 +142,7 @@ export default {
       tableKey: 1,
       tableData: [],
       checksData: [],
-      total: 0,
-      tipsData:[]
+      total: 0
     };
   },
   methods: {

@@ -36,11 +36,15 @@
           <el-select
             v-model="WLWQueryParam.CustomerMeterState"
             placeholder="请选择"
-            @change="getText(WLWQueryParam.CustomerMeterState,'CustomerMeterState',statusList,'用户状态')"
+            @change="getText(WLWQueryParam.CustomerMeterState,'CustomerMeterState',userStateList,'用户状态')"
           >
-            <el-option label="全部" value="-1"></el-option>
-            <el-option label="已开户" value="1"></el-option>
-            <el-option label="销户" value="2"></el-option>
+            <el-option label="全部" :value="-1"></el-option>
+            <el-option
+              v-for="item in userStateList"
+              :label="item.Name"
+              :value="item.Id"
+              :key="item.Id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item
@@ -54,31 +58,43 @@
             placeholder="请选择"
             @change="getText(WLWQueryParam.CustomerOpenAccountState,'CustomerOpenAccountState',statusList,'开户状态')"
           >
-            <el-option label="全部" value="-1"></el-option>
-            <el-option label="已开户" value="1"></el-option>
-            <el-option label="销户" value="2"></el-option>
+            <el-option label="全部" :value="-1"></el-option>
+            <el-option
+              v-for="item in statusList"
+              :label="item.Name"
+              :value="item.Id"
+              :key="item.Id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="阀门状态" v-show="show5||isShow" key="ValveState" prop="ValveState">
           <el-select
             v-model="WLWQueryParam.ValveState"
             placeholder="请选择"
-            @change="getText(WLWQueryParam.ValveState,'ValveState',statusList,'阀门状态')"
+            @change="getText(WLWQueryParam.ValveState,'ValveState',valStateList,'阀门状态')"
           >
-            <el-option label="全部" value="-1"></el-option>
-            <el-option label="已开户" value="1"></el-option>
-            <el-option label="销户" value="2"></el-option>
+            <el-option label="全部" :value="-1"></el-option>
+            <el-option
+              v-for="item in valStateList"
+              :label="item.Name"
+              :value="item.Id"
+              :key="item.Id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="水表状态" v-show="show6||isShow" key="MeterState" prop="MeterState">
           <el-select
             v-model="WLWQueryParam.MeterState"
             placeholder="请选择"
-            @change="getText(WLWQueryParam.MeterState,'MeterState',statusList,'水表状态')"
+            @change="getText(WLWQueryParam.MeterState,'MeterState',waterTypeList,'水表状态')"
           >
-            <el-option label="全部" value="-1"></el-option>
-            <el-option label="已开户" value="1"></el-option>
-            <el-option label="销户" value="2"></el-option>
+            <el-option label="全部" :value="-1"></el-option>
+            <el-option
+              v-for="item in waterTypeList"
+              :label="item.Name"
+              :value="item.Id"
+              :key="item.Id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -245,10 +261,10 @@ export default {
         limit: 10,
         CustomerNo: "", //用户编号
         WaterMeterNo: "", //水表编号
-        CustomerMeterState: "-1", //用户水表状态
-        CustomerOpenAccountState: "-1", //用户开户状态
-        ValveState: "-1", //阀门状态
-        MeterState: "-1", //水表状态
+        CustomerMeterState: -1, //用户水表状态
+        CustomerOpenAccountState: -1, //用户开户状态
+        ValveState: -1, //阀门状态
+        MeterState: -1, //水表状态
         sort: "", //升序
         filed: "", //排序字段
         tableId: "0000024"
@@ -275,7 +291,19 @@ export default {
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
-      statusList: [{ Id: "1", Name: "已开户" }, { Id: "2", Name: "销户" }],
+      userStateList: [
+        { Id: 0, Name: "正常" },
+        { Id: 10, Name: "余额不足" },
+        { Id: 8, Name: "欠费关阀" }
+      ], //用户状态
+      valStateList: [
+        { Id: 1, Name: "正常开阀" },
+        { Id: 2, Name: "阀门开到位" },
+        { Id: 3, Name: "正在关阀" },
+        { Id: 4, Name: "阀门关到位" }
+      ], //阀门状态
+      statusList: [{ Id: 0, Name: "已开户" }, { Id: 1, Name: "未开户" }], //用户开户
+      waterTypeList: [{ Id: 0, Name: "正常" }, { Id: 1, Name: "异常" }], //水表状态
       screenWidth: null,
       showBtn: false,
       isShow: false,
@@ -292,10 +320,9 @@ export default {
     this.TrafficStatusList = getDictionaryOption("远传表通讯状态");
   },
   mounted() {
-    this.tableHeight =
+   this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
-      document.getElementsByClassName("el-form")[0].offsetHeight -
-      289;
+      document.getElementById("table").offsetTop -98
     this.$refs.searchTips.$refs.myChild.GetTable(this.WLWQueryParam.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.$nextTick(() => {
@@ -351,9 +378,13 @@ export default {
     },
     searchWLWMeterInfo(num) {
       let that = this;
-      if (num != "0") {
+      if (num != 0) {
         this.orderData = Object.assign({}, this.WLWQueryParam);
+        this.orderData.page = 1;
+      } else {
+        this.orderData.page = this.WLWQueryParam.page;
       }
+
       getWLWWaterInfo(that.orderData).then(res => {
         if (res.code == 0) {
           this.tipsData = pushItem(this.tipsDataCopy);
@@ -388,7 +419,8 @@ export default {
       //导出
       if (this.tableData.length == 0) {
         this.$message({
-          message: "暂无导出数据",
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
           type: "warning"
         });
         return false;

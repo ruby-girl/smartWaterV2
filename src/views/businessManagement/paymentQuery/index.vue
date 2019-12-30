@@ -2,7 +2,7 @@
   <!-- 收费查询 -->
   <div class="section-container">
     <div ref="formHeight" class="position-search-head">
-      <select-head :select-head="listQuery" @handleFilter="getList"  @getText="getText"/>
+      <select-head :select-head="listQuery" @handleFilter="getList" @getText="getText" />
     </div>
     <div class="section-full-container">
       <div class="main-padding-20-y">
@@ -41,45 +41,36 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex justify-content-flex-center secur-content">
-                <!-- <div class="main-color-warn" @click="billDetails(row)">
-                  <a>账单详情</a>
-                </div>
-                <div class="main-color-red pl-15 pr-15" @click="invoice(row)">
-                  <a>数据冲红</a>
-                </div>
-                <div @click="pint(row)">
-                  <a>票据打印</a>
-                </div> -->
                 <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="账单详情"
-                placement="bottom"
-              >
-                <i class="icon iconfont iconbiaodan1" @click="billDetails(row)"></i>
-              </el-tooltip>
-              <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="数据冲红"
-                placement="bottom"
-              >
-                <i class="icon iconfont iconshoufeichaxun-piaojuchonghong" @click="invoice(row)"></i>
-              </el-tooltip>
-              <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="票据打印"
-                placement="bottom"
-              >
-                <i class="icon iconfont iconshoufeichaxun-piaojudayin" @click="pint(row)"></i>
-              </el-tooltip>
+                  class="item"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="账单详情"
+                  placement="bottom"
+                >
+                  <i class="icon iconfont iconbiaodan1" @click="billDetails(row)"></i>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="数据冲红"
+                  placement="bottom"
+                >
+                  <i class="icon iconfont iconshoufeichaxun-piaojuchonghong" @click="invoice(row)"></i>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  popper-class="tooltip"
+                  effect="light"
+                  :visible-arrow="false"
+                  content="票据打印"
+                  placement="bottom"
+                >
+                  <i class="icon iconfont iconshoufeichaxun-piaojudayin" @click="pint(row)"></i>
+                </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -111,7 +102,7 @@ import {
   SelectPayMentDataListToExcel
 } from "@/api/cashCharge";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "paymentQuery",
   components: { SelectHead, Pagination, TableTotal, SelectPint, SearchTips },
@@ -152,8 +143,14 @@ export default {
       ],
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      orderData:{}
+      orderData: {}
     };
+  },
+  watch: {
+    $route: {
+      handler: function(val, oldVal) {},
+      deep: true
+    }
   },
   computed: {
     tableHead: function() {
@@ -167,11 +164,11 @@ export default {
     this.$nextTick(function() {
       let start = parseStartTimeFunc(new Date());
       let end = parseEndTimeFunc(new Date());
-      this.listQuery.editStartTime=start
-      this.listQuery.editEndTime=end
+      this.listQuery.editStartTime = start;
+      this.listQuery.editEndTime = end;
       this.listQuery.timevalue.push(new Date(start));
       this.listQuery.timevalue.push(new Date(end));
-      this.getText(start+'~'+end, "timevalue", "", "缴费日期");
+      this.getText(start + "~" + end, "timevalue", "", "缴费日期");
       this.tipsData = pushItem(this.tipsDataCopy);
       var formHeight = this.$refs.formHeight.offsetHeight;
       this.tableHeight = document.body.clientHeight - formHeight - 230;
@@ -194,9 +191,9 @@ export default {
       this.tipsDataCopy.push(obj);
     },
     getList(n) {
-      if(!n){
-         this.orderData = Object.assign({}, this.listQuery);
-         this.orderData.page=1
+      if (!n) {
+        this.orderData = Object.assign({}, this.listQuery);
+        this.orderData.page = 1;
       }
       SelectPayMentDataList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -250,6 +247,7 @@ export default {
     },
     excel() {
       //导出
+      if(!isExport(this.tableData)) return
       SelectPayMentDataListToExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
@@ -258,11 +256,12 @@ export default {
     pint(r) {
       this.selectPintShow = true;
     },
-    billDetails() {
+    billDetails(row) {
       this.$router.push({
         path: "/businessManagement/billDetails",
         query: {
-          id: "qwe"
+          PayMentId: row.Id,
+          date: new Date()
         }
       });
     }
@@ -270,24 +269,24 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.section-container .section-full-container{
-  padding-top:0 !important;
+.section-container .section-full-container {
+  padding-top: 0 !important;
 }
-.iconshoufeichaxun-piaojudayin{
-  color:#777c82;
+.iconshoufeichaxun-piaojudayin {
+  color: #777c82;
 }
 .secur-content {
-    .icon {
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .iconbiaodan1 {
-      color: #b59200;
-    }
-    .iconshoufeichaxun-piaojuchonghong {
-      color: #ff3d3d;
-      padding:0 15px;
-    }
+  .icon {
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .iconbiaodan1 {
+    color: #b59200;
+  }
+  .iconshoufeichaxun-piaojuchonghong {
+    color: #ff3d3d;
+    padding: 0 15px;
+  }
 }
 </style>
 

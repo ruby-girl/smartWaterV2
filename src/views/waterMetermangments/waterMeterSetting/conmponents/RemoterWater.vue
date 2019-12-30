@@ -86,7 +86,7 @@
                 <el-option label="未开户" value="1"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
+            <!-- <el-form-item
               label="通讯状态"
               v-show="show4||isShow"
               key="TrafficStatus"
@@ -105,7 +105,7 @@
                   :key="item.Name"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label>
               <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
                 <i class="icon iconfont iconjianqu3" @click="toggClick"></i>
@@ -178,7 +178,6 @@
                   :label="item.ColDesc"
                   :fixed="item.Freeze"
                 />
-              
               </template>
               <el-table-column label="操作" width="180px" align="center" fixed="right">
                 <template slot-scope="scope">
@@ -375,10 +374,9 @@ export default {
     this.timeFunction = setInterval(() => {
       this.getdevice();
     }, 60000);
-    this.tableHeight =
+   this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
-      document.getElementsByClassName("el-form")[0].offsetHeight -
-      194;
+      document.getElementById("table").offsetTop -98
     this.$refs.searchTips.$refs.myChild.GetTable(
       this.YCMeterQueryParam.tableId
     ); // 先获取所有自定义字段赋值
@@ -438,8 +436,8 @@ export default {
       this.show1 = this.showLabel(1, val);
       this.show2 = this.showLabel(2, val);
       this.show3 = this.showLabel(3, val);
-      this.show4 = this.showLabel(4, val);
-      if (Math.floor((this.screenWidth - 180) / 280) < 4) {
+      // this.show4 = this.showLabel(4, val);
+      if (Math.floor((this.screenWidth - 180) / 280) < 3) {
         this.showBtn = true;
       } else {
         this.showBtn = false;
@@ -495,8 +493,12 @@ export default {
     searchYCWaterList(num) {
       //查询
       let that = this;
-      if (num != "0") {
+
+      if (num != 0) {
         this.orderData = Object.assign({}, this.YCMeterQueryParam);
+        this.orderData.page = 1;
+      } else {
+        this.orderData.page = this.YCMeterQueryParam.page;
       }
       searYCMeterWater(that.orderData).then(res => {
         if (res.code == 0) {
@@ -521,9 +523,10 @@ export default {
     },
     ExcelYcInfo() {
       //导出
-    if (this.tableData.length == 0) {
+      if (this.tableData.length == 0) {
         this.$message({
-          message: "暂无导出数据",
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
           type: "warning"
         });
         return false;
