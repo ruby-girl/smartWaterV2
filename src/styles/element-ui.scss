@@ -207,3 +207,6 @@ padding-right: 5px !important;
 .el-table th > .cell{
   line-height: 34px;
 }
+.el-checkbox__input.is-disabled .el-checkbox__inner{
+  background: #b4bcc1 !important;
+}

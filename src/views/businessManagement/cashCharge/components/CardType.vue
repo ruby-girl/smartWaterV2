@@ -153,7 +153,7 @@ export default {
           this.cardData.push(obj);
         });
         this.IsDisable();
-      });
+      }); 
     },
     // 处理能勾选的数据
     IsDisable() {

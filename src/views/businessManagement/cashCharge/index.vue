@@ -65,6 +65,7 @@
           :checkedAllParent.sync="checkedAllParent"
           :isIndeterminateParent.sync="isIndeterminateParent"
           :totalLength.sync="totalLength"
+          :tipsData="tipsData"
           @details="details"
           @reset="reset"
           @feeWaiver="feeWaiverFunc"
@@ -132,6 +133,7 @@ import SelectUser from "@/components/SelectUser";
 import FeeWaiver from "./components/FeeWaiver"; //水费减免弹窗
 import SelectPint from "./components/SelectPint"; //选择打印机
 import PaymentCode from "./components/PaymentCode"; //扫码支付
+import {getText,pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
 import CreditCardAlready from "./components/IcType/CreditCardAlready"; //IC卡已刷卡
 import NoCreditCard from "./components/IcType/NoCreditCard"; //IC卡未刷卡
 import { OrderFeeCancel } from "@/api/cashCharge";
@@ -157,11 +159,8 @@ export default {
       totalLength: 0,
       paymentNum:0,//圆圆数字
       tableHeight: 0,
-      // orderId: "", //需要减免的费用单ID
       feeWaiverItem:{},
       payOrderId: [],
-      // orderMoney: 0, //减免前金额
-      // orderType:'',//费用类型
       accountMoney: '0.00', //账户余额
       customerNo: "", //用户编号-结算后，用户编号获取账户余额
       icInfo: {}, //IC卡 卡片详情
@@ -208,20 +207,27 @@ export default {
       icType: "CreditCardAlready", //默认已刷卡
       unpaidMoney: '0.00', //剩余未缴
       isNull:true,
-      tipsDataCopy:[]//面包屑
+       tipsDataCopy:[],//面包屑
+      tipsData:[],
+      secName:'用户编号'
     };
   },
   mounted: function() {
     this.$nextTick(function() {
-      // 自适应表格高度 getBoundingClientRect().height比dom.offsetHeight性能更好
-      var formHeight = this.$refs.formHeight.getBoundingClientRect().height;
-      this.tableHeight = document.body.clientHeight - formHeight - 230;
-      this.saveTableHeight = document.body.clientHeight - formHeight - 80;
+     this.getHeight()
     });
   },
   methods: {
+    getHeight(){
+       var formHeight = this.$refs.formHeight.getBoundingClientRect().height;
+      this.tableHeight = document.body.clientHeight - formHeight - 230;
+      this.saveTableHeight = document.body.clientHeight - formHeight - 80;
+    },
     getList() {
-      if (this.type == 1) this.$refs.tableTypeCard.getList();
+      if (this.type == 1){
+        this.tipsData = pushItem(this.tipsDataCopy);
+        this.$refs.tableTypeCard.getList();
+      } 
       else this.$refs.tableTypeCard.getCardList()
     },
     delTips() {
@@ -229,7 +235,7 @@ export default {
       this.getList();
     },
     getText(val, model, arr, name) {
-      let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
+       let obj = getText(val, model, arr, this.tipsDataCopy, this.$refs.tableTypeCard, name);
       this.tipsDataCopy.push(obj);
     },
     // 查询用户缴费单 ---非IC卡
@@ -238,16 +244,33 @@ export default {
       this.isIC = false;
       this.headUser = user;
       this.customerNo = user.CustomerNo;
-      this.accountMoney = user.Balance;
+      this.accountMoney = (user.Balance).toFixed(2);
       this.listQuery.CustomerId = user.Id;
       this.cardQuery.CustomerId = user.Id;
       this.listQuery.page = 1;
       this.checkedAllParent = false;
+      if(this.headQuery.CustomerQueryType==1){//处理面包屑
+        this.getText(user.CustomerNo,'customerNo','','用户编号')
+      }else if(this.headQuery.CustomerQueryType==2){
+        this.getText(user.CustomerName,'CustomerName','','姓名/简码')
+      }else if(this.headQuery.CustomerQueryType==6){
+        this.getText(user.SA_WaterMeterNo,'SA_WaterMeterNo','','水表编号')
+      }
       this.getList();
     },
-    // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息
+    // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息 resInfo用户信息  resData卡片信息
     handleFilterIc(user) {
+      this.headUser = user;
       this.isIC = true;
+      this.customerNo = user.CustomerNo;
+      this.accountMoney = (user.Balance).toFixed(2);
+      this.listQuery.CustomerId = user.Id;
+      this.cardQuery.CustomerId = user.Id;
+      this.listQuery.page = 1;
+      this.checkedAllParent = false;
+      this.tipsDataCopy = [];
+      this.headQuery.CustomerQueryValue=""//输入框清空
+      this.getList();
     },
     // 结算成功后重新获取账户余额 --如果是IC卡需要再次读卡。查询缴费记录的数据+1
     getCustomer() {
@@ -277,23 +300,19 @@ export default {
            _this.getList();
         }
       }, 300);
-      this.unpaidMoney = 0;
+      this.unpaidMoney = '0.00';
       this.checkedAllParent = false;
       this.isIndeterminateParent = false;
     },
-    // parentChange(v) {
-    //   this.isIndeterminateParent = false;
-    //   // this.$refs.tableTypeCard.$refs.myCard.changeParent();
-    // },
     // 勾选操作计算剩余未缴
     calculatedAmount(data) {
-      this.unpaidMoney = 0;
+      this.unpaidMoney = '0.00';
       this.payOrderId = [];
       data.forEach(item => {
         this.payOrderId.push(item.Id);
         this.unpaidMoney =
-          (this.unpaidMoney * 1000 + parseFloat(item.PriceSurplus) * 1000) /
-          1000;
+          ((parseFloat(this.unpaidMoney)* 1000 + parseFloat(item.PriceSurplus) * 1000) /
+          1000).toFixed(2);
       });
     },
     // 费用详情- 根据费用类型展示不通的详情页面-水费or其它费用
@@ -326,10 +345,7 @@ export default {
     },
     // 费用减免
     feeWaiverFunc(item) {
-      this.feeWaiverItem=item
-      // this.orderId = id;
-      // this.orderMoney = num;
-      // this.orderType=type
+      this.feeWaiverItem = item;
       this.feeWaiverShow = true;
     },
     // 选择打印机
@@ -338,17 +354,15 @@ export default {
     },
     // 选择支付方式
     selectPayment(i) {
-      if (i == 2) {
-        this.paymentCodeShow = true;
-      }
+      if (i == 2) this.paymentCodeShow = true;
     },
     // 未查询到用户
-    clearData(){
-      this.isNull=true
-      this.accountMoney=0
-      this.listQuery.CustomerId=''
-       if (this.type == 1) this.$refs.tableTypeCard.tableData=[];
-      else this.$refs.tableTypeCard.cardData=[]
+    clearData() {
+     Object.assign(this.$data, this.$options.data())
+     this.getHeight()
+     this.listQuery.page = 1;
+      if (this.type == 1) this.$refs.tableTypeCard.tableData = [];
+      else this.$refs.tableTypeCard.cardData = [];
     }
   }
 };
@@ -371,9 +385,7 @@ export default {
   padding: 15px;
   overflow: auto;
 }
-/deep/ .is-disabled .el-checkbox__inner {
-  background: #b4bcc1 !important;
-}
+
 /deep/ .el-checkbox__input.is-disabled + span.el-checkbox__label {
   color: #fff;
 }

@@ -14,7 +14,7 @@
 import FactoryType from "./components/FactoryType"
 import UserType from "./components/UserType"
   export default {
-    name: "waterNatureChange",
+    name: "arrearsManagement",
     components: {FactoryType,UserType },
     data() {
       return {

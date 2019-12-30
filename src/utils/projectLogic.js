@@ -5,14 +5,24 @@
 // IC卡读卡
 import { GetICReadCardInfo } from "@/api/userSetting"; //IC卡读卡
 import { GetAreaListNotPNode } from "@/api/userArea"; //区域列表
-export function ICReadCardInfo(callback) {
+export function ICReadCardInfo(callback,errorCallBack) {
   let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo();
   if (res != undefined && res != "") {
     let rJSON = JSON.parse(res)//处理后的res
     // let resData = eval('(' + rJSON.Data + ')')//处理后的Data
     if (rJSON.Result) {
-      GetICReadCardInfo({ jsonData: rJSON.Data }).then(resInfo => {
-        callback(resInfo)
+      GetICReadCardInfo({ jsonData: rJSON.Data }).then(resData => {
+        let resIcInfo;
+        if(resData.data.ProductType=='2'){
+          resIcInfo=resData.data.ProductTwoModel
+        }else{
+          resIcInfo=resData.data.ProductOneModel
+        }
+        callback(resIcInfo)
+      }).catch(resError=>{    
+        if(errorCallBack){
+          errorCallBack(resError)
+        }
       })
     } else {
       this.$message({
