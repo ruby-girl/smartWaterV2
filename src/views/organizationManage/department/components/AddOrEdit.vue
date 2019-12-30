@@ -51,7 +51,10 @@
         jp: {
           Id: "",
           DeptName: "",
-          JobNameList: []
+          JobNameList: [{
+            Id: "",
+            JobName: ""
+          }]
         }
       }
     },
@@ -63,13 +66,20 @@
         }
         if (this.title === '编辑') {
           let posts = this.jp.JobNameList
-          if(posts.length > 0){
-            posts.forEach(item=>{
-              if(item.JobName.trim()==''){
-                promptInfoFun(this, 1, '岗位名称不能为空！');
-                return false
-              }
-            })
+          try {
+            if(posts.length > 0){
+              posts.forEach(item=>{
+                if(item.JobName.length==0){
+                  throw new Error("error")
+                }
+              })
+            }else {
+              promptInfoFun(this, 1, '职位名称不能为空！');
+              return false
+            }
+          } catch (e) {
+            promptInfoFun(this, 1, '职位名称不能为空！');
+            return false
           }
           UpDate(this.jp).then(res => {
             if (res.code == 0) {
@@ -81,6 +91,7 @@
               promptInfoFun(this, 1, res.message);
             }
           })
+
         } else {
           Add(this.jp).then(res => {
             if (res.code == 0) {
@@ -97,18 +108,12 @@
       resetForm(){//表格重置
         this.dialogVisible = false;
         this.jp.DeptName = ''
-        this.jp.JobNameList =  {
-          Id: "",
-          JobName: ""
-        }
+        this.jp.JobNameList =  []
       },
       handleClose(){//新增或编辑弹窗关闭事件
         this.dialogVisible = false;
         this.jp.DeptName = ''
-        this.jp.JobNameList =  {
-          Id: "",
-          JobName: ""
-        }
+        this.jp.JobNameList =  []
       },
       deletePost(index){//删除岗位
         this.jp.JobNameList.splice(index,1)
