@@ -10,6 +10,7 @@
         @handleFilterIcParent="handleFilterIc"
         @clearData="clearData"
         @getText="getText"
+        ref="head"
       />
     </div>
     <!-- 表格模式 -->
@@ -82,7 +83,7 @@
         v-if="isIC"
         :style="{'height':saveTableHeight+'px'}"
       >
-        <components :is="icType" :tableData="tableData" :tableHeight="tableHeight"></components>
+        <components :is="icType" :tableData="tableData" :tableHeight="tableHeight" :icInfo="icInfo"></components>
       </el-col>
       <!-- 左边表格end -->
       <!-- 右 -->
@@ -102,6 +103,8 @@
           :payOrderId="payOrderId"
           :totalLength="totalLength"
           @getCustomer="getCustomer"
+          :cardInfo="icInfo"
+          :isIC="isIC"
         ></right-box>
       </el-col>
       <!-- 右 -->
@@ -224,11 +227,11 @@ export default {
       this.saveTableHeight = document.body.clientHeight - formHeight - 80;
     },
     getList() {
-      if (this.type == 1){
+      if (this.type == 1&&!this.isIC){
         this.handelTips()
         this.tipsData = pushItem(this.tipsDataCopy);
         this.$refs.tableTypeCard.getList();
-      }else{  
+      }else if(this.type == 2&&!this.isIC){  
         this.$refs.tableTypeCard.getCardList()
       }   
     },
@@ -274,14 +277,17 @@ export default {
       this.listQuery.page = 1;
       this.checkedAllParent = false;
       this.tipsDataCopy = [];
+       //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡 
+      if(this.icInfo.CardType==0) this.icType='NoCreditCard';
+      else this.icType='CreditCardAlready';
       this.headQuery.CustomerQueryValue=""//输入框清空
-      this.getList();
+      // this.getList();
     },
     // 结算成功后重新获取账户余额 --如果是IC卡需要再次读卡。查询缴费记录的数据+1
     getCustomer() {
     this.paymentNum=parseInt(this.paymentNum)+1
       if (this.isIC) {
-        // 这里会再次读卡，然后显示卡片信息-调子组件方法
+        this.$refs.head.handleFilterIC()//再次读卡，然后显示卡片信息-调子组件方法       
       } else {
         let obj = {
           CustomerQueryValue: this.customerNo,

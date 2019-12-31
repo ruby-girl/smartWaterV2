@@ -8,8 +8,11 @@
           <span class="right-small-font">¥</span>
           {{unpaidMoney}}
         </div>
-      </div> -->
-      <div class="display-flex align-items-center justify-content-flex-justify right-font-18" style="background:#f5f5f5;">
+      </div>-->
+      <div
+        class="display-flex align-items-center justify-content-flex-justify right-font-18"
+        style="background:#f5f5f5;"
+      >
         <div>账户余额</div>
         <div class="main-color right-big-font">
           <span class="right-small-font">¥</span>
@@ -19,7 +22,7 @@
       <div
         class="display-flex align-items-center justify-content-flex-justify filter-container right-font-18"
       >
-      <!-- 勾选的费用单金额=应收金额（剩余未缴） -->
+        <!-- 勾选的费用单金额=应收金额（剩余未缴） -->
         <div>应收金额</div>
         <div class="right-big-font">
           <span class="right-small-font">¥</span>
@@ -57,7 +60,7 @@
         <div class="right-font-18">&#12288;&#12288;找零</div>
         <div class="right-big-font secur-content">
           <span class="right-small-font">¥</span>
-          {{surplus}}       
+          {{surplus}}
           <el-tooltip
             class="item"
             popper-class="tooltip"
@@ -65,8 +68,7 @@
             :visible-arrow="false"
             content="实收金额-（剩余未缴-账户余额）=找零"
             placement="bottom"
-          >
-          </el-tooltip>
+          ></el-tooltip>
         </div>
       </div>
     </div>
@@ -80,25 +82,25 @@
       </div>
       <i class="iconfont iconshezhi set-pint-btn" @click="pintShow=true"></i>
       <div class="main-more-black-color pint-type" v-show="pintShow">
-      <div>
-        <el-radio v-model="radio" :label="1">打印小票</el-radio>
-        <span @click="selectPint">
-          <i class="iconfont icondayinji"></i>&ensp;设置打印机
-        </span>
-      </div>
-      <div>
-        <el-radio v-model="radio" :label="2">打印发票</el-radio>
-        <span @click="selectPint">
-          <i class="iconfont icondayinji"></i>&ensp;设置打印机
-        </span>
-      </div>
-      <div class="text-center app-container">
-        <el-button type="primary" size="mini" @click="pintShow=false">确定</el-button>
-        <el-button size="mini"  @click="pintShow=false">取消</el-button>
+        <div>
+          <el-radio v-model="radio" :label="1">打印小票</el-radio>
+          <span @click="selectPint">
+            <i class="iconfont icondayinji"></i>&ensp;设置打印机
+          </span>
+        </div>
+        <div>
+          <el-radio v-model="radio" :label="2">打印发票</el-radio>
+          <span @click="selectPint">
+            <i class="iconfont icondayinji"></i>&ensp;设置打印机
+          </span>
+        </div>
+        <div class="text-center app-container">
+          <el-button type="primary" size="mini" @click="pintShow=false">确定</el-button>
+          <el-button size="mini" @click="pintShow=false">取消</el-button>
+        </div>
       </div>
     </div>
-    </div>
-    
+
     <div class="display-flex align-items-center justify-content-flex-justify">
       <div
         :class="{'cash-assets':true,'cash-assets-cash-active':paymentType==2701?true:false}"
@@ -125,40 +127,66 @@ import {
   ICSettlement,
   RollBackICSettlement
 } from "@/api/cashCharge";
-import '@/styles/cashCharge.scss'
+import { WriteCardInfo } from "@/utils/projectLogic";
+import "@/styles/cashCharge.scss";
 export default {
-  props: ["unpaidMoney","totalLength","payOrderId","customerId","accountMoney"],
+  props: [
+    "unpaidMoney",
+    "totalLength",
+    "payOrderId",
+    "customerId",
+    "accountMoney",
+    "isIC",
+    "cardInfo"
+  ],
   // unpaidMoney 剩余未缴
   // totalLength用户所有未缴费状态的数据个数-需求（当用户有未缴纳的费用时，不可单独进行预存操作）
   // payOrderId结算的费用单ID
-  // customerId//用户ID
+  // customerId//用户IDv
   // accountMoney//账户余额
   watch: {
     unpaidMoney(v) {
-      this.num=v
-      let _this=this
+      this.num = v;
+      let _this = this;
       setTimeout(function() {
         _this.$refs.myInput.select();
       }, 200);
       // this.calculationReceivable();
     },
     isAccount(v) {
-      //  this.isAccount =v;
       if (!this.testMoney()) return false;
       this.surplusFunc();
+    },
+    customerId() {
+      let _this = this;
+      setTimeout(function() {
+        //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡
+        if (_this.isIc) {
+          if (
+            _this.cardInfo.UserCard.uRechargeCount == 1 &&
+            _this.cardInfo.UserCard.RechargeMoney &&
+            _this.cardInfo.CardType == 0
+          )
+            _this.isFirst = true;
+          else _this.isFirst = false;
+        }
+        _this.$refs.myInput.select();
+      }, 200);
     },
     num(v) {
       this.inputWidth = v.length * 18 < 100 ? 100 : v.length * 18;
       if (this.isAccount || !this.num) this.surplus = "0.00";
-      else{
+      else {
         let surplus;
-       surplus =((parseFloat(this.num) * 1000 - parseFloat(this.unpaidMoney) * 1000) /
-          1000).toFixed(2);
-          if(surplus>0){
-            this.surplus=surplus
-          }else{
-            this.surplus = "0.00";
-          }
+        surplus = (
+          (parseFloat(this.num) * 1000 - parseFloat(this.unpaidMoney) * 1000) /
+          1000
+        ).toFixed(2);
+        if (surplus > 0) {
+          this.surplus = surplus;
+        } else {
+          this.surplus = "0.00";
+        }
       }
     }
   },
@@ -171,9 +199,10 @@ export default {
       inputWidth: 100,
       surplus: "0.00", //找零
       balanceDeduction: 0, //账户抵扣
-      saveAccount: 0, //zanshi
       isFocus: false,
-      pintShow:false
+      pintShow: false,
+      resCardInfo: {},
+      isFirst: false
     };
   },
   mounted() {
@@ -195,31 +224,9 @@ export default {
       }
       this.$emit("selectPayment", i);
     },
-    // 计算应收
-    // calculationReceivable() {
-    //   // 应缴金额=账户余额-剩余未缴
-    //   let unpaidMoney =
-    //     (parseFloat(this.accountMoney) * 1000 -
-    //       parseFloat(this.unpaidMoney) * 1000) /
-    //     1000;
-    //   if (unpaidMoney > 0) {
-    //     this.unpaidMoney = 0;
-    //     this.num = "";
-    //     this.balanceDeduction = this.unpaidMoney; //计算账户抵扣了多少钱
-    //   } else {
-    //     this.unpaidMoney = Math.abs(unpaidMoney).toFixed(2);
-    //     this.num = Math.abs(unpaidMoney).toFixed(2);
-
-    //     this.balanceDeduction = this.accountMoney;
-    //   }
-    //   let _this = this;
-    //   setTimeout(function() {
-    //     _this.$refs.myInput.select();
-    //   }, 200);
-    // },
     // 输入金额保留2位
     money(e) {
-      e.target.value = updateMoney(e.target.value);
+      this.num = updateMoney(e.target.value);
     },
     selectPint() {
       this.$emit("selectPint", "");
@@ -257,31 +264,37 @@ export default {
     // 结算
     pay() {
       let receipts = parseFloat(this.num) - parseFloat(this.surplus);
-      let obj = {
-        customerId: this.customerId,
-        orderId: this.payOrderId,
-        receivable: this.unpaidMoney, //剩余未缴
-        receipts: receipts, //实收
-        balanceDeduction: this.balanceDeduction, //账户抵扣
-        payType: this.paymentType
-      };
+      if (this.isIC) {
+        //iC卡结算调用另一方法
+        if (!this.icTest()) return false; //相关口径充值金额限制验证
+        this.IcPay(receipts);
+      } else {
+        let obj = {
+          customerId: this.customerId,
+          orderId: this.payOrderId,
+          receivable: this.unpaidMoney, //剩余未缴
+          receipts: receipts, //实收
+          balanceDeduction: this.balanceDeduction, //账户抵扣
+          payType: this.paymentType
+        };
 
-      Settlement(obj).then(res => {
-        this.$message({
-          message: "操作成功",
-          type: "success",
-          duration: 4000
+        Settlement(obj).then(res => {
+          this.$message({
+            message: "操作成功",
+            type: "success",
+            duration: 4000
+          });
+          // 金额清零--s
+          this.num = "";
+          this.surplus = "0.00";
+          this.$emit("update:unpaidMoney", "0.00");
+          this.unpaidMoney = 0;
+          // 金额清零--e
+          this.$emit("update:isIndeterminateParent", false);
+          this.$emit("update:checkedAllParent", false); //结算完成后，父元素全选置为false，卡片获取列表再设置全选
+          this.$emit("getCustomer"); //重新获取列表数据和账户余额
         });
-        // 金额清零--s
-        this.num = "";
-        this.surplus = "0.00";
-        this.$emit("update:unpaidMoney", "0.00");
-        this.unpaidMoney = 0;
-        // 金额清零--e
-        this.$emit("update:isIndeterminateParent", false);
-        this.$emit("update:checkedAllParent", false); //结算完成后，父元素全选置为false，卡片获取列表再设置全选
-        this.$emit("getCustomer"); //重新获取列表数据和账户余额
-      });
+      }
     },
     // 如果是IC卡结算
     IcPay(receipts) {
@@ -313,17 +326,63 @@ export default {
         this.wCard(); //写卡  如果实收金额（input值-应收）=0，不写卡
       });
     },
+    icTest() {
+      //IC卡结算前验证
+      if (this.cardInfo.CardType == 0 && !this.isFirst) {
+        //如果为未刷卡，不允许充值
+        this.$message({
+          message: "未刷卡状态下不允许充值！",
+          type: "error",
+          duration: 4000
+        });
+        return false;
+      }
+      if (this.cardInfo.UserCard.MeterDiameter > 50) {
+        //50<bore 大口径须充值10的倍数 25<bore<=50 精确到整数位
+        if (!this.testBigBore()) return false;
+      } else if (25 < this.cardInfo.UserCard.MeterDiameter <= 50) {
+        //25<bore<=50 精确到整数位
+        if (!this.testMediumBore()) return false;
+      }
+      return true;
+    },
     // IC卡结算成功后，进行写卡操作
     wCard() {
       try {
         WriteCardInfo(this.resCardInfo, errorRes => {
+          console.log("这是准备回滚的信息", errorRes);
+          console.log(errorRes.BusinessId)
           // 读卡
           // 错误回调，执行回滚
-          RollBackICSettlement({ businessId: errorRes.businessId });
+          RollBackICSettlement({ businessId: errorRes.BusinessId });
         });
       } catch (error) {
         console.log("请在CS端操作1");
       }
+    },
+    testBigBore() {
+      //50<bore 大口径须充值10的倍数
+      if (parseFloat(this.num) > 0 && parseFloat(this.num) % 10 !== 0) {
+        this.$message({
+          message: "大口径水表，充值金额须为10的倍数！",
+          type: "error",
+          duration: 4000
+        });
+        return false;
+      }
+      return true;
+    },
+    testMediumBore() {
+      //25<bore<=50 精确到整数位
+      if (parseFloat(this.num) > 0 && parseFloat(this.num) % 1 !== 0) {
+        this.$message({
+          message: "中等口径水表，充值金额须为整数！",
+          type: "error",
+          duration: 4000
+        });
+        return false;
+      }
+      return true;
     },
     // 补齐小数-
     changeTwoDecimal_x() {

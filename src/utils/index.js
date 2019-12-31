@@ -561,7 +561,7 @@ export function updateMoney(value) {
 //补齐 保留2位小数
 export function changeTwoDecimal(x) {
   var f_x = parseFloat(x);
-  if (isNaN(f_x)) {
+  if (!f_x) {
     return 0;
   }
   var f_x = Math.round(x * 100) / 100;
@@ -578,13 +578,11 @@ export function changeTwoDecimal(x) {
 }
 // 不补齐，删除最后的小数点
 export function delDecimal(x) {
-  var f_x = parseFloat(x);
-  if (isNaN(f_x)) {
+  var f_x = parseInt(x);
+  if (!f_x) {
     return 0;
   }
-  var f_x = Math.round(x * 100) / 100;
-  var s_x = f_x.toString();
-  return s_x;
+  return f_x;
 }
 /**
  * @param {Array} arr

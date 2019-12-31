@@ -20,36 +20,8 @@
 </template>
 <script>
 export default {
-  props: {
-    labelLeft: {
-      type: String,
-      default: ""
-    },
-    valueLeft: {
-      type: String,
-      default: ""
-    },
-    labelRight: {
-      type: String,
-      default: ""
-    },
-    valueRight: {
-      type: String,
-      default: ""
-    },
-    isGray: {
-      type: Boolean,
-      default: false
-    },
-    color: {
-      type: String,
-      default: ""
-    },
-    fontWeight: {
-      type: String,
-      default: ""
-    }
-  }
+  props:['labelLeft','valueLeft','labelRight','valueRight','isGray','color','fontWeight']
+
 };
 </script>
 <style lang="scss" scoped>

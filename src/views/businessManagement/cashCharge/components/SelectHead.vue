@@ -117,24 +117,10 @@ export default {
           type: "error",
           duration: 4000
         });
+        this.$emit("clearData");
         return;
       }
-      GetCustomerDataList(this.selectHead).then(res => {
-        if (res.data.length == 0) {
-          this.$message({
-            message: "未查询到用户！",
-            type: "error",
-            duration: 4000
-          });
-          this.user={}
-          this.$emit("clearData");
-        } else if (res.data.length == 1) {
-          this.user = res.data[0];
-          this.$emit("handleFilter", res.data[0]);
-        } else {
-          this.$parent.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
-        }
-      });
+      this.getUser()
     },
      handleFilterIC() {
       try {
@@ -153,8 +139,9 @@ export default {
     getUser(info){
       let postData={} 
       if(info){
-        this.$emit("update:cardInfo",info)
-        postData.CustomerQueryValue=info.UserCard.CardNo;
+        this.$emit("update:icInfo",info)
+        if(info.CardType==1)  postData.CustomerQueryValue=info.UserCardCredited.CardNo;
+        else postData.CustomerQueryValue=info.UserCard.CardNo;
         postData.CustomerQueryType="8";
         postData.page=1;
         postData.limit=20
@@ -174,7 +161,7 @@ export default {
           this.user = res.data[0];
           if(info) this.$emit("handleFilterIcParent", res.data[0]);
           else this.$emit("handleFilter", res.data[0]);
-        } else {
+        }else {
           this.$parent.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
         }
       });

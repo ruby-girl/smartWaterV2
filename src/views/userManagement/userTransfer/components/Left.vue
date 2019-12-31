@@ -121,21 +121,21 @@ export default {
       },
       selectUserShow: false,
       rules: {
-        NewCustomerName: [{ required: true, message: " ", trigger: "blur" }],
+        NewCustomerName: [{ required: true, message: "必填", trigger: "blur" }],
         NewTel: [
-          { required: true, message: " ", trigger: "blur" },
+          { required: true, message: "必填", trigger: "blur" },
           {
             pattern: /^[1][3,4,5,6,7,8,9][0-9]{9}$/,
-            message: " ",
+            message: "请正确输入电话号码",
             trigger: "blur"
           }
         ],
-        NewPeopleNo: [{ required: true, message: " ", trigger: "blur" }],
+        NewPeopleNo: [{ required: true, message: "必填", trigger: "blur" }],
         NewIdentityNo: [
           { required: true, message: " ", trigger: "blur" },
           {
             pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
-            message: " ",
+            message: "请正确输入身份证号",
             trigger: "blur"
           }
         ]
@@ -188,7 +188,6 @@ export default {
     },
     IsBalanceDepositFunc() {      
       this.accountShow = true;
-      console.info(this.user)
     },
      //进行过户操作
     accountBalancesFunc(user) { 
@@ -223,21 +222,7 @@ export default {
       }
       this.params.CustomerQueryValue = val;
       this.params.CustomerQueryType = n;
-      GetCustomerDataList(this.params).then(res => {
-        if (res.data.length == 0) {
-          this.$message({
-            message: "未查询到用户！",
-            type: "error",
-            duration: 4000
-          });
-          this.user = {};
-        } else if (res.data.length == 1) {
-          this.user = res.data[0];
-          this.IsTransferFunc(this.user.Id);
-        } else {
-          this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
-        }
-      });
+      this.getUser()
     },
     handleFilter(val) {
       this.user = val;  
@@ -255,22 +240,41 @@ export default {
     // IC卡读卡
     handleFilterIC(){
       try {
-        // resInfo用户信息  resData卡片信息
-        // ICReadCardInfo((resInfo,resData)=>{
-        //   console.log('头部咯')
-        //   console.log(resData)
-        //this.$emit("handleFilterIcParent", resInfo,resData) 
-        // })
-        // 读卡
-          ICReadCardInfo((resData)=>{
-          console.log('头部咯')
-          console.log(resData)
-          this.$emit("handleFilterIcParent", resData)      
+          // 读卡
+        ICReadCardInfo((resData)=>{
+          this.getUser(resData)    
         })
       } catch (error) {
         console.log("请在CS端操作1");
       }
-    }
+    },
+     // 查询用户信息
+    getUser(info){
+      let postData={} 
+      if(info){
+        postData.CustomerQueryValue=info.UserCard.CardNo;
+        postData.CustomerQueryType="8";
+        postData.page=1;
+        postData.limit=20
+      }else{ 
+        postData=Object.assign({},this.params)
+      }
+      GetCustomerDataList(postData).then(res => {
+        if (res.data.length == 0) {
+          this.$message({
+            message: "未查询到用户！",
+            type: "error",
+            duration: 4000
+          });
+          this.user = {};
+        } else if (res.data.length == 1) {
+          this.user = res.data[0];
+          this.IsTransferFunc(this.user.Id);
+        } else {
+          this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
+        }
+      });
+    },
   }
 };
 </script>
@@ -389,7 +393,7 @@ font-size: 14px;
   background: #f5f5f5;
   margin-top: 15px;
   /deep/ .el-form-item {
-    margin-bottom: 10px;
+    margin-bottom: 13px;
   }
 }
 .bottom-btn-box {

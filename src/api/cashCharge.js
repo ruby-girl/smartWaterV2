@@ -75,7 +75,7 @@ export function RollBackICSettlement(data){
   return request({
     url: '/PayMent/RollBackICSettlement',
     method: 'post',
-    data: data
+    params: data
   })
 }
 // 收费查询--------

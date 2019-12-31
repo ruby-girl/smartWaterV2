@@ -52,21 +52,21 @@
                   <i class="icon iconfont iconbiaodan1" @click="billDetails(row)"></i>
                 </el-tooltip>
                 <el-tooltip
-                   :class="{'item':true,'main-color-disabled':row.PayState!==2201?true:false}"
-                :popper-class="row.PayState==2201?'tooltip':''"
-                :effect="row.PayState==2201?'light':'dark'"
-                :visible-arrow="row.PayState==2201?false:true"
-                :content="row.PayState==2201?'数据冲红':'该笔费用不允许数据冲红'"
+                  :class="{'item':true,'main-color-disabled':row.PayState!==2201?true:false}"
+                  :popper-class="row.PayState==2201?'tooltip':''"
+                  :effect="row.PayState==2201?'light':'dark'"
+                  :visible-arrow="row.PayState==2201?false:true"
+                  :content="row.PayState==2201?'数据冲红':'该笔费用不允许数据冲红'"
                   placement="bottom"
                 >
                   <i class="icon iconfont iconshoufeichaxun-piaojuchonghong" @click="invoice(row)"></i>
                 </el-tooltip>
                 <el-tooltip
                   :class="{'item':true,'main-color-disabled':row.PayState!==2201?true:false}"
-                :popper-class="row.PayState==2201?'tooltip':''"
-                :effect="row.PayState==2201?'light':'dark'"
-                :visible-arrow="row.PayState==2201?false:true"
-                :content="row.PayState==2201?'票据打印':'该笔费用不允许打印票据'"
+                  :popper-class="row.PayState==2201?'tooltip':''"
+                  :effect="row.PayState==2201?'light':'dark'"
+                  :visible-arrow="row.PayState==2201?false:true"
+                  :content="row.PayState==2201?'票据打印':'该笔费用不允许打印票据'"
                   placement="bottom"
                 >
                   <i class="icon iconfont iconshoufeichaxun-piaojudayin" @click="pint(row)"></i>
@@ -102,7 +102,8 @@ import {
   SelectPayMentDataListToExcel
 } from "@/api/cashCharge";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem, isExport } from "@/utils/projectLogic"; //搜索条件面包屑
+import { ICReadCardInfo, WriteCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 export default {
   name: "paymentQuery",
   components: { SelectHead, Pagination, TableTotal, SelectPint, SearchTips },
@@ -143,7 +144,8 @@ export default {
       ],
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      orderData: {}
+      orderData: {},
+      IcInfo: {} //IC卡 卡片信息
     };
   },
   watch: {
@@ -193,7 +195,7 @@ export default {
     getList(n) {
       if (!n) {
         this.orderData = Object.assign({}, this.listQuery);
-        this.listQuery.page = 1;
+        this.listQuery.page = 1;
         this.orderData.page = 1;
       }
       SelectPayMentDataList(this.orderData).then(res => {
@@ -234,21 +236,53 @@ export default {
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-        RedPayMentDataByPayMentId({ SA_Payment_Id: r.Id, Remark: "" }).then(
-          res => {
-            this.$message({
-              message: res.message,
-              type: "success",
-              duration: 4000
-            });
-            this.getList();
-          }
-        );
+        this.IcInfo = {};
+        if (r.WaterMeterTypeId == "1102") {
+          //如果为IC卡先读卡
+          this.handleFilterIC(r);
+        } else {
+          this.RedPayMentDataByPayMent(r);
+        }
       });
+    },
+    // 冲红
+    RedPayMentDataByPayMent(row) {
+      RedPayMentDataByPayMentId({
+        SA_Payment_Id: row.Id,
+        Remark: "",
+        info: this.IcInfo
+      }).then(res => {
+        if (r.WaterMeterTypeId == "1102") {
+          ////如果为IC卡 执行3次写卡
+          WriteCardInfo(res.data);
+          WriteCardInfo(res.data);
+          WriteCardInfo(res.data);
+        } else {
+          this.$message({
+            message: res.message,
+            type: "success",
+            duration: 4000
+          });
+        }
+        this.getList();
+      });
+    },
+    // IC卡读卡
+    handleFilterIC(row) {
+      try {
+        // 读卡
+        ICReadCardInfo(resData => {
+          this.IcInfo = resData;
+
+          this.RedPayMentDataByPayMent(row);
+        });
+      } catch (error) {
+        console.log("请在CS端操作1");
+      }
     },
     excel() {
       //导出
-      if(!isExport(this.tableData)) return
+      if (!isExport(this.tableData)) return;
       SelectPayMentDataListToExcel(this.listQuery).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });

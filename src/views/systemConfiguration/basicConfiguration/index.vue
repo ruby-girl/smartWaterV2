@@ -10,26 +10,26 @@
             <input
               type="text"
               class="config-input"
-              @keyup="handleInput($event)"
+              @blur="handleInput('PopulationBase',$event)"
               v-model="postData.PopulationBase"
             />人时，每个阶梯结算周期内，增加各阶梯水量
             <input
               type="text"
               class="config-input"
-              @keyup="handleInput($event)"
+              @blur="handleInput('PeopleAddYield',$event)"           
               v-model="postData.PeopleAddYield"
             />吨；每增加
             <input
               type="text"
               class="config-input"
-              @keyup="handleInput($event)"
+              @blur="handleInput('AddPeopleNum',$event)"
               v-model="postData.AddPeopleNum"
             />人，
             <div>
               增加各阶梯水量
               <input
                 type="text"
-                @keyup="handleInput($event)"
+                 @blur="handleInput('AddPeopleNumAddYield',$event)"
                 class="config-input"
                 v-model="postData.AddPeopleNumAddYield"
               />吨。（此配置只针对居民用水）
@@ -46,7 +46,7 @@
             <input
               type="text"
               class="config-input"
-              @keyup="handleInput($event)"
+              @blur="handleInput('InsuredMessageWaterAllowance',$event)"
               v-model="postData.InsuredMessageWaterAllowance"
             />吨/户表.月
           </div>
@@ -74,13 +74,13 @@
             <input
               type="text"
               v-model="postData.OverdueParam.InterestRate"
-              @keyup="handleInput($event)"
+              @blur="handleInput('OverdueParam',$event,'InterestRate')"
               class="config-input"
             />‰，违约金总额不高于总金额的
             <input
               type="text"
               class="config-input"
-              @keyup="handleInput($event)"
+             @blur="handleInput('OverdueParam',$event,'OverdueFineUpBound')"
               v-model="postData.OverdueParam.OverdueFineUpBound"
             />％。
           </div>
@@ -91,7 +91,7 @@
             每月收费
             <input
               type="text"
-              @keyup="handleInput($event)"
+              @blur="handleInput('GarbageCost',$event)"
               class="config-input"
               v-model="postData.GarbageCost"
             />元。
@@ -165,7 +165,7 @@
               </el-select>时，预警量为
               <input
                 type="text"
-                @keyup="handleInput($event)"
+               @blur="handleInputForin($event,i)"
                 class="config-input"
                 v-model="item.AlarmVal"
               />
@@ -208,7 +208,7 @@
           <switch-item label="远传表欠费关阀" :swithValue.sync="postData.IsCloseValve" />
         </div>
         <div class="pt-15" v-show="postData.IsCloseValve=='1'?true:false">
-          <div><span>远传表不关阀时间</span></div>
+          <div style="font-size:18px;">远传表不关阀时间</div>
           <div class="font-small">
             节假日是否开阀
             <el-select size="small" v-model="postData.IsHolidayNotCloseValve" class="small-select">
@@ -264,6 +264,7 @@ import SwitchItem from "./components/SwitchItem";
 import ConfigSelectUser from "./components/ConfigSelectUser";
 import { AddBasicConfigInfo, GetBasicConfigVal } from "@/api/basicConfig";
 import { getTemplateName } from "@/api/shotMsg"; //获取模板下拉框
+import {delDecimal} from "@/utils/index"
 export default {
   name: "basicConfig",
   components: { SwitchItem, ConfigTitle, ConfigSelectUser },
@@ -351,8 +352,12 @@ export default {
       }
       this.postData.ReceiveSortMsgEmpArr = this.postData.ReceiveSortMsgEmp.split(",");
     },
-    handleInput(e) {
-      e.target.value = e.target.value.replace(/[^\d]/g, "");
+    handleInput(model,e,i) {
+      if(i) this.postData[model][i]= delDecimal(e.target.value);
+      else this.postData[model]= delDecimal(e.target.value);
+    },
+    handleInputForin(e,index){
+      this.postData.CaliberAlarmVal[index].AlarmVal=delDecimal(e.target.value);
     },
     cancel() {
       GetBasicConfigVal().then(res => {

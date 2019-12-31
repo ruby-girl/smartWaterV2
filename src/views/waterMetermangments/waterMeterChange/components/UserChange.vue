@@ -106,7 +106,6 @@
 <script>
 import { Exchange} from "@/api/waterMeterMang";
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
-import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 import SelectUser from "@/components/SelectUser";
 export default {
   components: { SelectUser },
@@ -196,25 +195,6 @@ export default {
         this.user = val;
       }else{
          this.newUser=val
-      }
-    },
-    // IC卡读卡
-    handleFilterIC() {
-      try {
-        // resInfo用户信息  resData卡片信息
-        // ICReadCardInfo((resInfo,resData)=>{
-        //   console.log('头部咯')
-        //   console.log(resData)
-        //this.$emit("handleFilterIcParent", resInfo,resData)
-        // })
-        // 读卡
-        ICReadCardInfo(resData => {
-          console.log("头部咯");
-          console.log(resData);
-          this.$emit("handleFilterIcParent", resData);
-        });
-      } catch (error) {
-        console.log("请在CS端操作1");
       }
     }
   }

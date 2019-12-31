@@ -46,6 +46,7 @@ export function WriteCardInfo(objJson, callback) {
         type: 'success',
         duration: 4000
       })
+      
     } else {
       Message.error({
         message: '写卡错误！',

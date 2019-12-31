@@ -269,7 +269,7 @@ export const asyncRoutes = [
     name: 'Permission',
     meta: {
       title: '系统管理',
-      icon: 'iconfont iconcaidan-yewuguanli',
+      icon: 'iconfont iconxitongguanli',
       roles: ['1']
     },
     children: [
@@ -444,7 +444,7 @@ export const asyncRoutes = [
     name: "reportStatistics",
     meta: {
       title: '报表统计',
-      icon: 'iconfont iconbaobiaotongji',
+      icon: 'iconfont iconcaidan-tongjibaobiao',
       roles: ['1']
     },
     children: [
