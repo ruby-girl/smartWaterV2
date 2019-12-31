@@ -72,9 +72,7 @@
         <i class="iconfont iconsousuo"></i>
         搜索
       </el-button>
-      <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
-        <i class="iconfont icon_zhongzhi"></i>重置
-      </el-button>
+      <el-button size="mini" class="btn-add" round  @click="resetting"><i class="iconfont icon_zhongzhi"></i>重置</el-button>
     </el-form-item>
   </el-form>
 </div>

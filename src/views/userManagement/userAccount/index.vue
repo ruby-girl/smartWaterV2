@@ -38,7 +38,7 @@
               :header-cell-style="{'background-color': '#F0F2F5'}"
               @sort-change="sortChanges"
             >
-              <el-table-column fixed="left" label="序号" width="60" align="center">
+              <el-table-column fixed="left" label="#" width="60" align="center">
                 <template slot-scope="scope">
                   <span>{{(listQuery.page - 1) *listQuery.limit+ scope.$index + 1}}</span>
                 </template>
@@ -96,7 +96,7 @@ export default {
       listQuery: {
         // 查询条件
         page: 1,
-        limit: 10,
+        limit: 20,
         filed: "",
         sort: "",
         customerQueryType: "", //查询类型

@@ -64,7 +64,7 @@
           style="width: 180px;float: left"
         />
       </el-form-item>
-      <el-form-item label="水表类型" v-show="show4||isShow"  prop="WaterMeterType">
+      <el-form-item label="水表类型" v-show="show4||isShow" prop="WaterMeterType">
         <el-select
           v-model="selectHead.WaterMeterType "
           placeholder="请选择"
@@ -125,7 +125,7 @@
           <i class="iconfont iconsousuo"></i>
           搜索
         </el-button>
-        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <el-button size="mini" class="btn-add" round @click="resetting">
           <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
       </el-form-item>
@@ -148,7 +148,7 @@ export default {
       WaterMeterList: [], //
       planStateOptions: [],
       companyShow: true,
-      secNmae:"",
+      secNmae: "",
       isShow: false,
       show1: true,
       show2: true,

@@ -27,7 +27,7 @@
             @selection-change="selectionChange"
           >
             <el-table-column type="selection" width="55" fixed="left"></el-table-column>
-            <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+            <el-table-column type="index" fixed="left" label="#" width="60" align="center">
               <template slot-scope="scope">
                 <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
               </template>

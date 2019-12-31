@@ -20,31 +20,15 @@
                 <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="name" label="水厂" width="180"></el-table-column>
-            <el-table-column prop="name" label="业务办理日期" width="180"></el-table-column>
-            <el-table-column prop="name" label="开户数" width="180"></el-table-column>
-            <el-table-column prop="name" label="过户数" width="180"></el-table-column>
-            <el-table-column prop="name" label="销户数" width="180"></el-table-column>
-            <el-table-column prop="name" label="换表数" width="180"></el-table-column>
-            <el-table-column prop="name" label="水表升级数" width="180"></el-table-column>
-            <el-table-column prop="name" label="总计" width="180"></el-table-column>
-            <el-table-column label="操作" width="200px" align="center" fixed="right">
-              <template slot-scope="scope">
-                <el-tooltip
-                  class="item"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="查看明细"
-                  placement="bottom"
-                >
-                  <i
-                    class="iconStyle icon iconfont operation3"
-                    @click="Detail(scope.row.Id)"
-                  >&#xe653;</i>
-                </el-tooltip>
-               
-              </template>
-            </el-table-column>
+            <el-table-column prop="name" label="水厂" ></el-table-column>
+            <el-table-column prop="name" label="操作员" ></el-table-column>
+            <el-table-column prop="name" label="开户数" ></el-table-column>
+            <el-table-column prop="name" label="过户数" ></el-table-column>
+            <el-table-column prop="name" label="销户数" ></el-table-column>
+            <el-table-column prop="name" label="换表数" ></el-table-column>
+            <el-table-column prop="name" label="水表升级数" ></el-table-column>
+            <el-table-column prop="name" label="低保户办理数" ></el-table-column>
+            <el-table-column prop="name" label="总计" ></el-table-column>
           </el-table>
         </div>
       </div>
@@ -107,8 +91,9 @@ export default {
       this.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
-        document.getElementById("table").offsetTop-4
- 
+        document.getElementById("table").offsetTop -
+        4;
+
       this.$refs.searchTips.showTabBtn = false;
     });
   }

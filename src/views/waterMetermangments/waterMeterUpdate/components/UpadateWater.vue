@@ -3,8 +3,9 @@
     <div class="user_info">
       <div class="display-flex align-items-center justify-content-flex-justify">
         <h4>原水表信息</h4>
+
         <el-button type="success" size="mini" class="redingK" @click="handleFilterIC">
-          <i class="iconfont icontianjia"></i>读卡
+          <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
       <el-form ref="userInfo" :model="userInfo" label-width="70px">
@@ -318,14 +319,17 @@ export default {
     },
     //升级
     updateWater() {
-      UpgradeInfo({UpgradeWaterNeedInfo:this.UpgradeWaterNeedInfo,balance:this.UpgradeWaterNeedInfo.NewWaterBalance}).then(res => {
-         this.$message({
-            message: data.message?data.message:"升级成功",
-            type: "warning"
-          });
-          this.UpgradeWaterNeedInfo=this.$options.UpgradeWaterNeedInfo
-          this. userInf={}
-          this. waterInfo={}
+      UpgradeInfo({
+        UpgradeWaterNeedInfo: this.UpgradeWaterNeedInfo,
+        balance: this.UpgradeWaterNeedInfo.NewWaterBalance
+      }).then(res => {
+        this.$message({
+          message: data.message ? data.message : "升级成功",
+          type: "warning"
+        });
+        this.UpgradeWaterNeedInfo = this.$options.UpgradeWaterNeedInfo;
+        this.userInf = {};
+        this.waterInfo = {};
       });
     },
     //切换升级水表
@@ -360,7 +364,7 @@ export default {
 
       getWaterTotalNum(this.thisWaterMerter).then(res => {
         if (res.data == null) {
-          this.$set(this.waterDetaileList,'TotalYield',0)
+          this.$set(this.waterDetaileList, "TotalYield", 0);
         } else {
           this.waterDetaileList = res.data;
           this.$refs.numDetaile.dialogVisible = true;
@@ -403,11 +407,9 @@ export default {
             this.userList = res.data;
             this.selectUserShow = true;
           } else {
-         
-              this.userInfo = res.data[0];
-              this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
-              this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
-     
+            this.userInfo = res.data[0];
+            this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
+            this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
           }
           // this.getWaterMeterInfo(res.data[0].Id);
         }
@@ -446,14 +448,41 @@ export default {
         }
       });
     },
-
+    getUser(info) {
+      let postData = {};
+      if (info) {
+        this.$emit("update:cardInfo", info);
+        postData.CustomerQueryValue = info.UserCard.CardNo;
+        postData.CustomerQueryType = "8";
+        postData.page = 1;
+        postData.limit = 20;
+        GetCustomerDataList(this.postData).then(res => {
+          if (res.code == 0) {
+            this.userInfo = {};
+            this.waterInfo = {};
+            if (res.data.length == 0) {
+              this.$message({
+                message: "未查询到用户！",
+                type: "warning"
+              });
+              return false;
+            } else {
+              this.userInfo = res.data[0];
+              this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
+              this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+            }
+            // this.getWaterMeterInfo(res.data[0].Id);
+          }
+        });
+      }
+    },
     //读卡
     handleFilterIC() {
       try {
         ICReadCardInfo(resData => {
           console.log("头部咯");
           console.log(resData);
-          this.$emit("handleFilterIcParent", resData);
+          getUser(resData);
         });
       } catch (error) {
         console.log("请在CS端操作1");
@@ -538,10 +567,10 @@ export default {
       margin-bottom: 12px;
     }
     .redingK {
-      padding: 5px;
-      width: 64px;
-      height: 28px;
-      background: rgba(117, 194, 0, 1);
+      color: #fff;
+      background-color: #33b300;
+      border-color: #33b300;
+      padding:7px 5px;
       opacity: 1;
       border-radius: 4px;
     }

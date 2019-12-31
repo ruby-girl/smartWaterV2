@@ -40,7 +40,7 @@
             :cell-style="{'padding':'5px 0'}"
             @sort-change="sortChanges"
           >
-            <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+            <el-table-column type="index" fixed="left" label="#" width="60" align="center">
               <template slot-scope="scope">
                 <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
               </template>
@@ -200,7 +200,7 @@ export default {
       // 查询条件
       selectHead: {
         page: 1,
-        limit: 10,
+        limit: 20,
         SA_WaterFactory_Id: "-1", //水厂Id
         createStartTime: "", //计划开始日期
         createEndTime: "", //计划结束日期

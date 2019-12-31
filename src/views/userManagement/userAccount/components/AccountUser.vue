@@ -4,7 +4,7 @@
       <div class="display-flex align-items-center justify-content-flex-justify">
         <h4>用户信息</h4>
         <el-button type="success" size="mini" class="redingK" @click="handleFilterIC">
-          <i class="iconfont icontianjia"></i>读卡
+          <i class="iconfont iconduka"></i>读卡
         </el-button>
       </div>
       <el-form ref="userInfo" :model="userInfo" label-width="70px">
@@ -215,20 +215,40 @@ export default {
         console.log(res);
       });
     },
+    getUser(info) {
+      let postData = {};
+      if (info) {
+        this.$emit("update:cardInfo", info);
+        postData.CustomerQueryValue = info.UserCard.CardNo;
+        postData.CustomerQueryType = "8";
+        postData.page = 1;
+        postData.limit = 20;
+        GetCustomerDataList(this.postData).then(res => {
+          if (res.code == 0) {
+            this.userInfo = {};
+            this.waterInfo = {};
+            if (res.data.length == 0) {
+              this.$message({
+                message: "未查询到用户！",
+                type: "warning"
+              });
+              return false;
+            } else {
+              this.userInfo = res.data[0];
+              this.getWaterMeterInfo(res.data[0].Id);
+            }
+            // this.getWaterMeterInfo(res.data[0].Id);
+          }
+        });
+      }
+    },
     //读卡
     handleFilterIC() {
       try {
-        // resInfo用户信息  resData卡片信息
-        // ICReadCardInfo((resInfo,resData)=>{
-        //   console.log('头部咯')
-        //   console.log(resData)
-        //this.$emit("handleFilterIcParent", resInfo,resData)
-        // })
-        // 读卡
         ICReadCardInfo(resData => {
           console.log("头部咯");
           console.log(resData);
-          this.$emit("handleFilterIcParent", resData);
+          this.getUser(resData);
         });
       } catch (error) {
         console.log("请在CS端操作1");
@@ -266,10 +286,10 @@ export default {
       margin-bottom: 12px;
     }
     .redingK {
-      padding: 5px;
-      width: 64px;
-      height: 28px;
-      background: rgba(117, 194, 0, 1);
+      color: #fff;
+      background-color: #33b300;
+      border-color: #33b300;
+      padding: 7px 5px;
       opacity: 1;
       border-radius: 4px;
     }

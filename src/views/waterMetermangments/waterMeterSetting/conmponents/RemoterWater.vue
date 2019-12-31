@@ -113,14 +113,7 @@
               <el-button round type="primary" size="mini" @click="searchYCWaterList">
                 <i class="iconfont iconsousuo"></i>搜索
               </el-button>
-              <el-button
-                class="btn-resetting"
-                round
-                plain
-                type="primary"
-                size="mini"
-                @click="resetting"
-              >
+              <el-button size="mini" class="btn-add" round @click="resetting">
                 <i class="iconfont icon_zhongzhi"></i>重置
               </el-button>
             </el-form-item>
@@ -162,7 +155,7 @@
               @sort-change="sortChanges"
             >
               <el-table-column type="selection" fixed="left" width="55"></el-table-column>
-              <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+              <el-table-column type="index" fixed="left" label="#" width="60" align="center">
                 <template slot-scope="scope">
                   <span>{{(YCMeterQueryParam.page - 1) * YCMeterQueryParam.limit+ scope.$index + 1}}</span>
                 </template>
@@ -288,7 +281,7 @@ export default {
     return {
       YCMeterQueryParam: {
         page: 1,
-        limit: 10,
+        limit: 20,
         CustomerQueryType: "6", //水表编号
         CollectorNo: "", //采集器
         CustomerQueryValue: "", //水表编号值
@@ -374,9 +367,10 @@ export default {
     this.timeFunction = setInterval(() => {
       this.getdevice();
     }, 60000);
-   this.tableHeight =
+    this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
-      document.getElementById("table").offsetTop -98
+      document.getElementById("table").offsetTop -
+      98;
     this.$refs.searchTips.$refs.myChild.GetTable(
       this.YCMeterQueryParam.tableId
     ); // 先获取所有自定义字段赋值

@@ -69,14 +69,7 @@
           <el-button type="primary" size="mini" @click="searchFun" round>
             <i class="icon iconfont">&#xe694;</i>查询
           </el-button>
-          <el-button
-            class="btn-resetting"
-            round
-            plain
-            type="primary"
-            size="mini"
-            @click="resetting"
-          >
+          <el-button size="mini" class="btn-add" round @click="resetting">
             <i class="iconfont icon_zhongzhi"></i>重置
           </el-button>
         </el-form-item>
@@ -122,7 +115,7 @@
               :label="item.ColDesc"
             />
           </template>
-          <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+          <el-table-column type="index" fixed="left" label="#" width="60" align="center">
             <template slot-scope="scope">
               <span>{{(IcwachMeterData.page - 1) * IcwachMeterData.limit+ scope.$index + 1}}</span>
             </template>
@@ -217,7 +210,7 @@ export default {
       IcwachMeterData: {
         //查询
         page: 1,
-        limit: 10,
+        limit: 20,
         CustomerName: "", // 用户名 ,
         WaterMeterNo: "", //水表编号 ,
         wms: "-1", //水表样式
@@ -258,9 +251,10 @@ export default {
     };
   },
   mounted() {
-  this.tableHeight =
+    this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
-      document.getElementById("table").offsetTop -98
+      document.getElementById("table").offsetTop -
+      98;
     this.$refs.searchTips.$refs.myChild.GetTable(this.IcwachMeterData.tableId); // 先获取所有自定义字段赋值
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.$nextTick(() => {

@@ -64,7 +64,7 @@
           <el-option v-for="item in sendTime" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item class="timePicker" label="定时发送时间"  v-show="show5||isShow" label-width="90px">
+      <el-form-item class="timePicker" label="定时发送时间" v-show="show5||isShow" label-width="90px">
         <el-select v-model="selectHead.timerSendStartTime" placeholder="请选择" @change="getSendTime">
           <el-option label="请选择" value></el-option>
           <el-option
@@ -76,7 +76,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <span v-show="show5||isShow" style="display: inline-block;line-height: 28px; margin-right: 10px">~</span>
+      <span
+        v-show="show5||isShow"
+        style="display: inline-block;line-height: 28px; margin-right: 10px"
+      >~</span>
       <el-form-item class="timePicker" v-show="show5||isShow">
         <el-select v-model="selectHead.timerSendEndTime" @change="getSendTime" placeholder="请选择">
           <el-option label="请选择" value></el-option>
@@ -98,7 +101,7 @@
           <i class="iconfont iconsousuo"></i>
           搜索
         </el-button>
-        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <el-button size="mini" class="btn-add" round @click="resetting">
           <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
       </el-form-item>
@@ -203,11 +206,11 @@ export default {
       let dateStart = this.selectHead.timerSendStartTime;
       let dateEnd = this.selectHead.timerSendEndTime;
       let dateStipe;
-      if(dateStart<10){
-        dateStart="0"+dateStart
+      if (dateStart < 10) {
+        dateStart = "0" + dateStart;
       }
-       if(dateEnd<10){
-        dateEnd="0"+dateEnd
+      if (dateEnd < 10) {
+        dateEnd = "0" + dateEnd;
       }
       dateStipe = dateStart + "~" + dateEnd;
       this.$emit(
