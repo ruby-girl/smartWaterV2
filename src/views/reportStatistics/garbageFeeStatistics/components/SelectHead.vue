@@ -9,7 +9,6 @@
     @submit.native.prevent>
     <el-form-item label="水厂" prop="editUserId" style="margin-left: -60px">
       <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
-        <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>

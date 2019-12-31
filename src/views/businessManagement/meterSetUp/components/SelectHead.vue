@@ -59,7 +59,7 @@
       class="my_header"
       width="600px">
       <el-table :data="meterData" border @row-click="getCurMeter" height="300">
-        <el-table-column type="index" width="150" align="center" label="序号"></el-table-column>
+        <el-table-column type="index" width="150" align="center" label="#"></el-table-column>
         <el-table-column property="Name" align="center" label="表册名称"></el-table-column>
       </el-table>
     </el-dialog>

@@ -23,7 +23,7 @@
       </el-form-item>
     </el-form>
     <div class="cl-operation1 fr">
-      <el-button size="mini" v-show="type=='1'" class="cl-operation-btn" round @click="deleteFun(1)"><i class="icon iconfont">&#xe63c;</i> 删除
+      <el-button size="mini" v-show="type=='1'" class="cl-operation-btn" round @click="deleteFun()"><i class="icon iconfont">&#xe63c;</i> 删除
       </el-button>
       <el-button size="mini" class="cl-operation-btn" round @click="distributionFun"><i class="icon iconfont">&#xe66d;</i> 分配至</el-button>
       <my-tree class="moveTree" v-show="moveTreeShow" ref="myChildFp" :treeData="moveTrees" :searchtype=searchtype  @changeSecode="moveChangeSecode" :ifLogos="1"></my-tree>
@@ -303,15 +303,15 @@
           });
         }
       },
-      deleteFun(num){//移出已分配表册用户至未分配表册
-        if(num==1){//移入默认表册
-          this.mop.RegisterBookInfo_Id = '0'
-        }
+      deleteFun() {//移出已分配表册用户至未分配表册
+        this.mop.RegisterBookInfo_Id = '0'
+        this.mop.MeterReaderOrderNum = 0
+        this.mop.rbdList = this.multipleSelection
         RegisterMoveIn(this.mop).then(res => {
-          if (res.code ==0 ) {
-            promptInfoFun(this,2,res.message)
+          if (res.code == 0) {
+            promptInfoFun(this, 2, res.message)
           } else {
-            promptInfoFun(this,1,res.message)
+            promptInfoFun(this, 1, res.message)
           }
         })
       },

@@ -6,6 +6,11 @@
       <p class="legacyArrears">截止今日XX水厂当前遗留垃圾费欠款为：XXXXX</p>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" style="margin-top: 50px;"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
+        <el-table-column fixed="left" label="#" width="60" align="center">
+          <template slot-scope="scope">
+            <span>{{(sbap.page - 1) *sbap.limit+ scope.$index + 1}}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="date"
           label="水厂"
@@ -61,7 +66,7 @@
     data() {
       return {
         tableHeight: null,//表格高度
-        sbap: {},
+        sbap: {page:1,limit:10},
         tableData: [{date:111,name:['小民族','刷卡啊额','安慰让我额']}],//表格数据
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
