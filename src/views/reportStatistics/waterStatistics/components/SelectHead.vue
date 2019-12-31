@@ -10,7 +10,6 @@
       @submit.native.prevent>
       <el-form-item label="水厂" prop="SA_WaterFactory_Id" :class="!ifMore||screenWidth>1440?'firstItemsOther':''">
         <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small">
-          <el-option label="全部" value="-1"></el-option>
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -44,6 +43,7 @@
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
             @keydown.enter.native="handleFilter"
+
             @change="getTime"
           />
         </el-form-item>

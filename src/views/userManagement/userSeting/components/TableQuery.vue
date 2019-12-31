@@ -14,14 +14,14 @@
     <Statistics :StatisticsData="StatisticsData"></Statistics>
     <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" />
     <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges" highlight-current-row  @current-change="handleCurrentChange">
-      <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+      <el-table-column type="index" fixed="left" label="#" width="60" align="center">
         <template slot-scope="scope">
           <span>{{(query.page - 1) * query.limit + scope.$index + 1}}</span>
         </template>
       </el-table-column>
       <template v-for="(item ,index) in tableHead">
         <el-table-column
-          v-if="item.IsFreeze"
+          v-if="item.IsFreeze&&item.ColProp !='CustomerStateName'"
           :key="index"
           min-width="200px"
           :sortable="item.IsSortBol ? 'custom' : null"
@@ -30,21 +30,34 @@
           :label="item.ColDesc"
           :fixed="item.Freeze"/>
         <el-table-column
-          v-else
+          v-else-if="!item.IsFreeze&&item.ColProp !='CustomerStateName'"
           :key="index"
           min-width="200px"
           :sortable="item.IsSortBol ? 'custom' : null"
           :prop="item.ColProp"
           :align="item.Position"
           :label="item.ColDesc"/>
+        <el-table-column
+          v-else
+          :key="index"
+          min-width="200px"
+          :sortable="item.IsSortBol ? 'custom' : null"
+          :align="item.Position"
+          :label="item.ColDesc">
+          <template slot-scope="scope">
+            <label style="color: #00B2A1" v-if="scope.row.CustomerStateName=='已开户'">{{scope.row.CustomerStateName}}</label>
+            <label style="color: #FF3D3D" v-if="scope.row.CustomerStateName=='销户'">{{scope.row.CustomerStateName}}</label>
+            <label style="color: #E57403" v-if="scope.row.CustomerStateName=='报停'">{{scope.row.CustomerStateName}}</label>
+          </template>
+        </el-table-column>
       </template>
       <el-table-column label="操作" width="100px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip effect="light" content="详情" placement="bottom-start">
-            <a style="color: #B59200" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
-          </el-tooltip>
           <el-tooltip effect="light" content="编辑" placement="bottom-start">
-            <a style="margin:0 6px;color: #00B2A1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
+            <a style="color: #00B2A1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
+          </el-tooltip>
+          <el-tooltip effect="light" content="详情" placement="bottom-start">
+            <a style="margin:0 6px;color: #B59200" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
           </el-tooltip>
           <el-tooltip effect="light" content="删除" placement="bottom-start">
             <a style="color: #FF3D3D" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>

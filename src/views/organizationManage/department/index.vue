@@ -9,7 +9,7 @@
       <!--列表数据 s-->
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
-        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+        <el-table-column type="index" fixed="left" label="#" width="60" align="center">
           <template slot-scope="scope">
             <span>{{(dp.page - 1) * dp.limit+ scope.$index + 1}}</span>
           </template>
@@ -42,7 +42,7 @@
               <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
             <el-tooltip v-else effect="dark" content="岗位已关联人员，不可删除" placement="bottom-start">
-              <a style="color: #C0C8CC;margin: 10px;"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
+              <a style="color: #C0C8CC;"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>
         </el-table-column>

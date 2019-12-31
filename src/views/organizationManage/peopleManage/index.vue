@@ -8,7 +8,7 @@
       <!--列表数据 s-->
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
-        <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+        <el-table-column type="index" fixed="left" label="#" width="60" align="center">
           <template slot-scope="scope">
             <span>{{(queryData.page - 1) * queryData.limit+ scope.$index + 1}}</span>
           </template>

@@ -4,6 +4,11 @@
     <div class="cl-center-box">
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" style="margin-top: 50px;"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
+        <el-table-column fixed="left" label="#" width="60" align="center">
+          <template slot-scope="scope">
+            <span>{{(param.page - 1) *param.limit+ scope.$index + 1}}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="date"
           label="用水性质名称"

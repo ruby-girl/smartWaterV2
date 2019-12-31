@@ -10,7 +10,7 @@
                     @sort-change="sortChanges" highlight-current-row ref="multipleTable"
                     :row-class-name="tableRowClassName"
                     @row-click="getCurInfo">
-            <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
+            <el-table-column type="index" fixed="left" label="#" width="60" align="center">
               <template slot-scope="scope">
                 <span>{{(param.page - 1) * param.limit+ scope.$index + 1}}</span>
               </template>
