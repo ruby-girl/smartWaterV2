@@ -17,7 +17,7 @@
           :header-cell-style="{'background-color': '#F0F2F5'}"
           @sort-change="sortChanges"
         >
-          <el-table-column fixed="left" label="序号" width="60" align="center">
+          <el-table-column fixed="left" label="#" width="60" align="center">
             <template slot-scope="scope">
               <span>{{(query.page - 1) *query.limit+ scope.$index + 1}}</span>
             </template>

@@ -7,7 +7,8 @@
       size="small"
       label-width="64px"
       @submit.native.prevent
-      ref="formHeight">
+      ref="formHeight"
+    >
       <el-form-item label="申请状态" v-show="show1||isShow">
         <el-input maxlength="20" value="申请中" disabled />
       </el-form-item>
@@ -16,12 +17,14 @@
           v-model="query.ProcessMenuCode"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(query.ProcessMenuCode ,'ProcessMenuCode',applyArray,'申请类型')">
+          @change="getText(query.ProcessMenuCode ,'ProcessMenuCode',applyArray,'申请类型')"
+        >
           <el-option
             v-for="item in applyArray"
             :key="item.Id"
             :label="item.Id=='2900'? '全部':item.Name"
-            :value="Number(item.Id)" />
+            :value="Number(item.Id)"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="业务编号" v-show="show3||isShow" prop="FlowNo">
@@ -32,7 +35,7 @@
           @change="getText(query.FlowNo ,'FlowNo','','业务编号')"
         />
       </el-form-item>
-      <el-form-item label="申请日期" v-show="show4||isShow" >
+      <el-form-item label="申请日期" v-show="show4||isShow">
         <el-date-picker
           v-model="timevalue"
           type="datetimerange"
@@ -54,7 +57,7 @@
         <el-button type="primary" size="mini" @click="handleFilter" round>
           <i class="icon iconfont">&#xe694;</i>查询
         </el-button>
-        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <el-button size="mini" class="btn-add" round @click="resetting">
           <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
       </el-form-item>
@@ -111,20 +114,20 @@ export default {
       show5: true,
       show6: true,
       showBtn: true, //查询展开
-      timevalue:[]
+      timevalue: []
     };
   },
   created() {
-    this.applyArray = getDictionaryOption('流程编码')
+    this.applyArray = getDictionaryOption("流程编码");
   },
   methods: {
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
-      this.timevalue = []
-      this.query.createStartTime = ''
-      this.query.createEndTime = ''
+      this.timevalue = [];
+      this.query.createStartTime = "";
+      this.query.createEndTime = "";
       this.handleFilter();
     },
     showLabel(n, w) {
@@ -152,7 +155,7 @@ export default {
       }
     },
     handleFilter() {
-      this.$parent.query = Object.assign({},this.query)
+      this.$parent.query = Object.assign({}, this.query);
       this.$parent.searchTableList();
     }
   }
