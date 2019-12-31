@@ -33,6 +33,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.isSysTemplate,'isSysTemplate',templateType,'模板类型')"
         >
+          <el-option label="全部" value></el-option>
           <el-option
             v-for="item in templateType"
             :key="item.Id"
@@ -48,6 +49,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.sendMethod,'sendMethod',sendType,'发送方式')"
         >
+          <el-option label="全部" value></el-option>
           <el-option v-for="item in sendType" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
@@ -58,30 +60,36 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.sendModality,'sendModality',sendTime,'发送方式')"
         >
+          <el-option label="全部" value></el-option>
           <el-option v-for="item in sendTime" :key="item.Id" :label="item.Name" :value="item.Id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item
-        label="定时发送时间"
-        label-width="90px"
-        v-show="show5||isShow"
-        prop="warterMeterPlanDate"
-      >
-        <el-date-picker
-          v-model="selectHead.warterMeterPlanDate"
-          type="daterange"
-          :editable="false"
-          :unlink-panels="true"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
-          @keydown.enter.native="handleFilter"
-          @change="getTime"
-        />
+      <el-form-item class="timePicker" label="定时发送时间"  v-show="show5||isShow" label-width="90px">
+        <el-select v-model="selectHead.timerSendStartTime" placeholder="请选择" @change="getSendTime">
+          <el-option label="请选择" value></el-option>
+          <el-option
+            v-for="item in 24"
+            :key="item"
+            :disabled="selectHead.timerSendEndTime!=''&&item>=selectHead.timerSendEndTime"
+            :label="item<10?'0'+item:item"
+            :value="item"
+          ></el-option>
+        </el-select>
       </el-form-item>
+      <span v-show="show5||isShow" style="display: inline-block;line-height: 28px; margin-right: 10px">~</span>
+      <el-form-item class="timePicker" v-show="show5||isShow">
+        <el-select v-model="selectHead.timerSendEndTime" @change="getSendTime" placeholder="请选择">
+          <el-option label="请选择" value></el-option>
+          <el-option
+            v-for="item in 24"
+            :label="item<10?'0'+item:item"
+            :value="item"
+            :key="item"
+            :disabled="item<=selectHead.timerSendStartTime"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <span class="isShow" :class="{tro:isShow}" v-if="showBtn">
           <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
@@ -191,25 +199,56 @@ export default {
     getText(val, model, arr, name) {
       this.$emit("getText", val, model, arr, name);
     },
-    getTime() {
-      //时间格式化
-      let date = this.selectHead.warterMeterPlanDate;
+    getSendTime() {
+      let dateStart = this.selectHead.timerSendStartTime;
+      let dateEnd = this.selectHead.timerSendEndTime;
       let dateStipe;
-      if (date) {
-        this.selectHead.timerSendStartTime = date[0];
-        this.selectHead.timerSendEndTime = date[1];
-        dateStipe =
-          this.selectHead.timerSendStartTime.split(" ")[0] +
-          "~" +
-          this.selectHead.timerSendEndTime.split(" ")[0];
-        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "定时发送日期");
-      } else {
-        this.selectHead.timerSendStartTime = "";
-        this.selectHead.timerSendEndTime = "";
-        dateStipe = "";
-        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "定时发送日期");
+      if(dateStart<10){
+        dateStart="0"+dateStart
       }
+       if(dateEnd<10){
+        dateEnd="0"+dateEnd
+      }
+      dateStipe = dateStart + "~" + dateEnd;
+      this.$emit(
+        "getText",
+        dateStipe,
+        "warterMeterPlanDate",
+        "",
+        "定时发送日期"
+      );
     },
+    // getTime() {
+    //   //时间格式化
+    //   let date = this.selectHead.warterMeterPlanDate;
+    //   let dateStipe;
+    //   if (date) {
+    //     this.selectHead.timerSendStartTime = date[0];
+    //     this.selectHead.timerSendEndTime = date[1];
+    //     dateStipe =
+    //       this.selectHead.timerSendStartTime.split(" ")[0] +
+    //       "~" +
+    //       this.selectHead.timerSendEndTime.split(" ")[0];
+    //     this.$emit(
+    //       "getText",
+    //       dateStipe,
+    //       "warterMeterPlanDate",
+    //       "",
+    //       "定时发送日期"
+    //     );
+    //   } else {
+    //     this.selectHead.timerSendStartTime = "";
+    //     this.selectHead.timerSendEndTime = "";
+    //     dateStipe = "";
+    //     this.$emit(
+    //       "getText",
+    //       dateStipe,
+    //       "warterMeterPlanDate",
+    //       "",
+    //       "定时发送日期"
+    //     );
+    //   }
+    // },
     //获取模板名称
     getNameList() {
       getTemplateName({ isSysTemplate: "" }).then(res => {
@@ -233,5 +272,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.timePicker {
+  /deep/.el-form-item__content {
+    width: 80px;
+  }
+  /deep/.el-input__inner {
+    width: 80px !important;
+  }
+}
 </style>
 

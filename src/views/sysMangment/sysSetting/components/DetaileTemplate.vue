@@ -1,7 +1,7 @@
 <template>
   <!-- 新增弹窗 -->
   <el-dialog
-    title="添加"
+    title="详情"
     :visible.sync="AdialogFormVisible"
     top="20vh"
     width="600px"
@@ -68,13 +68,9 @@ export default {
       }
       this.$emit("update:detaileShow", val);
     }
-  }
-  //   mounted() {
-  //     console.log(this.ShortMsgTempParam);
-  //   },
-  //   created() {
-  //     console.log(this.ShortMsgTempParam);
-  //   }
+  },
+  
+ 
 };
 </script>
 <style lang="scss" scoped>

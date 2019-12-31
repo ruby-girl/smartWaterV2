@@ -25,13 +25,12 @@
           <el-option label="自定义" :value="0"></el-option>
         </el-select>
       </el-form-item>
-      <!-- <p class="temPlateText">
-        <span>姓名</span>
-        <span>电话</span>
-        <span>用户编号</span>
-        <span>当前时间</span>
-      </p> -->
-      
+      <p class="temPlateText">
+        <span @click="textClick('【姓名】')">姓名</span>
+        <span @click="textClick('【电话】')">电话</span>
+        <span @click="textClick('【用户编号】')">用户编号</span>
+        <span @click="textClick('【当前时间】')">当前时间</span>
+      </p>
       <el-form-item label="模板内容">
         <el-input type="textarea" :rows="10" v-model="ShortMsgTempParam.TemplateContent"></el-input>
       </el-form-item>
@@ -58,7 +57,7 @@
       </el-form-item>
       <el-form-item class="timePicker">
         <el-select v-model="ShortMsgTempParam.TimerSendStartTime" placeholder="请选择">
-          <el-option v-for="item in 24"  :key="item" :label="item<10?'0'+item:item" :value="item"></el-option>
+          <el-option v-for="item in 24" :key="item" :label="item<10?'0'+item:item" :value="item"></el-option>
         </el-select>
       </el-form-item>
       <span style="display: inline-block;line-height: 28px;margin-top: 18px; margin-right: 10px">~</span>
@@ -120,6 +119,9 @@ export default {
     }
   },
   methods: {
+    textClick(text){
+      this.ShortMsgTempParam.TemplateContent+=text
+    },
     addMeterReadingPlan() {
       let that = this;
 
@@ -196,14 +198,15 @@ export default {
 }
 .temPlateText {
   margin-top: 28px;
-  margin-bottom: 12px;
+  margin-bottom: 0;
   padding-left: 100px;
   span {
+    cursor: pointer;
     padding: 3px 12px;
     line-height: 17px;
     color: rgba(109, 167, 131, 1);
     border: 1px solid rgba(109, 167, 131, 1);
-    border-radius:50px;
+    border-radius: 50px;
     margin-right: 5px;
   }
 }

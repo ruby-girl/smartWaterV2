@@ -27,7 +27,7 @@
             style="width: 100%;"
             :header-cell-style="{'background-color': '#F0F2F5'}"
           >
-            <el-table-column type="index" fixed="left" label="#" width="60" align="center">
+            <el-table-column type="index" fixed="left" label="序号" width="60" align="center">
               <template slot-scope="scope">
                 <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
               </template>
@@ -135,9 +135,9 @@ export default {
         timerSendEndTime: "", //抄表计划状态
         sort: "", //升序
         filed: "", //排序字段
-        warterMeterPlanDate: [],
         tableId: "0000066"
       },
+        warterMeterPlanDate: [],
       checksData: [],
       tableData: [],
       total: 0,
@@ -173,11 +173,6 @@ export default {
       this.$refs.searchTips.showExcel = false;
       // 自适应表格高度
       const that = this;
-      console.log(
-        document.getElementsByClassName("section-full-container")[0]
-          .offsetHeight
-      );
-      console.log(document.getElementById("table").offsetTop);
       that.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
@@ -191,6 +186,10 @@ export default {
   methods: {
     //删除面包屑
     delTips(val) {
+      if(val=="warterMeterPlanDate"){
+        this.selectHead.timerSendStartTime=""
+        this.selectHead.timerSendEndTime=""
+      }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
 
       this.searchTableList();
@@ -202,7 +201,15 @@ export default {
     },
 
     searchTableList(num) {
-      //查询列表
+      //查询列表timerSendStartTime: "", //计划结束日期
+       // timerSendEndTime: "", //抄表计划状态
+      if(Boolean(this.selectHead.timerSendStartTime)!=Boolean(this.selectHead.timerSendEndTime)){
+           this.$message({
+          message: "请选择完整的定时发送时间",
+          type: "warning"
+        });
+        return false;
+      }
       const that = this;
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
@@ -279,10 +286,11 @@ export default {
   }
 };
 </script>
-<style  scoped>
+<style lang="scss"  scoped>
 .section-full-container {
   padding: 0;
 }
+
 .contanier {
   padding: 14px;
   padding-top: 0;
