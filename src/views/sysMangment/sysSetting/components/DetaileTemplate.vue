@@ -100,7 +100,7 @@ export default {
       width: 100%;
       span {
         padding-top: 9px;
-        float: left;
+        // float: left;
         margin: 0;
         line-height: 20px;
       }

@@ -1,7 +1,7 @@
 <template>
-  <!-- 新增弹窗 -->
+  
   <el-dialog
-    title="添加"
+    title="编辑"
     :visible.sync="AdialogFormVisible"
     top="10vh"
     width="560px"

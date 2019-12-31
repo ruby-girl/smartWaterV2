@@ -98,20 +98,17 @@ export default {
     },
     //查询
     searchTableList() {
-      console.log(this.tipsDataCopy);
       this.tipsData = pushItem(this.tipsDataCopy);
     }
   },
   mounted() {
     this.searchWidth = this.$refs.formHeight.clientWidth;
     this.$nextTick(() => {
-      console.log(document.getElementsByClassName("section-full-container")[0].offsetHeight)
-      console.log(document.getElementById("table").offsetTop )
       this.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
-        document.getElementById("table").offsetTop-44
-      
+        document.getElementById("table").offsetTop-4
+ 
       this.$refs.searchTips.showTabBtn = false;
     });
   }

@@ -60,6 +60,14 @@ export function getSelectList(data) {
         data
     })
 }
+//获取信息对象
+export function getSendModel(data) {
+    return request({
+        url: '/ShorMsg/SelectSendMsgModel',
+        method: 'post',
+        params:data
+    })
+}
 //剩余短信
 export function getAllNum(data) {
     return request({

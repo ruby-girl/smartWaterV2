@@ -4,8 +4,11 @@
       <div ref="formHeight">
         <select-head :searchWidth="searchWidth" @getText="getText" />
       </div>
-      <div class="contanier"> 
-        <p class="notice">提示：当前短信剩余{{surpNum}}条，已用{{sendNum}}条</p>
+      <div class="contanier">
+        <p class="notice">
+          <i class="icon iconfont" style="margin-right:5px;">&#xe69c;</i>
+          提示：当前短信剩余{{surpNum}}条，已用{{sendNum}}条
+        </p>
         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
         <div class="main-padding-20-y" id="table">
           <el-table
@@ -34,69 +37,18 @@
                 :fixed="item.Freeze"
               />
             </template>
-            <el-table-column label="操作" width="200px" align="center" fixed="right">
+            <el-table-column label="操作" width="80px" align="center" fixed="right">
               <template slot-scope="scope">
-                <span style="display:inline-block;width:30px;">
-                  <el-tooltip
-                    v-show="scope.row.IsCanGenerateOrder"
-                    class="item"
-                    popper-class="tooltip"
-                    effect="light"
-                    :visible-arrow="false"
-                    content="生成费用"
-                    placement="bottom"
-                  >
-                    <i
-                      class="iconStyle icon iconfont operation1"
-                      @click="generateOrder(scope.row.Id)"
-                    >&#xe69d;</i>
-                  </el-tooltip>
-                </span>
                 <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
                   class="item"
-                  popper-class="tooltip"
                   effect="light"
                   :visible-arrow="false"
-                  content="数据补录"
+                  content="详情"
                   placement="bottom"
                 >
-                  <i
-                    class="iconStyle icon iconfont operation2"
-                    @click="changeInput(scope.row.Id,true)"
-                  >&#xe676;</i>
-                </el-tooltip>
-                <el-tooltip
-                  v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="数据绑定"
-                  placement="bottom"
-                >
-                  <i
-                    class="iconStyle icon iconfont operation2-1"
-                    @click="changeInput(scope.row.Id,false)"
-                  >&#xe675;</i>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
                   <i
                     class="iconStyle icon iconfont operation3"
-                    @click="meterReadingPlanDetail(scope.row.Id)"
-                  >&#xe69d;</i>
-                </el-tooltip>
-                <el-tooltip
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="删除"
-                  placement="bottom"
-                >
-                  <i
-                    class="icon iconfont iconStyle operation4"
-                    @click="delMeterReadingPlan(scope.row.Id)"
+                    @click="Detail(scope.row.Id)"
                   >&#xe653;</i>
                 </el-tooltip>
               </template>
@@ -111,21 +63,30 @@
           />
         </div>
       </div>
+      <detaile-template :detaile-show.sync="detaileDialogFormVisible" />
     </div>
   </div>
 </template>
 <script>
 import SelectHead from "./components/SelectHead"; //查询条件组件
+import DetaileTemplate from "./components/DetaileTemplate"; //详情
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import { getSelectList, getAllNum, getSendNum } from "@/api/shotMsg";
+import {
+  getSelectList,
+  getAllNum,
+  getSendNum,
+  delTemplate,
+  getSendModel
+} from "@/api/shotMsg";
 export default {
   name: "smsStaues",
   components: {
     SelectHead,
     Pagination,
-    SearchTips
+    SearchTips,
+    DetaileTemplate
   },
   data() {
     return {
@@ -153,7 +114,8 @@ export default {
       tableKey: 0,
       tableHeight: 0,
       addDialogFormVisible: false,
-      isShowAdPlanClass: !this.isShowAdPlan,
+      detaileDialogFormVisible: false,
+      detaileModel: {},
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
@@ -184,7 +146,8 @@ export default {
       that.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
-        document.getElementById("table").offsetTop-47
+        document.getElementById("table").offsetTop -
+        47;
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.searchWidth = this.$refs.formHeight.clientWidth;
@@ -210,8 +173,8 @@ export default {
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
         this.orderData.page = 1;
-      }else {
-        this.orderData.page =this.selectHead.page
+      } else {
+        this.orderData.page = this.selectHead.page;
       }
       getSelectList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -231,6 +194,41 @@ export default {
       exportPlanList(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
+    },
+    //详情
+    Detail(id) {
+      getSendModel({ sendId: id }).then(res => {
+        this.detaileModel = res.data;
+        this.detaileDialogFormVisible = true;
+      });
+    },
+    //删除
+    delTem(id) {
+      let that = this;
+      this.$confirm("是否删除当前模板信息", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        customClass: "warningBox",
+        showClose: false
+      })
+        .then(() => {
+          delTemplate({ tempId: id }).then(res => {
+            if (res.code == 0) {
+              that.$message({
+                message: res.message ? res.message : "删除成功",
+                type: "success"
+              });
+              that.searchTableList();
+            } else {
+              that.$message({
+                message: res.message,
+                type: "warning"
+              });
+            }
+          });
+        })
+        .catch(() => {});
     },
     getNum() {
       // surpNum: 0, //剩余

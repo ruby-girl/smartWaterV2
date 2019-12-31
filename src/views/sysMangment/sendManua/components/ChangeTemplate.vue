@@ -1,7 +1,7 @@
 <template>
   <!-- 新增弹窗 -->
   <el-dialog
-    title="添加"
+    title="模板选择"
     :visible.sync="AdialogFormVisible"
     top="20vh"
     width="400px"
@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     getNameList() {
-      getTemplateName({ isSysTemplate: "" }).then(res => {
+      getTemplateName({ isSysTemplate: "false" }).then(res => {
         this.templateNmaeList = [];
         res.data.forEach(element => {
           let obj = {
