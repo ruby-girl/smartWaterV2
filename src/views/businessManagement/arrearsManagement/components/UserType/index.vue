@@ -60,15 +60,6 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex justify-content-flex-center secur-content">
-                <!-- <div class="main-color-warn" @click="details(row)">
-                  <a>费用详情</a>
-                </div>
-                <div class="pl-15 pr-15" @click="reset(row.Id)">
-                  <a>费用撤销</a>
-                </div>
-                <div class="main-color" @click="feeWaiverFunc(row)">
-                  <a>费用减免</a>
-                </div> -->
                 <el-tooltip
                 class="item"
                 popper-class="tooltip"
@@ -80,22 +71,22 @@
                 <i class="icon iconfont iconbiaodan1" @click="details(row)"></i>
               </el-tooltip>
               <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="费用撤回"
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag==1002?false:true}"
+                :popper-class="row.ChargeFlag==1002?'tooltip':''"
+                :effect="row.ChargeFlag==1002?'light':'dark'"
+                :visible-arrow="row.ChargeFlag==1002?false:true"
+                :content="row.ChargeFlag==1002?'费用撤回':'该笔费用不允许撤回'"
                 placement="bottom"
               >
                 <i class="icon iconfont iconchexiao1" @click="reset(row)"></i>
               </el-tooltip>
               <!-- 费用类型仅为水费，OrderType==2001，才能进行减免 -->
               <el-tooltip
-                :class="{'item main-color':true,'main-color-disabled':row.OrderType==2001?false:true}"
-                :popper-class="row.OrderType==2001?'tooltip':''"
-                :effect="row.OrderType==2001?'light':'dark'"
-                :visible-arrow="row.OrderType==2001?false:true"
-                :content="row.OrderType==2001?'费用减免':'非水费类型不允许减免'"
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
+                :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
+                :effect="row.ChargeFlag!==1002||row.OrderType!==2001?'dark':'light'"
+                :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001?true:false"
+                :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'费用减免'"
                 placement="bottom"
               >
                 <i class="icon iconfont iconjianmianshui" @click="row.OrderType==2001?feeWaiverFunc(row):''"></i>
@@ -218,7 +209,7 @@ export default {
     this.$nextTick(function() {
       // 自适应表格高度
       var formHeight = this.$refs.formHeight.offsetHeight;   
-      this.tableHeight = document.body.clientHeight - formHeight - 260;
+      this.tableHeight = document.body.clientHeight - formHeight - 290;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
     });

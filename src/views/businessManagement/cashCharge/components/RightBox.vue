@@ -154,7 +154,7 @@ export default {
         let surplus;
        surplus =((parseFloat(this.num) * 1000 - parseFloat(this.unpaidMoney) * 1000) /
           1000).toFixed(2);
-          if(surplus){
+          if(surplus>0){
             this.surplus=surplus
           }else{
             this.surplus = "0.00";

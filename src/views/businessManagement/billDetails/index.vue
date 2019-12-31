@@ -45,12 +45,6 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex justify-content-flex-center secur-content">
-                <!-- <div class="main-color-warn pl-15" @click="details(row)">
-                  <a>费用详情</a>
-                </div>
-                <div class="pl-15" @click="reset(row)">
-                  <a>费用撤销</a> 
-                </div>              -->
                 <el-tooltip
                 class="item"
                 popper-class="tooltip"
@@ -62,11 +56,11 @@
                 <i class="icon iconfont iconbiaodan1" @click="details(row)"></i>
               </el-tooltip>
               <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="费用撤销"
+               :class="{'item':true,'main-color-disabled':row.PayType!==2706?true:false}"
+                :popper-class="row.PayType==2706?'tooltip':''"
+                :effect="row.PayType==2706?'light':'dark'"
+                :visible-arrow="row.PayType==2706?false:true"
+                :content="row.PayType==2706?'费用撤销':'该笔费用不允许撤销'"
                 placement="bottom"
               >
                 <i class="icon iconfont iconchexiao1" @click="reset(row)"></i>

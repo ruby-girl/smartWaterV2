@@ -52,21 +52,21 @@
                   <i class="icon iconfont iconbiaodan1" @click="billDetails(row)"></i>
                 </el-tooltip>
                 <el-tooltip
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="数据冲红"
+                   :class="{'item':true,'main-color-disabled':row.PayState!==2201?true:false}"
+                :popper-class="row.PayState==2201?'tooltip':''"
+                :effect="row.PayState==2201?'light':'dark'"
+                :visible-arrow="row.PayState==2201?false:true"
+                :content="row.PayState==2201?'数据冲红':'该笔费用不允许数据冲红'"
                   placement="bottom"
                 >
                   <i class="icon iconfont iconshoufeichaxun-piaojuchonghong" @click="invoice(row)"></i>
                 </el-tooltip>
                 <el-tooltip
-                  class="item"
-                  popper-class="tooltip"
-                  effect="light"
-                  :visible-arrow="false"
-                  content="票据打印"
+                  :class="{'item':true,'main-color-disabled':row.PayState!==2201?true:false}"
+                :popper-class="row.PayState==2201?'tooltip':''"
+                :effect="row.PayState==2201?'light':'dark'"
+                :visible-arrow="row.PayState==2201?false:true"
+                :content="row.PayState==2201?'票据打印':'该笔费用不允许打印票据'"
                   placement="bottom"
                 >
                   <i class="icon iconfont iconshoufeichaxun-piaojudayin" @click="pint(row)"></i>

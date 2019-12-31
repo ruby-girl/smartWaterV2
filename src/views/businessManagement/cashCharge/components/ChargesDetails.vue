@@ -35,7 +35,7 @@
           </div>
           <div>
             {{i+1}}阶水费：
-            <span class="color-more-black">{{item.TotalPrice}}10</span>元
+            <span class="color-more-black">{{item.TotalPrice}}</span>元
           </div>
         </div>
       </div>

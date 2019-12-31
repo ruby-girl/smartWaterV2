@@ -60,11 +60,11 @@
                 ></i>
               </el-tooltip>
               <el-tooltip
-                class="item"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                content="费用撤回"
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag==1002?false:true}"
+                :popper-class="row.ChargeFlag==1002?'tooltip':''"
+                :effect="row.ChargeFlag==1002?'light':'dark'"
+                :visible-arrow="row.ChargeFlag==1002?false:true"
+                :content="row.ChargeFlag==1002?'费用撤回':'该笔费用不允许撤回'"
                 placement="bottom"
               >
                 <i
@@ -73,13 +73,13 @@
                 ></i>
               </el-tooltip>
               <el-tooltip
-                :class="{'item':true,'main-color-disabled':row.ChargeFlag==1003||row.OrderType!==2001?true:false}"
-                popper-class="tooltip"
-                effect="light"
-                :visible-arrow="false"
-                :content="row.ChargeFlag==1003?'费用审核中，无法进行减免':row.OrderType!==2001?'非水费类型不能进行减免':'费用减免'"
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
+                :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
+                :effect="row.ChargeFlag!==1002||row.OrderType!==2001?'dark':'light'"
+                :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001?true:false"
+                :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'费用减免'"
                 placement="bottom"
-              >
+              > 
                 <i
                   class="icon iconfont iconjianmianshui"
                   @click="feeWaiver(row)"

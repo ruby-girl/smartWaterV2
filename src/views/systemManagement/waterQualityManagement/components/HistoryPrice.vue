@@ -9,19 +9,15 @@
     :close-on-click-modal="false"
     @opened="opened"
   >
-    <div class="table-top-btn-padding display-flex justify-content-flex-justify">
+    <div class="display-flex justify-content-flex-justify">
       <div></div>
-      <div>
-        <el-button type="success" size="mini" @click="excel">
-          <i class="iconfont icondaochuexcel"></i>导出Excel
-        </el-button>
-
-        <el-button type="warning" size="mini" @click="setCustomData()">
-          <i class="iconfont iconbiaogezidingyi"></i>表格自定义
-        </el-button>
+      <div style="margin-bottom:10px;">
+        <el-button size="mini" class="special-btn" round  @click="excel"><i class="iconfont icondaochuexcel"></i>导出Excel</el-button>
+        <el-button size="mini" class="special-btn" round  @click="setCustomData"><i class="iconfont iconbiaogezidingyi"></i>表格自定义</el-button>
       </div>
     </div>
-    <customTable ref="historyPrice" />
+     <table-custom ref="myChild" class="table-custom" />
+    <!-- <customTable ref="historyPrice" /> -->
     <div class="main-padding-20-y">
       <el-table
         :key="tableKey"
@@ -123,7 +119,7 @@
   </el-dialog>
 </template>
 <script>
-import customTable from "@/components/CustomTable/index";
+import TableCustom from "@/components/TableCustom/index"; //自定义表格
 import Pagination from "@/components/Pagination";
 import {
   GetWaterPropertyById,
@@ -142,7 +138,7 @@ export default {
     }
   },
   components: {
-    customTable,
+    TableCustom,
     Pagination
   },
   mounted: function() {
@@ -209,8 +205,8 @@ export default {
       });
     },
     opened(){ 
-        this.$refs.historyPrice.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-        this.checksData = this.$refs.historyPrice.checkData; // 获取自定义字段中选中了字段
+        this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
+        this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
         this.listQuery.UseWaterTypeId=this.id
         this.getList()
     },
@@ -222,8 +218,11 @@ export default {
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
       this.getList();
     },
+     //表格自定义方法
     setCustomData() {
-      this.$refs.historyPrice.isCustom = !this.$refs.historyPrice.isCustom;
+      // this.thisTable = !this.thisTable;
+      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
+      // this.customHeight = this.$refs.myChild.isCustom;
     },
     toogleExpandCargo(row) {
       let $table = this.$refs.cargoTable;
@@ -238,9 +237,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-// /deep/ .el-table__expanded-cell{
-//     width:200px !important;
-// }
+/deep/ .el-table__expanded-cell{
+   .ladder-box,.ladder-bottom-box{
+     padding-left: 65px;
+   }
+}
 /deep/ .el-table__expand-icon {
   display: none;
 }

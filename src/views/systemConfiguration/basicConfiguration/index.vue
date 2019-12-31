@@ -533,7 +533,18 @@ export default {
   border: 1px solid #f56c6c;
 }
 /deep/ .el-range-editor--medium.el-input__inner{
-  height:30px;
+  height:30px; 
+  .el-range-input{
+    width:52%;
+  }
+  .el-range__close-icon{
+    position: relative;
+    margin-top: -5px;
+  }
+  .el-range-separator{
+    line-height: 23px;
+  }
 }
+
 </style>
 
