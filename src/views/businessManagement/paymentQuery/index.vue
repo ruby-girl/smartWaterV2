@@ -61,7 +61,7 @@
                   :content="row.PayState==2201?'数据冲红':'该笔费用不允许数据冲红'"
                   placement="bottom"
                 >
-                  <i class="icon iconfont iconshoufeichaxun-piaojuchonghong" @click="invoice(row)"></i>
+                  <i class="icon iconfont iconshoufeichaxun-piaojuchonghong" @click="row.PayState==2201?invoice(row):''"></i>
                 </el-tooltip>
                 <el-tooltip
                   :class="{'item':true,'main-color-disabled':row.PayState!==2201?true:false}"
@@ -71,7 +71,7 @@
                   :content="row.PayState==2201?'票据打印':'该笔费用不允许打印票据'"
                   placement="bottom"
                 >
-                  <i class="icon iconfont iconshoufeichaxun-piaojudayin" @click="pint(row)"></i>
+                  <i class="icon iconfont iconshoufeichaxun-piaojudayin" @click="row.PayState==2201?pint(row):''"></i>
                 </el-tooltip>
               </div>
             </template>

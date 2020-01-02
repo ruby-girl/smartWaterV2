@@ -70,7 +70,7 @@
               >
                 <i
                   class="icon iconfont iconchexiao1"
-                 @click="reset(row)"
+                 @click="row.ChargeFlag==1002?reset(row):''"
                 ></i>
               </el-tooltip>
               <el-tooltip
@@ -83,7 +83,7 @@
               > 
                 <i
                   class="icon iconfont iconjianmianshui"
-                  @click="feeWaiver(row)"
+                  @click="row.ChargeFlag!==1002||row.OrderType!==2001?'':feeWaiver(row)"
                 ></i>
               </el-tooltip>
             </div>

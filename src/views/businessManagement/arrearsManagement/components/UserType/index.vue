@@ -79,7 +79,7 @@
                 :content="row.ChargeFlag==1002?'费用撤回':'该笔费用不允许撤回'"
                 placement="bottom"
               >
-                <i class="icon iconfont iconchexiao1" @click="reset(row)"></i>
+                <i class="icon iconfont iconchexiao1" @click="row.ChargeFlag==1002?reset(row):''"></i>
               </el-tooltip>
               <!-- 费用类型仅为水费，OrderType==2001，才能进行减免 -->
               <el-tooltip
@@ -90,7 +90,7 @@
                 :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'费用减免'"
                 placement="bottom"
               >
-                <i class="icon iconfont iconjianmianshui" @click="row.OrderType==2001?feeWaiverFunc(row):''"></i>
+                <i class="icon iconfont iconjianmianshui" @click="row.ChargeFlag!==1002||row.OrderType!==2001?'':feeWaiverFunc(row)"></i>
               </el-tooltip>
               </div>
             </template>

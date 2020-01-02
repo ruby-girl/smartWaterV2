@@ -64,7 +64,7 @@
                 :content="row.PayType==2706?'费用撤销':'该笔费用不允许撤销'"
                 placement="bottom"
               >
-                <i class="icon iconfont iconchexiao1" @click="reset(row)"></i>
+                <i class="icon iconfont iconchexiao1" @click="row.PayType==2706?reset(row):''"></i>
               </el-tooltip>
               </div>
             </template>
