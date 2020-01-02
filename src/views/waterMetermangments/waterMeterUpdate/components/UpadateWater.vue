@@ -451,7 +451,13 @@ export default {
     getUser(info) {
       let postData = {};
       if (info) {
-        this.$emit("update:cardInfo", info);
+        if (info.CardType != 1) {
+          this.$message({
+            message: "该卡是未刷卡状态，请刷卡后再进行操作",
+            type: "warning"
+          });
+          return false
+        }
         postData.CustomerQueryValue = info.UserCard.CardNo;
         postData.CustomerQueryType = "8";
         postData.page = 1;
@@ -570,7 +576,7 @@ export default {
       color: #fff;
       background-color: #33b300;
       border-color: #33b300;
-      padding:7px 5px;
+      padding: 7px 5px;
       opacity: 1;
       border-radius: 4px;
     }

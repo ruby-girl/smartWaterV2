@@ -19,7 +19,7 @@ import LongTImeUnpaid from "./components/LongTImeUnpaid";
 import WaterMetermal from "./components/WaterMetermal";
 import WaterUseMal from "./components/WaterUseMal";
 export default {
-  name: "waterStatistics",
+  name: "abnormalStatistics",
   components: { LongTImeUnpaid, WaterMetermal, WaterUseMal },
   data() {
     return {
