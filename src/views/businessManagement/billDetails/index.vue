@@ -121,8 +121,8 @@ export default {
         EndPayMentDate:'',//缴费时间止
         ReceiveMoneyUser:"-1",//收款人
         WaterFactory:"-1",//水厂
-        editStartTime: "", // 操作时间起
-        editEndTime: "", // 操作时间止
+        StartPayMentDate: "", // 操作时间起
+        EndPayMentDate: "", // 操作时间止
         tableId: "0000020",
         timevalue:[],
         PayMentId:''//收费查询跳转至账单详情，带入ID
@@ -185,8 +185,8 @@ export default {
      delTips(val) {
        if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
-        this.listQuery.editStartTime = "";
-        this.listQuery.editEndTime = "";
+        this.listQuery.StartPayMentDate = "";
+        this.listQuery.EndPayMentDate = "";
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
       this.getList();

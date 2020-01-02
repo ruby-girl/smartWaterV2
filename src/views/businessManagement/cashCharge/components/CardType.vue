@@ -167,8 +167,7 @@ export default {
       });
       this.$emit("update:isIndeterminateParent", false);
       this.$emit("update:checkedAllParent", true);//初始化全选
-    },
-    
+    },   
     // 全选
     handleCheckAllChange(val, i) {
       this.cardData.forEach((item, a) => {
@@ -244,6 +243,7 @@ export default {
           });
         });
       });
+      this.$emit("update:totalLength", data.length);
       this.$emit("calculatedAmount", data);
     },
     details(id) {

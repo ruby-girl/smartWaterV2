@@ -130,8 +130,8 @@ export default {
         EndPayMentDate: "", //缴费时间止
         ReceiveMoneyUser: "-1", //收款人
         WaterFactory: "-1", //水厂
-        editStartTime: "", // 操作时间起
-        editEndTime: "", // 操作时间止
+        StartPayMentDate: "", // 操作时间起
+        EndPayMentDate: "", // 操作时间止
         tableId: "0000033",
         timevalue: []
       },
@@ -168,8 +168,8 @@ export default {
     this.$nextTick(function() {
       let start = parseStartTimeFunc(new Date());
       let end = parseEndTimeFunc(new Date());
-      this.listQuery.editStartTime = start;
-      this.listQuery.editEndTime = end;
+      this.listQuery.StartPayMentDate = start;
+      this.listQuery.EndPayMentDate = end;
       this.listQuery.timevalue.push(new Date(start));
       this.listQuery.timevalue.push(new Date(end));
       this.getText(start + "~" + end, "timevalue", "", "缴费日期");
@@ -193,8 +193,8 @@ export default {
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
-        this.listQuery.editStartTime = "";
-        this.listQuery.editEndTime = "";
+        this.listQuery.StartPayMentDate = "";
+        this.listQuery.EndPayMentDate = "";
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "listQuery");
       this.getList();

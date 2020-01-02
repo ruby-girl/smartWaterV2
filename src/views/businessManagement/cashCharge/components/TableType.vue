@@ -102,11 +102,8 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination";
-import { legalTime } from "@/utils/index";
-// import customTable from "@/components/CustomTable/index";
 import { GetOrder } from "@/api/cashCharge";
 import SearchTips from "@/components/SearchTips/index";
-// import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   props: {
     listQuery: {
@@ -124,8 +121,6 @@ export default {
   },
   components: { Pagination,SearchTips },
   mounted() {
-    // this.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
-    // this.checksData = this.$refs.myChild.checkData; // 获取自定义字段中选中了字段
       this.$refs.searchTips.showExcel = false; // 先获取所有自定义字段赋值
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\

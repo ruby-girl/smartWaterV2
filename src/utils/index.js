@@ -561,7 +561,7 @@ export function updateMoney(value) {
 export function changeTwoDecimal(x) {
   var f_x = parseFloat(x);
   if (!f_x) {
-    return 0;
+    return '0.00';
   }
   var f_x = Math.round(x * 100) / 100;
   var s_x = f_x.toString();

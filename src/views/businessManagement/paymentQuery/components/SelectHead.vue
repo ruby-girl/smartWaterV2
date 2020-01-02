@@ -189,12 +189,12 @@ export default {
     getTime(v) {
       let date;
       if (v) {
-        this.selectHead.editStartTime = v[0];
-        this.selectHead.editEndTime = v[1];
+        this.selectHead.StartPayMentDate = v[0];
+        this.selectHead.EndPayMentDate = v[1];
         date = v[0] + "~" + v[1];
       } else {
-        this.selectHead.editStartTime = "";
-        this.selectHead.editEndTime = "";
+        this.selectHead.StartPayMentDate = "";
+        this.selectHead.EndPayMentDate = "";
         date = "";
       }
       this.$emit("getText", date, "timevalue", "", "缴费日期");

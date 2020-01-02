@@ -211,12 +211,12 @@ export default {
     getTime(v) {
       let date;
       if (v) {
-        this.selectHead.editStartTime = v[0]+ " 00:00:00";
-        this.selectHead.editEndTime = v[1]+ " 23:59:59";
+        this.selectHead.StartPayMentDate = v[0]+ " 00:00:00";
+        this.selectHead.EndPayMentDate = v[1]+ " 23:59:59";
         date = v[0] + "~" + v[1];
       } else {
-        this.selectHead.editStartTime = "";
-        this.selectHead.editEndTime = "";
+        this.selectHead.StartPayMentDate = "";
+        this.selectHead.EndPayMentDate = "";
         date = "";
       }
       this.$emit("getText", date, "timevalue", "", "缴费日期");

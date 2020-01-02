@@ -129,6 +129,8 @@ import {
 } from "@/api/cashCharge";
 import { WriteCardInfo } from "@/utils/projectLogic";
 import "@/styles/cashCharge.scss";
+// unpaidMoney 剩余未缴  // totalLength用户所有未缴费状态的数据个数-需求（当用户有未缴纳的费用时，不可单独进行预存操作）
+// payOrderId结算的费用单ID // customerId//用户IDv  // accountMoney//账户余额 //cardInfo IC卡 卡片信息
 export default {
   props: [
     "unpaidMoney",
@@ -139,11 +141,6 @@ export default {
     "isIC",
     "cardInfo"
   ],
-  // unpaidMoney 剩余未缴
-  // totalLength用户所有未缴费状态的数据个数-需求（当用户有未缴纳的费用时，不可单独进行预存操作）
-  // payOrderId结算的费用单ID
-  // customerId//用户IDv
-  // accountMoney//账户余额
   watch: {
     unpaidMoney(v) {
       this.num = v;
@@ -151,27 +148,29 @@ export default {
       setTimeout(function() {
         _this.$refs.myInput.select();
       }, 200);
-      // this.calculationReceivable();
     },
     isAccount(v) {
       if (!this.testMoney()) return false;
       this.surplusFunc();
     },
-    customerId() {
-      let _this = this;
-      setTimeout(function() {
+    customerId:{
+      handler: function(val, oldVal){
+           let _this = this;
+        setTimeout(function() {
         //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡
-        if (_this.isIc) {
-          if (
-            _this.cardInfo.UserCard.uRechargeCount == 1 &&
-            _this.cardInfo.UserCard.RechargeMoney &&
-            _this.cardInfo.CardType == 0
-          )
+          if (_this.isIc) {
+            if (
+              _this.cardInfo.UserCard.uRechargeCount == 1 &&
+              _this.cardInfo.UserCard.RechargeMoney &&
+              _this.cardInfo.CardType == 0
+            )
             _this.isFirst = true;
-          else _this.isFirst = false;
+           else _this.isFirst = false;
         }
         _this.$refs.myInput.select();
-      }, 200);
+       }, 200);
+      },
+      immediate: true
     },
     num(v) {
       this.inputWidth = v.length * 18 < 100 ? 100 : v.length * 18;
@@ -288,7 +287,7 @@ export default {
           this.num = "0.00";
           this.surplus = "0.00";
           this.$emit("update:unpaidMoney", "0.00");
-          this.unpaidMoney = 0;
+          this.unpaidMoney = '0.00';
           // 金额清零--e
           this.$emit("update:isIndeterminateParent", false);
           this.$emit("update:checkedAllParent", false); //结算完成后，父元素全选置为false，卡片获取列表再设置全选
@@ -320,7 +319,6 @@ export default {
         this.$emit("update:unpaidMoney", "0.00");
         this.unpaidMoney = "0.00";  
       //结算完成后，父元素全选置为false，卡片获取列表再设置全选
-        // this.$emit("getCustomer"); //重新获取列表数据和账户余额
         this.wCard(); //写卡  如果实收金额（input值-应收）=0，不写卡
       });
     },
@@ -345,8 +343,7 @@ export default {
       return true;
     },
     // IC卡结算成功后，进行写卡操作
-    wCard() {
-     
+    wCard() {    
         WriteCardInfo(this.resCardInfo, errorRes => {
           // 读卡
           // 错误回调，执行回滚

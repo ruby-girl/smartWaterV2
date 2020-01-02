@@ -16,7 +16,7 @@
     <!-- 表格模式 -->
     <el-row :gutter="10" class="container-bottom-box display-flex">
       <!-- 左边表格 -->
-      <el-col :md="14" :lg="17" :xl="18" class="cash-padding-bg" v-if="!isIC">
+      <el-col :md="14" :lg="16" :xl="18" class="cash-padding-bg" v-if="!isIC">
         <div class="display-flex justify-content-flex-justify">
           <div class="display-flex">
             <el-tooltip
@@ -57,6 +57,7 @@
             >全选</el-checkbox>
           </div>
         </div>
+        <keep-alive>
         <components
           :is="typeComponents"
           :listQuery="listQuery"
@@ -73,11 +74,12 @@
           @calculatedAmount="calculatedAmount"
           @delTips="delTips"
         ></components>
+        </keep-alive>
       </el-col>
       <!-- IC卡展示内容 -->
       <el-col
         :md="14"
-        :lg="17"
+        :lg="16"
         :xl="18"
         class="cash-padding-bg ic-container"
         v-if="isIC"
@@ -89,7 +91,7 @@
       <!-- 右 -->
       <el-col
         :md="10"
-        :lg="7"
+        :lg="8"
         :xl="6"
         class="cash-padding-bg cash-right-box"
         :style="{'height':saveTableHeight+'px'}"
@@ -256,6 +258,8 @@ export default {
     handleFilter(user) {
       // user-当前选择/查询的用户信息
       this.isIC = false;
+      this.type=1
+      this.typeComponents="TableType"
       this.headUser = user;
       this.customerNo = user.CustomerNo;
       this.accountMoney = (user.Balance).toFixed(2);
@@ -263,8 +267,10 @@ export default {
       this.cardQuery.CustomerId = user.Id;
       this.listQuery.page = 1;
       this.checkedAllParent = false;
-      this.handelTips()
-      this.getList();
+     let _this=this
+     setTimeout(function(){
+       _this.getList()
+     },800)
     },
     // 查询用户缴费单 ---IC卡 读卡后回调--显示IC卡信息 resInfo用户信息  resData卡片信息
     handleFilterIc(user) {
@@ -281,7 +287,6 @@ export default {
       if(this.icInfo.CardType==0) this.icType='NoCreditCard';
       else this.icType='CreditCardAlready';
       this.headQuery.CustomerQueryValue=""//输入框清空
-      // this.getList();
     },
     // 结算成功后重新获取账户余额 --如果是IC卡需要再次读卡。查询缴费记录的数据+1
     getCustomer() {
@@ -305,6 +310,8 @@ export default {
       this.type = n;
       this.typeComponents = n == 2 ? "CardType" : "TableType";
       let _this = this;
+      
+      // 1-2注释-*************************************是否可以不请求接口
       // 组件切换后，拿不到方法，无法在卡片形式结算后，更新表格数据-所以每点击切换就重新获取
       setTimeout(function() {
         if (_this.listQuery.CustomerId){
@@ -314,6 +321,23 @@ export default {
       this.unpaidMoney = '0.00';
       this.checkedAllParent = false;
       this.isIndeterminateParent = false;
+        // 1-2注释-*********************************是否可以不请求接口
+      
+    //  if(n==2){
+    //      setTimeout(function() {
+    //     if (_this.listQuery.CustomerId){
+    //        _this.$refs.tableTypeCard.getCardList()
+    //     }
+    //   }, 300);
+        
+    //   }else{
+    //     setTimeout(function() {
+    //     if (_this.listQuery.CustomerId){
+    //        this.$refs.tableTypeCard.$refs.cashTable.toggleAllSelection(true)//表格默认选择
+    //     }
+    //   }, 300);
+    //   }
+    //   this.checkedAllParent=true
     },
     // 勾选操作计算剩余未缴
     calculatedAmount(data) {

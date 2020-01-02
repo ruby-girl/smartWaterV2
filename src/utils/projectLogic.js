@@ -7,7 +7,7 @@ import {Message} from 'element-ui'
 import { GetICReadCardInfo } from "@/api/userSetting"; //IC卡读卡
 import { GetAreaListNotPNode } from "@/api/userArea"; //区域列表
 export function ICReadCardInfo(callback,errorCallBack) {
-  let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo();
+  let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo(); 
   if (res != undefined && res != "") {
     let rJSON = JSON.parse(res)//处理后的res
     // let resData = eval('(' + rJSON.Data + ')')//处理后的Data
@@ -25,7 +25,7 @@ export function ICReadCardInfo(callback,errorCallBack) {
           errorCallBack(resError)
         }
       })
-    } else {
+    } else {    
       Message.error({
         message: '读取错误',
         type: 'error',
