@@ -26,6 +26,7 @@
           :header-cell-style="{'background-color': '#F0F2F5'}"
           @sort-change="sortChanges"
           @selection-change="handleSelectionChange"
+          :cell-style="cellStyle"
         >
           <el-table-column
             label="as"
@@ -215,6 +216,15 @@ export default {
     });
   },
   methods: {
+    cellStyle({ row, column, rowIndex, columnIndex }){
+        if(row.ChargeFlag==1002&&column.property=="ChargeFlagStr"){//未缴费
+          return 'color:#FF3D3D;'
+        }else if(row.ChargeFlag==1003&&column.property=="ChargeFlagStr"){//审核中
+           return 'color:#E57403;'
+        }else if(row.ChargeFlag==1004&&column.property=="ChargeFlagStr"){//已撤销
+           return 'color:#46494C;'
+        }
+    },
     setQuery() {//水厂跳转用户，查询条件赋值
     // 重置条件
       this.$refs.head.$refs["formHeight"].resetFields();

@@ -20,6 +20,7 @@
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
           @sort-change="sortChanges"
+          :cell-style="cellStyle"
         >
           <el-table-column fixed="left" label="序号" width="60" align="center">
             <template slot-scope="scope">
@@ -166,6 +167,15 @@ export default {
     });
   },
   methods: {
+    cellStyle({ row, column, rowIndex, columnIndex }){
+        if(row.ChargeFlag==1001&&column.property=="ChargeFlagName"){//已缴费
+          return 'color:#00B2A1;'
+        }else if(row.ChargeFlag==1005&&column.property=="ChargeFlagName"){//已冲红
+           return 'color:#FF5656;'
+        }else if(row.ChargeFlag==1006&&column.property=="ChargeFlagName"){//退款中
+           return 'color:#E57403;'
+        }
+    },
     getHeight(){
       var formHeight = this.$refs.formHeight.offsetHeight;
       this.tableHeight = document.body.clientHeight - formHeight - 160;

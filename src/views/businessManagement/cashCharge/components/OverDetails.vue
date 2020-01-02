@@ -18,7 +18,7 @@
       </div>
       <div class="ladder-box display-flex flex-1">      
         <div class="display-flex align-items-center ladder-item">
-          <span>{{temp.OrderType}}：</span>
+          <span>{{detail.OrderType}}：</span>
           <span class="main-color-red font-weight pr-15 pl-15">{{detail.Money}}</span>元
         </div>
       </div>
@@ -27,7 +27,7 @@
     <div class="totle-box">
       <span class="color-more-black">合计应收：</span>
       <span class="font-weight main-color-red totle-num">{{detail.Money}}元</span>
-      <span>({{temp.OrderType}})</span>    
+      <span>({{detail.OrderType}})</span>    
     </div>
   </el-dialog>
 </template>

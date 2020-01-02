@@ -1,6 +1,6 @@
 <template>
   <!-- 表格样式-费用展示 -->
-  <div>
+  <div style="position: relative;">
     <!-- <customTable ref="myChild" /> -->
     <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"/>
     <div class="main-padding-20-y">
@@ -14,6 +14,7 @@
         :header-cell-style="{'background-color': '#F0F2F5'}"
         @sort-change="sortChanges"
         @selection-change="handleSelectionChange"
+        :cell-style="cellStyle"
       >
         <el-table-column
           label="as"
@@ -146,6 +147,13 @@ export default {
     };
   },
   methods: {
+     cellStyle({ row, column, rowIndex, columnIndex }){
+        if(row.ChargeFlag==1002&&column.property=="ChargeFlagStr"){//已缴费
+          return 'color:#FF6161;'
+        }else if(row.ChargeFlag==1003&&column.property=="ChargeFlagStr"){
+           return 'color:#E9AB00;'
+        }
+    },
     delTips() {
      this.$emit("delTips")
     }, 

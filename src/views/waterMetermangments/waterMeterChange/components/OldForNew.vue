@@ -233,6 +233,14 @@ export default {
       });
     },
     handleFilter(val) {
+      if(val.WaterMeterTypeId=='1102'){
+        this.$message({
+          message: "卡表用户请先读卡！",
+          type: "warning",
+          duration: 4000
+        });
+        return
+      }
       this.user = val;
       this.newUser.customerId = val.Id;
     },
@@ -267,10 +275,21 @@ export default {
             duration: 4000
           });
           this.user = {};
-        } else if (res.data.length == 1) {
-          this.user = res.data[0];
-          if (info) this.$emit("handleFilterIcParent", res.data[0]);
-          else this.$emit("handleFilter", res.data[0]);
+        } else if (res.data.length == 1) {      
+          if (info){
+            this.user = res.data[0];
+            this.$emit("handleFilterIcParent", res.data[0]);
+          }else{//如果不是读卡数据，查询出来是IC卡用户，提示需读卡操作
+            if(res.data[0].WaterMeterTypeId=='1102'){
+              this.$message({
+                message: "卡表用户请先读卡！",
+                type: "warning",
+                duration: 4000
+              });
+              return
+            }
+            this.$emit("handleFilter", res.data[0]);
+          }
         }else {
           this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
         }

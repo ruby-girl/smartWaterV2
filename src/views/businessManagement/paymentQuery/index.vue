@@ -16,6 +16,7 @@
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
           @sort-change="sortChanges"
+          :cell-style="cellStyle"
         >
           <el-table-column fixed="left" label="序号" width="60" align="center">
             <template slot-scope="scope">
@@ -24,6 +25,7 @@
           </el-table-column>
           <template v-for="(item ,index) in tableHead">
             <el-table-column
+            class="row-y-class"
               :key="index"
               min-width="150px"
               :prop="item.ColProp"
@@ -179,6 +181,15 @@ export default {
     });
   },
   methods: {
+    cellStyle({ row, column, rowIndex, columnIndex }){
+        if(row.PayState==2201&&column.property=="PayStateName"){//已缴费
+          return 'color:#00B2A1;'
+        }else if(row.PayState==2202&&column.property=="PayStateName"){//已冲红
+           return 'color:#FF5656;'
+        }else if(row.PayState==2203&&column.property=="PayStateName"){
+           return 'color:#E57403;'
+        }
+    },
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
