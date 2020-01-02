@@ -98,11 +98,12 @@ export function GetWaterTypeCustomerNum(data){
   })
 }
 // 缴费单冲红
-export function RedPayMentDataByPayMentId(data){
+export function RedPayMentDataByPayMentId(query,data){
   return request({
     url: '/PayMent/RedPayMentDataByPayMentId',
     method: 'post',
-    params: data
+    params: query,
+    data:data
   })
 }
 // 导出收费查询

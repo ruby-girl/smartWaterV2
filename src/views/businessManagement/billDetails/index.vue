@@ -148,12 +148,16 @@ export default {
     handler: function(val, oldVal){
       if(this.$route.query.PayMentId){
         Object.assign(this.$data, this.$options.data())
-        this.getHeight()
+        let _this=this
+        setTimeout(function(){
+          _this.getHeight()
+        },1000)
        this.listQuery.PayMentId=this.$route.query.PayMentId
        this.getList(0,this.listQuery.PayMentId)
       }
     },
-    deep: true
+    deep: true,
+    immediate: true
   }
     },
   mounted: function() {
@@ -163,7 +167,7 @@ export default {
   },
   methods: {
     getHeight(){
-        var formHeight = this.$refs.formHeight.offsetHeight;
+      var formHeight = this.$refs.formHeight.offsetHeight;
       this.tableHeight = document.body.clientHeight - formHeight - 160;
       this.$refs.searchTips.$refs.myChild.GetTable(this.listQuery.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\

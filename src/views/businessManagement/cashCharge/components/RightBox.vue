@@ -285,7 +285,7 @@ export default {
             duration: 4000
           });
           // 金额清零--s
-          this.num = "";
+          this.num = "0.00";
           this.surplus = "0.00";
           this.$emit("update:unpaidMoney", "0.00");
           this.unpaidMoney = 0;
@@ -315,14 +315,12 @@ export default {
           duration: 4000
         });
         // 金额清零--s
-        this.num = "";
+        this.num = "0.00";
         this.surplus = "0.00";
         this.$emit("update:unpaidMoney", "0.00");
-        this.unpaidMoney = "0.00";
-        // 金额清零--e
-        this.$emit("update:isIndeterminateParent", false);
-        this.$emit("update:checkedAllParent", false); //结算完成后，父元素全选置为false，卡片获取列表再设置全选
-        this.$emit("getCustomer"); //重新获取列表数据和账户余额
+        this.unpaidMoney = "0.00";  
+      //结算完成后，父元素全选置为false，卡片获取列表再设置全选
+        // this.$emit("getCustomer"); //重新获取列表数据和账户余额
         this.wCard(); //写卡  如果实收金额（input值-应收）=0，不写卡
       });
     },
@@ -348,17 +346,16 @@ export default {
     },
     // IC卡结算成功后，进行写卡操作
     wCard() {
-      try {
+     
         WriteCardInfo(this.resCardInfo, errorRes => {
-          console.log("这是准备回滚的信息", errorRes);
-          console.log(errorRes.BusinessId)
           // 读卡
           // 错误回调，执行回滚
-          RollBackICSettlement({ businessId: errorRes.BusinessId });
-        });
-      } catch (error) {
-        console.log("请在CS端操作1");
-      }
+         this.$emit("getCustomer")
+        RollBackICSettlement({ businessId: errorRes.BusinessId })      
+        },()=>{
+          this.$emit("getCustomer")
+        })
+     
     },
     testBigBore() {
       //50<bore 大口径须充值10的倍数

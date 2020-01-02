@@ -247,16 +247,29 @@ export default {
     },
     // 冲红
     RedPayMentDataByPayMent(row) {
-      RedPayMentDataByPayMentId({
-        SA_Payment_Id: row.Id,
-        Remark: "",
-        info: this.IcInfo
-      }).then(res => {
-        if (r.WaterMeterTypeId == "1102") {
+      let ic={};
+      if (row.WaterMeterTypeId == "1102") {//this.cardInfo.CardType 0：未刷卡 1：已刷卡,  已刷卡不允许冲红
+       ic = {
+          RechargeMoney: this.IcInfo.UserCard.RechargeMoney,
+          ICCardNo: this.IcInfo.UserCard.CardNo,
+          PrepaidNum: this.IcInfo.UserCard.RechargeCount
+        };
+      }
+      RedPayMentDataByPayMentId(
+        {
+          SA_Payment_Id: row.Id,
+          Remark: ""
+        },
+        ic
+      ).then(res => {
+        if (row.WaterMeterTypeId == "1102") {
           ////如果为IC卡 执行3次写卡
-          WriteCardInfo(res.data);
-          WriteCardInfo(res.data);
-          WriteCardInfo(res.data);
+          let obj={
+            CardInfo:res.data
+          }
+          WriteCardInfo(obj);
+          WriteCardInfo(obj);
+          WriteCardInfo(obj);
         } else {
           this.$message({
             message: res.message,
@@ -270,10 +283,18 @@ export default {
     // IC卡读卡
     handleFilterIC(row) {
       try {
-        // 读卡
+        // 读卡 //this.cardInfo.CardType 0：未刷卡 1：已刷卡,  已刷卡不允许冲红
         ICReadCardInfo(resData => {
           this.IcInfo = resData;
-
+          console.info('kapian',this.IcInfo)
+          if (this.IcInfo.CardType == 1) {
+            Message.error({
+              message: "该卡片为已刷卡状态，不允许冲红！",
+              type: "error",
+              duration: 4000
+            });
+            return;
+          }
           this.RedPayMentDataByPayMent(row);
         });
       } catch (error) {

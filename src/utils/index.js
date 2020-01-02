@@ -552,7 +552,6 @@ export function updateMoney(value) {
     if (attr[0].length > 8) {
       var last = attr[0].slice(0, 8)
       var n = attr[1].slice(0, 2)
-      console.log('n--' + n)
       value = last + '.' + n
     }
   }

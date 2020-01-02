@@ -35,18 +35,20 @@ export function ICReadCardInfo(callback,errorCallBack) {
   }
 }
 //IC写卡 objJson:卡片信息 callback:写卡失败后回调
-export function WriteCardInfo(objJson, callback) {
-  let res = window.FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(objJson));
+export function WriteCardInfo(objJson, callback,successCallback) {
+  let res = window.FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(objJson.CardInfo));
   if (res != undefined && res != "") {
     let rJSON = JSON.parse(res)//处理后的res
     // let resData = eval('(' + rJSON.Data + ')')//处理后的Data
     if (rJSON.Result) {
-      Message.success({
-        message: '写卡成功',
-        type: 'success',
-        duration: 4000
-      })
-      
+      // Message.success({
+      //   message: '写卡成功',
+      //   type: 'success',
+      //   duration: 4000
+      // })
+      if(successCallback){
+        successCallback()
+      }
     } else {
       Message.error({
         message: '写卡错误！',

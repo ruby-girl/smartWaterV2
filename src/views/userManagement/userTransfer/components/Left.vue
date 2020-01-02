@@ -252,7 +252,8 @@ export default {
     getUser(info){
       let postData={} 
       if(info){
-        postData.CustomerQueryValue=info.UserCard.CardNo;
+        if(info.CardType==1)  postData.CustomerQueryValue=info.UserCardCredited.CardNo;
+        else postData.CustomerQueryValue=info.UserCard.CardNo;
         postData.CustomerQueryType="8";
         postData.page=1;
         postData.limit=20

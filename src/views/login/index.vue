@@ -194,7 +194,6 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        console.log('mac',this.mac)
         if (valid) {
           let postData = {
             LoginName: this.loginForm.username,
@@ -346,6 +345,9 @@ $cursor: #283443;
     line-height: 24px;
   }
 }
+.el-form-item__content .el-input__inner{
+  width:100% !important;
+}
 </style>
 
 <style lang="scss" scoped>
@@ -427,4 +429,5 @@ $light_gray: #eee;
     }
   }
 }
+
 </style>
