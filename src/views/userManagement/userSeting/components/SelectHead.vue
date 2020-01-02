@@ -24,7 +24,7 @@
         <el-form-item label="用户状态" prop="UserState" v-show="screenWdth<1600?ifMore:true">
           <el-select v-model="query.UserState" placeholder="请选择" size="small" @change="getText(query.UserState,'UserState',userStaus,'用户状态')">
             <el-option label="全部" value="-1"></el-option>
-            <el-option v-for="(item,index) in userStaus" :key="index" :label="item.Name" :value="item.Id"/>
+            <el-option v-for="(item,index) in userStaus" :key="index" :label="item.Name" :value="item.Id" v-if="item.Id!=1302&&item.Id!=1305"/>
           </el-select>
         </el-form-item>
       </transition>
@@ -112,6 +112,6 @@
       this.screenWdth = window.screen.width
       this.userType = getDictionaryOption('用户类型')
       this.userStaus = getDictionaryOption('用水用户状态')
-    }
+  }
   }
 </script>
