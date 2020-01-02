@@ -458,7 +458,7 @@ export default {
           });
           return false
         }
-        postData.CustomerQueryValue = info.UserCard.CardNo;
+        postData.CustomerQueryValue = info.UserCardCredited.CardNo;
         postData.CustomerQueryType = "8";
         postData.page = 1;
         postData.limit = 20;
@@ -486,9 +486,7 @@ export default {
     handleFilterIC() {
       try {
         ICReadCardInfo(resData => {
-          console.log("头部咯");
-          console.log(resData);
-          getUser(resData);
+          this.getUser(resData);
         });
       } catch (error) {
         console.log("请在CS端操作1");

@@ -19,15 +19,24 @@
               <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="用户编号" width="180"></el-table-column>
-          <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-          <el-table-column prop="name" label="电话" width="180"></el-table-column>
-          <el-table-column prop="name" label="地址" width="180"></el-table-column>
-          <el-table-column prop="name" label="水表类型" width="180"></el-table-column>
-          <el-table-column prop="name" label="用户类型" width="180"></el-table-column>
-          <el-table-column prop="name" label="口径" width="180"></el-table-column>
-          <el-table-column prop="name" label="用水量" width="180"></el-table-column>
-          <el-table-column prop="name" label="抄表起止日期" width="180"></el-table-column>
+          <el-table-column prop="name" label="区域" width="180"></el-table-column>
+          <el-table-column prop="name" label="日期" width="180"></el-table-column>
+          <el-table-column prop="name" label="普通用户" width="180">
+            <el-table-column prop="province" label="用户数量" width="120"></el-table-column>
+            <el-table-column prop="province" label="用水量" width="120"></el-table-column>
+            <el-table-column prop="province" label="占总用水量百分比" width="200"></el-table-column>
+          </el-table-column>
+          <el-table-column prop="name" label="单位用户" width="180">
+            <el-table-column prop="province" label="用户数量" width="120"></el-table-column>
+            <el-table-column prop="province" label="用水量" width="120"></el-table-column>
+            <el-table-column prop="province" label="占总用水量百分比" width="200"></el-table-column>
+          </el-table-column>
+          <el-table-column prop="name" label="低保户" width="180">
+            <el-table-column prop="province" label="用户数量" width="120"></el-table-column>
+            <el-table-column prop="province" label="用水量" width="120"></el-table-column>
+            <el-table-column prop="province" label="占总用水量百分比" width="200"></el-table-column>
+          </el-table-column>
+         
         </el-table>
       </div>
     </div>
@@ -39,7 +48,7 @@ import SelectHead from "./selected/RegionWaterSelected";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
-  name: "RegionWater",//按区域
+  name: "RegionWater", //按区域
   components: { SelectHead, SearchTips },
   data() {
     return {

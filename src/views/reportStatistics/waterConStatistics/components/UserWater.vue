@@ -26,21 +26,11 @@ export default {
               <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="水厂" width="180"></el-table-column>
-          <el-table-column prop="name" label="用户编号" width="180"></el-table-column>
-          <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-          <el-table-column prop="name" label="电话" width="180"></el-table-column>
-          <el-table-column prop="name" label="用户类型" width="180"></el-table-column>
-          <el-table-column prop="name" label="口径" width="180"></el-table-column>
-          <el-table-column prop="name" label="用水性质" width="180"></el-table-column>
-          <el-table-column prop="name" label="上次读数" width="180"></el-table-column>
-          <el-table-column prop="name" label="本次读数" width="180"></el-table-column>
-          <el-table-column prop="name" label="上次水量" width="180"></el-table-column>
-          <el-table-column prop="name" label="本次水量" width="180"></el-table-column>
-          <el-table-column prop="name" label="水量倍率" width="180"></el-table-column>
-          <el-table-column prop="name" label="本次抄表时间" width="180"></el-table-column>
-          <el-table-column prop="name" label="上次抄表时间" width="180"></el-table-column>
-        
+          <el-table-column prop="name" label="用户编号"></el-table-column>
+          <el-table-column prop="name" label="用户姓名"></el-table-column>
+          <el-table-column prop="name" label="日期"></el-table-column>
+          <el-table-column prop="name" label="用水量"></el-table-column>
+          <el-table-column prop="name" label="增水量"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -52,7 +42,7 @@ import SelectHead from "./selected/UserWaterSelected";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
-  name: "UserWater",//按用户
+  name: "UserWater", //按用户
   components: { SelectHead, SearchTips },
   data() {
     return {
@@ -99,8 +89,7 @@ export default {
     this.searchWidth = this.$refs.formHeight.clientWidth;
     this.$nextTick(() => {
       this.tableHeight =
-        document.getElementsByClassName("onBox")[0]
-          .offsetHeight -
+        document.getElementsByClassName("onBox")[0].offsetHeight -
         document.getElementById("table").offsetTop -
         4;
 
@@ -112,7 +101,7 @@ export default {
 
 <style lang="scss" scoped>
 .onBox {
-    height: 100%;
+  height: 100%;
   padding: 0;
 }
 .contanier {
