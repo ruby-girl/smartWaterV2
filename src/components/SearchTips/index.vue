@@ -143,6 +143,7 @@ export default {
 <style lang="scss" scoped>
 .searchTips {
   user-select: none;
+  // position: relative;
   margin: 0;
   overflow: hidden;
   padding-left: 5px;

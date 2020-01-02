@@ -274,7 +274,8 @@ export default {
             }
           });
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     },
     //编辑
     edit(id) {

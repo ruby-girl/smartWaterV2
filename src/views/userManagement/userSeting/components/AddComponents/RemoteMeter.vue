@@ -19,7 +19,7 @@
           <el-input :disabled="true" v-model="ycData.NameCode" size="small"/>
         </el-form-item>
         <el-form-item label="电话 " prop="Tel">
-          <el-input v-model="ycData.Tel " size="small"/>
+          <el-input v-model="ycData.Tel " size="small"  maxlength="11"/>
         </el-form-item>
         <el-form-item label="人口 " prop="PeopleNo">
           <el-input v-model.number="ycData.PeopleNo" size="small"/>
@@ -29,8 +29,8 @@
             <el-option v-for="(item,index) in userType" :key="index" :label="item.Name" :value="item.Id" v-show="item.Id!=1201"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="证件号 " prop="IdentityNo">
-          <el-input v-model="ycData.IdentityNo" size="small"/>
+        <el-form-item label="证件号 " prop="IdentityNo" >
+          <el-input v-model="ycData.IdentityNo" size="small" maxlength="18"/>
         </el-form-item>
         <el-form-item label="区域 " prop="SA_UserArea_Id" class="cl_allLine">
           <el-input v-model="ycData.SA_UserArea_Id" style="display: none"></el-input>

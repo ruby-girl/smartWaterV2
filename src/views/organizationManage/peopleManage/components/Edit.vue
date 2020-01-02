@@ -106,7 +106,6 @@
   import { getRoles } from "@/api/role"
   import { getDictionaryOption } from "@/utils/permission"
   import { promptInfoFun } from "@/utils/index"
-
   export default {
     name: 'edit',
     components: {uploadImg, PostInfo},
@@ -234,6 +233,7 @@
               if (res.code == 0) {
                 promptInfoFun(this,2,res.message)
                 this.$emit("Changed1", 1)//触发父元素事件
+                this.$store.dispatch("user/getWaterWorks")
               } else {
                 promptInfoFun(this,1,res.message)
               }

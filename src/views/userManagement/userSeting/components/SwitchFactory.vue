@@ -52,11 +52,11 @@
         this.dialogVisible = false
       },
       handleClose(){//弹窗关闭
-
-      }
+        this.resetForm('formData')
+      },
     },
     mounted() {
-      this.waterFactory = this.$store.state.user.waterWorks
+ /*     this.waterFactory = this.$store.state.user.waterWorks*/
     }
   }
 </script>

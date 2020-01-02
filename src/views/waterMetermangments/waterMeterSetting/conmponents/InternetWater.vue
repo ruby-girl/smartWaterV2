@@ -177,7 +177,7 @@
               >
                 <i
                   class="icon iconfont viewHis"
-                  @click="waterMeterWLWDetail(scope.row.IMSI)"
+                  @click="waterMeterWLWDetail(scope.row.Id)"
                 >&#xe670;</i>
               </el-tooltip>
             </template>
@@ -208,7 +208,7 @@
         :total="histotal"
         :page.sync="Bl_WaterMeter4His.page"
         :limit.sync="Bl_WaterMeter4His.limit"
-        @pagination="waterMeterWLWDetail(Bl_WaterMeter4His.Meter4IMSI)"
+        @pagination="waterMeterWLWDetail(Bl_WaterMeter4His.Meter4Id)"
       />
     </el-dialog>
   </div>
@@ -270,7 +270,7 @@ export default {
       total: 0,
       ErrorList: {}, //异常统计
       Bl_WaterMeter4His: {
-        Meter4IMSI: "",
+        Meter4Id : "",
         limit: 10,
         page: 1,
         sort: "",
@@ -435,11 +435,11 @@ export default {
         }
       });
     },
-    waterMeterWLWDetail(imsi) {
+    waterMeterWLWDetail(id) {
       //历史详情
       let that = this;
       that.viewWaterHistory = true;
-      that.Bl_WaterMeter4His.Meter4IMSI = imsi;
+      that.Bl_WaterMeter4His.Meter4Id = id;
       searWLWHisWater(that.Bl_WaterMeter4His).then(res => {
         that.hisData = res.data;
         that.histotal = res.count;

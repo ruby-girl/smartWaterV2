@@ -17,7 +17,7 @@
           <el-button
             v-show="isShowAdPlan"
             size="mini"
-            class="cl-search cl-reset"
+            class="cl-search cl-reset sysClass"
             round
             type="primary"
             @click="addPlan"
@@ -354,6 +354,8 @@ export default {
             });
           }
         });
+      }).catch(()=>{
+        
       });
     },
     sortChanges({ column, prop, order }) {
@@ -513,5 +515,15 @@ export default {
   position: absolute;
   right: 0px;
   overflow: hidden;
+}
+.sysClass {
+  color: #fff;
+  background-color: #00b3a1;
+  border-color: #00b3a1;
+}
+.sysClass:hover {
+  background: #33c2b4;
+  border-color: #33c2b4;
+  color: #fff;
 }
 </style>

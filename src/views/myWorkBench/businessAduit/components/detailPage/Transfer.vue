@@ -157,9 +157,7 @@
         }
       },
       detailData (newVal){//获取附件信息
-        if(newVal.Data.saList&&newVal.Data.saList.length>0)
-          this.files = getFileFun(newVal.Data.saList,this)
-
+        newVal.Data.saList && newVal.Data.saList.length > 0 ? this.files = getFileFun(newVal.Data.saList, this) : this.files = []
         this.userInfoData = newVal.Data
         this.applyInfoData = newVal.Info
       }

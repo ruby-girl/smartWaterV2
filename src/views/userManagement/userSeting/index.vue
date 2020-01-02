@@ -124,12 +124,9 @@ export default {
       switch (type) {
         case 1:
           if (selectNode.Id === undefined || selectNode.Id == 0) {
-            //不能为且只能添加水厂以下数据
             this.disAdd = false;
-            //promptInfoFun(this, 1, '请选择公司！')
             return;
           }
-          this.disAdd = true;
           CreateAreaNo().then(res => {
             //自动生成区域编码
             if (res.code == 0) {
@@ -190,6 +187,7 @@ export default {
         if (res.code ==0 ) {
           this.firstTree = res.data
           this.oldTreeData = res.data.children
+          this.$refs.myChild.selectNode = ""//重置tree 默认项
         } else {
           promptInfoFun(this,1,res.message)
         }
@@ -230,6 +228,7 @@ export default {
      * 切换水厂
      * */
     changeWaterFactory(){
+      this.$refs.switchChild.waterFactory = this.$store.state.user.waterWorks
       this.$refs.switchChild.dialogVisible = true;
       this.$refs.switchChild.formData.waterFactoryId = this.waterFactoryName.Id
     },

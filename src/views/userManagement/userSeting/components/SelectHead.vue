@@ -93,6 +93,7 @@
       searchFun(){
         this.$parent.query =  Object.assign({},this.query)
         this.$parent.searchTableFun()
+        this.$parent.$refs.tableChild.$refs.statisticsChild.curNum = '-1'
       },
       resetFun(formName){
         this.query.CustomerQueryType = '1'
