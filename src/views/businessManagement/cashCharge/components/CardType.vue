@@ -307,6 +307,7 @@ export default {
   .card-item-mony-box {
     height: 82px;
     padding: 0 15px;
+    font-size: 16px;
   }
   .card-item-btn-box {
     text-align: center;
