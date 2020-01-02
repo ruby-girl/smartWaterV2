@@ -197,9 +197,7 @@
         }
       },
       detailData (newVal){//获取附件信息
-        if(newVal.Data.newobj.saList&&newVal.Data.newobj.saList.length>0)
-          this.files = getFileFun(newVal.Data.newobj.saList,this)
-
+        newVal.Data.newobj.saList&&newVal.Data.newobj.saList.length>0?this.files = getFileFun(newVal.Data.newobj.saList,this):this.files = []
         this.editUserInfo = newVal.Data.newobj
         this.oldEditUserInfo = newVal.Data.oldobj
         this.applyInfoData = newVal.Info

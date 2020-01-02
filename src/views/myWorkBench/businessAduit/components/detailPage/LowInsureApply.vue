@@ -170,8 +170,7 @@
         }
       },
       detailData(newVal) {//获取附件信息
-        if (newVal.Data.SaList && newVal.Data.SaList.length > 0)
-          this.files = getFileFun(newVal.Data.SaList, this)
+        newVal.Data.SaList && newVal.Data.SaList.length > 0? this.files = getFileFun(newVal.Data.SaList, this):this.files = []
         this.applyInfoData = newVal.Info
         this.customInfoData = newVal.Data.bl
         this.newInsuredInfoData = newVal.Data.insuredMessage

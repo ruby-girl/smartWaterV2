@@ -21,7 +21,7 @@
               <li class="user_line clearfix">
                 <p>电话 <span>{{formData.Tel}}</span></p>
                 <p>人口 <span>{{formData.PeopleNo}}</span></p>
-                <p>用户类型 <span>{{formData.UserType}}</span></p>
+                <p>用户类型 <span>{{formData.UserTypeStr}}</span></p>
                 <p>用水性质 <span>{{formData.SA_UseWaterType}}</span></p>
               </li>
               <li class="user_line clearfix">

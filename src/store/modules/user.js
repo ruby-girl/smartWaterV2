@@ -126,10 +126,10 @@ const actions = {
     })
   },
   // 操作员可操作水厂
-  getWaterWorks({ commit }) { 
-      planConpanySelect().then(response => {
+  getWaterWorks({ commit }) {
+    planConpanySelect().then(response => {
         const { data } = response
-        commit('SET_WaterWorks', data)      
+        commit('SET_WaterWorks', data)
     })
   }
 }

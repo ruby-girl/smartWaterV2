@@ -16,10 +16,10 @@
           style="width: 230px"/>
       </el-form-item>
       <p style="width: 100%;background: #F7F7F7;height: 10px;" v-show="title=='编辑'"></p>
-      <el-button v-show="title=='编辑'" type="primary" icon="el-icon-plus" size="mini" style="margin-bottom: 30px;" @click="addPost">添加职位</el-button>
+      <el-button v-show="title=='编辑'" type="primary" icon="el-icon-plus" size="mini" style="margin-bottom: 30px;" @click="addPost">添加岗位</el-button>
 
       <div style="max-height:220px;overflow: auto">
-        <el-form-item v-show="title=='编辑'" label="职位" v-for="(item,index) in jp.JobNameList" :key="index">
+        <el-form-item v-show="title=='编辑'" label="岗位" v-for="(item,index) in jp.JobNameList" :key="index">
           <el-input
             v-model.trim="item.JobName"
             placeholder="请输入岗位名称"
@@ -51,10 +51,7 @@
         jp: {
           Id: "",
           DeptName: "",
-          JobNameList: [{
-            Id: "",
-            JobName: ""
-          }]
+          JobNameList: []
         }
       }
     },
@@ -65,6 +62,7 @@
           return false
         }
         if (this.title === '编辑') {
+          console.log(this.jp.DeptName)
           let posts = this.jp.JobNameList
           try {
             if(posts.length > 0){
@@ -73,9 +71,6 @@
                   throw new Error("error")
                 }
               })
-            }else {
-              promptInfoFun(this, 1, '职位名称不能为空！');
-              return false
             }
           } catch (e) {
             promptInfoFun(this, 1, '职位名称不能为空！');

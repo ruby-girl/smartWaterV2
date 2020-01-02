@@ -11,7 +11,7 @@
       </el-button>
     </div>
     <!--表格自定义组建 s-->
-    <Statistics :StatisticsData="StatisticsData"></Statistics>
+    <Statistics :StatisticsData="StatisticsData" ref="statisticsChild"></Statistics>
     <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" />
     <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges" highlight-current-row  @current-change="handleCurrentChange">
       <el-table-column type="index" fixed="left" label="#" width="60" align="center">

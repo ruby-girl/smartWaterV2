@@ -118,7 +118,6 @@
     data() {
       return {
         dialogVisible: false,
-        files:[],
         index:1,
         componentsArr:['MechanicsMater','YcMeter'],
         screenWidth:'',

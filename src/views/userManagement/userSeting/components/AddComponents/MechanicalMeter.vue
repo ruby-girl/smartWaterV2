@@ -19,7 +19,7 @@
           <el-input :disabled="true" v-model="formData.NameCode" size="small"/>
         </el-form-item>
         <el-form-item label="电话 "prop="Tel">
-          <el-input v-model="formData.Tel " size="small"/>
+          <el-input v-model="formData.Tel " size="small" maxlength="11"/>
         </el-form-item>
         <el-form-item label="人口 " prop="PeopleNo">
           <el-input v-model.number="formData.PeopleNo" size="small"/>
@@ -30,7 +30,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="证件号 " prop="IdentityNo">
-          <el-input v-model="formData.IdentityNo" size="small"/>
+          <el-input v-model="formData.IdentityNo" size="small" maxlength="18"/>
         </el-form-item>
         <el-form-item label="区域 " prop="SA_UserArea_Id" class="cl_allLine">
           <el-input v-model="formData.SA_UserArea_Id" style="display: none"></el-input>

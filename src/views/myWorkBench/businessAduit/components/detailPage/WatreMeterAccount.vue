@@ -175,9 +175,7 @@
         }
       },
       detailData (newVal){//获取附件信息
-        if(newVal.Data.bl.saList&&newVal.Data.bl.saList.length>0)
-        this.files = getFileFun(newVal.Data.bl.saList,this)
-
+        newVal.Data.bl.saList && newVal.Data.bl.saList.length > 0 ? this.files = getFileFun(newVal.Data.bl.saList, this) : this.files = []
         this.userInfoData = newVal.Data.bl
         this.waterInfoData = newVal.Data.sw
         this.waterInfoData.WaterMeterTypeStr = newVal.Data.bl.WaterMeterTypeStr

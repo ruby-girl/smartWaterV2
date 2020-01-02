@@ -61,7 +61,8 @@ export default {
       let Nodes = this.$refs.tree.store._getAllNodes();
       Nodes.forEach(key => {//移除筛选条件加载的默认样式
         if(key.data.Id!=data.Id){
-          document.getElementById(key.data.Id).classList.remove("matchStyle")
+          let exp = null
+          document.getElementById(key.data.Id)!=exp ? document.getElementById(key.data.Id).classList.remove("matchStyle"):''
         }
       });
       this.selectNode = data;
