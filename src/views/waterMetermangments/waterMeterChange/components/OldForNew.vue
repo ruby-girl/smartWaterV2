@@ -259,8 +259,14 @@ export default {
     getUser(info) {
      let postData={} 
       if(info){
-        if(info.CardType==1)  postData.CustomerQueryValue=info.UserCardCredited.CardNo;
-        else postData.CustomerQueryValue=info.UserCard.CardNo;
+        if (info.CardType !== 1) {
+          this.$message({
+            message: "该卡是未刷卡状态，请刷卡后再进行操作",
+            type: "warning"
+          });
+          return false;
+        }
+        postData.CustomerQueryValue=info.UserCardCredited.CardNo;
         postData.CustomerQueryType="8";
         postData.page=1;
         postData.limit=20
