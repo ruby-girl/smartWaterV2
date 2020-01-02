@@ -59,7 +59,6 @@
           align="center"
           min-width="200px">
         </el-table-column>
-
         <el-table-column
           prop="date"
           label="账户本期扣减"
@@ -96,7 +95,6 @@
           align="center"
           min-width="200px">
         </el-table-column>
-
         <el-table-column
           prop="date"
           label="本期实收违约金"
