@@ -150,6 +150,7 @@ export default {
       if (val == "") {
         return;
       }
+      this.selectUserShow = false;
       this.params.CustomerQueryType = num;
       this.params.CustomerQueryValue = val;
       GetCustomerDataList(this.params).then(res => {
@@ -176,8 +177,8 @@ export default {
     //选择用户信息
     handleFilter(val) {
       this.userInfo = val;
-      this.getWaterMeterInfo(val.Id);
       this.selectUserShow = false;
+      this.getWaterMeterInfo(val.Id);
     },
     //获取水表信息
     getWaterMeterInfo(id) {

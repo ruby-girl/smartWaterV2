@@ -376,6 +376,7 @@ export default {
       if (val == "") {
         return;
       }
+       this.selectUserShow = false;
       this.params.CustomerQueryType = num;
       this.params.CustomerQueryValue = val;
       GetCustomerDataList(this.params).then(res => {

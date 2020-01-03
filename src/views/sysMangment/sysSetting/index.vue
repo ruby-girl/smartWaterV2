@@ -76,7 +76,7 @@
                   placement="bottom"
                 >
                   <i
-                    class="icon iconfont iconStyle operation4"
+                    class="iconStyle icon iconfont operation4"
                     @click="delTem(scope.row.Id)"
                   >&#xe6a0;</i>
                 </el-tooltip>
@@ -137,7 +137,7 @@ export default {
         filed: "", //排序字段
         tableId: "0000066"
       },
-        warterMeterPlanDate: [],
+      warterMeterPlanDate: [],
       checksData: [],
       tableData: [],
       total: 0,
@@ -186,9 +186,9 @@ export default {
   methods: {
     //删除面包屑
     delTips(val) {
-      if(val=="warterMeterPlanDate"){
-        this.selectHead.timerSendStartTime=""
-        this.selectHead.timerSendEndTime=""
+      if (val == "warterMeterPlanDate") {
+        this.selectHead.timerSendStartTime = "";
+        this.selectHead.timerSendEndTime = "";
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
 
@@ -202,9 +202,12 @@ export default {
 
     searchTableList(num) {
       //查询列表timerSendStartTime: "", //计划结束日期
-       // timerSendEndTime: "", //抄表计划状态
-      if(Boolean(this.selectHead.timerSendStartTime)!=Boolean(this.selectHead.timerSendEndTime)){
-           this.$message({
+      // timerSendEndTime: "", //抄表计划状态
+      if (
+        Boolean(this.selectHead.timerSendStartTime) !=
+        Boolean(this.selectHead.timerSendEndTime)
+      ) {
+        this.$message({
           message: "请选择完整的定时发送时间",
           type: "warning"
         });
@@ -251,6 +254,7 @@ export default {
     //删除
     delTem(id) {
       let that = this;
+      console.log(event)
       this.$confirm("是否删除当前模板信息", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -275,6 +279,7 @@ export default {
           });
         })
         .catch(() => {
+          
         });
     },
     //编辑

@@ -21,14 +21,30 @@
       </div>
     </div>
     <div class="tipsBtn fr">
-      <i v-if="showExcel" class="icon iconfont" @click="excel" title="导出excel">&#xe64f;</i>
-      <i
-        v-if="showTabBtn"
-        class="icon iconfont"
-        :class="{thisTableClass:thisTable}"
-        @click="setCustomData"
-        title="自定义表格"
-      >&#xe64a;</i>
+      <el-tooltip
+        class="item"
+        effect="light"
+        :visible-arrow="false"
+        content="导出excel"
+        placement="bottom"
+      >
+        <i v-if="showExcel" class="icon iconfont" @click="excel">&#xe64f;</i>
+      </el-tooltip>
+      <el-tooltip
+        class="item"
+        effect="light"
+        :visible-arrow="false"
+        content="自定义表格"
+        placement="bottom"
+      >
+        <i
+          v-if="showTabBtn"
+          class="icon iconfont"
+          :class="{thisTableClass:thisTable}"
+          @click="setCustomData"
+        >&#xe64a;</i>
+      </el-tooltip>
+  
     </div>
     <table-custom ref="myChild" class="table-custom" />
   </div>
@@ -71,7 +87,7 @@ export default {
       tipsDataCopy: [],
       showBtn: false,
       showExcel: true, //是否有导出按钮
-      showTabBtn:true,//是否有自定义按钮
+      showTabBtn: true //是否有自定义按钮
     };
   },
   methods: {
