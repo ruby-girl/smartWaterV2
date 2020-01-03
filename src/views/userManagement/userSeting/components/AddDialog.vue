@@ -10,16 +10,16 @@
     <!--用户资料-->
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="机械水表" name="1">
-        <MechanicalMeter ref="jxChild" :formData="formData" ></MechanicalMeter>
+        <MechanicalMeter ref="jxChild" :formData="formData" :waterFactory="waterFactory"></MechanicalMeter>
       </el-tab-pane>
       <el-tab-pane label="IC卡水表" name="2">
-        <MechanicalMeter ref="icChild" :formData="formData" ></MechanicalMeter>
+        <MechanicalMeter ref="icChild" :formData="formData" :waterFactory="waterFactory"></MechanicalMeter>
       </el-tab-pane>
       <el-tab-pane label="远传水表" name="3">
-        <RemoteMeter ref="ycChild" :ycData="ycData" ></RemoteMeter>
+        <RemoteMeter ref="ycChild" :ycData="ycData" :waterFactory="waterFactory"></RemoteMeter>
       </el-tab-pane>
       <el-tab-pane label="物联网水表" name="4">
-        <RemoteMeter ref="wlwChild" :ycData="ycData" ></RemoteMeter>
+        <RemoteMeter ref="wlwChild" :ycData="ycData" :waterFactory="waterFactory"></RemoteMeter>
       </el-tab-pane>
     </el-tabs>
   </el-dialog>
@@ -48,7 +48,7 @@
           IdentityNo: "",
           Tel: "",
           Address: "",
-          UserType: "",
+          UserType: "1202",
           SA_RegisterBookInfo_Id: "",
           TaxpayerNumber: "",
           Remark: "",
@@ -69,7 +69,7 @@
           NameCode:'',
           Tel: "",
           PeopleNo: 1,
-          UserType: "",
+          UserType: "1202",
           IdentityNo: "",
           SA_UserArea_Id: "",
           SA_UseWaterType_Id: "",
@@ -119,19 +119,6 @@
             break;
         }
       },
-      /***********************获得具有权限的水厂*********************/
-      getWater(){
-        WaterFactoryComboBoxListAuth().then(res => {
-          if (res.code ==0 ) {
-              this.waterFactory = res.data
-          } else {
-            promptInfoFun(this,1,res.message)
-          }
-        })
-      }
-    },
-    mounted() {
-      this.waterFactory=this.$store.state.user.waterWorks
     }
   }
 </script>

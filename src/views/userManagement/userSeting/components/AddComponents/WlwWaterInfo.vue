@@ -23,10 +23,10 @@
         <el-option v-for="(item,index) in MeterDiameters" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
+  <!--  <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
       <el-input :disabled="true" type="textarea" v-model="data.InstallAddress" max-length="500" rows="1"></el-input>
-      <!--<span>{{InstallAddress}}/500</span>-->
-    </el-form-item>
+      &lt;!&ndash;<span>{{InstallAddress}}/500</span>&ndash;&gt;
+    </el-form-item>-->
     <el-form-item label="备注 " class="cl_allArea" prop="Remark">
       <el-input :disabled="true" type="textarea" v-model="data.Remark" max-length="500"></el-input>
       <!-- <span>{{Remark}}/500</span>-->

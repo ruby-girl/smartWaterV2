@@ -9,7 +9,7 @@
     <el-form :inline="true" ref="formData" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="水厂：" prop="waterFactoryId">
         <el-select v-model="formData.waterFactoryId" placeholder="请选择" size="small">
-          <el-option label="全部水厂" value="-1"></el-option>
+          <el-option label="全部水厂" value="-1" v-if="waterFactory.length>1"></el-option>
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>

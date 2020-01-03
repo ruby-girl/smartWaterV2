@@ -97,11 +97,11 @@
   export default {
     name: "RemoteMeter",
     components: {AreaTree, uploadBox, YcWaterInfo, WlwWaterInfo},
-    props:['ycData'],
+    props:['ycData','waterFactory'],
     data() {
       return {
         SA_RegisterBookInfo_Id:'',//物联网单独使用表册ID
-        waterFactory:[],//水厂集合
+       // waterFactory:[],//水厂集合
         userType:[],//用户类型
         userWater:[],//用水性质
         differ:false,//true 物联网 false 远传
@@ -252,7 +252,6 @@
       }
     },
     mounted() {
-      this.waterFactory = this.$parent.$parent.$parent.$parent.waterFactory
       this.userType = getDictionaryOption('用户类型')
       this.GetWaterProperty()
     }

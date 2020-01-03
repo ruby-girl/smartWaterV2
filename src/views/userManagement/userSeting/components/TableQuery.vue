@@ -190,6 +190,7 @@
       /******************新增用户*********************/
       addNewFun(){
         this.$refs.addDialog.dialogVisible = true;
+        this.$refs.addDialog.waterFactory = this.$store.state.user.waterWorks
       },
       makeCard(){//制卡
         if(this.curObj == '' || typeof (this.curObj) == undefined){

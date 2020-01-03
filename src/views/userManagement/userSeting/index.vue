@@ -41,7 +41,7 @@ import tableQuery from "./components/TableQuery";
 import Dialog from "./components/Dialog";
 import SwitchFactory from './components/SwitchFactory'
 import { promptInfoFun } from "@/utils/index";
-import { CreateAreaNo, DelCustomerArea, GetAreaListByWaterFactory } from "@/api/userArea";
+import { CreateAreaNo, DelCustomerArea, GetAreaListByWaterFactory, GetAreaListNotPNode } from "@/api/userArea";
 import {
   GetWaterTypeCustomerNum,
   GetCustomerDataList,
@@ -49,6 +49,7 @@ import {
 } from "@/api/userSetting";
 import Bus from "@/utils/bus";
 import { pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import{ mapGetters } from 'vuex'
 
 export default {
   name: "userSeting",
@@ -73,6 +74,18 @@ export default {
   watch:{
     query(){
       this.$refs.tableChild.query = this.query
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'waterWorks'
+    ]),
+  },
+  watch: {
+    waterWorks: function (newValue) {
+      if (newValue) {
+        this.waterNums = newValue
+      }
     }
   },
   methods: {
@@ -149,9 +162,6 @@ export default {
           _this.$refs.editDialog.param.AreaNo = selectNode.AreaNo; //老树
           _this.$refs.editDialog.param.AreaName = selectNode.label
           _this.$refs.editDialog.title = "编辑";
-
-          console.log(selectNode)
-
           break;
         case 3://删除
           if (selectNode.Id === undefined || selectNode.Id == 0 || selectNode.Level <= 1) {
@@ -183,10 +193,11 @@ export default {
      * 获取左侧区域列表数据
      * */
     getTreeData() {
-      GetAreaListByWaterFactory({'waterFactoryId':this.waterFactoryName.Id}).then(res => {
+      GetAreaListNotPNode({'pid':this.waterFactoryName.Id}).then(res => {
         if (res.code ==0 ) {
           this.firstTree = res.data
-          this.oldTreeData = res.data.children
+         // this.oldTreeData = res.data.children
+          this.oldTreeData = res.data
           this.$refs.myChild.selectNode = ""//重置tree 默认项
         } else {
           promptInfoFun(this,1,res.message)
@@ -208,7 +219,6 @@ export default {
      * 用户列表查询
      * */
     searchTableFun() {
-      this.getSatrtFun()
       this.query.AreaId = this.$refs.myChild.areaId;
       this.query.WaterFactoryId = localStorage.getItem('waterFactoryId')
       let query = Object.assign({}, this.query);
@@ -228,6 +238,7 @@ export default {
       parms = JSON.parse(parms);
       parms.WaterTypeId = -1;
       this.$refs.tableChild.tipsData = pushItem(this.$refs.tableChild.tipsDataCopy)
+      this.getSatrtFun()
     },
     /**
      * 用户导出
@@ -264,7 +275,14 @@ export default {
   },
   mounted() {
     this.waterNums = this.$store.state.user.waterWorks
-    localStorage.setItem('waterFactoryId', '-1')
+    let obj = {
+      Id:'-1',
+      Name:'全部水厂',
+      Pid:'',
+      ProcessMemberType:''
+    }
+    this.$store.state.user.waterWorks.length>1 ? this.waterFactoryName = obj : this.waterFactoryName = this.$store.state.user.waterWorks[0]
+    this.$store.state.user.waterWorks.length>1 ? localStorage.setItem('waterFactoryId', '-1'):localStorage.setItem('waterFactoryId', this.$store.state.user.waterWorks[0].Id)
     let _this = this;
     this.getTreeData();
     this.getSatrtFun()
@@ -277,7 +295,7 @@ export default {
   beforeDestroy() {
     Bus.$off("queryData");
   }
-};
+}
 </script>
 <style lang="scss">
 .tree_container {

@@ -40,7 +40,7 @@ export default {
       ifFlag: true,
       ifLogo:true,
       idType:true,
-    };
+    }
   },
   props: ["treeData",'searchtype','ifLogos'],
   methods: {

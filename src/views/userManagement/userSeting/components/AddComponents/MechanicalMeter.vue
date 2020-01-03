@@ -66,10 +66,14 @@
     <div class="user_information">
       <h3 class="add_title"><i></i>水表信息</h3>
       <el-form :inline="true" ref="formData1" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="水表编号 " prop="WaterMeterNo">
+        <el-form-item label="水表编号 " v-show="!differ">
           <el-input v-model="formData.WaterMeterNo" size="small"/>
         </el-form-item>
-        <el-form-item label="水表样式 " prop="WaterMeterStyle">
+        <el-form-item label="水表编号 " v-show="differ" prop="WaterMeterNo">
+          <el-input v-model="formData.WaterMeterNo" size="small"/>
+        </el-form-item>
+
+        <el-form-item label="水表样式 " prop="WaterMeterStyle" >
           <el-select v-model="formData.WaterMeterStyle" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in waterMeterStyles" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
@@ -89,10 +93,10 @@
           <el-input v-model="formData.AlarmMoney" size="small"/>
         </el-form-item>
         <!--IC表 e-->
-        <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
+      <!--  <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
           <el-input type="textarea" v-model="formData.InstallAddress" maxlength="500" @input="descInput('InstallAddress')" rows="1"></el-input>
           <span>{{InstallAddress}}/500</span>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="备注 " class="cl_allArea" prop="WaterRemark">
           <el-input type="textarea" v-model="formData.WaterRemark" maxlength="500" @input="descInput('WaterRemark')"></el-input>
           <span>{{WaterRemark}}/500</span>
@@ -129,13 +133,13 @@
   export default {
     name: "MechanicalMeter",
     components: {AreaTree, uploadBox},
-    props:['formData','dialogVisible'],
+    props:['formData','dialogVisible','waterFactory'],
     data() {
       return {
         RegisterBookInfo:[],//表册集合
         waterMeterStyles:[],//水表样式
         MeterDiameters:[],//水表口径
-        waterFactory:[],//水厂集合
+       // waterFactory:[],//水厂集合
         userType:[],//用户类型
         userWater:[],//用水性质
         differ:false,//true IC表,false,机械
@@ -292,7 +296,6 @@
       }
     },
     mounted() {
-      this.waterFactory = this.$parent.$parent.$parent.$parent.waterFactory
       this.userType = getDictionaryOption('用户类型')
       this.waterMeterStyles = getDictionaryOption('水表样式')
       this.MeterDiameters = getDictionaryOption('口径类型')
