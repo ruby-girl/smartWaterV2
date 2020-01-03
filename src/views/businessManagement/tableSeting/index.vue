@@ -134,11 +134,13 @@
                BookTypeKey: JSON.stringify(res.data.BookTypeKey),
                MeterReaderId: res.data.MeterReaderId
            }
+          this.getMeterReaderList(2,res.data.SA_WaterFactory_Id)
         })
       },
       addNewFun() {//新增方法
         this.$refs.childDialog.dialogVisible = true
         this.$refs.childDialog.title = '添加'
+        this.getMeterReaderList(2,this.$refs.childDialog.waterFactory[0].Id)
       },
       handleDelete(row) {//删除方法
         this.$confirm("是否确认删除该表册？", "提示", {

@@ -3,8 +3,8 @@
     <div class="user_box">
       <!--左侧树形菜单-->
       <div class="user_tree">
-        <h2>{{ waterFactoryName.Name }}</h2>
-        <p class="switch_water" @click="changeWaterFactory"><i class="icon iconfont iconqiehuan"></i>切换水厂</p>
+        <h2 @click="getWaterInfos" style="cursor: pointer">{{ waterFactoryName.Name }}</h2>
+        <p v-show="waterNums.length>1" class="switch_water" @click="changeWaterFactory"><i class="icon iconfont iconqiehuan"></i>切换水厂</p>
         <div id="operate_area">
           <el-button :disabled="disAdd" type="primary" size="mini" @click="getCheckedNodes(1)" round><i class="icon iconfont">&#xe689;</i>添加</el-button>
           <el-button :disabled="disEdit" round size="mini" class="cl-reset" @click="getCheckedNodes(2)"><i class="icon iconfont">&#xe618;</i>编辑</el-button>
@@ -55,17 +55,19 @@ export default {
   components: { myTree, SelectHead, tableQuery, Dialog,SwitchFactory },
   data() {
     return {
-      waterFactoryName:{},
+      waterFactoryName:{Name:'全部水厂',Id:'-1'},
       ifShow: false,
       query: {
         //右侧用户列表查询条件
-        tableId: "0000016"
+        tableId: "0000016",
+        WaterFactoryId:'-1',
       },
       oldTreeData: [],
       disAdd: false,
       disEdit: false,
       disDel: false,
-      firstTree:{}
+      firstTree:{},
+      waterNums:[]
     };
   },
   watch:{
@@ -118,11 +120,11 @@ export default {
       const _this = this;
       let selectNode ;
       _this.$refs.myChild.selectNode!='' ? selectNode = _this.$refs.myChild.selectNode : selectNode = this.firstTree
-      _this.$refs.editDialog.param.pieName = selectNode.label;
       _this.$refs.editDialog.param.Id = selectNode.Id;
       _this.$refs.editDialog.param.Pid = selectNode.Pid;
       switch (type) {
-        case 1:
+        case 1://新增
+          _this.$refs.editDialog.param.pieName = selectNode.label;
           if (selectNode.Id === undefined || selectNode.Id == 0) {
             this.disAdd = false;
             return;
@@ -139,24 +141,22 @@ export default {
             }
           });
           break;
-        case 2:
+        case 2://编辑
           selectNode.Id === undefined ||
           selectNode.Id == 0 ||
-          selectNode.Level <= 1
-            ? (_this.disEdit = false)
-            : (_this.$refs.editDialog.dialogVisible = true);
+          selectNode.Level <= 1 ? (_this.disEdit = false,promptInfoFun(this,1,'请选择区域！')) : (_this.$refs.editDialog.dialogVisible = true);
+          _this.$refs.editDialog.param.pieName = selectNode.PName; //上级目录
           _this.$refs.editDialog.param.AreaNo = selectNode.AreaNo; //老树
-          _this.$refs.editDialog.param.AreaName = selectNode.text
-            selectNode.label;
+          _this.$refs.editDialog.param.AreaName = selectNode.label
           _this.$refs.editDialog.title = "编辑";
+
+          console.log(selectNode)
+
           break;
-        case 3:
-          if (
-            selectNode.Id === undefined ||
-            selectNode.Id == 0 ||
-            selectNode.Level <= 1
-          ) {
+        case 3://删除
+          if (selectNode.Id === undefined || selectNode.Id == 0 || selectNode.Level <= 1) {
             _this.disDel = false;
+            promptInfoFun(this,1,'请选择区域！')
             return;
           }
           this.$confirm("是否确认删除该区域？", "提示", {
@@ -193,11 +193,24 @@ export default {
         }
       })
     },
+    getWaterInfos(){//直接查水厂信息
+      this.$refs.myChild.areaId = ''
+      this.$refs.myChild.selectNode = ''
+      this.searchTableFun()
+      let elementNodes1 = document.getElementsByClassName('is-current')//选中样式
+      let elementNodes2 = document.getElementsByClassName('matchStyle')//收索结果样式
+      elementNodes1.length > 0 ? elementNodes1[0].classList.remove('is-current') : ''
+      for(let i = elementNodes2.length-1; i >=0 ; i--) {//遍历去掉区域树收索结果样式
+        elementNodes2[i].classList.remove('matchStyle')
+      }
+    },
     /**
      * 用户列表查询
      * */
     searchTableFun() {
+      this.getSatrtFun()
       this.query.AreaId = this.$refs.myChild.areaId;
+      this.query.WaterFactoryId = localStorage.getItem('waterFactoryId')
       let query = Object.assign({}, this.query);
       query.CustomerQueryType = parseInt(query.CustomerQueryType);
       query.UserType = parseInt(query.UserType);
@@ -234,24 +247,27 @@ export default {
     },
     getText(val, model, arr, name) {//触发子元素事件
       this.$refs.tableChild.getText(val, model, arr, name)
+    },
+    getSatrtFun(){
+      let parms = this.query;
+      parms.WaterTypeId = -1;
+      parms.AreaId = '';
+      GetWaterTypeCustomerNum(parms).then(res => {
+        //用户统计数据
+        if (res.code == 0) {
+          this.$refs.tableChild.StatisticsData = res.data;
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      });
     }
   },
-  created() {
-    let parms = this.query;
-    parms.WaterTypeId = -1;
-    GetWaterTypeCustomerNum(parms).then(res => {
-      //用户统计数据
-      if (res.code == 0) {
-        this.$refs.tableChild.StatisticsData = res.data;
-      } else {
-        promptInfoFun(this, 1, res.message);
-      }
-    });
-  },
   mounted() {
-    this.waterFactoryName = this.$store.state.user.waterWorks[0]
+    this.waterNums = this.$store.state.user.waterWorks
+    localStorage.setItem('waterFactoryId', '-1')
     let _this = this;
     this.getTreeData();
+    this.getSatrtFun()
     Bus.$off("queryData");
     Bus.$on("queryData", () => {
       //添加成功后调用查询方法

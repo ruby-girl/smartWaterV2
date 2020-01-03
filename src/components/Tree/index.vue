@@ -75,7 +75,7 @@ export default {
           label:'',
           children:this.treeData
       }
-      this.searchText.trim() == "" ? promptInfoFun(this, 1, "公司名称不能为空！") : this.getParentId(this.searchText, tree)
+      this.searchText.trim() == "" ? promptInfoFun(this, 1, "区域名称不能为空！") : this.getParentId(this.searchText, tree)
     },
     /**
      * 模糊查询名称

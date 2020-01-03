@@ -226,13 +226,11 @@
         this.isIndeterminate2 = checkedCount > 0 && checkedCount < this.data.length;//控制全选按钮样式
       },
       handlecheckListChange3(value) {//非全选
-        alert(3)
         let checkedCount = value.length;
         this.checkAll3 = checkedCount === this.data.length;
         this.isIndeterminate3 = checkedCount > 0 && checkedCount < this.data.length;//控制全选按钮样式
       },
       handlecheckListChange4(value) {//非全选
-        alert(4)
         let checkedCount = value.length;
         this.checkAll4 = checkedCount === this.data.length;
         this.isIndeterminate4 = checkedCount > 0 && checkedCount < this.data.length;//控制全选按钮样式

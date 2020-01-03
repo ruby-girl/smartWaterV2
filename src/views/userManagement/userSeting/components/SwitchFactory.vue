@@ -9,6 +9,7 @@
     <el-form :inline="true" ref="formData" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-form-item label="水厂：" prop="waterFactoryId">
         <el-select v-model="formData.waterFactoryId" placeholder="请选择" size="small">
+          <el-option label="全部水厂" value="-1"></el-option>
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -39,9 +40,14 @@
       submitForm(formData){//确定
         this.$refs[formData].validate((valid) => {
           if (valid) {
-            this.waterFactory.forEach(item=>{
-              item.Id == this.formData.waterFactoryId ? this.$parent.waterFactoryName = item:''
-            })
+            if(this.formData.waterFactoryId=='-1'){
+              this.$parent.waterFactoryName = {Name:'全部水厂',Id:'-1'}
+              localStorage.setItem('waterFactoryId', '-1')
+            }else {
+              this.waterFactory.forEach(item=>{
+                item.Id == this.formData.waterFactoryId ? (this.$parent.waterFactoryName = item, localStorage.setItem('waterFactoryId', item.Id)):''
+              })
+            }
             this.dialogVisible = false
             this.$parent.getTreeData()
           }
@@ -54,9 +60,6 @@
       handleClose(){//弹窗关闭
         this.resetForm('formData')
       },
-    },
-    mounted() {
- /*     this.waterFactory = this.$store.state.user.waterWorks*/
     }
   }
 </script>
