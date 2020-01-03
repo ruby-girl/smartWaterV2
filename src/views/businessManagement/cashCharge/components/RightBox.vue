@@ -61,14 +61,6 @@
         <div class="right-big-font secur-content">
           <span class="right-small-font">¥</span>
           {{surplus}}
-          <el-tooltip
-            class="item"
-            popper-class="tooltip"
-            effect="light"
-            :visible-arrow="false"
-            content="实收金额-（剩余未缴-账户余额）=找零"
-            placement="bottom"
-          ></el-tooltip>
         </div>
       </div>
     </div>
@@ -77,7 +69,18 @@
         <span>是否存入账户:&emsp;</span>
         <el-radio-group v-model="isAccount">
           <el-radio :label="true">是</el-radio>
-          <el-radio :label="false">否</el-radio>
+          <el-tooltip
+            v-show="unpaidMoney=='0.00'"
+            class="item"
+            popper-class="tooltip"
+            effect="light"
+            :visible-arrow="false"
+            content="当前应收金额为0，不可找零"
+            placement="bottom"
+          >
+           <el-radio :label="false" :disabled="unpaidMoney=='0.00'?true:false">否</el-radio>
+          </el-tooltip>
+         
         </el-radio-group>
       </div>
       <i class="iconfont iconshezhi set-pint-btn" @click="pintShow=true"></i>

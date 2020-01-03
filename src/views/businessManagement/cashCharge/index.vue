@@ -310,8 +310,6 @@ export default {
       this.type = n;
       this.typeComponents = n == 2 ? "CardType" : "TableType";
       let _this = this;
-      
-      // 1-2注释-*************************************是否可以不请求接口
       // 组件切换后，拿不到方法，无法在卡片形式结算后，更新表格数据-所以每点击切换就重新获取
       setTimeout(function() {
         if (_this.listQuery.CustomerId){
@@ -321,23 +319,6 @@ export default {
       this.unpaidMoney = '0.00';
       this.checkedAllParent = false;
       this.isIndeterminateParent = false;
-        // 1-2注释-*********************************是否可以不请求接口
-      
-    //  if(n==2){
-    //      setTimeout(function() {
-    //     if (_this.listQuery.CustomerId){
-    //        _this.$refs.tableTypeCard.getCardList()
-    //     }
-    //   }, 300);
-        
-    //   }else{
-    //     setTimeout(function() {
-    //     if (_this.listQuery.CustomerId){
-    //        this.$refs.tableTypeCard.$refs.cashTable.toggleAllSelection(true)//表格默认选择
-    //     }
-    //   }, 300);
-    //   }
-    //   this.checkedAllParent=true
     },
     // 勾选操作计算剩余未缴
     calculatedAmount(data) {

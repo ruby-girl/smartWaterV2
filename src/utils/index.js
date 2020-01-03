@@ -575,13 +575,24 @@ export function changeTwoDecimal(x) {
   }
   return s_x;
 }
-// 不补齐，删除最后的小数点
+// 不补齐，删除最后的小数点-返回整数
 export function delDecimal(x) {
   var f_x = parseInt(x);
   if (!f_x) {
     return 0;
   }
   return f_x;
+}
+
+// // 不补齐，删除最后的小数点 返回浮点数
+export function delDecimal_float(x) {
+  var f_x = parseFloat(x);
+  if (!f_x) {
+    return 0;
+  }
+  var f_x = Math.round(x * 100) / 100;
+  var s_x = f_x.toString();
+  return s_x;
 }
 /**
  * @param {Array} arr

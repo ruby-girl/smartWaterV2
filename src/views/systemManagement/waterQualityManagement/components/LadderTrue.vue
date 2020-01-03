@@ -28,22 +28,22 @@
       <el-form-item label="污水费" prop="SewagePrice">
         <el-input
           v-model="temp.SewagePrice"
-          @blur="changeTwoDecimal_x($event,'all')"
-          @keyup.native="money($event)"
+          @blur="delDecimal_x($event,'SewagePrice')"
+          @keyup.native="money($event,'SewagePrice')"
         />
       </el-form-item>
       <el-form-item label="其他费用1">
         <el-input
           v-model="temp.OtherPrice1"
-          @blur="changeTwoDecimal_x($event,'all')"
-          @keyup.native="money($event)"
+          @blur="delDecimal_x($event,'OtherPrice1')"
+          @keyup.native="money($event,'OtherPrice1')"
         />
       </el-form-item>
       <el-form-item label="其他费用2">
         <el-input
           v-model="temp.OtherPrice2"
-          @blur="changeTwoDecimal_x($event,'all')"
-          @keyup.native="money($event)"
+          @blur="delDecimal_x($event,'OtherPrice2')"
+          @keyup.native="money($event,'OtherPrice2')"
         />
       </el-form-item>
       <div class="ladder-box">
@@ -56,8 +56,8 @@
                 <input
                   type="text"
                   v-model="item.LadderPrice"
-                  @blur="changeTwoDecimal_x($event,i)"
-                  @keyup="money($event)"
+                  @blur="delDecimal_x_ladder($event,i)"
+                  @keyup="money_ladder($event,i)"
                 />
                 <span>元/吨</span>
               </div>
@@ -69,9 +69,8 @@
                 <input
                   type="text"
                   :readonly="i==0?true:false"
-                  v-model="item.LadderWaterNum"
-                  @blur="changeTwoDecimal_x($event,i)"
-                  @keyup="money($event)"
+                  v-model="item.LadderWaterNum"            
+                  @keyup="delDecimal_int($event,i)"
                 />
                 <span>吨</span>
               </div>
@@ -85,8 +84,6 @@
                   type="text"
                   readonly
                   v-model="item.TotalPrice"
-                  @blur="changeTwoDecimal_x($event)"
-                  @keyup="money($event)"
                 />
                 <span>元/吨</span>
               </div>
@@ -126,7 +123,7 @@
 </template>
 <script>
 import { getTimeOption,yearTimeOption,threeTimeOption } from "@/utils/projectLogic"; //获取时间下拉框
-import { updateMoney, delDecimal } from "@/utils/index.js";
+import { updateMoney, delDecimal,delDecimal_float } from "@/utils/index.js";
 export default {
   props: {
     temp: {
@@ -192,39 +189,43 @@ export default {
        this.timeOption.push(getTimeOption(new Date(), i+1))
       }
     },
+    delDecimal_int(e,i){//起始量，整数
+     this.temp.ladder[i].LadderWaterNum= delDecimal(e.target.value);
+    },
     addLadderNumber() {
       this.temp.LadderNumber++;
     },
     delLadderNumber() {
       this.temp.LadderNumber--;
     },
-    // 输入金额保留2位
-    money(e) {
-      e.target.value = updateMoney(e.target.value);
+    //只允许输入金额
+    money(e,txt) {
+      this.temp[txt]= updateMoney(e.target.value);
+    },
+    money_ladder(e,i){//阶梯只允许输入金额
+      this.temp.ladder[i].LadderPrice=updateMoney(e.target.value);
+    },
+    delDecimal_x(e,txt){
+      this.temp[txt] = delDecimal_float(e.target.value);
+       //更改污水费，其他费用全部重新计算合计
+       this.setTotNum();
     },
     // 补齐小数
-    changeTwoDecimal_x(e, n) {
-      e.target.value = delDecimal(e.target.value);
-      if (typeof n !== "undefined" && n !== "all") {
-        //如果是阶梯填写变更
+    delDecimal_x_ladder(e, n) {
         let num =
-          parseFloat(this.temp.ladder[n].LadderPrice) +
-          parseFloat(this.temp.SewagePrice) +
-          parseFloat(this.temp.OtherPrice1) +
-          parseFloat(this.temp.OtherPrice2);
-        this.temp.ladder[n].TotalPrice = delDecimal(num);
-      } else {
-        //更改污水费，其他费用全部重新计算合计
-        this.setTotNum();
-      }
+         (parseFloat(this.temp.ladder[n].LadderPrice)*100 +
+          parseFloat(this.temp.SewagePrice)*100 +
+          parseFloat(this.temp.OtherPrice1)*100 +
+          parseFloat(this.temp.OtherPrice2)*100)/100;
+        this.temp.ladder[n].TotalPrice = delDecimal_float(num);      
     },
     setTotNum() {
       this.temp.ladder.map(item => {
         item.TotalPrice =
-          parseFloat(item.LadderPrice) +
-          parseFloat(this.temp.SewagePrice) +
-          parseFloat(this.temp.OtherPrice1) +
-          parseFloat(this.temp.OtherPrice2);
+          (parseFloat(item.LadderPrice)*100 +
+          parseFloat(this.temp.SewagePrice)*100 +
+          parseFloat(this.temp.OtherPrice1)*100+
+          parseFloat(this.temp.OtherPrice2)*100)/100;
       });
     }
   }
