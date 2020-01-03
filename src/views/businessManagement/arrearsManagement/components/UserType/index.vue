@@ -346,7 +346,14 @@ export default {
         });
         return;
       }
-      OrdersFeeCancels({ SA_Order_Ids: this.checkedDataId }).then(res => {
+      this.$confirm("是否确认撤销已勾选的欠费？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        customClass: "warningBox",
+        showClose: false
+      }).then(() => {
+         OrdersFeeCancels({ SA_Order_Ids: this.checkedDataId }).then(res => {
         this.$message({
           message: res.message,
           type: "success",
@@ -354,6 +361,7 @@ export default {
         });
         this.handleFilter();
       });
+      })
     },
     // 费用减免
     feeWaiverFunc(item) {
