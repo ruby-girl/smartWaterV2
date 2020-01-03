@@ -131,25 +131,6 @@
                     @click="delMeterReadingPlan(scope.row.Id)"
                   >&#xe6a0;</i>
                 </el-tooltip>
-                <!-- <a
-                  v-show="scope.row.IsCanGenerateOrder"
-                  class="operation1"
-                  @click="generateOrder(scope.row.Id)"
-                >生成费用</a>
-              </span>
-              <a
-                class="operation2"
-                @click="changeInput(scope.row.Id,true)"
-                v-if="scope.row.IsAllowDataSupplementaryInputFormat=='否'"
-              >数据补录</a>
-              <a
-                class="operation2-1"
-                @click="changeInput(scope.row.Id,false)"
-                v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
-              >数据绑定</a>
-              <a class="operation3" @click="meterReadingPlanDetail(scope.row.Id)">详情</a>
-
-                <a class="operation4" @click="delMeterReadingPlan(scope.row.Id)">删除</a>-->
               </template>
             </el-table-column>
           </el-table>
@@ -355,7 +336,6 @@ export default {
           }
         });
       }).catch(()=>{
-        
       });
     },
     sortChanges({ column, prop, order }) {
