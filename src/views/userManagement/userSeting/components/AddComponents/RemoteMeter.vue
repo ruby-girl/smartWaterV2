@@ -4,7 +4,7 @@
     <div class="user_information">
       <h3 class="add_title"><i></i>用户资料</h3>
       <el-form :inline="true" ref="ycData" :model="ycData" :rules="rules" label-width="100px">
-        <el-form-item label="水厂 " prop="SA_WaterFactory_Id" >
+        <el-form-item label="水厂 " prop="SA_WaterFactory_Id">
           <el-select v-model="ycData.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getDataByWater">
             <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
@@ -22,7 +22,7 @@
           <el-input v-model="ycData.Tel " size="small"  maxlength="11"/>
         </el-form-item>
         <el-form-item label="人口 " prop="PeopleNo">
-          <el-input v-model.number="ycData.PeopleNo" size="small"/>
+          <el-input v-model.number="ycData.PeopleNo" size="small" maxlength="2"/>
         </el-form-item>
         <el-form-item label="用户类型 " prop="UserType">
           <el-select v-model="ycData.UserType" placeholder="请选择" size="small">
@@ -32,7 +32,7 @@
         <el-form-item label="证件号 " prop="IdentityNo" >
           <el-input v-model="ycData.IdentityNo" size="small" maxlength="18"/>
         </el-form-item>
-        <el-form-item label="区域 " prop="SA_UserArea_Id" class="cl_allLine">
+        <el-form-item label="区域 " class="cl_allLine" prop="SA_UserArea_Id">
           <el-input v-model="ycData.SA_UserArea_Id" style="display: none"></el-input>
           <p @click="setAreaFun" class="areaInput">{{areaName}}<i
             :class="ifArea?'el-icon-arrow-up':'el-icon-arrow-down'"
@@ -45,7 +45,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="纳税人识别号 " label-width="110px" prop="TaxpayerNumber">
-          <el-input v-model.trim="ycData.TaxpayerNumber " size="small"/>
+          <el-input v-model.trim="ycData.TaxpayerNumber " size="small" maxlength="30"/>
         </el-form-item>
         <el-form-item label="地址 " class="cl_allArea" prop="Address">
           <el-input type="textarea" v-model="ycData.Address" maxlength="500" @input="descInput('Address')" rows="1"></el-input>
@@ -182,17 +182,23 @@
                   params = Object.assign(this.ycData,childName.changeWordName())
                 }
                 functionName(params).then(res => {
+                  let ObjData = Object.assign({},params)
                   if (res.code == 0) {
                     promptInfoFun(_this,2,res.message)
                     _this.$refs.getFiles.certificates = '身份证'
                     _this.$refs.getFiles.fileList = []
                     _this.$refs['ycData'].resetFields();
                     childName.$refs['data'].resetFields();//重置子组件表单数据
-                    _this.areaName = ''
+
                     if(_this.ifGoOn){
-                      _this.ifGoOn = false
+                      _this.ycData.SA_WaterFactory_Id = ObjData.SA_WaterFactory_Id
+                      _this.ycData.SA_UserArea_Id = ObjData.SA_UserArea_Id
+                      _this.ycData.SA_UseWaterType_Id = ObjData.SA_UseWaterType_Id
+                      _this.ycData.SA_RegisterBookInfo_Id = ObjData.SA_RegisterBookInfo_Id
                       _this.$parent.$parent.$parent.$parent.getUserCode()//调用父组件获取新的用户编码
                     }else{
+                      _this.ycData.SA_UserArea_Id = ''
+                      _this.areaName = ''
                       _this.$parent.$parent.$parent.$parent.dialogVisible = false
                       Bus.$emit('queryData')//操作成功后重新执行列表查询
                     }
@@ -208,6 +214,9 @@
       },
       /************************重置表单*************************/
       resetForm() {
+        this.$refs.getFiles.certificates = '身份证'
+        this.$refs.getFiles.fileList = []
+        this.areaName = ''
         this.$refs['ycData'].resetFields();
         let childName = this.differ ? childName = this.$refs.wlyChild : childName = this.$refs.ycChilds
         childName.$refs['data'].resetFields()
@@ -238,6 +247,8 @@
       /****************获取水厂获取数据**************************/
       getDataByWater(Id){
         this.getTreeData(Id)
+        this.ycData.SA_UserArea_Id = ''//清空区域选择数据
+        this.areaName = ''
       },
       /****************获取水厂获取区域数据**********************/
       getTreeData(Id) {

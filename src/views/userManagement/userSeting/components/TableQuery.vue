@@ -99,6 +99,7 @@
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
   import { DelCustomerInfo} from "@/api/userSetting";
   import { getMarkCard, getPatchCard } from "@/utils/projectLogic"; //IC卡读卡
+  import { GetProcessConfig } from "@/api/operationFlow"
 
   export default {
     name: "TableQuery",
@@ -165,11 +166,13 @@
       },
       /******************编辑**********************/
       handleEdit(row){
+        console.log(row)
         this.$refs.editDialog.dialogVisible = true;
         this.$refs.editDialog.getInfo(row.Id)
       },
       /******************详情*********************/
       handleDetail(row){
+        this.$refs.detailDialog.waterFactory = this.$store.state.user.waterWorks
         this.$refs.detailDialog.dialogVisible = true;
         this.$refs.detailDialog.getInfo(row.Id,row.WaterMeterTypeId)//用户ID，表类型
       },
@@ -230,7 +233,23 @@
         getPatchCard(param,this)
       },
       lowApplication() {//低保户申请
-        this.curObj == '' || typeof (this.curObj) == undefined ? promptInfoFun(this, 1, '请选择用户！') : this.$refs.lowIncomeDialog.dialogVisible = true
+        if(this.curObj == '' || typeof (this.curObj) == undefined){
+          promptInfoFun(this, 1, '请选择用户！')
+          return
+        }else{
+          this.$refs.lowIncomeDialog.dialogVisible = true
+          let openFlag = this.getOpenFlag(2902)
+          console.log(openFlag)
+        }
+       // this.curObj == '' || typeof (this.curObj) == undefined ? promptInfoFun(this, 1, '请选择用户！') : this.$refs.lowIncomeDialog.dialogVisible = true
+      },
+      getOpenFlag(code){
+        let ceshi = GetProcessConfig({code:code}).then(res => {
+          if(res.code==0){
+            return res.data.ProcessState //开启标识
+          }
+        })
+        return ceshi
       },
       handleCurrentChange(val) {//列表点击事件
         this.curObj = val

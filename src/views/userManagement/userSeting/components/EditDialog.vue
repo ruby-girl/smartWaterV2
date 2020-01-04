@@ -9,7 +9,7 @@
     width="55%">
     <el-form :inline="true" ref="ruleForm" :model="formData" :rules="rules" label-width="100px">
       <el-form-item label="水厂  " prop="SA_WaterFactory_Id" >
-        <el-select v-model="formData.SA_WaterFactory_Id" placeholder=" " size="small" @change="getDataByWater" :disabled="true">
+        <el-select v-model="formData.SA_WaterFactoryName" placeholder=" " size="small" @change="getDataByWater" :disabled="true">
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -37,7 +37,7 @@
         <el-input v-model="formData.IdentityNo" size="small"/>
       </el-form-item>
       <el-form-item label="用水性质  " prop="SA_UseWaterType_Id">
-        <el-select v-model="formData.SA_UseWaterType_Id" placeholder=" " size="small" :disabled="true">
+        <el-select v-model="formData.SA_UseWaterTypeName" placeholder=" " size="small" :disabled="true">
           <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.SA_UseWaterType_Id"/>
         </el-select>
       </el-form-item>
@@ -49,7 +49,7 @@
         <AreaTree ref="areaTree" v-show="ifArea" @click="getArea" @watchChild="getCurAreaId"></AreaTree>
       </el-form-item>
       <el-form-item label="表册  ">
-        <el-select v-model="formData.SA_RegisterBookInfo_Id" placeholder=" " size="small" :disabled="true">
+        <el-select v-model="formData.RegisterBookInfoName" placeholder=" " size="small" :disabled="true">
           <el-option v-for="(item,index) in RegisterBookInfo" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -162,6 +162,7 @@
       },
       /************************用水性质*************************/
       GetWaterProperty(){
+        alert(222)
         GetWaterPropertyList().then(res => {
           if (res.code ==0 ) {
             this.userWater = res.data
@@ -268,6 +269,7 @@
       getInfo(id) {//根据id获取详情
         GetBlObjById({CusId: id}).then(res => {
           if (res.code == 0) {
+            console.log(res.data)
             this.backFile = JSON.parse(JSON.stringify(res.data.saList))
             res.data.UserType = JSON.stringify(res.data.UserType)
             this.formData = res.data
@@ -294,8 +296,8 @@
     },
     mounted() {
       this.userType = getDictionaryOption('用户类型')
-      this.getWater()
-      this.GetWaterProperty()
+    /*  this.getWater()*/
+     /* this.GetWaterProperty()*/
       this.getisMorePeople()
     }
   }

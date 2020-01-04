@@ -85,10 +85,11 @@
       /***********************弹窗关闭事件**************************/
       handleClose(){//弹窗关闭初始化表单信息
         this.dialogVisible = false
-        this.$refs.jxChild.$refs['formData'].resetFields();
-        this.$refs.jxChild.$refs['formData1'].resetFields();
-        this.$refs.ycChild.$refs.ycChilds.$refs['data'].resetFields();
-        this.$refs.wlwChild.$refs.wlyChild.$refs['data'].resetFields();
+        this.activeName = '1'
+        this.$refs.jxChild.resetForm()
+        this.$refs.icChild.resetForm()
+        this.$refs.ycChild.resetForm()
+        this.$refs.wlwChild.resetForm()
       },
       /***********************选项卡切换事件************************/
       handleClick(){//水表切换
@@ -96,26 +97,26 @@
           case '1'://机械
             this.$refs.jxChild.differ = false
             this.$refs.jxChild.areaName = ''
-            this.$refs.jxChild.$refs['formData'].resetFields();
-            this.$refs.jxChild.$refs['formData1'].resetFields();
-            break;
+            this.$refs.jxChild.resetForm()
+            this.dialogVisible = true
+            break
           case '2'://IC
             this.$refs.icChild.differ = true
             this.$refs.icChild.areaName = ''
-            this.$refs.icChild.$refs['formData'].resetFields();
-            this.$refs.icChild.$refs['formData1'].resetFields();
+            this.$refs.icChild.resetForm()
+            this.dialogVisible = true
             break;
           case '3'://远传
             this.$refs.ycChild.differ = false
             this.$refs.ycChild.areaName = ''
-            this.$refs.ycChild.$refs['ycData'].resetFields();
-            this.$refs.ycChild.$refs.ycChilds.$refs['data'].resetFields();
+            this.$refs.ycChild.resetForm()
+            this.dialogVisible = true
             break;
           case '4'://物联
             this.$refs.wlwChild.differ = true
             this.$refs.wlwChild.areaName = ''
-            this.$refs.wlwChild.$refs['ycData'].resetFields();
-            this.$refs.wlwChild.$refs.wlyChild.$refs['data'].resetFields();
+            this.$refs.wlwChild.resetForm()
+            this.dialogVisible = true
             break;
         }
       },
