@@ -82,7 +82,7 @@
               _this.param = {
                 Id: this.param.Id,
                 AreaName: this.param.AreaName,
-                Pid: this.param.Pid,
+                Pid: '',
                 AreaNo: this.param.AreaNo
               }
               AddArea(this.param).then(res => {

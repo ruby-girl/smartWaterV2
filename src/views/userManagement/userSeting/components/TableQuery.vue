@@ -233,23 +233,27 @@
         getPatchCard(param,this)
       },
       lowApplication() {//低保户申请
-        if(this.curObj == '' || typeof (this.curObj) == undefined){
+       /* if(this.curObj == '' || typeof (this.curObj) == undefined){
           promptInfoFun(this, 1, '请选择用户！')
           return
         }else{
           this.$refs.lowIncomeDialog.dialogVisible = true
           let openFlag = this.getOpenFlag(2902)
           console.log(openFlag)
-        }
+        }*/
+
+        let openFlag = this.getOpenFlag(2902)
+        console.log(openFlag.PromiseValue)
+
        // this.curObj == '' || typeof (this.curObj) == undefined ? promptInfoFun(this, 1, '请选择用户！') : this.$refs.lowIncomeDialog.dialogVisible = true
       },
       getOpenFlag(code){
-        let ceshi = GetProcessConfig({code:code}).then(res => {
+        let codeNum = GetProcessConfig({code:code}).then((res) => {
           if(res.code==0){
             return res.data.ProcessState //开启标识
           }
         })
-        return ceshi
+        return codeNum
       },
       handleCurrentChange(val) {//列表点击事件
         this.curObj = val

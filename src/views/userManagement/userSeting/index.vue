@@ -86,6 +86,9 @@ export default {
       if (newValue) {
         this.waterNums = newValue
       }
+    },
+    waterFactoryName: function (newValue) {//全部水厂不允许添加区域
+      newValue.Id == '-1' ? this.disAdd = true : this.disAdd = false
     }
   },
   methods: {
@@ -132,16 +135,13 @@ export default {
     getCheckedNodes(type) {
       const _this = this;
       let selectNode ;
-      _this.$refs.myChild.selectNode!='' ? selectNode = _this.$refs.myChild.selectNode : selectNode = this.firstTree
+      _this.$refs.myChild.selectNode!='' ? selectNode = _this.$refs.myChild.selectNode : selectNode = this.waterFactoryName
       _this.$refs.editDialog.param.Id = selectNode.Id;
       _this.$refs.editDialog.param.Pid = selectNode.Pid;
       switch (type) {
         case 1://新增
-          _this.$refs.editDialog.param.pieName = selectNode.label;
-          if (selectNode.Id === undefined || selectNode.Id == 0) {
-            this.disAdd = false;
-            return;
-          }
+          _this.$refs.editDialog.param.Id = selectNode.Id;//添加时候只需要PID
+          _this.$refs.editDialog.param.pieName = selectNode.label||selectNode.Name;
           CreateAreaNo().then(res => {
             //自动生成区域编码
             if (res.code == 0) {
@@ -196,7 +196,6 @@ export default {
       GetAreaListNotPNode({'pid':this.waterFactoryName.Id}).then(res => {
         if (res.code ==0 ) {
           this.firstTree = res.data
-         // this.oldTreeData = res.data.children
           this.oldTreeData = res.data
           this.$refs.myChild.selectNode = ""//重置tree 默认项
         } else {
