@@ -111,49 +111,6 @@
           <span>{{WaterRemark}}/500</span>
         </el-form-item>
       </el-form>
-
-      <!--<el-form :inline="true" ref="formData1" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="水表编号 " v-if="!differ">
-          <el-input v-model="formData.WaterMeterNo" size="small" maxlength="20"/>
-        </el-form-item>
-        <el-form-item label="水表编号 " v-else prop="WaterMeterNo">
-          <el-input v-model="formData.WaterMeterNo" size="small"/>
-        </el-form-item>
-        <el-form-item label="水表样式 " prop="WaterMeterStyle" >
-          <el-select v-model="formData.WaterMeterStyle" placeholder="请选择" size="small">
-            <el-option v-for="(item,index) in waterMeterStyles" :key="index" :label="item.Name" :value="item.Id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="水表口径 " v-if="!differ">
-          <el-select v-model="formData.MeterDiameter" placeholder="请选择" size="small">
-            <el-option v-for="(item,index) in MeterDiameters" :key="index" :label="item.Name" :value="item.Id"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="水表口径 " v-else prop="MeterDiameter">
-          <el-select v-model="formData.MeterDiameter" placeholder="请选择" size="small">
-            <el-option v-for="(item,index) in MeterDiameters" :key="index" :label="item.Name" :value="item.Id"/>
-          </el-select>
-        </el-form-item>
-        &lt;!&ndash;机械表 s&ndash;&gt;
-        <el-form-item label="起始读数 " v-show="!differ" prop="StarReadNum">
-          <el-input v-model="formData.StarReadNum" size="small"/>
-        </el-form-item>
-        &lt;!&ndash;机械表 e&ndash;&gt;
-        &lt;!&ndash;IC表 s&ndash;&gt;
-        <el-form-item label="报警金额 " prop="AlarmMoney" v-show="differ">
-          <el-input v-model="formData.AlarmMoney" size="small"/>
-        </el-form-item>
-        &lt;!&ndash;IC表 e&ndash;&gt;
-        &lt;!&ndash;  <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
-          <el-input type="textarea" v-model="formData.InstallAddress" maxlength="500" @input="descInput('InstallAddress')" rows="1"></el-input>
-          <span>{{InstallAddress}}/500</span>
-        </el-form-item>&ndash;&gt;
-        <el-form-item label="备注 " class="cl_allArea" prop="WaterRemark">
-          <el-input type="textarea" v-model="formData.WaterRemark" maxlength="500" @input="descInput('WaterRemark')"></el-input>
-          <span>{{WaterRemark}}/500</span>
-        </el-form-item>
-      </el-form>-->
-
     </div>
     <!--附件信息-->
     <div class="user_information">
@@ -164,7 +121,8 @@
     </div>
     <el-checkbox v-model="ifGoOn">勾选后继续添加</el-checkbox>
     <p style="text-align: center">
-      <el-button type="primary" size="mini" @click="submitForm()">提交审核/确定</el-button>
+      <el-button type="primary" size="mini" @click="submitForm()" v-if="ifExamine">提交审核</el-button>
+      <el-button type="primary" size="mini" @click="submitForm()" v-else>确定</el-button>
       <el-button size="mini" @click="resetForm()">取 消</el-button>
     </p>
   </div>
@@ -185,7 +143,7 @@
   export default {
     name: "MechanicalMeter",
     components: {AreaTree, uploadBox},
-    props:['formData','dialogVisible','waterFactory'],
+    props:['formData','dialogVisible','waterFactory','ifExamine'],
     data() {
       return {
         RegisterBookInfo:[],//表册集合

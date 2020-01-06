@@ -278,7 +278,8 @@ export default {
       Id:'-1',
       Name:'全部水厂',
       Pid:'',
-      ProcessMemberType:''
+      ProcessMemberType:'',
+      Level:1
     }
     this.$store.state.user.waterWorks.length>1 ? this.waterFactoryName = obj : this.waterFactoryName = this.$store.state.user.waterWorks[0]
     this.$store.state.user.waterWorks.length>1 ? localStorage.setItem('waterFactoryId', '-1'):localStorage.setItem('waterFactoryId', this.$store.state.user.waterWorks[0].Id)

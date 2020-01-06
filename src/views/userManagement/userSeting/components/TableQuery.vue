@@ -98,8 +98,7 @@
   import CreditCard from './CreditCard'
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
   import { DelCustomerInfo} from "@/api/userSetting";
-  import { getMarkCard, getPatchCard } from "@/utils/projectLogic"; //IC卡读卡
-  import { GetProcessConfig } from "@/api/operationFlow"
+  import { getMarkCard, getPatchCard, getOpenFlag } from "@/utils/projectLogic"; //IC卡读卡
 
   export default {
     name: "TableQuery",
@@ -166,7 +165,9 @@
       },
       /******************编辑**********************/
       handleEdit(row){
-        console.log(row)
+        getOpenFlag(2903).then(value => {//开户是否开启低保户审核
+          this.$refs.editDialog.ifExamine = value
+        })
         this.$refs.editDialog.dialogVisible = true;
         this.$refs.editDialog.getInfo(row.Id)
       },
@@ -194,6 +195,9 @@
       addNewFun(){
         this.$refs.addDialog.dialogVisible = true;
         this.$refs.addDialog.waterFactory = this.$store.state.user.waterWorks
+        getOpenFlag(2901).then(value => {//开户是否开启低保户审核
+          this.$refs.addDialog.ifExamine = value
+        })
       },
       makeCard(){//制卡
         if(this.curObj == '' || typeof (this.curObj) == undefined){
@@ -233,27 +237,15 @@
         getPatchCard(param,this)
       },
       lowApplication() {//低保户申请
-       /* if(this.curObj == '' || typeof (this.curObj) == undefined){
+        if(this.curObj == '' || typeof (this.curObj) == undefined){
           promptInfoFun(this, 1, '请选择用户！')
           return
         }else{
           this.$refs.lowIncomeDialog.dialogVisible = true
-          let openFlag = this.getOpenFlag(2902)
-          console.log(openFlag)
-        }*/
-
-        let openFlag = this.getOpenFlag(2902)
-        console.log(openFlag.PromiseValue)
-
-       // this.curObj == '' || typeof (this.curObj) == undefined ? promptInfoFun(this, 1, '请选择用户！') : this.$refs.lowIncomeDialog.dialogVisible = true
-      },
-      getOpenFlag(code){
-        let codeNum = GetProcessConfig({code:code}).then((res) => {
-          if(res.code==0){
-            return res.data.ProcessState //开启标识
-          }
-        })
-        return codeNum
+          getOpenFlag(2902).then(value => {//是否开启低保户审核
+            this.$refs.lowIncomeDialog.ifExamine = value
+          })
+        }
       },
       handleCurrentChange(val) {//列表点击事件
         this.curObj = val

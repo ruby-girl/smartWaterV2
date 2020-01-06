@@ -47,11 +47,6 @@
               <h3><i></i>人员信息</h3>
               <!--部门岗位组件 s-->
               <PostInfo ref="childPost"></PostInfo>
-              <el-form-item label="水厂" prop="WaterFactoryIdarr">
-                <el-select v-model="jp.WaterFactoryIdarr" placeholder="请选择" size="small" multiple>
-                  <el-option v-for="(item,index) in WaterFactory" :label="item.Name" :value="item.Id" :key="index"/>
-                </el-select>
-              </el-form-item>
               <el-form-item label="职务" prop="EnumFun">
                 <el-select v-model="jp.EnumFun" placeholder="请选择" size="small">
                   <el-option v-for="(item,index) in  EnumFunArry" :label="item.Name" :value="item.Id" :key="index"/>
@@ -67,19 +62,26 @@
                   </el-form-item>
                 </el-row>
                 <transition name="fade">
-                <el-form-item label="角色" prop="RoleId" v-show="ifAddAcount=='是'">
+                <el-form-item label="水厂" prop="WaterFactoryIdarr" v-if="ifAddAcount=='是'">
+                  <el-select v-model="jp.WaterFactoryIdarr" placeholder="请选择" size="small" multiple>
+                    <el-option v-for="(item,index) in WaterFactory" :label="item.Name" :value="item.Id" :key="index"/>
+                  </el-select>
+                </el-form-item>
+                </transition>
+                <transition name="fade">
+                <el-form-item label="角色" prop="RoleId" v-if="ifAddAcount=='是'">
                   <el-select v-model="jp.RoleId" placeholder="请选择" size="small" >
                     <el-option v-for="(item,index) in  RoleArry" :label="item.Name" :value="item.Id" :key="index"/>
                   </el-select>
                 </el-form-item>
                 </transition>
                 <transition name="fade">
-                <el-form-item label="账号" prop="Account" v-show="ifAddAcount=='是'">
+                <el-form-item label="账号" prop="Account" v-if="ifAddAcount=='是'">
                   <el-input v-model="jp.Account" size="small" maxlength="50" placeholder=""/>
                 </el-form-item>
                 </transition>
                 <transition name="fade">
-                <el-form-item label="密码" prop="PassWord" v-show="ifAddAcount=='是'">
+                <el-form-item label="密码" prop="PassWord" v-if="ifAddAcount=='是'">
                   <el-input v-model="jp.PassWord" size="small" maxlength="50" placeholder=""/>
                 </el-form-item>
                 </transition>
@@ -165,6 +167,18 @@
           ],
           desc: [
             {required: true, message: '请填写活动形式', trigger: 'blur'}
+          ],
+          WaterFactoryIdarr: [
+            {required: true, message: '请输入水厂名称', trigger: 'blur'}
+          ],
+          RoleId: [
+            {required: true, message: '请输入角色名称', trigger: 'blur'}
+          ],
+          Account: [
+            {required: true, message: '请输入账号', trigger: 'blur'}
+          ],
+          PassWord: [
+            {required: true, message: '请输入密码', trigger: 'blur'}
           ]
         },
         jp: {//新增对象

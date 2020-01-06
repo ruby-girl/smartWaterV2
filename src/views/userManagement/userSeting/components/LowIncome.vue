@@ -65,7 +65,8 @@
       </el-form>
     </div>
     <p style="text-align: center">
-      <el-button type="primary" size="mini" @click="submitForm()">提交审核/确定</el-button>
+      <el-button type="primary" size="mini" @click="submitForm()" v-if="ifExamine">提交审核</el-button>
+      <el-button type="primary" size="mini" @click="submitForm()" v-else>确定</el-button>
       <el-button size="mini" @click="resetForm()">取 消</el-button>
     </p>
   </el-dialog>
@@ -83,6 +84,7 @@
     props: ['curObj'],
     data() {
       return {
+        ifExamine:false,
         dialogVisible: false,
         formData: {
           CustomerNo: '',

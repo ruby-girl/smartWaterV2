@@ -276,7 +276,7 @@
     }
     .inrow{font-size:0;;*font-size:0;font-family:arial;*letter-spacing:normal;*word-spacing:-1px;}
     .inrow>div,.inrow>a{display:inline-block;letter-spacing:normal;word-spacing:normal; }
-    .dataOne{position:relative;  width:1.4rem; height:32px; overflow:hidden;border: solid 1px #CCCCCC;border-right: 0;}
+    .dataOne{position:relative;  width:28px; height:32px; overflow:hidden;border: solid 1px #CCCCCC;border-right: 0;}
     .dataOne .tt{position:absolute;width:100%;height:100%;top:0;left:0;}
     .tt span{display:block; height:32px; font:normal 24px 'Calibri'; text-align:center;  color: #666666; }
   }

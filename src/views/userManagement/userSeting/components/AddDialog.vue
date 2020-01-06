@@ -10,16 +10,16 @@
     <!--用户资料-->
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="机械水表" name="1">
-        <MechanicalMeter ref="jxChild" :formData="formData" :waterFactory="waterFactory"></MechanicalMeter>
+        <MechanicalMeter ref="jxChild" :formData="formData" :waterFactory="waterFactory" :ifExamine="ifExamine"></MechanicalMeter>
       </el-tab-pane>
       <el-tab-pane label="IC卡水表" name="2">
-        <MechanicalMeter ref="icChild" :formData="formData" :waterFactory="waterFactory"></MechanicalMeter>
+        <MechanicalMeter ref="icChild" :formData="formData" :waterFactory="waterFactory" :ifExamine="ifExamine"></MechanicalMeter>
       </el-tab-pane>
       <el-tab-pane label="远传水表" name="3">
-        <RemoteMeter ref="ycChild" :ycData="ycData" :waterFactory="waterFactory"></RemoteMeter>
+        <RemoteMeter ref="ycChild" :ycData="ycData" :waterFactory="waterFactory" :ifExamine="ifExamine"></RemoteMeter>
       </el-tab-pane>
       <el-tab-pane label="物联网水表" name="4">
-        <RemoteMeter ref="wlwChild" :ycData="ycData" :waterFactory="waterFactory"></RemoteMeter>
+        <RemoteMeter ref="wlwChild" :ycData="ycData" :waterFactory="waterFactory" :ifExamine="ifExamine"></RemoteMeter>
       </el-tab-pane>
     </el-tabs>
   </el-dialog>
@@ -36,6 +36,7 @@
     components: {MechanicalMeter, RemoteMeter},
     data() {
       return {
+        ifExamine:false,
         activeName:'1',
         dialogVisible: false,
         formData:{//添加抄表及IC表对象

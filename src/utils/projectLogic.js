@@ -7,7 +7,7 @@ import {Message} from 'element-ui'
 import { GetICReadCardInfo } from "@/api/userSetting"; //IC卡读卡
 import { GetAreaListNotPNode } from "@/api/userArea"; //区域列表
 export function ICReadCardInfo(callback,errorCallBack) {
-  let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo(); 
+  let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo();
   if (res != undefined && res != "") {
     let rJSON = JSON.parse(res)//处理后的res
     // let resData = eval('(' + rJSON.Data + ')')//处理后的Data
@@ -20,12 +20,12 @@ export function ICReadCardInfo(callback,errorCallBack) {
           resIcInfo=resData.data.ProductOneModel
         }
         callback(resIcInfo)
-      }).catch(resError=>{    
+      }).catch(resError=>{
         if(errorCallBack){
           errorCallBack(resError)
         }
       })
-    } else {    
+    } else {
       Message.error({
         message: '读取错误',
         type: 'error',
@@ -76,6 +76,7 @@ export function getMarkCard(param,obj){
             let dataJosn = JSON.parse(ress)//cs 制卡返回数据
             if(dataJosn.Result){
               promptInfoFun(obj, 2, '制卡成功');
+              obj.$router.push({path: "/businessManagement/cashCharge"});
             } else {
               RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
               promptInfoFun(obj, 1, dataJosn.ErrMsg);
@@ -324,4 +325,16 @@ export function isExport(data){
     return false
   }
   return true
+}
+
+import { GetProcessConfig } from "@/api/operationFlow"
+export function getOpenFlag(code){//获取是否开启审核权限,code 为权限栏目ID 参照流程设置左侧tree
+  let codeNum = new Promise(function (resolve, reject) {        //做一些异步操作
+    GetProcessConfig({code:code}).then((res) => {
+      if(res.code==0){
+        resolve(res.data.ProcessState)
+      }
+    })
+  });
+  return codeNum.then(function(value) { return value})
 }

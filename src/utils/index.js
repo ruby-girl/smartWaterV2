@@ -683,14 +683,11 @@ export function legalTime(time_str) {
  */
 export function scroNum(scroID, number ,h = 32) {//数字滚动
   let $num_item = document.getElementById(scroID).querySelectorAll('.dataOne>div')
-  $num_item.forEach((item,i)=>{
-    item.style.top = 0 + 'px'//清空上次top值再计算本次top值
-  })
-
-  $num_item.forEach(item=>{
-    item.style.transition = 'all 1s ease-in-out'
-  })
-
+  for(let i=0;i<$num_item.length;i++){
+    console.log($num_item[i])
+    $num_item[i].style.top = 0 + 'px'//清空上次top值再计算本次top值
+    $num_item[i].style.transition = 'all 1s ease-in-out'
+  }
   let numberStr = number.toString();
   if (numberStr.length <= $num_item.length - 1) {
     let tempStr = "";
@@ -700,12 +697,11 @@ export function scroNum(scroID, number ,h = 32) {//数字滚动
     numberStr = tempStr + numberStr;
   }
   let numberArr = numberStr.split("");
-  $num_item.forEach((item,i)=>{
+  for(let i=0;i<$num_item.length;i++){
     setTimeout(function () {
-      item.style.top = - parseInt(numberArr[i]) * h - h * 10 + 'px'
+      $num_item[i].style.top = - parseInt(numberArr[i]) * h - h * 10 + 'px'
     }, i * 50)
-  })
-
+  }
 }
 /**
  * 数字逐渐增加显示

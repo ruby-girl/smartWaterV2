@@ -56,7 +56,7 @@
     name: "HistoryBusiness",
     data() {
       return {
-        asce: 'asc',
+        asce: 'desc',
         Id:'',
         data:[]
       }

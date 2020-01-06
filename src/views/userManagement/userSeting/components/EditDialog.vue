@@ -17,24 +17,24 @@
         <el-input :disabled="true" v-model="formData.CustomerNo" size="small"/>
       </el-form-item>
       <el-form-item label="姓名  " prop="CustomerName">
-        <el-input v-model="formData.CustomerName" placeholder="长度（1-30）" max-length="30" size="small"  @blur="getJMFun"/>
+        <el-input v-model="formData.CustomerName" placeholder="长度（1-30）" maxlength="30" size="small"  @blur="getJMFun"/>
       </el-form-item>
       <el-form-item label="简码  " prop="NameCode">
         <el-input :disabled="true" v-model="formData.NameCode" size="small"/>
       </el-form-item>
       <el-form-item label="电话  " prop="Tel">
-        <el-input v-model="formData.Tel " size="small"/>
+        <el-input v-model="formData.Tel " size="small" maxlength="11"/>
       </el-form-item>
       <el-form-item label="人口  " prop="PeopleNo">
         <el-input v-model="formData.PeopleNo" size="small" :disabled="isMorePeople==1?true:false" />
       </el-form-item>
       <el-form-item label="用户类型  " prop="UserType">
-        <el-select v-model="formData.UserType" placeholder=" " size="small" :disabled="formData.UserType==1201">
+        <el-select v-model="formData.UserType" placeholder=" " size="small" :disabled="true">
           <el-option v-for="(item,index) in userType" v-show="item.Id!=1201"  :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="证件号  " prop="IdentityNo">
-        <el-input v-model="formData.IdentityNo" size="small"/>
+        <el-input v-model="formData.IdentityNo" size="small" maxlength="18"/>
       </el-form-item>
       <el-form-item label="用水性质  " prop="SA_UseWaterType_Id">
         <el-select v-model="formData.SA_UseWaterTypeName" placeholder=" " size="small" :disabled="true">
@@ -61,12 +61,12 @@
       </el-form-item>
 
       <el-form-item label="地址" class="cl_allArea">
-        <el-input type="textarea" v-model="formData.Address" max-length="500" @input="descInput('Address')"
+        <el-input type="textarea" v-model="formData.Address" maxlength="500" @input="descInput('Address')"
                   rows="1"></el-input>
         <span>{{Address}}/500</span>
       </el-form-item>
       <el-form-item label="备注  " class="cl_allArea">
-        <el-input type="textarea" v-model="formData.Remark" max-length="500" @input="descInput('Remark')"></el-input>
+        <el-input type="textarea" v-model="formData.Remark" maxlength="500" @input="descInput('Remark')"></el-input>
         <span>{{Remark}}/500</span>
       </el-form-item>
     </el-form>
@@ -74,7 +74,8 @@
       <uploadBox @getFileFun="getFileFun" ref="getFiles"></uploadBox>
     </el-form>
     <p style="text-align: center">
-      <el-button type="primary" size="mini" @click="submitForm('ruleForm')">提交审核/确定</el-button>
+      <el-button type="primary" size="mini" @click="submitForm('ruleForm')" v-if="ifExamine">提交审核</el-button>
+      <el-button type="primary" size="mini" @click="submitForm('ruleForm')" v-else>确定</el-button>
       <el-button size="mini" @click="resetForm('ruleForm')">取 消</el-button>
     </p>
   </el-dialog>
@@ -99,6 +100,7 @@
     components: {uploadBox, AreaTree},
     data() {
       return {
+        ifExamine:false,
         RegisterBookInfo:[],//表册数据
         waterFactory:[],//水厂
         userType:[],//用户类型
@@ -269,7 +271,6 @@
       getInfo(id) {//根据id获取详情
         GetBlObjById({CusId: id}).then(res => {
           if (res.code == 0) {
-            console.log(res.data)
             this.backFile = JSON.parse(JSON.stringify(res.data.saList))
             res.data.UserType = JSON.stringify(res.data.UserType)
             this.formData = res.data

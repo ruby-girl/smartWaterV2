@@ -74,7 +74,8 @@
     </div>
     <el-checkbox v-model="ifGoOn">勾选后继续添加</el-checkbox>
     <p style="text-align: center">
-      <el-button type="primary" size="mini" @click="submitForm()">提交审核/确定</el-button>
+      <el-button type="primary" size="mini" @click="submitForm()" v-if="ifExamine">提交审核</el-button>
+      <el-button type="primary" size="mini" @click="submitForm()" v-else>确定</el-button>
       <el-button size="mini" @click="resetForm()">取 消</el-button>
     </p>
   </div>
@@ -97,7 +98,7 @@
   export default {
     name: "RemoteMeter",
     components: {AreaTree, uploadBox, YcWaterInfo, WlwWaterInfo},
-    props:['ycData','waterFactory'],
+    props:['ycData','waterFactory','ifExamine'],
     data() {
       return {
         SA_RegisterBookInfo_Id:'',//物联网单独使用表册ID

@@ -27,7 +27,8 @@
           size="small"/>
       </el-form-item>
       <p style="text-align: center">
-        <el-button type="primary" size="mini" @click="submitForm('ruleForm')">提交审核/确定</el-button>
+        <el-button type="primary" size="mini" @click="submitForm('ruleForm')" v-if="ifExamine">提交审核</el-button>
+        <el-button type="primary" size="mini" @click="submitForm('ruleForm')" v-else>确定</el-button>
         <el-button size="mini" @click="resetForm('ruleForm')">取 消</el-button>
       </p>
     </el-form>
@@ -43,6 +44,7 @@
     name: "Dialog",
     data() {
       return {
+        ifExamine:false,
         title:'',
         dialogVisible: false,
         param:{//新增或编辑区域对象
