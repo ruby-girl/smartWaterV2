@@ -56,6 +56,14 @@ export function searICHisWater(data) {//ic表历史
     data
   })
 }
+export function editICWater(data) {//ic表历史
+  return request({
+    url: "/WaterMeter/WaterMeter2UpDate",
+    method: 'post',
+    data
+  })
+}
+///WaterMeter/WaterMeter2UpDate
 export function searYCMeterWater(data) {//远传表查询
   return request({
     url: "/WaterMeter/SelectWaterMeter3DataList",

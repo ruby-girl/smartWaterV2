@@ -50,9 +50,9 @@
               prop="CustomerQueryValue"
             >
               <el-input
-                v-model="YCMeterQueryParam.waterMerterNo"
+                v-model="YCMeterQueryParam.WaterMerterNo"
                 maxlength="20"
-                @change="getText(YCMeterQueryParam.waterMerterNo,'waterMerterNo','','水表编号')"
+                @change="getText(YCMeterQueryParam.WaterMerterNo,'WaterMerterNo','','水表编号')"
               />
             </el-form-item>
             <el-form-item label="阀门状态" v-show="show2||isShow" key="ValveState" prop="ValveState">
@@ -314,7 +314,7 @@ export default {
         IsOpenAccount: "", //开户状态
         sort: "", //升序
         filed: "", //排序字段
-        waterMerterNo:"",
+        WaterMerterNo:"",
         tableId: "0000022"
       },
       meterReadListParam: {

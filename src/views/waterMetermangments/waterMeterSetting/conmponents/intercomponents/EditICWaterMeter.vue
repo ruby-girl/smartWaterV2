@@ -9,10 +9,10 @@
   >
     <el-form :inline="true" :model="editData" size="small" label-width="70px">
       <el-form-item label="水表编号">
-        <el-input v-model="editData.WaterMeterNo" maxlength="20" />
+        <el-input v-model="editData.WaterMeterNo" disabled maxlength="20" />
       </el-form-item>
       <el-form-item label="水表样式">
-        <el-select v-model="editData.wms" placeholder="请选择">
+        <el-select v-model="editData.WaterMeterStyle" placeholder="请选择">
           <el-option
             v-for="item in waterMeterList"
             :label="item.Name"
@@ -22,9 +22,9 @@
         </el-select>
       </el-form-item>
       <el-form-item label="水表口径">
-        <el-select v-model="editData.wms" placeholder="请选择">
+        <el-select v-model="editData.MeterDiameter" placeholder="请选择">
           <el-option
-            v-for="item in waterMeterList"
+            v-for="item in MeterDiameterList"
             :label="item.Name"
             :value="item.Id"
             :key="item.Name"
@@ -32,17 +32,18 @@
         </el-select>
       </el-form-item>
       <el-form-item label="报警金额">
-        <el-input v-model="editData.money" maxlength="20" />
+        <el-input v-model="editData.AlarmMoney" maxlength="20" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click>确认</el-button>
+      <el-button size="mini" type="primary" @click="save">确认</el-button>
       <el-button size="mini" @click="EditIC = false">取消</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
+import { editICWater } from "@/api/waterMeterMang";
 export default {
   name: "EditICWaterMeter",
   props: {
@@ -54,9 +55,14 @@ export default {
   data() {
     return {
       EditIC: false,
-      editData: {},
       waterMeterList: [],
-      MeterDiameterList: []
+      MeterDiameterList: [],
+      editData: {
+        Id: "",
+        WaterMeterStyle: "", //水表样式
+        MeterDiameter: "", //口径
+        AlarmMoney: ""
+      }
     };
   },
   watch: {
@@ -70,6 +76,25 @@ export default {
       this.$emit("update:editShow", val);
     }
   },
+  methods: {
+    save() {
+      editICWater(this.editData).then(res=>{
+        if(res.code==0){
+          this.$message({
+            type:"success",
+            message:res.message?res.message:"操作成功"
+          })
+          this.EditIC=false
+          this.$parent.searchFun()
+        }else{
+          this.$message({
+            type:"warning",
+            message:res.message?res.message:"操作失败"
+          })
+        }
+      })
+    }
+  },
   created() {
     this.waterMeterList = getDictionaryOption("水表样式");
     this.MeterDiameterList = getDictionaryOption("口径类型");
@@ -77,14 +102,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.el-form{
+.el-form {
   text-align: center;
   margin-top: 30px;
 }
 .el-form-item {
   margin-bottom: 20px;
 }
-/deep/.el-input__inner{
-  width: 200px!important;
+/deep/.el-input__inner {
+  width: 200px !important;
 }
 </style>

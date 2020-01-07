@@ -19,7 +19,7 @@
         <el-input v-model="EditJxData.CustomerName" disabled maxlength="10" placeholder="(长度1-10)" />
       </el-form-item>
       <el-form-item label="用户编号：" prop="CustomerNo">
-        <el-input v-model="EditJxData.CustomerNo" maxlength="20" />
+        <el-input v-model="EditJxData.CustomerNo" disabled maxlength="20" />
       </el-form-item>
       <el-form-item label="开户状态：" prop="CustomerState">
         <el-select v-model="EditJxData.CustomerState" disabled>
@@ -43,7 +43,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="水表编号：" prop="WaterMeterNo">
-        <el-input v-model="EditJxData.WaterMeterNo " maxlength="20" />
+        <el-input v-model="EditJxData.WaterMeterNo " disabled maxlength="20" />
       </el-form-item>
       <el-form-item label="口径：" prop="MeterDiameter">
         <el-select v-model="EditJxData.MeterDiameter" placeholder="请选择">
