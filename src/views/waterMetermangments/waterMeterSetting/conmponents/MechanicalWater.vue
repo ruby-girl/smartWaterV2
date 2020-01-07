@@ -49,7 +49,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-         <el-form-item v-show="show3||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
+         <el-form-item v-show="show3||isShow" key="QueryType" prop="QueryType">
           <el-select
             v-model="wachMeterData.QueryType"
             placeholder="请选择"
@@ -316,6 +316,7 @@ export default {
   methods: {
     getscName(id) {
       this.secNmae = getName(id);
+      console.log(this.secNmae )
     },
     resetting() {
       //重置

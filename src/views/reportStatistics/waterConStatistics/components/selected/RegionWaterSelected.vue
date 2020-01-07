@@ -9,7 +9,7 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item label="区域" v-show="show1||isShow" prop="UserType">
+      <el-form-item label="区域" :label-width="isShow?'68px':'40px'" v-show="show1||isShow" prop="UserType">
         <el-select
           v-model="selectHead.UserType"
           placeholder="请选择"

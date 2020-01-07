@@ -1,4 +1,4 @@
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 /**
  * @param {string} callback 回调方法
  * resInfo 卡片信息 包含几代卡片，通过为几代卡片分别从MOdel里获取卡号
@@ -6,7 +6,7 @@ import {Message} from 'element-ui'
 // IC卡读卡
 import { GetICReadCardInfo } from "@/api/userSetting"; //IC卡读卡
 import { GetAreaListNotPNode } from "@/api/userArea"; //区域列表
-export function ICReadCardInfo(callback,errorCallBack) {
+export function ICReadCardInfo(callback, errorCallBack) {
   let res = window.FXYB_WEB_CS_ICCard.ReadCardInfo();
   if (res != undefined && res != "") {
     let rJSON = JSON.parse(res)//处理后的res
@@ -14,14 +14,14 @@ export function ICReadCardInfo(callback,errorCallBack) {
     if (rJSON.Result) {
       GetICReadCardInfo({ jsonData: rJSON.Data }).then(resData => {
         let resIcInfo;
-        if(resData.data.ProductType=='2'){
-          resIcInfo=resData.data.ProductTwoModel
-        }else{
-          resIcInfo=resData.data.ProductOneModel
+        if (resData.data.ProductType == '2') {
+          resIcInfo = resData.data.ProductTwoModel
+        } else {
+          resIcInfo = resData.data.ProductOneModel
         }
         callback(resIcInfo)
-      }).catch(resError=>{
-        if(errorCallBack){
+      }).catch(resError => {
+        if (errorCallBack) {
           errorCallBack(resError)
         }
       })
@@ -35,7 +35,7 @@ export function ICReadCardInfo(callback,errorCallBack) {
   }
 }
 //IC写卡 objJson:卡片信息 callback:写卡失败后回调
-export function WriteCardInfo(objJson, callback,successCallback) {
+export function WriteCardInfo(objJson, callback, successCallback) {
   let res = window.FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(objJson.CardInfo));
   if (res != undefined && res != "") {
     let rJSON = JSON.parse(res)//处理后的res
@@ -46,7 +46,7 @@ export function WriteCardInfo(objJson, callback,successCallback) {
       //   type: 'success',
       //   duration: 4000
       // })
-      if(successCallback){
+      if (successCallback) {
         successCallback()
       }
     } else {
@@ -66,19 +66,19 @@ export function WriteCardInfo(objJson, callback,successCallback) {
  * */
 import { GetICWriteCard, RollBackICWriteCard, GetICReplaceWriteCardInfo, RollBacICkReplaceWriteCardInfo } from "@/api/userSetting";
 import { promptInfoFun } from "@/utils/index"
-export function getMarkCard(param,obj){
+export function getMarkCard(param, obj) {
   try {
-    if(FXYB_WEB_CS_ICCard){
+    if (FXYB_WEB_CS_ICCard) {
       GetICWriteCard(param).then(res => {//写卡
         if (res.code == 0) {
           let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
           if (ress != undefined && ress != "") {
             let dataJosn = JSON.parse(ress)//cs 制卡返回数据
-            if(dataJosn.Result){
+            if (dataJosn.Result) {
               promptInfoFun(obj, 2, '制卡成功');
-              obj.$router.push({path: "/businessManagement/cashCharge"});
+              obj.$router.push({ path: "/businessManagement/cashCharge" });
             } else {
-              RollBackICWriteCard({businessId:res.data.BusinessId}).then(res => {})
+              RollBackICWriteCard({ businessId: res.data.BusinessId }).then(res => { })
               promptInfoFun(obj, 1, dataJosn.ErrMsg);
             }
           } else {
@@ -89,7 +89,7 @@ export function getMarkCard(param,obj){
         }
       });
     }
-  }catch (e) {
+  } catch (e) {
     promptInfoFun(obj, 1, '请在CS端操作');
     return
   }
@@ -100,18 +100,18 @@ export function getMarkCard(param,obj){
  * isCard 是否已刷卡
  * obj vue 实列
  * */
-export function getPatchCard(param,obj){
+export function getPatchCard(param, obj) {
   try {
-    if(FXYB_WEB_CS_ICCard){
+    if (FXYB_WEB_CS_ICCard) {
       GetICReplaceWriteCardInfo(param).then(res => {//补卡
         if (res.code == 0) {
           let ress = FXYB_WEB_CS_ICCard.WriteCardInfo(JSON.stringify(res.data.CardInfo));
           if (ress != undefined && ress != "") {
             let dataJosn = JSON.parse(ress)//cs 制卡返回数据
-            if(dataJosn.Result){
+            if (dataJosn.Result) {
               promptInfoFun(obj, 2, '补卡成功');
             } else {
-              RollBacICkReplaceWriteCardInfo({businessId:res.data.BusinessId}).then(res => {})
+              RollBacICkReplaceWriteCardInfo({ businessId: res.data.BusinessId }).then(res => { })
               promptInfoFun(obj, 1, dataJosn.ErrMsg);
             }
           } else {
@@ -122,7 +122,7 @@ export function getPatchCard(param,obj){
         }
       });
     }
-  }catch (e) {
+  } catch (e) {
     promptInfoFun(obj, 1, '请在CS端操作');
     return
   }
@@ -137,8 +137,8 @@ function mapTree(org) {
       //分别将我们查询出来的值做出改变他的key
       label: org.label,
       id: org.Id,
-      Id:org.Id,
-      Name:org.label,
+      Id: org.Id,
+      Name: org.label,
       //判断它是否存在子集，若果存在就进行再次进行遍历操作，知道不存在子集便对其他的元素进行操作
       children: org.children.map(i => mapTree(i))
     };
@@ -146,8 +146,8 @@ function mapTree(org) {
     return {
       label: org.label,
       id: org.Id,
-      Id:org.Id,
-      Name:org.label
+      Id: org.Id,
+      Name: org.label
     }
   }
 }
@@ -156,8 +156,8 @@ export function getOrgTree(callback, id) {
   {
     id: '-1',
     label: '全部',
-    Id:'-1',
-    Name:'全部'
+    Id: '-1',
+    Name: '全部'
   }
   GetAreaListNotPNode({ pid: id }).then(res => {
     let resResult = res.data
@@ -198,9 +198,12 @@ export function getText(val, model, arr, tipsDataCopy, that, name) {
   for (let i = 0; i < tipsDataCopy.length; i++) {
     if (tipsDataCopy[i].model == model) {//判断是否有相同的收缩条件
       tipsDataCopy.splice(i, 1);
+
     }
   }
   if (arr && val == "-1") {
+    return false
+  } else if (!arr && val == "") {
     return false
   } else {
     obj = that.$refs.searchTips.getArrData(val, model, arr, name);//调用面包屑组件里面的方法
@@ -288,11 +291,11 @@ export function threeTimeOption(time) {
   return arr
 }
 
-export function getFileFun(data,object){//获取附件信息,data 详情接口返回salist 数据集合 obejec vue对象
+export function getFileFun(data, object) {//获取附件信息,data 详情接口返回salist 数据集合 obejec vue对象
   let files = []
   let fileData = data
   let obj = {}
-  for(let i=0;i<fileData.length;i++){//区分不同文件类型设置不同展示样式
+  for (let i = 0; i < fileData.length; i++) {//区分不同文件类型设置不同展示样式
     let thisType;
     const Suffix = fileData[i].FileExtName.split('.')[1]
     if (Suffix === 'docx' || Suffix === 'doc') {
@@ -301,40 +304,40 @@ export function getFileFun(data,object){//获取附件信息,data 详情接口�
       thisType = 2
     } else if (Suffix === 'pdf') {
       thisType = 3
-    }else {
+    } else {
       thisType = 0
     }
     obj = {
       id: fileData[i].Id,
-      name:fileData[i].FileName,
+      name: fileData[i].FileName,
       type: thisType,
-      url: object.baseUrl + (fileData[i].RelativePath).replace("~",""),
+      url: object.baseUrl + (fileData[i].RelativePath).replace("~", ""),
     }
     files.push(obj)
     return files
   }
 }
 // 表格无数据，禁止导出
-export function isExport(data){
-  if(data.length<1){
+export function isExport(data) {
+  if (data.length < 1) {
     Message({
       message: '当前列表无数据，不可导出！',
       type: 'warning',
-      duration:3500
-  })
+      duration: 3500
+    })
     return false
   }
   return true
 }
 
 import { GetProcessConfig } from "@/api/operationFlow"
-export function getOpenFlag(code){//获取是否开启审核权限,code 为权限栏目ID 参照流程设置左侧tree
+export function getOpenFlag(code) {//获取是否开启审核权限,code 为权限栏目ID 参照流程设置左侧tree
   let codeNum = new Promise(function (resolve, reject) {        //做一些异步操作
-    GetProcessConfig({code:code}).then((res) => {
-      if(res.code==0){
+    GetProcessConfig({ code: code }).then((res) => {
+      if (res.code == 0) {
         resolve(res.data.ProcessState)
       }
     })
   });
-  return codeNum.then(function(value) { return value})
+  return codeNum.then(function (value) { return value })
 }

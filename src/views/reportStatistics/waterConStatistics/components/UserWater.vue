@@ -1,11 +1,5 @@
- <template>
-  <div>机械表异常统计</div>
-</template>
- <script>
-export default {
-  name: "WaterMetermal"
-};
-</script><template>
+
+<template>
   <div class="onBox">
     <div ref="formHeight">
       <select-head :searchWidth="searchWidth" @getText="getText" ref="seachChild" />

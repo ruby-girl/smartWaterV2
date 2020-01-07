@@ -161,7 +161,7 @@
                 content="编辑"
                 placement="bottom"
               >
-                <i class="icon iconfont editJxWater" @click="edit">&#xe69f;</i>
+                <i class="icon iconfont editJxWater" @click="edit(scope.row)">&#xe69f;</i>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -198,7 +198,7 @@
         @pagination="waterMeterJxDetail(waterMeterICDetail.WaterMeterId)"
       />
     </el-dialog>
-    <editIC-waterMeter :edit-show.sync="editShow" />
+    <editIC-waterMeter ref="edit" :edit-show.sync="editShow" />
   </div>
 </template>
 <script>
@@ -313,7 +313,8 @@ export default {
     }
   },
   methods: {
-    edit() {
+    edit(data) {
+      this.$refs.edit.editData=data
       this.editShow = true;
     },
     getscName(id) {
