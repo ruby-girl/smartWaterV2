@@ -13,13 +13,13 @@
         v-if="companyOptions.length!=1"
         label="水厂"
         :label-width="isShow?'68px':'40px'"
-        prop="SA_WaterFactory_Id"
+        prop="WaterFactoryId"
       >
         <el-select
-          v-model="selectHead.SA_WaterFactory_Id"
+          v-model="selectHead.WaterFactoryId "
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'水厂')"
+          @change="getText(selectHead.WaterFactoryId ,'WaterFactoryId ',companyOptions,'水厂')"
         >
           <el-option label="全部" value="-1"></el-option>
           <el-option
@@ -31,12 +31,12 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterType">
+      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterMeterTypeId ">
         <el-select
-          v-model="selectHead.WaterType"
+          v-model="selectHead.WaterMeterTypeId "
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterType,'WaterType',WaterMeterList,'水表类型')"
+          @change="getText(selectHead.WaterMeterTypeId ,'WaterMeterTypeId ',WaterMeterList,'水表类型')"
         >
           <el-option label="全部" :value="-1"></el-option>
           <el-option
@@ -47,11 +47,11 @@
           ></el-option>
         </el-select>
       </el-form-item>
-     
+
       <el-form-item label="日期" label-width="40px" v-show="show2||isShow">
         <el-date-picker
           v-model="dateArr"
-          type="daterange"
+          type="monthrange"
           :editable="false"
           :unlink-panels="true"
           range-separator="~"
@@ -59,7 +59,7 @@
           end-placeholder="结束日期"
           :default-time="['00:00:00', '23:59:59']"
           format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
+          value-format="yyyy-MM"
           @keydown.enter.native="handleFilter"
           @change="getTime"
         />
@@ -107,7 +107,7 @@ export default {
       handler(val, oldVal) {
         this.show1 = this.showLabel(1, val);
         this.show2 = this.showLabel(2, val);
-     
+
         if (this.companyOptions.length == 1) {
           if (Math.floor((val - 200) / 280) < 3) {
             this.showBtn = true;
@@ -127,6 +127,16 @@ export default {
   },
   created() {},
   methods: {
+    //获取下拉框中文
+    getSelectName(id, list) {
+      let Name = "";
+      list.forEach(res => {
+        if (res.Id == id) {
+          Name = res.Name;
+        }
+      });
+      return Name;
+    },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
@@ -143,6 +153,18 @@ export default {
       }
     },
     handleFilter() {
+      //水厂名字
+       console.log(this.selectHead.WaterFactoryId )
+      this.selectHead.WaterFactoryName = this.getSelectName(
+        this.selectHead.WaterFactoryId,
+        this.companyOptions
+      );
+      //水表类型
+      this.selectHead.WaterMeterTypeName = this.getSelectName(
+        this.selectHead.WaterMeterTypeId,
+        this.WaterMeterList
+      );
+      console.log(this.selectHead);
       this.$parent.searchTableList();
     },
     getText(val, model, arr, name) {
@@ -153,28 +175,30 @@ export default {
       let date = this.dateArr;
       let dateStipe;
       if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
+        this.selectHead.StartDate = date[0];
+        this.selectHead.EndDate = date[1];
         dateStipe =
-          this.selectHead.createStartTime.split(" ")[0] +
+          this.selectHead.StartDate.split(" ")[0] +
           "~" +
-          this.selectHead.createEndTime.split(" ")[0];
+          this.selectHead.EndDate.split(" ")[0];
         this.$emit("getText", dateStipe, "dateArr", "", "日期");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
+        this.selectHead.StartDate = "";
+        this.selectHead.EndDate = "";
         dateStipe = "";
         this.$emit("getText", dateStipe, "dateArr", "", "日期");
       }
     }
   },
+
   created() {
     this.WaterMeterList = getDictionaryOption("水表类型");
     this.userTypeList = getDictionaryOption("用户类型");
     this.editUserList = getDictionaryOption("口径类型");
     this.companyOptions = this.$store.state.user.waterWorks;
     if (this.companyOptions.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.companyOptions.Id;
+      this.$parent.selectHead.WaterFactoryId = this.companyOptions[0].Id;
+      this.$parent.selectHead.WaterFactoryName = this.companyOptions[0].Name;
     }
     // getSelectUser().then(res => {
     //   this.editUserList = res.data;

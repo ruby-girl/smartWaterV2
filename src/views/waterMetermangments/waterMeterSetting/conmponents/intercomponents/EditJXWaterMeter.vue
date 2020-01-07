@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="添加"
+    title="编辑"
     :visible.sync="EditWaterJX"
     top="20vh"
     width="60%"

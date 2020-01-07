@@ -50,9 +50,9 @@
               prop="CustomerQueryValue"
             >
               <el-input
-                v-model="YCMeterQueryParam.CustomerQueryValue"
+                v-model="YCMeterQueryParam.waterMerterNo"
                 maxlength="20"
-                @change="getText(YCMeterQueryParam.CustomerQueryValue,'CustomerQueryValue','','水表编号')"
+                @change="getText(YCMeterQueryParam.waterMerterNo,'waterMerterNo','','水表编号')"
               />
             </el-form-item>
             <el-form-item label="阀门状态" v-show="show2||isShow" key="ValveState" prop="ValveState">
@@ -70,6 +70,29 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+             <el-form-item v-show="show3||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
+          <el-select
+            v-model="YCMeterQueryParam.CustomerQueryType"
+            placeholder="请选择"
+            style="width: 100px;float: left;margin-right:4px;"
+            class="short-select"
+            @change="getscName(YCMeterQueryParam.CustomerQueryType)"
+          >
+            <el-option label="姓名/简码" value="2"></el-option>
+            <el-option label="用户编号" value="1"></el-option>
+            <el-option label="电话" value="3"></el-option>
+            <el-option label="证件号" value="4"></el-option>
+            <el-option label="用户地址" value="5"></el-option>
+          </el-select>
+          <el-input
+            v-model="YCMeterQueryParam.CustomerQueryValue"
+            maxlength="20"
+            placeholder="(长度1-30)"
+            @keyup.enter.native="handleFilter"
+            @change="getText(YCMeterQueryParam.CustomerQueryValue,'CustomerQueryValue','',secNmae)"
+            style="width: 180px;float: left"
+          />
+        </el-form-item>
             <el-form-item
               label="开户状态"
               v-show="show3||isShow"
@@ -167,7 +190,7 @@
                   min-width="170px"
                   :sortable="item.IsSortBol?'custom':null"
                   :prop="item.ColProp"
-                  :align="item.Position"
+                 align="center"
                   :label="item.ColDesc"
                   :fixed="item.Freeze"
                 />
@@ -270,7 +293,8 @@ import {
   delTips,
   getText,
   pushItem,
-  getTipsChangeWidth
+  getTipsChangeWidth,
+  getName
 } from "@/utils/projectLogic"; //搜索条件面包屑
 import { async } from "q";
 export default {
@@ -282,7 +306,7 @@ export default {
       YCMeterQueryParam: {
         page: 1,
         limit: 20,
-        CustomerQueryType: "6", //水表编号
+        CustomerQueryType: "", //水表编号
         CollectorNo: "", //采集器
         CustomerQueryValue: "", //水表编号值
         ValveState: "", //阀门状态
@@ -290,6 +314,7 @@ export default {
         IsOpenAccount: "", //开户状态
         sort: "", //升序
         filed: "", //排序字段
+        waterMerterNo:"",
         tableId: "0000022"
       },
       meterReadListParam: {
@@ -394,6 +419,9 @@ export default {
     }
   },
   methods: {
+     getscName(id) {
+      this.secNmae = getName(id);
+    },
     resetting() {
       //重置
       this.$refs["searcTable"].resetFields();
