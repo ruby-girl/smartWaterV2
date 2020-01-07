@@ -83,6 +83,7 @@
   import { parseTime, promptInfoFun } from "@/utils/index"
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import{ mapGetters } from 'vuex'
 
   export default {
     name: 'tableSeting',
@@ -99,6 +100,7 @@
         checksData: [],
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
+        waterNums:[]
       }
     },
     computed: {
@@ -111,6 +113,17 @@
           }
         }
         return arrayHead
+      },
+      ...mapGetters([
+        'waterWorks'
+      ]),
+    },
+    watch: {
+      waterWorks: function (newValue) {
+        if (newValue) {
+          this.waterNums = newValue
+          this.getWaterFactoryList()
+        }
       }
     },
     methods: {
@@ -253,14 +266,13 @@
         })
       },
       getWaterFactoryList(){//获取具有权限的水厂数据集合
-        let data = this.$store.state.user.waterWorks
-        this.$refs.childDialog.waterFactory = data
-        this.$refs.childSelect.waterFactory = data
-        this.rbp.SA_WaterFactory_Id = data[0].Id;//查询条件
-        this.$refs.childDialog.rb.SA_WaterFactory_Id = data[0].Id//增加弹窗默认选当前登录人员所在水厂
-        this.getMeterReaderList(1,data[0].Id)//查询条件
-        this.getMeterReaderList(2,data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
-        this.getMeterReaderList(3,data[0].Id)//用户表册弹窗根据选中水厂获取默认抄表员数据
+        this.$refs.childDialog.waterFactory = this.waterNums
+        this.$refs.childSelect.waterFactory = this.waterNums
+        this.rbp.SA_WaterFactory_Id = this.waterNums[0].Id;//查询条件
+        this.$refs.childDialog.rb.SA_WaterFactory_Id = this.waterNums[0].Id//增加弹窗默认选当前登录人员所在水厂
+        this.getMeterReaderList(1,this.waterNums[0].Id)//查询条件
+        this.getMeterReaderList(2,this.waterNums[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
+        this.getMeterReaderList(3,this.waterNums[0].Id)//用户表册弹窗根据选中水厂获取默认抄表员数据
       },
       getMeterReaderList(type,id){//通过水厂获得抄表员
         MeterReaderList({SA_WaterFactory_Id:id}).then(res => {
@@ -301,6 +313,7 @@
       }
     },
     mounted() {
+      this.waterNums = this.$store.state.user.waterWorks
       let _this = this
       _this.$refs.searchTips.$refs.myChild.GetTable(this.rbp.tableId); // 先获取所有自定义字段赋值
       _this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段

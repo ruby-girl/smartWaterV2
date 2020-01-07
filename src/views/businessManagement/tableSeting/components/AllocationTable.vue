@@ -317,17 +317,22 @@
         })
       },
       sameRegisterMove(row){//本表册移动
-        this.mop.MeterReaderOrderNum = parseInt(row.nums)//d动态获取
-        this.mop.RegisterBookInfo_Id = this.formRbp.SA_RegisterBookInfo_Id//d动态获取
-        this.mop.rbdList = this.multipleSelection
-        SortRegisterBookDetailMoveOut(this.mop).then(res => {
-          if (res.code ==0 ) {
-            promptInfoFun(this,2,res.message)
-            this.searchFun(this.flag)
-          } else {
-            promptInfoFun(this,1,res.message)
-          }
-        })
+        if(this.multipleSelection.length<=0){
+          promptInfoFun(this,1,'请选中要移动的用户！')
+          return
+        }else {
+          this.mop.MeterReaderOrderNum = parseInt(row.nums)//d动态获取
+          this.mop.RegisterBookInfo_Id = this.formRbp.SA_RegisterBookInfo_Id//d动态获取
+          this.mop.rbdList = this.multipleSelection
+          SortRegisterBookDetailMoveOut(this.mop).then(res => {
+            if (res.code ==0 ) {
+              promptInfoFun(this,2,res.message)
+              this.searchFun(this.flag)
+            } else {
+              promptInfoFun(this,1,res.message)
+            }
+          })
+        }
       },
       setNums(row){//排序号
         this.rowNums = row.nums
@@ -340,7 +345,7 @@
         })
       },
       distributionFun(){
-        this.multipleSelection.length<=0 ?  promptInfoFun(this,1,'请选择要移动的数据！') : this.moveTreeShow = !this.moveTreeShow
+        this.multipleSelection.length<=0 ?  promptInfoFun(this,1,'请选中要移动的用户！') : this.moveTreeShow = !this.moveTreeShow
         this.moveTrees = this.moveTree
       },
       handleUser(row){//用户表册,type==2时候为定位

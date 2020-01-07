@@ -73,7 +73,6 @@
         id == 1 ? ids = '' : ids = id
         GetWFMRRBITree({'WaterFactoryId':ids}).then(res => {
           if (res.code ==0 ) {
-            console.log(res)
             id == 1 ? this.oldTreeData = res.data : this.treeData = res.data
           } else {
             promptInfoFun(this,1,res.message)

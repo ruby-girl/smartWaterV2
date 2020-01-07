@@ -27,7 +27,7 @@
               <li class="user_line clearfix">
                 <p class="half">证件号 <span>{{formData.IdentityNo}}</span></p>
                 <p>表册 <span>{{formData.RegisterBookInfoName}}</span></p>
-                <p class="money">账号余额 <span>{{formData.Balance}}</span></p>
+                <p class="money">账户余额 <span>{{formData.Balance}}</span></p>
               </li>
               <li class="user_line clearfix">
                 <p class="half">区域 <span>{{formData.SA_UserAreaName}}</span></p>

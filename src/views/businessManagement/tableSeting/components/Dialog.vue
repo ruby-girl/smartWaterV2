@@ -26,7 +26,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="表册类型" prop="BookTypeKey">
-        <el-select :disabled="title=='编辑'" v-model="rb.BookTypeKey">
+        <el-select :disabled="true" v-model="rb.BookTypeKey">
           <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>

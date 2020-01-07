@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     handleClick() {
-     
+
       if (this.typeCheck == "1") {
         this.$refs.planChild1.typeCheck = this.typeCheck;
          this.$refs.planChild1.$refs.childSelect.setparams(
