@@ -232,7 +232,7 @@ export default {
       color: #777c82;
       max-height: 100%;
       border-bottom: solid 1px #e6ebf5;
-      overflow-y: auto;
+     // overflow-y: auto;
     }
   }
   .el-tree-node__content {

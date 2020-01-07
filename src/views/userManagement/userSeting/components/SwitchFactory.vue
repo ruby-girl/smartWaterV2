@@ -41,10 +41,17 @@
         this.$refs[formData].validate((valid) => {
           if (valid) {
             if(this.formData.waterFactoryId=='-1'){
-              this.$parent.waterFactoryName = {Name:'全部水厂',Id:'-1'}
+              this.$parent.waterFactoryName = {
+                Id:'-1',
+                Name:'全部水厂',
+                Pid:'',
+                ProcessMemberType:'',
+                Level:1
+              }
               localStorage.setItem('waterFactoryId', '-1')
             }else {
               this.waterFactory.forEach(item=>{
+                item.Level = 1
                 item.Id == this.formData.waterFactoryId ? (this.$parent.waterFactoryName = item, localStorage.setItem('waterFactoryId', item.Id)):''
               })
             }

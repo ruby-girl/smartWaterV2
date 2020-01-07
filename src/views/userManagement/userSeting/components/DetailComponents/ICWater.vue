@@ -47,7 +47,7 @@
         GetICInfoByCustomerId({'CustomerId': Id}).then(res => {//获取用户信息
           if (res.code == 0) {
             this.data = res.data
-            this.ReadNum = res.data.ReadNum
+            this.ReadNum = res.data.SumAprice
           } else {
             promptInfoFun(this, 1, res.message)
           }

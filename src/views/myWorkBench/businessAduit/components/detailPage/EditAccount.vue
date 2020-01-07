@@ -180,6 +180,7 @@
           if (res.code ==0 ) {
             promptInfoFun(this, 2, res.message);
             this.dialogVisible = false
+            this.$parent.searchTableList()
           } else {
             promptInfoFun(this, 1, res.message);
           }

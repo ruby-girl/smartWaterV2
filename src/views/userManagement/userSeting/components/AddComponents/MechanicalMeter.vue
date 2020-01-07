@@ -44,8 +44,8 @@
             <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="表册 " prop="SA_RegisterBookInfo_Id">
-          <el-select v-model="formData.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
+        <el-form-item label="表册 "  prop="SA_RegisterBookInfo_Id">
+          <el-select clearable v-model="formData.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in RegisterBookInfo" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
@@ -69,13 +69,13 @@
         <el-form-item label="水表编号 " prop="WaterMeterNo">
           <el-input v-model="formData.WaterMeterNo" size="small" maxlength="20"/>
         </el-form-item>
-        <el-form-item label="水表样式 " prop="WaterMeterStyle" >
-          <el-select v-model="formData.WaterMeterStyle" placeholder="请选择" size="small">
+        <el-form-item label="水表样式 "  prop="WaterMeterStyle" >
+          <el-select clearable v-model="formData.WaterMeterStyle" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in waterMeterStyles" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="水表口径 " prop="MeterDiameter">
-          <el-select v-model="formData.MeterDiameter" placeholder="请选择" size="small">
+        <el-form-item label="水表口径 "  prop="MeterDiameter">
+          <el-select clearable v-model="formData.MeterDiameter" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in MeterDiameters" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>
@@ -92,8 +92,8 @@
         <el-form-item label="水表编号 " prop="WaterMeterNo">
           <el-input v-model="formData.WaterMeterNo" size="small"/>
         </el-form-item>
-        <el-form-item label="水表样式 " prop="WaterMeterStyle">
-          <el-select v-model="formData.WaterMeterStyle" placeholder="请选择" size="small">
+        <el-form-item label="水表样式 "  prop="WaterMeterStyle">
+          <el-select clearable v-model="formData.WaterMeterStyle" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in waterMeterStyles" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>
         </el-form-item>

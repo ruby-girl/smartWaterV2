@@ -113,14 +113,13 @@
       :total="total"
       :page.sync="rbp.page"
       :limit.sync="rbp.limit"
-      @pagination="searchFun"/>
+      @pagination="getList"/>
     <pagination
       v-show="total>0&&flag==2"
       :total="total"
       :page.sync="rbp.page"
       :limit.sync="rbp.limit"
-      @pagination="getRegister"/>
-
+      @pagination="getList"/>
     <FormsDialog ref="formsDialog"></FormsDialog>
   </div>
 </template>
@@ -184,7 +183,7 @@
     methods:{
       searchFun(num) {//定位列表查询
         this.flag = num
-        if (this.flag == 1) {
+        if (this.flag == 1) {//已分配
           if(this.formRbp.SA_RegisterBookInfo_Id.trim() == ''){
             promptInfoFun(this,1,'请选择表册')
           }else if(this.formRbp.Customer==''){
@@ -199,7 +198,7 @@
                 if(res.data.length==1){
                    this.formRbp.SA_RegisterBookDetail_Id = res.data[0].Id
                    this.rbp = Object.assign({}, this.formRbp)
-                   this.getList(this.rbp)
+                   this.getList()
                 }else if(res.data.length>1) {
                   this.$refs.formsDialog.rbp = this.rbp
                   this.$refs.formsDialog.total = res.data.length
@@ -213,7 +212,7 @@
               }
             })
           }
-        }else {
+        }else {//未分配
           this.getRegister2()
         }
       },
@@ -246,7 +245,7 @@
         this.tbdp.SA_RegisterBookInfo_Id =  this.formRbp.SA_RegisterBookInfo_Id
         this.tbdp.SA_UserArea_Id =  this.formRbp.SA_UserArea_Id
         this.rbp = Object.assign({},this.tbdp)
-        this.getList(this.rbp)
+        this.getList()
       },
       getRegister(){//点击左侧柱状图事件未分配表册及已分配表册中未定位表册列表信息
           this.formRbp.ecqt = '1'
@@ -257,16 +256,17 @@
           this.tbdp.SA_RegisterBookInfo_Id =  this.formRbp.SA_RegisterBookInfo_Id
           this.tbdp.SA_UserArea_Id =  this.formRbp.SA_UserArea_Id
           this.rbp = Object.assign({},this.tbdp)
-          this.getList(this.rbp)
+          this.getList()
       },
       getList(param){//定位列表查询公用方法
+        param = this.rbp
         RegisterDetailGetList(param).then(res => {
           if (res.code ==0 ) {
             res.data.rbdList.forEach(item=>{
               item.nums = ''
             })
             this.tableData = res.data.rbdList
-            this.total = res.data.rbdList.length
+            this.total = res.data.count
             if(res.data.IsIsLocation){
               this.$refs.multipleTable.setCurrentRow(this.tableData[res.data.index]);
               this.rbp.page = res.data.page
@@ -295,7 +295,7 @@
             RegisterMoveIn(this.mop).then(res => {
               if (res.code == 0) {
                 promptInfoFun(this,2,res.message)
-                this.searchFun(this.flag)
+                this.getList()
               } else {
                 promptInfoFun(this,1,res.message)
               }
@@ -310,6 +310,7 @@
         RegisterMoveIn(this.mop).then(res => {
           if (res.code == 0) {
             promptInfoFun(this, 2, res.message)
+            this.getList()
           } else {
             promptInfoFun(this, 1, res.message)
           }
@@ -346,7 +347,7 @@
         this.formRbp.SA_RegisterBookDetail_Id = row.Id
         this.formRbp.SA_RegisterBookInfo_Id = this.tbdp.SA_RegisterBookInfo_Id
         this.rbp = Object.assign({}, this.formRbp)
-        this.getList(this.rbp)
+        this.getList()
       },
     }
   }

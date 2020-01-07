@@ -55,15 +55,26 @@
         treeData:[]
       }
     },
+    watch:{
+      userType: function (newValue) {
+        if (newValue) {
+          this.$nextTick(()=>{
+            this.userType =='1' ? this.$refs.waterTableChild1.type = this.userType : this.$refs.waterTableChild2.type = this.userType
+          })
+        }
+      }
+    },
     methods:{
       handleClick(){//选项卡切换
         this.userType=='1' ? this.$refs.waterTableChild1.type = this.userType : this.$refs.waterTableChild2.type = this.userType
       },
-      GetWFMRRBITreeFun(){//获取全部表册树
-        GetWFMRRBITree({'WaterFactoryIdList':[]}).then(res => {
+      GetWFMRRBITreeFun(id){//获取全部表册树
+        let ids = ''
+        id == 1 ? ids = '' : ids = id
+        GetWFMRRBITree({'WaterFactoryId':ids}).then(res => {
           if (res.code ==0 ) {
-            this.oldTreeData = res.data
-            this.treeData = JSON.parse(JSON.stringify(res.data))
+            console.log(res)
+            id == 1 ? this.oldTreeData = res.data : this.treeData = res.data
           } else {
             promptInfoFun(this,1,res.message)
           }
@@ -74,12 +85,16 @@
           this.$refs.waterTableChild1.formRbp.SA_RegisterBookInfo_Id = data.Id
           this.$refs.waterTableChild1.formRbp.SA_WaterFactory_Id = data.SA_WaterFactory_Id
           this.$refs.waterTableChild1.getRegister()
+          this.$refs.waterTableChild1.moveTreeShow = false
+          this.GetWFMRRBITreeFun(data.SA_WaterFactory_Id)
         }
       },
       changeSecode2(data){//点击左侧区域回调
         this.$refs.waterTableChild2.formRbp.SA_UserArea_Id = data.Id
         this.$refs.waterTableChild2.formRbp.SA_RegisterBookInfo_Id = '0'
         this.$refs.waterTableChild2.getRegister()
+        this.$refs.waterTableChild2.moveTreeShow = false
+        this.GetWFMRRBITreeFun(data.WaterFactoryId)
       },
       getTreeData() {//获取全部区域树
         GetAreaList().then(res => {
@@ -97,7 +112,7 @@
     },
     mounted() {
       this.$nextTick(()=>{
-        this.GetWFMRRBITreeFun()
+        this.GetWFMRRBITreeFun(1)
         this.getTreeData()
       })
     }

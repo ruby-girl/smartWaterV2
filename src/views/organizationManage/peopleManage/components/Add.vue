@@ -18,7 +18,7 @@
                 <el-input v-model.trim="jp.EmpName" size="small" maxlength="10" placeholder="请输入人员名称"/>
               </el-form-item>
               <el-form-item label="性别" prop="Gender">
-                <el-select v-model="jp.Gender" placeholder="请选择" size="small">
+                <el-select clearable v-model="jp.Gender" placeholder="请选择" size="small">
                   <el-option label="女" value="女"/>
                   <el-option label="男" value="男"/>
                 </el-select>
@@ -48,7 +48,7 @@
               <!--部门岗位组件 s-->
               <PostInfo ref="childPost"></PostInfo>
               <el-form-item label="职务" prop="EnumFun">
-                <el-select v-model="jp.EnumFun" placeholder="请选择" size="small">
+                <el-select clearable v-model="jp.EnumFun" placeholder="请选择" size="small">
                   <el-option v-for="(item,index) in  EnumFunArry" :label="item.Name" :value="item.Id" :key="index"/>
                 </el-select>
               </el-form-item>
@@ -63,14 +63,14 @@
                 </el-row>
                 <transition name="fade">
                 <el-form-item label="水厂" prop="WaterFactoryIdarr" v-if="ifAddAcount=='是'">
-                  <el-select v-model="jp.WaterFactoryIdarr" placeholder="请选择" size="small" multiple>
+                  <el-select clearable v-model="jp.WaterFactoryIdarr" placeholder="请选择" size="small" multiple>
                     <el-option v-for="(item,index) in WaterFactory" :label="item.Name" :value="item.Id" :key="index"/>
                   </el-select>
                 </el-form-item>
                 </transition>
                 <transition name="fade">
                 <el-form-item label="角色" prop="RoleId" v-if="ifAddAcount=='是'">
-                  <el-select v-model="jp.RoleId" placeholder="请选择" size="small" >
+                  <el-select clearable v-model="jp.RoleId" placeholder="请选择" size="small" >
                     <el-option v-for="(item,index) in  RoleArry" :label="item.Name" :value="item.Id" :key="index"/>
                   </el-select>
                 </el-form-item>

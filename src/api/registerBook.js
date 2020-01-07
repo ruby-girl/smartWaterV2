@@ -168,6 +168,6 @@ export function GetWFMRRBITree(data) {
   return request({
     url: '/RegisterBook/GetWFMRRBITree',
     method: 'post',
-    data: data
+    params: data
   })
 }

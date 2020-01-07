@@ -201,12 +201,9 @@
           })
         }
       },
-      allocationForm(){//表册分配 临时表册
+      allocationForm(){//表册分配 未分配表册
         this.$refs.childSchedule.dialogVisible = true
         this.$refs.childSchedule.userType = '2'
-        this.$nextTick(() => {
-          this.$refs.childSchedule.$refs.waterTableChild2.getRegister(1)
-        })
       },
       handleEmpty(row){//清空
         ClearRegisterBook({'RegisterBookId':row.Id}).then(res => {
@@ -256,19 +253,14 @@
         })
       },
       getWaterFactoryList(){//获取具有权限的水厂数据集合
-        WaterFactoryComboBoxListAuth().then(res => {
-          if (res.code ==0 ) {
-              this.$refs.childDialog.waterFactory = res.data;
-              this.$refs.childSelect.waterFactory = res.data;
-              this.rbp.SA_WaterFactory_Id = res.data[0].Id;//查询条件
-              this.$refs.childDialog.rb.SA_WaterFactory_Id = res.data[0].Id//增加弹窗默认选当前登录人员所在水厂
-              this.getMeterReaderList(1,res.data[0].Id)//查询条件
-              this.getMeterReaderList(2,res.data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
-              this.getMeterReaderList(3,res.data[0].Id)//用户表册弹窗根据选中水厂获取默认抄表员数据
-          } else {
-            promptInfoFun(this,1,res.message)
-          }
-        })
+        let data = this.$store.state.user.waterWorks
+        this.$refs.childDialog.waterFactory = data
+        this.$refs.childSelect.waterFactory = data
+        this.rbp.SA_WaterFactory_Id = data[0].Id;//查询条件
+        this.$refs.childDialog.rb.SA_WaterFactory_Id = data[0].Id//增加弹窗默认选当前登录人员所在水厂
+        this.getMeterReaderList(1,data[0].Id)//查询条件
+        this.getMeterReaderList(2,data[0].Id)//增加弹窗根据选中水厂获取默认抄表员数据
+        this.getMeterReaderList(3,data[0].Id)//用户表册弹窗根据选中水厂获取默认抄表员数据
       },
       getMeterReaderList(type,id){//通过水厂获得抄表员
         MeterReaderList({SA_WaterFactory_Id:id}).then(res => {
@@ -314,6 +306,7 @@
       _this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
       _this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 70
       _this.getWaterFactoryList()
+
     }
   }
 </script>

@@ -252,13 +252,13 @@ export default {
       let date;
       if (v) {
         if (n == "timevalue") {
-          this.query.createStartTime = v[0] + "00:00:00";
-          this.query.createEndTime = v[1] + "23:59:59";
+          this.query.createStartTime = v[0] + " 00:00:00";
+          this.query.createEndTime = v[1] + " 23:59:59";
           date = this.query.createStartTime + "~" + this.query.createEndTime;
           this.$emit("getText", date, n, "", "申请日期");
         } else {
-          this.query.editStartTime = v[0] + "00:00:00";
-          this.query.editEndTime = v[1] + "23:59:59";
+          this.query.editStartTime = v[0] + " 00:00:00";
+          this.query.editEndTime = v[1] + " 23:59:59";
           date = this.query.editStartTime + "~" + this.query.editEndTime;
           this.$emit("getText", date, n, "", "审核日期");
         }

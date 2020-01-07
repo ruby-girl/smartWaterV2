@@ -684,7 +684,6 @@ export function legalTime(time_str) {
 export function scroNum(scroID, number ,h = 32) {//数字滚动
   let $num_item = document.getElementById(scroID).querySelectorAll('.dataOne>div')
   for(let i=0;i<$num_item.length;i++){
-    console.log($num_item[i])
     $num_item[i].style.top = 0 + 'px'//清空上次top值再计算本次top值
     $num_item[i].style.transition = 'all 1s ease-in-out'
   }

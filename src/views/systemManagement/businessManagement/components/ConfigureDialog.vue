@@ -7,8 +7,8 @@
       <el-form-item label="名称：">
         <el-input v-model="form.ModuleName" placeholder="审核人" size="small"></el-input>
       </el-form-item>
-      <el-form-item label="当审核不通过时，流程：">
-        <el-select v-model="form.ToId" placeholder="结束"  size="small">
+      <el-form-item label="当审核不通过时，审核环节返回至：">
+        <el-select v-model="form.ToId" placeholder="空值为直接结束"  size="small" clearable>
           <el-option v-for="(item,index) in nodeIds" :label="item.ModuleName" :value="item.Id" :key="index">{{item.ModuleName}}</el-option>
         </el-select>
       </el-form-item>
@@ -323,7 +323,7 @@
       getLocalstorageData(data){//动态获取节点，回归线下拉数据
         data.forEach((item,index)=>{//该节点之后的节点 不允许选择
           if(item.Id === this.module.Id){
-            this.nodeIds = data.slice(0,index+1)
+            this.nodeIds = data.slice(0,index)
           }
         })
       }
@@ -336,9 +336,9 @@
       Bus.$on('NodesSetFun', (msg) => {//触发流程节点配置
         let exp = undefined
         if(msg.item.ProcessConfigLine!=exp){
-          msg.item.ProcessConfigLine.ToId !='' ? this.form.ToId = msg.item.ProcessConfigLine.ToId : this.form.ToId = msg.item.Id
+         // msg.item.ProcessConfigLine.ToId !='' ? this.form.ToId = msg.item.ProcessConfigLine.ToId : this.form.ToId = msg.item.Id
         }else{
-          this.form.ToId = msg.item.Id
+        //  this.form.ToId = msg.item.Id
         }
         this.type = msg.type
         this.module = msg.item
@@ -429,7 +429,8 @@
   .configure_box {
     .el-dialog__body{background: #F5F5F5;padding: 0;}
     .person_form {background: #fff;padding: 35px 24px 13px 24px;margin-bottom: 10px;
-      .el-form-item{margin-right: 90px;}}
+      .el-form-item:first-child{margin-right: 90px;}
+    }
     .card_box{background: #fff;padding: 30px 25px 15px 25px;
       .el-tabs__content{padding: 0;}
     }

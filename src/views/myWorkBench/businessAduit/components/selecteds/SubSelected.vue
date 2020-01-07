@@ -143,8 +143,8 @@ export default {
     getTime(v) {
       let date;
       if (v) {
-        this.query.createStartTime = v[0] + "00:00:00";
-        this.query.createEndTime = v[1] + "23:59:59";
+        this.query.createStartTime = v[0] + " 00:00:00";
+        this.query.createEndTime = v[1] + " 23:59:59";
         date = this.query.createStartTime + "~" + this.query.createEndTime;
         this.$emit("getText", date, "timevalue", "", "申请日期");
       } else {
