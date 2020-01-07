@@ -8,7 +8,7 @@
         </el-button>
       </div>
       <el-form ref="userInfo" :model="userInfo" label-width="70px">
-        <el-form-item label="姓名">
+        <el-form-item label="姓名/简码">
           <el-input
             v-model="userInfo.CustomerName"
             @keydown.enter.native="searchEnter(2,userInfo.CustomerName)"

@@ -19,11 +19,11 @@
               <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="用户编号" ></el-table-column>
-          <el-table-column prop="name" label="用户姓名" ></el-table-column>
-          <el-table-column prop="name" label="日期" ></el-table-column>
-          <el-table-column prop="name" label="用水量" ></el-table-column>
-          <el-table-column prop="name" label="增水量" ></el-table-column>
+          <el-table-column prop="name" label="用户编号"></el-table-column>
+          <el-table-column prop="name" label="用户姓名"></el-table-column>
+          <el-table-column prop="name" label="日期"></el-table-column>
+          <el-table-column prop="name" label="用水量"></el-table-column>
+          <el-table-column prop="name" label="增水量"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -34,32 +34,34 @@
 import SelectHead from "./selected/WorkWaterSelected";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { GetReportFactory, ExcelReportFactory } from "@/api/reports";
 export default {
-  name: "WorkWater",//按水厂
+  name: "WorkWater", //按水厂
   components: { SelectHead, SearchTips },
   data() {
     return {
       selectHead: {
-        SA_WaterFactory_Id: "-1", //水厂
-        CreateUser: -1, //口径
-        WaterType: -1, //水表类型
-        UserType: -1, //用户类型
-        createStartTime: "",
-        createEndTime: ""
+        WaterFactoryId: "-1", //水厂
+        WaterFactoryName: "",
+        WaterMeterTypeId: -1,
+        WaterMeterTypeName: "", //水表类型
+        StartDate: "",
+        EndDate: ""
       },
       tableHeight: null,
       tableData: [], //表格数据
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      searchWidth: 1024
+      searchWidth: 1024,
+      orderData: {}
     };
   },
   methods: {
     delTips(val) {
       if (val == "dateArr") {
         //当返回的model 为时间数组  置空 时间
-        this.selectHead.createStartTime = "";
-        this.selectHead.createStartTime = "";
+        this.selectHead.StartDate = "";
+        this.selectHead.EndDate = "";
         this.$refs.seachChild.dateArr = [];
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
@@ -71,19 +73,41 @@ export default {
     },
     //导出
     excel() {
-      console.log("导出");
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
+          type: "warning"
+        });
+        return false;
+      }
+      ExcelReportFactory(this.orderData).then(res => {
+        if (res.code == 0) {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        } else {
+          this.$message({
+            type: "warning",
+            msg: res.msg ? res.msg : "导出失败  "
+          });
+        }
+      });
     },
     //查询
-    searchTableList() {
-      this.tipsData = pushItem(this.tipsDataCopy);
+    searchTableList(num) {
+      if (num != 0) {
+        this.orderData = Object.assign({}, this.listQuery);
+      }
+      GetReportFactory(this.selectHead).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
+        this.tableData = res.data;
+      });
     }
   },
   mounted() {
     this.searchWidth = this.$refs.formHeight.clientWidth;
     this.$nextTick(() => {
       this.tableHeight =
-        document.getElementsByClassName("onBox")[0]
-          .offsetHeight -
+        document.getElementsByClassName("onBox")[0].offsetHeight -
         document.getElementById("table").offsetTop -
         4;
 
@@ -95,7 +119,7 @@ export default {
 
 <style lang="scss" scoped>
 .onBox {
-    height: 100%;
+  height: 100%;
   padding: 0;
 }
 .contanier {

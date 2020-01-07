@@ -178,7 +178,9 @@
     methods:{
       setNumber(num){
          let obj = this.$refs.dzNum
-         scroNum(this.Ids,num)
+         let scrollNum = parseInt(num.toString().replace(/\./g,''))//过滤小数点 按整数显示滚动字幕
+         scroNum(this.Ids,scrollNum)
+
           let s = this.toDecimal(num)
           let b = s.split(".");
           let integerNum = b[0];

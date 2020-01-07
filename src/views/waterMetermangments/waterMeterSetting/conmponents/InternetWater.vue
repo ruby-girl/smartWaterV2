@@ -12,24 +12,70 @@
         ref="searcTable"
         style="width:100%"
       >
-        <el-form-item label="用户编号" v-show="show1||isShow" key="CustomerNo" prop="CustomerNo">
-          <el-input
-            v-model="WLWQueryParam.CustomerNo"
-            maxlength="20"
-            @change="getText(WLWQueryParam.CustomerNo,'CustomerNo','','用户编号')"
-          />
-        </el-form-item>
-        <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
+        <el-form-item label="水表编号" v-show="show1||isShow" key="WaterMeterNo" prop="WaterMeterNo">
           <el-input
             v-model="WLWQueryParam.WaterMeterNo"
             maxlength="20"
             @change="getText(WLWQueryParam.WaterMeterNo,'WaterMeterNo','','水表编号')"
           />
         </el-form-item>
+        <el-form-item label="水表状态" v-show="show2||isShow" key="MeterState" prop="MeterState">
+          <el-select
+            v-model="WLWQueryParam.MeterState"
+            placeholder="请选择"
+            @change="getText(WLWQueryParam.MeterState,'MeterState',waterTypeList,'水表状态')"
+          >
+            <el-option label="全部" :value="-1"></el-option>
+            <el-option
+              v-for="item in waterTypeList"
+              :label="item.Name"
+              :value="item.Id"
+              :key="item.Id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="阀门状态" v-show="show3||isShow" key="ValveState" prop="ValveState">
+          <el-select
+            v-model="WLWQueryParam.ValveState"
+            placeholder="请选择"
+            @change="getText(WLWQueryParam.ValveState,'ValveState',valStateList,'阀门状态')"
+          >
+            <el-option label="全部" :value="-1"></el-option>
+            <el-option
+              v-for="item in valStateList"
+              :label="item.Name"
+              :value="item.Id"
+              :key="item.Id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-show="show4||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
+          <el-select
+            v-model="WLWQueryParam.CustomerQueryType"
+            placeholder="请选择"
+            style="width: 100px;float: left;margin-right:4px;"
+            class="short-select"
+            @change="getscName(WLWQueryParam.CustomerQueryType)"
+          >
+            <el-option label="姓名/简码" value="2"></el-option>
+            <el-option label="用户编号" value="1"></el-option>
+            <el-option label="电话" value="3"></el-option>
+            <el-option label="证件号" value="4"></el-option>
+            <el-option label="用户地址" value="5"></el-option>
+          </el-select>
+          <el-input
+            v-model="WLWQueryParam.CustomerQueryValue"
+            maxlength="20"
+            placeholder="(长度1-30)"
+            @keyup.enter.native="handleFilter"
+            @change="getText(WLWQueryParam.CustomerQueryValue,'CustomerQueryValue','',secNmae)"
+            style="width: 180px;float: left"
+          />
+        </el-form-item>
 
         <el-form-item
           label="用户状态"
-          v-show="show3||isShow"
+          v-show="show5||isShow"
           key="CustomerMeterState"
           prop="CustomerMeterState"
         >
@@ -49,7 +95,7 @@
         </el-form-item>
         <el-form-item
           label="开户状态"
-          v-show="show4||isShow"
+          v-show="show6||isShow"
           key="CustomerOpenAccountState"
           prop="CustomerOpenAccountState"
         >
@@ -67,36 +113,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="阀门状态" v-show="show5||isShow" key="ValveState" prop="ValveState">
-          <el-select
-            v-model="WLWQueryParam.ValveState"
-            placeholder="请选择"
-            @change="getText(WLWQueryParam.ValveState,'ValveState',valStateList,'阀门状态')"
-          >
-            <el-option label="全部" :value="-1"></el-option>
-            <el-option
-              v-for="item in valStateList"
-              :label="item.Name"
-              :value="item.Id"
-              :key="item.Id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="水表状态" v-show="show6||isShow" key="MeterState" prop="MeterState">
-          <el-select
-            v-model="WLWQueryParam.MeterState"
-            placeholder="请选择"
-            @change="getText(WLWQueryParam.MeterState,'MeterState',waterTypeList,'水表状态')"
-          >
-            <el-option label="全部" :value="-1"></el-option>
-            <el-option
-              v-for="item in waterTypeList"
-              :label="item.Name"
-              :value="item.Id"
-              :key="item.Id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+
         <el-form-item>
           <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
             <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
@@ -160,7 +177,7 @@
               min-width="150px"
               sortable="custom"
               :prop="item.ColProp"
-              :align="item.Position"
+              align="center"
               :label="item.ColDesc"
             />
           </template>
@@ -175,10 +192,20 @@
                 content="查看历史详情"
                 placement="bottom"
               >
+                <i class="icon iconfont viewHis" @click="waterMeterWLWDetail(scope.row.Id)">&#xe670;</i>
+              </el-tooltip>
+               <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="编辑"
+                placement="bottom"
+              >
                 <i
-                  class="icon iconfont viewHis"
-                  @click="waterMeterWLWDetail(scope.row.Id)"
-                >&#xe670;</i>
+                  class="icon iconfont editJxWater"
+                  @click=""
+                >&#xe69f;</i>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -229,7 +256,7 @@ import {
   ValveLockClose //关
 } from "@/api/waterMeterMang";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem, getName } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   //机械表
   name: "InternetWater",
@@ -270,7 +297,7 @@ export default {
       total: 0,
       ErrorList: {}, //异常统计
       Bl_WaterMeter4His: {
-        Meter4Id : "",
+        Meter4Id: "",
         limit: 10,
         page: 1,
         sort: "",
@@ -305,7 +332,8 @@ export default {
       show3: true,
       show4: true,
       show5: true,
-      show6: true
+      show6: true,
+      secNmae: ""
     };
   },
   created() {
@@ -344,6 +372,9 @@ export default {
     }
   },
   methods: {
+    getscName(id) {
+      this.secNmae = getName(id);
+    },
     resetting() {
       //重置
       this.$refs["searcTable"].resetFields();

@@ -117,7 +117,7 @@
         checksData:[],
         query:{
           page:1,
-          limit:10,
+          limit:20,
           tableId: "0000016"
         },
         customHeight:'',

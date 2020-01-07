@@ -9,9 +9,9 @@
       size="small"
       label-width="70px"
       @submit.native.prevent>
-      <el-form-item label="水厂" v-if="waterFactory.length>1" prop="SA_WaterFactory_Id" :class="!ifMore||screenWidth>1440?'firstItemsOther':''">
+      <el-form-item label="水厂" prop="SA_WaterFactory_Id" :class="!ifMore||screenWidth>1440?'firstItemsOther':''" style="margin-left: -22px">
         <el-select v-model="param1.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList">
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value="-1" v-show="waterFactory.length>1"></el-option>
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -101,9 +101,9 @@
       size="small"
       label-width="70px"
       @submit.native.prevent>
-      <el-form-item label="水厂" v-if="waterFactory.length>1" prop="SA_WaterFactory_Id" :class="!ifMore2||screenWidth>1440?'firstItemsOther':''">
+      <el-form-item label="水厂" prop="SA_WaterFactory_Id" :class="!ifMore2||screenWidth>1440?'firstItemsOther':''" style="margin-left: -22px">
         <el-select v-model="param2.SA_WaterFactory_Id" placeholder="请选择" size="small" @change="getPlanList">
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value="-1" v-show="waterFactory.length>1"></el-option>
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -138,7 +138,7 @@
         </el-form-item>
       </transition>
       <transition name="fade">
-        <el-form-item label="表册" v-show="screenWdth<1680?ifMore2:true" prop="SA_RegisterBookInfo_Id">
+        <el-form-item label="表册" v-show="ifMore2" prop="SA_RegisterBookInfo_Id">
           <el-select v-model="param2.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param2.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formArry,'表册')">
             <el-option label="全部" value="-1"></el-option>
             <el-option v-for="(item,index) in formArry" :key="index" :label="item.Name" :value="item.Id"/>
@@ -201,6 +201,7 @@
   import { LoadRegisterBookAndMeterReader } from "@/api/meterReading"//抄表计划搜索条件下，获取表册及抄表员接口
   import { promptInfoFun } from "@/utils/index"
   import { getName } from "@/utils/projectLogic"
+  import{ mapGetters } from 'vuex'
 
   export default {
     name: "SelectHead",
@@ -216,7 +217,7 @@
         param1: {
           CustomerQueryType: "1", //用户查询类型 用户编号=1，姓名=2，简码=3
           CustomerQueryValue: "", //用户查询值
-          SA_WaterFactory_Id: "-1", //水厂
+          SA_WaterFactory_Id: "", //水厂
           SA_MeterReadPlan_Id: "", //抄表计划Id
           SA_MeterReader_Id: "-1", //抄表员ID
           SA_RegisterBookInfo_Id: "-1", //表册Id
@@ -237,7 +238,7 @@
         param2: {
           CustomerQueryType: "1", //用户查询类型 用户编号=1，姓名=2，简码=3
           CustomerQueryValue: "", //用户查询值
-          SA_WaterFactory_Id: "-1", //水厂
+          SA_WaterFactory_Id: "", //水厂
           SA_MeterReadPlan_Id: "", //抄表计划Id
           SA_MeterReader_Id: "-1", //抄表员ID
           SA_RegisterBookInfo_Id: "-1", //表册Id
@@ -410,13 +411,26 @@
         this.getText(text,model,arr,name)
       }
     },
+    computed: {
+      ...mapGetters([
+        'waterWorks'
+      ]),
+    },
+    watch: {
+      waterWorks: function (newValue) {
+        if (newValue) {
+          this.waterFactory = newValue
+          this.getPlanList(this.waterFactory[0].Id);
+        }
+      }
+    },
     mounted() {
+      this.waterFactory = this.$store.state.user.waterWorks
+      this.getPlanList(this.waterFactory[0].Id);
       this.screenWdth = window.screen.width
       this.formArry = getDictionaryOption('表册类型')
       this.meterState = getDictionaryOption('抄表状态')
       this.userArry = getDictionaryOption('用户类型')
-      this.waterFactory=this.$store.state.user.waterWorks
-      this.getPlanList(this.waterFactory[0].Id);
       if(this.$route.query.CustomerNo){
         this.typeCheck = 2
         this.param.ReadingQueryType = '2'

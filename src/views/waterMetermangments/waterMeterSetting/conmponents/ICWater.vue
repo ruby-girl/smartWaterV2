@@ -11,7 +11,7 @@
         @submit.native.prevent
         ref="searcTable"
       >
-        <el-form-item
+        <!-- <el-form-item
           label="姓名"
           v-show="show1||isShow"
           key="CustomerName"
@@ -24,15 +24,15 @@
             placeholder="(长度1-10)"
             @change="getText(IcwachMeterData.CustomerName,'CustomerName','','姓名')"
           />
-        </el-form-item>
-        <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
+        </el-form-item>-->
+        <el-form-item label="水表编号" v-show="show1||isShow" key="WaterMeterNo" prop="WaterMeterNo">
           <el-input
             v-model="IcwachMeterData.WaterMeterNo"
             maxlength="50"
             @change="getText(IcwachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
           />
         </el-form-item>
-        <el-form-item label="水表样式" v-show="show3||isShow" key="wms" prop="wms">
+        <el-form-item label="水表样式" v-show="show2||isShow" key="wms" prop="wms">
           <el-select
             v-model="IcwachMeterData.wms"
             placeholder="请选择"
@@ -46,6 +46,27 @@
               :key="item.Name"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item v-show="show3||isShow" key="QueryType" prop="QueryType">
+          <el-select
+            v-model="IcwachMeterData.QueryType"
+            placeholder="请选择"
+            style="width: 100px;float: left;margin-right:4px;"
+            class="short-select"
+            @change="getscName(IcwachMeterData.QueryType)"
+          >
+            <el-option label="姓名" value="2"></el-option>
+            <el-option label="用户编号" value="1"></el-option>
+      
+          </el-select>
+          <el-input
+            v-model="IcwachMeterData.Customer"
+            maxlength="20"
+            placeholder="(长度1-30)"
+            @keyup.enter.native="handleFilter"
+            @change="getText(IcwachMeterData.Customer,'Customer','',secNmae)"
+            style="width: 180px;float: left"
+          />
         </el-form-item>
         <el-form-item label="用户状态" v-show="show4||isShow" key="cs" prop="cs">
           <el-select
@@ -101,7 +122,7 @@
               min-width="170px"
               :sortable="item.IsSortBol?'custom':null"
               :prop="item.ColProp"
-              :align="item.Position"
+              align="center"
               :label="item.ColDesc"
               :fixed="item.Freeze"
             />
@@ -111,7 +132,7 @@
               min-width="170px"
               sortable="custom"
               :prop="item.ColProp"
-              :align="item.Position"
+              align="center"
               :label="item.ColDesc"
             />
           </template>
@@ -131,6 +152,16 @@
                 placement="bottom"
               >
                 <i class="icon iconfont viewHis" @click="waterMeterICDetail(scope.row.Id)">&#xe670;</i>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="编辑"
+                placement="bottom"
+              >
+                <i class="icon iconfont editJxWater" @click="edit">&#xe69f;</i>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -167,23 +198,25 @@
         @pagination="waterMeterJxDetail(waterMeterICDetail.WaterMeterId)"
       />
     </el-dialog>
+    <editIC-waterMeter :edit-show.sync="editShow" />
   </div>
 </template>
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem, getName } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   searICMeterWater,
   searICHisWater,
   excelICMeterWater
 } from "@/api/waterMeterMang";
 import ICWaterMeterHis from "./intercomponents/ICWaterMeterHis";
+import EditICWaterMeter from "./intercomponents/EditICWaterMeter";
 export default {
   //机械表
   name: "ICWater",
-  components: { SearchTips, Pagination, ICWaterMeterHis },
+  components: { SearchTips, Pagination, ICWaterMeterHis,EditICWaterMeter },
   props: {
     waterMeterList: {
       type: Array,
@@ -211,7 +244,8 @@ export default {
         //查询
         page: 1,
         limit: 20,
-        CustomerName: "", // 用户名 ,
+       QueryType: "", // 用户名 ,
+        Customer: "", // 用户名 ,
         WaterMeterNo: "", //水表编号 ,
         wms: "-1", //水表样式
         cs: "-1", //开户状态
@@ -247,7 +281,9 @@ export default {
       show1: true,
       show2: true,
       show3: true,
-      show4: true
+      show4: true,
+      secNmae: "",
+      editShow:false
     };
   },
   mounted() {
@@ -277,6 +313,12 @@ export default {
     }
   },
   methods: {
+    edit() {
+      this.editShow = true;
+    },
+    getscName(id) {
+      this.secNmae = getName(id);
+    },
     resetting() {
       //重置
       this.$refs["searcTable"].resetFields();

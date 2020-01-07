@@ -154,6 +154,10 @@
 .el-form-item__content .el-date-editor--daterange{
   width:290px !important;
 }
+//年月
+.el-form-item__content .el-date-editor--monthrange{
+  width: 290px!important;
+}
 // 含时分秒
 .el-date-editor--datetimerange{
   width:350px !important;

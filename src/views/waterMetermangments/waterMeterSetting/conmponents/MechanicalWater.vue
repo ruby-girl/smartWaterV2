@@ -11,7 +11,9 @@
         @submit.native.prevent
         ref="searcTable"
       >
-        <el-form-item
+
+       
+        <!-- <el-form-item
           label="姓名"
           v-show="show1||isShow"
           prop="CustomerName"
@@ -24,15 +26,15 @@
             placeholder="(长度1-10)"
             @change="getText(wachMeterData.CustomerName,'CustomerName','','姓名')"
           />
-        </el-form-item>
-        <el-form-item label="水表编号" v-show="show2||isShow" key="WaterMeterNo" prop="WaterMeterNo">
+        </el-form-item> -->
+        <el-form-item label="水表编号" v-show="show1||isShow" key="WaterMeterNo" prop="WaterMeterNo">
           <el-input
             v-model="wachMeterData.WaterMeterNo"
             maxlength="50"
             @change="getText(wachMeterData.WaterMeterNo,'WaterMeterNo','','水表编号')"
           />
         </el-form-item>
-        <el-form-item label="水表样式" v-show="show3||isShow" key="wachMeterData" prop="wachMeterData">
+        <el-form-item label="水表样式" v-show="show2||isShow" key="wachMeterData" prop="wachMeterData">
           <el-select
             v-model="wachMeterData.wms"
             placeholder="请选择"
@@ -46,6 +48,27 @@
               :key="item.Name"
             ></el-option>
           </el-select>
+        </el-form-item>
+         <el-form-item v-show="show3||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
+          <el-select
+            v-model="wachMeterData.QueryType"
+            placeholder="请选择"
+            style="width: 100px;float: left;margin-right:4px;"
+            class="short-select"
+            @change="getscName(wachMeterData.QueryType)"
+          >
+            <el-option label="姓名" value="2"></el-option>
+            <el-option label="用户编号" value="1"></el-option>
+           
+          </el-select>
+          <el-input
+            v-model="wachMeterData.Customer"
+            maxlength="20"
+            placeholder="(长度1-30)"
+            @keyup.enter.native="handleFilter"
+            @change="getText(wachMeterData.Customer,'Customer','',secNmae)"
+            style="width: 180px;float: left"
+          />
         </el-form-item>
         <el-form-item label="用户状态" v-show="show4||isShow" key="cs" prop="cs">
           <el-select
@@ -100,7 +123,7 @@
               min-width="190px"
               :sortable="item.IsSortBol?'custom':null"
               :prop="item.ColProp"
-              :align="item.Position"
+              align="center"
               :label="item.ColDesc"
               :fixed="item.Freeze"
             />
@@ -182,7 +205,7 @@
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem ,getName} from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   searJXMeterWater,
   searJXHisWater,
@@ -223,7 +246,8 @@ export default {
       wachMeterData: {
         page: 1,
         limit: 20,
-        CustomerName: "", // 用户名 ,
+        QueryType: "", // 用户名 ,
+        Customer: "", // 用户名 ,
         WaterMeterNo: "", //水表编号 ,
         wms: "-1", //水表样式
         cs: "-1", //开户状态
@@ -259,7 +283,8 @@ export default {
       show1: true,
       show2: true,
       show3: true,
-      show4: true
+      show4: true,
+      secNmae:""
     };
   },
   mounted() {
@@ -289,6 +314,9 @@ export default {
     }
   },
   methods: {
+    getscName(id) {
+      this.secNmae = getName(id);
+    },
     resetting() {
       //重置
       this.$refs["searcTable"].resetFields();

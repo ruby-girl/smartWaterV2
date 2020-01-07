@@ -35,7 +35,7 @@
               min-width="190px"
               :sortable="item.IsSortBol?'custom':null"
               :prop="item.ColProp"
-              :align="item.Position"
+              align="center"
               :label="item.ColDesc"
             />
           </template>

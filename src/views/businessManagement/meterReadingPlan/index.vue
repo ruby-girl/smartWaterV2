@@ -52,7 +52,7 @@
                 min-width="230px"
                 :sortable="item.IsSortBol?'custom':null"
                 :prop="item.ColProp"
-                :align="item.Position"
+                align="center"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
               />
@@ -62,7 +62,7 @@
                 min-width="230px"
                 sortable="custom"
                 :prop="item.ColProp"
-                :align="item.Position"
+                align="center"
                 :label="item.ColDesc"
               />
             </template>
@@ -83,7 +83,7 @@
                       @click="generateOrder(scope.row.Id)"
                     >&#xe69d;</i>
                   </el-tooltip>
-                   <el-tooltip
+                  <el-tooltip
                     v-show="scope.row.IsCanGenerateOrder==false"
                     class="item"
                     popper-class="tooltip"
@@ -91,10 +91,7 @@
                     content="已生成过费用"
                     placement="bottom"
                   >
-                    <i
-                      class="iconStyle icon iconfont operation1"
-                      style="color:#d5d5d5"
-                    >&#xe69d;</i>
+                    <i class="iconStyle icon iconfont operation1" style="color:#d5d5d5">&#xe69d;</i>
                   </el-tooltip>
                 </span>
                 <el-tooltip
@@ -127,9 +124,9 @@
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
                   <i
-                    class="iconStyle icon iconfont operation3"
+                    class="iconStyle icon iconfont operation3 iconbiaodan1"
                     @click="meterReadingPlanDetail(scope.row.Id)"
-                  >&#xe69d;</i>
+                  ></i>
                 </el-tooltip>
                 <el-tooltip
                   class="item"
@@ -266,8 +263,8 @@ export default {
       that.tableHeight =
         document.getElementsByClassName("section-full-container")[0]
           .offsetHeight -
-        document.getElementById("table").offsetTop -47
-        
+        document.getElementById("table").offsetTop -
+        89;
       this.$refs.searchTips.$refs.myChild.GetTable(this.selectHead.tableId); // 先获取所有自定义字段赋值
       this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
       this.searchWidth = this.$refs.formHeight.clientWidth;
@@ -297,7 +294,7 @@ export default {
       GenerateOrder({ SA_MeterReadPlan_Id: id }).then(res => {
         if (res.code == 0) {
           that.$message({
-            message: res.data ? res.data : "操作成功",
+            message: res.message ? res.message : "操作成功",
             type: "success"
           });
         } else {
@@ -306,6 +303,7 @@ export default {
             type: "warning"
           });
         }
+        this.searchTableList();
       });
     },
     meterReadingPlanDetail(id) {
@@ -321,7 +319,7 @@ export default {
       });
     },
     delMeterReadingPlan(id) {
-      //删除
+      //生成费用
       let that = this;
       this.$confirm("是否删除当前信息", "提示", {
         confirmButtonText: "确定",
@@ -329,23 +327,24 @@ export default {
         type: "warning",
         customClass: "warningBox",
         showClose: false
-      }).then(() => {
-        delPlanList({ SA_MeterReadPlan_Id: id }).then(res => {
-          if (res.code == 0) {
-            that.$message({
-              message: res.message ? res.message : "删除成功",
-              type: "success"
-            });
-            that.searchTableList();
-          } else {
-            that.$message({
-              message: res.message,
-              type: "warning"
-            });
-          }
-        });
-      }).catch(()=>{
-      });
+      })
+        .then(() => {
+          delPlanList({ SA_MeterReadPlan_Id: id }).then(res => {
+            if (res.code == 0) {
+              that.$message({
+                message: res.message ? res.message : "删除成功",
+                type: "success"
+              });
+              that.searchTableList();
+            } else {
+              that.$message({
+                message: res.message,
+                type: "warning"
+              });
+            }
+          });
+        })
+        .catch(() => {});
     },
     sortChanges({ column, prop, order }) {
       //排序
@@ -361,7 +360,10 @@ export default {
       if (this.companyParentOptions.length == 1) {
         this.selectHead.SA_WaterFactory_Id = this.companyParentOptions[0].Id;
       }
-      if (!this.selectHead.warterMeterPlanDate||this.selectHead.warterMeterPlanDate.length < 1) {
+      if (
+        !this.selectHead.warterMeterPlanDate ||
+        this.selectHead.warterMeterPlanDate.length < 1
+      ) {
         that.$message({
           message: "计划抄表日期不能为空，请选择!",
           type: "warning"

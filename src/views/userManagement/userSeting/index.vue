@@ -71,11 +71,6 @@ export default {
       waterNums:[]
     };
   },
-  watch:{
-    query(){
-      this.$refs.tableChild.query = this.query
-    }
-  },
   computed: {
     ...mapGetters([
       'waterWorks'
@@ -89,6 +84,9 @@ export default {
     },
     waterFactoryName: function (newValue) {//全部水厂不允许添加区域
       newValue.Id == '-1' ? this.disAdd = true : this.disAdd = false
+    },
+    query(){
+      this.$refs.tableChild.query = this.query
     }
   },
   methods: {
@@ -274,6 +272,9 @@ export default {
   },
   mounted() {
     this.waterNums = this.$store.state.user.waterWorks
+    this.waterNums.forEach(item=>{//默认顶级水厂不能进行删除编辑操作
+      item.Level = 1
+    })
     let obj = {
       Id:'-1',
       Name:'全部水厂',

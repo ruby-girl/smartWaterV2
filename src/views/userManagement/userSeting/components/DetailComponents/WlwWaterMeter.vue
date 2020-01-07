@@ -11,7 +11,7 @@
         </li>
         <li class="user_line clearfix">
           <p class="half">水表样式 <span>{{ data.WaterMeterStyleName}}</span></p>
-          <p class="half">口径 <span>{{ data.WaterRemark }}</span></p>
+          <p class="half">口径 <span>{{ data.MeterDiameter }}</span></p>
         </li>
         <li class="user_line clearfix">
           <p class="half">报警量(吨) <span>{{ data.AlarmYield }}</span></p>
