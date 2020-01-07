@@ -157,6 +157,7 @@ export default {
         if (res.code == 0) {
           this.userInfo = {};
           this.waterInfo = {};
+          this.totalMoney = 0;
           if (res.data.length == 0) {
             this.$message({
               message: "该用户不存在",

@@ -70,7 +70,7 @@
               <template slot-scope="scope">
                 <span style="display:inline-block;width:30px;">
                   <el-tooltip
-                    v-show="scope.row.IsCanGenerateOrder"
+                    v-show="scope.row.IsCanGenerateOrder==true"
                     class="item"
                     popper-class="tooltip"
                     effect="light"
@@ -83,6 +83,19 @@
                       @click="generateOrder(scope.row.Id)"
                     >&#xe69d;</i>
                   </el-tooltip>
+                   <el-tooltip
+                    v-show="scope.row.IsCanGenerateOrder==false"
+                    class="item"
+                    popper-class="tooltip"
+                    :visible-arrow="false"
+                    content="已生成过费用"
+                    placement="bottom"
+                  >
+                    <i
+                      class="iconStyle icon iconfont operation1"
+                      style="color:#d5d5d5"
+                    >&#xe69d;</i>
+                  </el-tooltip>
                 </span>
                 <el-tooltip
                   v-if="scope.row.IsAllowDataSupplementaryInputFormat=='是'"
@@ -90,7 +103,7 @@
                   popper-class="tooltip"
                   effect="light"
                   :visible-arrow="false"
-                  content="数据补录"
+                  content="开启/关闭数据补录"
                   placement="bottom"
                 >
                   <i
@@ -104,7 +117,7 @@
                   popper-class="tooltip"
                   effect="light"
                   :visible-arrow="false"
-                  content="数据绑定"
+                  content="开启/关闭数据补录"
                   placement="bottom"
                 >
                   <i
@@ -263,14 +276,10 @@ export default {
   methods: {
     //删除面包屑
     delTips(val) {
-      if (val == "warterMeterPlanDate") {
-        this.$message({
-          message: "计划抄表日期不能为空",
-          type: "warning"
-        });
-        return false;
-      }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
+      if (val == "warterMeterPlanDate") {
+        this.getDefaulDate();
+      }
       this.searchTableList();
       //返回的查询条件的属性
     },
@@ -352,13 +361,14 @@ export default {
       if (this.companyParentOptions.length == 1) {
         this.selectHead.SA_WaterFactory_Id = this.companyParentOptions[0].Id;
       }
-      if (this.selectHead.warterMeterPlanDate.length < 1) {
+      if (!this.selectHead.warterMeterPlanDate||this.selectHead.warterMeterPlanDate.length < 1) {
         that.$message({
           message: "计划抄表日期不能为空，请选择!",
           type: "warning"
         });
         return false;
       }
+
       this.$refs.child1.getTime();
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
@@ -477,7 +487,7 @@ export default {
   margin: 10px;
 }
 .operation2-1 {
-  color: #46494c;
+  color: #acacac;
   margin: 10px;
 }
 .operation3 {

@@ -191,7 +191,7 @@
               class="left-input"
             ></el-input>
           </el-form-item>
-          <el-form-item label="表端余额">
+          <el-form-item label="账户余额">
             <el-input
               class="totalMoney left-input"
               disabled

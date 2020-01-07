@@ -329,8 +329,6 @@
         if(this.typeCheck==1){//计划
           QueryMeterReadPlanByFactoryId({SA_WaterFactory_Id:id}).then(res => {
             if (res.code ==0 ) {
-              console.log(res)
-              console.log("0000000000000000000")
               this.planArry = res.data;
               this.param1.SA_MeterReadPlan_Id = res.data[0].Id
               this.getCbyInfo(res.data[0].Id)//搜索默认抄表计划

@@ -80,6 +80,7 @@ export default {
   },
   methods: {
     addMeterReadingPlan() {
+
       let that = this;
       if (!this.addPlanData.SA_WaterFactory_Id) {
         that.$message({
@@ -131,7 +132,8 @@ export default {
         if (res.code == 0) {
           that.addPlanData.StartPlanDate = res.data;
           const ETime = res.data.split(" ")[0];
-          that.addPlanData.EndPlanDate = ETime;
+          that.addPlanData.EndPlanDate =  that.getNextMonth(ETime);
+         
           that.endDateLimit = {
             disabledDate(time) {
               return time.getTime() < new Date(res.data);
@@ -139,6 +141,20 @@ export default {
           };
         }
       });
+    },
+    getNextMonth(time){
+      let date=new Date(time)
+      let year=date.getFullYear()
+      let month=date.getMonth()+2
+      let day=date.getDate()
+      let nextMonth=year+"-"+month+"-"+day
+      let dateNum=new Date(nextMonth).getTime()
+      let lastDay=new Date(dateNum-24*60*60*1000)
+      let lastyear=lastDay.getFullYear()
+      let lastmonth=lastDay.getMonth()+1
+      let lastday=lastDay.getDate()
+      let lastnextMonth=lastyear+"-"+lastmonth+"-"+lastday
+      return lastnextMonth
     }
   },
   data() {
