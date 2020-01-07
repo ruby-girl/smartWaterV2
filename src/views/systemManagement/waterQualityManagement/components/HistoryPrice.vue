@@ -96,14 +96,24 @@
           label="操作"
           align="center"
           class-name="small-padding"
-          width="189px"
+          width="100px"
           fixed="right"
         >
           <template slot-scope="{row}">
-            <div class="display-flex justify-content-flex-center method-font">
-              <div class="main-color-warn" @click="constitute(row)">
+            <div class="display-flex justify-content-flex-center method-font secur-content">
+              <!-- <div class="main-color-warn" @click="constitute(row)">
                 <a>水价构成</a>
-              </div>
+              </div> -->
+               <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="水价构成"
+                placement="bottom"
+              >
+                <i class="icon iconfont iconyongshuixingzhishezhi-shuijiagoucheng"  @click="constitute(row)"></i>
+              </el-tooltip>
             </div>
           </template>
         </el-table-column>
@@ -270,5 +280,15 @@ export default {
 .color-more-black {
   color: #46494c;
 }
+.secur-content {
+    .icon {
+      font-size: 16px;
+      color:#777c82;
+      cursor: pointer;
+    }
+    .iconyongshuixingzhishezhi-shuijiagoucheng {
+      color: #b59200 !important;
+    }
+    }
 </style>
 

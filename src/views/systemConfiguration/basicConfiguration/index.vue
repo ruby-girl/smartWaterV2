@@ -175,7 +175,7 @@
                 @click="pushCaliberAlarmVal"
               ></i>
               <i
-                class="iconfont icon- main-color pointer"
+                class="iconfont icon- main-color-pink pointer"
                 v-show="i!==postData.CaliberAlarmVal.length-1"
                 @click="delCaliberAlarmVal(i)"
               ></i>
@@ -238,7 +238,7 @@
               @click="pushTime"
             ></i>
             <i
-              class="iconfont icon- main-color pointer"
+              class="iconfont icon- main-color-pink pointer"
               v-show="i!==postData.NotColseTimes.length-1"
               @click="delTime(i)"
             ></i>
@@ -517,11 +517,6 @@ export default {
     margin-bottom: 5px;
     padding-bottom: 5px;
   }
-}
-.add-btn-config {
-  border: 1px solid #00b2a1;
-  color: #00b2a1;
-  border-radius: 50%;
 }
 .section-full-container {
   height: 100%;

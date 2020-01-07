@@ -79,15 +79,15 @@ export const asyncRoutes = [
           roles: ['1']
         }
       },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: 'Directive Permission',
-          roles: ['2']
-        }
-      },
+      // {
+      //   path: 'directive',
+      //   component: () => import('@/views/permission/directive'),
+      //   name: 'DirectivePermission',
+      //   meta: {
+      //     title: 'Directive Permission',
+      //     roles: ['2']
+      //   }
+      // },
       {
         path: 'role',
         component: () => import('@/views/permission/role/index'),
@@ -432,6 +432,15 @@ export const asyncRoutes = [
       name: 'basicConfig',
       meta: {
         title: '基础功能设置',
+        roles: ['1']
+      }
+    },
+    {
+      path: 'differenceConfig',
+      component: () => import('@/views/systemConfiguration/differenceConfig/index'),
+      name: 'differenceConfig',
+      meta: {
+        title: '产销差供水量设置',
         roles: ['1']
       }
     }]

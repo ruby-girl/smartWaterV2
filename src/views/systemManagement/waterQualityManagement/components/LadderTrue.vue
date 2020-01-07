@@ -92,12 +92,23 @@
               class="display-flex align-items-center ladder-item"
               v-if="(i+1)==temp.LadderNumber"
             >
-              <span class="main-color cursor" v-if="temp.LadderNumber<5" @click="addLadderNumber">增加</span>&nbsp;&nbsp;&nbsp;
+              <!-- <span class="main-color cursor" v-if="temp.LadderNumber<5" @click="addLadderNumber">增加</span>&nbsp;&nbsp;&nbsp;
               <span
                 class="main-color-red cursor"
                 @click="delLadderNumber"
                 v-if="temp.LadderNumber>2"
-              >删除</span>
+              >删除</span> -->
+              <i
+              class="iconfont iconicon-test main-color pointer"
+             v-if="temp.LadderNumber<5"
+              @click="addLadderNumber"
+            ></i>
+            <i
+              class="iconfont icon- main-color-pink pointer"
+              @click="delLadderNumber"
+                v-if="temp.LadderNumber>2"
+                style="margin-left:10px;"
+            ></i>
             </div>
           </div>
         </div>
