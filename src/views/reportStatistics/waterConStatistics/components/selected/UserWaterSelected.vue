@@ -21,7 +21,7 @@
           <el-option label="用户编号" value="1"></el-option>
         </el-select>
         <el-input
-          v-model="selectHead.CustomerQueryValue"
+          v-model="selectHead.CustomerQueryType==1?selectHead.UserNo:selectHead.UserName"
           maxlength="20"
           placeholder="(长度1-30)"
           @keyup.enter.native="handleFilter"
@@ -126,18 +126,18 @@ export default {
       let date = this.dateArr;
       let dateStipe;
       if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
+        this.selectHead.StartDate = date[0];
+        this.selectHead.EndDate = date[1];
         dateStipe =
-          this.selectHead.createStartTime.split(" ")[0] +
+          this.selectHead.StartDate.split(" ")[0] +
           "~" +
-          this.selectHead.createEndTime.split(" ")[0];
-        this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
+          this.selectHead.EndDate.split(" ")[0];
+        this.$emit("getText", dateStipe, "dateArr", "", "日期");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
+        this.selectHead.StartDate = "";
+        this.selectHead.EndDate = "";
         dateStipe = "";
-        this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
+        this.$emit("getText", dateStipe, "dateArr", "", "日期");
       }
     }
   },

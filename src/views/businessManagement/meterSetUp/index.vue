@@ -167,6 +167,7 @@
                 _this.$refs.planchild1.$refs.ReadNumInput.$el.querySelector('input').focus()
               })
             }
+
             MeterReadingProcessQuery({
               'SA_MeterReadPlan_Id': this.param.SA_MeterReadPlan_Id,
               'SA_RegisterBookInfo_Id': this.param.SA_RegisterBookInfo_Id

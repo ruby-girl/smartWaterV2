@@ -62,7 +62,7 @@
       </transition>
       <transition name="fade">
         <el-form-item label="录入人  " v-show="ifMore"  prop="InputEmpName">
-          <el-input v-model="param1.InputEmpName" maxlength="20" placeholder="请输入录入人" @change="getText(param1.InputEmpName,'InputEmpName','','录入人')"/>
+          <el-input v-model="param1.InputEmpName" maxlength="50" placeholder="请输入录入人" @change="getText(param1.InputEmpName,'InputEmpName','','录入人')"/>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -165,7 +165,7 @@
       </transition>
       <transition name="fade">
         <el-form-item label="录入人  " v-show="ifMore2" prop="InputEmpName">
-          <el-input v-model="param2.InputEmpName" maxlength="20" placeholder="请输入录入人" @change="getText(param2.InputEmpName,'InputEmpName','','录入人')"/>
+          <el-input v-model="param2.InputEmpName" maxlength="50" placeholder="请输入录入人" @change="getText(param2.InputEmpName,'InputEmpName','','录入人')"/>
         </el-form-item>
       </transition>
       <transition name="fade">
@@ -200,7 +200,7 @@
   import { QueryMeterReaderByFactoryId } from "@/api/meterQuery" //抄表时间条件下，获取抄表员信息接口
   import { LoadRegisterBookAndMeterReader } from "@/api/meterReading"//抄表计划搜索条件下，获取表册及抄表员接口
   import { promptInfoFun } from "@/utils/index"
-  import { getName } from "@/utils/projectLogic"
+  import { getName,getMonthStartDate,getMonthEndDate } from "@/utils/projectLogic"
   import{ mapGetters } from 'vuex'
 
   export default {
@@ -266,7 +266,7 @@
         userArry:[],//用户类型
         planArry:[],
         screenWdth:'',
-        checkAllData:[]
+        checkAllData:[],
       }
     },
     methods: {
@@ -425,6 +425,11 @@
       }
     },
     mounted() {
+      this.meterData.push(getMonthStartDate())
+      this.meterData.push(getMonthEndDate())
+      this.param2.ReadDateStart = getMonthStartDate()+ " 00:00:00";
+      this.param2.ReadDateEnd = getMonthEndDate()+ " 23:59:59";
+
       this.waterFactory = this.$store.state.user.waterWorks
       this.getPlanList(this.waterFactory[0].Id);
       this.screenWdth = window.screen.width

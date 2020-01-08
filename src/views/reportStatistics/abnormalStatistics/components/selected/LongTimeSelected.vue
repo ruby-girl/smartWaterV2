@@ -21,7 +21,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'水厂')"
         >
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value=""></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -31,14 +31,14 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterType">
+      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterMeter">
         <el-select
-          v-model="selectHead.WaterType"
+          v-model="selectHead.WaterMeter"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterType,'WaterType',WaterMeterList,'水表类型')"
+          @change="getText(selectHead.WaterMeter,'WaterMeter',WaterMeterList,'水表类型')"
         >
-          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="全部" :value="0"></el-option>
           <el-option
             v-for="item in WaterMeterList"
             :key="item.Id"
@@ -47,14 +47,14 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户类型" v-show="show2||isShow" prop="UserType">  
+      <el-form-item label="用户类型" v-show="show2||isShow" prop="UserType">
         <el-select
           v-model="selectHead.UserType"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.UserType,'UserType',userTypeList,'用户类型')"
         >
-          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="全部" :value="0"></el-option>
           <el-option
             v-for="item in userTypeList"
             :key="item.Id"
@@ -63,14 +63,14 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="口径" v-show="show3||isShow" prop="CreateUser">
+      <el-form-item label="口径" v-show="show3||isShow" prop="MeterDiameter">
         <el-select
-          v-model="selectHead.CreateUser"
+          v-model="selectHead.MeterDiameter"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.CreateUser,'CreateUser',editUserList,'口径')"
+          @change="getText(selectHead.MeterDiameter,'MeterDiameter',editUserList,'口径')"
         >
-          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="全部" :value="0"></el-option>
           <el-option
             v-for="item in editUserList"
             :key="item.Id"
@@ -81,19 +81,22 @@
       </el-form-item>
       <el-form-item label="未缴费起止日期" label-width="110px" v-show="show4||isShow">
         <el-date-picker
-          v-model="dateArr"
-          type="daterange"
-          :editable="false"
-          :unlink-panels="true"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
+          v-model="selectHead.StarDateTime"
+          type="date"
+          placeholder="选择日期时间"
           format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
-          @keydown.enter.native="handleFilter"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :picker-options="pickTime"
           @change="getTime"
-        />
+        ></el-date-picker>
+        <el-date-picker
+          v-model="selectHead.EndDateTime"
+          type="date"
+          disabled
+          placeholder="选择日期时间"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <span class="isShow" :class="{tro:isShow}" v-if="showBtn">
@@ -132,7 +135,12 @@ export default {
       show2: true,
       show3: true,
       show4: true,
-      showBtn: false
+      showBtn: false,
+      pickTime: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      }
     };
   },
   watch: {
@@ -159,7 +167,7 @@ export default {
       immediate: true
     }
   },
-  created() {},
+
   methods: {
     resetting() {
       //重置
@@ -183,22 +191,14 @@ export default {
       this.$emit("getText", val, model, arr, name);
     },
     getTime() {
+      let dateStipe = "";
       //时间格式化
-      let date = this.dateArr;
-      let dateStipe;
-      if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
+      if (this.selectHead.StarDateTime) {
         dateStipe =
-          this.selectHead.createStartTime.split(" ")[0] +
-          "~" +
-          this.selectHead.createEndTime.split(" ")[0];
-        this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
+          this.selectHead.StarDateTime + "~" + this.selectHead.EndDateTime+" 23:59:59";
+        this.$emit("getText", dateStipe, "StarDateTime", "", "未缴费起止日期");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
-        dateStipe = "";
-        this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
+        this.$emit("getText", dateStipe, "StarDateTime", "", "未缴费起止日期");
       }
     }
   },
@@ -216,11 +216,20 @@ export default {
   },
   mounted() {
     this.selectHead = this.$parent.selectHead;
+    // this.selectHead.StarDateTime = {
+    //   disabledDate(time) {
+    //     return time.getTime() < new Date();
+    //   }
+    // };
   }
 };
 </script>
 <style lang="scss" scoped>
 .el-form {
   width: 100%;
+}
+/deep/.el-date-editor.el-input,
+.el-date-editor.el-input__inner {
+  width: 180px;
 }
 </style>

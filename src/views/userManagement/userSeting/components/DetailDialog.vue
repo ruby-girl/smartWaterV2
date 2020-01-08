@@ -13,9 +13,9 @@
           <div class="user_info">
             <ul>
               <li class="user_line clearfix">
-                <p>水厂 <span> {{formData.SA_WaterFactoryName}}</span></p>
+                <p :title='formData.SA_WaterFactoryName'>水厂 <span> {{formData.SA_WaterFactoryName}}</span></p>
                 <p>用户编号 <span>{{formData.CustomerNo}}</span></p>
-                <p>姓名 <span>{{formData.CustomerName}}</span></p>
+                <p :title='formData.CustomerName'>姓名 <span>{{formData.CustomerName}}</span></p>
                 <p>简码 <span>{{formData.NameCode}}</span></p>
               </li>
               <li class="user_line clearfix">
@@ -26,7 +26,7 @@
               </li>
               <li class="user_line clearfix">
                 <p class="half">证件号 <span>{{formData.IdentityNo}}</span></p>
-                <p>表册 <span>{{formData.RegisterBookInfoName}}</span></p>
+                <p :title="formData.RegisterBookInfoName">表册 <span>{{formData.RegisterBookInfoName}}</span></p>
                 <p class="money">账户余额 <span>{{formData.Balance}}</span></p>
               </li>
               <li class="user_line clearfix">
@@ -267,9 +267,9 @@
       }
     }
     .user_line, .user_remak {
-      >p{display: inline-block;float: left;margin: 0;width: 25%;border-right: solid 1px #DBE3E8;padding: 0 12px;position: relative;overflow: hidden}
+      >p{display: inline-block;float: left;margin: 0;width: 25%;border-right: solid 1px #DBE3E8;padding: 0 12px;position: relative;overflow: hidden;position: relative}
       >p:last-child{border: none;}
-      span{color: #46494C;left: 100px;position: absolute; }
+      span{color: #46494C;left: 100px;position: absolute; display: inline-block;width: calc(100% - 100px);white-space: nowrap;text-overflow:ellipsis;overflow: hidden;}
       .money{color: #FF3D3D;
       span{color: #FF3D3D}}
       .half{width: 50%;}

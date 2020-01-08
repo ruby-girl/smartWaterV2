@@ -29,6 +29,13 @@
           <el-table-column prop="name" label="用水量" width="180"></el-table-column>
           <el-table-column prop="name" label="抄表起止日期" width="180"></el-table-column>
         </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="selectHead.page"
+          :limit.sync="selectHead.limit"
+          @pagination="searchTableList('0')"
+        />
       </div>
     </div>
   </div>
@@ -37,22 +44,29 @@
 <script>
 import SelectHead from "./selected/WaterUseSelected";
 import SearchTips from "@/components/SearchTips/index";
+import Pagination from "@/components/Pagination/index"; //分页
+import { GetReportYield, ExcelReportYield } from "@/api/reports";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "WaterUseMal",
-  components: { SelectHead, SearchTips },
+  components: { SelectHead, SearchTips, Pagination },
   data() {
     return {
       selectHead: {
-        SA_WaterFactory_Id: "-1", //水厂
-        CreateUser: -1, //口径
-        WaterType: -1, //水表类型
-        UserType: -1, //用户类型
-        createStartTime: "",
-        createEndTime: ""
+        page: 1,
+        limit: 20,
+        SA_WaterFactory_Id: "", //水厂
+        MeterDiameter: 0, //口径
+        WaterMeter: 0, //水表类型
+        UserType: 0, //用户类型
+        StarDateTime: "",
+        EndDateTime: "",
+        TotalWaterYield: "", //用水量
+        UpOrDown: "" //用水量
       },
       tableHeight: null,
       tableData: [], //表格数据
+      total: 0,
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       searchWidth: 1024
@@ -75,11 +89,48 @@ export default {
     },
     //导出
     excel() {
-      console.log("导出");
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
+          type: "warning"
+        });
+        return false;
+      }
+      ExcelReportYield(this.orderData).then(res => {
+        if (res.code == 0) {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        } else {
+          this.$message({
+            type: "warning",
+            msg: res.msg ? res.msg : "导出失败  "
+          });
+        }
+      });
     },
     //查询
-    searchTableList() {
-      this.tipsData = pushItem(this.tipsDataCopy);
+    searchTableList(num) {
+      //StarDateTime: "",
+      //  EndDateTime: "",
+      if(!this.selectHead.StarDateTime||!this.selectHead.EndDateTime){
+        this.$message({
+          message: "抄表起止日期不能为空，请选择!",
+          type: "warning"
+        });
+        return false
+      }
+      if (num != 0) {
+        this.orderData = Object.assign({}, this.selectHead);
+        this.orderData.page = 1;
+      } else {
+        this.orderData.page = this.selectHead.page;
+      }
+
+      GetReportYield(this.orderData).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
+        this.tableData = res.data;
+        this.total = res.count;
+      });
     }
   },
   mounted() {

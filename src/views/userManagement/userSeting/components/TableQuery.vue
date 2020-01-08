@@ -150,7 +150,7 @@
           this.query.WaterTypeId = type//更改查询水表类型
         }
         this.$parent.query = this.query
-        this.$parent.searchTableFun()
+        this.$parent.getTableLine()
 
       },
       /******************排序**********************/
@@ -160,7 +160,7 @@
         if(this.tableData.length>0){
           this.query.page = 1
           this.$parent.query = this.query
-          this.$parent.searchTableFun()
+          this.$parent.getTableLine()
         }
       },
       /******************编辑**********************/

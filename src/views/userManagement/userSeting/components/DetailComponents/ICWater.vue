@@ -7,7 +7,7 @@
       <ul>
         <li class="user_line clearfix">
           <p class="half">水表编号 <span>{{ data.WaterMeterNo}}</span></p>
-          <p class="half">电子读数 <span>{{ data.ReadNum}}</span></p>
+          <p class="half">充值总金额 <span>{{ data.ReadNum}}</span></p>
         </li>
         <li class="user_line clearfix">
           <p class="half">水表样式 <span>{{ data.WaterMeterStyleStr}}</span></p>
@@ -16,9 +16,9 @@
         <li class="user_line">
           <p class="all">报警金额(元) <span>{{ data.AlarmMoney}}</span></p>
         </li>
-        <li class="user_remak clearfix">
+       <!-- <li class="user_remak clearfix">
           <p class="all">安装位置 <span>{{ data.InstallAddress}}</span></p>
-        </li>
+        </li>-->
         <li class="user_remak clearfix">
           <p class="all">备注 <span>{{ data.Remark}}</span>
           </p>

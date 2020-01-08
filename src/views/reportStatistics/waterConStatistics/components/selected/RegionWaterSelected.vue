@@ -9,28 +9,25 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item label="区域" :label-width="isShow?'68px':'40px'" v-show="show1||isShow" prop="UserType">
-        <el-select
-          v-model="selectHead.UserType"
+      <el-form-item
+        label="区域"
+        :label-width="isShow?'68px':'40px'"
+        v-show="show1||isShow"
+        prop="AreaId"
+      >
+        <treeselect
           placeholder="请选择"
-          @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.UserType,'UserType',userTypeList,'区域')"
-        >
-          <el-option label="全部" :value="-1"></el-option>
-          <el-option
-            v-for="item in userTypeList"
-            :key="item.Id"
-            :label="item.Name"
-            :value="item.Id"
-          ></el-option>
-        </el-select>
+          :searchable="false"
+          v-model="selectHead.AreaId"
+          :options="orgTree"
+        />
       </el-form-item>
-      <el-form-item label="水表类型" v-show="show2||isShow" prop="WaterType">
+      <el-form-item label="水表类型" v-show="show2||isShow" prop="WaterMeterTypeId">
         <el-select
-          v-model="selectHead.WaterType"
+          v-model="selectHead.WaterMeterTypeId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterType,'WaterType',WaterMeterList,'水表类型')"
+          @change="getText(selectHead.WaterMeterTypeId,'WaterMeterTypeId',WaterMeterList,'水表类型')"
         >
           <el-option label="全部" :value="-1"></el-option>
           <el-option
@@ -41,7 +38,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="未缴费起止日期" label-width="110px" v-show="show3||isShow">
+      <el-form-item label="日期" label-width="110px" v-show="show3||isShow">
         <el-date-picker
           v-model="dateArr"
           type="daterange"
@@ -75,10 +72,14 @@
 <script>
 import { getDictionaryOption } from "@/utils/permission";
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import { getOrgTree } from "@/utils/projectLogic";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
   props: {
     searchWidth: {}
   },
+  components:{Treeselect},
   data() {
     return {
       companyOptions: [], //水厂
@@ -88,6 +89,7 @@ export default {
       selectHead: {},
       planStateOptions: [],
       dateArr: [], //日期数组
+      orgTree: [],
       companyShow: true,
       isShow: false,
       show1: true,
@@ -116,6 +118,15 @@ export default {
   },
   created() {},
   methods: {
+    getArea(id) {
+      getOrgTree(
+        function(res) {
+          this.orgTree = res;
+          this.selectHead.SA_UserArea_Id = "-1";
+        }.bind(this),
+        id
+      );
+    },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
@@ -142,16 +153,16 @@ export default {
       let date = this.dateArr;
       let dateStipe;
       if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
+        this.selectHead.StartDate = date[0];
+        this.selectHead.EndDate = date[1];
         dateStipe =
-          this.selectHead.createStartTime.split(" ")[0] +
+          this.selectHead.StartDate.split(" ")[0] +
           "~" +
-          this.selectHead.createEndTime.split(" ")[0];
+          this.selectHead.EndDate.split(" ")[0];
         this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
+        this.selectHead.StartDate = "";
+        this.selectHead.EndDate = "";
         dateStipe = "";
         this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
       }

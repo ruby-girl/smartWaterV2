@@ -61,14 +61,15 @@ export default {
       query: {
         //右侧用户列表查询条件
         tableId: "0000016",
-        WaterFactoryId:'-1',
+        WaterFactoryId:'',
       },
       oldTreeData: [],
       disAdd: false,
       disEdit: false,
       disDel: false,
       firstTree:{},
-      waterNums:[]
+      waterNums:[],
+      ifWaterFactory:true,//是否查水厂 , true 为水厂，false为区域
     };
   },
   computed: {
@@ -111,6 +112,7 @@ export default {
     },
     //获取选中的树节点
     changeSecode(Level) {
+      this.ifWaterFactory = false
       if(Level==1){
         this.disEdit = true
         this.disDel = true
@@ -204,10 +206,13 @@ export default {
     getWaterInfos(){//直接查水厂信息
       this.$refs.myChild.areaId = ''
       this.$refs.myChild.selectNode = ''
-      this.searchTableFun()
+      //this.$refs.myChild.$refs.tree.setCheckedNodes([]);//重置区域树
+      //this.$refs.childSelect.query.AreaId = localStorage.getItem('waterFactoryId')
+      this.ifWaterFactory = true
+      this.$refs.childSelect.searchFun()
       let elementNodes1 = document.getElementsByClassName('is-current')//选中样式
-      let elementNodes2 = document.getElementsByClassName('matchStyle')//收索结果样式
       elementNodes1.length > 0 ? elementNodes1[0].classList.remove('is-current') : ''
+      let elementNodes2 = document.getElementsByClassName('matchStyle')//收索结果样式
       for(let i = elementNodes2.length-1; i >=0 ; i--) {//遍历去掉区域树收索结果样式
         elementNodes2[i].classList.remove('matchStyle')
       }
@@ -216,8 +221,13 @@ export default {
      * 用户列表查询
      * */
     searchTableFun() {
-      this.query.AreaId = this.$refs.myChild.areaId;
-      this.query.WaterFactoryId = localStorage.getItem('waterFactoryId')
+      this.getTableLine()
+      this.getSatrtFun()
+    },
+    getTableLine(){
+      //this.query.AreaId = this.$refs.myChild.areaId;
+      this.ifWaterFactory ? this.query.AreaId = localStorage.getItem('waterFactoryId') : this.query.AreaId = this.$refs.myChild.areaId
+
       let query = Object.assign({}, this.query);
       query.CustomerQueryType = parseInt(query.CustomerQueryType);
       query.UserType = parseInt(query.UserType);
@@ -235,7 +245,6 @@ export default {
       parms = JSON.parse(parms);
       parms.WaterTypeId = -1;
       this.$refs.tableChild.tipsData = pushItem(this.$refs.tableChild.tipsDataCopy)
-      this.getSatrtFun()
     },
     /**
      * 用户导出
@@ -257,10 +266,12 @@ export default {
       this.$refs.tableChild.getText(val, model, arr, name)
     },
     getSatrtFun(){
-      let parms = this.query;
-      parms.WaterTypeId = -1;
-      parms.AreaId = '';
-      GetWaterTypeCustomerNum(parms).then(res => {
+      this.query.AreaId = this.$refs.myChild.areaId;
+      let query = Object.assign({}, this.query);
+      query.CustomerQueryType = parseInt(query.CustomerQueryType);
+      query.UserType = parseInt(query.UserType);
+      query.UserState = parseInt(query.UserState);
+      GetWaterTypeCustomerNum(query).then(res => {
         //用户统计数据
         if (res.code == 0) {
           this.$refs.tableChild.StatisticsData = res.data;

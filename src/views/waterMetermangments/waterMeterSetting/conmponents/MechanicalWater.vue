@@ -11,8 +11,6 @@
         @submit.native.prevent
         ref="searcTable"
       >
-
-       
         <!-- <el-form-item
           label="姓名"
           v-show="show1||isShow"
@@ -26,7 +24,7 @@
             placeholder="(长度1-10)"
             @change="getText(wachMeterData.CustomerName,'CustomerName','','姓名')"
           />
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item label="水表编号" v-show="show1||isShow" key="WaterMeterNo" prop="WaterMeterNo">
           <el-input
             v-model="wachMeterData.WaterMeterNo"
@@ -49,7 +47,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-         <el-form-item v-show="show3||isShow" key="QueryType" prop="QueryType">
+        <el-form-item v-show="show3||isShow" key="QueryType" prop="QueryType">
           <el-select
             v-model="wachMeterData.QueryType"
             placeholder="请选择"
@@ -59,7 +57,6 @@
           >
             <el-option label="姓名" value="2"></el-option>
             <el-option label="用户编号" value="1"></el-option>
-           
           </el-select>
           <el-input
             v-model="wachMeterData.Customer"
@@ -117,22 +114,33 @@
           :cell-style="{'padding':'5px 0'}"
           @sort-change="sortChanges"
         >
-          <template v-for="(item ,index) in tableHeadData">
-            <el-table-column
-              :key="index"
-              min-width="190px"
-              :sortable="item.IsSortBol?'custom':null"
-              :prop="item.ColProp"
-              align="center"
-              :label="item.ColDesc"
-              :fixed="item.Freeze"
-            />
-          </template>
           <el-table-column type="index" fixed="left" label="#" width="60" align="center">
             <template slot-scope="scope">
               <span>{{(wachMeterData.page - 1) * wachMeterData.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
+          <template v-for="(item ,index) in tableHeadData">
+          <el-table-column
+              v-if="item.IsFreeze"
+              :key="index"
+              min-width="150px"
+              :sortable="item.IsSortBol?'custom':null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc"
+              :fixed="item.Freeze"
+            />
+            <el-table-column
+              v-else
+              :key="index"
+              min-width="150px"
+              sortable="custom"
+              :prop="item.ColProp"
+              align="center"
+              :label="item.ColDesc"
+            />
+          </template>
+
           <el-table-column label="操作" width="120px" align="center" fixed="right">
             <template slot-scope="scope">
               <el-tooltip
@@ -205,7 +213,7 @@
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem ,getName} from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem, getName } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   searJXMeterWater,
   searJXHisWater,
@@ -284,7 +292,7 @@ export default {
       show2: true,
       show3: true,
       show4: true,
-      secNmae:""
+      secNmae: ""
     };
   },
   mounted() {
@@ -316,7 +324,7 @@ export default {
   methods: {
     getscName(id) {
       this.secNmae = getName(id);
-      console.log(this.secNmae )
+      console.log(this.secNmae);
     },
     resetting() {
       //重置

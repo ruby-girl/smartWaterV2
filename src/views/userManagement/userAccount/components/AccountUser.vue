@@ -214,7 +214,17 @@ export default {
       this.accountList.icMeterBalance = this.waterInfo.MeterBalance;
       console.log(this.accountList);
       waterAccount(this.accountList).then(res => {
-        console.log(res);
+        if (res.code == 0) {
+          this.$message({
+            message: res.message ? res.message : "销户成功",
+            type: "success"
+          });
+        } else {
+          this.$message({
+            message: res.message ? res.message : "销户失败",
+            type: "warning"
+          });
+        }
       });
     },
     getUser(info) {
