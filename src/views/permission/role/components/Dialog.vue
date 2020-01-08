@@ -38,20 +38,25 @@
             >{{item.name}}</el-checkbox>
           </div>
           <!-- 子集 循环 二级 body-->
-          <div class="config-item" v-for="(temp,i) in item.child">
+          <div class="config-item" v-for="(temp,child) in item.child">
             <div
               v-if="temp.childrens.length<1"
               class="config-body-box display-flex align-items-center"
             >
               <div class="config-body-left">
-                <el-checkbox :indeterminate="temp.isIndeterminate" :label="temp.nId" v-model="temp.checked" @change="handleCheckedTwo()">{{temp.name}}</el-checkbox>
+                <el-checkbox
+                  :indeterminate="temp.isIndeterminate"
+                  :label="temp.nId"
+                  v-model="temp.checked"
+                  @change="handleCheckedTwo()"
+                >{{temp.name}}</el-checkbox>
               </div>
               <div class="config-body-right display-flex flex-wrap">
                 <el-checkbox
                   v-model="btn.checked"
                   :label="btn.nId"
                   v-for="(btn,n) in temp.button"
-                   @change="handleCheckedThree()"
+                  @change="handleCheckedNoThreeButton(i,child)"
                 >{{btn.name}}</el-checkbox>
               </div>
             </div>
@@ -62,7 +67,7 @@
                   <el-checkbox
                     :indeterminate="temp.isIndeterminate"
                     v-model="temp.checked"
-                    @change="handleCheckedTwo()"
+                    @change="handleCheckedTwo(i,child)"
                   >{{temp.name}}</el-checkbox>
                 </div>
                 <div class="config-body-right display-flex flex-wrap">
@@ -70,13 +75,20 @@
                 </div>
               </div>
               <!-- 循环第3级 s-->
-              <div class="config-item" v-for="(last,i) in temp.childrens">
+              <div class="config-item" v-for="(last,childrens) in temp.childrens">
                 <div class="config-body-box display-flex align-items-center">
                   <div class="config-body-left three-title">
-                    <el-checkbox :indeterminate="last.isIndeterminate" v-model="last.checked" :label="last.nId">{{last.name}}</el-checkbox>
+                    <el-checkbox
+                     @change="handleCheckedThree(i,child,childrens)"
+                      :indeterminate="last.isIndeterminate"
+                      v-model="last.checked"
+                      :label="last.nId"
+                     
+                    >{{last.name}}</el-checkbox>
                   </div>
                   <div class="config-body-right display-flex flex-wrap">
-                    <el-checkbox @change="handleCheckedThree(n)"
+                    <el-checkbox
+                    @change="handleCheckedButton(i,child,childrens)"
                       v-model="btn.checked"
                       :label="btn.nId"
                       v-for="(btn,n) in last.button"
@@ -173,7 +185,7 @@ export default {
                   name: "按抄表计划查询",
                   checked: false,
                   isIndeterminateThree: false,
-                  button: [{ name: "删除",checked: false }]
+                  button: [{ name: "删除", checked: false }]
                 },
                 {
                   name: "按抄表日期查询",
@@ -190,8 +202,8 @@ export default {
               checked: false,
               isIndeterminate: false,
               button: [
-                { name: "删除抄表记录",checked: false },
-                { name: "抄表录入确定",checked: false }
+                { name: "删除抄表记录", checked: false },
+                { name: "抄表录入确定", checked: false }
               ]
             }
           ]
@@ -236,68 +248,144 @@ export default {
         this.$emit("updateData", this.temp);
       });
     },
-    handleCheckedThree(){//按钮勾选  
-       this.arr.forEach((item,i)=>{
-        item.child.forEach(n=>{
-          let btnCheckedArr=n.button.filter(m=>{
-            return m.checked
-          })
-          if(btnCheckedArr.length==n.button.length){
-            n.button.forEach(m=>{
-              m.checked=true//按钮全选
-              n.checked=true
-              n.isIndeterminate=false
-            })
-            item.checked=true
-            item.isIndeterminate=false
-          }else if(btnCheckedArr.length==0){
-            // m.checked=false        
-            n.checked=false
-            n.isIndeterminate=false
-          }else{
-            
-            // n.checked=false
-            // n.isIndeterminate=true
-          }
-        })   
+    handleCheckedNoThreeButton(first,index){
+      let buttonArr=this.arr[first].child[index].button.filter(button=>{
+            return button.checked
       })
+     
+      if(buttonArr.length==this.arr[first].child[index].button.length){
+        this.arr[first].child[index].checked=true
+        this.arr[first].child[index].isIndeterminate=false
+      }else if(buttonArr.length==0){
+        this.arr[first].child[index].checked=false
+        this.arr[first].child[index].isIndeterminate=false
+      }else{
+        this.arr[first].child[index].checked=false
+        this.arr[first].child[index].isIndeterminate=true
+      }
+      
+      console.info(buttonArr,this.arr[first].child[index].button.length)
+      console.log(this.arr[first].child[index].checked)
+      //  this.handleCheckedTwo(first,index,true)
     },
-    handleCheckedTwo() {
-      this.arr.forEach((item,i)=>{
-        let checkedArr=item.child.filter(i=>{//二级勾选
-          return i.checked
+    handleCheckedButton(first,index,children) {
+      if(first){
+        this.arr[first].child[index].childrens.forEach(childrens=>{
+            let btnCheckedArr=childrens.button.filter(button=>{
+              return  button.checked==true
+            })          
+            if(btnCheckedArr.length==childrens.button.length){//该行按钮全选
+                childrens.checked=true
+            }else if(btnCheckedArr.length==0){
+              childrens.checked=false
+            }else{
+              childrens.checked=false
+              childrens.isIndeterminate=true
+            }
         })
-        if(checkedArr.length==item.child.length){//二级全选
-          this.arr[i].checked=true//一级全选
-          this.arr[i].isIndeterminate=false//
-           this.arr[i].child.forEach(n=>{
-            n.button.forEach(m=>{//按钮全选
-              m.checked=true
-            })
-           })
-        }else if(checkedArr.length==0){
-          this.arr[i].checked=false//一级全选
-          this.arr[i].isIndeterminate=false//
-           this.arr[i].child.forEach(n=>{
-            n.button.forEach(m=>{//按钮全选
-              m.checked=false
-            })
-           })
-        }else{
-          this.arr[i].checked=false//一级全选 false
-          this.arr[i].isIndeterminate=true//
-           this.arr[i].child.forEach(n=>{
-            n.button.forEach(m=>{//按钮
-             if(n.checked){
-               m.checked=true
-             }else{
-               m.checked=false
-             }
-         
-            })
-           })
-        }   
+      }
+      this. handleCheckedThree(first,index,children)
+    },
+    handleCheckedThree(first,index,children){
+      if(this.arr[first].child[index].childrens[children].checked){
+        this.arr[first].child[index].childrens[children].button.forEach(button=>{
+          button.checked=true
+        })
+      }else{
+        this.arr[first].child[index].childrens[children].button.forEach(button=>{
+          button.checked=false
+        })
+      }
+      // 处理第二级复选样式
+      let childrensArr=this.arr[first].child[index].childrens.filter(childrens=>{
+        return childrens.checked==true
       })
+      if(childrensArr.length===this.arr[first].child[index].childrens.length){//全选
+          this.arr[first].child[index].checked=true
+          this.arr[first].child[index].isIndeterminate=false
+      }else if(childrensArr.length==0){
+          this.arr[first].child[index].checked=false
+          this.arr[first].child[index].isIndeterminate=false
+      }else{
+        this.arr[first].child[index].checked=false
+          this.arr[first].child[index].isIndeterminate=true
+      }
+    },
+    handleCheckedTwo(first,index,noTHree) { 
+      if (first&&!noTHree) {
+        //如果是从有第三级过来的事件
+        if (this.arr[first].child[index].checked) {//第三级和按钮处理选中
+          this.arr[first].child[index].childrens.forEach(childrens => {
+            childrens.checked = true;
+            childrens.button.forEach(button => {
+              button.checked = true;
+            });
+          });
+        } else {
+          this.arr[first].child[index].childrens.forEach(childrens => {
+            childrens.checked = false;
+            childrens.button.forEach(button => {
+              button.checked = false;
+            });
+          });
+        }
+      }
+      this.arr.forEach((item, i) => {
+        let checkedArr = item.child.filter(i => {
+          //二级勾选
+          return i.checked;
+        });
+        if (checkedArr.length == item.child.length) {
+          //二级全选
+          this.arr[i].checked = true; //一级全选
+          this.arr[i].isIndeterminate = false; //
+          this.arr[i].child.forEach(n => {
+            if (n.childrens.length > 0) {
+              n.childrens.forEach(childrens => {
+                childrens.checked = true;
+                childrens.button.forEach(button => {
+                  button.checked = true;
+                });
+              });
+            } else {
+              n.button.forEach(m => {
+                //按钮全选
+                m.checked = true;
+              });
+            }
+          });
+        } else if (checkedArr.length == 0) {
+          this.arr[i].checked = false; //一级全选
+          this.arr[i].isIndeterminate = false; //
+          this.arr[i].child.forEach(n => {
+            if (n.childrens.length > 0) {
+              n.childrens.forEach(childrens => {
+                childrens.button.forEach(button => {
+                  button.checked = false;
+                });
+              });
+            } else {
+              n.button.forEach(m => {
+                //按钮全选
+                m.checked = false;
+              });
+            }
+          });
+        } else {
+          this.arr[i].checked = false; //一级全选 false
+          this.arr[i].isIndeterminate = true; //
+          this.arr[i].child.forEach(n => {
+            n.button.forEach(m => {
+              //按钮
+              if (n.checked) {
+                m.checked = true;
+              } else {
+                m.checked = false;
+              }
+            });
+          });
+        }
+      });
     },
     handleCheckedOne() {}
   }

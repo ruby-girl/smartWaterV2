@@ -52,8 +52,8 @@
           v-model="selectHead.TransferCustomer"
           placeholder="请选择"
           @change="getscName(selectHead.TransferCustomer)"
-          class="user-select-box"
-          style="width: 100px;float: left;margin-right:3px;"
+          class="user-select-box-width"
+          style="width: 130px;float: left;margin-right:3px;"
         >
           <el-option
             v-for="item in selectOption"
@@ -134,7 +134,7 @@ export default {
     return {
       editUserList: [],
       userType: [],
-      secNmae: "原用户姓名",
+      secNmae: "原用户姓名/简码",
       waterType: [], //水表类型
       waterWorks: [], //水厂
       isShow: false,
@@ -145,8 +145,8 @@ export default {
       show4: false,
       show5: false,
       selectOption: [
-        { Name: "原用户姓名", Id: "3301" },
-        { Name: "新用户姓名", Id: "3302" },
+        { Name: "原用户姓名/简码", Id: "3301" },
+        { Name: "新用户姓名/简码", Id: "3302" },
         { Name: "用户编号", Id: "3303" },
         { Name: "电话", Id: "3304" },
         { Name: "证件号", Id: "3305" },
@@ -223,10 +223,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.user-select-box{
+.user-select-box-width{
   /deep/ .el-input__suffix{
     right: 0;
   }
+}
+.user-select-box-width{
+  /deep/ .el-input__inner, .el-input{width: 130px !important;}
 }
 </style>
 

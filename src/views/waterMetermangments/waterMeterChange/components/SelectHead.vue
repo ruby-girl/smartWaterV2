@@ -31,7 +31,7 @@
           @change="getscName(selectHead.customerQueryType)"
         >
           <el-option label="用户编号" value="1"></el-option>
-          <el-option label="用户姓名" value="2"></el-option>
+          <el-option label="姓名/简码" value="2"></el-option>
         </el-select>
         <el-input
           v-model="selectHead.customerQueryValue"
@@ -187,7 +187,7 @@ export default {
       this.showIcon=isShow||!this.showLabel(6,val)
     },
     getscName(id) {
-      this.secNmae = id == 1 ? "用户编号" : "用户姓名";
+      this.secNmae = id == 1 ? "用户编号" : "姓名/简码";
       this.getText(
         this.selectHead.customerQueryValue,
         "customerQueryValue",

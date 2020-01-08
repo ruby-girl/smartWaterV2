@@ -30,8 +30,8 @@
               <el-form-item>
                 <el-input
                   v-model="inputValue"
-                  @blur="changeTwoDecimal_x($event)"
-                  @keyup.native="money($event)"
+                  @blur="changeTwoDecimal_x($event,1)"
+                  @keyup.native="money($event,1)"
                   maxlength="8"
                 />
               </el-form-item>
@@ -49,8 +49,8 @@
               <el-form-item>
                 <el-input
                   v-model="lateFeeValue"
-                  @blur="changeTwoDecimal_x($event)"
-                  @keyup.native="money($event)"
+                  @blur="changeTwoDecimal_x($event,2)"
+                  @keyup.native="money($event,2)"
                   maxlength="8"
                   :disabled="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee==0?true:false"
                 />
@@ -100,50 +100,51 @@ export default {
     };
   },
   methods: {
-    //   减免请求
-    feeWaiver() {
+   feeWaiver() {
+      if (this.activeName == "two") {
+        this.OrderAfterOverdueFeeWaiverFunc(); //违约金减免
+      } else {
+        this.OrderFeeWaiverFunc();
+      }
+    },
+    OrderFeeWaiverFunc() {//水费减免
       if (
         parseFloat(this.inputValue) >
         parseFloat(this.feeWaiverItem.PriceSurplus)
       ) {
         this.$message({
-          message: "减免后金额不能大于总费用",
+          message: "减免后金额不能大于减免前金额！",
           type: "error",
           duration: 4000
         });
         return;
       }
-      this.OrderFeeWaiverFunc();
-      // 减免违约金
-    },
-    async OrderFeeWaiverFunc() {
-      let water = await OrderFeeWaiver({
+      OrderFeeWaiver({
         SA_Order_Id: this.feeWaiverItem.Id,
         AfterFee: this.inputValue
       }).then(res => {
-        return true;
+        this.inputValue = "";
+        this.lateFeeValue = "";
+        this.dialogFormVisible = false;
+        this.$emit("getList");
       });
-      // 如果有违约金
+    },
+    // 违约金减免
+    OrderAfterOverdueFeeWaiverFunc() {
       if (
-        this.feeWaiverItem.OrderType == 2001 &&
-        this.feeWaiverItem.LateFee > 0 &&
-        water
+        parseFloat(this.lateFeeValue) > parseFloat(this.feeWaiverItem.LateFee)
       ) {
-        OrderAfterOverdueFeeWaiver({
-          SA_Order_Id: this.feeWaiverItem.Id,
-          AfterOverdueFee: this.lateFeeValue
-        }).then(res => {
-          this.$message({
-            message: "减免成功",
-            type: "success",
-            duration: 4000
-          });
-          this.inputValue = "";
-          this.lateFeeValue = "";
-          this.dialogFormVisible = false;
-          this.$emit("getList");
+        this.$message({
+          message: "减免后金额不能大于减免前金额！",
+          type: "error",
+          duration: 4000
         });
-      } else {
+        return;
+      }
+      OrderAfterOverdueFeeWaiver({
+        SA_Order_Id: this.feeWaiverItem.Id,
+        AfterOverdueFee: this.lateFeeValue
+      }).then(res => {
         this.$message({
           message: "减免成功",
           type: "success",
@@ -153,15 +154,23 @@ export default {
         this.lateFeeValue = "";
         this.dialogFormVisible = false;
         this.$emit("getList");
-      }
+      });
     },
     // 输入金额保留2位
-    money(e) {
-      e.target.value = updateMoney(e.target.value);
+    money(e,n) {
+       if(n==1){
+        this.inputValue=updateMoney(e.target.value);
+      }else{
+        this.lateFeeValue=updateMoney(e.target.value);
+      }  
     },
     // 补齐小数
     changeTwoDecimal_x(e, n) {
-      e.target.value = changeTwoDecimal(e.target.value);
+      if(n==1){
+        this.inputValue=changeTwoDecimal(e.target.value);
+      }else{
+        this.lateFeeValue=changeTwoDecimal(e.target.value);
+      }
     }
   }
 };

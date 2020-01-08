@@ -79,7 +79,7 @@
                 :content="row.ChargeFlag==1002?'费用撤回':'该笔费用不允许撤回'"
                 placement="bottom"
               >
-                <i class="icon iconfont iconchexiao1" @click="row.ChargeFlag==1002?reset(row):''"></i>
+                <i class="icon iconfont iconchexiao1" @click="row.ChargeFlag==1002?reset(row.Id):''"></i>
               </el-tooltip>
               <!-- 费用类型仅为水费，OrderType==2001，才能进行减免 -->
               <el-tooltip
@@ -120,7 +120,7 @@
 import SelectHead from "./SelectHead";
 import Pagination from "@/components/Pagination";
 import SearchTips from "@/components/SearchTips/index";
-import { GetList, OrdersFeeCancels, GetList_execl } from "@/api/cashCharge";
+import { GetList, OrderFeeCancel,OrdersFeeCancels, GetList_execl } from "@/api/cashCharge";
 import MytableTotal from "@/components/TableTotal/index";
 import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
 import ChargesDetails from "../../../cashCharge/components/ChargesDetails"; //水费详情弹窗-共用现金收费的费用详情
@@ -314,22 +314,22 @@ export default {
     },
     // 费用撤回
     reset(id) {
-      this.$confirm("是否确认撤销欠费？", "提示", {
-        confirmButtonText: "确定",
+         this.$confirm("是否确认撤销欠费？", "提示", {
+          confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
         customClass: "warningBox",
         showClose: false
-      }).then(() => {
+        }).then(() => {
         OrderFeeCancel({ SA_Order_Id: id }).then(res => {
           this.$message({
             message: res.message,
             type: "success",
             duration: 4000
           });
-          this.getList();
-        });
-      });
+           this.getList();       
+        })
+        })
     },
     // 费用减免
     feeWaiverFunc(item) {
