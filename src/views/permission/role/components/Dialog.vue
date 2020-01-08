@@ -262,7 +262,7 @@ export default {
         this.arr[first].child[index].checked=false
         this.arr[first].child[index].isIndeterminate=false
       }else{
-        this.arr[first].child[index].checked=false
+        this.arr[first].child[index].checked=true
         this.arr[first].child[index].isIndeterminate=true
       }
       
@@ -281,7 +281,7 @@ export default {
             }else if(btnCheckedArr.length==0){
               childrens.checked=false
             }else{
-              childrens.checked=false
+              childrens.checked=true
               childrens.isIndeterminate=true
             }
         })
@@ -309,7 +309,7 @@ export default {
           this.arr[first].child[index].checked=false
           this.arr[first].child[index].isIndeterminate=false
       }else{
-        this.arr[first].child[index].checked=false
+        this.arr[first].child[index].checked=true
           this.arr[first].child[index].isIndeterminate=true
       }
     },

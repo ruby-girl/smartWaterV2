@@ -46,10 +46,10 @@
           </el-form-item>
         </div>
         <el-form-item label="电话" prop="NewTel">
-          <el-input class="left-input"  v-model="newUser.NewTel"></el-input>
+          <el-input class="left-input"  v-model="newUser.NewTel" maxlength="11"></el-input>
         </el-form-item>
         <el-form-item label="证件号" prop="NewIdentityNo">
-          <el-input class="left-input" v-model="newUser.NewIdentityNo"></el-input>
+          <el-input class="left-input" v-model="newUser.NewIdentityNo" maxlength="18"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input  type="textarea" v-model="newUser.Remark"></el-input>
@@ -57,7 +57,7 @@
       </el-form>
       <div class="bottom-btn-box">
         <el-button style="padding:8px 14px;" type="success" size="mini" @click="fileShow=true">
-          <i class="iconfont iconsousuo"></i>附件
+          <i class="iconfont iconfujian" style="margin-right:3px;"></i>附件
         </el-button>
       </div>
     </div>

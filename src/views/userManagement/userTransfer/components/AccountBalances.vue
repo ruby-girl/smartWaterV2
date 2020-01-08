@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     accountBalancesFunc(){
-      if(!this.user.IsBalanceDeposit&&!this.user.OperatorEmpId){
+      if(!this.user.IsBalanceDeposit&&!this.user.OperatorEmpId&&this.user.BalanceValue>0){
         this.$message({
             message: "余额不转存时，需选择经办人!",
             type: "error",

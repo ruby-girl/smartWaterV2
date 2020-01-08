@@ -54,14 +54,26 @@
         <el-form-item
           label="表端余额"
           :prop="user.WaterMeterTypeId==1102?'meterBalance':''"
-          v-show="user.WaterMeterTypeId==1102||user.WaterMeterTypeId==1104"
+          v-show="user.WaterMeterTypeId==1102"
         >
           <el-input
             class="left-input"
             v-model="newUser.meterBalance"
-            :disabled="user.WaterMeterTypeId==1104?true:false"
+            :disabled="false"
           ></el-input>
         </el-form-item>
+        <!-- 物联网账户余额-->
+         <el-form-item
+          label="账户余额"
+          v-show="user.WaterMeterTypeId==1104"
+        >
+          <el-input
+            class="left-input"
+            v-model="newUser.meterBalance"
+            :disabled="true"
+          ></el-input>
+        </el-form-item>
+        <!-- 物联网e -->
         <el-form-item label="账户余额" v-show="user.WaterMeterTypeId!==1104">
           <el-input class="left-input" v-model="user.Balance" :disabled="true"></el-input>
         </el-form-item>

@@ -59,7 +59,7 @@
         <div class="display-flex align-items-center ladder-item" v-if="detail.olf.LeteFee>0">
           <div>
             欠费金额&nbsp;*&nbsp;逾期
-            <span class="color-more-black">{{detail.olf.LeteFeeDays}}</span>
+            <span class="color-more-black">{{detail.olf.LateFeeDays}}</span>
             天&nbsp;*&nbsp;{{detail.olf.InterestRate}}‰&nbsp;=&nbsp;违约金
           </div>
         </div>

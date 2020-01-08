@@ -163,7 +163,7 @@ export default {
         //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡
           if (_this.isIc) {
             if (
-              _this.cardInfo.UserCard.uRechargeCount == 1 &&
+              _this.cardInfo.UserCard.RechargeCount == 1 &&
               _this.cardInfo.UserCard.RechargeMoney &&
               _this.cardInfo.CardType == 0
             )
