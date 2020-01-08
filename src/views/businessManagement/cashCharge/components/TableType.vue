@@ -95,7 +95,7 @@
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
-        @pagination="getList"
+        @pagination="getList(1)"
       />
     </div>
   </div>
@@ -117,7 +117,8 @@ export default {
       default: 100
     },
     tipsData:{},
-    totalLength:{}
+    totalLength:{},
+    orderData: {}
   },
   components: { Pagination,SearchTips },
   mounted() {
@@ -162,13 +163,20 @@ export default {
         this.getList();
       }
     },
-    getList() {
+    getList(n) {
+      if (!n) {
+        this.orderData = Object.assign({}, this.listQuery);
+        this.listQuery.page = 1;
+        this.orderData.page = 1;
+      }else{
+        this.orderData.page=this.listQuery.page
+      }
       //表格
-      GetOrder(this.listQuery).then(res => {
+      GetOrder(this.orderData).then(res => {
         this.total = res.count;
         res.data.forEach(item => {
           if (item.ChargeFlag == 1003) {
-            item.tooltip = "费用审核中，暂不能缴费";
+            item.tooltip = "费用审核中，暂无法缴费";
           }
         });
       // 筛选可以选择的数据，需求（当用户有未缴纳的费用时，不可单独进行预存操作）

@@ -208,6 +208,8 @@ export default {
         this.orderData = Object.assign({}, this.listQuery);
         this.listQuery.page = 1;
         this.orderData.page = 1;
+      }else{
+        this.orderData.page=this.listQuery.page
       }
       SelectPayMentDataList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -297,7 +299,6 @@ export default {
         // 读卡 //this.cardInfo.CardType 0：未刷卡 1：已刷卡,  已刷卡不允许冲红
         ICReadCardInfo(resData => {
           this.IcInfo = resData;
-          console.info('kapian',this.IcInfo)
           if (this.IcInfo.CardType == 1) {
             Message.error({
               message: "该卡片为已刷卡状态，不允许冲红！",
@@ -315,7 +316,7 @@ export default {
     excel() {
       //导出
       if (!isExport(this.tableData)) return;
-      SelectPayMentDataListToExcel(this.listQuery).then(res => {
+      SelectPayMentDataListToExcel(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },

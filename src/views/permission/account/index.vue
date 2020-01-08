@@ -222,6 +222,8 @@ export default {
         this.orderData = Object.assign({}, this.listQuery);
         this.listQuery.page = 1;
         this.orderData.page = 1;
+      }else{
+        this.orderData.page=this.listQuery.page
       }
       getAccountList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -305,7 +307,7 @@ export default {
     },
     excel() {
      if(!isExport(this.tableData)) return
-      exportExcel(this.listQuery).then(res => {
+      exportExcel(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     }

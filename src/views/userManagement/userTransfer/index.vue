@@ -157,6 +157,8 @@ export default {
         this.orderData = Object.assign({}, this.listQuery);
         this.orderData.page = 1;
         this.listQuery.page = 1;
+      }else{
+        this.orderData.page=this.listQuery.page
       }
       TransferCustomerList(this.orderData).then(res => {
          this.tipsData = pushItem(this.tipsDataCopy);
@@ -177,7 +179,7 @@ export default {
     excel() {
       //导出
        if(!isExport(this.tableData)) return
-      TransferCustomerList_Execl(this.listQuery).then(res => {
+      TransferCustomerList_Execl(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     }

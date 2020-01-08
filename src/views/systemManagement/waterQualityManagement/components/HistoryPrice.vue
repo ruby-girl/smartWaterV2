@@ -123,7 +123,7 @@
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
-        @pagination="getList"
+        @pagination="getList(1)"
       />
     </div>
   </el-dialog>
@@ -190,12 +190,13 @@ export default {
         tableId: "0000013",
         UseWaterTypeId:''
       },
-      details: {}
+      details: {},
+      orderData:{}
     };
   },
   methods: {
     excel() {
-      GetWaterPropertyHisList_OutExcel(this.listQuery).then(
+      GetWaterPropertyHisList_OutExcel(this.orderData).then(
         res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         }
@@ -208,8 +209,15 @@ export default {
         this.details = ladderChangeArr(res.data); //阶梯转换数组
       });
     },
-    getList() {   
-      GetWaterPropertyById(this.listQuery).then(res => {
+    getList(n) {
+      if(!n){
+         this.orderData = Object.assign({}, this.listQuery);
+         this.orderData.page=1
+         this.listQuery.page = 1;
+      }else{
+        this.orderData.page=this.listQuery.page
+      }
+      GetWaterPropertyById(this.orderData).then(res => {
         this.total = res.count;
         this.tableData = res.data;
       });
@@ -222,11 +230,13 @@ export default {
     },
     sortChanges({ prop, order }) {
       //筛选
-      this.listQuery.page = 1;
       this.listQuery.filed = prop;
       this.listQuery.sort =
         order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
-      this.getList();
+      if (this.tableData.length > 0) {
+        this.listQuery.page = 1;
+        this.getList();
+      }
     },
      //表格自定义方法
     setCustomData() {

@@ -21,7 +21,7 @@
           <el-tab-pane label="水费" name="frist">
             <el-row class="tab-container-y">
               <el-form-item :label="feeWaiverItem.OrderTypeStr">
-                <el-input v-model="feeWaiverItem.PriceSurplus" disabled />
+                <el-input v-model="feeWaiverItem.Money" disabled />
               </el-form-item>
               <div class="inline-box">
                 <div>减免为</div>
@@ -110,7 +110,7 @@ export default {
     OrderFeeWaiverFunc() {//水费减免
       if (
         parseFloat(this.inputValue) >
-        parseFloat(this.feeWaiverItem.PriceSurplus)
+        parseFloat(this.feeWaiverItem.Money)
       ) {
         this.$message({
           message: "减免后金额不能大于减免前金额！",

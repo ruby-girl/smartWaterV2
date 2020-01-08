@@ -52,35 +52,6 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex  justify-content-flex-justify method-font secur-content" style="padding:0 15px;">
-                <!-- <div
-                  class="main-color-warn button-width"
-                  @click="constitute(row,1)"
-                  v-permission="['1010106']"
-                >
-                  <a>水价构成</a>
-                </div>
-                <div class="button-width" @click="history(row)" v-permission="['1010105']">
-                  <a>历史水价</a>
-                </div>
-                <div
-                  class="main-color button-width"
-                  @click="handleUpdate(row)"
-                  v-if="row.UseState=='801'"
-                  v-permission="['1010107']"
-                >
-                  <a>水价调整</a>
-                </div>
-                <div
-                  class="color-more-black button-width"
-                  @click="constitute(row,2)"
-                  v-if="row.UseState=='802'"
-                  v-permission="['1010107']"
-                >
-                  <a>撤销水价调整</a>
-                </div>
-                <div class="main-color-red pl-20" @click="cancel(row)" v-permission="['1010105']">
-                  <a>删除</a>
-                </div> -->
                 <el-tooltip
                 class="item"
                 popper-class="tooltip"
@@ -230,7 +201,7 @@ export default {
       checksData: [],
        tipsData: [],//传入子组件的值
         tipsDataCopy: [],//表单变化的值
-        orderData:[]
+        orderData:{}
     };
   },
   computed: {
@@ -276,6 +247,8 @@ export default {
          this.orderData = Object.assign({}, this.listQuery);
          this.orderData.page=1
          this.listQuery.page = 1;
+      }else{
+        this.orderData.page=this.listQuery.page
       }
       getWaterQualityList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -338,8 +311,7 @@ export default {
     handleUpdate(row) {
       SelectUpdateWaterPropertyBeforeInfo({ id: row.Id }).then(res => {
         this.updateId = row.Id; 
-        let obj = ladderChangeArr(res.data); //阶梯转换数组
-       
+        let obj = ladderChangeArr(res.data); //阶梯转换数组    
         let ladder = {
           isLadder: "1",
           NewPriceUseDate: ''
@@ -396,7 +368,7 @@ export default {
     //导出
     excel() {
       if(!isExport(this.tableData)) return
-      GetWaterPropertyList_OutExcel(this.listQuery).then(res => {
+      GetWaterPropertyList_OutExcel(this.orderData).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },  

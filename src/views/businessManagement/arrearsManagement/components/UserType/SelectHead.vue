@@ -62,14 +62,14 @@
           v-model="selectHead.Star_TotalPrice"
           maxlength="20"
           @blur="testMoney()"
-          @keyup.native="money($event)"
+          @keyup.native="money($event,1)"
           style="width: 88px !important;float: left"
         />~
         <el-input
           v-model="selectHead.End_TotalPrice"
           maxlength="20"
           @blur="testMoney()"
-          @keyup.native="money($event)"
+          @keyup.native="money($event,2)"
           style="width: 80px !important;float: right"
         />
       </el-form-item>
@@ -303,8 +303,12 @@ export default {
       }
     },
     // 输入金额保留2位
-    money(e) {
-      e.target.value = updateMoney(e.target.value);
+    money(e,n) {
+      if(n==1){
+        this.selectHead.Star_TotalPrice=updateMoney(e.target.value);
+      }else{
+        this.selectHead.End_TotalPrice=updateMoney(e.target.value);
+      }
     }
   }
 };

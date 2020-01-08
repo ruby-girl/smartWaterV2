@@ -29,7 +29,7 @@
     <div class="config-box">
       <div class="role-title">权限分配</div>
       <div class="config-container">
-        <div v-for="(item,i) in arr" class="show-border">
+        <div v-for="(item,i) in arr" :key="i+1" class="show-border">
           <div class="config-title">
             <el-checkbox
               :indeterminate="item.isIndeterminate"
@@ -38,7 +38,7 @@
             >{{item.name}}</el-checkbox>
           </div>
           <!-- 子集 循环 二级 body-->
-          <div class="config-item" v-for="(temp,child) in item.child">
+          <div class="config-item" v-for="(temp,child) in item.child" :key="temp.nId">
             <div
               v-if="temp.childrens.length<1"
               class="config-body-box display-flex align-items-center"
@@ -56,6 +56,7 @@
                   v-model="btn.checked"
                   :label="btn.nId"
                   v-for="(btn,n) in temp.button"
+                  :key="btn.nId"
                   @change="handleCheckedNoThreeButton(i,child)"
                 >{{btn.name}}</el-checkbox>
               </div>
@@ -75,7 +76,7 @@
                 </div>
               </div>
               <!-- 循环第3级 s-->
-              <div class="config-item" v-for="(last,childrens) in temp.childrens">
+              <div class="config-item" v-for="(last,childrens) in temp.childrens" :key="last.nId">
                 <div class="config-body-box display-flex align-items-center">
                   <div class="config-body-left three-title">
                     <el-checkbox
@@ -92,6 +93,7 @@
                       v-model="btn.checked"
                       :label="btn.nId"
                       v-for="(btn,n) in last.button"
+                      :key="btn.nId"
                     >{{btn.name}}</el-checkbox>
                   </div>
                 </div>
