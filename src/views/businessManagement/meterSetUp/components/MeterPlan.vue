@@ -26,7 +26,7 @@
           <div class="meter_box meter_box3">
             <p>本次读数</p>
             <el-input v-model="param.ReadNum" placeholder="按[enter]键确定" ref="ReadNumInput"
-                      @keyup.enter.native="getWaterPredict(1)" onkeyup="value=value.replace(/\D/g,'')"></el-input>
+                      @keyup.enter.native="getWaterPredict(1)" @input="handleInput" maxlength="8"></el-input>
           </div>
           <el-input class="meter_remark" placeholder="请输入内容" v-model="param.Remark">
             <template slot="prepend">备注：</template>
@@ -160,7 +160,7 @@
         <div class="meter_box meter_box3">
           <p>本次读数</p>
           <el-input v-model="param.ReadNum" ref="ReadNumInput" placeholder="按[enter]键确定"
-                    @keyup.enter.native="getWaterPredict(1)"></el-input>
+                    @keyup.enter.native="getWaterPredict(1)" @input="handleInput" maxlength="8"></el-input>
         </div>
         <el-input class="meter_remark" placeholder="请输入内容" v-model="param.Remark">
           <template slot="prepend">备注：</template>
@@ -230,17 +230,24 @@
       }
     },
     methods: {
+      handleInput(e) {
+        this.param.ReadNum = e.replace(/[^\d]/g, '');
+      },
       getShrink(type) {
         type == 0 ? document.getElementById('water_hide').style.width = 575 + 'px' : document.getElementById('water_hide').style.width = 0 + 'px';
       },
       getCheck(param) {//抄表
+        this.$refs.ReadNumInput.$el.querySelector('input').focus()
         getReading(param).then(res => {
           if (res.code == 0) {
             promptInfoFun(this, 2, res.message)
             this.param.ReadNum = ''
-            if(this.$parent.tableData.length>1){
-              this.checks.indexOf('自动载入下一户') == '-1' ? this.$refs.ReadNumInput.$el.querySelector('input').focus() : this.$parent.nextPageFun(true);
-            }else {
+            this.param.Remark = ''
+            if (this.$parent.tableData.length > 1) {
+              if(this.checks.indexOf('自动载入下一户') != '-1'){
+                this.$parent.nextPageFun(true)
+              }
+            } else {
               this.$parent.searchFun()
             }
           } else {
@@ -264,7 +271,7 @@
                 curWater = this.param.ReadNum - this.currentContract.LastReadNum//本次水量= 本次读数-上次读数
                 let magnificate = curWater / lastWater //公式（本次水量/上次水量）
                 if (type === 2) {
-                  this.getMagnificate(magnificate,curWater,lastWater,params)//抄表
+                  this.getMagnificate(magnificate, curWater, lastWater, params)//抄表
                 } else {
                   if (this.isEstimate) {
                     this.getPrice(params)//水量水费预估
@@ -283,7 +290,7 @@
                 curWater = parseInt(totalNum) - lastRead + parseInt(curNum) + 1 //本次水量 = 总数 - 上次读数 + 本次读数 + 1;例：上次读数12345，本次读数为10，则本次水量为99999 – 12345 + 10 + 1
                 let magnificate = curWater / lastWater //公式（本次水量/上次水量）
                 if (type === 2) {
-                  this.getMagnificate(magnificate,curWater,lastWater,params)//抄表
+                  this.getMagnificate(magnificate, curWater, lastWater, params)//抄表
                 } else {
                   if (this.isEstimate) {
                     this.getPrice(params)//水量水费预估

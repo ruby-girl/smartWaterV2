@@ -44,7 +44,7 @@
             <el-option v-for="(item,index) in userWater" :key="index" :label="item.UseWaterTypeName" :value="item.Id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="表册 "  prop="SA_RegisterBookInfo_Id">
+        <el-form-item label="表册 "  prop="SA_RegisterBookInfo_Id" v-if="!differ">
           <el-select clearable v-model="formData.SA_RegisterBookInfo_Id" placeholder="请选择" size="small">
             <el-option v-for="(item,index) in RegisterBookInfo" :key="index" :label="item.Name" :value="item.Id"/>
           </el-select>

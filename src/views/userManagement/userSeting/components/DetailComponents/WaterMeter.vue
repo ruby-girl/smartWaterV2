@@ -13,9 +13,9 @@
           <p class="half">水表样式 <span>{{ data.WaterMeterStyleStr }}</span></p>
           <p class="half">口径 <span>{{ data.MeterDiameter }}</span></p>
         </li>
-        <li class="user_remak clearfix">
+     <!--   <li class="user_remak clearfix">
           <p class="all">安装位置 <span>{{ data.InstallAddress }}</span></p>
-        </li>
+        </li>-->
         <li class="user_remak clearfix">
           <p class="all">备注 <span>{{ data.Remark }}</span>
           </p>

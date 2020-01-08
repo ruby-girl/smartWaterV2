@@ -8,7 +8,7 @@
     <div class="custom-tree-container">
       <el-tree
         :data="treeData"
-        node-key="Id"
+        node-key="id"
         ref="tree"
         highlight-current
         auto-expand-parent
@@ -49,9 +49,9 @@ export default {
      **/
     renderContent(h, { node, data, store }) {
       if(this.ifSearch||this.ifLogo){
-        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class={'icon iconfont ndoe_level iconlevel'+node.level}></i> {node.label} < /span>)
+        return (<span title={node.label} slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level}> <i class={'icon iconfont ndoe_level iconlevel'+node.level}></i> {node.label} < /span>)
       }else{
-        return (<span slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level} title={node.label}>{node.label} < /span>)
+        return (<span title={node.label} slot-scope = '{ node, data }' id= {data.Id} class={'back back'+node.level} title={node.label}>{node.label} < /span>)
       }
     },
     /**
@@ -194,7 +194,7 @@ export default {
       this.ifLogos == 1 ? this.ifLogo = false : this.ifLogo = true
     })
   }
-};
+}
 </script>
 <style lang="scss">
 .cl-treeBox {

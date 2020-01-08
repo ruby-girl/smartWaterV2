@@ -21,7 +21,6 @@
       </el-form-item>
       <el-form-item label="表册" prop="SA_RegisterBookInfo_Id" >
         <el-select v-model="param.SA_RegisterBookInfo_Id" placeholder="请选择" size="small" @change="getText(param.SA_RegisterBookInfo_Id,'SA_RegisterBookInfo_Id',formsArray,'表册')">
-          <el-option label="全部" value="-1" v-if="formsArray.length>1"></el-option>
           <el-option v-for="(item,index) in formsArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -159,7 +158,8 @@
               if(res.data.length <=0 ){//没有该人员信息
                 promptInfoFun(this,1,'未搜索到数据')
               }else if(res.data.length ==1){//此时有一条数据默认覆盖当前表册
-                this.param.SA_RegisterBookInfo_Id = res.data[0].Id
+                this.$parent.param.SA_RegisterBookInfo_Id = res.data[0].Id
+                this.$parent.isPage = false
                 this.$parent.searchFun();
               }else{//此时有一条以上数据，需手动选择后确认表册信息
                 this.meterData = res.data

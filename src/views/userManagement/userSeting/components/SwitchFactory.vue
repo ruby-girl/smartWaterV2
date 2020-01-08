@@ -57,6 +57,7 @@
             }
             this.dialogVisible = false
             this.$parent.getTreeData()
+            this.$parent.ifWaterFactory = true
           }
         })
       },

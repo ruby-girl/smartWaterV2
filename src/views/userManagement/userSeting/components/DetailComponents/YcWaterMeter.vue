@@ -24,9 +24,9 @@
         <li class="user_line clearfix">
           <p class="all">阀门状态 <span>{{ data.ValveStateName }}</span></p>
         </li>
-        <li class="user_remak clearfix">
+      <!--  <li class="user_remak clearfix">
           <p class="all">安装位置 <span>{{ data.InstallAddress }}</span></p>
-        </li>
+        </li>-->
         <li class="user_remak clearfix">
           <p class="all">备注 <span>{{ data.WaterRemark }}</span>
           </p>

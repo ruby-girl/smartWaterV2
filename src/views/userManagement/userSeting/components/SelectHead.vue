@@ -70,7 +70,7 @@
           UserState: "-1",
           AreaId: "-1",
           WaterTypeId: -1,
-          WaterFactoryId:'-1',
+          WaterFactoryId:'',
           limit: 20,
           page: 1,
           sort: "",
