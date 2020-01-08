@@ -30,7 +30,7 @@
         <el-date-picker
           v-model="addPlanData.StartPlanDate"
           type="date"
-          readonly
+          disabled
           placeholder="选择日期时间"
         ></el-date-picker>
         <el-date-picker
@@ -38,8 +38,8 @@
           type="date"
           placeholder="选择日期时间"
           :picker-options="endDateLimit"
-          format="yyyy-MM-dd "
-          value-format="yyyy-MM-dd "
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -80,7 +80,6 @@ export default {
   },
   methods: {
     addMeterReadingPlan() {
-
       let that = this;
       if (!this.addPlanData.SA_WaterFactory_Id) {
         that.$message({
@@ -132,8 +131,8 @@ export default {
         if (res.code == 0) {
           that.addPlanData.StartPlanDate = res.data;
           const ETime = res.data.split(" ")[0];
-          that.addPlanData.EndPlanDate =  that.getNextMonth(ETime);
-         
+          that.addPlanData.EndPlanDate = that.getNextMonth(ETime);
+
           that.endDateLimit = {
             disabledDate(time) {
               return time.getTime() < new Date(res.data);
@@ -142,19 +141,20 @@ export default {
         }
       });
     },
-    getNextMonth(time){
-      let date=new Date(time)
-      let year=date.getFullYear()
-      let month=date.getMonth()+2
-      let day=date.getDate()
-      let nextMonth=year+"-"+month+"-"+day
-      let dateNum=new Date(nextMonth).getTime()
-      let lastDay=new Date(dateNum-24*60*60*1000)
-      let lastyear=lastDay.getFullYear()
-      let lastmonth=lastDay.getMonth()+1
-      let lastday=lastDay.getDate()
-      let lastnextMonth=lastyear+"-"+lastmonth+"-"+lastday
-      return lastnextMonth
+    getNextMonth(time) {
+      let date = new Date(time);
+      let nextDate = new Date(date.setMonth(date.getMonth() + 1));
+      let year = nextDate.getFullYear();
+      let month = nextDate.getMonth() + 1;
+      let day = nextDate.getDate();
+      let nextMonth = year + "-" + month + "-" + day;
+      let dateNum = new Date(nextMonth).getTime();
+      let lastDay = new Date(dateNum - 24 * 60 * 60 * 1000);
+      let lastyear = lastDay.getFullYear();
+      let lastmonth = lastDay.getMonth() + 1;
+      let lastday = lastDay.getDate();
+      let lastnextMonth = lastyear + "-" + lastmonth + "-" + lastday;
+      return lastnextMonth;
     }
   },
   data() {
@@ -177,11 +177,10 @@ export default {
 <style lang="scss" scoped>
 .el-form-item {
   margin-top: 30px;
-  
 }
-.planDate{
-  /deep/.el-input__inner{
-    width: 100%!important;
+.planDate {
+  /deep/.el-input__inner {
+    width: 100% !important;
   }
 }
 </style>

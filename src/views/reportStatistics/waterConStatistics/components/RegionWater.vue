@@ -36,7 +36,6 @@
             <el-table-column prop="province" label="用水量" width="120"></el-table-column>
             <el-table-column prop="province" label="占总用水量百分比" width="200"></el-table-column>
           </el-table-column>
-         
         </el-table>
       </div>
     </div>
@@ -47,24 +46,26 @@
 import SelectHead from "./selected/RegionWaterSelected";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { GetReportArea, ExcelReportArea } from "@/api/reports";
 export default {
   name: "RegionWater", //按区域
   components: { SelectHead, SearchTips },
   data() {
     return {
       selectHead: {
-        SA_WaterFactory_Id: "-1", //水厂
-        CreateUser: -1, //口径
-        WaterType: -1, //水表类型
-        UserType: -1, //用户类型
-        createStartTime: "",
-        createEndTime: ""
+        AreaId: "", //区域
+        AreaName: "", //区域
+        WaterMeterTypeId: "", //水表类型
+        WaterMeterTypeName: "", //水表类型
+        StartDate: "",
+        EndDate: ""
       },
       tableHeight: null,
       tableData: [], //表格数据
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      searchWidth: 1024
+      searchWidth: 1024,
+      orderData: {}
     };
   },
   methods: {
@@ -84,11 +85,34 @@ export default {
     },
     //导出
     excel() {
-      console.log("导出");
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
+          type: "warning"
+        });
+        return false;
+      }
+      ExcelReportArea(this.orderData).then(res => {
+        if (res.code == 0) {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        } else {
+          this.$message({
+            type: "warning",
+            msg: res.msg ? res.msg : "导出失败  "
+          });
+        }
+      });
     },
     //查询
-    searchTableList() {
-      this.tipsData = pushItem(this.tipsDataCopy);
+    searchTableList(num) {
+      if (num != 0) {
+        this.orderData = Object.assign({}, this.listQuery);
+      }
+      GetReportArea(this.selectHead).then(res => {
+        this.tipsData = pushItem(this.tipsDataCopy);
+        this.tableData = res.data;
+      });
     }
   },
   mounted() {

@@ -154,7 +154,6 @@ export default {
     },
     handleFilter() {
       //水厂名字
-       console.log(this.selectHead.WaterFactoryId )
       this.selectHead.WaterFactoryName = this.getSelectName(
         this.selectHead.WaterFactoryId,
         this.companyOptions
@@ -164,7 +163,6 @@ export default {
         this.selectHead.WaterMeterTypeId,
         this.WaterMeterList
       );
-      console.log(this.selectHead);
       this.$parent.searchTableList();
     },
     getText(val, model, arr, name) {

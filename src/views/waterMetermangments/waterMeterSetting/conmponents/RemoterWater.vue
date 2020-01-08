@@ -26,6 +26,7 @@
           </li>
         </ul>
         <p class="boxMsg" v-if="showMsg">暂无数据</p>
+        <!-- <p class="boxMsg" >暂无数据</p> -->
         <span v-show="ifShow" class="telescopic telescopic2" @click="closeAccount">
           设备详情
           <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
@@ -70,29 +71,29 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-             <el-form-item v-show="show3||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
-          <el-select
-            v-model="YCMeterQueryParam.CustomerQueryType"
-            placeholder="请选择"
-            style="width: 100px;float: left;margin-right:4px;"
-            class="short-select"
-            @change="getscName(YCMeterQueryParam.CustomerQueryType)"
-          >
-            <el-option label="姓名/简码" value="2"></el-option>
-            <el-option label="用户编号" value="1"></el-option>
-            <el-option label="电话" value="3"></el-option>
-            <el-option label="证件号" value="4"></el-option>
-            <el-option label="用户地址" value="5"></el-option>
-          </el-select>
-          <el-input
-            v-model="YCMeterQueryParam.CustomerQueryValue"
-            maxlength="20"
-            placeholder="(长度1-30)"
-            @keyup.enter.native="handleFilter"
-            @change="getText(YCMeterQueryParam.CustomerQueryValue,'CustomerQueryValue','',secNmae)"
-            style="width: 180px;float: left"
-          />
-        </el-form-item>
+            <el-form-item v-show="show3||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
+              <el-select
+                v-model="YCMeterQueryParam.CustomerQueryType"
+                placeholder="请选择"
+                style="width: 100px;float: left;margin-right:4px;"
+                class="short-select"
+                @change="getscName(YCMeterQueryParam.CustomerQueryType)"
+              >
+                <el-option label="姓名/简码" value="2"></el-option>
+                <el-option label="用户编号" value="1"></el-option>
+                <el-option label="电话" value="3"></el-option>
+                <el-option label="证件号" value="4"></el-option>
+                <el-option label="用户地址" value="5"></el-option>
+              </el-select>
+              <el-input
+                v-model="YCMeterQueryParam.CustomerQueryValue"
+                maxlength="20"
+                placeholder="(长度1-30)"
+                @keyup.enter.native="handleFilter"
+                @change="getText(YCMeterQueryParam.CustomerQueryValue,'CustomerQueryValue','',secNmae)"
+                style="width: 180px;float: left"
+              />
+            </el-form-item>
             <el-form-item
               label="开户状态"
               v-show="show3||isShow"
@@ -186,13 +187,23 @@
 
               <template v-for="(item ,index) in tableHeadData">
                 <el-table-column
+                  v-if="item.IsFreeze"
                   :key="index"
-                  min-width="170px"
+                  min-width="150px"
                   :sortable="item.IsSortBol?'custom':null"
                   :prop="item.ColProp"
-                 align="center"
+                  :align="item.Position"
                   :label="item.ColDesc"
                   :fixed="item.Freeze"
+                />
+                <el-table-column
+                  v-else
+                  :key="index"
+                  min-width="150px"
+                  sortable="custom"
+                  :prop="item.ColProp"
+                  align="center"
+                  :label="item.ColDesc"
                 />
               </template>
               <el-table-column label="操作" width="180px" align="center" fixed="right">
@@ -314,7 +325,7 @@ export default {
         IsOpenAccount: "", //开户状态
         sort: "", //升序
         filed: "", //排序字段
-        WaterMerterNo:"",
+        WaterMerterNo: "",
         tableId: "0000022"
       },
       meterReadListParam: {
@@ -391,7 +402,7 @@ export default {
     this.getdevice();
     this.timeFunction = setInterval(() => {
       this.getdevice();
-    }, 60000);
+    }, 60*1000);
     this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
       document.getElementById("table").offsetTop -
@@ -419,7 +430,7 @@ export default {
     }
   },
   methods: {
-     getscName(id) {
+    getscName(id) {
       this.secNmae = getName(id);
     },
     resetting() {
@@ -692,7 +703,7 @@ export default {
 <style lang="scss" scoped>
 .mac-contianer {
   padding: 0 !important;
-  user-select: none;
+  // user-select: none;
   .el-container {
     background: #eee;
     // padding-top: 10px !important;
@@ -819,8 +830,10 @@ export default {
       margin-right: 0px !important;
     }
     .boxMsg {
-      border: 1px solid #eee;
-      height: 300px;
+      height: 100px;
+      color: #9e9e9e;
+      margin-top: 30px !important;
+      text-align: center;
     }
   }
 }
