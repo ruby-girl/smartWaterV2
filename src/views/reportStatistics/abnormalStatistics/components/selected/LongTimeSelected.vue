@@ -196,9 +196,9 @@ export default {
       if (this.selectHead.StarDateTime) {
         dateStipe =
           this.selectHead.StarDateTime + "~" + this.selectHead.EndDateTime+" 23:59:59";
-        this.$emit("getText", dateStipe, "StarDateTime", "", "日期");
+        this.$emit("getText", dateStipe, "StarDateTime", "", "未缴费起止日期");
       } else {
-        this.$emit("getText", dateStipe, "StarDateTime", "", "日期");
+        this.$emit("getText", dateStipe, "StarDateTime", "", "未缴费起止日期");
       }
     }
   },

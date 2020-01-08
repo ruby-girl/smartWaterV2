@@ -109,7 +109,16 @@ export default {
       });
     },
     //查询
-    searchTableList() {
+    searchTableList(num) {
+      //StarDateTime: "",
+      //  EndDateTime: "",
+      if(!this.selectHead.StarDateTime||!this.selectHead.EndDateTime){
+        this.$message({
+          message: "抄表起止日期不能为空，请选择!",
+          type: "warning"
+        });
+        return false
+      }
       if (num != 0) {
         this.orderData = Object.assign({}, this.selectHead);
         this.orderData.page = 1;

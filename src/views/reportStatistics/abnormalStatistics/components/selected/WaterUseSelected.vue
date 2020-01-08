@@ -86,7 +86,7 @@
           <el-radio label="以下"></el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="未缴费起止日期" label-width="110px" v-show="show5||isShow">
+      <el-form-item label="抄表起止日期" label-width="110px" v-show="show5||isShow">
         <el-date-picker
           v-model="dateArr"
           type="daterange"
@@ -202,12 +202,12 @@ export default {
           this.selectHead.StarDateTime.split(" ")[0] +
           "~" +
           this.selectHead.EndDateTime.split(" ")[0];
-        this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
+        this.$emit("getText", dateStipe, "dateArr", "", "抄表起止日期");
       } else {
         this.selectHead.StarDateTime = "";
         this.selectHead.EndDateTime = "";
         dateStipe = "";
-        this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
+        this.$emit("getText", dateStipe, "dateArr", "", "抄表起止日期");
       }
     }
   },
