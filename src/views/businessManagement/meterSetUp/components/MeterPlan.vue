@@ -11,11 +11,12 @@
         <div class="meter_nums clearfix">
           <div>
             <div class="meter_box meter_box1">
-              <p>抄表日期</p>
+              <p>上次抄表日期</p>
               <el-date-picker
-                v-model="param.ReadDate"
+                :disabled="true"
+                v-model="MaxReadDate"
                 type="datetime"
-                placeholder="选择日期">
+                placeholder="上次抄表日期">
               </el-date-picker>
             </div>
             <div class="meter_box meter_box2">
@@ -23,10 +24,20 @@
               <el-input v-model="currentContract.LastReadNum" :disabled="true"></el-input>
             </div>
           </div>
-          <div class="meter_box meter_box3">
-            <p>本次读数</p>
-            <el-input v-model="param.ReadNum" placeholder="按[enter]键确定" ref="ReadNumInput"
-                      @keyup.enter.native="getWaterPredict(1)" @input="handleInput" maxlength="8"></el-input>
+          <div>
+            <div class="meter_box meter_box1">
+              <p>本次抄表日期</p>
+              <el-date-picker
+                v-model="param.ReadDate"
+                type="datetime"
+                placeholder="选择日期">
+              </el-date-picker>
+            </div>
+            <div class="meter_box meter_box2">
+              <p>本次读数</p>
+              <el-input v-model="param.ReadNum" placeholder="按[enter]键确定" ref="ReadNumInput"
+                        @keyup.enter.native="getWaterPredict(1)" @input="handleInput" maxlength="8"></el-input>
+            </div>
           </div>
           <el-input class="meter_remark" placeholder="请输入内容" v-model="param.Remark">
             <template slot="prepend">备注：</template>
@@ -199,6 +210,7 @@
     name: "MeterPlan",
     data() {
       return {
+        MaxReadDate:'',
         isEstimate:false,//是否加载水量水费预估
         checks: ['自动载入下一户'],
         meterData: {},
@@ -246,6 +258,15 @@
             if (this.$parent.tableData.length > 1) {
               if(this.checks.indexOf('自动载入下一户') != '-1'){
                 this.$parent.nextPageFun(true)
+                /*清空水量预估数据*/
+                this.temp = {
+                  LadderNumber: 3,
+                    ladder: [
+                    {'LadderPrice': 0, 'LadderWaterNum': 0, 'TotalPrice': 0},
+                    {'LadderPrice': 0, 'LadderWaterNum': 0, 'TotalPrice': 0},
+                    {'LadderPrice': 0, 'LadderWaterNum': 0, 'TotalPrice': 0}
+                  ]
+                }
               }
             } else {
               this.$parent.searchFun()
@@ -331,7 +352,7 @@
       },
       getMagnificate(...param) {//预估水量异常倍率进行对比
         if (this.checks.indexOf('异常倍率') != '-1') {
-          if (param[0] > this.magnification) {//若预估结果大于等于用户所选倍率
+          if (param[0] > this.magnification&&this.currentContract.LastReadNum>0) {//若预估结果大于等于用户所选倍率,上次读数大于0计算异常倍率
             this.$confirm("本次水量" + param[1] + "方，为上次水量" + param[2] + "方的" + param[0] + "倍，确认继续录入？", "提示", {
               cancelButtonText: "取消",
               confirmButtonText: "确定",

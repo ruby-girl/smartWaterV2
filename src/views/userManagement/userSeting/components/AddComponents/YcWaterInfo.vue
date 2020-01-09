@@ -3,7 +3,7 @@
     <!--远程水表 s-->
     <el-form-item label="水表编号 " prop="WaterMeterNo">
       <el-input v-model="data.WaterMeterNo " size="small" placeholder="按enter建查询水表信息"
-                @keyup.enter.native="GetYCWaterByWaterMeterNo"/>
+                @keyup.enter.native="GetYCWaterByWaterMeterNo" maxlength="20"/>
     </el-form-item>
     <el-form-item label="集中器号 " prop="ConcentratorNo">
       <el-input :disabled="true" v-model="data.ConcentratorNo" size="small"/>
@@ -21,7 +21,7 @@
       <el-input :disabled="true" v-model="data.ReadNum" size="small"/>
     </el-form-item>
     <el-form-item label="水表样式 " prop="MeterStyle">
-      <el-select v-model="data.WaterMeterStyle" placeholder="请选择" size="small" :disabled="true">
+      <el-select v-model="data.WaterMeterStyle.toString()" placeholder="请选择" size="small" :disabled="true">
         <el-option v-for="(item,index) in waterMeterStyles" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
@@ -30,13 +30,8 @@
         <el-option v-for="(item,index) in MeterDiameters" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-   <!-- <el-form-item label="安装位置 " class="cl_allArea" prop="InstallAddress">
-      <el-input :disabled="true" type="textarea" v-model="data.InstallAddress" max-length="500"
-                rows="1"></el-input>
-    &lt;!&ndash;  <span>{{InstallAddress}}/500</span>&ndash;&gt;
-    </el-form-item>-->
     <el-form-item label="备注 " class="cl_allArea" prop="Remark">
-      <el-input :disabled="true" type="textarea" v-model="data.Remark" max-length="500"></el-input>
+      <el-input :disabled="true" type="textarea" v-model="data.Remark" maxlength="500"></el-input>
       <!--<span>{{Remark}}/500</span>-->
     </el-form-item>
   </el-form>

@@ -90,7 +90,7 @@
 
       <el-form :inline="true" ref="formData1" :model="formData" :rules="rules" label-width="100px" v-else>
         <el-form-item label="水表编号 " prop="WaterMeterNo">
-          <el-input v-model="formData.WaterMeterNo" size="small"/>
+          <el-input v-model="formData.WaterMeterNo" size="small" maxlength="20"/>
         </el-form-item>
         <el-form-item label="水表样式 "  prop="WaterMeterStyle">
           <el-select clearable v-model="formData.WaterMeterStyle" placeholder="请选择" size="small">

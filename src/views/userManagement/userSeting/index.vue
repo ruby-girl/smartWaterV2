@@ -225,7 +225,8 @@ export default {
       this.getSatrtFun()
     },
     getTableLine(){
-      //this.query.AreaId = this.$refs.myChild.areaId;
+      this.$refs.tableChild.total = 0;
+      this.$refs.tableChild.tableData = [];//解决CS 数据切换异常问题
       this.ifWaterFactory ? this.query.AreaId = localStorage.getItem('waterFactoryId') : this.query.AreaId = this.$refs.myChild.areaId
 
       let query = Object.assign({}, this.query);
@@ -266,7 +267,7 @@ export default {
       this.$refs.tableChild.getText(val, model, arr, name)
     },
     getSatrtFun(){
-      this.query.AreaId = this.$refs.myChild.areaId;
+      this.ifWaterFactory ? this.query.AreaId = localStorage.getItem('waterFactoryId') : this.query.AreaId = this.$refs.myChild.areaId
       let query = Object.assign({}, this.query);
       query.CustomerQueryType = parseInt(query.CustomerQueryType);
       query.UserType = parseInt(query.UserType);

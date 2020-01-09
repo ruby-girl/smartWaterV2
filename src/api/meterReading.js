@@ -24,6 +24,18 @@ export function LoadRegisterBookAndMeterReader(data) {
 }
 
 /**
+ *表册抄表员与抄表计划联动查询,返回表册下拉选数据与抄表员下拉选数据
+ * */
+export function QueryRegisterBookByPlanIdAndMeterReaderId(data) {
+  return request({
+    url: '/ReadingQuery/QueryRegisterBookByPlanIdAndMeterReaderId',
+    method: 'post',
+    params: data
+  })
+}
+
+
+/**
  *抄表设置定位查询
  * */
 export function MeterReadingLocationQuery(data) {

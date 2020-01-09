@@ -29,7 +29,6 @@ export default {
       let _this = this;
       let id = _this.$route.query.id;
       if (id) {
-
         this.$refs.planChild1.param.SA_MeterReadPlan_Id = id;
         _this.$refs.planChild1.searchFun();
       }

@@ -158,10 +158,12 @@
               if(res.data.length <=0 ){//没有该人员信息
                 promptInfoFun(this,1,'未搜索到数据')
               }else if(res.data.length ==1){//此时有一条数据默认覆盖当前表册
+                this.param.MeterReadState = '-1'
                 this.$parent.param.SA_RegisterBookInfo_Id = res.data[0].Id
                 this.$parent.isPage = false
                 this.$parent.searchFun();
               }else{//此时有一条以上数据，需手动选择后确认表册信息
+                this.param.MeterReadState = '-1'
                 this.meterData = res.data
                 this.meterVisible = true
               }
@@ -173,6 +175,7 @@
       },
       getCurMeter(row){//多表册手动选择
         this.param.SA_RegisterBookInfo_Id = row.Id
+        this.param.MeterReadState = '-1'
         this.meterVisible = false
         this.$parent.searchFun();
       },
