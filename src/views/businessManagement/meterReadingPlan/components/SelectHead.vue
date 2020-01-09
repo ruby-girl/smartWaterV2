@@ -154,12 +154,12 @@ export default {
           this.selectHead.createStartTime.split(" ")[0] +
           "~" +
           this.selectHead.createEndTime.split(" ")[0];
-        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "升级日期");
+        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "计划抄表日期");
       } else {
         this.selectHead.createStartTime = "";
         this.selectHead.createEndTime = "";
         dateStipe = "";
-        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "升级日期");
+        this.$emit("getText", dateStipe, "warterMeterPlanDate", "", "计划抄表日期");
       }
     }
   },

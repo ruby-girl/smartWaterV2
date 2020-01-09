@@ -99,7 +99,7 @@ export default {
         limit: 20,
         filed: "",
         sort: "",
-        customerQueryType: "", //查询类型
+        customerQueryType: "1", //查询类型
         customerQueryValue: "", //查询值
         waterFactoryId: "-1", //水厂ID
         userType: -1, // 用户类型

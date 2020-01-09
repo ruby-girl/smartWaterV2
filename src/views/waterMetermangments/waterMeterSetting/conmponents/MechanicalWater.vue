@@ -241,7 +241,7 @@ export default {
       wachMeterData: {
         page: 1,
         limit: 20,
-        QueryType: "", // 用户名 ,
+        QueryType: "1", // 用户名 ,
         Customer: "", // 用户名 ,
         WaterMeterNo: "", //水表编号 ,
         wms: "-1", //水表样式

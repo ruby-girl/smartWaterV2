@@ -166,7 +166,7 @@ export default {
   },
   data() {
     return {
-      secNmae: "",
+      secNmae: "用户编号",
       WaterMeterList: [], //
       securStatus: [],
       securNextStatus: [],
@@ -216,16 +216,18 @@ export default {
     //日期格式化
     getTime(v) {
       let date;
+      console.log(v)
+
       if (v) {
         this.selectHead.StartTime = v[0];
         this.selectHead.EndTime = v[1];
         date = this.selectHead.StartTime + "~" + this.selectHead.EndTime;
-        this.$emit("getText", date, "timevalue", "", "销户日期");
+        this.$emit("getText", date, "timevalue", "", "生效日期止");
       } else {
         this.selectHead.StartTime = "";
         this.selectHead.EndTime = "";
         date = "";
-        this.$emit("getText", date, "timevalue", "", "销户日期");
+        this.$emit("getText", date, "timevalue", "", "生效日期止");
       }
     },
     handleFilter() {
