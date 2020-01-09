@@ -90,7 +90,7 @@ export default {
         limit: 20,
         filed: "",
         sort: "",
-        CustomerQueryType: "", //查询类型
+        CustomerQueryType: "1", //查询类型
         CustomerQueryValue: "", //查询值
         WaterMeter: -1, //水表类型
         StartTime: "", // 操作时间起

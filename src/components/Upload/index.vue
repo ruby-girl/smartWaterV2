@@ -18,7 +18,7 @@
         accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.JPG,.JPEG,.PDF,.DOC,.DOCX,.XLS,.XLSX"
         :file-list="fileList">
         <el-button size="small" type="success"><i class="icon iconfont">&#xe688;</i> 添加附件</el-button>
-        <div slot="tip" class="el-upload__tip">可选择jpg/png/word/excel/pdf格式，每张图片大小限制为10M内</div>
+        <div slot="tip" class="el-upload__tip">可选择jpg/png/word/excel/pdf格式，每张图片大小限制为5M内</div>
       </el-upload>
 
       <ul class="uploadList el-upload-list el-upload-list--text">
@@ -142,10 +142,10 @@
       this.$message.warning(`当前限制选择 10 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeAvatarUpload(file) { // 上传限制
-      const isLt5M = file.size / 1024 / 1024 < 10
+      const isLt5M = file.size / 1024 / 1024 < 5
       if (!isLt5M) {
         this.$message({
-          message: '上传文件大小不能超过 10MB!',
+          message: '上传文件大小不能超过 5MB!',
           type: 'error'
         })
         return false

@@ -86,6 +86,13 @@ export default {
         //过滤获取上传文件信息ID
         _this.InsuredRecheckParam.Idarr.push(_this.fileArr[j].id);
       }
+      if (!_this.InsuredRecheckParam.Idarr.length) {
+        _this.$message({
+          type: "warning",
+          message: "请上传低保户附件"
+        });
+        return false;
+      }
       reviewInssure(_this.InsuredRecheckParam).then(res => {
         if (res.code == 0) {
           _this.viewExam = false;

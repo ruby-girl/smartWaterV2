@@ -59,9 +59,9 @@
           >
             <el-option label="姓名/简码" value="2"></el-option>
             <el-option label="用户编号" value="1"></el-option>
-            <el-option label="电话" value="3"></el-option>
+            <!-- <el-option label="电话" value="3"></el-option>
             <el-option label="证件号" value="4"></el-option>
-            <el-option label="用户地址" value="5"></el-option>
+            <el-option label="用户地址" value="5"></el-option> -->
           </el-select>
           <el-input
             v-model="WLWQueryParam.CustomerQueryValue"
@@ -333,7 +333,7 @@ export default {
       show4: true,
       show5: true,
       show6: true,
-      secNmae: ""
+      secNmae: "用户编号"
     };
   },
   created() {

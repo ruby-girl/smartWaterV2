@@ -2,7 +2,7 @@
   <div class="cl-container">
     <div style="background: transparent;padding: 0;width: 100%;position: relative">
       <div style="background: #fff;padding: 16px;width: 100%;position: relative">
-        <SelectHead ref="childSelect" @getText="getText"></SelectHead>
+        <SelectHead ref="childSelect" @getText="getText" @searchFunion="searchFun"></SelectHead>
         <!--列表组建 s-->
         <div class="cl-center-box">
           <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips"/>
@@ -17,22 +17,46 @@
             </el-table-column>
             <template v-for="(item ,index) in tableHead">
               <el-table-column
-                v-if="item.IsFreeze"
+                v-if="item.IsFreeze&&item.ColProp!='MeterReadStateName'&&item.ColProp!='ChargeFlagName'"
                 min-width="110"
                 :key="index"
                 :sortable="item.IsSortBol ? 'custom' : null"
                 :prop="item.ColProp"
-                :align="item.Position"
+                align="center"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"/>
               <el-table-column
-                v-else
+                v-else-if="!item.IsFreeze&&item.ColProp!='MeterReadStateName'&&item.ColProp!='ChargeFlagName'"
                 min-width="110"
                 :key="index"
                 :sortable="item.IsSortBol ? 'custom' : null"
                 :prop="item.ColProp"
-                :align="item.Position"
+                align="center"
                 :label="item.ColDesc"/>
+              <el-table-column
+                v-else-if="item.ColProp=='MeterReadStateName'"
+                :key="index"
+                min-width="200px"
+                :sortable="item.IsSortBol ? 'custom' : null"
+                align="center"
+                :label="item.ColDesc">
+                <template slot-scope="scope">
+                  <label style="color: #00B2A1" v-if="scope.row.MeterReadStateName=='已抄表'">{{scope.row.MeterReadStateName}}</label>
+                  <label style="color: #FF5656" v-else="scope.row.MeterReadStateName=='未抄表'">{{scope.row.MeterReadStateName}}</label>
+                </template>
+              </el-table-column>
+                <el-table-column
+                  v-else-if="item.ColProp=='ChargeFlagName'"
+                  :key="index"
+                  min-width="200px"
+                  :sortable="item.IsSortBol ? 'custom' : null"
+                  align="center"
+                  :label="item.ColDesc">
+                  <template slot-scope="scope">
+                     <label style="color: #00B2A1" v-if="scope.row.ChargeFlagName=='已缴费'">{{scope.row.ChargeFlagName}}</label>
+                     <label style="color: #FF5656" v-else="scope.row.ChargeFlagName=='未缴费'">{{scope.row.ChargeFlagName}}</label>
+                  </template>
+              </el-table-column>
             </template>
             <el-table-column label="操作" width="100px" align="center" fixed="right">
               <template slot-scope="scope">
@@ -213,6 +237,9 @@
       },
       tableRowClassName({row, rowIndex}) {//为table添加当前行索引
         row.index = rowIndex;
+        if(row.MeterReadStateName=='已抄表'){
+          return 'warning-row'
+        }
       },
       getCurInfo(row) {//表格选中事件
         this.curRow = row.index
@@ -220,9 +247,12 @@
         this.$refs.planchild1.currentContract = this.$refs.multipleTable.data[row.index]
         this.$refs.planchild1.$refs.ReadNumInput.$el.querySelector('input').focus()
         this.$refs.planchild1.param.ReadNum = ''
+        this.$refs.planchild1.MaxReadDate = row.MaxReadDate//上次抄表时间
       },
       handleHistory(row) {// 查看历史数据，跳转表册设置
-        this.$router.push({path: '/businessManagement/meterQuery', query: {CustomerNo: row.CustomerNo}})
+        row.SA_MeterReadPlan_Id =  this.param.SA_MeterReadPlan_Id
+        this.$router.push({path: '/businessManagement/meterQuery', query: {CustomerInfo: row}})
+       // Bus.$emit('getPlanData',row)
       },
       /**
        *val 对应绑定的参数
@@ -262,3 +292,10 @@
     }
   }
 </script>
+<style lang="scss">
+  .cl-container {
+    .el-table .warning-row {
+      background: #feddd8;
+    }
+  }
+</style>

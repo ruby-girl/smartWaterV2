@@ -115,7 +115,7 @@ export default {
         limit: 20,
         filed: "",
         sort: "",
-        CustomerQueryType: "", //查询类型
+        CustomerQueryType: "1", //查询类型
         CustomerQueryType: "", //查询值
         SA_WaterFactory_Id: "-1", //水厂ID
         UserType: -1, // 用户类型

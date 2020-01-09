@@ -8,7 +8,7 @@
     <div class="custom-tree-container">
       <el-tree
         :data="treeData"
-        node-key="id"
+        node-key="Id"
         ref="tree"
         highlight-current
         auto-expand-parent

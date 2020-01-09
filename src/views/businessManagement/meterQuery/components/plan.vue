@@ -40,7 +40,7 @@
         <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
             <el-tooltip effect="light" content="水量详情" placement="bottom-start" v-if="scope.LadderNumber>1">
-              <a class="operation1" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
+              <a class="operation3" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
             </el-tooltip>
             <el-tooltip effect="light" content="删除" placement="bottom-start">
               <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>

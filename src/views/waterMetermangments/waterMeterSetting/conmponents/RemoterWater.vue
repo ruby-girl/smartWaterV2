@@ -81,9 +81,9 @@
               >
                 <el-option label="姓名/简码" value="2"></el-option>
                 <el-option label="用户编号" value="1"></el-option>
-                <el-option label="电话" value="3"></el-option>
+                <!-- <el-option label="电话" value="3"></el-option>
                 <el-option label="证件号" value="4"></el-option>
-                <el-option label="用户地址" value="5"></el-option>
+                <el-option label="用户地址" value="5"></el-option>-->
               </el-select>
               <el-input
                 v-model="YCMeterQueryParam.CustomerQueryValue"
@@ -110,26 +110,6 @@
                 <el-option label="未开户" value="1"></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item
-              label="通讯状态"
-              v-show="show4||isShow"
-              key="TrafficStatus"
-              prop="TrafficStatus"
-            >
-              <el-select
-                v-model="YCMeterQueryParam.TrafficStatus"
-                placeholder="请选择"
-                @change="getText(YCMeterQueryParam.TrafficStatus,'TrafficStatus',TrafficStatusList,'通讯状态')"
-              >
-                <el-option label="全部" value="-1"></el-option>
-                <el-option
-                  v-for="item in TrafficStatusList"
-                  :label="item.Name"
-                  :value="item.Id"
-                  :key="item.Name"
-                ></el-option>
-              </el-select>
-            </el-form-item>-->
             <el-form-item label>
               <span class="isShow" v-if="showBtn" :class="{tro:isShow}">
                 <i class="icon iconfont iconjianqu3" @click="toggClick"></i>
@@ -317,7 +297,7 @@ export default {
       YCMeterQueryParam: {
         page: 1,
         limit: 20,
-        CustomerQueryType: "", //水表编号
+        CustomerQueryType: "1", //水表编号
         CollectorNo: "", //采集器
         CustomerQueryValue: "", //水表编号值
         ValveState: "", //阀门状态
@@ -368,7 +348,8 @@ export default {
       show1: true,
       show2: true,
       show3: true,
-      show4: true
+      show4: true,
+      secNmae: "用户编号"
     };
   },
   watch: {
@@ -402,7 +383,7 @@ export default {
     this.getdevice();
     this.timeFunction = setInterval(() => {
       this.getdevice();
-    }, 60*1000);
+    }, 60 * 1000);
     this.tableHeight =
       document.getElementsByClassName("section-container")[0].offsetHeight -
       document.getElementById("table").offsetTop -

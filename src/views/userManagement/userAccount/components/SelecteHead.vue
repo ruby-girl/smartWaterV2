@@ -180,7 +180,7 @@ export default {
       companyShow: true,
       userTypeList: [],
       WaterMeterList: [],
-      secNmae: "",
+      secNmae: "用户编号",
       isShow: false,
       show1: true,
       show2: true,

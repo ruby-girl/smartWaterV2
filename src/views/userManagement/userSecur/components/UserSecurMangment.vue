@@ -65,7 +65,7 @@
                   <i class="icon iconfont" @click="goHisWeb(scope.row.CustomerNo)">&#xe670;</i>
                 </el-tooltip>
                 <el-tooltip
-                  v-if="scope.row.RecheckStateName=='待复审'"
+                  v-if="scope.row.InsuredStateName=='生效中'&&scope.row.RecheckStateName=='待复审'"
                   class="item"
                   popper-class="tooltip"
                   effect="light"
@@ -77,11 +77,11 @@
                   <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)"></i>
                 </el-tooltip>
                 <el-tooltip
-                  v-if="scope.row.RecheckStateName!='待复审'"
+                  v-else
                   class="item"
                   popper-class="tooltip"
                   :visible-arrow="false"
-                  content="该用户已复审或未到审核日期"
+                  content="该用户已过期或已复审或未到审核日期"
                   placement="bottom"
                 >
                   <!-- <i  v-if="scope.row.RecheckStateName!='待复审'" class="icon iconfont iconlianhe1" style="color:#ccc;"></i> -->
@@ -124,7 +124,7 @@ export default {
         limit: 20,
         filed: "",
         sort: "",
-        CustomerQueryType: "", //查询类型
+        CustomerQueryType: "1", //查询类型
         CustomerQueryValue: "", //查询值
         WaterMeter: -1, //水表类型
         StartTime: "", // 操作时间起
@@ -186,11 +186,14 @@ export default {
     },
     //查询低保户
     seachAccountOrder(num) {
-      if (this.listQuery.timevalue.length > 0) {
-        this.listQuery.StartTime =
-          this.listQuery.StartTime.split(" ")[0] + " 00:00:00";
-        this.listQuery.EndTime =
-          this.listQuery.EndTime.split(" ")[0] + " 23:58:59";
+      if(this.listQuery.timevalue){
+        if (this.listQuery.timevalue.length > 0) {
+          this.listQuery.StartTime =
+            this.listQuery.StartTime.split(" ")[0] + " 00:00:00";
+          this.listQuery.EndTime =
+            this.listQuery.EndTime.split(" ")[0] + " 23:59:59";
+        }
+
       }
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
