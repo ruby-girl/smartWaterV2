@@ -341,7 +341,7 @@
           QueryMeterReadPlanByFactoryId({SA_WaterFactory_Id:id}).then(res => {
             if (res.code ==0 ) {
               this.planArry = res.data;
-              this.param1.SA_MeterReadPlan_Id = res.data[0].Id
+              this.param1.SA_MeterReadPlan_Id = res.data[0].Plans[0].Id
               this.getCbyInfo(res.data[0].Plans[0].Id)//搜索默认抄表计划
             } else {
               promptInfoFun(this,1,res.message)
