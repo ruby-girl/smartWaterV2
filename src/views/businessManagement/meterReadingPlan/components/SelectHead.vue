@@ -22,7 +22,7 @@
             :key="item.Id"
             :label="item.Name"
             :value="item.Id"
-          ></el-option>
+          ></el-option> 
         </el-select>
       </el-form-item>
       <transition-group name="fade">

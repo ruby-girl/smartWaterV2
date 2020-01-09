@@ -24,7 +24,7 @@
             <el-table-column prop="name" label="日期"></el-table-column>
             <el-table-column prop="name" label="用水量"></el-table-column>
             <el-table-column prop="name" label="供水量"></el-table-column>
-            <el-table-column prop="name" label="产销量"></el-table-column>
+            <el-table-column prop="name" label="产销差率"></el-table-column>
           </el-table>
         </div>
       </div>

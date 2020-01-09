@@ -22,7 +22,10 @@
         <i class="icon iconfont iconfamen open_guan" v-if="item.CommandName=='阀门锁定关'"></i>
         <div class="content">
           <span>{{item.CreateTime}}</span>
-          <label>{{item.TrafficStatus}}</label>
+          <label>{{item.CommandName}}</label>
+          <span v-if="item.TrafficStatus=='通讯中'" class="styleText" >{{item.TrafficStatus}}</span>
+          <span v-if="item.TrafficStatus=='通讯异常'" class="styleText colorStyle" >{{item.TrafficStatus}}</span>
+          <span v-if="item.TrafficStatus=='通讯正常'" class="styleText colorStyle1" >{{item.TrafficStatus}}</span>
         </div>
       </li>
     </ul>
@@ -127,7 +130,9 @@ export default {
     top: 20px;
     margin-left: -1px;
   }
-
+li:nth-last-child(2):before{
+    height: calc(100% + 50px);
+}
   li:last-child:before {
     height: calc(100% - 50px);
   }
@@ -177,6 +182,7 @@ export default {
     box-shadow: 1px 2px 3px #cecece;
     -webkit-box-shadow: 1px 2px 5px #cecece;
     padding: 0 15px;
+    position: relative;
 
     span {
       color: #777c82;
@@ -206,6 +212,23 @@ export default {
     span.on {
       color: #46494c;
     }
+  }
+  .content .styleText {
+    position: absolute !important;
+    right: 15px;
+    top: 15px;
+    margin: 0;
+    font-size: 13px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 10px;
+    color: #E57403;
+  }
+  .content .colorStyle{
+    color: #FF3D3D;
+  }
+  .content .colorStyle1{
+    color: #00B2A1;
   }
 }
 </style>

@@ -131,11 +131,13 @@ export default {
       document.body.clientWidth < 1630
         ? (_this.dialogWidth = "90%")
         : (_this.dialogWidth = "65%"); //自适应窗体宽度
+      _this.clientHeight = document.documentElement.clientHeight;
 
       window.onresize = function temp() {
         document.body.clientWidth < 1630
           ? (_this.dialogWidth = "90%")
           : (_this.dialogWidth = "65%");
+        _this.clientHeight = document.documentElement.clientHeight;
       };
       document.addEventListener(
         "keydown",
@@ -153,6 +155,7 @@ export default {
     handleClose() {
       //弹窗关闭事件
       this.dialogVisible = false;
+      
     },
     getFile(fileData) {
       this.file = [];
@@ -322,6 +325,7 @@ export default {
       height: 320px;
       overflow: auto;
     }
+
     .fileBox {
       padding: 0;
       min-height: 160px;
@@ -357,6 +361,41 @@ export default {
         }
       }
     }
+  }
+  .cl-image-viewer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    height: 100%;
+    text-align: center;
+    .el-image-viewer__canvas {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .cl-image-viewer__mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    background: #000;
+    cursor: pointer;
   }
 }
 </style>

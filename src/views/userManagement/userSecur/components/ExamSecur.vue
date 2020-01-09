@@ -32,7 +32,7 @@
       </el-form>
     </div>
     <p style="text-align: center">
-      <el-button type="primary" size="mini" @click="saveAduite">提交审核/确定</el-button>
+      <el-button type="primary" size="mini" @click="saveAduite">{{isOpen?"提交审核":"确定"}}</el-button>
       <el-button size="mini" @click="cancalSecur">取 消</el-button>
     </p>
   </el-dialog>
@@ -40,6 +40,7 @@
 <script>
 import uploadBox from "@/components/Upload";
 import { reviewInssure } from "@/api/inSecur";
+import { getOpenFlag } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "ExamSecur",
   components: { uploadBox },
@@ -54,7 +55,8 @@ export default {
         FS_StartDate: "", //次年生效开始时间
         FS_EndDate: "" //次年生效开始时间
       }, //提交数据
-      fileArr: []
+      fileArr: [],
+      isOpen: true
     };
   },
   watch: {
@@ -64,7 +66,13 @@ export default {
       });
     }
   },
-
+  mounted() {
+    //是否开启审核
+    getOpenFlag(2902).then(val => {
+      console.log(val);
+      this.isOpen = val;
+    });
+  },
   methods: {
     /********************获取上传文件信息**********************/
     getFileFun(data) {
@@ -81,13 +89,19 @@ export default {
       reviewInssure(_this.InsuredRecheckParam).then(res => {
         if (res.code == 0) {
           _this.viewExam = false;
-          _this.$mssage({
+          _this.$message({
             type: "success",
-            message: res.data ? res.data : "提交成功"
+            message: res.message ? res.message : "复审成功"
+          });
+          _this.nextTimeArr = [];
+          _this.InsuredRecheckParam = this.$options.InsuredRecheckParam;
+          this.$parent.seachAccountOrder();
+        } else {
+          _this.$message({
+            type: "success",
+            message: res.message ? res.message : "复审失败"
           });
         }
-        _this.nextTimeArr = [];
-        _this.InsuredRecheckParam = this.$options.InsuredRecheckParam;
       });
     },
     //取消

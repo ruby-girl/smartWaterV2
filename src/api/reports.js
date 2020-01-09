@@ -76,3 +76,66 @@ export function ExcelReportYield(data) {
         data: data
     })
 }
+/* ************************** 用户业务办理************************** */
+export function GetReportBusiness(data) {
+    return request({
+        url: '/CustomerBusinessReport/CustomerBusinessTotal',
+        method: 'post',
+        data: data
+    })
+}
+export function ExcelReportBusiness(data) {
+    return request({
+        url: '/CustomerBusinessReport/CustomerBusinessTotalExcel',
+        method: 'post',
+        data: data
+    })
+}
+//开户明细
+export function GetReportOpen(data) {
+    return request({
+        url: '/CustomerBusinessReport/CustomerTotalDetail',
+        method: 'post',
+        data: data
+    })
+}
+//过户明细
+export function GetReportTransfer(data) {
+    return request({
+        url: '/CustomerBusinessReport/TransferChangeTotalDetail',
+        method: 'post',
+        data: data
+    })
+}
+//销户明细
+export function GetReportAccount(data) {
+    return request({
+        url: '/CustomerBusinessReport/AccountCanCellationTotalDetail',
+        method: 'post',
+        data: data
+    })
+}
+//换表明细
+export function GetReportChange(data) {
+    return request({
+        url: '/CustomerBusinessReport/WaterMeterChangeTotalDetail',
+        method: 'post',
+        data: data
+    })
+}
+//升级明细
+export function GetReportUpgrade(data) {
+    return request({
+        url: '/CustomerBusinessReport/WaterMeterUpgradeRecordTotalDetail',
+        method: 'post',
+        data: data
+    })
+}
+//低保户明细
+export function GetReportInsured(data) {
+    return request({
+        url: '/CustomerBusinessReport/InsuredMessageTotalDetail',
+        method: 'post',
+        data: data
+    })
+}
