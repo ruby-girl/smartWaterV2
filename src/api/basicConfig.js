@@ -20,3 +20,13 @@ export function GetBasicConfigVal() {//获取操作人下拉框(账户无分页)
     method: 'get'
   })
 }
+
+// 产销差接口**********************************
+
+export function SelectWaterYieldToFactory(data) {//获取操作人下拉框(账户无分页)
+  return request({
+    url: '/MonthWaterYieldManage/SelectWaterYieldToFactory',
+    method: 'post',
+    params:data
+  })
+}

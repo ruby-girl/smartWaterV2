@@ -210,14 +210,14 @@
         <div class="pt-15" v-show="postData.IsCloseValve=='1'?true:false">
           <div style="font-size:18px;">远传表不关阀时间</div>
           <div class="font-small">
-            节假日是否开阀
+            节假日欠费是否不关阀
             <el-select size="small" v-model="postData.IsHolidayNotCloseValve" class="small-select">
               <el-option label="是" value="1"></el-option>
               <el-option label="否" value="0"></el-option>
             </el-select>
           </div>
           <div class="font-small" v-for="(item,i) in postData.NotColseTimes">
-            <span v-show="i==0">自定义开阀</span>
+            <span v-show="i==0">自定义不关阀时间</span>
             <span v-show="i!==0">&emsp;&emsp;&emsp;&emsp;&emsp;</span>
             <el-date-picker
               v-model="item.timevalue"

@@ -8,7 +8,6 @@
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
-        <el-option label="全部" value="-1" />
         <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </div>
@@ -68,6 +67,7 @@
   </div>
 </template>
 <script>
+import {SelectWaterYieldToFactory} from "@/api/basicConfig"
 export default {
   name: "differenceConfig",
   data() {
@@ -110,6 +110,7 @@ export default {
   },
   mounted() {
     this.waterWorks = this.$store.state.user.waterWorks;
+    SelectWaterYieldToFactory({factoryId:this.waterWorks[0].Id})
   },
   methods: {
     saveMonth(i){
