@@ -13,13 +13,13 @@
         v-if="companyOptions.length!=1"
         label="水厂"
         :label-width="isShow?'68px':'40px'"
-        prop="SA_WaterFactory_Id"
+        prop="waterFactoryId"
       >
         <el-select
-          v-model="selectHead.SA_WaterFactory_Id"
+          v-model="selectHead.waterFactoryId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'水厂')"
+          @change="getText(selectHead.waterFactoryId,'waterFactoryId',companyOptions,'水厂')"
         >
           <el-option label="全部" value="-1"></el-option>
           <el-option
@@ -30,12 +30,12 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="操作人" v-show="show1||isShow" prop="CreateUser">
+      <el-form-item label="操作人" v-show="show1||isShow" prop="createUserId">
         <el-select
-          v-model="selectHead.CreateUser"
+          v-model="selectHead.createUserId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.CreateUser,'CreateUser',editUserList,'操作人')"
+          @change="getText(selectHead.createUserId,'createUserId',editUserList,'操作人')"
         >
           <el-option label="全部" value="-1"></el-option>
           <el-option
@@ -46,12 +46,12 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="水表类型" v-show="show2||isShow" prop="WaterType">
+      <el-form-item label="水表类型" v-show="show2||isShow" prop="waterMeterType">
         <el-select
-          v-model="selectHead.WaterType"
+          v-model="selectHead.waterMeterType"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterType,'WaterType',WaterMeterList,'水表类型')"
+          @change="getText(selectHead.waterMeterType,'waterMeterType',WaterMeterList,'水表类型')"
         >
           <el-option label="全部" :value="-1"></el-option>
           <el-option
@@ -62,12 +62,12 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户类型" v-show="show3||isShow" prop="UserType">
+      <el-form-item label="用户类型" v-show="show3||isShow" prop="userType">
         <el-select
-          v-model="selectHead.UserType"
+          v-model="selectHead.userType"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.UserType,'UserType',userTypeList,'用户类型')"
+          @change="getText(selectHead.userType,'userType',userTypeList,'用户类型')"
         >
           <el-option label="全部" :value="-1"></el-option>
           <el-option
@@ -112,6 +112,7 @@
 <script>
 import { getDictionaryOption } from "@/utils/permission";
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import { getLabelName } from "@/utils/projectLogic"; //获取lable
 export default {
   props: {
     searchWidth: {}
@@ -137,7 +138,6 @@ export default {
   watch: {
     searchWidth: {
       handler(val, oldVal) {
-        console.log(val);
         this.show1 = this.showLabel(1, val);
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
@@ -161,6 +161,12 @@ export default {
   },
   created() {},
   methods: {
+    getName() {
+      this.selectHead.waterFactoryName=getLabelName(this.selectHead.waterFactoryId,this.companyOptions)
+      this.selectHead.createUserName=getLabelName(this.selectHead.createUserId,this.editUserList)
+      this.selectHead.userTypeName=getLabelName(this.selectHead.userType,this.userTypeList)
+      this.selectHead.waterMeterTypeName=getLabelName(this.selectHead.waterMeterType,this.WaterMeterList)
+    },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();

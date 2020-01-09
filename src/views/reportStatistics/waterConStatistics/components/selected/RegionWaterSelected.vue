@@ -122,7 +122,7 @@ export default {
       getOrgTree(
         function(res) {
           this.orgTree = res;
-          this.selectHead.SA_UserArea_Id = "-1";
+          this.selectHead.AreaId = "-1";
         }.bind(this),
         id
       );

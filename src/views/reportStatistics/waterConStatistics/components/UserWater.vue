@@ -15,11 +15,7 @@
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
         >
-          <el-table-column type="index" fixed="left" label="#" width="60" align="center">
-            <template slot-scope="scope">
-              <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
-            </template>
-          </el-table-column>
+          <el-table-column type="index" fixed="left" label="#" width="60" align="center"></el-table-column>
           <el-table-column prop="name" label="用户编号"></el-table-column>
           <el-table-column prop="name" label="用户姓名"></el-table-column>
           <el-table-column prop="name" label="日期"></el-table-column>

@@ -392,3 +392,18 @@ export function getMonthEndDate() {
   return formatDate(monthEndDate);
 }
 
+//报表统计获取下拉框的lable
+export function getLabelName(id, list) {
+  let label = ""
+  if (list) {
+    list.forEach(val => {
+      if (val.Id == id) {
+        label = val.Name
+      }
+    })
+  }
+  return label
+}
+
+
+

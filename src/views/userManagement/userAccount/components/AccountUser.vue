@@ -58,11 +58,12 @@
         <el-form-item label="水表类型">
           <el-input v-model="waterInfo.WaterMeterTypeName" disabled class="left-input"></el-input>
         </el-form-item>
-        <el-form-item label="表端余额">
+        <el-form-item label="表端余额" v-if="waterInfo.WaterMeterTypeName=='IC卡表水表'">
           <el-input
             class="totalMoney left-input"
             v-model="waterInfo.MeterBalance"
             :disabled="waterInfo.WaterMeterTypeName=='IC卡表水表'?false:true"
+            @change="ICMoney(waterInfo.MeterBalance)"
           >
             <template slot="append">元</template>
           </el-input>
@@ -145,6 +146,10 @@ export default {
   },
 
   methods: {
+    ICMoney(num) {
+      this.totalMoney =
+        Number(this.waterInfo.MeterBalance) + Number(this.userInfo.Balance);
+    },
     //回车模糊查询
     searchEnter(num, val) {
       if (val == "") {
@@ -165,10 +170,18 @@ export default {
             });
             return false;
           }
+
           if (res.data.length > 1) {
             this.userList = res.data;
             this.selectUserShow = true;
           } else {
+            if (res.data[0].WaterMeterTypeName == "IC卡表水表") {
+              this.$message({
+                message: "卡表用户请先读卡",
+                type: "warning"
+              });
+              return false;
+            }
             this.userInfo = res.data[0];
             this.getWaterMeterInfo(res.data[0].Id);
           }
@@ -177,12 +190,20 @@ export default {
     },
     //选择用户信息
     handleFilter(val) {
+      if (val.WaterMeterTypeName == "IC卡表水表") {
+        this.$message({
+          message: "卡表用户请先读卡",
+          type: "warning"
+        });
+        return false;
+      }
       this.userInfo = val;
       this.selectUserShow = false;
       this.getWaterMeterInfo(val.Id);
     },
     //获取水表信息
     getWaterMeterInfo(id) {
+      this.totalMoney = 0;
       getWaterInfo({ customerId: id }).then(res => {
         if (res.code == 0) {
           this.waterInfo = res.data;
@@ -212,7 +233,6 @@ export default {
         ? this.userInfo.remark
         : "";
       this.accountList.icMeterBalance = this.waterInfo.MeterBalance;
-      console.log(this.accountList);
       waterAccount(this.accountList).then(res => {
         if (res.code == 0) {
           this.$message({

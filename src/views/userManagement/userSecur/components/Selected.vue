@@ -49,22 +49,15 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="区域" v-show="show3||isShow" key="AreaId">
-          <el-select
-            v-model="selectHead.AreaId "
+        <el-form-item label="区域" prop="AreaId" v-show="show3||isShow" key="AreaId">
+          <treeselect
             placeholder="请选择"
-            @keydown.enter.native="handleFilter"
-            @change="getText(selectHead.AreaId ,'AreaId',WaterMeterList,'区域')"
-          >
-            <el-option label="全部" :value="-1" />
-            <el-option
-              v-for="item in WaterMeterList"
-              :key="item.Id"
-              :label="item.Name"
-              :value="Number(item.Id)"
-            />
-          </el-select>
+            :searchable="false"
+            v-model="selectHead.AreaId"
+            :options="orgTree"
+          />
         </el-form-item>
+
         <el-form-item label="低保户状态" label-width="80px" v-show="show4||isShow" key="InsuredState">
           <el-select
             v-model="selectHead.InsuredState "
@@ -135,10 +128,13 @@
   </div>
 </template>
 <script>
-import { getName } from "@/utils/projectLogic"; //搜索条件面包屑
+import { getName ,getOrgTree} from "@/utils/projectLogic"; //搜索条件面包屑
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
   name: "Selected",
+  components:{Treeselect},
   props: {
     selectHead: {
       type: Object,
@@ -167,6 +163,7 @@ export default {
       WaterMeterList: [], //
       securStatus: [],
       securNextStatus: [],
+      orgTree: [],
       isShow: false,
       show1: true,
       show2: true,
@@ -182,6 +179,15 @@ export default {
     this.securNextStatus = getDictionaryOption("低保户复审状态");
   },
   methods: {
+    getArea(id) {
+      getOrgTree(
+        function(res) {
+          this.orgTree = res;
+          this.selectHead.SA_UserArea_Id = "-1";
+        }.bind(this),
+        id
+      );
+    },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
