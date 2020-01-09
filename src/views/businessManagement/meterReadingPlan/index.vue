@@ -60,7 +60,7 @@
                 v-else
                 :key="index"
                 min-width="230px"
-                sortable="custom"
+                :sortable="item.IsSortBol?'custom':null"
                 :prop="item.ColProp"
                 align="center"
                 :label="item.ColDesc"

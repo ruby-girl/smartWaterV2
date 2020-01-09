@@ -11,20 +11,7 @@
         @submit.native.prevent
         ref="searcTable"
       >
-        <!-- <el-form-item
-          label="姓名"
-          v-show="show1||isShow"
-          prop="CustomerName"
-          key="CustomerName"
-          :label-width="isShow?'70px':'40px'"
-        >
-          <el-input
-            v-model="wachMeterData.CustomerName"
-            maxlength="10"
-            placeholder="(长度1-10)"
-            @change="getText(wachMeterData.CustomerName,'CustomerName','','姓名')"
-          />
-        </el-form-item>-->
+ 
         <el-form-item label="水表编号" v-show="show1||isShow" key="WaterMeterNo" prop="WaterMeterNo">
           <el-input
             v-model="wachMeterData.WaterMeterNo"
@@ -261,7 +248,7 @@ export default {
         cs: "-1", //开户状态
         sort: "", //升序
         filed: "", //排序字段
-        tableId: "0000021"
+        tableId: "0000023"
       },
       hisData: [],
       tableKey: 1,

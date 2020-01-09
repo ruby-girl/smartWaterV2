@@ -239,9 +239,9 @@ export default {
         data.SA_InsuredMessage_Id;
       this.$refs.aduit.nextTimeArr = this.formatTime(data.EndDate);
       this.$refs.aduit.InsuredRecheckParam.FS_StartDate =
-        this.formatTime(data.EndDate)[0] + " 00:00:00";
+        this.$refs.aduit.nextTimeArr[0] + " 00:00:00";
       this.$refs.aduit.InsuredRecheckParam.FS_EndDate =
-        this.formatTime(data.EndDate)[1] + " 23:59:59";
+        this.$refs.aduit.nextTimeArr[1] + " 23:59:59";
       this.$refs.aduit.viewExam = true;
     },
     formatTime(data) {
@@ -251,20 +251,25 @@ export default {
       let year = time.getFullYear();
       let month = time.getMonth() + 1;
       let day = time.getDate();
-      let day1 = day - 1;
       if (month < 10) {
         month = "0" + month;
       }
       if (day < 10) {
         day = "0" + day;
       }
-      if (day1 < 10) {
-        day1 = "0" + day1;
-      }
+
       let nextSatrt = year + "-" + month + "-" + day;
-      let nextEnd = year + 1 + "-" + month + "-" + day1;
+      //一年
+      let d1 = new Date(nextSatrt);
+      let nextEnd = new Date(d1);
+      nextEnd.setFullYear(nextEnd.getFullYear() + 1);
+      nextEnd.setDate(nextEnd.getDate() - 1);
+      let nextyear = nextEnd.getFullYear();
+      let nextmonth = nextEnd.getMonth() + 1;
+      let nextday = nextEnd.getDate();
+      let nextTime = nextyear + "-" + nextmonth + "-" + nextday;
       arr.push(nextSatrt);
-      arr.push(nextEnd);
+      arr.push(nextTime);
       return arr;
     }
   }

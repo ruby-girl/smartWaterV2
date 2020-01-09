@@ -40,7 +40,7 @@
 <script>
 import uploadBox from "@/components/Upload";
 import { reviewInssure } from "@/api/inSecur";
-import {getOpenFlag } from "@/utils/projectLogic"; //搜索条件面包屑
+import { getOpenFlag } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "ExamSecur",
   components: { uploadBox },
@@ -56,7 +56,7 @@ export default {
         FS_EndDate: "" //次年生效开始时间
       }, //提交数据
       fileArr: [],
-      isOpen:true
+      isOpen: true
     };
   },
   watch: {
@@ -66,12 +66,12 @@ export default {
       });
     }
   },
-  mounted(){
+  mounted() {
     //是否开启审核
-    getOpenFlag(2902).then(val=>{
-      console.log(val)
-      this.isOpen=val
-    })
+    getOpenFlag(2902).then(val => {
+      console.log(val);
+      this.isOpen = val;
+    });
   },
   methods: {
     /********************获取上传文件信息**********************/
@@ -89,13 +89,19 @@ export default {
       reviewInssure(_this.InsuredRecheckParam).then(res => {
         if (res.code == 0) {
           _this.viewExam = false;
-          _this.$mssage({
+          _this.$message({
             type: "success",
-            message: res.data ? res.data : "提交成功"
+            message: res.message ? res.message : "复审成功"
+          });
+          _this.nextTimeArr = [];
+          _this.InsuredRecheckParam = this.$options.InsuredRecheckParam;
+          this.$parent.seachAccountOrder();
+        } else {
+          _this.$message({
+            type: "success",
+            message: res.message ? res.message : "复审失败"
           });
         }
-        _this.nextTimeArr = [];
-        _this.InsuredRecheckParam = this.$options.InsuredRecheckParam;
       });
     },
     //取消
