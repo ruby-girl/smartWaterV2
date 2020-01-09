@@ -140,11 +140,15 @@ export default {
       let postData={} 
       if(info){
         this.$emit("update:icInfo",info)
-        if(info.CardType==1)  postData.CustomerQueryValue=info.UserCardCredited.CardNo;
-        else postData.CustomerQueryValue=info.UserCard.CardNo;
-        postData.CustomerQueryType="8";
-        postData.page=1;
-        postData.limit=20
+        if(info.CardType==1){
+          postData.CustomerQueryValue=info.UserCardCredited.CardNo;
+        }
+        else{
+          postData.CustomerQueryValue=info.UserCard.CardNo;
+          postData.CustomerQueryType="8";
+          postData.page=1;
+          postData.limit=20
+        }
       }else{ 
         postData=Object.assign({},this.selectHead)
       }
@@ -159,8 +163,18 @@ export default {
           this.$emit("clearData");
         } else if (res.data.length == 1) {
           this.user = res.data[0];
-          if(info) this.$emit("handleFilterIcParent", res.data[0]);
-          else this.$emit("handleFilter", res.data[0]);
+          if(info&&this.user.WaterMeterTypeId=='1102') this.$emit("handleFilterIcParent", res.data[0]);
+          else if(!info&&this.user.WaterMeterTypeId=='1102'){
+             this.$message({
+            message: "卡表用户请先读卡！",
+            type: "error",
+            duration: 4000
+          });
+          this.user={}
+          this.$emit("clearData");
+          }else{
+            this.$emit("handleFilter", res.data[0]);
+          }
         }else {
           this.$parent.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
         }

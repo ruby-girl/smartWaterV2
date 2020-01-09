@@ -28,7 +28,12 @@ export function addRole(name) {//添加
     method: 'post',
   })
 }
-
+export function GetRoleModel(id){
+  return request({
+    url: `/Role/GetRoleModel?roleId=${id}`,
+    method: 'post',
+  })
+}
 export function updateRole(name,id) {//编辑
   return request({
     url: `/Role/EditRoleName?roleName=${name}&roleId=${id}`,

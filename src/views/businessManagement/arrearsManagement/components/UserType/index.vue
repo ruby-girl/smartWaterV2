@@ -361,7 +361,7 @@ export default {
           type: "success",
           duration: 4000
         });
-        this.handleFilter();
+        this.getList();
       });
       })
     },

@@ -305,6 +305,8 @@ export default {
                 duration: 4000
               });
               return
+            }else{
+              this.user = res.data[0];
             }
             this.$emit("handleFilter", res.data[0]);
           }

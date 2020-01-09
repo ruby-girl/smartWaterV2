@@ -257,6 +257,15 @@ export default {
     // 查询用户缴费单 ---非IC卡
     handleFilter(user) {
       // user-当前选择/查询的用户信息
+      if(user.WaterMeterTypeId=='1102'){
+        this.$message({
+            message: "卡表用户请先读卡！",
+            type: "error",
+            duration: 4000
+          });
+          this.clearData()
+          return false
+      }
       this.isIC = false;
       this.type=1
       this.typeComponents="TableType"

@@ -26,7 +26,7 @@ export function OrdersFeeCancels(data) {//费用撤销批量
   return request({
     url: '/Order/OrdersFeeCancels',
     method: 'post',
-    params: data
+    data: data
   })
 }
 export function OrderFeeWaiver(data) {//费用减免
