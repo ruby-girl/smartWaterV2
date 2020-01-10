@@ -7,6 +7,7 @@
     :close-on-click-modal="false"
     top="10vh"
     width="1000px"
+    height
     center
     @open="opened"
   >
@@ -48,10 +49,10 @@
                   :indeterminate="temp.IsIndeterminate"
                   :label="temp.Unique"
                   v-model="temp.Checked"
-                  @change="handleCheckedTwo()"
+                  @change="handleCheckedTwo(i,child,false)"
                 >{{temp.Name}}</el-checkbox>
               </div>
-              <div class="config-body-right display-flex flex-wrap">
+              <div class="config-body-right display-flex flex-wrap flex-1">
                 <el-checkbox
                   v-model="btn.Checked"
                   :label="btn.Unique"
@@ -60,6 +61,7 @@
                   @change="handleCheckedNoThreeButton(i,child)"
                 >{{btn.Name}}</el-checkbox>
               </div>
+                <i class="iconfont iconquestion main-color pr-15"></i>
             </div>
             <div v-else class="config-body-box">
               <!-- 有3级的第二个父级 -->
@@ -68,7 +70,7 @@
                   <el-checkbox
                     :indeterminate="temp.IsIndeterminate"
                     v-model="temp.Checked"
-                    @change="handleCheckedTwo(i,child)"
+                    @change="handleCheckedTwo(i,child,true)"
                   >{{temp.Name}}</el-checkbox>
                 </div>
                 <div class="config-body-right display-flex flex-wrap">
@@ -76,7 +78,11 @@
                 </div>
               </div>
               <!-- 循环第3级 s-->
-              <div class="config-item" v-for="(last,childrens) in temp.Childrens" :key="last.Unique">
+              <div
+                class="config-item"
+                v-for="(last,childrens) in temp.Childrens"
+                :key="last.Unique"
+              >
                 <div class="config-body-box display-flex align-items-center">
                   <div class="config-body-left three-title">
                     <el-checkbox
@@ -86,7 +92,7 @@
                       :label="last.Unique"
                     >{{last.Name}}</el-checkbox>
                   </div>
-                  <div class="config-body-right display-flex flex-wrap">
+                  <div class="config-body-right display-flex flex-1 flex-wrap">
                     <el-checkbox
                       @change="handleCheckedButton(i,child,childrens)"
                       v-model="btn.Checked"
@@ -95,6 +101,7 @@
                       :key="btn.Unique"
                     >{{btn.Name}}</el-checkbox>
                   </div>
+                  <i class="iconfont iconquestion main-color pr-15"></i>
                 </div>
               </div>
               <!-- 循环第3级 e-->
@@ -115,7 +122,7 @@
   </el-dialog>
 </template>
 <script>
-import {GetRoleModel} from "@/api/role";
+import { GetRoleModel } from "@/api/role";
 export default {
   props: {
     dialogStatus: {
@@ -230,36 +237,72 @@ export default {
   },
   methods: {
     opened() {
-      // let obj = {
-      //   Checked: false,
-      //   IsIndeterminate: false
-      // };
-      // this.arr = this.arr.map(item => {
-      //   return { ...item, ...obj };
-      // });
-      GetRoleModel(this.temp.Id).then(res=>{
-        console.info(res)
-        this.arr=res.data.Menus
-      })
+      GetRoleModel(this.temp.Id).then(res => {
+        this.arr = res.data.Menus;
+      });
     },
     createData() {
+      let arr = this.getData(this.arr);
       this.$refs["dataForm"].validate(valid => {
         if (!valid) return false;
-        this.$emit("createData", this.temp);
+        this.$emit("createData", this.temp, arr);
       });
     },
     updateData() {
-      // this.$refs["dataForm"].validate(valid => {
-      //   if (!valid) return false;
-      //   this.$emit("updateData", this.temp);
-      // });
-      console.info(this.arr)
-    },
-    handleCheckedNoThreeButton(first, index) { //没有标签页的按钮点击事件    
-      // 处理二级
-      let buttonArr = this.arr[first].Childrens[index].Buttons.filter(button => {
-        return button.Checked;
+      let arr = this.getData(this.arr);
+      this.$refs["dataForm"].validate(valid => {
+        if (!valid) return false;
+        this.$emit("updateData", this.temp, arr);
       });
+    },
+    getData(arr) {
+      //处理已勾选的复选框ID，数组给后端
+      let newArr = [];
+      arr.forEach(first => {
+        if (first.Checked) {
+          newArr.push(first.Id);
+        }
+        first.Childrens.forEach(Child => {
+          if (Child.Checked) {
+            newArr.push(Child.Id);
+          }
+          if (Child.Childrens.length > 0) {
+            //如果有3级
+            Child.Childrens.forEach(Childrens => {
+              if (Childrens.Checked) {
+                newArr.push(Childrens.Id);
+              }
+              Childrens.Buttons.forEach(button => {
+                if (button.Checked) {
+                  newArr.push(button.Id);
+                }
+              });
+            });
+          } else {
+            Child.Buttons.forEach(button => {
+              if (button.Checked) {
+                newArr.push(button.Id);
+              }
+            });
+          }
+        });
+      });
+      return newArr;
+    },
+    filterData(arr) {
+      let postDataArr = arr.filter(item => {
+        return item.Checked;
+      });
+      return postDataArr;
+    },
+    handleCheckedNoThreeButton(first, index) {
+      //没有标签页的按钮点击事件
+      // 处理二级
+      let buttonArr = this.arr[first].Childrens[index].Buttons.filter(
+        button => {
+          return button.Checked;
+        }
+      );
       if (buttonArr.length == this.arr[first].Childrens[index].Buttons.length) {
         this.arr[first].Childrens[index].Checked = true;
         this.arr[first].Childrens[index].IsIndeterminate = false;
@@ -269,10 +312,11 @@ export default {
       } else {
         this.arr[first].Childrens[index].Checked = true;
         this.arr[first].Childrens[index].IsIndeterminate = true;
-      }   
+      }
       this.setCheckedOne(first); // 处理1级复选框
     },
-    handleCheckedButton(first, index, children) {//有标签页的按钮事件    
+    handleCheckedButton(first, index, children) {
+      //有标签页的按钮事件
       if (first) {
         this.arr[first].Childrens[index].Childrens.forEach(childrens => {
           let btnCheckedArr = childrens.Buttons.filter(button => {
@@ -281,29 +325,35 @@ export default {
           if (btnCheckedArr.length == childrens.Buttons.length) {
             //该行按钮全选
             childrens.Checked = true;
+            childrens.IsIndeterminate = false;
           } else if (btnCheckedArr.length == 0) {
             childrens.Checked = false;
+            childrens.IsIndeterminate = false;
           } else {
             childrens.Checked = true;
             childrens.IsIndeterminate = true;
           }
         });
       }
-      this.handleCheckedThree(first, index, children);
+      this.handleCheckedThree(first, index, children, 'btnEvent');
     },
-    handleCheckedThree(first, index, children) {//标签页事件    
-      if (this.arr[first].Childrens[index].Childrens[children].Checked) {
-        this.arr[first].Childrens[index].Childrens[children].Buttons.forEach(
-          button => {
-            button.Checked = true;
-          }
-        );
-      } else {
-        this.arr[first].Childrens[index].Childrens[children].Buttons.forEach(
-          button => {
-            button.Checked = false;
-          }
-        );
+    handleCheckedThree(first, index, children, btnEvent) {//第3级标签页事件
+      if (!btnEvent) {//如果是按钮事件调用该方法，不再次处理按钮
+        //标签页事件
+        this.arr[first].Childrens[index].Childrens[children].IsIndeterminate=false
+        if (this.arr[first].Childrens[index].Childrens[children].Checked) {
+          this.arr[first].Childrens[index].Childrens[children].Buttons.forEach(
+            button => {
+              button.Checked = true;
+            }
+          );
+        } else {
+          this.arr[first].Childrens[index].Childrens[children].Buttons.forEach(
+            button => {
+              button.Checked = false;
+            }
+          );
+        }
       }
       // 处理第二级复选样式
       let childrensArr = this.arr[first].Childrens[index].Childrens.filter(
@@ -312,7 +362,8 @@ export default {
         }
       );
       if (
-        childrensArr.length === this.arr[first].Childrens[index].Childrens.length
+        childrensArr.length ===
+        this.arr[first].Childrens[index].Childrens.length
       ) {
         //全选
         this.arr[first].Childrens[index].Checked = true;
@@ -326,9 +377,10 @@ export default {
       }
       this.setCheckedOne(first); //处理1级复选框
     },
-    handleCheckedTwo(first, index) { //二级页面事件 
-      if (first) {//如果是从有第三级过来的事件,需要处理标签页
-        this.arr[first].Childrens[index].IsIndeterminate = false;   
+    handleCheckedTwo(first, index,isHaveThree) {
+      //二级页面事件
+      if (isHaveThree) {
+        //如果是从有第三级过来的事件,需要处理标签页   
         if (this.arr[first].Childrens[index].Checked) {
           //第三级和按钮处理选中
           this.arr[first].Childrens[index].Childrens.forEach(childrens => {
@@ -348,6 +400,7 @@ export default {
           });
         }
       }
+      this.arr[first].Childrens[index].IsIndeterminate=false
       this.arr.forEach((item, i) => {
         let CheckedArr = item.Childrens.filter(i => {
           //二级勾选
@@ -383,8 +436,8 @@ export default {
                 });
               });
             } else {
-              n.Buttons.forEach(m => {        
-                m.Checked = false;//按钮全选
+              n.Buttons.forEach(m => {
+                m.Checked = false; //按钮全选
               });
             }
           });
@@ -404,7 +457,8 @@ export default {
         }
       });
     },
-    handleCheckedOne(first) {//1级事件   
+    handleCheckedOne(first) {
+      //1级事件
       let isChecked = this.arr[first].Checked;
       this.arr[first].IsIndeterminate = false;
       this.arr[first].Childrens.forEach(child => {
@@ -426,11 +480,14 @@ export default {
         }
       });
     },
-    setCheckedOne(first) {// 共用->处理1级复选框   
-      let IsIndeterminateArr = this.arr[first].Childrens.filter(item => { //筛选二级有“-”  
+    setCheckedOne(first) {
+      // 共用->处理1级复选框
+      let IsIndeterminateArr = this.arr[first].Childrens.filter(item => {
+        //筛选二级有“-”
         return item.IsIndeterminate;
       });
-      let CheckedArr = this.arr[first].Childrens.filter(item => {//筛选二级有几个的全选   
+      let CheckedArr = this.arr[first].Childrens.filter(item => {
+        //筛选二级有几个的全选
         return item.Checked && item.IsIndeterminate == false;
       });
       if (
@@ -462,13 +519,15 @@ export default {
   font-weight: bold;
   border-left: 4px solid #29beb0;
   padding-left: 10px;
+  margin: 15px;
 }
-.config-box {
-  padding: 16px 19px;
-}
+
 .config-container {
   border: 1px solid #e2e9ed;
   border-bottom: none;
+  height: 500px;
+  margin: 15px;
+  overflow-y: scroll;
   .config-title {
     background: #c2d6c7;
     color: #535353;

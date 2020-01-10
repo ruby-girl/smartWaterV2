@@ -161,17 +161,17 @@ export default {
            let _this = this;
         setTimeout(function() {
         //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡
-          if (_this.isIc) {
+          if (_this.isIC) {
             if (
               _this.cardInfo.UserCard.RechargeCount == 1 &&
-              _this.cardInfo.UserCard.RechargeMoney &&
+              _this.cardInfo.UserCard.RechargeMoney==0 &&
               _this.cardInfo.CardType == 0
-            )
-            _this.isFirst = true;
-           else _this.isFirst = false;
+            ){
+              _this.isFirst = true;
+            }else _this.isFirst = false;
         }
         _this.$refs.myInput.select();
-       }, 200);
+       }, 300);
       },
       immediate: true
     },

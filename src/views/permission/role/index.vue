@@ -210,36 +210,46 @@ export default {
       });
     },
     addRole() {
-      this.temp = {};
+      this.temp = {Id:0};
       this.dialogStatus = "create";
       this.dialogFormVisible = true;
     },
-    createData(dialog) {
-      addRole(dialog.RoleName).then(res => {
+    createData(dialog,arr) {
+      let obj={
+        RoleName:this.temp.RoleName,
+        MenusChk:arr
+      }
+      addRole(obj).then(res => {
         this.$message({
           message: res.message,
           type: "success",
           duration: 4000
         });
         this.dialogFormVisible = false;
-        this.handleFilter();
+        this.getList();
       });
     },
-    updateData(dialog) {
-      updateRole(dialog.RoleName, dialog.Id).then(res => {
+    updateData(dialog,arr) {
+      let obj={
+        RoleName:this.temp.RoleName,
+        MenusChk:arr,
+        Id:dialog.Id
+      }
+      updateRole(obj).then(res => {
         this.$message({
           message: res.message,
           type: "success",
           duration: 4000
         });
         this.dialogFormVisible = false;
-        for (const v of this.tableData) {
-          if (v.Id == this.temp.Id) {
-            const index = this.tableData.indexOf(v);
-            this.tableData.splice(index, 1, this.temp);
-            break;
-          }
-        }
+        // for (const v of this.tableData) {
+        //   if (v.Id == this.temp.Id) {
+        //     const index = this.tableData.indexOf(v);
+        //     this.tableData.splice(index, 1, this.temp);
+        //     break;
+        //   }
+        // }
+        this.getList();
         this.dialogFormVisible = false;
       });
     },

@@ -22,10 +22,11 @@ export function getRolesList(data) {//查询角色表格
   })
 }
 
-export function addRole(name) {//添加
+export function addRole(data) {//添加
   return request({
-    url: `/Role/InsertRoleName?roleName=${name}`,
+    url: `/Role/InsertRoleName`,
     method: 'post',
+    data:data
   })
 }
 export function GetRoleModel(id){
@@ -34,10 +35,11 @@ export function GetRoleModel(id){
     method: 'post',
   })
 }
-export function updateRole(name,id) {//编辑
+export function updateRole(data) {//编辑
   return request({
-    url: `/Role/EditRoleName?roleName=${name}&roleId=${id}`,
+    url: `/Role/EditRoleName`,
     method: 'post',
+    data:data
   })
 }
 
