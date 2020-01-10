@@ -296,7 +296,6 @@ export default {
         } else if (res.data.length == 1) {      
           if (info){
             this.user = res.data[0];
-            this.$emit("handleFilterIcParent", res.data[0]);
           }else{//如果不是读卡数据，查询出来是IC卡用户，提示需读卡操作
             if(res.data[0].WaterMeterTypeId=='1102'){
               this.$message({
@@ -308,7 +307,6 @@ export default {
             }else{
               this.user = res.data[0];
             }
-            this.$emit("handleFilter", res.data[0]);
           }
         }else {
           this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
