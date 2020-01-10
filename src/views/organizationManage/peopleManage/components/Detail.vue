@@ -30,8 +30,8 @@
                   <p>岗位状态 <span>{{form.JobStatus}}</span></p>
                 </li>
                 <li class="user_line clearfix">
-                  <p>角色 <span>{{form.Account}}</span></p>
-                  <p>账号 <span>{{form.RoleName}}</span></p>
+                  <p>角色 <span>{{form.RoleName}}</span></p>
+                  <p>账号 <span>{{form.Account}}</span></p>
                   <p>密码 <span style="line-height: 45px">********</span></p>
                 </li>
                 <li class="user_line clearfix" v-for="(item,index) in form.blList" :key="index" >

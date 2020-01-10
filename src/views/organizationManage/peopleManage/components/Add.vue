@@ -206,6 +206,7 @@
     },
     methods: {
       submitForm(formName) {//提交方法
+        this.jp.Idarr = []//避免信息提交重复时候，再次提交导致上传文件重复的问题
         let exp = null
         let beginDate = this.jp.Birthday;
         let endDate = this.jp.EnrollingTime;
@@ -233,6 +234,12 @@
               } else {
                 return false
               }
+            }
+            if(this.ifAddAcount!='是'){
+               this.jp.WaterFactoryIdarr = ''
+               this.jp.RoleId = ''
+               this.jp.Account  = ''
+               this.jp.PassWord  = ''
             }
             peopleAdd(this.jp).then(res => {
               if (res.code == 0) {

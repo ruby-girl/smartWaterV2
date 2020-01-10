@@ -58,8 +58,10 @@
       class="my_header"
       width="600px">
       <el-table :data="meterData" border @row-click="getCurMeter" height="300">
-        <el-table-column type="index" width="150" align="center" label="#"></el-table-column>
-        <el-table-column property="Name" align="center" label="表册名称"></el-table-column>
+        <el-table-column type="index" width="50" align="center" label="#"></el-table-column>
+        <el-table-column property="CustomerNo" align="center" label="用户编码"></el-table-column>
+        <el-table-column property="CustomerName" align="center" label="用户名"></el-table-column>
+        <el-table-column width="120" property="RegisterBookName" align="center" label="表册"></el-table-column>
       </el-table>
     </el-dialog>
     <!--多用户弹窗 e-->
@@ -159,7 +161,7 @@
                 promptInfoFun(this,1,'未搜索到数据')
               }else if(res.data.length ==1){//此时有一条数据默认覆盖当前表册
                 this.param.MeterReadState = '-1'
-                this.$parent.param.SA_RegisterBookInfo_Id = res.data[0].Id
+                this.$parent.param.SA_RegisterBookInfo_Id = res.data[0].RegisterBookId
                 this.$parent.isPage = false
                 this.$parent.searchFun();
               }else{//此时有一条以上数据，需手动选择后确认表册信息
@@ -174,8 +176,10 @@
         }
       },
       getCurMeter(row){//多表册手动选择
-        this.param.SA_RegisterBookInfo_Id = row.Id
+        this.param.SA_RegisterBookInfo_Id = row.RegisterBookId
         this.param.MeterReadState = '-1'
+        this.param.CustomerQueryType =  '1',//用户类型
+        this.param.CustomerQueryValue = row.CustomerNo
         this.meterVisible = false
         this.$parent.searchFun();
       },

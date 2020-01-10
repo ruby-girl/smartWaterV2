@@ -16,7 +16,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(query.WaterFactoryId,'WaterFactoryId',companyOptions,'所属水厂')"
         >
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value=""></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -55,7 +55,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(query.createUserId ,'createUserId',createUserArry,'创建人')"
         >
-          <el-option label="全部" :value="-1" />
+          <el-option label="全部" value="" />
           <el-option
             v-for="item in createUserArry"
             :key="item.Id"
@@ -71,7 +71,6 @@
           @keydown.enter.native="handleFilter"
           @change="getText(query.VerifyState ,'VerifyState',auditOpinionArry,'审核意见')"
         >
-          <el-option label="全部" :value="-1" />
           <el-option
             v-for="item in auditOpinionArry"
             :key="item.Id"

@@ -16,7 +16,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(query.WaterFactoryId,'WaterFactoryId',companyOptions,'所属水厂')"
         >
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value=""></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -55,7 +55,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(query.createUserId ,'createUserId',WaterMeterList,'创建人')"
         >
-          <el-option label="全部" :value="-1" />
+          <el-option label="全部" value="" />
           <el-option
             v-for="item in WaterMeterList"
             :key="item.Id"
@@ -96,6 +96,8 @@
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
+import { ComboBoxListZhuanYong } from "@/api/operationFlow";
+import { promptInfoFun } from "@/utils/index";
 export default {
   name: "StaySelected",
   props: {
@@ -162,6 +164,7 @@ export default {
     if (this.companyOptions.length == 1) {
       this.query.WaterFactoryId = this.companyOptions[0].Id;
     }
+    this.getCreateUser()
     this.applyArray = getDictionaryOption("流程编码"); //申请类型
   },
   methods: {
@@ -210,6 +213,15 @@ export default {
 
       this.$parent.query = Object.assign({}, this.query);
       this.$parent.searchTableList();
+    },
+    getCreateUser() {
+      ComboBoxListZhuanYong({ PId: "" }).then(res => {
+        if (res.code == 0) {
+          this.WaterMeterList = res.data;
+        } else {
+          promptInfoFun(this, 1, res.message);
+        }
+      });
     }
   }
 };

@@ -70,7 +70,9 @@
       :total="total"
       :page.sync="query.page"
       :limit.sync="query.limit"
-      @pagination="searchFun"/>
+      @pagination="searchFun"
+    />
+
     <!--列表数据 e-->
 
     <!--新增弹窗-->
@@ -116,8 +118,6 @@
         total:0,
         checksData:[],
         query:{
-          page:1,
-          limit:20,
           tableId: "0000016"
         },
         customHeight:'',
@@ -149,9 +149,7 @@
         if(type instanceof Object == false){//为false 则为区分水表类型条件查询，true 为普通分页查询
           this.query.WaterTypeId = type//更改查询水表类型
         }
-        this.$parent.query = this.query
         this.$parent.getTableLine()
-
       },
       /******************排序**********************/
       sortChanges({prop, order }){//排序
