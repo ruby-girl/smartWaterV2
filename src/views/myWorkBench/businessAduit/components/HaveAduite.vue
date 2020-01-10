@@ -15,8 +15,7 @@
           :height="tableHeight"
           style="width: 100%;"
           :header-cell-style="{'background-color': '#F0F2F5'}"
-          @sort-change="sortChanges"
-        >
+          @sort-change="sortChanges">
           <el-table-column fixed="left" label="#" width="60" align="center">
             <template slot-scope="scope">
               <span>{{(query.page - 1) *query.limit+ scope.$index + 1}}</span>
@@ -25,6 +24,7 @@
 
           <template v-for="(item ,index) in tableHeadData">
             <el-table-column
+              v-if="item.ColProp!='VerifyState'"
               :key="index"
               min-width="190px"
               :sortable="item.IsSortBol?'custom':null"
@@ -32,6 +32,19 @@
               :align="item.Position"
               :label="item.ColDesc"
             />
+            <el-table-column
+              v-else
+              :key="index"
+              min-width="190px"
+              :sortable="item.IsSortBol?'custom':null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc">
+              <template slot-scope="scope">
+                <label style="color: #00B2A1" v-if="scope.row.VerifyState">已通过</label>
+                <label style="color: #FF5656" v-else>未通过</label>
+              </template>
+            </el-table-column>
           </template>
           <el-table-column label="操作" width="120px" align="center" fixed="right">
             <template slot-scope="scope">

@@ -24,6 +24,7 @@
           </el-table-column>
           <template v-for="(item ,index) in tableHeadData">
             <el-table-column
+              v-if="item.ColProp!='SqState'"
               :key="index"
               min-width="190px"
               :sortable="item.IsSortBol?'custom':null"
@@ -31,6 +32,21 @@
               :align="item.Position"
               :label="item.ColDesc"
             />
+            <el-table-column
+              v-else
+              :key="index"
+              min-width="190px"
+              :sortable="item.IsSortBol?'custom':null"
+              :prop="item.ColProp"
+              :align="item.Position"
+              :label="item.ColDesc">
+              <template slot-scope="scope">
+                <label style="color: #00B2A1" v-if="scope.row.SqState=='审核通过'">审核通过</label>
+                <label style="color: #FF5656" v-else-if="scope.row.SqState=='审核未通过'">审核未通过</label>
+                <label style="color: #b59200" v-else-if="scope.row.SqState=='审核中'">审核中</label>
+              </template>
+            </el-table-column>
+
           </template>
           <el-table-column label="操作" width="120px" align="center" fixed="right">
             <template slot-scope="scope">

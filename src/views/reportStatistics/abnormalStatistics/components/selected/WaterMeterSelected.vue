@@ -31,14 +31,14 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterType">
+      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterMeter">
         <el-select
-          v-model="selectHead.WaterType"
+          v-model="selectHead.WaterMeter"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterType,'WaterType',WaterMeterList,'水表类型')"
+          @change="getText(selectHead.WaterMeter,'WaterMeter',WaterMeterList,'水表类型')"
         >
-          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="全部" :value="0"></el-option>
           <el-option
             v-for="item in WaterMeterList"
             :key="item.Id"
@@ -54,7 +54,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.UserType,'UserType',userTypeList,'用户类型')"
         >
-          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="全部" :value="0"></el-option>
           <el-option
             v-for="item in userTypeList"
             :key="item.Id"
@@ -63,14 +63,14 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="口径" v-show="show3||isShow" prop="CreateUser">
+      <el-form-item label="口径" v-show="show3||isShow" prop="MeterDiameter">
         <el-select
-          v-model="selectHead.CreateUser"
+          v-model="selectHead.MeterDiameter"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.CreateUser,'CreateUser',editUserList,'口径')"
+          @change="getText(selectHead.MeterDiameter,'MeterDiameter',editUserList,'口径')"
         >
-          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="全部" :value="0"></el-option>
           <el-option
             v-for="item in editUserList"
             :key="item.Id"
@@ -79,9 +79,9 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用水量" prop="CustomerQueryValue" v-show="show4||isShow" class="waterNum">
-        <el-input v-model="selectHead.CustomerQueryValue" />
-        <el-radio-group v-model="selectHead.resource">
+      <el-form-item label="水量倍率" prop="Pre" v-show="show4||isShow" class="waterNum">
+        <el-input v-model="selectHead.Pre" />
+        <el-radio-group v-model="selectHead.UpOrDown">
           <el-radio label="以上"></el-radio>
           <el-radio label="以下"></el-radio>
         </el-radio-group>
@@ -196,18 +196,18 @@ export default {
       let date = this.dateArr;
       let dateStipe;
       if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
+        this.selectHead.StarDateTime = date[0];
+        this.selectHead.EndDateTime = date[1];
         dateStipe =
-          this.selectHead.createStartTime.split(" ")[0] +
+          this.selectHead.StarDateTime.split(" ")[0] +
           "~" +
-          this.selectHead.createEndTime.split(" ")[0];
-        this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
+          this.selectHead.EndDateTime.split(" ")[0];
+        this.$emit("getText", dateStipe, "dateArr", "", "本次抄表日期");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
+        this.selectHead.StarDateTime = "";
+        this.selectHead.EndDateTime = "";
         dateStipe = "";
-        this.$emit("getText", dateStipe, "dateArr", "", "业务办理日期");
+        this.$emit("getText", dateStipe, "dateArr", "", "本次抄表日期");
       }
     }
   },

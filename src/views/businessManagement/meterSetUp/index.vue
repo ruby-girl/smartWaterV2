@@ -22,7 +22,7 @@
                 :key="index"
                 :sortable="item.IsSortBol ? 'custom' : null"
                 :prop="item.ColProp"
-                align="center"
+                :align="item.Position"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"/>
               <el-table-column
@@ -38,7 +38,7 @@
                 :key="index"
                 min-width="200px"
                 :sortable="item.IsSortBol ? 'custom' : null"
-                align="center"
+                :align="item.Position"
                 :label="item.ColDesc">
                 <template slot-scope="scope">
                   <label style="color: #00B2A1" v-if="scope.row.MeterReadStateName=='已抄表'">{{scope.row.MeterReadStateName}}</label>
@@ -50,7 +50,7 @@
                   :key="index"
                   min-width="200px"
                   :sortable="item.IsSortBol ? 'custom' : null"
-                  align="center"
+                  :align="item.Position"
                   :label="item.ColDesc">
                   <template slot-scope="scope">
                      <label style="color: #00B2A1" v-if="scope.row.ChargeFlagName=='已缴费'">{{scope.row.ChargeFlagName}}</label>

@@ -76,6 +76,22 @@ export function ExcelReportYield(data) {
         data: data
     })
 }
+//机械表异常AbnormalReport/GetAbnormalRate_Dt
+export function GetReportRate(data) {
+    return request({
+        url: '/AbnormalReport/GetAbnormalRate_Dt',
+        method: 'post',
+        data: data
+    })
+}
+export function ExcelReportRate(data) {
+    return request({
+        url: '/AbnormalReport/Execl_GetAbnormalRate_Dt',
+        method: 'post',
+        data: data
+    })
+}
+
 /* ************************** 用户业务办理************************** */
 export function GetReportBusiness(data) {
     return request({

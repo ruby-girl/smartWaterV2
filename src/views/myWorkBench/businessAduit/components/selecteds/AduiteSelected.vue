@@ -13,10 +13,9 @@
         <el-select
           v-model="query.WaterFactoryId"
           placeholder="请选择"
-          @keydown.enter.native="handleFilter"
           @change="getText(query.WaterFactoryId,'WaterFactoryId',companyOptions,'所属水厂')"
         >
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value=""></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -29,7 +28,6 @@
         <el-select
           v-model="query.ProcessMenuCode "
           placeholder="请选择"
-          @keydown.enter.native="handleFilter"
           @change="getText(query.ProcessMenuCode  ,'ProcessMenuCode ',applyArray,'申请类型')"
         >
           <el-option
@@ -44,7 +42,6 @@
         <el-input
           v-model="query.FlowNo "
           maxlength="20"
-          @keyup.enter.native="handleFilter"
           @change="getText(query.FlowNo  ,'FlowNo ','','业务编号')"
         />
       </el-form-item>
@@ -52,10 +49,9 @@
         <el-select
           v-model="query.createUserId "
           placeholder="请选择"
-          @keydown.enter.native="handleFilter"
           @change="getText(query.createUserId  ,'createUserId ',creareUserArry,'创建人')"
         >
-          <el-option label="全部" :value="-1" />
+          <el-option label="全部" value="" />
           <el-option
             v-for="item in creareUserArry"
             :key="item.Id"
@@ -66,18 +62,13 @@
       </el-form-item>
       <el-form-item label="审核状态" v-show="show4||isShow" prop="aduitAdvise">
         <el-select
-          v-model="query.aduitAdvise"
+          v-model="query.ProcessState "
           placeholder="请选择"
-          @keydown.enter.native="handleFilter"
-          @change="getText(query.VerifyState  ,'VerifyState ',auditStatusArry,'审核意见')"
-        >
-          <el-option label="全部" :value="-1" />
-          <el-option
-            v-for="item in auditStatusArry"
-            :key="item.Id"
-            :label="item.Name"
-            :value="Number(item.Id)"
-          />
+          @change="getText(query.ProcessState   ,'ProcessState  ',auditStatusArry,'审核意见')">
+          <el-option label="全部" value="0" />
+          <el-option label="审核中" value="1" />
+          <el-option label="审核通过" value="2" />
+          <el-option label="审核未通过" value="3" />
         </el-select>
       </el-form-item>
       <el-form-item label="申请日期" v-show="show5||isShow">
@@ -93,7 +84,6 @@
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
           @change="getTime(timevalue,'timevalue')"
-          @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="审核日期" v-show="show6||isShow">
@@ -109,7 +99,6 @@
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
           @change="getTime(timevalue1,'timevalue1')"
-          @keydown.enter.native="handleFilter"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -164,7 +153,7 @@ export default {
       creareUserArry: [],
       applyArray: [], //申请类型
       query: {
-        ProcessState: 0,
+        ProcessState: "0",
         VerifyState: 0,
         WaterFactoryId: "",
         ProcessMenuCode: 2900,
@@ -204,6 +193,7 @@ export default {
       this.query.WaterFactoryId = this.companyOptions[0].Id;
     }
     this.applyArray = getDictionaryOption("流程编码");
+    this.auditStatusArry = getDictionaryOption("审核状态");
     this.getCreateUser();
   },
   methods: {
@@ -249,18 +239,23 @@ export default {
     getTime(v, n) {
       let date;
       if (v) {
-        this.query.StartTime = v[0];
-        this.query.EndTime = v[1];
-        date = this.query.StartTime + "~" + this.query.EndTime;
         if (n == "timevalue1") {
+          this.query.editStartTime = v[0];
+          this.query.editEndTime = v[1];
+          date = this.query.editStartTime + "~" + this.query.editEndTime;
           this.$emit("getText", date, n, "", "审核日期");
         }
         if (n == "timevalue") {
+          this.query.createStartTime = v[0];
+          this.query.createEndTime = v[1];
+          date = this.query.createStartTime + "~" + this.query.createEndTime;
           this.$emit("getText", date, n, "", "申请日期");
         }
       } else {
-        this.query.StartTime = "";
-        this.query.EndTime = "";
+        this.query.editStartTime = "";
+        this.query.editEndTime = "";
+        this.query.createStartTime = "";
+        this.query.createEndTime = "";
         date = "";
         if (n == "timevalue1") {
           this.$emit("getText", date, n, "", "审核日期");
@@ -272,6 +267,7 @@ export default {
     },
     handleFilter() {
       this.$parent.query = Object.assign({}, this.query);
+      this.$parent.query.ProcessState = parseInt(this.$parent.query.ProcessState)
       this.$parent.searchTableList();
     }
   }

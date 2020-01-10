@@ -279,7 +279,8 @@ export default {
       WLWQueryParam: {
         page: 1,
         limit: 20,
-        CustomerNo: "", //用户编号
+        CustomerQueryType:"1",//用户编号
+        CustomerQueryValue:"",
         WaterMeterNo: "", //水表编号
         CustomerMeterState: -1, //用户水表状态
         CustomerOpenAccountState: -1, //用户开户状态

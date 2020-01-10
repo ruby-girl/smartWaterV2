@@ -68,7 +68,7 @@
                </p>
                <p>
                  <label>表册</label>
-                 <span>{{ userInfoData.WaterMeterTypeStr}}</span>
+                 <span>{{ userInfoData.RegisterBookInfoName}}</span>
                </p>
              </li>
                <li class="clearfix half">
