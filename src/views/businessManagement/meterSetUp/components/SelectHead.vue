@@ -180,6 +180,7 @@
         this.param.MeterReadState = '-1'
         this.param.CustomerQueryType =  '1',//用户类型
         this.param.CustomerQueryValue = row.CustomerNo
+        this.$parent.param =  Object.assign({},this.param)
         this.meterVisible = false
         this.$parent.searchFun();
       },
