@@ -17,7 +17,7 @@
     <el-table-column prop="AlarmMoney" label="报警金额（元）" width="150"></el-table-column>
     <el-table-column prop="PrepaidNum" label="表端充值次数" width="150"></el-table-column>
     <el-table-column prop="GuaranteedAmount" label="保底量（吨）" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterStyleStr" label="充值金额（元）" width="150"></el-table-column>
+    <el-table-column prop="Aprice" label="充值金额（元）" width="150"></el-table-column>
   </el-table>
 </template>
 <script>

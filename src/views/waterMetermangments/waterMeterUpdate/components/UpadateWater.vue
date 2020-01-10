@@ -292,41 +292,39 @@ export default {
 
   methods: {
     //检查是否欠费
-    checkNoMoney(Id) {
-      let isCheck = true;
+    checkNoMoney(Id, val) {
       checkResidueMon({ customerId: Id }).then(res => {
-        if (res.code != 0) {
-          this.$message({
-            type: "warning",
-            message: res.message ? res.message : "当前用户已欠费,不可升级水表"
-          });
-          isCheck = false;
-        } else {
-          checkMeterRecord({ customerId: Id }).then(res => {
-            if (res.code != 0) {
-              this.$message({
-                type: "warning",
-                message: res.message
-                  ? res.message
-                  : "当前用户存在未抄表或未生成费用单,不可升级水表"
-              });
-              isCheck = false;
-            }
-          });
-        }
+        debugger;
+        checkMeterRecord({ customerId: Id }).then(res => {
+          this.userInfo = val.data[0];
+          this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
+          this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+        });
       });
-      return isCheck;
     },
+
     //升级
     updateWater() {
+      let params = {
+        customerId: this.userInfo.Id,
+        customerBalance: this.userInfo.Balance,
+        inputResidueMoney: num
+      };
       UpgradeInfo({
         UpgradeWaterNeedInfo: this.UpgradeWaterNeedInfo,
         balance: this.UpgradeWaterNeedInfo.NewWaterBalance
       }).then(res => {
-        this.$message({
-          message: data.message ? data.message : "升级成功",
-          type: "warning"
-        });
+        if (res.code == 0) {
+          this.$message({
+            message: res.message ? res.message : "升级成功",
+            type: "success"
+          });
+        } else {
+          this.$message({
+            message: res.message ? res.message : "升级失败",
+            type: "warning"
+          });
+        }
         this.UpgradeWaterNeedInfo = this.$options.UpgradeWaterNeedInfo;
         this.userInf = {};
         this.waterInfo = {};
@@ -376,7 +374,7 @@ export default {
       if (val == "") {
         return;
       }
-       this.selectUserShow = false;
+      this.selectUserShow = false;
       this.params.CustomerQueryType = num;
       this.params.CustomerQueryValue = val;
       GetCustomerDataList(this.params).then(res => {
@@ -408,9 +406,16 @@ export default {
             this.userList = res.data;
             this.selectUserShow = true;
           } else {
-            this.userInfo = res.data[0];
-            this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
-            this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+            this.checkNoMoney(res.data[0].Id, res);
+
+            // console.log(this.checkNoMoney(res.data[0].Id));
+            // console.log(this.checkNCreateOrder(res.data[0].Id));
+
+            // if (this.checkNCreateOrder(res.data[0].Id) &&this.checkNoMoney(res.data[0].Id)) {
+            //  this.userInfo = res.data[0];
+            // this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
+            // this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+            // }
           }
           // this.getWaterMeterInfo(res.data[0].Id);
         }
@@ -420,6 +425,14 @@ export default {
     IcMoneyChange(num) {
       this.UpgradeWaterNeedInfo.NewWaterBalance =
         Number(this.userInfo.Balance) + Number(num);
+      let params = {
+        customerId: this.userInfo.Id,
+        customerBalance: this.userInfo.Balance,
+        inputResidueMoney: num
+      };
+      checkWaterMOney(params).then(res => {
+        console.log(res);
+      });
     },
     //选择用户信息
     handleFilter(val) {
@@ -431,6 +444,7 @@ export default {
         return false;
       } else {
         this.userInfo = val;
+        this.checkNoMoney(val.Id);
         this.selectUserShow = false;
         this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
       }
@@ -457,7 +471,7 @@ export default {
             message: "该卡是未刷卡状态，请刷卡后再进行操作",
             type: "warning"
           });
-          return false
+          return false;
         }
         postData.CustomerQueryValue = info.UserCardCredited.CardNo;
         postData.CustomerQueryType = "8";

@@ -313,6 +313,9 @@ export default {
   },
   methods: {
     edit(data) {
+      if(data.WaterMeterStyle==0){
+        data.WaterMeterStyle=""
+      }
       this.$refs.edit.editData = data;
       this.editShow = true;
     },

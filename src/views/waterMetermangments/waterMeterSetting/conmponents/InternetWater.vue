@@ -404,6 +404,7 @@ export default {
     },
     searchWLWMeterInfo(num) {
       let that = this;
+      this.SelectionList=""
       if (num != 0) {
         this.orderData = Object.assign({}, this.WLWQueryParam);
         this.orderData.page = 1;
@@ -478,8 +479,12 @@ export default {
       });
     },
     handleCurrentChange(val) {
-      //选中行数据
-      this.SelectionList = val.Id;
+      if(val){
+        //选中行数据
+        console.log(val)
+        this.SelectionList = val.Id;
+
+      }
     },
     orderLockWLWOpen() {
       //开

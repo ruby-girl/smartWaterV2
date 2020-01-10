@@ -32,7 +32,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="报警金额">
-        <el-input v-model="editData.AlarmMoney" maxlength="20" />
+        <el-input type="number" v-model="editData.AlarmMoney" maxlength="20" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
