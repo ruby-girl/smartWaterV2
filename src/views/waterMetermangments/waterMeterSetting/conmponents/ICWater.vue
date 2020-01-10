@@ -57,7 +57,6 @@
           >
             <el-option label="姓名" value="2"></el-option>
             <el-option label="用户编号" value="1"></el-option>
-      
           </el-select>
           <el-input
             v-model="IcwachMeterData.Customer"
@@ -216,7 +215,7 @@ import EditICWaterMeter from "./intercomponents/EditICWaterMeter";
 export default {
   //机械表
   name: "ICWater",
-  components: { SearchTips, Pagination, ICWaterMeterHis,EditICWaterMeter },
+  components: { SearchTips, Pagination, ICWaterMeterHis, EditICWaterMeter },
   props: {
     waterMeterList: {
       type: Array,
@@ -244,7 +243,7 @@ export default {
         //查询
         page: 1,
         limit: 20,
-       QueryType: "1", // 用户名 ,
+        QueryType: "1", // 用户名 ,
         Customer: "", // 用户名 ,
         WaterMeterNo: "", //水表编号 ,
         wms: "-1", //水表样式
@@ -282,8 +281,8 @@ export default {
       show2: true,
       show3: true,
       show4: true,
-      secNmae: "",
-      editShow:false
+      secNmae: "用户编号",
+      editShow: false
     };
   },
   mounted() {
@@ -314,7 +313,7 @@ export default {
   },
   methods: {
     edit(data) {
-      this.$refs.edit.editData=data
+      this.$refs.edit.editData = data;
       this.editShow = true;
     },
     getscName(id) {

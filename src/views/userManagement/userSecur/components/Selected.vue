@@ -55,6 +55,7 @@
             :searchable="false"
             v-model="selectHead.AreaId"
             :options="orgTree"
+            @change="getText(selectHead.AreaId ,'AreaId',orgTree,'区域')"
           />
         </el-form-item>
 
@@ -136,7 +137,8 @@
 </template>
 <script>
 import { getName, getOrgTree } from "@/utils/projectLogic"; //搜索条件面包屑
-import { getDictionaryOption } from "@/utils/permission"; //获取字典项
+import { getDictionaryOption } from "@/utils/permission"; //获取字典项GetAreaTree
+import { GetAreaTree } from "@/api/inSecur"; //获取区域
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
@@ -162,6 +164,12 @@ export default {
         this.show6 = this.showLabel(6, val);
       },
       immediate: true
+    },
+    "selectHead.AreaId": {
+      handler() {
+        // console.log(this.orgTree)
+        this.getText(this.selectHead.AreaId, "AreaId", this.orgTree, "区域");
+      }
     }
   },
   data() {
@@ -184,13 +192,26 @@ export default {
     this.WaterMeterList = getDictionaryOption("水表类型");
     this.securStatus = getDictionaryOption("低保户状态");
     this.securNextStatus = getDictionaryOption("低保户复审状态");
+    this.getArea(0);
   },
   methods: {
+    // getArry(arr) {
+    //   let ifChildren = Array.isArray(arr.children) && arr.children.length > 0;
+    //   if (ifChildren) {
+    //     arr.children.forEach(val => {
+    //       this.getArry(val);
+    //       return val;
+    //     });
+    //   } else {
+    //     return arr;
+    //   }
+    // },
     getArea(id) {
       getOrgTree(
         function(res) {
           this.orgTree = res;
-          this.selectHead.SA_UserArea_Id = "-1";
+          let childrenArr = [];
+          this.selectHead.AreaId = "-1";
         }.bind(this),
         id
       );
@@ -216,8 +237,6 @@ export default {
     //日期格式化
     getTime(v) {
       let date;
-      console.log(v)
-
       if (v) {
         this.selectHead.StartTime = v[0];
         this.selectHead.EndTime = v[1];

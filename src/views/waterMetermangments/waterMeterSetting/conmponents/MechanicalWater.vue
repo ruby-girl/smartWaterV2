@@ -279,7 +279,7 @@ export default {
       show2: true,
       show3: true,
       show4: true,
-      secNmae: ""
+      secNmae: "用户编号"
     };
   },
   mounted() {
