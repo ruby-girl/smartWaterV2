@@ -363,6 +363,7 @@ export default {
       position: relative;
     }
     .user_tree {
+      height: 100%;
       width: 240px;
       position: relative;
       background: #fff;

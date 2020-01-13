@@ -27,10 +27,10 @@
         <label>报警金额</label>
         <span>{{ waterData.WaterYield }}</span>
       </p>
-      <p>
+    <!--  <p>
         <label>安装位置</label>
         <span>{{ waterData.InstallAddress }}</span>
-      </p>
+      </p>-->
     </li>
     <li class="clearfix whole">
       <p>

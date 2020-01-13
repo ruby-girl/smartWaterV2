@@ -223,7 +223,7 @@ export default {
     padding: 0;
     width: 190px;
   }
-  height: calc(100vh - 20%);
+ height: calc(100vh - 20%);
   overflow: auto;
   .custom-tree-container {
     width: 100%;

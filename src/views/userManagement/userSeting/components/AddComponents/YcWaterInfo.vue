@@ -88,12 +88,11 @@
               if(res.data.message.indexOf('已绑定用户') != -1){
                 this.$confirm(res.data.message, "提示", {
                   confirmButtonText: "确定",
-                  cancelButtonText: "取消",
                   iconClass:"el-icon-question questionIcon",
                   customClass: "warningBox",
                   showClose: false
                 }).then(() => {
-                  this.$router.push({path: '/waterMetermangments/waterMeterSetting', query: {CustomerQueryValue: this.data.WaterMeterNo,type:'3'}})
+                 // this.$router.push({path: '/waterMetermangments/waterMeterSetting', query: {CustomerQueryValue: this.data.WaterMeterNo,type:'3'}})
                 })
               }else {
                 promptInfoFun(this,1,res.data.message)
