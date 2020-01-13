@@ -15,19 +15,19 @@
             <li class="clearfix">
               <p>
                 <label>申请类型</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.ProcessName }}</span>
               </p>
               <p>
                 <label>申请时间</label>
-                <span>1988-12-01 12:00:00</span>
+                <span>{{ applyInfoData.CreateTime }}</span>
               </p>
               <p>
                 <label>创建人</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.CreateUserName}}</span>
               </p>
               <p>
                 <label>所属水厂</label>
-                <span>编辑开户申请</span>
+                <span>{{ applyInfoData.WaterFactoryName}}</span>
               </p>
             </li>
           </ul>
@@ -37,56 +37,34 @@
           <ul class="detail-table-info">
             <li class="clearfix">
               <p>
-                <label>序号</label>
-                <span>测试用水</span>
+                <label>费用类型</label>
+                <span>水费</span>
               </p>
               <p>
-                <label>交易流水号</label>
-                <span>1988-12-01 12:00:00</span>
+                <label>欠费日期</label>
+                <span>{{ otherInfoData.ArrearsDate  }}</span>
+              </p>
+              <p>
+                <label>费用金额</label>
+                <span>{{ otherInfoData.TotalPrice  }}</span>
+              </p>
+              <p>
+                <label>协议减免金额</label>
+                <span>{{ otherInfoData.FreePrice  }}</span>
+              </p>
+            </li>
+            <li class="clearfix">
+              <p>
+                <label>账户扣减</label>
+                <span>{{ otherInfoData.PricePaid  }}</span>
               </p>
               <p>
                 <label>用户编号</label>
-                <span>张三</span>
+                <span>{{ otherInfoData.CustomerNo  }}</span>
               </p>
               <p>
-                <label>姓名</label>
-                <span>张三</span>
-              </p>
-            </li>
-            <li class="clearfix">
-              <p>
-                <label>缴费日期</label>
-                <span>测试用水</span>
-              </p>
-              <p>
-                <label>缴费金额(元)</label>
-                <span>1988-12-01</span>
-              </p>
-              <p>
-                <label>预存金额(元)</label>
-                <span>张三</span>
-              </p>
-              <p>
-                <label>实收金额(元)</label>
-                <span>张三</span>
-              </p>
-            </li>
-            <li class="clearfix">
-              <p>
-                <label>缴费状态</label>
-                <span>测试用水</span>
-              </p>
-              <p>
-                <label>收款人</label>
-                <span>1988-12-01</span>
-              </p>
-              <p>
-                <label>缴费方式</label>
-                <span>张三</span>
-              </p>
-              <p>
-                <label>水表编号</label>
-                <span>张三</span>
+                <label>用户姓名</label>
+                <span>{{ otherInfoData.CustomerName  }}</span>
               </p>
             </li>
           </ul>
@@ -95,9 +73,9 @@
           <h2><i></i>违约金详情</h2>
           <p class="contract-detail">
             <label>违约金(元)</label>
-            <span>50:00</span>
+            <span>{{ otherInfoData.LateFee }}</span>
             <span class="pot"><i></i><label>减免为</label></span>
-            <span class="pot-money">50:00</span>
+            <span class="pot-money">{{ otherInfoData.LateFee - otherInfoData.LeteFeeFree }}</span>
           </p>
         </div>
         <p class="to-examine" v-show="!ifDetail">
@@ -135,7 +113,10 @@
         componentsArr:['MechanicsMater','YcMeter'],
         screenWidth:'',
         ifDetail:true,
-        curObj:{}//当前点击列对象
+        curObj:{},//当前点击列对象
+        detailData:{},//详情信息
+        applyInfoData:{},//申请信息
+        otherInfoData:{},//费用详情
       }
     },
     computed:{
@@ -152,6 +133,10 @@
             document.getElementsByClassName('detail-right')[0].style.height = document.getElementsByClassName('detail-left')[0].clientHeight - num + 'px'
           })
         }
+      },
+      detailData (newVal){
+        this.applyInfoData = newVal.Info
+        this.otherInfoData = newVal.Data.order
       }
     },
     methods:{

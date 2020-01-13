@@ -8,7 +8,7 @@
     label-width="90px"
     @submit.native.prevent>
     <el-form-item label="水厂" prop="SA_WaterFactory_Id" style="margin-left: -60px">
-      <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(param.SA_WaterFactory_Id,'SA_WaterFactory_Id',waterFactory,'水厂')">
+      <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getWaterFactory">
         <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
@@ -68,7 +68,8 @@
           YearMonth:'',
           waterMeterType:'-1',
           SA_WaterFactory_Id:'',
-          userType:'-1'
+          userType:'-1',
+          WaterFactoryName:''
         },
         waterMeterArray:[],
         waterFactory:[],
@@ -85,6 +86,15 @@
       }
     },
     methods: {
+      getWaterFactory(value){
+        this.waterFactory.forEach((item)=>{
+          if(item.Id==value){
+            this.param.WaterFactoryName = item.Name
+          }
+        })
+        this.$parent.getNoBack(value)
+        this.getText(this.param.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+      },
       /**
        * 触发父组建查询方法
        * */
@@ -101,7 +111,6 @@
         }
       },
       getText(val, model, arr, name) {
-        this.$parent.getNoBack(val)
         this.$parent.getText(val, model, arr, name)
       },
       resetFun(formName){
@@ -117,6 +126,7 @@
       this.screenWdth = window.screen.width
       this.waterFactory = this.$store.state.user.waterWorks
       this.param.SA_WaterFactory_Id = this.waterFactory[0].Id
+      this.param.WaterFactoryName = this.waterFactory[0].Name
       this.$parent.getNoBack(this.param.SA_WaterFactory_Id)
       this.waterMeterArray = getDictionaryOption('水表类型')
       this.userArray = getDictionaryOption('用户类型')

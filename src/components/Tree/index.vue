@@ -58,6 +58,10 @@ export default {
      * 当前选中需编辑或者新增信息或删除
      * */
     setCurNode(data) {
+      if(localStorage.getItem('removeClick')){
+        document.getElementById(data.Id).classList.add('matchStyle')
+        localStorage.removeItem('removeClick')
+      }
       let Nodes = this.$refs.tree.store._getAllNodes();
       Nodes.forEach(key => {//移除筛选条件加载的默认样式
         if(key.data.Id!=data.Id){
