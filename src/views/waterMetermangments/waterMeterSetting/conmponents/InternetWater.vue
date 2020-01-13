@@ -61,7 +61,7 @@
             <el-option label="用户编号" value="1"></el-option>
             <!-- <el-option label="电话" value="3"></el-option>
             <el-option label="证件号" value="4"></el-option>
-            <el-option label="用户地址" value="5"></el-option> -->
+            <el-option label="用户地址" value="5"></el-option>-->
           </el-select>
           <el-input
             v-model="WLWQueryParam.CustomerQueryValue"
@@ -194,7 +194,7 @@
               >
                 <i class="icon iconfont viewHis" @click="waterMeterWLWDetail(scope.row.Id)">&#xe670;</i>
               </el-tooltip>
-               <el-tooltip
+              <el-tooltip
                 class="item"
                 popper-class="tooltip"
                 effect="light"
@@ -202,10 +202,7 @@
                 content="编辑"
                 placement="bottom"
               >
-                <i
-                  class="icon iconfont editJxWater"
-                  @click=""
-                >&#xe69f;</i>
+                <i class="icon iconfont editJxWater" @click="edit(scope.row)">&#xe69f;</i>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -238,10 +235,11 @@
         @pagination="waterMeterWLWDetail(Bl_WaterMeter4His.Meter4Id)"
       />
     </el-dialog>
+      <editWLW-waterMeter ref="edit" :edit-show.sync="editShow" />
   </div>
 </template>
 <script>
-import customTable from "@/components/CustomTable/index"; //自定义表格
+import EditWLWWaterMeter from "./intercomponents/EditWLWWaterMeter"; 
 import Pagination from "@/components/Pagination/index"; //分页
 import Static from "./intercomponents/Static"; //异常统计
 import WLWWaterMeterHis from "./intercomponents/WLWWaterMeterHis"; //历史
@@ -260,7 +258,7 @@ import { delTips, getText, pushItem, getName } from "@/utils/projectLogic"; //�
 export default {
   //机械表
   name: "InternetWater",
-  components: { SearchTips, Pagination, Static, WLWWaterMeterHis },
+  components: { SearchTips, Pagination, Static, WLWWaterMeterHis ,EditWLWWaterMeter},
   watch: {
     screenWidth: {
       handler(val, oldVal) {
@@ -279,8 +277,8 @@ export default {
       WLWQueryParam: {
         page: 1,
         limit: 20,
-        CustomerQueryType:"1",//用户编号
-        CustomerQueryValue:"",
+        CustomerQueryType: "1", //用户编号
+        CustomerQueryValue: "",
         WaterMeterNo: "", //水表编号
         CustomerMeterState: -1, //用户水表状态
         CustomerOpenAccountState: -1, //用户开户状态
@@ -334,7 +332,8 @@ export default {
       show4: true,
       show5: true,
       show6: true,
-      secNmae: "用户编号"
+      secNmae: "用户编号",
+      editShow:false
     };
   },
   created() {
@@ -404,7 +403,7 @@ export default {
     },
     searchWLWMeterInfo(num) {
       let that = this;
-      this.SelectionList=""
+      this.SelectionList = "";
       if (num != 0) {
         this.orderData = Object.assign({}, this.WLWQueryParam);
         this.orderData.page = 1;
@@ -428,6 +427,14 @@ export default {
         //统计
         that.ErrorList = res.data;
       });
+    },
+    edit(data) {
+      // if(data.WaterMeterStyle==0){
+      //   data.WaterMeterStyle=""
+      // }
+      console.log(data)
+      this.$refs.edit.editData = data;
+      this.editShow = true;
     },
     sortChanges({ column, prop, order }) {
       //排序
@@ -479,11 +486,9 @@ export default {
       });
     },
     handleCurrentChange(val) {
-      if(val){
+      if (val) {
         //选中行数据
-        console.log(val)
         this.SelectionList = val.Id;
-
       }
     },
     orderLockWLWOpen() {

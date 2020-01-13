@@ -155,3 +155,19 @@ export function GetReportInsured(data) {
         data: data
     })
 }
+
+/* ************************** 产销差************************** */
+export function GetReportNrw(data) {
+    return request({
+        url: '/NrwStatisticsReport/NrwStatisticsReportQuery',
+        method: 'post',
+        data: data
+    })
+}
+export function ExcelReportNrw(data) {
+    return request({
+        url: '/NrwStatisticsReport/NrwStatisticsReportQueryExport',
+        method: 'post',
+        data: data
+    })
+}

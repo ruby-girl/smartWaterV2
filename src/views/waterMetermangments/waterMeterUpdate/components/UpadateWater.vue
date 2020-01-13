@@ -314,7 +314,6 @@ export default {
         });
         return;
       }
-      console.log(this.userInfo)
       if (this.userInfo.WaterMeterTypeName != "IC卡表水表") {
         checkResidueMon({ customerId: this.userInfo.Id }).then(res => {
           checkMeterRecord({ customerId: this.userInfo.Id }).then(res => {
@@ -446,7 +445,6 @@ export default {
         inputResidueMoney: num
       };
       checkWaterMOney(params).then(res => {
-        console.log(res);
       });
     },
     //选择用户信息

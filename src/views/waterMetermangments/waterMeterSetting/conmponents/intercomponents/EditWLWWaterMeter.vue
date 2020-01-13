@@ -8,30 +8,10 @@
     :close-on-click-modal="false"
   >
     <el-form :inline="true" :model="editData" size="small" label-width="70px">
-      <el-form-item label="水表编号">
-        <el-input v-model="editData.WaterMeterNo" maxlength="20" />
+      <el-form-item label="报警量">
+        <el-input v-model="editData.money" maxlength="20" />
       </el-form-item>
-      <el-form-item label="水表样式">
-        <el-select v-model="editData.wms" placeholder="请选择">
-          <el-option
-            v-for="item in waterMeterList"
-            :label="item.Name"
-            :value="item.Id"
-            :key="item.Name"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="水表口径">
-        <el-select v-model="editData.wms" placeholder="请选择">
-          <el-option
-            v-for="item in waterMeterList"
-            :label="item.Name"
-            :value="item.Id"
-            :key="item.Name"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="报警金额">
+      <el-form-item label="透支量">
         <el-input v-model="editData.money" maxlength="20" />
       </el-form-item>
     </el-form>
@@ -77,14 +57,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.el-form{
+.el-form {
   text-align: center;
   margin-top: 30px;
 }
 .el-form-item {
   margin-bottom: 20px;
 }
-/deep/.el-input__inner{
-  width: 200px!important;
+/deep/.el-input__inner {
+  width: 200px !important;
 }
 </style>

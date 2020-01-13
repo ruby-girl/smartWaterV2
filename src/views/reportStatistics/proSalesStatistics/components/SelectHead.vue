@@ -10,10 +10,10 @@
       ref="formHeight"
     >
       <el-form-item
-        v-if="companyOptions.length!=1"
         label="水厂"
         :label-width="isShow?'68px':'40px'"
         prop="SA_WaterFactory_Id"
+        v-show="show1||isShow"
       >
         <el-select
           v-model="selectHead.SA_WaterFactory_Id"
@@ -21,7 +21,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'水厂')"
         >
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" v-if="companyOptions.length!=1" value="-1"></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -31,7 +31,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterType">
+      <!-- <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterType">
         <el-select
           v-model="selectHead.WaterType"
           placeholder="请选择"
@@ -46,20 +46,18 @@
             :value="item.Id"
           ></el-option>
         </el-select>
-      </el-form-item>
-     
+      </el-form-item>-->
+
       <el-form-item label="日期" label-width="40px" v-show="show2||isShow">
         <el-date-picker
           v-model="dateArr"
-          type="daterange"
+          type="monthrange"
           :editable="false"
           :unlink-panels="true"
           range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
+          start-placeholder="开始月份"
+          end-placeholder="结束月份"
+          value-format="yyyy-MM"
           @keydown.enter.native="handleFilter"
           @change="getTime"
         />
@@ -81,7 +79,7 @@
 </template>
 <script>
 import { getDictionaryOption } from "@/utils/permission";
-import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import { getLabelName } from "@/utils/projectLogic"; //获取lable
 export default {
   props: {
     searchWidth: {}
@@ -107,19 +105,11 @@ export default {
       handler(val, oldVal) {
         this.show1 = this.showLabel(1, val);
         this.show2 = this.showLabel(2, val);
-     
-        if (this.companyOptions.length == 1) {
-          if (Math.floor((val - 200) / 280) < 3) {
-            this.showBtn = true;
-          } else {
-            this.showBtn = false;
-          }
+
+        if (Math.floor((val - 200) / 280) < 3) {
+          this.showBtn = true;
         } else {
-          if (Math.floor((val - 200) / 280) < 4) {
-            this.showBtn = true;
-          } else {
-            this.showBtn = false;
-          }
+          this.showBtn = false;
         }
       },
       immediate: true
@@ -143,6 +133,7 @@ export default {
       }
     },
     handleFilter() {
+      this.selectHead.WaterFactoryName=getLabelName(this.selectHead.SA_WaterFactory_Id,this.companyOptions)
       this.$parent.searchTableList();
     },
     getText(val, model, arr, name) {
@@ -151,27 +142,18 @@ export default {
     getTime() {
       //时间格式化
       let date = this.dateArr;
-      let dateStipe;
       if (date) {
-        this.selectHead.createStartTime = date[0];
-        this.selectHead.createEndTime = date[1];
-        dateStipe =
-          this.selectHead.createStartTime.split(" ")[0] +
-          "~" +
-          this.selectHead.createEndTime.split(" ")[0];
-        this.$emit("getText", dateStipe, "dateArr", "", "日期");
+        this.selectHead.YearMonth = date[0] + "~" + date[1];
+
+        this.$emit("getText", this.selectHead.YearMonth, "dateArr", "", "日期");
       } else {
-        this.selectHead.createStartTime = "";
-        this.selectHead.createEndTime = "";
-        dateStipe = "";
-        this.$emit("getText", dateStipe, "dateArr", "", "日期");
+        this.selectHead.YearMonth=""
+        this.$emit("getText", this.selectHead.YearMonth, "dateArr", "", "日期");
       }
     }
   },
   created() {
-    this.WaterMeterList = getDictionaryOption("水表类型");
-    this.userTypeList = getDictionaryOption("用户类型");
-    this.editUserList = getDictionaryOption("口径类型");
+  
     this.companyOptions = this.$store.state.user.waterWorks;
     if (this.companyOptions.length == 1) {
       this.selectHead.SA_WaterFactory_Id = this.companyOptions.Id;
