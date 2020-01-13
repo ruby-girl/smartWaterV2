@@ -429,11 +429,10 @@ export default {
       });
     },
     edit(data) {
-      // if(data.WaterMeterStyle==0){
-      //   data.WaterMeterStyle=""
-      // }
-      console.log(data)
-      this.$refs.edit.editData = data;
+    
+       this.$refs.edit.editData.SA_WaterMeter_Id =data.Id
+      this.$refs.edit.editData.AmountAlarm  = data.WaterAmountAlarm;//报警量
+      this.$refs.edit.editData.AmountOverdraft  = data.WaterAmountOverdraft;//透支量
       this.editShow = true;
     },
     sortChanges({ column, prop, order }) {

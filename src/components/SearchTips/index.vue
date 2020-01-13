@@ -213,7 +213,7 @@ export default {
       line-height: 22px;
       .icon {
         // line-height: 22px;
-        font-size: 12px;
+        font-size: 14px;
       }
     }
   }
