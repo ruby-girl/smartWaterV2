@@ -231,6 +231,7 @@ import {
 } from "@/api/waterMeterMang"; //获取用水量
 import WaterNumDetail from "./WaterNumDetail";
 import "@/styles/userAccount.scss";
+import { async } from "q";
 export default {
   name: "UpadateWater",
   components: { SelectUser, WaterNumDetail },
@@ -294,22 +295,46 @@ export default {
     //检查是否欠费
     checkNoMoney(Id, val) {
       checkResidueMon({ customerId: Id }).then(res => {
-        debugger;
         checkMeterRecord({ customerId: Id }).then(res => {
-          this.userInfo = val.data[0];
-          this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
-          this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+          if (val) {
+            this.userInfo = val.data[0];
+            this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
+            this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+          }
         });
       });
     },
 
     //升级
-    updateWater() {
-      let params = {
-        customerId: this.userInfo.Id,
-        customerBalance: this.userInfo.Balance,
-        inputResidueMoney: num
-      };
+    async updateWater() {
+      if (!this.userInfo.Id) {
+        this.message({
+          message: "请查询出用户后再升级",
+          type: "warning"
+        });
+        return;
+      }
+      console.log(this.userInfo)
+      if (this.userInfo.WaterMeterTypeName != "IC卡表水表") {
+        checkResidueMon({ customerId: this.userInfo.Id }).then(res => {
+          checkMeterRecord({ customerId: this.userInfo.Id }).then(res => {
+            this.updateApi();
+          });
+        });
+      }
+      if ((this.userInfo.WaterMeterTypeName == "IC卡表水表")) {
+        let params = {
+          customerId: this.userInfo.Id,
+          customerBalance: this.userInfo.Balance,
+          inputResidueMoney: this.userInfo.BdBalance
+        };
+        checkWaterMOney(params).then(res => {
+          this.updateApi();
+        });
+      }
+    },
+    //升级请求
+    updateApi() {
       UpgradeInfo({
         UpgradeWaterNeedInfo: this.UpgradeWaterNeedInfo,
         balance: this.UpgradeWaterNeedInfo.NewWaterBalance
@@ -407,17 +432,7 @@ export default {
             this.selectUserShow = true;
           } else {
             this.checkNoMoney(res.data[0].Id, res);
-
-            // console.log(this.checkNoMoney(res.data[0].Id));
-            // console.log(this.checkNCreateOrder(res.data[0].Id));
-
-            // if (this.checkNCreateOrder(res.data[0].Id) &&this.checkNoMoney(res.data[0].Id)) {
-            //  this.userInfo = res.data[0];
-            // this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
-            // this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
-            // }
           }
-          // this.getWaterMeterInfo(res.data[0].Id);
         }
       });
     },
@@ -466,7 +481,7 @@ export default {
     getUser(info) {
       let postData = {};
       if (info) {
-        if (info.CardType != 1) {
+        if (info.CardType != 4 && info.CardType != 1) {
           this.$message({
             message: "该卡是未刷卡状态，请刷卡后再进行操作",
             type: "warning"

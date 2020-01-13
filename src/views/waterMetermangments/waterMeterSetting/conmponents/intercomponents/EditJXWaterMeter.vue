@@ -166,10 +166,11 @@ export default {
   methods: {
     saveWaterInfo() {
       let that = this;
-      this.EditJxData.CustomerState = Number(this.EditJxData.CustomerState);
-      this.EditJxData.WaterMeterStyle = Number(this.EditJxData.WaterMeterStyle);
-      this.EditJxData.MeterDiameter = Number(this.EditJxData.MeterDiameter);
-      this.EditJxData.ReadNum = Number(this.EditJxData.ReadNum);
+      let parms = Object.assign({}, this.EditJxData)
+      parms.CustomerState = Number(parms.CustomerState);
+      parms.WaterMeterStyle = Number(parms.WaterMeterStyle);
+      parms.MeterDiameter = Number(parms.MeterDiameter);
+      parms.ReadNum = Number(parms.ReadNum);
       saveJXHisWater(that.EditJxData).then(res => {
         if (res.code == 0) {
             that.$parent.searchWatetJX()

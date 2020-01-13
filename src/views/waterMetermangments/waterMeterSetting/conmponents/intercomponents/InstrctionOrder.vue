@@ -53,9 +53,7 @@ export default {
         this.getHistoryInfo();
       }
     },
-    orderHistory() {
-      this.orderInsd = this.orderHistory;
-    },
+  
     orderInsd(val, oldVal) {
       if (val === oldVal) {
         return;
@@ -91,9 +89,15 @@ export default {
     getHistoryInfo() {
       //   //详情历史业务数据
       GetCommandRecord(this.instrictionList).then(res => {
-        console.log(res);
+        if(res.data.length==0){
+          this.$message({
+            message:"该水表没有指令历史",
+            type:"warning"
+          })
+          return false
+        }
+        this.orderInsd = this.orderHistory;
         this.orderInstion = res.data;
-        console.log(this.orderInstion);
       });
     }
   }
