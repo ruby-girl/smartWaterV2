@@ -3,142 +3,143 @@
     <div>
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <!--列表组建 s-->
-      <p class="legacyArrears">截止今日XX水厂当前遗留欠款（水费/垃圾/其他）为：XXXXX</p>
-      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" style="margin-top: 50px;"/>
+     <!-- <p class="legacyArrears">截止今日{{waterFactory}}水厂当前遗留欠款（水费/垃圾/其他）为：{{money}}</p>-->
+      <p class="legacyArrears">{{waterFactoryInfo}}</p>
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" style="margin-top: 68px;"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
         <el-table-column fixed="left" label="#" width="60" align="center">
           <template slot-scope="scope">
-            <span>{{(sbap.page - 1) *sbap.limit+ scope.$index + 1}}</span>
+            <span>{{(param.page - 1) *param.limit+ scope.$index + 1}}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="WaterFactoryName"
           label="水厂"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="YearMonth"
           label="日期"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="WaterMeterTypeName"
           label="水表类型"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="UserTypeName"
           label="用户类型"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="CurrentWaterYield"
           label="本期水量"
           align="center"
           min-width="200px">
         </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期清水费"
-          align="center"
-          min-width="200px">
+        <el-table-column label="本期">
+          <el-table-column
+            prop="WaterPrice"
+            label="清水费"
+            align="center"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="PollutionDischarge"
+            label="污水费"
+            align="center"
+            width="120">
+          </el-table-column>
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="本期污水费"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
+          prop="FreePrice"
           label="减免费用"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="PricePaid"
           label="账户本期扣减"
           align="center"
           min-width="200px">
         </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期应收清水费"
-          align="center"
-          min-width="200px">
+        <el-table-column label="本期应收">
+          <el-table-column
+            prop="CPollutionDischarge"
+            label="CPrice"
+            align="center"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="CPollutionDischarge"
+            label="污水费"
+            align="center"
+            width="120">
+          </el-table-column>
+        </el-table-column>
+        <el-table-column label="本期实收">
+          <el-table-column
+            prop="APrice"
+            align="center"
+            label="清水费"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="APollutionDischarge"
+            label="污水费"
+            align="center"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="RechargeMoney"
+            label="预存"
+            align="center"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="LateFee"
+            label="违约金"
+            align="center"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="GarbageSS"
+            label="垃圾费"
+            align="center"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="OtherFeeSS"
+            label="其他费用"
+            align="center"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="TotalPriceSS"
+            label="总额"
+            align="center"
+            width="120">
+          </el-table-column>
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="本期应收污水费"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期实收清水费"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期实收污水费"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期实收预存"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期实收违约金"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期实收垃圾费"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期实收其他费用"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期实收总额"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
+          prop="NewArrears"
           label="本期新增欠款"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="水费回收率"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
+          prop="PastArrears"
           label="往期遗留欠款"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="RecoverArrears"
           label="追回往期欠款"
           align="center"
           min-width="200px">
@@ -152,18 +153,20 @@
   import SearchTips from "@/components/SearchTips/index";
   import '@/styles/organization.scss'
   import SelectHead from './components/SelectHead'//查询条件组建
-  import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"
   import { promptInfoFun } from "@/utils/index"
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { FeeStatisticsReportGetList, FeeStatisticsReportGetListToExcel, GetPastArrears } from "@/api/reportInfo";
+
 
   export default {
     name: 'feeStatistics',
     components: { SelectHead, SearchTips },
     data() {
       return {
+        waterFactoryInfo:'',
         tableHeight: null,//表格高度
-        sbap: {page:1,limit:10},
-        tableData: [{date:111,name:['小民族','刷卡啊额','安慰让我额']}],//表格数据
+        param: {page:1,limit:10},
+        tableData: [],//表格数据
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
       }
@@ -174,13 +177,14 @@
           promptInfoFun(this,1,res.message)
           return false
         }
-        BlockAreaExecl(this.sbap).then(res => {
+        FeeStatisticsReportGetListToExcel(this.param).then(res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         })
       },
       searchFun() {//查询事件
-        BlockAreaGetList(this.sbap).then(res => {
+        FeeStatisticsReportGetList(this.param).then(res => {
           if (res.code == 0 ) {
+            console.log(res.data)
             this.tableData = res.data;
             this.tipsData = pushItem(this.tipsDataCopy)
           } else {
@@ -189,10 +193,10 @@
         })
       },
       sortChanges({prop, order }){//排序
-        this.sbap.filed = prop
-        this.sbap.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        this.param.filed = prop
+        this.param.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
         if(this.tableData.length>0){
-          this.sbap.page = 1
+          this.param.page = 1
           this.searchFun()
         }
       },
@@ -203,7 +207,7 @@
        * param  对应搜索条件的对象名
        */
       delTips(val) {
-        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "sbap"); //返回删除后的数据传给组件
+        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()
       },
       /**
@@ -216,12 +220,16 @@
       getText(val, model, arr, name) {
         let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
         this.tipsDataCopy.push(obj);
+      },
+      getNoBack(id){//获取水厂遗留欠款
+        GetPastArrears({'SA_WaterFactory_Id':id}).then(res => {
+           this.waterFactoryInfo = res.data
+        })
       }
     },
     mounted() {
       this.$refs.searchTips.showTabBtn = false//隐藏自定义按钮
       this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 40
-
     }
   }
 </script>

@@ -313,6 +313,7 @@ export default {
               break;
             case 2911: //违约金减免
               this.index = 7;
+              this.getAddNature(res.data, row);
               break;
           }
         } else {

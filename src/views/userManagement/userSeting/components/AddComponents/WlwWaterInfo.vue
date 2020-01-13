@@ -75,8 +75,6 @@
         }).then((res) => {
             if (res.data.code == 0) {
               _this.data = res.data.data
-              console.log(res.data)
-              console.log('------------------------')
             }else {
               if(res.data.message.indexOf('已绑定用户') != -1){
                 this.$confirm(res.data.message, "提示", {

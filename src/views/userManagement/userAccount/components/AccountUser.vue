@@ -250,7 +250,7 @@ export default {
     getUser(info) {
       let postData = {};
       if (info) {
-        if (info.CardType != 1) {
+        if (info.CardType!=4&&info.CardType != 1) {
           this.$message({
             message: "该卡是未刷卡状态，请刷卡后再进行操作",
             type: "warning"

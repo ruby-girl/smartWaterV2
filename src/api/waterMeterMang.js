@@ -182,7 +182,13 @@ export function ValveUnLock(data) {//解锁
     params: data
   })
 }
-
+export function EditWlWInfo(data) {//编辑
+  return request({
+    url: "/WaterMeter/EditWLWABWaterInfo",
+    method: 'POST',
+    data
+  })
+}
 
 //------------------------------------水表升级-----------------------------------------------
 //WaterMeterUpgrade/SelectMeter1ThisLadderWaterYield

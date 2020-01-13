@@ -66,7 +66,7 @@
               </p>
               <p>
                 <label>用水性质</label>
-                <span>{{ oldEditUserInfo.PeopleNo }}</span>
+                <span>{{ oldEditUserInfo.SA_UseWaterTypeName }}</span>
               </p>
               <p>
                 <label>表册</label>

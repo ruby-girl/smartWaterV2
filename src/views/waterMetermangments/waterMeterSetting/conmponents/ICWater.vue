@@ -250,7 +250,7 @@ export default {
         cs: "-1", //开户状态
         sort: "", //升序
         filed: "", //排序字段
-        tableId: "0000021"
+        tableId: "0000023"
       },
 
       meterReadListParam: {

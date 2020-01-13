@@ -62,6 +62,8 @@ export default {
         //右侧用户列表查询条件
         tableId: "0000016",
         WaterFactoryId:'',
+        page:1,
+        limit:20
       },
       oldTreeData: [],
       disAdd: false,
@@ -204,10 +206,9 @@ export default {
       })
     },
     getWaterInfos(){//直接查水厂信息
+      localStorage.setItem('removeClick',true)
       this.$refs.myChild.areaId = ''
       this.$refs.myChild.selectNode = ''
-      //this.$refs.myChild.$refs.tree.setCheckedNodes([]);//重置区域树
-      //this.$refs.childSelect.query.AreaId = localStorage.getItem('waterFactoryId')
       this.ifWaterFactory = true
       this.$refs.childSelect.searchFun()
       let elementNodes1 = document.getElementsByClassName('is-current')//选中样式
@@ -263,7 +264,7 @@ export default {
     getText(val, model, arr, name) {//触发子元素事件
       this.$refs.tableChild.getText(val, model, arr, name)
     },
-    getSatrtFun(){
+    getSatrtFun(){//水表类型统计
       this.ifWaterFactory ? this.query.AreaId = localStorage.getItem('waterFactoryId') : this.query.AreaId = this.$refs.myChild.areaId
       let query = Object.assign({}, this.query);
       query.CustomerQueryType = parseInt(query.CustomerQueryType);
@@ -299,6 +300,7 @@ export default {
     Bus.$off("queryData");
     Bus.$on("queryData", () => {
       //添加成功后调用查询方法
+      this.query.WaterTypeId = -1
       _this.searchTableFun();
     });
   },
@@ -363,6 +365,7 @@ export default {
       position: relative;
     }
     .user_tree {
+      height: 100%;
       width: 240px;
       position: relative;
       background: #fff;

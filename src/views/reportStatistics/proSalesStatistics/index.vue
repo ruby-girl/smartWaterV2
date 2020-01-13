@@ -36,6 +36,7 @@
 import SelectHead from "./components/SelectHead";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { GetReportNrw, ExcelReportNrw } from "@/api/reports";
 export default {
   name: "proSalesStatistics",
   components: { SelectHead, SearchTips },
@@ -43,11 +44,9 @@ export default {
     return {
       selectHead: {
         SA_WaterFactory_Id: "-1", //水厂
-        CreateUser: "-1", //操作人
-        WaterType: -1, //水表类型
-        UserType: -1, //用户类型
-        createStartTime: "",
-        createEndTime: ""
+        WaterFactoryName: "", //操作人
+        YearMonth: "",
+        tableId: "0000039"
       },
       tableHeight: null,
       tableData: [], //表格数据
@@ -60,8 +59,7 @@ export default {
     delTips(val) {
       if (val == "dateArr") {
         //当返回的model 为时间数组  置空 时间
-        this.selectHead.createStartTime = "";
-        this.selectHead.createStartTime = "";
+        this.selectHead.YearMonth = "";
         this.$refs.seachChild.dateArr = [];
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
@@ -69,16 +67,36 @@ export default {
     },
     getText(val, model, arr, name) {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
-      console.log(obj);
       this.tipsDataCopy.push(obj);
     },
     //导出
     excel() {
-      console.log("导出");
+      if (this.tableData.length == 0) {
+        this.$message({
+          message: "当前列表暂无数据，不可导出！",
+          duration: 5 * 1000,
+          type: "warning"
+        });
+        return false;
+      }
+
+      ExcelReportNrw(this.selectHead).then(res => {
+        if (res.code == 0) {
+          window.location.href = `${this.common.excelPath}${res.data}`;
+        } else {
+          this.$message({
+            type: "warning",
+            msg: res.msg ? res.msg : "导出失败  "
+          });
+        }
+      });
     },
     //查询
     searchTableList() {
-      this.tipsData = pushItem(this.tipsDataCopy);
+      GetReportNrw(this.selectHead).then(res => {
+        this.tableData = res.data;
+        this.tipsData = pushItem(this.tipsDataCopy);
+      });
     }
   },
   mounted() {
