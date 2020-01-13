@@ -43,7 +43,7 @@
         </el-form-item>
         <!-- 物联网 -->
         <el-form-item 
-         :prop="user.WaterMeterTypeId==1104?'wlwWaterYield':''"
+         prop="wlwWaterYield"
          label="换表期间用水量" v-show="user.WaterMeterTypeId==1104" class="big-label-width">
           <el-input class="left-input" v-model="newUser.wlwWaterYield"></el-input>
         </el-form-item>
@@ -140,7 +140,6 @@ export default {
       }
     };
     const validateMeterBalance = (rule, value, callback) => {
-      console.info('yue=====',this.newUser.meterBalance)
       if (!this.newUser.meterBalance && this.user.WaterMeterTypeId == 1102) {
         //IC卡表端余额必填
         callback(new Error("必填"));
@@ -150,7 +149,6 @@ export default {
      
     };
     const validateOldRead=(rule, value, callback)=>{
-      console.info('原读数',this.newUser.oldRead)
        if (!this.newUser.oldRead && (this.user.WaterMeterTypeId == 1101||this.user.WaterMeterTypeId==1103)) {
         //IC卡表端余额必填
         callback(new Error("必填"));
@@ -158,9 +156,18 @@ export default {
         callback();
       }
     }
+    const validatewlwWaterYield=(rule, value, callback)=>{
+       if (!this.newUser.wlwWaterYield &&this.user.WaterMeterTypeId==1104) {
+        //IC卡表端余额必填
+        callback(new Error("必填"));
+      } else {
+        callback();
+      }
+    }
+
     return {
       user: {
-        WaterMeterTypeId: 1102
+        WaterMeterTypeId: 1104
       },
       newUser: {
         customerId: "",
@@ -191,7 +198,7 @@ export default {
           { required: true, trigger: "blur", validator: validateMeterBalance }
         ],
         oldRead: [{ required: true,validator: validateOldRead, trigger: "blur" }],
-        wlwWaterYield:[{ required: true, message: "必填", trigger: "blur" }]
+        wlwWaterYield:[{ required: true, validator: validatewlwWaterYield,trigger: "blur" }]
       }
     };
   },
@@ -218,20 +225,34 @@ export default {
       this.$refs["user"].validate(valid => {
         if (!valid) return false;
         else {
-          if (this.user.WaterMeterTypeId == 1102) {
+          if (this.user.WaterMeterTypeId == 1102&&!this.newUser.meterBalance) {
             //如果是IC卡验证表端余额必填
             // this.$refs["oldUser"].validate(valid => {
             //   if (!valid) return false;
-            if(!this.newUser.meterBalance){
+          
               this.$message({
                 message: "表端余额必填！",
                 type: "warning",
                 duration: 4000
               });
               return false
-            }
-              this.changeRes();
+            
+              // this.changeRes();
             // });
+          }else if((this.user.WaterMeterTypeId == 1103||this.user.WaterMeterTypeId == 1101)&&!this.newUser.oldRead){//远传
+               this.$message({
+                message: "原水表读数必填！",
+                type: "warning",
+                duration: 4000
+              });
+              return false
+          }else if(!this.newUser.wlwWaterYield&&this.user.WaterMeterTypeId == 1104){
+             this.$message({
+                message: "换表期间用水量必填！",
+                type: "warning",
+                duration: 4000
+              });
+              return false
           } else {
             this.changeRes();
           }
