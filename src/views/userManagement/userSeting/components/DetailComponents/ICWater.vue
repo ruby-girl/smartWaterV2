@@ -7,7 +7,7 @@
       <ul>
         <li class="user_line clearfix">
           <p class="half">水表编号 <span>{{ data.WaterMeterNo}}</span></p>
-          <p class="half">充值总金额 <span>{{ data.ReadNum}}</span></p>
+          <p class="half">充值总金额 <span>{{ data.SumAprice}}</span></p>
         </li>
         <li class="user_line clearfix">
           <p class="half">水表样式 <span>{{ data.WaterMeterStyleStr}}</span></p>
@@ -53,8 +53,8 @@
           }
         })
       },
-      setMeterNum(){
-        this.$refs.wlwChildMoudler.setNumber(this.ReadNum)
+      setMeterNum(){//IC卡默认0
+        this.$refs.wlwChildMoudler.setNumber(0)
       }
     }
   }
