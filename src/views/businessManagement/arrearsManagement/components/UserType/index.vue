@@ -355,7 +355,7 @@ export default {
         customClass: "warningBox",
         showClose: false
       }).then(() => {
-         OrdersFeeCancels({ SA_Order_Ids: this.checkedDataId }).then(res => {
+         OrdersFeeCancels({SA_Order_Ids:this.checkedDataId }).then(res => {
         this.$message({
           message: res.message,
           type: "success",

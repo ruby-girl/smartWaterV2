@@ -154,8 +154,13 @@ export default {
       show5: true
     };
   },
+  mounted(){
+    this.waterWorks = this.$store.state.user.waterWorks;
+    console.info('看看水厂',this.$store.state.user.waterWorks)
+  },
   created() {
     this.waterWorks = this.$store.state.user.waterWorks;
+    console.info('看看水厂',this.$store.state.user.waterWorks)
     if (this.waterWorks.length == 1) {
       this.selectHead.SA_WaterFactory_Id = this.waterWorks[0].Id;
     }

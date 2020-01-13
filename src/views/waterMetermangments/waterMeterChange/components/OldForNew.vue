@@ -133,15 +133,14 @@ export default {
   props: { ifShow: {} },
   data() {
     const validateNewRead = (rule, value, callback) => {
-      if (!value && this.user.WaterMeterTypeId == 1101) {
+      if (!this.newUser.newRead && this.user.WaterMeterTypeId == 1101) {
         callback(new Error("必填"));
       } else {
         callback();
       }
     };
     const validateMeterBalance = (rule, value, callback) => {
-
-      if (!value && this.user.WaterMeterTypeId == 1102) {
+      if (!this.newUser.meterBalance && this.user.WaterMeterTypeId == 1102) {
         //IC卡表端余额必填
         callback(new Error("必填"));
       } else {
@@ -149,9 +148,17 @@ export default {
       }
      
     };
+    const validateOldRead=(rule, value, callback)=>{
+       if (!this.newUser.oldRead && (this.user.WaterMeterTypeId == 1101||this.user.WaterMeterTypeId==1103)) {
+        //IC卡表端余额必填
+        callback(new Error("必填"));
+      } else {
+        callback();
+      }
+    }
     return {
       user: {
-        WaterMeterTypeId: 1101
+        WaterMeterTypeId: 1102
       },
       newUser: {
         customerId: "",
@@ -181,7 +188,7 @@ export default {
         meterBalance: [
           { required: true, trigger: "blur", validator: validateMeterBalance }
         ],
-        oldRead: [{ required: true, message: "必填", trigger: "blur" }],
+        oldRead: [{ required: true,validator: validateOldRead, trigger: "blur" }],
         wlwWaterYield:[{ required: true, message: "必填", trigger: "blur" }]
       }
     };
@@ -293,9 +300,11 @@ export default {
             duration: 4000
           });
           this.user = {};
+           this.newUser.customerId = '';
         } else if (res.data.length == 1) {      
           if (info){
             this.user = res.data[0];
+            this.newUser.customerId = res.data[0].Id;
           }else{//如果不是读卡数据，查询出来是IC卡用户，提示需读卡操作
             if(res.data[0].WaterMeterTypeId=='1102'){
               this.$message({
@@ -306,6 +315,7 @@ export default {
               return
             }else{
               this.user = res.data[0];
+               this.newUser.customerId = res.data[0].Id;
             }
           }
         }else {
