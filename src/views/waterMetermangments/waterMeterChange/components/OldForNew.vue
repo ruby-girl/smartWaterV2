@@ -36,7 +36,7 @@
         <!-- 机械或远传    -->
         <el-form-item
           label="原水表读数"
-          :prop="user.WaterMeterTypeId==1101||user.WaterMeterTypeId==1103?'oldRead':''"
+          prop="oldRead"
           v-show="user.WaterMeterTypeId==1101||user.WaterMeterTypeId==1103"
         >
           <el-input class="left-input" v-model="newUser.oldRead"></el-input>
@@ -53,7 +53,7 @@
         <!-- IC -->
         <el-form-item
           label="表端余额"
-          :prop="user.WaterMeterTypeId==1102?'meterBalance':''"
+          prop="meterBalance"
           v-show="user.WaterMeterTypeId==1102"
         >
           <el-input
@@ -140,6 +140,7 @@ export default {
       }
     };
     const validateMeterBalance = (rule, value, callback) => {
+      console.info('yue=====',this.newUser.meterBalance)
       if (!this.newUser.meterBalance && this.user.WaterMeterTypeId == 1102) {
         //IC卡表端余额必填
         callback(new Error("必填"));
@@ -149,6 +150,7 @@ export default {
      
     };
     const validateOldRead=(rule, value, callback)=>{
+      console.info('原读数',this.newUser.oldRead)
        if (!this.newUser.oldRead && (this.user.WaterMeterTypeId == 1101||this.user.WaterMeterTypeId==1103)) {
         //IC卡表端余额必填
         callback(new Error("必填"));
@@ -218,10 +220,18 @@ export default {
         else {
           if (this.user.WaterMeterTypeId == 1102) {
             //如果是IC卡验证表端余额必填
-            this.$refs["oldUser"].validate(validIC => {
-              if (!validIC) return false;
+            // this.$refs["oldUser"].validate(valid => {
+            //   if (!valid) return false;
+            if(!this.newUser.meterBalance){
+              this.$message({
+                message: "表端余额必填！",
+                type: "warning",
+                duration: 4000
+              });
+              return false
+            }
               this.changeRes();
-            });
+            // });
           } else {
             this.changeRes();
           }
