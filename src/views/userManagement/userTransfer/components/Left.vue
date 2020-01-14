@@ -12,23 +12,39 @@
       <el-form ref="form" label-width="70px" style="margin-top:10px;">
         <el-form-item label="姓名">
           <el-input
-          class="left-input"
+            class="left-input"
             v-model="user.CustomerName"
             @keyup.enter.native="handleSelect(user.CustomerName,2)"
             placeholder="回车进行模糊查询"
           ></el-input>
         </el-form-item>
         <el-form-item label="电话">
-          <el-input class="left-input" v-model="user.Tel" @keyup.enter.native="handleSelect(user.Tel,3)"></el-input>
+          <el-input
+            class="left-input"
+            v-model="user.Tel"
+            @keyup.enter.native="handleSelect(user.Tel,3)"
+          ></el-input>
         </el-form-item>
         <el-form-item label="用户编号">
-          <el-input  class="left-input" v-model="user.CustomerNo" @keyup.enter.native="handleSelect(user.CustomerNo,1)"></el-input>
+          <el-input
+            class="left-input"
+            v-model="user.CustomerNo"
+            @keyup.enter.native="handleSelect(user.CustomerNo,1)"
+          ></el-input>
         </el-form-item>
         <el-form-item label="证件号">
-          <el-input class="left-input" v-model="user.IdentityNo" @keyup.enter.native="handleSelect(user.IdentityNo,4)"></el-input>
+          <el-input
+            class="left-input"
+            v-model="user.IdentityNo"
+            @keyup.enter.native="handleSelect(user.IdentityNo,4)"
+          ></el-input>
         </el-form-item>
         <el-form-item label="地址">
-          <el-input class="left-input" v-model="user.Address" @keyup.enter.native="handleSelect(user.Address,5)"></el-input>
+          <el-input
+            class="left-input"
+            v-model="user.Address"
+            @keyup.enter.native="handleSelect(user.Address,5)"
+          ></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -36,23 +52,34 @@
       <div class="display-flex align-items-center justify-content-flex-justify">
         <div class="font-weight pl-15 top-title">新用户信息</div>
       </div>
-      <el-form :model="newUser" ref="user" :rules="rules" label-width="68px" style="margin-top:10px;">
+      <el-form
+        :model="newUser"
+        ref="user"
+        :rules="rules"
+        label-width="68px"
+        style="margin-top:10px;"
+      >
         <div class="display-flex align-items-center justify-content-flex-justify">
           <el-form-item label="姓名" prop="NewCustomerName">
-            <el-input  v-model="newUser.NewCustomerName" class="short-input"></el-input>
+            <el-input v-model="newUser.NewCustomerName" class="short-input"></el-input>
           </el-form-item>
           <el-form-item label="人口" label-width="55px" prop="NewPeopleNo">
-            <el-input class="people-input" v-model="newUser.NewPeopleNo" maxlength="1" @keyup.native="testNumber"></el-input>
+            <el-input
+              class="people-input"
+              v-model="newUser.NewPeopleNo"
+              maxlength="1"
+              @keyup.native="testNumber"
+            ></el-input>
           </el-form-item>
         </div>
         <el-form-item label="电话" prop="NewTel">
-          <el-input class="left-input"  v-model="newUser.NewTel" maxlength="11"></el-input>
+          <el-input class="left-input" v-model="newUser.NewTel" maxlength="11"></el-input>
         </el-form-item>
         <el-form-item label="证件号" prop="NewIdentityNo">
           <el-input class="left-input" v-model="newUser.NewIdentityNo" maxlength="18"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input  type="textarea" v-model="newUser.Remark"></el-input>
+          <el-input type="textarea" v-model="newUser.Remark"></el-input>
         </el-form-item>
       </el-form>
       <div class="bottom-btn-box">
@@ -83,7 +110,7 @@
 </template>
 <script>
 import "@/styles/organization.scss";
-import { IsTransfer,TransferCustomer } from "@/api/userAccount";
+import { IsTransfer, TransferCustomer } from "@/api/userAccount";
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import SelectUser from "@/components/SelectUser";
 import AccountBalances from "./AccountBalances";
@@ -100,7 +127,7 @@ export default {
       user: {},
       accountShow: false, //账户转存弹窗
       newUser: {
-        CustomerId:'',
+        CustomerId: "",
         NewCustomerName: "", //姓名
         NewTel: "", //电话
         NewPeopleNo: "", //人口
@@ -159,8 +186,8 @@ export default {
       }
       this.$emit("getUp", this.ifShowChild);
     },
-    testNumber(){
-      this.newUser.NewPeopleNo = this.newUser.NewPeopleNo.replace(/[^\d]/g,'');
+    testNumber() {
+      this.newUser.NewPeopleNo = this.newUser.NewPeopleNo.replace(/[^\d]/g, "");
     },
     account() {
       if (!this.user.CustomerNo) {
@@ -171,13 +198,13 @@ export default {
         });
         return;
       }
-      if(this.IsArrearageRes.IsArrearage){
-           this.$message({
-            message: "您选择的用户存在欠费不允许过户!",
-            type: "error",
-            duration: 4000
-          });
-          return
+      if (this.IsArrearageRes.IsArrearage) {
+        this.$message({
+          message: "您选择的用户存在欠费不允许过户!",
+          type: "error",
+          duration: 4000
+        });
+        return;
       }
       this.$refs["user"].validate(valid => {
         if (!valid) return false;
@@ -186,33 +213,33 @@ export default {
         }
       });
     },
-    IsBalanceDepositFunc() {      
+    IsBalanceDepositFunc() {
       this.accountShow = true;
     },
-     //进行过户操作
-    accountBalancesFunc(user) { 
-      user.FileIdList=this.file
-      this.accountShow=false
-      TransferCustomer(user).then(res=>{
+    //进行过户操作
+    accountBalancesFunc(user) {
+      user.FileIdList = this.file;
+      this.accountShow = false;
+      TransferCustomer(user).then(res => {
         this.$message({
-            message: "操作成功！",
-            type: "success",
-            duration: 4000
-          });
-          this.user={}
-          this.newUser={
-            CustomerId:'',
-            NewCustomerName: "", //姓名
-            NewTel: "", //电话
-            NewPeopleNo: "", //人口
-            NewIdentityNo: "", //证件号
-            Remark: "", //备注
-            FileIdList: [], //文件合集
-            BalanceValue: 0, //余额
-            OperatorEmpId: "", //经办人ID
-            IsBalanceDeposit: false //是否转存
-          }
-      })
+          message: "操作成功！",
+          type: "success",
+          duration: 4000
+        });
+        this.user = {};
+        this.newUser = {
+          CustomerId: "",
+          NewCustomerName: "", //姓名
+          NewTel: "", //电话
+          NewPeopleNo: "", //人口
+          NewIdentityNo: "", //证件号
+          Remark: "", //备注
+          FileIdList: [], //文件合集
+          BalanceValue: 0, //余额
+          OperatorEmpId: "", //经办人ID
+          IsBalanceDeposit: false //是否转存
+        };
+      });
     },
     // 模糊查询用户
     handleSelect(val, n) {
@@ -222,64 +249,63 @@ export default {
       }
       this.params.CustomerQueryValue = val;
       this.params.CustomerQueryType = n;
-      this.getUser()
+      this.getUser();
     },
     handleFilter(val) {
-      if(res.data[0].CustomerState!=1301){
-             this.$message({
-            message: "请注意该用户状态不正常！",
-            type: "error",
-            duration: 4000
-          });
-          return
-          } 
-       if(val.WaterMeterTypeId==1102){
-         this.$message({
-            message: "卡表用户请先读卡！",
-            type: "error",
-            duration: 4000
-          });
-          return
-       }
+      if (res.data[0].CustomerState != 1301) {
+        this.$message({
+          message: "请注意该用户状态不正常！",
+          type: "error",
+          duration: 4000
+        });
+        this.user = {};
+        return;
+      }
+      if (val.WaterMeterTypeId == 1102) {
+        this.$message({
+          message: "卡表用户请先读卡！",
+          type: "error",
+          duration: 4000
+        });
+        return;
+      }
       this.user = val;
-     
       this.IsTransferFunc(val.Id);
     },
     // 查询用户是否有欠费
     IsTransferFunc(id) {
-      this.newUser.CustomerId=id
+      this.newUser.CustomerId = id;
       IsTransfer({ CustomerId: id }).then(res => {
-        this.user.BalanceValue=res.data.Balance
-        this.newUser.BalanceValue=res.data.Balance
+        this.user.BalanceValue = res.data.Balance;
+        this.newUser.BalanceValue = res.data.Balance;
         this.IsArrearageRes = res.data;
       });
     },
     // IC卡读卡
-    handleFilterIC(){
+    handleFilterIC() {
       try {
-          // 读卡
-        ICReadCardInfo((resData)=>{
-          this.getUser(resData)    
-        })
+        // 读卡
+        ICReadCardInfo(resData => {
+          this.getUser(resData);
+        });
       } catch (error) {
         console.log("请在CS端操作1");
       }
     },
-     // 查询用户信息
-    getUser(info){
-      let postData={} 
-      if(info){
-        if(info.CardType==1){
-          postData.CustomerQueryValue=info.UserCardCredited.CardNo;
+    // 查询用户信息
+    getUser(info) {
+      let postData = {};
+      if (info) {
+        if (info.CardType == 1) {
+          postData.CustomerQueryValue = info.UserCardCredited.CardNo;
+        } else {
+          postData.CustomerQueryValue = info.UserCard.CardNo;
         }
-        else{
-          postData.CustomerQueryValue=info.UserCard.CardNo;
-        }
-        postData.CustomerQueryType="8";
-        postData.page=1;
-        postData.limit=20
-      }else{ 
-        postData=Object.assign({},this.params)
+        postData.CustomerQueryType = "8";
+        postData.page = 1;
+        postData.limit = 20;
+      } else {
+        postData = Object.assign({}, this.params);
       }
       GetCustomerDataList(postData).then(res => {
         if (res.data.length == 0) {
@@ -290,42 +316,43 @@ export default {
           });
           this.user = {};
         } else if (res.data.length == 1) {
-          if(res.data[0].CustomerState!=1301){
-             this.$message({
-            message: "请注意该用户状态不正常！",
-            type: "error",
-            duration: 4000
-          });
-          return
-          } 
-          if(res.data[0].WaterMeterTypeId==1102&&!info){
-             this.$message({
-            message: "卡表用户请先读卡！",
-            type: "error",
-            duration: 4000
-          });
-          return
+          if (res.data[0].CustomerState != 1301) {
+            this.$message({
+              message: "请注意该用户状态不正常！",
+              type: "error",
+              duration: 4000
+            });
+            this.user = {};
+            return;
           }
-           this.user = res.data[0];
+          if (res.data[0].WaterMeterTypeId == 1102 && !info) {
+            this.$message({
+              message: "卡表用户请先读卡！",
+              type: "error",
+              duration: 4000
+            });
+            return;
+          }
+          this.user = res.data[0];
           this.IsTransferFunc(this.user.Id);
         } else {
           this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
         }
       });
-    },
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
-.type-title{
-  color:#777;
+.type-title {
+  color: #777;
   padding: 11px 0;
   font-weight: bold;
   font-size: 14px;
 }
-.top-title{
-color:#535353;
-font-size: 14px;
+.top-title {
+  color: #535353;
+  font-size: 14px;
 }
 .tree_container {
   .icon {
@@ -377,7 +404,7 @@ font-size: 14px;
       padding: 0 13px;
       margin-right: 16px;
       height: 100%;
-    overflow: auto;
+      overflow: auto;
     }
     .user_table {
       flex: 1;
@@ -388,22 +415,22 @@ font-size: 14px;
       overflow: hidden;
     }
   }
-  .short-input{
-    width:80px;
-   /deep/ input.el-input__inner{
-      width:100% !important;
+  .short-input {
+    width: 80px;
+    /deep/ input.el-input__inner {
+      width: 100% !important;
     }
   }
-  .left-input{
-    width:170px !important;
-     /deep/ input.el-input__inner{
-      width:100% !important;
+  .left-input {
+    width: 170px !important;
+    /deep/ input.el-input__inner {
+      width: 100% !important;
     }
   }
-  .people-input{
-    width:35px;
-   /deep/ input.el-input__inner{
-      width:100% !important;
+  .people-input {
+    width: 35px;
+    /deep/ input.el-input__inner {
+      width: 100% !important;
       padding: 0 2px;
       text-align: center;
     }

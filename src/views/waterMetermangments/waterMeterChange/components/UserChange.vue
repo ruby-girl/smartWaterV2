@@ -140,7 +140,6 @@ export default {
   methods: {
     // 模糊查询用户 val:输入的值 n:模糊查询类型,userType: 1旧用户2新用户
     handleSelect(val, n, userType) {
-      debugger
       if (!val) {
         if (userType == 1) this.user = {};
         else  this.newUser = {};
@@ -159,6 +158,16 @@ export default {
           if (userType == 1) this.user = {};
           else this.newUser = {};
         } else if (res.data.length == 1) {
+          if(res.data[0].CustomerState!=1301){
+             this.$message({
+            message: "请注意该用户状态不正常！",
+            type: "error",
+            duration: 4000
+          });
+          if (userType == 1) this.user = {};
+          else this.newUser = {};
+          return
+          } 
           if (userType == 1) this.user = res.data[0];
           else this.newUser = res.data[0];
         } else {
@@ -192,6 +201,20 @@ export default {
       });
     },
     handleFilter(val) {
+       if(val.CustomerState!=1301){
+             this.$message({
+            message: "请注意该用户状态不正常！",
+            type: "error",
+            duration: 4000
+          });
+          if(this.setUserType==1){
+          this.user = {};
+         }else{
+         this.newUser={}
+        }
+          return
+       }
+
       if(this.setUserType==1){
         this.user = val;
       }else{

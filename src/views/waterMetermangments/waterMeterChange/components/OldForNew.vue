@@ -43,36 +43,24 @@
           <el-input class="left-input" v-model="newUser.oldRead"></el-input>
         </el-form-item>
         <!-- 物联网 -->
-        <el-form-item 
-         prop="wlwWaterYield"
-         label="换表期间用水量" v-show="user.WaterMeterTypeId==1104" class="big-label-width">
+        <el-form-item
+          prop="wlwWaterYield"
+          label="换表期间用水量"
+          v-show="user.WaterMeterTypeId==1104"
+          class="big-label-width"
+        >
           <el-input class="left-input" v-model="newUser.wlwWaterYield"></el-input>
         </el-form-item>
         <el-form-item label="原水表编号">
           <el-input class="left-input" v-model="user.SA_WaterMeterNo" :disabled="true"></el-input>
         </el-form-item>
         <!-- IC -->
-        <el-form-item
-          label="表端余额"
-          prop="meterBalance"
-          v-show="user.WaterMeterTypeId==1102"
-        >
-          <el-input
-            class="left-input"
-            v-model="newUser.meterBalance"
-            :disabled="false"
-          ></el-input>
+        <el-form-item label="表端余额" prop="meterBalance" v-show="user.WaterMeterTypeId==1102">
+          <el-input class="left-input" v-model="newUser.meterBalance" :disabled="false"></el-input>
         </el-form-item>
         <!-- 物联网账户余额-->
-         <el-form-item
-          label="账户余额"
-          v-show="user.WaterMeterTypeId==1104"
-        >
-          <el-input
-            class="left-input"
-            v-model="newUser.meterBalance"
-            :disabled="true"
-          ></el-input>
+        <el-form-item label="账户余额" v-show="user.WaterMeterTypeId==1104">
+          <el-input class="left-input" v-model="newUser.meterBalance" :disabled="true"></el-input>
         </el-form-item>
         <!-- 物联网e -->
         <el-form-item label="账户余额" v-show="user.WaterMeterTypeId!==1104">
@@ -147,24 +135,27 @@ export default {
       } else {
         callback();
       }
-     
     };
-    const validateOldRead=(rule, value, callback)=>{
-       if (!this.newUser.oldRead && (this.user.WaterMeterTypeId == 1101||this.user.WaterMeterTypeId==1103)) {
+    const validateOldRead = (rule, value, callback) => {
+      if (
+        !this.newUser.oldRead &&
+        (this.user.WaterMeterTypeId == 1101 ||
+          this.user.WaterMeterTypeId == 1103)
+      ) {
         //IC卡表端余额必填
         callback(new Error("必填"));
       } else {
         callback();
       }
-    }
-    const validatewlwWaterYield=(rule, value, callback)=>{
-       if (!this.newUser.wlwWaterYield &&this.user.WaterMeterTypeId==1104) {
+    };
+    const validatewlwWaterYield = (rule, value, callback) => {
+      if (!this.newUser.wlwWaterYield && this.user.WaterMeterTypeId == 1104) {
         //IC卡表端余额必填
         callback(new Error("必填"));
       } else {
         callback();
       }
-    }
+    };
 
     return {
       user: {
@@ -198,8 +189,12 @@ export default {
         meterBalance: [
           { required: true, trigger: "blur", validator: validateMeterBalance }
         ],
-        oldRead: [{ required: true,validator: validateOldRead, trigger: "blur" }],
-        wlwWaterYield:[{ required: true, validator: validatewlwWaterYield,trigger: "blur" }]
+        oldRead: [
+          { required: true, validator: validateOldRead, trigger: "blur" }
+        ],
+        wlwWaterYield: [
+          { required: true, validator: validatewlwWaterYield, trigger: "blur" }
+        ]
       }
     };
   },
@@ -212,7 +207,7 @@ export default {
       }
       this.params.CustomerQueryValue = val;
       this.params.CustomerQueryType = n;
-      this.getUser()
+      this.getUser();
     },
     change() {
       if (!this.user.CustomerNo) {
@@ -223,23 +218,22 @@ export default {
         });
         return;
       }
-      var isPass=this.testUser()
-      var isNewPass=this.testNewUser()
-     if(isNewPass&&isPass){
-       this.changeRes();
-     }
+      var isPass = this.testUser();
+      var isNewPass = this.testNewUser();
+      if (isNewPass && isPass) {
+        this.changeRes();
+      }
     },
-    testUser(){
+    testUser() {
       this.$refs["oldUser"].validate(valid => {
-        console.info(valid)
         if (!valid) return false;
-        return true
-      })  
+        return true;
+      });
     },
-    testNewUser(){
-       this.$refs["user"].validate(valid => {
-        if (!valid) return false; 
-        return true
+    testNewUser() {
+      this.$refs["user"].validate(valid => {
+        if (!valid) return false;
+        return true;
       });
     },
     //进行过户操作
@@ -252,7 +246,6 @@ export default {
           type: "success",
           duration: 4000
         });
-        console.info(res)
         this.user = {};
         this.newUser = {
           customerId: "",
@@ -266,13 +259,23 @@ export default {
       });
     },
     handleFilter(val) {
-      if(val.WaterMeterTypeId=='1102'){
+      if (res.data[0].CustomerState != 1301) {
+        this.$message({
+          message: "请注意该用户状态不正常！",
+          type: "error",
+          duration: 4000
+        });
+        this.user = {};
+        this.newUser.customerId = "";
+        return;
+      }
+      if (val.WaterMeterTypeId == "1102") {
         this.$message({
           message: "卡表用户请先读卡！",
           type: "warning",
           duration: 4000
         });
-        return
+        return;
       }
       this.user = val;
       this.newUser.customerId = val.Id;
@@ -290,8 +293,8 @@ export default {
     },
     // 查询用户信息
     getUser(info) {
-     let postData={} 
-      if(info){
+      let postData = {};
+      if (info) {
         if (info.CardType !== 1) {
           this.$message({
             message: "该卡是未刷卡状态，请刷卡后再进行操作",
@@ -299,12 +302,12 @@ export default {
           });
           return false;
         }
-        postData.CustomerQueryValue=info.UserCardCredited.CardNo;
-        postData.CustomerQueryType="8";
-        postData.page=1;
-        postData.limit=20
-      }else{ 
-        postData=Object.assign({},this.params)
+        postData.CustomerQueryValue = info.UserCardCredited.CardNo;
+        postData.CustomerQueryType = "8";
+        postData.page = 1;
+        postData.limit = 20;
+      } else {
+        postData = Object.assign({}, this.params);
       }
       GetCustomerDataList(postData).then(res => {
         if (res.data.length == 0) {
@@ -314,25 +317,36 @@ export default {
             duration: 4000
           });
           this.user = {};
-           this.newUser.customerId = '';
-        } else if (res.data.length == 1) {      
-          if (info){
+          this.newUser.customerId = "";
+        } else if (res.data.length == 1) {
+          if (info) {
             this.user = res.data[0];
             this.newUser.customerId = res.data[0].Id;
-          }else{//如果不是读卡数据，查询出来是IC卡用户，提示需读卡操作
-            if(res.data[0].WaterMeterTypeId=='1102'){
+          } else {
+            //如果不是读卡数据，查询出来是IC卡用户，提示需读卡操作
+            if (res.data[0].CustomerState != 1301) {
+              this.$message({
+                message: "请注意该用户状态不正常！",
+                type: "error",
+                duration: 4000
+              });
+               this.user = {};
+              this.newUser.customerId = "";
+              return;
+            }
+            if (res.data[0].WaterMeterTypeId == "1102") {
               this.$message({
                 message: "卡表用户请先读卡！",
                 type: "warning",
                 duration: 4000
               });
-              return
-            }else{
+              return;
+            } else {
               this.user = res.data[0];
-               this.newUser.customerId = res.data[0].Id;
+              this.newUser.customerId = res.data[0].Id;
             }
           }
-        }else {
+        } else {
           this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
         }
       });
