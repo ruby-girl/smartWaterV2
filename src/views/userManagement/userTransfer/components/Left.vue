@@ -66,7 +66,7 @@
       <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
     </span>
     <div class="bottom-btn-box">
-      <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户</el-button>
+      <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户1</el-button>
     </div>
     <fileList :show.sync="fileShow" :file.sync="file"></fileList>
     <select-user
@@ -225,6 +225,14 @@ export default {
       this.getUser()
     },
     handleFilter(val) {
+      if(res.data[0].CustomerState!=1301){
+             this.$message({
+            message: "请注意该用户状态不正常！",
+            type: "error",
+            duration: 4000
+          });
+          return
+          } 
        if(val.WaterMeterTypeId==1102){
          this.$message({
             message: "卡表用户请先读卡！",
@@ -282,7 +290,7 @@ export default {
           });
           this.user = {};
         } else if (res.data.length == 1) {
-          if(res.data[0].CustomerState!==1301){
+          if(res.data[0].CustomerState!=1301){
              this.$message({
             message: "请注意该用户状态不正常！",
             type: "error",
