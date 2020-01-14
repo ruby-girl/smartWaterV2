@@ -83,7 +83,10 @@
         label-width="86px"
         style="margin-top:10px;"
       >
-        <el-form-item label="新水表编号" prop="newWaterMeterNo">
+        <el-form-item label="新水表编号" prop="newWaterMeterNo" v-if="user.WaterMeterTypeId!==1101">
+          <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
+        </el-form-item>
+        <el-form-item label="新水表编号" v-else>
           <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
         </el-form-item>
         <el-form-item label="新水表读数" prop="newRead" v-show="user.WaterMeterTypeId==1101">
@@ -160,7 +163,7 @@ export default {
 
     return {
       user: {
-        WaterMeterTypeId: 1104
+        WaterMeterTypeId: 1101
       },
       newUser: {
         customerId: "",
@@ -180,7 +183,7 @@ export default {
       },
       selectUserShow: false,
       rules: {
-        newWaterMeterNo: [{ required: true, message: "必填", trigger: "blur" }],
+         newWaterMeterNo: [{ required: true, message: "必填", trigger: "blur" }],
         newRead: [
           { required: true, trigger: "blur", validator: validateNewRead }
         ],

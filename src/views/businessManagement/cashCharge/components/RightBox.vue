@@ -169,6 +169,7 @@ export default {
             ){
               _this.isFirst = true;
             }else _this.isFirst = false;
+            console.log('是不是第一次',_this.isFirst)
         }
         _this.$refs.myInput.select();
        }, 300);
@@ -320,7 +321,8 @@ export default {
         this.num = "0.00";
         this.surplus = "0.00";
         this.$emit("update:unpaidMoney", "0.00");
-        this.unpaidMoney = "0.00";  
+        this.unpaidMoney = "0.00"; 
+        this.isFirst=false
       //结算完成后，父元素全选置为false，卡片获取列表再设置全选
         this.wCard(); //写卡  如果实收金额（input值-应收）=0，不写卡
       });
