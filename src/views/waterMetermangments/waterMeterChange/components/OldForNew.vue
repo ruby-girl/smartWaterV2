@@ -116,7 +116,8 @@
 import { OldChangeNew, GetICK_OldChangeNew } from "@/api/waterMeterMang";
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import SelectUser from "@/components/SelectUser";
-import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
+import { ICReadCardInfo,WriteCardInfo } from "@/utils/projectLogic"; //IC卡读卡
+import {RollBackICSettlement} from "@/api/cashCharge";
 export default {
   components: { SelectUser },
   props: { ifShow: {} },
@@ -218,23 +219,26 @@ export default {
         });
         return;
       }
-      var isPass = this.testUser();
-      var isNewPass = this.testNewUser();
+      let isPass,isNewPass;
+      isPass = this.testUser();
+      isNewPass = this.testNewUser();
       if (isNewPass && isPass) {
         this.changeRes();
       }
     },
     testUser() {
+      let isPass;
       this.$refs["oldUser"].validate(valid => {
-        if (!valid) return false;
-        return true;
+       isPass=valid  
       });
+      return isPass
     },
     testNewUser() {
+      let isPass;
       this.$refs["user"].validate(valid => {
-        if (!valid) return false;
-        return true;
+        isPass=valid
       });
+     return isPass
     },
     //进行过户操作
     changeRes() {
@@ -246,6 +250,9 @@ export default {
           type: "success",
           duration: 4000
         });
+        if( this.user.WaterMeterTypeId == 1102){
+          this.wCard(res.data)
+        }    
         this.user = {};
         this.newUser = {
           customerId: "",
@@ -257,6 +264,14 @@ export default {
           isPage: false //是否翻页
         };
       });
+    },
+     //换表成功，进行写卡操作
+    wCard(Info) {    
+        WriteCardInfo(Info, errorRes => {
+          // 读卡
+          // 错误回调，执行回滚
+        RollBackICSettlement({ businessId: errorRes.BusinessId })      
+        })  
     },
     handleFilter(val) {
       if (res.data[0].CustomerState != 1301) {

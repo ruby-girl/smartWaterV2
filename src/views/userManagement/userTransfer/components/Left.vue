@@ -93,7 +93,7 @@
       <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
     </span>
     <div class="bottom-btn-box">
-      <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户1</el-button>
+      <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户</el-button>
     </div>
     <fileList :show.sync="fileShow" :file.sync="file"></fileList>
     <select-user
