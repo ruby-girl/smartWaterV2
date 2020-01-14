@@ -118,6 +118,23 @@
         total:0,
         checksData:[],
         query:{
+          CustomerQueryType: "1",
+          CustomerQueryValue: "",
+          UserType: "-1",
+          UserState: "-1",
+          AreaId: "-1",
+          WaterTypeId: -1,
+          WaterFactoryId:'',
+          limit: 20,
+          page: 1,
+          sort: "",
+          filed: "",
+          createUserId: "",
+          createStartTime: "",
+          createEndTime: "",
+          editUserId: "",
+          editStartTime: "",
+          editEndTime: "",
           tableId: "0000016"
         },
         customHeight:'',
@@ -147,7 +164,8 @@
       /******************查询，触发父级查询方法**********************/
       searchFun(type){
         if(type instanceof Object == false){//为false 则为区分水表类型条件查询，true 为普通分页查询
-          this.query.WaterTypeId = type//更改查询水表类型
+          //this.query.WaterTypeId = type//更改查询水表类型
+          this.$parent.query.WaterTypeId = type//更改查询水表类型
         }
         this.$parent.getTableLine()
       },

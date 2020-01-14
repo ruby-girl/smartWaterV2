@@ -3,7 +3,6 @@
     <div>
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <!--列表组建 s-->
-     <!-- <p class="legacyArrears">截止今日{{waterFactory}}水厂当前遗留欠款（水费/垃圾/其他）为：{{money}}</p>-->
       <p class="legacyArrears">{{waterFactoryInfo}}</p>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" style="margin-top: 68px;"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
@@ -184,7 +183,6 @@
       searchFun() {//查询事件
         FeeStatisticsReportGetList(this.param).then(res => {
           if (res.code == 0 ) {
-            console.log(res.data)
             this.tableData = res.data;
             this.tipsData = pushItem(this.tipsDataCopy)
           } else {
@@ -207,6 +205,10 @@
        * param  对应搜索条件的对象名
        */
       delTips(val) {
+        if(val=='createStartTimes'){
+          promptInfoFun(this,1,'日期不能为空!')
+          return false
+        }
         this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()
       },
