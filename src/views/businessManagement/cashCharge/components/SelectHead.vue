@@ -142,6 +142,9 @@ export default {
         this.$emit("update:icInfo",info)
         if(info.CardType==1){
           postData.CustomerQueryValue=info.UserCardCredited.CardNo;
+          postData.CustomerQueryType="8";
+          postData.page=1;
+          postData.limit=20
         }
         else{
           postData.CustomerQueryValue=info.UserCard.CardNo;

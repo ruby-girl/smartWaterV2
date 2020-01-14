@@ -227,18 +227,12 @@ export default {
         else {
           if (this.user.WaterMeterTypeId == 1102&&!this.newUser.meterBalance) {
             //如果是IC卡验证表端余额必填
-            // this.$refs["oldUser"].validate(valid => {
-            //   if (!valid) return false;
-          
               this.$message({
                 message: "表端余额必填！",
                 type: "warning",
                 duration: 4000
               });
               return false
-            
-              // this.changeRes();
-            // });
           }else if((this.user.WaterMeterTypeId == 1103||this.user.WaterMeterTypeId == 1101)&&!this.newUser.oldRead){//远传
                this.$message({
                 message: "原水表读数必填！",
@@ -256,7 +250,6 @@ export default {
           } else {
             this.changeRes();
           }
-          //如果双方信息通过，这里询问账户余额是否转存
         }
       });
     },
