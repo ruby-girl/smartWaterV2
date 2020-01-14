@@ -64,7 +64,7 @@
         <el-form-item label="用户编号">
           <el-input
             class="left-input"
-            @keyup.enter.native="handleSelect(newUser.CustomerName,1,2)"
+            @keyup.enter.native="handleSelect(newUser.CustomerNo,1,2)"
             v-model="newUser.CustomerNo"
           ></el-input>
         </el-form-item>
@@ -140,6 +140,7 @@ export default {
   methods: {
     // 模糊查询用户 val:输入的值 n:模糊查询类型,userType: 1旧用户2新用户
     handleSelect(val, n, userType) {
+      debugger
       if (!val) {
         if (userType == 1) this.user = {};
         else  this.newUser = {};

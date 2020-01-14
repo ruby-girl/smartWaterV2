@@ -10,6 +10,7 @@
       </div>
       <el-form
         class="head-search-form big-margin-label"
+        :model="user"
         ref="oldUser"
         :rules="oldUser"
         label-width="86px"
@@ -222,35 +223,23 @@ export default {
         });
         return;
       }
-      this.$refs["user"].validate(valid => {
+      var isPass=this.testUser()
+      var isNewPass=this.testNewUser()
+     if(isNewPass&&isPass){
+       this.changeRes();
+     }
+    },
+    testUser(){
+      this.$refs["oldUser"].validate(valid => {
+        console.info(valid)
         if (!valid) return false;
-        else {
-          if (this.user.WaterMeterTypeId == 1102&&!this.newUser.meterBalance) {
-            //如果是IC卡验证表端余额必填
-              this.$message({
-                message: "表端余额必填！",
-                type: "warning",
-                duration: 4000
-              });
-              return false
-          }else if((this.user.WaterMeterTypeId == 1103||this.user.WaterMeterTypeId == 1101)&&!this.newUser.oldRead){//远传
-               this.$message({
-                message: "原水表读数必填！",
-                type: "warning",
-                duration: 4000
-              });
-              return false
-          }else if(!this.newUser.wlwWaterYield&&this.user.WaterMeterTypeId == 1104){
-             this.$message({
-                message: "换表期间用水量必填！",
-                type: "warning",
-                duration: 4000
-              });
-              return false
-          } else {
-            this.changeRes();
-          }
-        }
+        return true
+      })  
+    },
+    testNewUser(){
+       this.$refs["user"].validate(valid => {
+        if (!valid) return false; 
+        return true
       });
     },
     //进行过户操作
@@ -263,6 +252,7 @@ export default {
           type: "success",
           duration: 4000
         });
+        console.info(res)
         this.user = {};
         this.newUser = {
           customerId: "",

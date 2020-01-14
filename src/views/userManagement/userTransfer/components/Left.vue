@@ -225,7 +225,16 @@ export default {
       this.getUser()
     },
     handleFilter(val) {
-      this.user = val;  
+       if(val.WaterMeterTypeId==1102){
+         this.$message({
+            message: "卡表用户请先读卡！",
+            type: "error",
+            duration: 4000
+          });
+          return
+       }
+      this.user = val;
+     
       this.IsTransferFunc(val.Id);
     },
     // 查询用户是否有欠费
@@ -252,8 +261,12 @@ export default {
     getUser(info){
       let postData={} 
       if(info){
-        if(info.CardType==1)  postData.CustomerQueryValue=info.UserCardCredited.CardNo;
-        else postData.CustomerQueryValue=info.UserCard.CardNo;
+        if(info.CardType==1){
+          postData.CustomerQueryValue=info.UserCardCredited.CardNo;
+        }
+        else{
+          postData.CustomerQueryValue=info.UserCard.CardNo;
+        }
         postData.CustomerQueryType="8";
         postData.page=1;
         postData.limit=20
@@ -269,7 +282,23 @@ export default {
           });
           this.user = {};
         } else if (res.data.length == 1) {
-          this.user = res.data[0];
+          if(res.data[0].CustomerState!==1301){
+             this.$message({
+            message: "请注意该用户状态不正常！",
+            type: "error",
+            duration: 4000
+          });
+          return
+          } 
+          if(res.data[0].WaterMeterTypeId==1102&&!info){
+             this.$message({
+            message: "卡表用户请先读卡！",
+            type: "error",
+            duration: 4000
+          });
+          return
+          }
+           this.user = res.data[0];
           this.IsTransferFunc(this.user.Id);
         } else {
           this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
