@@ -290,6 +290,15 @@ export const asyncRoutes = [
           title: '业务流程管理',
           roles: ['1']
         }
+      },
+      {
+        path: 'logManagement',
+        component: () => import('@/views/systemManagement/logManagement/index'),
+        name: 'logManagement',
+        meta: {
+          title: '日志管理',
+          roles: ['1']
+        }
       }
     ]
   },

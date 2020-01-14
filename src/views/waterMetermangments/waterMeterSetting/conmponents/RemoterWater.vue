@@ -199,7 +199,7 @@
                   >
                     <i
                       class="icon iconfont viewHis"
-                      @click="waterMeterYCDetail(scope.row.SA_Customer_Id)"
+                      @click="waterMeterYCDetail(scope.row.SA_Customer_Id,scope.row.WaterMeterNo)"
                     >&#xe670;</i>
                   </el-tooltip>
                   <el-tooltip
@@ -249,7 +249,7 @@
             :total="histotal"
             :page.sync="meterReadListParam.page"
             :limit.sync="meterReadListParam.limit"
-            @pagination="waterMeterYCDetail(meterReadListParam.customerId)"
+            @pagination="waterMeterYCDetail(meterReadListParam.customerId,meterReadListParam.waterMeterNo)"
           />
         </el-dialog>
         <span v-show="!ifShow" class="telescopic telescopic1" @click="closeAccount">
@@ -311,6 +311,7 @@ export default {
       meterReadListParam: {
         //历史数据
         customerId: "", //水表Id ,
+        waterMeterNo:"",
         limit: 10, //表格每页数据条数 ,
         page: 1, //表格当前页面 从1开始 ,
         sort: "", // 排序方式 ASC或DESC ,
@@ -566,11 +567,12 @@ export default {
       this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
       this.customHeight = this.$refs.myChild.isCustom;
     },
-    waterMeterYCDetail(id) {
+    waterMeterYCDetail(id,WaterMeterNo) {
       //历史
       let that = this;
       that.viewWaterHistory = true;
       that.meterReadListParam.customerId = id;
+      that.meterReadListParam.waterMeterNo = WaterMeterNo;
       searYCHisWater(that.meterReadListParam).then(res => {
         that.hisData = res.data;
         that.histotal = res.count;
