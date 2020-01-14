@@ -13,7 +13,7 @@
           placeholder="(长度1-20内)"
           maxlength="20"
           size="small"
-          style="width: 250px"/>
+          style="width: 180px"/>
       </el-form-item>
       <el-form-item label="水厂 " prop="waterFactoryName">
         <el-select multiple v-model="ruleForm.waterFactoryName">

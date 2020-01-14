@@ -8,18 +8,18 @@
     label-width="90px"
     @submit.native.prevent>
     <el-form-item label="水厂" prop="SA_WaterFactory_Id" style="margin-left: -60px">
-      <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getWaterFactory">
+      <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small"   @change="getWaterFactory">
         <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
     <el-form-item label="水表类型" prop="waterMeterType">
-      <el-select v-model="param.waterMeterType" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(param.waterMeterType ,'waterMeterType',waterMeterArray,'水表类型')">
+      <el-select v-model="param.waterMeterType" placeholder="请选择" size="small"   @change="getText(param.waterMeterType ,'waterMeterType',waterMeterArray,'水表类型')">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in waterMeterArray" :key="index" :label="item.Name" :value="item.Id" v-if="item.Id != '1102'"/>
       </el-select>
     </el-form-item>
     <el-form-item label="用户类型" prop="userType">
-      <el-select v-model="param.userType" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(param.userType ,'userType ',userArray,'用户类型')">
+      <el-select v-model="param.userType" placeholder="请选择" size="small"   @change="getText(param.userType ,'userType ',userArray,'用户类型')">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in userArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
@@ -52,7 +52,6 @@
 
 <script>
   import { getDictionaryOption } from "@/utils/permission"
-  import { ComboBoxListZhuanYong } from "@/api/operationFlow"
 
   export default {
     name: "SelectHead",
@@ -103,7 +102,7 @@
         this.$parent.searchFun();
       },
       getTime1(data) {
-        this.getText(this.createStartTimes,'createStartTimes','','操作时间')
+        this.getText(this.createStartTimes,'createStartTimes','','日期')
         if(data !=null){
           this.param.YearMonth = data.toString().replace(/,/,'~')
         }else{
@@ -115,8 +114,7 @@
       },
       resetFun(formName){
         this.$refs[formName].resetFields();
-        this.param.createStartTime = ''
-        this.param.createEndTime = ''
+        this.param.YearMonth = ''
         this.createStartTimes = []
         this.$parent.tipsDataCopy = []
         this.searchFun()

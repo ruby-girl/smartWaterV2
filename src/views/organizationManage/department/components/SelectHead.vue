@@ -6,8 +6,8 @@
     size="small"
     label-width="70px"
     @submit.native.prevent>
-    <el-form-item label="部门" style="margin-left: -40px">
-      <el-select v-model="dp.Id" placeholder="请选择" size="small" @change="getText(dp.Id,'Id',postArray,'部门')">
+    <el-form-item label="部门" style="margin-left: -40px;">
+      <el-select v-model="dp.Id" placeholder="请选择" size="small" @change="getText(dp.Id,'Id',postArray,'部门')" style="width: 180px">
         <el-option label="全部" value="-1"></el-option>
         <el-option v-for="(item,index) in postArray" :key="index" :label="item.Name" :value="item.Id" />
       </el-select>

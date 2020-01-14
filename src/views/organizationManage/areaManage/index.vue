@@ -13,7 +13,7 @@
             <span>{{(sbap.page - 1) * sbap.limit+ scope.$index + 1}}</span>
           </template>
         </el-table-column>
-        <template v-for="(item ,index) in tableHead" >
+        <template v-for="(item ,index) in tableHead">
           <el-table-column
             v-if="item.IsFreeze"
             :key="index"
@@ -34,13 +34,13 @@
         </template>
         <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="编辑" placement="bottom-start">
+            <el-tooltip effect="light" content="编辑" placement="bottom-start"  :visible-arrow="false">
               <a class="operation1" @click="handleEdit(scope.$index, scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.isDelete">
+            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.isDelete"  :visible-arrow="false">
               <a class="operation2" @click="handleDelete(scope.$index, scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
-            <el-tooltip v-else effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start">
+            <el-tooltip v-else effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start"  :visible-arrow="false">
               <a style="color: #C0C8CC;margin: 10px;"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>
@@ -141,7 +141,7 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           iconClass:"el-icon-question questionIcon",
-          customClass: "warningBox",
+          customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
           BlockAreaDelete({Id: row.Id}).then(res => {

@@ -7,17 +7,17 @@
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
         <el-table-column fixed="left" label="#" width="60" align="center">
           <template slot-scope="scope">
-            <span>{{(sbap.page - 1) *sbap.limit+ scope.$index + 1}}</span>
+            <span>{{(param.page - 1) *param.limit+ scope.$index + 1}}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="MeterReadPlanName"
           label="抄表计划"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="WaterFactoryName"
           label="水厂"
           align="center"
           min-width="200px">
@@ -27,25 +27,26 @@
           align="center"
           min-width="200px">
           <template slot-scope="scope">
+            <!--MeterReadUserName-->
             <p v-for="(item,index) in scope.row.name" :key="index" class="multiColumn">
               {{item}}
             </p>
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="MeterReadStartTime"
           label="开始日期"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="MeterReadEndTime"
           label="截止日期"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="YCMeterReadNum"
           label="应抄数"
           align="center"
           min-width="200px">
@@ -56,13 +57,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="YCMeterReadTotal"
           label="总应抄数"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="FinishMeterReadNum"
           label="已抄数"
           align="center"
           min-width="200px">
@@ -73,13 +74,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="FinishMeterReadTotal"
           label="总已抄数"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="UnfinishedMeterReadNum"
           label="未抄数"
           align="center"
           min-width="200px">
@@ -90,13 +91,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="UnfinishedMeterReadTotal"
           label="总未抄数"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="FinishPercent"
           label="完成率"
           align="center"
           min-width="200px">
@@ -107,7 +108,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="FinishPercentTotal"
           label="总完成率"
           align="center"
           min-width="200px">
@@ -118,10 +119,10 @@
 </template>
 
 <script>
+  import { MeterReadPercentStatistics, MeterReadPercentStatistics_ToExcel } from "@/api/reportInfo"
   import SearchTips from "@/components/SearchTips/index";
   import '@/styles/organization.scss'
   import SelectHead from './components/SelectHead'//查询条件组建
-  import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"
   import { promptInfoFun } from "@/utils/index"
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
@@ -131,7 +132,7 @@
     data() {
       return {
         tableHeight: null,//表格高度
-        sbap: {
+        param: {
           page:1,
           limit:10
         },
@@ -147,12 +148,12 @@
           promptInfoFun(this,1,res.message)
           return false
         }
-        BlockAreaExecl(this.sbap).then(res => {
+        MeterReadPercentStatistics_ToExcel(this.param).then(res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         })
       },
       searchFun() {//查询事件
-        BlockAreaGetList(this.sbap).then(res => {
+        MeterReadPercentStatistics(this.param).then(res => {
           if (res.code == 0 ) {
             this.tableData = res.data;
             this.tipsData = pushItem(this.tipsDataCopy)
@@ -162,10 +163,10 @@
         })
       },
       sortChanges({prop, order }){//排序
-        this.sbap.filed = prop
-        this.sbap.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        this.param.filed = prop
+        this.param.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
         if(this.tableData.length>0){
-          this.sbap.page = 1
+          this.param.page = 1
           this.searchFun()
         }
       },
@@ -176,7 +177,7 @@
        * param  对应搜索条件的对象名
        */
       delTips(val) {
-        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "sbap"); //返回删除后的数据传给组件
+        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()
       },
       /**

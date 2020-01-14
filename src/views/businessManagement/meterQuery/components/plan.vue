@@ -39,10 +39,10 @@
         </template>
         <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="水量详情" placement="bottom-start" v-if="scope.LadderNumber>1">
+            <el-tooltip effect="light" content="水量详情" placement="bottom-start" v-if="scope.LadderNumber>1"  :visible-arrow="false">
               <a class="operation3" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除" placement="bottom-start">
+            <el-tooltip effect="light" content="删除" placement="bottom-start"  :visible-arrow="false">
               <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>
@@ -152,7 +152,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         iconClass: "el-icon-question questionIcon",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
         getReadDelete({ MeterRecordId: row.SA_MeterRecord_Id }).then(res => {

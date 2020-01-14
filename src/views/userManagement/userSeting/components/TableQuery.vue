@@ -53,13 +53,13 @@
       </template>
       <el-table-column label="操作" width="100px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip effect="light" content="编辑" placement="bottom-start">
+          <el-tooltip effect="light" content="编辑" placement="bottom-start"  :visible-arrow="false">
             <a style="color: #00B2A1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
           </el-tooltip>
-          <el-tooltip effect="light" content="详情" placement="bottom-start">
+          <el-tooltip effect="light" content="详情" placement="bottom-start"  :visible-arrow="false">
             <a style="margin:0 6px;color: #B59200" @click="handleDetail(scope.row)"><i class="iconfont icon iconbiaodan"></i></a>
           </el-tooltip>
-          <el-tooltip effect="light" content="删除" placement="bottom-start">
+          <el-tooltip effect="light" content="删除" placement="bottom-start"  :visible-arrow="false">
             <a style="color: #FF3D3D" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
           </el-tooltip>
         </template>
@@ -164,7 +164,6 @@
       /******************查询，触发父级查询方法**********************/
       searchFun(type){
         if(type instanceof Object == false){//为false 则为区分水表类型条件查询，true 为普通分页查询
-          //this.query.WaterTypeId = type//更改查询水表类型
           this.$parent.query.WaterTypeId = type//更改查询水表类型
         }
         this.$parent.getTableLine()
@@ -199,7 +198,7 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           iconClass:"el-icon-question questionIcon",
-          customClass: "warningBox",
+          customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
           DelCustomerInfo({customerId:row.Id}).then(res => {//写卡

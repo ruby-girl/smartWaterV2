@@ -141,7 +141,7 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           iconClass:"el-icon-question questionIcon",
-          customClass: "warningBox",
+          customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
           Delete({ Id: row.Id }).then(res => {

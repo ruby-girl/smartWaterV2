@@ -502,3 +502,7 @@ div::-webkit-scrollbar-thumb {
 :focus{
   outline-color:#fff !important;
 }
+.deleteBox .el-message-box__btns{ padding: 0 142px;}
+.deleteBox .el-button{ padding: 7px 14px;float: right;}
+.deleteBox .el-button:last-child{margin-right: 10px;}
+.el-message-box {border-radius: 0px;}

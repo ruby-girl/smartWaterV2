@@ -2,26 +2,26 @@
   <el-form
     ref="formName"
     :inline="true"
-    :model="sbap"
+    :model="grp"
     :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
     size="small"
     label-width="90px"
     @submit.native.prevent>
-    <el-form-item label="水厂" prop="editUserId" style="margin-left: -60px">
-      <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
-        <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
+    <el-form-item label="水厂" prop="SA_WaterFactory_Id" style="margin-left: -60px">
+      <el-select v-model="grp.SA_WaterFactory_Id" placeholder="请选择" size="small"  @change="getText(grp.SA_WaterFactory_Id,'SA_WaterFactory_Id',waterFactory,'水厂')">
+        <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="水表类型" prop="editUserId">
-      <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
+    <el-form-item label="水表类型" prop="WaterMeter">
+      <el-select v-model="grp.WaterMeter" placeholder="请选择" size="small"  @change="getText(grp.WaterMeter,'WaterMeter',waterMeterArray,'水表类型')">
         <el-option label="全部" value="-1"></el-option>
-        <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
+        <el-option v-for="(item,index) in waterMeterArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="用户类型" prop="editUserId">
-      <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
+    <el-form-item label="用户类型" prop="UserType">
+      <el-select v-model="grp.UserType" placeholder="请选择" size="small"  @change="getText(grp.UserType,'UserType',userArray,'操作人')">
         <el-option label="全部" value="-1"></el-option>
-        <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
+        <el-option v-for="(item,index) in userArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
     <transition name="fade">
@@ -33,6 +33,7 @@
           :unlink-panels="true"
           size="small"
           type="monthrange"
+          value-format ="yyyy-MM"
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -50,26 +51,29 @@
 </template>
 
 <script>
-  import { ComboBoxListZhuanYong } from "@/api/operationFlow"
+  import { getDictionaryOption } from "@/utils/permission"
 
   export default {
     name: "SelectHead",
     data() {
       return {
+        waterFactory:[],
+        waterMeterArray:[],
+        userArray:[],
         ifMore:false,
-        sbap:{
+        grp:{
+          SA_WaterFactory_Id: "",
+          StarDateTime: "",
+          EndDateTime: "",
+          WaterMeter: "-1",
+          UserType: "-1",
+          limit: 10,
           page: 1,
-          limit: 20,
-          filed:'',
-          sort:"",
-          BlockAreaName: '',//片区名称
-          editUserId: '-1',//操作者
-          editStartTime: '',//操作开始结束时间
-          editEndTime: '',
-          tableId: '0000007'
+          sort: "",
+          filed: "",
+          tableId: ""
         },
         createStartTimes:[],
-        operatorArray:[],
         screenWdth:''
       }
     },
@@ -78,42 +82,29 @@
        * 触发父组建查询方法
        * */
       searchFun(){
-        this.$parent.sbap = Object.assign({},this.sbap)
+        this.$parent.grp = Object.assign({},this.grp)
         this.$parent.searchFun();
       },
       getTime1(data) {
-        this.getText(this.createStartTimes,'createStartTimes','','操作时间')
+        this.getText(this.createStartTimes,'createStartTimes','','日期')
         if(data !=null){
-          this.sbap.editStartTime = data[0]+ " 00:00:00"
-          this.sbap.editEndTime = data[1]+ " 23:59:59"
+          this.grp.StarDateTime = data[0]
+          this.grp.EndDateTime = data[1]
         }else{
-          this.sbap.editStartTime = ''
-          this.sbap.editEndTime = ''
+          this.grp.StarDateTime = ''
+          this.grp.EndDateTime = ''
         }
       },
       /**
        * 获取操作人信息
        * */
-      GetLoginNameList() {
-        ComboBoxListZhuanYong().then(res => {
-          if (res.code ==0 ) {
-            this.operatorArray = res.data;
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
-          }
-        })
-      },
       getText(val, model, arr, name) {
         this.$parent.getText(val, model, arr, name)
       },
       resetFun(formName){
         this.$refs[formName].resetFields();
-        this.sbap.editStartTime = ''
-        this.sbap.editEndTime = ''
+        this.grp.StarDateTime = ''
+        this.grp.EndDateTime = ''
         this.createStartTimes = []
         this.$parent.tipsDataCopy = []
         this.searchFun()
@@ -121,7 +112,10 @@
     },
     mounted() {
       this.screenWdth = window.screen.width
-      this.GetLoginNameList()
+      this.waterFactory = this.$store.state.user.waterWorks
+      this.grp.SA_WaterFactory_Id = this.waterFactory[0].Id
+      this.waterMeterArray = getDictionaryOption('水表类型')
+      this.userArray = getDictionaryOption('用户类型')
     }
   }
 </script>

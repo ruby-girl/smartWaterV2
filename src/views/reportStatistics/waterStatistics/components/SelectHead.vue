@@ -8,9 +8,9 @@
       size="small"
       label-width="70px"
       @submit.native.prevent>
-      <el-form-item label="水厂" prop="SA_WaterFactory_Id" :class="!ifMore||screenWidth>1440?'firstItemsOther':''">
-        <el-select v-model="param.SA_WaterFactory_Id" placeholder="请选择" size="small">
-          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
+      <el-form-item label="水厂" prop="WaterFactoryId">
+        <el-select v-model="param.WaterFactoryId" placeholder="请选择" size="small">
+          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" @change="getText(param.WaterFactoryId,'WaterFactoryId',waterFactory,'水厂')"/>
         </el-select>
       </el-form-item>
       <el-form-item label="用水性质" prop="SA_MeterReadPlan_Id">
@@ -74,33 +74,34 @@
     name: "SelectHead",
     data() {
       return {
+        waterFactory:[],
         userTypes:[
           {name:'用户编号',Id:'1'},
           {name:'姓名/简码',Id:'2'},
         ],
         ifMore: false,
         param: {
-          CustomerQueryType: "1", //用户查询类型 用户编号=1，姓名=2，简码=3
-          CustomerQueryValue: "", //用户查询值
-          SA_WaterFactory_Id: "-1", //水厂
-          SA_MeterReadPlan_Id: "", //抄表计划Id
-          SA_MeterReader_Id: "-1", //抄表员ID
-          SA_RegisterBookInfo_Id: "-1", //表册Id
-          UserType: "-1", //用户类型 = ['1201', '1202', '1203', '1204', '-1']
-          InputEmpName: "", //录入人
-          ReadDateStart: "", //抄表时间
-          ReadDateEnd: "",
-          ReadingQueryType: "1", //抄表查询类型 按抄表计划查询=1， 按抄表时间查询=2
-          MeterReadState: "-1", //抄表状态 = ['1401', '1402', '-1']
-          InputTimeStart: "", //录入时间
-          InputTimeEnd: "",
-          limit: 20,
-          page: 1,
+          WaterFactoryId: "",
+          WaterFactoryName: "",
+          StartEnabledTime: "",
+          EndEnabledTime: "",
+          WaterPropertyName: "",
+          WaterMeterType: 1101,
+          WaterMeterTypeName: "",
+          CustomerType: 1201,
+          CustomerTypeName: "",
+          createUserId: "",
+          createStartTime: "",
+          createEndTime: "",
+          editUserId: "",
+          editStartTime: "",
+          editEndTime: "",
+          limit: 0,
+          page: 0,
           sort: "",
           filed: "",
-          tableId: "0000015"
+          tableId: ""
         },
-        waterFactory: [],
         InputData:[],
         screenWdth:'',
       }
@@ -146,7 +147,8 @@
     },
     mounted() {
       this.screenWdth = window.screen.width
-      this.waterFactory=this.$store.state.user.waterWorks
+      this.waterFactory = this.$store.state.user.waterWorks
+      this.param.WaterFactoryId = this.waterFactory[0].Id
     }
   }
 </script>

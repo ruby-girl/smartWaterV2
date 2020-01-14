@@ -3,47 +3,35 @@
     <div>
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <!--列表组建 s-->
-      <p class="legacyArrears">截止今日XX水厂当前遗留垃圾费欠款为：XXXXX</p>
-      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" style="margin-top: 50px;"/>
+      <p class="legacyArrears">{{tableInfo.PriceSurplus}}</p>
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" style="margin-top: 68px;"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
         <el-table-column fixed="left" label="#" width="60" align="center">
           <template slot-scope="scope">
-            <span>{{(sbap.page - 1) *sbap.limit+ scope.$index + 1}}</span>
+            <span>{{(grp.page - 1) *grp.limit+ scope.$index + 1}}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="SA_WaterFactory_Name"
           label="水厂"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="YearMonth"
           label="日期"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="水表类型"
+          prop="TotalPrice"
+          label="本期应收"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="用户类型"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="本期应收（垃圾费）"
-          align="center"
-          min-width="200px">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="实收总额（已缴费费用金额）"
+          prop="Aprice"
+          label="实收总额"
           align="center"
           min-width="200px">
         </el-table-column>
@@ -53,10 +41,10 @@
 </template>
 
 <script>
+  import { GarbageReportDt, Execl_GarbageReportDt } from "@/api/reportInfo"
   import SearchTips from "@/components/SearchTips/index";
   import '@/styles/organization.scss'
   import SelectHead from './components/SelectHead'//查询条件组建
-  import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"
   import { promptInfoFun } from "@/utils/index"
   import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 
@@ -66,10 +54,11 @@
     data() {
       return {
         tableHeight: null,//表格高度
-        sbap: {page:1,limit:10},
-        tableData: [{date:111,name:['小民族','刷卡啊额','安慰让我额']}],//表格数据
+        grp: {page:1,limit:10},
+        tableData: [],//表格数据
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
+        tableInfo:''
       }
     },
     methods: {
@@ -78,14 +67,18 @@
           promptInfoFun(this,1,res.message)
           return false
         }
-        BlockAreaExecl(this.sbap).then(res => {
+        Execl_GarbageReportDt(this.grp).then(res => {
           window.location.href = `${this.common.excelPath}${res.data}`;
         })
       },
       searchFun() {//查询事件
-        BlockAreaGetList(this.sbap).then(res => {
+        let grp = Object.assign({},this.grp)
+        grp.WaterMeter = parseInt(this.grp.WaterMeter)
+        grp.UserType = parseInt(this.grp.UserType)
+        GarbageReportDt(this.grp).then(res => {
           if (res.code == 0 ) {
-            this.tableData = res.data;
+            this.tableData = res.data.Table1;
+            this.tableInfo = res.data.Table2[0];
             this.tipsData = pushItem(this.tipsDataCopy)
           } else {
             promptInfoFun(this,1,res.message)
@@ -93,10 +86,10 @@
         })
       },
       sortChanges({prop, order }){//排序
-        this.sbap.filed = prop
-        this.sbap.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
+        this.grp.filed = prop
+        this.grp.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
         if(this.tableData.length>0){
-          this.sbap.page = 1
+          this.grp.page = 1
           this.searchFun()
         }
       },
@@ -107,7 +100,11 @@
        * param  对应搜索条件的对象名
        */
       delTips(val) {
-        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "sbap"); //返回删除后的数据传给组件
+        if(val=='createStartTimes'){
+          promptInfoFun(this,1,'日期不能为空!')
+          return false
+        }
+        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "grp"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()
       },
       /**
