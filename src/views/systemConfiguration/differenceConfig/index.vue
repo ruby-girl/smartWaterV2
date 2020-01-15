@@ -12,18 +12,19 @@
       </el-select>
     </div>
     <!-- 配置 -->
-    <div class="bottom-box">
+    <div class="bottom-box position-absolute-head">
       <!-- 循环年 s-->
       <div class="year-box" v-for="(item,i) in arr">
         <div class="year-box-border display-flex align-items-center justify-content-flex-justify">
-          <div>{{item.year}}</div>
+          <div>{{item.TitleYear}}年</div>
           <div class="year-button display-flex align-items-center">
-            <span @click="item.show =true">
+            <span @click="edit(i)">
               <i class="iconfont iconsuoyoubiaogelidebianji"></i>
               <span style="margin:0 10px 0 5px;">编辑</span>
             </span>
-            <i class="iconfont iconjianqu3" v-show="!item.allShow" style="font-size:22px;" @click="item.allShow=true"></i>
-            <i class="iconfont iconshouqi3" v-show="item.allShow" style="font-size:22px;" @click="item.allShow=false"></i>
+           <span class="isShow" :class="{tro:item.allShow}" style="margin-left:0">
+          <i class="icon iconfont iconjianqu3" @click="item.allShow=!item.allShow"></i>
+        </span>
           </div>
         </div>
         <!-- 循环月 -->
@@ -32,89 +33,87 @@
           <!-- 未编辑 -->
           <div
             class="month-line display-flex align-items-center"
-            v-for="(n,index) in item.months"
+            v-for="(n,index) in item.WaterYields"
             v-show="!item.show"
             :key="index"
           >
-            <div class="month-box-bg">{{n.month}}月</div>
+            <div class="month-box-bg">{{n.Month}}月</div>
             <div class="display-flex flex-1" style="color:#777C82;">
               <div class="read-left-box">供水量（吨）</div>
-              <div>123123</div>
+              <div>{{n.TotalWaterYield}}</div>
             </div>
           </div>
           <!-- 编辑状态 -->
           <div
             class="month-line display-flex align-items-center"
-            v-for="n in item.months"
+            v-for="n in item.WaterYields"
             v-show="item.show"
-            :key="n.month+11"
+            :key="n.Month+11"
           >
-            <div class="month-box-bg">{{n.month}}月</div>
+            <div class="month-box-bg">{{n.Month}}月</div>
             <div class="display-flex align-items-center flex-1" style="color:#777C82;">
               <div style="width:75px;text-align:center;">供水量</div>
-              <el-input size="small"></el-input>
+              <el-input size="small" v-model="n.TotalWaterYield"></el-input>
               <span style="padding:0 10px;">吨</span>
             </div>
           </div>
           <!-- 1月 -->
         </div>
-        <div class="month-save-btn" v-show="item.show&&item.allShow">
-          <el-button type="primary" size="mini" @click="saveMonth(i)">保存</el-button>
-        </div>
+       
       </div>
       <!-- 循环年e -->
+       
     </div>
+    <div class="month-save-btn text-center" style="margin-top:10px;">
+          <el-button type="primary" size="mini" @click="saveMonth()">保存</el-button>
+        </div>
   </div>
 </template>
 <script>
-import {SelectWaterYieldToFactory} from "@/api/basicConfig"
+import {SelectWaterYieldToFactory,SaveYearMonthWaterYieldInfo} from "@/api/basicConfig"
 export default {
   name: "differenceConfig",
   data() {
     return {
       waterFactory: "",
-      arr: [
-        {
-          year: "1990年",
-          show: false,
-          allShow:true,
-          months: [
-            { month: 1, value: 10 },
-            { month: 2, value: 10 },
-            { month: 3, value: 10 },
-            { month: 4, value: 10 },
-            { month: 5, value: 10 },
-            { month: 6, value: 10 },
-            { month: 7, value: 10 },
-            { month: 8, value: 10 },
-            { month: 9, value: 10 },
-            { month: 10, value: 10 },
-            { month: 11, value: 10 },
-            { month: 12, value: 10 }
-          ]
-        },
-        {
-          year: "1991年",
-          show: false,
-          allShow:true,
-          months: [
-            { month: 1, value: 10 },
-            { month: 2, value: 10 },
-            { month: 3, value: 10 },
-            { month: 4, value: 10 }
-          ]
-        }
-      ],
+      arr: [],
       waterWorks: []
     };
   },
   mounted() {
     this.waterWorks = this.$store.state.user.waterWorks;
-    SelectWaterYieldToFactory({factoryId:this.waterWorks[0].Id})
+    this.waterFactory=this.waterWorks[0].Id
+    this.getWaterYieldToFactory()
   },
   methods: {
-    saveMonth(i){
-      this.arr[i].show =false;
+    getWaterYieldToFactory(){
+      SelectWaterYieldToFactory({factoryId:this.waterWorks[0].Id}).then(res=>{
+      res.data.forEach((item,i)=>{
+        item.show=false
+        item.allShow=false
+        if(i==0){
+           item.allShow=true
+        }
+      })
+      this.arr=res.data
+    })
+    },
+    saveMonth(){
+      console.info(this.arr)
+      return
+      SaveYearMonthWaterYieldInfo(this.arr).then(res=>{
+        this.$message({
+          message: "保存成功",
+          type: "success",
+          duration: 4000
+        });
+        // this.getWaterYieldToFactory()
+      })
+    },
+    edit(i){
+      this.arr[i].show =true
+      this.arr[i].allShow =true
+     
     }
   }
 };
@@ -126,7 +125,8 @@ export default {
   color: #777c82;
 }
 .bottom-box {
-  height: calc(100vh - 130px);
+  max-height: calc(100vh - 170px);
+  overflow: scroll;
   .year-box {
     margin-top: 10px;
     background: #fff;

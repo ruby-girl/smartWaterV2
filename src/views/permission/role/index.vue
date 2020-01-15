@@ -72,10 +72,15 @@
       <!-- 编辑弹窗 -->
       <Dialog
         :show.sync="dialogFormVisible"
+        @showImg="showImg"
         :temp="temp"
         :dialog-status="dialogStatus"
         @createData="createData"
         @updateData="updateData"
+      />
+      <ImgDialog
+        :imgShow.sync="imgShow"
+        :imgIndex="imgIndex"
       />
     </div>
   </div>
@@ -84,6 +89,7 @@
 import SelectHead from "./components/SelectHead";
 import Pagination from "@/components/Pagination";
 import Dialog from "./components/Dialog";
+import ImgDialog from "./components/ImgDialog";
 import {
   getRolesList,
   addRole,
@@ -95,12 +101,13 @@ import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "RolePermission",
-  components: { SelectHead, Pagination, Dialog, SearchTips },
+  components: { SelectHead, Pagination, Dialog, SearchTips,ImgDialog },
   data() {
     return {
       total: 0,
       tableKey: 0,
       tableHeight: 0,
+      imgIndex:'',
       temp: {},
       listQuery: {
         // 查询条件
@@ -117,6 +124,7 @@ export default {
       },
       dialogStatus: "", // 识别添加还是编辑
       dialogFormVisible: false, // 弹窗
+      imgShow:false,
       tableData: [],
       checksData: [],
       tipsData: [], //传入子组件的值
@@ -143,6 +151,11 @@ export default {
     });
   },
   methods: {
+    showImg(n){
+      console.info('1111',n)
+      this.imgShow=true
+      this.imgIndex=n
+    },
     delTips(val) {
       if (val == "timevalue") {
         //当返回的model 为时间数组  置空 时间
