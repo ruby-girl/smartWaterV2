@@ -92,7 +92,7 @@
           page: 1,
           sort: "",
           filed: "",
-          tableId: ""
+          tableId: "0000068"
         },
         createStartTimes:[],
         screenWdth:''
