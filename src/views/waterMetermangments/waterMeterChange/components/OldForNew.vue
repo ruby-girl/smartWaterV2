@@ -248,6 +248,7 @@ export default {
       let Func =
         this.user.WaterMeterTypeId == 1102 ? GetICK_OldChangeNew : OldChangeNew;
       Func(this.newUser).then(res => {
+
         this.$message({
           message: "操作成功！",
           type: "success",
@@ -255,7 +256,7 @@ export default {
         });
         if( this.user.WaterMeterTypeId == 1102){
           this.wCard(res.data)
-        }    
+        }
         this.user = {};
         this.newUser = {
           customerId: "",
