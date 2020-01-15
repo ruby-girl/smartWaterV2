@@ -131,9 +131,28 @@ export function WaterPropertyReportToNotLadderToExcel(data) {
 }
 
 
+/**
+ * 用户统计报表
+ * */
+export function GetCustomerReportData(data) {
+  return request({
+    url: '/CustomerReport/GetCustomerReportData',
+    method: 'post',
+    data: data
+  })
+}
 
 
-
+/**
+ * 用户统计报表导出
+ * */
+export function GetCustomerReportDataToExcel(data) {
+  return request({
+    url: '/CustomerReport/GetCustomerReportDataToExcel',
+    method: 'post',
+    data: data
+  })
+}
 
 
 

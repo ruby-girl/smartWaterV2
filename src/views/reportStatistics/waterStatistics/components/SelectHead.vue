@@ -9,41 +9,41 @@
       label-width="70px"
       @submit.native.prevent>
       <el-form-item label="水厂" prop="WaterFactoryId">
-        <el-select v-model="param.WaterFactoryId" placeholder="请选择" size="small">
-          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" @change="getText(param.WaterFactoryId,'WaterFactoryId',waterFactory,'水厂')"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="用水性质" prop="SA_MeterReadPlan_Id">
-        <el-select v-model="param.SA_MeterReadPlan_Id" placeholder="请选择" size="small">
+        <el-select v-model="param.WaterFactoryId" placeholder="请选择" size="small" @change="getText(param.WaterFactoryId,'WaterFactoryId',waterFactory,'水厂')">
           <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="水表类型" prop="SA_MeterReader_Id">
-        <el-select v-model="param.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param.SA_MeterReader_Id,'SA_MeterReader_Id',meterArry,'抄表员')">
-          <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
+      <el-form-item label="用水性质" prop="WaterPropertyName">
+        <el-select v-model="param.WaterPropertyName" placeholder="请选择" size="small" @change="getText(param.WaterPropertyName,'WaterPropertyName','','用水性质')">
+          <el-option label="全部" value="-1" v-if="userWterTypes.length>1"></el-option>
+          <el-option v-for="(item,index) in userWterTypes" :key="index" :label="item.UseWaterTypeName" :value="item.UseWaterTypeName"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户类型" prop="SA_MeterReader_Id">
-        <el-select v-model="param.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getText(param.SA_MeterReader_Id,'SA_MeterReader_Id',meterArry,'抄表员')">
-          <el-option label="全部" value="-1"></el-option>
-          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
+      <el-form-item label="水表类型" prop="WaterMeterType">
+        <el-select v-model="param.WaterMeterType" placeholder="请选择" size="small" @change="getText(param.WaterMeterType,'WaterMeterType',waterMeterArray,'水表类型')">
+          <el-option label="全部" value="-1" v-if="waterMeterArray.length>1"></el-option>
+          <el-option v-for="(item,index) in waterMeterArray" :key="index" :label="item.Name" :value="item.Id"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="用户类型" prop="CustomerType">
+        <el-select v-model="param.CustomerType" placeholder="请选择" size="small" @change="getText(param.CustomerType,'CustomerType',userArray,'用户类型')">
+          <el-option label="全部" value="-1" v-if="userArray.length>1"></el-option>
+          <el-option v-for="(item,index) in userArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <transition name="fade">
-        <el-form-item label="生效日期 " v-show="screenWdth<1600?ifMore:true"prop="InputData">
+        <el-form-item label="生效日期" v-show="screenWdth<1600?ifMore:true" prop="createStartTimes">
           <el-date-picker
-            v-model="InputData"
-            type="monthrange"
             :editable="false"
+            @keydown.enter.native="searchFun"
+            v-model="createStartTimes"
             :unlink-panels="true"
+            size="small"
+            type="monthrange"
+            value-format ="yyyy-MM"
             range-separator="~"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
-            @keydown.enter.native="handleFilter"
-
             @change="getTime"
           />
         </el-form-item>
@@ -62,33 +62,30 @@
 </template>
 
 <script>
+  import {GetWaterPropertyList} from "@/api/userSetting"
   import {getDictionaryOption} from "@/utils/permission"
-  import { QueryMeterReadPlanByFactoryId } from "@/api/plan"
-  import { WaterFactoryComboBoxListAuth } from "@/api/organize"//具有权限的水厂
-  import { QueryMeterReaderByFactoryId } from "@/api/meterQuery" //抄表时间条件下，获取抄表员信息接口
-  import { LoadRegisterBookAndMeterReader } from "@/api/meterReading"//抄表计划搜索条件下，获取表册及抄表员接口
-  import { promptInfoFun } from "@/utils/index"
-  import { getName } from "@/utils/projectLogic"
+  import {promptInfoFun} from "@/utils/index"
+  import {getName} from "@/utils/projectLogic"
 
   export default {
     name: "SelectHead",
     data() {
       return {
+        createStartTimes:[],
         waterFactory:[],
-        userTypes:[
-          {name:'用户编号',Id:'1'},
-          {name:'姓名/简码',Id:'2'},
-        ],
+        waterMeterArray:[],
+        userArray:[],
+        userWterTypes:[],
         ifMore: false,
         param: {
           WaterFactoryId: "",
           WaterFactoryName: "",
           StartEnabledTime: "",
           EndEnabledTime: "",
-          WaterPropertyName: "",
-          WaterMeterType: 1101,
+          WaterPropertyName: "-1",
+          WaterMeterType: '-1',
           WaterMeterTypeName: "",
-          CustomerType: 1201,
+          CustomerType: '-1',
           CustomerTypeName: "",
           createUserId: "",
           createStartTime: "",
@@ -100,9 +97,8 @@
           page: 0,
           sort: "",
           filed: "",
-          tableId: ""
+          tableId: "0000069"
         },
-        InputData:[],
         screenWdth:'',
       }
     },
@@ -110,19 +106,19 @@
       /**
        * 触发父组建搜索方法
        * */
-      searchFun(type) {
+      searchFun() {
+        this.$parent.param = Object.assign({},this.param)
         this.$parent.searchFun();
       },
-      getTime() {
-      },
-      getWaterFactoryList(){//  获取具有权限的水厂数据集合,若当前操作员没权限，则只显示当前所在水厂信息，待后期做
-        WaterFactoryComboBoxListAuth().then(res => {
-          if (res.code ==0 ) {
-            this.waterFactory = res.data;
-          } else {
-            promptInfoFun(this,1,res.message)
-          }
-        })
+      getTime(data) {
+        this.getText(this.createStartTimes,'createStartTimes','','生效日期')
+        if(data !=null){
+          this.param.StartEnabledTime = data[0]
+          this.param.EndEnabledTime = data[1]
+        }else{
+          this.param.StartEnabledTime = ''
+          this.param.EndEnabledTime = ''
+        }
       },
       resetFun(type){
         this.InputData = []
@@ -143,12 +139,27 @@
       setText(text,model,arr){
         let name = getName(this.query.CustomerQueryType)
         this.getText(text,model,arr,name)
+      },
+      getWaterPorter(){//获取用水性质
+        GetWaterPropertyList(this.param).then(res => {
+          if(res.code==0){
+            let data = res.data
+            data.forEach(item=>{
+              item.Name = item.UseWaterTypeName
+            })
+            console.log(res.data)
+            this.userWterTypes = data
+          }
+        })
       }
     },
     mounted() {
       this.screenWdth = window.screen.width
       this.waterFactory = this.$store.state.user.waterWorks
       this.param.WaterFactoryId = this.waterFactory[0].Id
+      this.waterMeterArray = getDictionaryOption('水表类型')
+      this.userArray = getDictionaryOption('用户类型')
+      this.getWaterPorter()
     }
   }
 </script>

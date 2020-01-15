@@ -10,115 +10,115 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="WaterPropertyName"
           label="用水性质名称"
           min-width="120"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="WaterMeterType"
           min-width="120"
           label="水表类型"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="CustomerType"
           min-width="120"
           label="用户类型"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="CustomerCount"
           min-width="120"
           label="用户户数"
           align="center">
         </el-table-column>
         <el-table-column label="一阶">
           <el-table-column
-            prop="name"
+            prop="WaterPriceToLadder1"
             label="水费"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="WaterYieldToLadder1"
             label="水量"
             width="120">
           </el-table-column>
         </el-table-column>
         <el-table-column label="二阶">
           <el-table-column
-            prop="name"
+            prop="WaterPriceToLadder2"
             label="水费"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="WaterYieldToLadder2"
             label="水量"
             width="120">
           </el-table-column>
         </el-table-column>
         <el-table-column label="三阶">
           <el-table-column
-            prop="name"
+            prop="WaterPriceToLadder3"
             label="水费"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="WaterYieldToLadder3"
             label="水量"
             width="120">
           </el-table-column>
         </el-table-column>
         <el-table-column label="四阶">
           <el-table-column
-            prop="name"
+            prop="WaterPriceToLadder4"
             label="水费"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="WaterYieldToLadder4"
             label="水量"
             width="120">
           </el-table-column>
         </el-table-column>
         <el-table-column label="五阶">
           <el-table-column
-            prop="name"
+            prop="WaterPriceToLadder5"
             label="水费"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="WaterYieldToLadder5"
             label="水量"
             width="120">
           </el-table-column>
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="SewagePrice"
           label="污水费"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="OtherPrice1"
           min-width="120"
           label="其他费用1"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="OtherPrice2"
           label="其他费用2"
           min-width="120"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="TotalPrice"
           label="共计水量"
           min-width="120"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="TotalYield"
           label="共计水费"
           min-width="120"
           align="center">
@@ -132,11 +132,7 @@
 import SearchTips from "@/components/SearchTips/index";
 import SelectHead from "./SelectHead"; //查询条件组建
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import {
-  MeterReadPlanExport,
-  ReadingQueryPageQuery,
-  QueryMeterReaderByFactoryId
-} from "@/api/meterQuery";
+import { WaterPropertyReportToLadder, WaterPropertyReportToLadderToExcel } from "@/api/reportInfo";
 import { promptInfoFun } from "@/utils/index";
 export default {
   components: { SelectHead, SearchTips },
@@ -147,33 +143,15 @@ export default {
       tableHeight: null, //表格高度
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
-      param: {
-        CustomerQueryType: "1", //用户查询类型 用户编号=1，姓名=2，简码=3
-        CustomerQueryValue: "", //用户查询值
-        SA_WaterFactory_Id: "-1", //水厂
-        SA_MeterReadPlan_Id: "", //抄表计划Id
-        SA_MeterReader_Id: "-1", //抄表员ID
-        SA_RegisterBookInfo_Id: "-1", //表册Id
-        UserType: "-1", //用户类型 = ['1201', '1202', '1203', '1204', '-1']
-        InputEmpName: "", //录入人
-        ReadDateStart: "", //抄表时间
-        ReadDateEnd: "",
-        ReadingQueryType: "1", //抄表查询类型 按抄表计划查询=1， 按抄表时间查询=2
-        MeterReadState: "-1", //抄表状态 = ['1401', '1402', '-1']
-        InputTimeStart: "", //录入时间
-        InputTimeEnd: "",
-        limit: 10,
-        page: 0,
-        sort: "",
-        filed: "",
-        tableId: "0000015"
-      },
+      param: { },
     };
   },
   methods: {
     searchFun() {
-      //列表查询
-      ReadingQueryPageQuery(this.param).then(res => {
+      let param = Object.assign({},this.param)
+      param.CustomerType = parseInt(this.param.CustomerType)
+      param.WaterMeterType = parseInt(this.param.WaterMeterType)
+      WaterPropertyReportToLadder(param).then(res => {
         if (res.code == 0) {
           this.tipsData = pushItem(this.tipsDataCopy)
           this.tableData = res.data;
@@ -187,7 +165,10 @@ export default {
         promptInfoFun(this,1,'暂无导出数据')
         return false
       }
-      MeterReadPlanExport(this.param).then(res => {
+      let param = Object.assign({},this.param)
+      param.CustomerType = parseInt(this.param.CustomerType)
+      param.WaterMeterType = parseInt(this.param.WaterMeterType)
+      WaterPropertyReportToLadderToExcel(param).then(res => {
         window.location.href = `${this.common.excelPath}${res.data}`;
       });
     },
@@ -208,6 +189,10 @@ export default {
      * param  对应搜索条件的对象名
      */
     delTips(val) {
+      if(val=='createStartTimes'){
+        promptInfoFun(this,1,'生效日期不能为空!')
+        return false
+      }
       this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, 'param')
       this.searchFun()
     },
@@ -229,5 +214,5 @@ export default {
       this.tableHeight  = document.getElementsByClassName("cl-container")[0].offsetHeight - document.getElementById("table").offsetTop;
     })
   }
-};
+}
 </script>

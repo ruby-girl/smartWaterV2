@@ -27,8 +27,7 @@
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <!--MeterReadUserName-->
-            <p v-for="(item,index) in scope.row.name" :key="index" class="multiColumn">
+            <p v-for="(item,index) in scope.row.OpName" :key="index" class="multiColumn">
               {{item}}
             </p>
           </template>
@@ -46,52 +45,49 @@
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="YCMeterReadNum"
           label="应抄数"
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <p v-for="(item,index) in scope.row.name" :key="index" class="multiColumn">
+            <p v-for="(item,index) in scope.row.yichaoshu" :key="index" class="multiColumn">
               {{item}}
             </p>
           </template>
         </el-table-column>
         <el-table-column
-          prop="YCMeterReadTotal"
+          prop="zongyingchaoshu"
           label="总应抄数"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="FinishMeterReadNum"
           label="已抄数"
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <p v-for="(item,index) in scope.row.name" :key="index" class="multiColumn">
+            <p v-for="(item,index) in scope.row.yingchaoshu" :key="index" class="multiColumn">
               {{item}}
             </p>
           </template>
         </el-table-column>
         <el-table-column
-          prop="FinishMeterReadTotal"
+          prop="zongyichaoshu"
           label="总已抄数"
           align="center"
           min-width="200px">
         </el-table-column>
         <el-table-column
-          prop="UnfinishedMeterReadNum"
           label="未抄数"
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <p v-for="(item,index) in scope.row.name" :key="index" class="multiColumn">
+            <p v-for="(item,index) in scope.row.weichaoshu" :key="index" class="multiColumn">
               {{item}}
             </p>
           </template>
         </el-table-column>
         <el-table-column
-          prop="UnfinishedMeterReadTotal"
+          prop="zongweichaoshu"
           label="总未抄数"
           align="center"
           min-width="200px">
@@ -102,13 +98,13 @@
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <p v-for="(item,index) in scope.row.name" :key="index" class="multiColumn">
+            <p v-for="(item,index) in scope.row.wanchenglv" :key="index" class="multiColumn">
               {{item}}
             </p>
           </template>
         </el-table-column>
         <el-table-column
-          prop="FinishPercentTotal"
+          prop="zongwanchenglv"
           label="总完成率"
           align="center"
           min-width="200px">
@@ -136,7 +132,7 @@
           page:1,
           limit:10
         },
-        tableData: [{date:111,name:['小民族','刷卡啊额','安慰让我额']}],//表格数据
+        tableData: [],//表格数据
         tipsData: [], //传入子组件的值
         tipsDataCopy: [], //表单变化的值
       }
@@ -145,7 +141,7 @@
       /*当前列表无数据，不可导出*/
       exportExcel() {//导出事件
         if(this.tableData.length<=0){
-          promptInfoFun(this,1,res.message)
+          promptInfoFun(this,1,'当前列表无数据，不可导出')
           return false
         }
         MeterReadPercentStatistics_ToExcel(this.param).then(res => {
@@ -177,6 +173,10 @@
        * param  对应搜索条件的对象名
        */
       delTips(val) {
+        if(val=='createStartTimes'){
+          promptInfoFun(this,1,'抄表计划日期不能为空！')
+          return
+        }
         this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()
       },

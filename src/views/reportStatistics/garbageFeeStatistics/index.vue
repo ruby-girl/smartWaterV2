@@ -64,7 +64,7 @@
     methods: {
       exportExcel() {//导出事件
         if(this.tableData.length<=0){
-          promptInfoFun(this,1,res.message)
+          promptInfoFun(this,1,'当前列表无数据，不可导出')
           return false
         }
         Execl_GarbageReportDt(this.grp).then(res => {

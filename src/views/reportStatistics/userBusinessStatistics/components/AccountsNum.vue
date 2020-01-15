@@ -13,13 +13,17 @@
         <span>{{(parms.page - 1) * parms.limit+ scope.$index + 1}}</span>
       </template>
     </el-table-column>
+    <el-table-column prop="CustomerNo" label="用户编号" width="150"></el-table-column>
     <el-table-column prop="CustomerName" label="姓名" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterNo" label="水表编号" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterStyleStr" label="水表样式" width="150"></el-table-column>
-    <el-table-column prop="MeterDiameter" label="口径" width="150"></el-table-column>
-    <el-table-column prop="StarReadNum" label="起始读数" width="150"></el-table-column>
-    <el-table-column prop="ReadNum" label="当前读数" width="150"></el-table-column>
-    <el-table-column prop="ReadDate" label="最近一次抄表日期" width="200"></el-table-column>
+    <el-table-column prop="WaterWorksName" label="水厂" width="150"></el-table-column>
+    <el-table-column prop="AreaName" label="所属区域" width="150"></el-table-column>
+    <el-table-column prop="WaterMeterTypeName" label="水表类型" width="150"></el-table-column>
+    <el-table-column prop="UseWaterTypeName" label="用水性质" width="150"></el-table-column>
+    <el-table-column prop="UserTypeName" label="用户类型" width="150"></el-table-column>
+    <el-table-column prop="Tel" label="电话" width="150"></el-table-column>
+    <el-table-column prop="CustomerStateName" label="用户状态" width="150"></el-table-column>
+    <el-table-column prop="CreateUserName" label="开户人" width="150"></el-table-column>
+    <el-table-column prop="OperAccountDate" label="开户日期" width="200"></el-table-column>
   </el-table>
 </template>
 <script>

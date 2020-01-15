@@ -33,10 +33,10 @@
 
       <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterMeterTypeId ">
         <el-select
-          v-model="selectHead.WaterMeterTypeId "
+          v-model="selectHead.WaterMeterTypeId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterMeterTypeId ,'WaterMeterTypeId ',WaterMeterList,'水表类型')"
+          @change="getText(selectHead.WaterMeterTypeId ,'WaterMeterTypeId',WaterMeterList,'水表类型')"
         >
           <el-option label="全部" :value="-1"></el-option>
           <el-option

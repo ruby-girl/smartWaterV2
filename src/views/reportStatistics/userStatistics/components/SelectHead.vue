@@ -2,26 +2,27 @@
   <el-form
     ref="formName"
     :inline="true"
-    :model="sbap"
+    :model="report"
     :class="ifMore?'head-search-form form-inline-small-input search-head-otherbox on':'head-search-form form-inline-small-input search-head-otherbox'"
     size="small"
     label-width="90px"
     @submit.native.prevent>
-    <el-form-item label="水厂" prop="editUserId" style="margin-left: -60px">
-      <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
-        <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
+    <el-form-item label="水厂" prop="WaterFactoryId" style="margin-left: -60px">
+      <el-select v-model="report.WaterFactoryId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(report.WaterFactoryId,'WaterFactoryId',waterFactory,'水厂')">
+        <el-option label="全部" value="-1" v-if="waterFactory.length>1"></el-option>
+        <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="用户类型" prop="editUserId">
-      <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
-        <el-option label="全部" value="-1"></el-option>
-        <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
+    <el-form-item label="用户类型" prop="UserType">
+      <el-select v-model="report.UserType" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(report.UserType,'UserType',userArray,'用户类型')">
+        <el-option label="全部" value="-1" v-if="userArray.length>1"></el-option>
+        <el-option v-for="(item,index) in userArray" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-    <el-form-item label="用水性质" prop="editUserId">
-      <el-select v-model="sbap.editUserId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(sbap.editUserId,'editUserId',operatorArray,'操作人')">
-        <el-option label="全部" value="-1"></el-option>
-        <el-option v-for="(item,index) in operatorArray" :key="index" :label="item.Name" :value="item.Id"/>
+    <el-form-item label="用水性质" prop="UseWaterTypeName">
+      <el-select v-model="report.UseWaterTypeId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(report.UseWaterTypeId,'UseWaterTypeId',userWterTypes,'用水性质')">
+        <el-option label="全部" value="-1" v-if="userWterTypes.length>1"></el-option>
+        <el-option v-for="(item,index) in userWterTypes" :key="index" :label="item.UseWaterTypeName" :value="item.UseWaterTypeId"/>
       </el-select>
     </el-form-item>
     <el-form-item label="">
@@ -34,23 +35,35 @@
 </template>
 
 <script>
-  import { ComboBoxListZhuanYong } from "@/api/operationFlow"
+  import {GetWaterPropertyList} from "@/api/userSetting"
+  import {getDictionaryOption} from "@/utils/permission"
 
   export default {
     name: "SelectHead",
     data() {
       return {
+        waterFactory:[],
+        userArray:[],
+        userWterTypes:[],
         ifMore:false,
-        sbap:{
-          page: 1,
+        report:{
+          UserType: "-1",
+          UserTypeName: "",
+          WaterFactoryId: "-1",
+          WaterFactoryName: "",
+          UseWaterTypeId: "",
+          UseWaterTypeName: "",
+          createUserId: "",
+          createStartTime: "",
+          createEndTime: "",
+          editUserId: "",
+          editStartTime: "",
+          editEndTime: "",
           limit: 20,
-          filed:'',
-          sort:"",
-          BlockAreaName: '',//片区名称
-          editUserId: '-1',//操作者
-          editStartTime: '',//操作开始结束时间
-          editEndTime: '',
-          tableId: '0000007'
+          page: 1,
+          sort: "",
+          filed: "",
+          tableId: ""
         },
         createStartTimes:[],
         operatorArray:[],
@@ -60,34 +73,18 @@
     methods: {
       /**
        * 触发父组建查询方法
-       * */
+       **/
       searchFun(){
-        this.$parent.sbap = Object.assign({},this.sbap)
+        this.$parent.report = Object.assign({},this.report)
         this.$parent.searchFun();
-      },
-      getTime1(data) {
-        this.getText(this.createStartTimes,'createStartTimes','','操作时间')
-        if(data !=null){
-          this.sbap.editStartTime = data[0]+ " 00:00:00"
-          this.sbap.editEndTime = data[1]+ " 23:59:59"
-        }else{
-          this.sbap.editStartTime = ''
-          this.sbap.editEndTime = ''
-        }
       },
       /**
        * 获取操作人信息
-       * */
-      GetLoginNameList() {
-        ComboBoxListZhuanYong().then(res => {
-          if (res.code ==0 ) {
-            this.operatorArray = res.data;
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
+       **/
+      getWaterPorter() {
+        GetWaterPropertyList(this.param).then(res => {
+          if(res.code==0){
+            this.userWterTypes = res.data
           }
         })
       },
@@ -96,8 +93,8 @@
       },
       resetFun(formName){
         this.$refs[formName].resetFields();
-        this.sbap.editStartTime = ''
-        this.sbap.editEndTime = ''
+        this.report.editStartTime = ''
+        this.report.editEndTime = ''
         this.createStartTimes = []
         this.$parent.tipsDataCopy = []
         this.searchFun()
@@ -105,7 +102,9 @@
     },
     mounted() {
       this.screenWdth = window.screen.width
-      this.GetLoginNameList()
+      this.waterFactory = this.$store.state.user.waterWorks
+      this.userArray = getDictionaryOption('用户类型')
+      this.getWaterPorter()
     }
   }
 </script>

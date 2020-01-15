@@ -21,10 +21,12 @@
     data() {
       return {
         typeCheck:'1',
+        param:{}
       }
     },
     methods: {
       handleClick(){
+
       },
     },
     mounted() {
