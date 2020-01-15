@@ -95,7 +95,8 @@
           tableId: "0000068"
         },
         createStartTimes:[],
-        screenWdth:''
+        screenWdth:'',
+        planInfoData:[]
       }
     },
     methods: {
@@ -123,6 +124,9 @@
         this.getText(this.param.WaterFactoryId,'WaterFactoryId',this.waterFactory,'水厂')
         QueryMeterReadPlanByFactoryId({'SA_WaterFactory_Id':val}).then(res => {
           if (res.code ==0 ) {
+            res.data.forEach(item=>{
+              this.planInfoData = this.planInfoData.concat(item.Plans)
+            })
             this.planArry = res.data;
             this.param.MeterReadPlanId = res.data[0].Plans[0].Id
             this.getCbyInfo(res.data[0].Plans[0].Id)//搜索默认抄表计划
@@ -132,7 +136,7 @@
       getCbyInfo(id){
         LoadRegisterBookAndMeterReader({'MeterReadPlanId' : id}).then(res => {
           if (res.code ==0 ) {
-            this.getText(id,'param.MeterReadPlanId',this.planArry,'抄表计划')
+            this.getText(id,'MeterReadPlanId',this.planInfoData,'抄表计划')
             this.peopleArray = res.data.MeterReaders;
             this.peopleArray.length > 1 ? this.param.MeterReadUserId = '-1' : this.param.MeterReadUserId = this.peopleArray[0].Id
           } else {

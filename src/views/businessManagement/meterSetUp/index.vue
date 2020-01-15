@@ -140,7 +140,7 @@
           customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
-          getReadDelete({MeterRecordId: row.Id}).then(res => {
+          getReadDelete({MeterRecordId: row.Id,model:'抄表设置'}).then(res => {
             if (res.code == 0) {
               promptInfoFun(this, 2, res.message)
               this.searchFun()

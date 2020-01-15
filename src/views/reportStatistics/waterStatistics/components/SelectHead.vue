@@ -10,16 +10,17 @@
       @submit.native.prevent>
       <el-form-item label="水厂" prop="WaterFactoryId">
         <el-select v-model="param.WaterFactoryId" placeholder="请选择" size="small" @change="getText(param.WaterFactoryId,'WaterFactoryId',waterFactory,'水厂')">
-          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id" />
+          <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="用水性质" prop="WaterPropertyName">
-        <el-select v-model="param.WaterPropertyName" placeholder="请选择" size="small" @change="getText(param.WaterPropertyName,'WaterPropertyName ',userWterTypes,'用水性质')">
-          <el-option v-for="(item,index) in userWterTypes" :key="index" :label="item.Name" :value="item.Id"/>
+        <el-select v-model="param.WaterPropertyName" placeholder="请选择" size="small" @change="getText(param.WaterPropertyName,'WaterPropertyName','','用水性质')">
+          <el-option label="全部" value="-1" v-if="userWterTypes.length>1"></el-option>
+          <el-option v-for="(item,index) in userWterTypes" :key="index" :label="item.UseWaterTypeName" :value="item.UseWaterTypeName"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="水表类型" prop="WaterMeterType ">
-        <el-select v-model="param.WaterMeterType" placeholder="请选择" size="small" @change="getText(param.WaterMeterType,'WaterMeterType ',waterMeterArray,'水表类型')">
+      <el-form-item label="水表类型" prop="WaterMeterType">
+        <el-select v-model="param.WaterMeterType" placeholder="请选择" size="small" @change="getText(param.WaterMeterType,'WaterMeterType',waterMeterArray,'水表类型')">
           <el-option label="全部" value="-1" v-if="waterMeterArray.length>1"></el-option>
           <el-option v-for="(item,index) in waterMeterArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
@@ -31,7 +32,7 @@
         </el-select>
       </el-form-item>
       <transition name="fade">
-        <el-form-item label="日期 " v-show="screenWdth<1600?ifMore:true"prop="createStartTimes">
+        <el-form-item label="生效日期" v-show="screenWdth<1600?ifMore:true" prop="createStartTimes">
           <el-date-picker
             :editable="false"
             @keydown.enter.native="searchFun"
@@ -81,10 +82,10 @@
           WaterFactoryName: "",
           StartEnabledTime: "",
           EndEnabledTime: "",
-          WaterPropertyName: "",
-          WaterMeterType: 1101,
+          WaterPropertyName: "-1",
+          WaterMeterType: '-1',
           WaterMeterTypeName: "",
-          CustomerType: 1201,
+          CustomerType: '-1',
           CustomerTypeName: "",
           createUserId: "",
           createStartTime: "",
@@ -105,11 +106,12 @@
       /**
        * 触发父组建搜索方法
        * */
-      searchFun(type) {
+      searchFun() {
+        this.$parent.param = Object.assign({},this.param)
         this.$parent.searchFun();
       },
-      getTime() {
-        this.getText(this.createStartTimes,'createStartTimes','','日期')
+      getTime(data) {
+        this.getText(this.createStartTimes,'createStartTimes','','生效日期')
         if(data !=null){
           this.param.StartEnabledTime = data[0]
           this.param.EndEnabledTime = data[1]
@@ -141,7 +143,12 @@
       getWaterPorter(){//获取用水性质
         GetWaterPropertyList(this.param).then(res => {
           if(res.code==0){
-            this.userWterTypes = res.data
+            let data = res.data
+            data.forEach(item=>{
+              item.Name = item.UseWaterTypeName
+            })
+            console.log(res.data)
+            this.userWterTypes = data
           }
         })
       }

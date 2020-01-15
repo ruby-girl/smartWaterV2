@@ -155,7 +155,7 @@ export default {
         customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
-        getReadDelete({ MeterRecordId: row.SA_MeterRecord_Id }).then(res => {
+        getReadDelete({ MeterRecordId: row.SA_MeterRecord_Id,model:'抄表查询'}).then(res => {
           if (res.code == 0) {
             promptInfoFun(this, 2, res.message);
             this.searchFun();

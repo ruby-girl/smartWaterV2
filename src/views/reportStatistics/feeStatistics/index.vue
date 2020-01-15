@@ -70,7 +70,7 @@
         <el-table-column label="本期应收">
           <el-table-column
             prop="CPollutionDischarge"
-            label="CPrice"
+            label="清水费"
             align="center"
             width="120">
           </el-table-column>
@@ -173,7 +173,7 @@
     methods: {
       exportExcel() {//导出事件
         if(this.tableData.length<=0){
-          promptInfoFun(this,1,res.message)
+          promptInfoFun(this,1,"当前列表无数据，不可导出")
           return false
         }
         FeeStatisticsReportGetListToExcel(this.param).then(res => {
