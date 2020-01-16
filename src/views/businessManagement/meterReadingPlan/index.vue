@@ -122,7 +122,7 @@
                     @click="changeInput(scope.row.Id,true)"
                   >&#xe675;</i>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="详情" placement="bottom">
+                <el-tooltip  effect="light" content="详情" :visible-arrow="false" placement="bottom">
                   <i
                     class="iconStyle icon iconfont operation3 iconbiaodan1"
                     @click="meterReadingPlanDetail(scope.row.Id)"
@@ -165,7 +165,7 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import AddReadingPlan from "./components/AddReadingPlan";
 import {
   searchPlanList,
@@ -214,7 +214,7 @@ export default {
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
-      searchWidth: 1024
+      searchWidth: 1024,
     };
   },
   computed: {
@@ -325,10 +325,11 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       })
         .then(() => {
+             closeDelTip()
           delPlanList({ SA_MeterReadPlan_Id: id }).then(res => {
             if (res.code == 0) {
               that.$message({
@@ -344,7 +345,9 @@ export default {
             }
           });
         })
-        .catch(() => {});
+        .catch(() => {
+          closeDelTip()
+        });
     },
     sortChanges({ column, prop, order }) {
       //排序
