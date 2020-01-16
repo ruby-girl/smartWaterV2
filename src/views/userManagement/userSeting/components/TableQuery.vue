@@ -98,7 +98,7 @@
   import EditDialog from './EditDialog'
   import DetailDialog from './DetailDialog'
   import CreditCard from './CreditCard'
-  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { delTips, getText, pushItem,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
   import { DelCustomerInfo} from "@/api/userSetting";
   import { getMarkCard, getPatchCard, getOpenFlag } from "@/utils/projectLogic"; //IC卡读卡
 
@@ -201,9 +201,12 @@
           customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
+          closeDelTip()
           DelCustomerInfo({customerId:row.Id}).then(res => {//写卡
             res.code==0 ? (promptInfoFun(this, 2, res.message), this.searchFun()):promptInfoFun(this, 1, res.message)
           })
+        }).catch(()=>{
+          closeDelTip()
         })
       },
       /******************新增用户*********************/

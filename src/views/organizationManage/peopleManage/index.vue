@@ -99,7 +99,7 @@
   import detailmponent from './components/Detail'
   import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl, WaterFactoryComboBoxList} from "@/api/organize"
   import { getTime } from "@/utils/index";
-  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 
   export default {
     name: 'peopleManage',
@@ -218,6 +218,7 @@
           customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
+          closeDelTip()
           peopleDelete({id: row.Id}).then(res => {
             if (res.code == 0) {
               this.$message({
@@ -234,7 +235,9 @@
               });
             }
           })
-        });
+        }).catch(()=>{
+          closeDelTip()
+        })
       },
       searchFun() {//查询方法
         let jp;

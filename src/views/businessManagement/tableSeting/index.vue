@@ -82,7 +82,7 @@
   import { GetRegisterList, GetObjById, DeleteBlObj, ClearRegisterBook, GetRegisterList_Execl, GetOrientationList} from "@/api/registerBook"
   import { parseTime, promptInfoFun } from "@/utils/index"
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
-  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
   import{ mapGetters } from 'vuex'
 
   export default {
@@ -163,6 +163,7 @@
           customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
+          closeDelTip()
           DeleteBlObj({'RegisterBookId': row.Id}).then(res => {
             if (res.code == 0) {
               promptInfoFun(this,2,res.message)
@@ -171,6 +172,8 @@
               promptInfoFun(this,1,res.message)
             }
           })
+        }).catch(()=>{
+          closeDelTip()
         })
       },
       handleUser(row){//用户表册,type==2时候为定位

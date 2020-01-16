@@ -65,7 +65,7 @@ import EditDialog from "./EditDialog"; //查询条件组建
 import SearchTips from "@/components/SearchTips/index";
 import SelectHead from "./SelectHead"; //查询条件组建
 import Pagination from "@/components/Pagination/index"; //分页
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   MeterReadPlanExport,
   ReadingQueryPageQuery,
@@ -155,6 +155,7 @@ export default {
         customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
+        closeDelTip()
         getReadDelete({ MeterRecordId: row.SA_MeterRecord_Id,model:'抄表查询'}).then(res => {
           if (res.code == 0) {
             promptInfoFun(this, 2, res.message);
@@ -163,7 +164,9 @@ export default {
             promptInfoFun(this, 1, res.message);
           }
         });
-      });
+      }).catch(()=>{
+        closeDelTip()
+      })
     },
     handleDetail(row) {
       //水量详情

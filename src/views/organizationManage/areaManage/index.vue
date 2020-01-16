@@ -144,6 +144,7 @@
           customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
+          closeDelTip()
           BlockAreaDelete({Id: row.Id}).then(res => {
             if (res.code == 0) {
               this.$message({
@@ -160,6 +161,8 @@
               });
             }
           })
+        }).catch(()=>{
+          closeDelTip()
         })
       },
       searchFun() {//查询事件
