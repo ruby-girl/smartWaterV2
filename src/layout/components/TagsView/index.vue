@@ -147,10 +147,10 @@ export default {
     closeSelectedTag(view) {
       if(view.title=='业务流程管理'){
         this.$confirm("请确认业务流程管理是否还有未保存的流程配置！", "提示", {
-          confirmButtonText: "确认关闭",
-          cancelButtonText: " 取消关闭",
+          confirmButtonText: "确认",
+          cancelButtonText: " 取消",
           iconClass: "el-icon-question questionIcon",
-          customClass: "warningBox",
+          customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
           this.$store.dispatch('tagsView/delView', view).then(({visitedViews}) => {

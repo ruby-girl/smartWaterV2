@@ -68,7 +68,7 @@
   import Pagination from '@/components/Pagination/index'//分页
   import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"//http 请求
   import { parseTime } from "@/utils/index"
-  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 
   export default {
     name: 'areaManage',
