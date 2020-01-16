@@ -256,7 +256,7 @@ import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //�
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           iconClass: "el-icon-question questionIcon",
-          customClass: "warningBox",
+          customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
           waterFactoryDelete(row).then(res => {

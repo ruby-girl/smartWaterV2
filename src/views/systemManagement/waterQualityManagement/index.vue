@@ -352,7 +352,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
         DeleteWaterPropertyId({ id: row.Id }).then(res => {

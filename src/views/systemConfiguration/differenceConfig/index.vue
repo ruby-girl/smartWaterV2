@@ -99,19 +99,17 @@ export default {
     })
     },
     saveMonth(){
-      console.info(this.arr)
-      return
       SaveYearMonthWaterYieldInfo(this.arr).then(res=>{
         this.$message({
           message: "保存成功",
           type: "success",
           duration: 4000
         });
-        // this.getWaterYieldToFactory()
+         this.getWaterYieldToFactory()
       })
     },
     edit(i){
-      this.arr[i].show =true
+      this.arr[i].show =!this.arr[i].show
       this.arr[i].allShow =true
      
     }
@@ -134,6 +132,7 @@ export default {
   }
   .year-box-border {
     border-left: 4px solid #29beb0;
+    padding-left:5px;
   }
   .year-button {
     color: #29beb0;
@@ -161,7 +160,8 @@ export default {
   }
   .read-left-box {
     background: #ebeff5;
-    width: 85px;
+    width: 88px;
+    padding-left: 2px;
     height: 52px;
     text-align: center;
     & + div {

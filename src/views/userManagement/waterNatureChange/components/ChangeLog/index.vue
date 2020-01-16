@@ -75,7 +75,7 @@ export default {
       listQuery: {
         // 查询条件
         //右侧用户列表查询条件
-        CustomerQueryType: "", //用户下拉框类型
+        CustomerQueryType: "1", //用户下拉框类型
         CustomerQueryValue: "",
         WaterMeterType: "-1", //水表类型
         UserType: "-1", //用户类型

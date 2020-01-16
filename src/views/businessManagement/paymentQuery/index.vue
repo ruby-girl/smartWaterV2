@@ -121,7 +121,7 @@ export default {
         limit: 20,
         filed: "",
         sort: "",
-        CustomerQueryType: "", //用户类型
+        CustomerQueryType: "1", //用户类型
         CustomerQueryValue: "", // input值
         WaterMeterTypeId: "-1", //水表类型
         PayMentState: "-1", //缴费状态
@@ -246,7 +246,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
         this.IcInfo = {};

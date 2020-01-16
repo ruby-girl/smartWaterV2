@@ -320,7 +320,7 @@ export default {
           confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
         }).then(() => {
         OrderFeeCancel({ SA_Order_Id: id }).then(res => {
@@ -352,7 +352,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
          OrdersFeeCancels(this.checkedDataId).then(res => {

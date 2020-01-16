@@ -227,7 +227,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
         OrderFeeCancel({SA_Order_Id:r.Id}).then(res => {

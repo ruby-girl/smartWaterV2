@@ -80,7 +80,7 @@ export default {
        SA_WaterFactory_Id:'-1',//水厂
        UserType:'-1',//用户类型
        WaterTypeId:'-1',//水表类型
-       TransferCustomer:'',//查询类型
+       TransferCustomer:'3301',//查询类型
        Customer:'',//Input值
        OpId:'-1',//过户操作员
        Star_TransferDate:'',//开始时间
