@@ -61,13 +61,13 @@
       >
         <div class="display-flex align-items-center justify-content-flex-justify">
           <el-form-item label="姓名" prop="NewCustomerName">
-            <el-input v-model="newUser.NewCustomerName" class="short-input"></el-input>
+            <el-input v-model="newUser.NewCustomerName" class="short-input" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="人口" label-width="55px" prop="NewPeopleNo">
             <el-input
               class="people-input"
               v-model="newUser.NewPeopleNo"
-              maxlength="1"
+              maxlength="2"
               @keyup.native="testNumber"
             ></el-input>
           </el-form-item>
@@ -159,7 +159,7 @@ export default {
         ],
         NewPeopleNo: [{ required: true, message: "必填", trigger: "blur" }],
         NewIdentityNo: [
-          { required: true, message: " ", trigger: "blur" },
+          { required: false, message: " ", trigger: "blur" },
           {
             pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
             message: "请正确输入身份证号",

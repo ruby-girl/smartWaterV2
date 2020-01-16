@@ -51,7 +51,7 @@ export default {
       selectHead: {
         AreaId: "", //区域
         AreaName: "", //区域
-        WaterMeterTypeId: "", //水表类型
+        WaterMeterTypeId: -1, //水表类型
         WaterMeterTypeName: "", //水表类型
         StartDate: "",
         EndDate: ""

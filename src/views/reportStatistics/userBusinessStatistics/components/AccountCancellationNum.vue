@@ -16,14 +16,11 @@
     <el-table-column prop="CustomerNo" label="用户编号" width="150"></el-table-column>
     <el-table-column prop="CustomerName" label="姓名" width="150"></el-table-column>
     <el-table-column prop="WaterWorksName" label="水厂" width="150"></el-table-column>
-    <el-table-column prop="AreaName" label="所属区域" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterTypeName" label="水表类型" width="150"></el-table-column>
-    <el-table-column prop="UseWaterTypeName" label="用水性质" width="150"></el-table-column>
-    <el-table-column prop="UserTypeName" label="用户类型" width="150"></el-table-column>
     <el-table-column prop="Tel" label="电话" width="150"></el-table-column>
-    <el-table-column prop="CustomerStateName" label="用户状态" width="150"></el-table-column>
-    <el-table-column prop="CreateUserName" label="开户人" width="150"></el-table-column>
-    <el-table-column prop="OperAccountDate" label="开户日期" width="200"></el-table-column>
+    <el-table-column prop="IdentityNo" label="证件号" width="150"></el-table-column>
+    <el-table-column prop="Address" label="地址" width="150"></el-table-column>
+    <el-table-column prop="CreateUserName" label="销户操作员" width="150"></el-table-column>
+    <el-table-column prop="CancelDate" label="销户日期" width="200"></el-table-column>
   </el-table>
 </template>
 <script>

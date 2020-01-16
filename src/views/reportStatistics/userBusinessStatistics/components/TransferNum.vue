@@ -14,16 +14,12 @@
       </template>
     </el-table-column>
     <el-table-column prop="CustomerNo" label="用户编号" width="150"></el-table-column>
-    <el-table-column prop="CustomerName" label="姓名" width="150"></el-table-column>
-    <el-table-column prop="WaterWorksName" label="水厂" width="150"></el-table-column>
-    <el-table-column prop="AreaName" label="所属区域" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterTypeName" label="水表类型" width="150"></el-table-column>
-    <el-table-column prop="UseWaterTypeName" label="用水性质" width="150"></el-table-column>
-    <el-table-column prop="UserTypeName" label="用户类型" width="150"></el-table-column>
-    <el-table-column prop="Tel" label="电话" width="150"></el-table-column>
-    <el-table-column prop="CustomerStateName" label="用户状态" width="150"></el-table-column>
-    <el-table-column prop="CreateUserName" label="开户人" width="150"></el-table-column>
-    <el-table-column prop="OperAccountDate" label="开户日期" width="200"></el-table-column>
+    <el-table-column prop="OldCustomerName" label="原用户姓名" width="150"></el-table-column>
+    <el-table-column prop="NewCustomerName" label="新用户姓名" width="150"></el-table-column>
+    <el-table-column prop="NewIdentityNo" label="新用户证件号" width="150"></el-table-column>
+    <el-table-column prop="CreateUserName" label="过户操作人" width="150"></el-table-column>
+    <el-table-column prop="TransferDate" label="过户日期" width="200"></el-table-column>
+    
   </el-table>
 </template>
 <script>

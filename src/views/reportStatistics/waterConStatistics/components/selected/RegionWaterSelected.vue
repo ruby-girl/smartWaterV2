@@ -120,6 +120,16 @@ export default {
   },
   
   methods: {
+     //获取下拉框中文
+    getSelectName(id, list) {
+      let Name = "";
+      list.forEach(res => {
+        if (res.Id == id) {
+          Name = res.Name;
+        }
+      });
+      return Name;
+    },
     getArea(id) {
       getOrgTree(
         function(res) {
@@ -145,6 +155,10 @@ export default {
       }
     },
     handleFilter() {
+      this.selectHead.WaterMeterTypeName = this.getSelectName(
+        this.selectHead.WaterMeterTypeId,
+        this.WaterMeterList
+      );
       this.$parent.searchTableList();
     },
     getText(val, model, arr, name) {

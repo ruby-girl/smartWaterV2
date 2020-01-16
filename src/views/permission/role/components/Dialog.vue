@@ -6,7 +6,7 @@
     :visible.sync="dialogFormVisible"
     :close-on-click-modal="false"
     top="10vh"
-    width="1000px"
+    width="1010px"
     height
     center
     @open="opened"
@@ -61,7 +61,11 @@
                   @change="handleCheckedNoThreeButton(i,child)"
                 >{{btn.Name}}</el-checkbox>
               </div>
-                <i class="iconfont iconquestion main-color pr-15"></i>
+              <i
+                class="iconfont iconquestion main-color pr-15 pointer"
+                @click="showImg(temp.Unique)"
+                v-show="temp.Event=='true'"
+              ></i>
             </div>
             <div v-else class="config-body-box">
               <!-- 有3级的第二个父级 -->
@@ -101,7 +105,7 @@
                       :key="btn.Unique"
                     >{{btn.Name}}</el-checkbox>
                   </div>
-                  <i class="iconfont iconquestion main-color pr-15"></i>
+                  <i class="iconfont iconquestion main-color pr-15 pointer" @click="showImg(last.Unique)" v-if="last.Event=='true'"></i>
                 </div>
               </div>
               <!-- 循环第3级 e-->
@@ -150,74 +154,8 @@ export default {
           { max: 20, message: "最大长度20个字符", trigger: "blur" }
         ]
       },
-      arr: [
-        {
-          name: "权限管理",
-          Checked: false,
-          IsIndeterminate: false,
-          child: [
-            {
-              name: "账号管理",
-              childrens: [],
-              nId: 1,
-              Checked: false,
-              IsIndeterminate: false,
-              button: [
-                { name: "添加", nId: 11, Checked: false },
-                { name: "编辑", nId: 22, Checked: false }
-              ]
-            },
-            {
-              name: "角色管理",
-              childrens: [],
-              nId: 2,
-              Checked: false,
-              IsIndeterminate: false,
-              button: [
-                { name: "添加", nId: 33, Checked: false },
-                { name: "编辑", nId: 44, Checked: false }
-              ]
-            }
-          ]
-        },
-        {
-          name: "业务管理",
-          Checked: false,
-          IsIndeterminate: false,
-          child: [
-            {
-              name: "抄表查询",
-              Checked: false,
-              IsIndeterminate: false,
-              childrens: [
-                {
-                  name: "按抄表计划查询",
-                  Checked: false,
-                  IsIndeterminateThree: false,
-                  button: [{ name: "删除", Checked: false }]
-                },
-                {
-                  name: "按抄表日期查询",
-                  Checked: false,
-                  IsIndeterminateThree: false,
-                  button: [{ name: "删除", Checked: false }]
-                }
-              ],
-              button: []
-            },
-            {
-              name: "抄表设置",
-              childrens: [],
-              Checked: false,
-              IsIndeterminate: false,
-              button: [
-                { name: "删除抄表记录", Checked: false },
-                { name: "抄表录入确定", Checked: false }
-              ]
-            }
-          ]
-        }
-      ],
+      url: "",
+      arr: [],
       dialogFormVisible: false
     };
   },
@@ -236,6 +174,10 @@ export default {
     }
   },
   methods: {
+    // 查看新手指引
+    showImg(num) {
+      this.$emit("showImg", num);
+    },
     opened() {
       GetRoleModel(this.temp.Id).then(res => {
         this.arr = res.data.Menus;
@@ -335,12 +277,16 @@ export default {
           }
         });
       }
-      this.handleCheckedThree(first, index, children, 'btnEvent');
+      this.handleCheckedThree(first, index, children, "btnEvent");
     },
-    handleCheckedThree(first, index, children, btnEvent) {//第3级标签页事件
-      if (!btnEvent) {//如果是按钮事件调用该方法，不再次处理按钮
+    handleCheckedThree(first, index, children, btnEvent) {
+      //第3级标签页事件
+      if (!btnEvent) {
+        //如果是按钮事件调用该方法，不再次处理按钮
         //标签页事件
-        this.arr[first].Childrens[index].Childrens[children].IsIndeterminate=false
+        this.arr[first].Childrens[index].Childrens[
+          children
+        ].IsIndeterminate = false;
         if (this.arr[first].Childrens[index].Childrens[children].Checked) {
           this.arr[first].Childrens[index].Childrens[children].Buttons.forEach(
             button => {
@@ -377,10 +323,10 @@ export default {
       }
       this.setCheckedOne(first); //处理1级复选框
     },
-    handleCheckedTwo(first, index,isHaveThree) {
+    handleCheckedTwo(first, index, isHaveThree) {
       //二级页面事件
       if (isHaveThree) {
-        //如果是从有第三级过来的事件,需要处理标签页   
+        //如果是从有第三级过来的事件,需要处理标签页
         if (this.arr[first].Childrens[index].Checked) {
           //第三级和按钮处理选中
           this.arr[first].Childrens[index].Childrens.forEach(childrens => {
@@ -400,7 +346,7 @@ export default {
           });
         }
       }
-      this.arr[first].Childrens[index].IsIndeterminate=false
+      this.arr[first].Childrens[index].IsIndeterminate = false;
       this.arr.forEach((item, i) => {
         let CheckedArr = item.Childrens.filter(i => {
           //二级勾选
@@ -525,7 +471,7 @@ export default {
 .config-container {
   border: 1px solid #e2e9ed;
   border-bottom: none;
-  height: 500px;
+  height: 400px;
   margin: 15px;
   overflow-y: scroll;
   .config-title {
@@ -556,5 +502,6 @@ export default {
     }
   }
 }
+
 </style>
 

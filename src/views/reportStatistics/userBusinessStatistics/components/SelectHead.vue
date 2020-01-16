@@ -10,18 +10,17 @@
       ref="formHeight"
     >
       <el-form-item
-        v-if="companyOptions.length!=1"
         label="水厂"
         :label-width="isShow?'68px':'40px'"
         prop="waterFactoryId"
+        v-show="show1||isShow"
       >
         <el-select
           v-model="selectHead.waterFactoryId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.waterFactoryId,'waterFactoryId',companyOptions,'水厂')"
+          @change="getText(selectHead.waterFactoryId, 'waterFactoryId',companyOptions,'水厂')"
         >
-          <el-option label="全部" value="-1"></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -30,7 +29,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="操作人" v-show="show1||isShow" prop="createUserId">
+      <el-form-item label="操作人" v-show="show2||isShow" prop="createUserId">
         <el-select
           v-model="selectHead.createUserId"
           placeholder="请选择"
@@ -46,7 +45,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="水表类型" v-show="show2||isShow" prop="waterMeterType">
+      <el-form-item label="水表类型" v-show="show3||isShow" prop="waterMeterType">
         <el-select
           v-model="selectHead.waterMeterType"
           placeholder="请选择"
@@ -62,7 +61,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户类型" v-show="show3||isShow" prop="userType">
+      <el-form-item label="用户类型" v-show="show4||isShow" prop="userType">
         <el-select
           v-model="selectHead.userType"
           placeholder="请选择"
@@ -78,7 +77,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="业务办理日期" label-width="90px" v-show="show4||isShow">
+      <el-form-item label="业务办理日期" label-width="90px" v-show="show5||isShow">
         <el-date-picker
           v-model="dateArr"
           type="daterange"
@@ -142,18 +141,12 @@ export default {
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
-        if (this.companyOptions.length == 1) {
-          if (Math.floor((val - 200) / 280) < 4) {
-            this.showBtn = true;
-          } else {
-            this.showBtn = false;
-          }
+        this.show5 = this.showLabel(5, val);
+
+        if (Math.floor((val - 200) / 280) < 6) {
+          this.showBtn = true;
         } else {
-          if (Math.floor((val - 200) / 280) < 5) {
-            this.showBtn = true;
-          } else {
-            this.showBtn = false;
-          }
+          this.showBtn = false;
         }
       },
       immediate: true
@@ -162,10 +155,41 @@ export default {
   created() {},
   methods: {
     getName() {
-      this.selectHead.waterFactoryName=getLabelName(this.selectHead.waterFactoryId,this.companyOptions)
-      this.selectHead.createUserName=getLabelName(this.selectHead.createUserId,this.editUserList)
-      this.selectHead.userTypeName=getLabelName(this.selectHead.userType,this.userTypeList)
-      this.selectHead.waterMeterTypeName=getLabelName(this.selectHead.waterMeterType,this.WaterMeterList)
+      if(this.selectHead.waterFactoryId==-1){
+        this.selectHead.waterFactoryName="全部"
+      }else{
+        this.selectHead.waterFactoryName = getLabelName(
+          this.selectHead.waterFactoryId,
+          this.companyOptions
+        );
+      }
+
+       if(this.selectHead.waterMeterType==-1){
+        this.selectHead.waterMeterTypeName="全部"
+      }else{
+        this.selectHead.waterMeterTypeName = getLabelName(
+          this.selectHead.waterMeterType,
+          this.WaterMeterList
+        );
+      }
+
+       if(this.selectHead.createUserId==-1){
+        this.selectHead.createUserName="全部"
+      }else{
+          this.selectHead.createUserName = getLabelName(
+          this.selectHead.createUserId,
+          this.editUserList
+        );
+      }
+
+       if(this.selectHead.userType==-1){
+        this.selectHead.userTypeName="全部"
+      }else{
+      this.selectHead.userTypeName = getLabelName(
+        this.selectHead.userType,
+        this.userTypeList
+      );
+      }
     },
     resetting() {
       //重置
@@ -174,13 +198,9 @@ export default {
       this.$parent.delTips("dateArr");
     },
     showLabel(n, w) {
-      if (this.companyOptions.length == 1) {
         if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
         return false;
-      } else {
-        if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
-        return false;
-      }
+        
     },
     handleFilter() {
       this.$parent.searchTableList();

@@ -52,24 +52,38 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const { data } = response
+        // const { data } = response
+        // let arr=[]
+        // response.data.map((item)=>{
+        //   arr.push(item.Id)
+        // })
+        // data.roles=arr
+        // // data.roles=response.data
+        // const { roles } = data
+        // // roles must be a non-empty array
+        // if (!roles || roles.length <= 0) {
+        //   reject('getInfo: roles must be a non-null array!')
+        // }
+        
+        // commit('SET_ROLES', roles)
+        // // commit('SET_NAME', name)
+        // // commit('SET_AVATAR', avatar)
+        // // commit('SET_INTRODUCTION', introduction)
+        // resolve(data)
+        
         let arr=[]
-        response.data.map((item)=>{
-          arr.push(item.Id)
-        })
-        data.roles=arr
-        // data.roles=response.data
-        const { roles } = data
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
+        response.data.forEach(item => {
+          let obj={
+            Id:item,
+            Name:'路由名'
+          }
+          arr.push(obj)
+        });
+        let obj={
+          roles:response.data
         }
-
-        commit('SET_ROLES', roles)
-        // commit('SET_NAME', name)
-        // commit('SET_AVATAR', avatar)
-        // commit('SET_INTRODUCTION', introduction)
-        resolve(data)
+        commit('SET_ROLES',  arr)    
+        resolve(obj)
       }).catch(error => {
         reject(error)
       })

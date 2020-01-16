@@ -14,16 +14,17 @@
       </template>
     </el-table-column>
     <el-table-column prop="CustomerNo" label="用户编号" width="150"></el-table-column>
-    <el-table-column prop="CustomerName" label="姓名" width="150"></el-table-column>
-    <el-table-column prop="WaterWorksName" label="水厂" width="150"></el-table-column>
-    <el-table-column prop="AreaName" label="所属区域" width="150"></el-table-column>
-    <el-table-column prop="WaterMeterTypeName" label="水表类型" width="150"></el-table-column>
-    <el-table-column prop="UseWaterTypeName" label="用水性质" width="150"></el-table-column>
-    <el-table-column prop="UserTypeName" label="用户类型" width="150"></el-table-column>
-    <el-table-column prop="Tel" label="电话" width="150"></el-table-column>
-    <el-table-column prop="CustomerStateName" label="用户状态" width="150"></el-table-column>
-    <el-table-column prop="CreateUserName" label="开户人" width="150"></el-table-column>
-    <el-table-column prop="OperAccountDate" label="开户日期" width="200"></el-table-column>
+    <el-table-column prop="CustomerName" label="用户姓名" width="150"></el-table-column>
+    <el-table-column prop="OldWaterMeterTypeName" label="原水表类型" width="150"></el-table-column>
+    <el-table-column prop="OldSA_WaterMeterNo" label="原水表编号" width="150"></el-table-column>
+    <el-table-column prop="OldMeterBalance" label="原表端金额" width="150"></el-table-column>
+    <el-table-column prop="OldAccountBalance" label="原账户金额" width="150"></el-table-column>
+    <el-table-column prop="NewWaterMeterTypeName" label="升级后水表类型" width="150"></el-table-column>
+    <el-table-column prop="NewSA_WaterMeterNo" label="升级后水表编号" width="150"></el-table-column>
+    <el-table-column prop="NewMeterBalance" label="升级后表端余额" width="150"></el-table-column>
+    <el-table-column prop="NewAccountBalance" label="升级后账户余额" width="150"></el-table-column>
+    <el-table-column prop="UpgradeDate" label="升级日期" width="200"></el-table-column>
+    <el-table-column prop="CreateUserName" label="操作员" width="150"></el-table-column>
   </el-table>
 </template>
 <script>

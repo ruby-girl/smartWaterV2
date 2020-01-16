@@ -97,7 +97,7 @@ export default {
         CustomerQueryValue: "",
         WaterFactoryId: "-1", //水厂
         UserType: "-1", //用户类型
-        UserState: "-1", //用户状态
+        UserState: "1301", //用户状态
         AreaId: "-1", //区域
         WaterTypeId: "-1", //水表类型
         WaterPropertyId: "-1", //用水性质

@@ -8,6 +8,7 @@
     center
     custom-class="dialog-background"
     :close-on-click-modal="false"
+    @closed="close"
   >
     <div class="feewaiver-box">
       <el-form
@@ -100,6 +101,10 @@ export default {
     };
   },
   methods: {
+    close(){
+      this.lateFeeValue=''
+      this.inputValue=''
+    },
    feeWaiver() {
       if (this.activeName == "two") {
         this.OrderAfterOverdueFeeWaiverFunc(); //违约金减免

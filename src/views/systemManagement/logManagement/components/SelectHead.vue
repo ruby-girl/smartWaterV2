@@ -102,6 +102,7 @@
 <script>
 import { getDictionaryOption } from "@/utils/permission";
 import { getLabelName } from "@/utils/projectLogic"; //获取lable
+import {getBoxList} from "@/api/log"
 export default {
   props: {
     searchWidth: {}

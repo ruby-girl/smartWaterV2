@@ -22,8 +22,8 @@
     <el-table-column prop="UserTypeName" label="用户类型" width="150"></el-table-column>
     <el-table-column prop="Tel" label="电话" width="150"></el-table-column>
     <el-table-column prop="CustomerStateName" label="用户状态" width="150"></el-table-column>
-    <el-table-column prop="CreateUserName" label="开户人" width="150"></el-table-column>
-    <el-table-column prop="OperAccountDate" label="开户日期" width="200"></el-table-column>
+    <el-table-column prop="CreateUserName" label="操作人" width="150"></el-table-column>
+    <el-table-column prop="OperAccountDate" label="操作日期" width="200"></el-table-column>
   </el-table>
 </template>
 <script>

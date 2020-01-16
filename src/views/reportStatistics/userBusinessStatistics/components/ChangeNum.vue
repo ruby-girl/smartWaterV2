@@ -14,16 +14,18 @@
       </template>
     </el-table-column>
     <el-table-column prop="CustomerNo" label="用户编号" width="150"></el-table-column>
-    <el-table-column prop="CustomerName" label="姓名" width="150"></el-table-column>
-    <el-table-column prop="WaterWorksName" label="水厂" width="150"></el-table-column>
-    <el-table-column prop="AreaName" label="所属区域" width="150"></el-table-column>
+    <el-table-column prop="CustomerName" label="用户姓名" width="150"></el-table-column>
     <el-table-column prop="WaterMeterTypeName" label="水表类型" width="150"></el-table-column>
-    <el-table-column prop="UseWaterTypeName" label="用水性质" width="150"></el-table-column>
-    <el-table-column prop="UserTypeName" label="用户类型" width="150"></el-table-column>
-    <el-table-column prop="Tel" label="电话" width="150"></el-table-column>
-    <el-table-column prop="CustomerStateName" label="用户状态" width="150"></el-table-column>
-    <el-table-column prop="CreateUserName" label="开户人" width="150"></el-table-column>
-    <el-table-column prop="OperAccountDate" label="开户日期" width="200"></el-table-column>
+    <el-table-column prop="OldWaterMeterNo" label="旧水表编号" width="150"></el-table-column>
+    <el-table-column prop="OldReadNum" label="旧水表止数" width="150"></el-table-column>
+    <el-table-column prop="NewWaterMeterNo" label="新水表编号" width="150"></el-table-column>
+    <el-table-column prop="NewReadNum" label="新水表起数" width="150"></el-table-column>
+    <el-table-column prop="OldBalance" label="换表前余额" width="150"></el-table-column>
+    <el-table-column prop="NewBalance" label="换表后余额" width="150"></el-table-column>
+    <el-table-column prop="ChangeMeterTypeName" label="换表类型" width="150"></el-table-column>
+    <el-table-column prop="CreateUserName" label="换标操作员" width="200"></el-table-column>
+    <el-table-column prop="ChangeMeterDate" label="换表日期" width="200"></el-table-column>
+    <el-table-column prop="Remark" label="换表备注" width="200"></el-table-column>
   </el-table>
 </template>
 <script>

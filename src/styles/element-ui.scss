@@ -214,3 +214,13 @@ padding-right: 5px !important;
 .el-checkbox__input.is-disabled .el-checkbox__inner{
   background: #b4bcc1 !important;
 }
+.section-full-container{
+  /deep/ .no-head .el-dialog__header {  
+     padding:0 20px !important;
+  }
+  /deep/ .no-head .el-dialog__header .el-dialog__headerbtn{
+    top:-20px;
+    right: -30px;
+    font-size: 30px;
+  }
+}

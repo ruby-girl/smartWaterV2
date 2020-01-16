@@ -18,7 +18,7 @@ function hasPermission(roles, route) {
  * @param routes asyncRoutes
  * @param roles
  */
-export function filterAsyncRoutes(routes, roles) {
+export function filterAsyncRoutes(routes,roles) {
   const res = []
   routes.forEach(route => {
     const tmp = { ...route }
