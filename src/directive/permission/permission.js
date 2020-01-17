@@ -7,11 +7,9 @@ export default {
 
     if (value && value instanceof Array && value.length > 0) {
       const permissionRoles = value
-      console.info(roles)
       const hasPermission = roles.some(role => {
         return permissionRoles.includes(role.Id)
       })
-      console.info(hasPermission)
       if (!hasPermission) {
         el.parentNode && el.parentNode.removeChild(el)
       }
