@@ -31,55 +31,50 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="模块" v-show="show2||isShow" prop="WaterType">
+      <el-form-item label="模块" v-show="show2||isShow" prop="sYS_Model_Name">
+         <treeselect
+            placeholder="请选择"
+            :searchable="false"
+            v-model="selectHead.sYS_Model_Name"
+            :options="orgTree"
+            @change="getText(selectHead.sYS_Model_Name ,'AreasYS_Model_NameId',orgTree,'模块')"
+          />
+      
+      </el-form-item>
+      <el-form-item label="操作人" v-show="show3||isShow" prop="user_Id">
         <el-select
-          v-model="selectHead.WaterType"
+          v-model="selectHead.user_Id"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterType,'WaterType',WaterMeterList,'水表类型')"
+          @change="getText(selectHead.user_Id,'user_Id',editUserList,'操作人')"
         >
           <el-option label="全部" :value="-1"></el-option>
           <el-option
-            v-for="item in WaterMeterList"
+            v-for="item in editUserList"
             :key="item.Id"
             :label="item.Name"
             :value="item.Id"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="操作人" v-show="show3||isShow" prop="WaterType">
-        <el-select
-          v-model="selectHead.WaterType"
-          placeholder="请选择"
-          @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.WaterType,'WaterType',WaterMeterList,'水表类型')"
-        >
-          <el-option label="全部" :value="-1"></el-option>
-          <el-option
-            v-for="item in WaterMeterList"
-            :key="item.Id"
-            :label="item.Name"
-            :value="item.Id"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="操作类容" v-show="show4||isShow" key="WaterMeterNo" prop="WaterMeterNo">
+      <el-form-item label="操作类容" v-show="show4||isShow" key="content" prop="content">
         <el-input
-          v-model="selectHead.WaterMeterNo"
+          v-model="selectHead.content"
           maxlength="50"
-          @change="getText(selectHead.WaterMeterNo,'WaterMeterNo','','水表编号')"
+          @change="getText(selectHead.content,'content','','操作类容')"
         />
       </el-form-item>
       <el-form-item label="日期" label-width="40px" v-show="show5||isShow">
         <el-date-picker
           v-model="dateArr"
-          type="monthrange"
+          type="daterange"
           :editable="false"
           :unlink-panels="true"
           range-separator="~"
           start-placeholder="开始月份"
           end-placeholder="结束月份"
-          value-format="yyyy-MM"
+          default-format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
           @keydown.enter.native="handleFilter"
           @change="getTime"
         />
@@ -103,7 +98,12 @@
 import { getDictionaryOption } from "@/utils/permission";
 import { getLabelName } from "@/utils/projectLogic"; //获取lable
 import {getBoxList} from "@/api/log"
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+
+import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 export default {
+  components:{Treeselect},
   props: {
     searchWidth: {}
   },
@@ -123,7 +123,10 @@ export default {
       show3: true,
       show4: true,
       show5: true,
-      showBtn: false
+      showBtn: false,
+      orgTree:[],//模块
+      editUserList:[],//操作人
+      
     };
   },
   watch: {
@@ -135,16 +138,43 @@ export default {
         this.show4 = this.showLabel(4, val);
         this.show5 = this.showLabel(5, val);
         if (Math.floor((val - 180) / 280) < 6) {
-          this.showBtn = false;
-        } else {
           this.showBtn = true;
+        } else {
+          this.showBtn = false;
         }
       },
       immediate: true
     }
   },
-  created() {},
   methods: {
+     mapTree(org) {
+  const haveChildren =
+    Array.isArray(org.children) && org.children.length > 0;
+  if (haveChildren) {
+    return {
+      //分别将我们查询出来的值做出改变他的key
+      label: org.label,
+      id: org.label,
+      Id: org.label,
+      Name: org.label,
+      //判断它是否存在子集，若果存在就进行再次进行遍历操作，知道不存在子集便对其他的元素进行操作
+      children: org.children.map(i => this.mapTree(i))
+    };
+  } else {
+    return {
+      label: org.label,
+      id: org.label,
+      Id: org.label,
+      Name: org.label
+    }
+  }
+},
+    getTree(){
+      getBoxList().then(res=>{
+        this.orgTree = res.data.map(org => this.mapTree(org));
+        // this.orgTree=res.data
+      })
+    },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
@@ -168,13 +198,17 @@ export default {
     getTime() {
       //时间格式化
       let date = this.dateArr;
+      let dateRang=''
       if (date) {
-        this.selectHead.YearMonth = date[0] + "~" + date[1];
-
-        this.$emit("getText", this.selectHead.YearMonth, "dateArr", "", "日期");
+        this.selectHead.starDateTime = date[0] 
+        this.selectHead.endDateTime = date[1] 
+dateRang=date[0] +"~"+date[1]
+        this.$emit("getText", dateRang, "dateArr", "", "日期");
       } else {
-        this.selectHead.YearMonth = "";
-        this.$emit("getText", this.selectHead.YearMonth, "dateArr", "", "日期");
+        dateRang=''
+      this.selectHead.starDateTime =""
+        this.selectHead.endDateTime = "" 
+        this.$emit("getText", dateRang, "dateArr", "", "日期");
       }
     }
   },
@@ -183,9 +217,10 @@ export default {
     if (this.companyOptions.length == 1) {
       this.selectHead.SA_WaterFactory_Id = this.companyOptions.Id;
     }
-    // getSelectUser().then(res => {
-    //   this.editUserList = res.data;
-    // });
+    this.getTree()
+    getSelectUser().then(res => {
+      this.editUserList = res.data;
+    });
   },
   mounted() {
     this.selectHead = this.$parent.selectHead;
@@ -196,4 +231,7 @@ export default {
 .el-form {
   width: 100%;
 }
+  /deep/.vue-treeselect{
+      width:180px!important;
+    }
 </style>

@@ -6,7 +6,7 @@
         <select-head :searchWidth="searchWidth" @getText="getText" ref="seachChild" />
       </div>
       <div class="contanier">
-        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" />
         <div class="main-padding-20-y" id="table">
           <el-table
             :data="tableData"
@@ -21,11 +21,11 @@
                 <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="name" label="水厂"></el-table-column>
-            <el-table-column prop="name" label="日期"></el-table-column>
-            <el-table-column prop="name" label="用水量"></el-table-column>
-            <el-table-column prop="name" label="供水量"></el-table-column>
-            <el-table-column prop="name" label="产销差率"></el-table-column>
+            <el-table-column prop="SA_WaterFactory_Name" label="水厂"></el-table-column>
+            <el-table-column prop="EditTime" label="日期"></el-table-column>
+            <el-table-column prop="SYS_Model_Name" label="用水量"></el-table-column>
+            <el-table-column prop="EditUser" label="供水量"></el-table-column>
+            <el-table-column prop="Content" label="产销差率"></el-table-column>
           </el-table>
         </div>
       </div>
@@ -37,17 +37,23 @@
 import SelectHead from "./components/SelectHead";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import { GetReportNrw, ExcelReportNrw } from "@/api/reports";
+import { getLogList } from "@/api/log";
 export default {
   name: "logManagement",
   components: { SelectHead, SearchTips },
   data() {
     return {
       selectHead: {
-        SA_WaterFactory_Id: "-1", //水厂
-        WaterFactoryName: "", //操作人
-        YearMonth: "",
-        tableId: "0000039"
+        page:1,
+        limit:20,
+        sA_WaterFactory_Id: "-1", //水厂
+        sYS_Model_Name: "-1", //模块名称
+        content: "", //内容
+        user_Id: "-1", //操作员
+        sort:"",
+        filed:"",
+        starDateTime:"",
+        endDateTime:"",
       },
       tableHeight: null,
       tableData: [], //表格数据
@@ -70,31 +76,10 @@ export default {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
-    //导出
-    excel() {
-      if (this.tableData.length == 0) {
-        this.$message({
-          message: "当前列表暂无数据，不可导出！",
-          duration: 5 * 1000,
-          type: "warning"
-        });
-        return false;
-      }
-
-      ExcelReportNrw(this.selectHead).then(res => {
-        if (res.code == 0) {
-          window.location.href = `${this.common.excelPath}${res.data}`;
-        } else {
-          this.$message({
-            type: "warning",
-            msg: res.msg ? res.msg : "导出失败  "
-          });
-        }
-      });
-    },
+   
     //查询
     searchTableList() {
-      GetReportNrw(this.selectHead).then(res => {
+      getLogList(this.selectHead).then(res => {
         this.tableData = res.data;
         this.tipsData = pushItem(this.tipsDataCopy);
       });
@@ -110,6 +95,7 @@ export default {
         4;
 
       this.$refs.searchTips.showTabBtn = false;
+      this.$refs.searchTips.showExcel = false;
     });
   }
 };
