@@ -41,12 +41,12 @@
         <el-table-column
           label="操作"
           fixed="right"
-          min-width="112"
+          min-width="140"
           align="center"
           class-name="small-padding"
         >
           <template slot-scope="{row}">
-            <div class="display-flex justify-content-flex-center secur-content">
+            <div class="display-flex justify-content-flex-justify secur-content plr-10">
               <el-tooltip
                 class="item"
                 popper-class="tooltip"
@@ -60,8 +60,23 @@
                   @click="details(row)"
                 ></i>
               </el-tooltip>
+              <!-- 违约金减免 s-->
               <el-tooltip
-                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag==1002?false:true}"
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?true:false}"
+                :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'':'tooltip'"
+                :effect="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'dark':'light'"
+                :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?true:false"
+                :content="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'该笔费用不允许减免':'违约金减免'"
+                placement="bottom"
+              > 
+                <i
+                  class="icon iconfont iconjianmianshui font-19"
+                  @click="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'':feeWaiver(row,'违约金')"
+                ></i>
+              </el-tooltip>
+              <!-- 违约金减免 e -->
+              <el-tooltip
+                :class="{'item':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
                 :popper-class="row.ChargeFlag==1002?'tooltip':''"
                 :effect="row.ChargeFlag==1002?'light':'dark'"
                 :visible-arrow="row.ChargeFlag==1002?false:true"
@@ -73,7 +88,20 @@
                  @click="row.ChargeFlag==1002?reset(row):''"
                 ></i>
               </el-tooltip>
-              <el-tooltip
+               <el-tooltip
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
+                :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
+                :effect="row.ChargeFlag!==1002||row.OrderType!==2001?'dark':'light'"
+                :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001?true:false"
+                :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'水费减免'"
+                placement="bottom"
+              > 
+                <i
+                  class="icon iconfont iconshuifeijianmian1 font-19"
+                  @click="row.ChargeFlag!==1002||row.OrderType!==2001?'':feeWaiver(row,'水费')"
+                ></i>
+              </el-tooltip>
+              <!-- <el-tooltip
                 :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
                 :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
                 :effect="row.ChargeFlag!==1002||row.OrderType!==2001?'dark':'light'"
@@ -85,7 +113,7 @@
                   class="icon iconfont iconjianmianshui"
                   @click="row.ChargeFlag!==1002||row.OrderType!==2001?'':feeWaiver(row)"
                 ></i>
-              </el-tooltip>
+              </el-tooltip> -->
             </div>
           </template>
         </el-table-column>
@@ -117,8 +145,7 @@ export default {
       default: 100
     },
     tipsData:{},
-    totalLength:{},
-    orderData: {}
+    totalLength:{}
   },
   components: { Pagination,SearchTips },
   mounted() {
@@ -139,7 +166,8 @@ export default {
       tableKey: 1,
       tableData: [],
       checksData: [],
-      total: 0
+      total: 0,
+      orderData:{}
     };
   },
   methods: {
@@ -203,9 +231,13 @@ export default {
     reset(row) {
       this.$emit("reset",row.Id);
     },
-    feeWaiver(row) {
+    feeWaiver(row,type) {
       if(row.ChargeFlag==1003||row.OrderType!==2001) return;
-      this.$emit("feeWaiver",row);
+      this.$emit("feeWaiver",row,type);
+    },
+    feeWaiverOver(row){
+      if(row.ChargeFlag==1003||row.OrderType!==2001) return;
+      this.$emit("feeWaiverOver",row);
     }
   }
 };
@@ -224,7 +256,6 @@ export default {
 }
 .iconchexiao1{
   color:#777c82;
-  padding:0 15px;
 }
 .secur-content {
     .icon {
@@ -234,6 +265,9 @@ export default {
     .iconbiaodan1 {
       color: #b59200;
     }
+}
+.font-19{
+  font-size: 19px !important;
 }
 </style>
 

@@ -143,7 +143,7 @@ import HistoryPrice from "./components/HistoryPrice";
 import WaterConstitute from "./components/WaterConstitute";
 import { getDictionaryOption } from "@/utils/permission";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips,getText,pushItem,isExport} from "@/utils/projectLogic";//搜索条件面包屑
+import { delTips,getText,pushItem,isExport,closeDelTip} from "@/utils/projectLogic";//搜索条件面包屑
 import {
   addWaterQuality,
   delWaterQuality,
@@ -352,9 +352,10 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
+        closeDelTip()
         DeleteWaterPropertyId({ id: row.Id }).then(res => {
           this.$message({
             message: "删除成功",
@@ -363,6 +364,8 @@ export default {
           });
           this.getList();
         });
+      }).catch(()=>{
+        closeDelTip()
       });
     },
     //导出

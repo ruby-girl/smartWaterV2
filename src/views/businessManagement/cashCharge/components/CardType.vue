@@ -53,13 +53,82 @@
                         </span>
                       </div>
                       <!-- 详情，费用减免。。按钮 -->
-                      <div
+                      <!-- <div
                         class="card-item-btn-box display-flex justify-content-flex-center font-14"
                       >
                         <div class="card-item-btn" @click="details(li)">详情</div>
                         <div class="card-item-btn margin-samll" @click="reset(li.Id)">费用撤回</div>
                         <div class="card-item-btn" @click="feeWaiver(li)">费用减免</div>
-                      </div>
+                      </div> -->
+                      <div class="display-flex justify-content-flex-justify secur-content plr-10 card-item-btn-box">
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="费用详情"
+                placement="bottom"
+              >
+                <i
+                  class="icon iconfont iconbiaodan2"
+                  @click="details(li)"
+                ></i>
+              </el-tooltip>
+              <!-- 违约金减免 s-->
+              <el-tooltip
+                :class="{'item main-color':true,'main-color-disabled':li.ChargeFlag!==1002||li.OrderType!==2001||li.LateFee==0?true:false}"
+                :popper-class="li.ChargeFlag!==1002||li.OrderType!==2001||li.LateFee==0?'':'tooltip'"
+                :effect="li.ChargeFlag!==1002||li.OrderType!==2001||li.LateFee==0?'dark':'light'"
+                :visible-arrow="li.ChargeFlag!==1002||li.OrderType!==2001||li.LateFee==0?true:false"
+                :content="li.ChargeFlag!==1002||li.OrderType!==2001||li.LateFee==0?'该笔费用不允许减免':'违约金减免'"
+                placement="bottom"
+              > 
+                <i
+                  class="icon iconfont iconweiyuejinjianmian font-19" style="padding-left:10px"
+                  @click="li.ChargeFlag!==1002||li.OrderType!==2001||li.LateFee==0?'':feeWaiver(li,'违约金')"
+                ></i>
+              </el-tooltip>
+              <!-- 违约金减免 e -->
+              <el-tooltip
+                :class="{'item main-color':true,'main-color-disabled':li.ChargeFlag==1002?false:true}"
+                :popper-class="li.ChargeFlag==1002?'tooltip':''"
+                :effect="li.ChargeFlag==1002?'light':'dark'"
+                :visible-arrow="li.ChargeFlag==1002?false:true"
+                :content="li.ChargeFlag==1002?'费用撤回':'该笔费用不允许撤回'"
+                placement="bottom"
+              >
+                <i
+                  class="icon iconfont iconchexiao2" style="padding-left:10px"
+                 @click="li.ChargeFlag==1002?reset(li):''"
+                ></i>
+              </el-tooltip>
+               <el-tooltip
+                :class="{'item main-color':true,'main-color-disabled':li.ChargeFlag!==1002||li.OrderType!==2001?true:false}"
+                :popper-class="li.ChargeFlag!==1002||li.OrderType!==2001?'':'tooltip'"
+                :effect="li.ChargeFlag!==1002||li.OrderType!==2001?'dark':'light'"
+                :visible-arrow="li.ChargeFlag!==1002||li.OrderType!==2001?true:false"
+                :content="li.ChargeFlag!==1002||li.OrderType!==2001?'该笔费用不允许减免':'水费减免'"
+                placement="bottom"
+              > 
+                <i
+                  class="icon iconfont iconshuifeijianmian font-19" style="padding-left:10px"
+                  @click="li.ChargeFlag!==1002||li.OrderType!==2001?'':feeWaiver(li,'水费')"
+                ></i>
+              </el-tooltip>
+              <!-- <el-tooltip
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
+                :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
+                :effect="row.ChargeFlag!==1002||row.OrderType!==2001?'dark':'light'"
+                :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001?true:false"
+                :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'费用减免'"
+                placement="bottom"
+              > 
+                <i
+                  class="icon iconfont iconjianmianshui"
+                  @click="row.ChargeFlag!==1002||row.OrderType!==2001?'':feeWaiver(row)"
+                ></i>
+              </el-tooltip> -->
+            </div>
                     </div>
                   </div>
                 </div>
@@ -254,8 +323,8 @@ export default {
       this.$emit("reset", id);
     },
     // id:费用ID，num:减免前金额 type：费用类型
-    feeWaiver(row) {
-      this.$emit("feeWaiver", row);
+    feeWaiver(row,type) {
+      this.$emit("feeWaiver", row,type);
     }
   }
 };
@@ -310,12 +379,18 @@ export default {
     font-size: 16px;
   }
   .card-item-btn-box {
-    text-align: center;
-    padding-bottom: 20px;
-    :first-child {
-      border: 1px solid #bc9d1a !important;
-      color: #bc9d1a !important;
+    text-align: center;   
+    .iconfont {
+      cursor: pointer;
+       font-size: 23px;
     }
+    .iconbiaodan2{
+      color:#B59200 !important;
+    }
+    .iconchexiao2{
+      color:#777C82 !important;
+    }
+    padding:0 20px 20px 20px;
     .card-item-btn {
       border: 1px solid #777c82;
       color: #777c82;

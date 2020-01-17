@@ -98,7 +98,7 @@
   import Pagination from "@/components/Pagination";
   import Dialog from "./components/Dialog";
  import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport,closeDelTip} from "@/utils/projectLogic"; //搜索条件面包屑
   import {
     waterFactoryGetList,
     waterFactoryUpDate,
@@ -256,9 +256,10 @@ import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //�
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           iconClass: "el-icon-question questionIcon",
-          customClass: "warningBox",
+          customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
+          closeDelTip()
           waterFactoryDelete(row).then(res => {
             this.$message({
               message: res.message,
@@ -267,7 +268,9 @@ import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //�
             });
             this.getList();
           });
-        });
+        }).catch(()=>{
+        closeDelTip()
+      });
       },
       excel() {
         //导出

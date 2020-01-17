@@ -188,7 +188,8 @@ export default {
     this.searchWidth = document.body.clientWidth - 160; //160左侧导航宽度
     this.Enumwm = getDictionaryOption("水表类型");
     this.Enumut = getDictionaryOption("用户类型");
-    this.Enumot = getDictionaryOption("费用类型");
+     this.Enumot = getDictionaryOption("费用类型");
+    this.delEnumotOption(this.Enumot)
     // this.Enumcf = getDictionaryOption("缴费单缴费状态");
     this.waterWorks = this.$store.state.user.waterWorks;
     if (this.waterWorks.length == 1) {
@@ -196,6 +197,13 @@ export default {
     }
   },
   methods: {
+    delEnumotOption(arr){//删除不需要展示的费用类型    
+      arr.forEach((item,i)=>{    
+        if(item.Id==2006||item.Id==2007||item.Id==2008){
+          arr.splice(i,1)
+        }
+      })
+    },
     getTime(v) {
       let date;
       if (v) {

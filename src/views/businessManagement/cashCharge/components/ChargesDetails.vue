@@ -70,7 +70,28 @@
       <div class="details-left">
         <div>扣减项</div>
       </div>
-      <div class="ladder-box flex-1 border-left">
+       <div class="ladder-box flex-1 border-left">
+        <div class="ladder-item">
+          <span class="lable-box">账户扣减：</span>
+          <span class="font-weight main-color">{{detail.orr.PricePaid}}</span>元
+        </div>
+        <!-- <div class="ladder-item">
+          <span class="lable-box">违约金减免：</span>
+          <span class="font-weight main-color">{{detail.orr.LeteFeeFree}}</span>元
+        </div> -->
+        <div class="ladder-item">
+          <span class="lable-box">协议减免减免：</span>
+          <span v-if="detail.orr.waterTotal>0">
+            <span class="font-weight main-color">{{detail.orr.FreePrice}}</span>
+            <span>（水费减免)+</span>
+            <span class="font-weight main-color">{{detail.orr.LeteFeeFree}}</span>
+            <span>(违约金减免)=</span>
+          </span>
+          <span class="font-weight main-color">{{detail.orr.waterTotal}}</span>元
+          <!-- <span class="font-weight main-color">0</span> -->
+        </div>
+      </div>
+      <!-- <div class="ladder-box flex-1 border-left">
         <div class="ladder-item">
           <span class="lable-box">账户扣减：</span>
           <span class="font-weight main-color">{{detail.orr.PricePaid}}</span>元
@@ -93,7 +114,7 @@
       </div>
     </div>
     <div class="totle-box">
-      <span class="color-more-black">合计应收：</span>
+      <span class="color-more-black">剩余未缴：</span>
       <span class="font-weight main-color-red">{{detail.TotalWaterPrice}}元</span>
       <span>(水费)</span>
       <span class="color-more-black">+</span>
@@ -154,7 +175,7 @@ export default {
         let detail = ladderChangeArrs(res.data.mrod); //阶梯转换数组
         this.detail = { ...detail, ...res.data };
         this.detail.orr.waterTotal =
-          (parseFloat(this.detail.orr.WaterAllowanceMoeny) * 1000 +
+          (parseFloat(this.detail.orr.LeteFeeFree ) * 1000 +
             parseFloat(this.detail.orr.FreePrice) * 1000) /
           1000; //所有的水费减免
         this.detail.orr.total =
@@ -243,8 +264,8 @@ export default {
 }
 .lable-box{
   display: inline-block;
-  width:84px;
-  text-align: right;
+  // width:84px;
+  text-align: left;
 }
 </style>
 

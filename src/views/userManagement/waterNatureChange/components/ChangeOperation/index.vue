@@ -93,7 +93,7 @@ export default {
       listQuery: {
         // 查询条件
         //右侧用户列表查询条件
-        CustomerQueryType: "", //用户下拉框类型
+        CustomerQueryType: "1", //用户下拉框类型
         CustomerQueryValue: "",
         WaterFactoryId: "-1", //水厂
         UserType: "-1", //用户类型

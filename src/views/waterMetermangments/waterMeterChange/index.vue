@@ -84,7 +84,7 @@ export default {
         filed: "",
         sort: "",
         waterFactoryId: "-1", //水厂
-        customerQueryType: "", //查询用户类型
+        customerQueryType: "1", //查询用户类型
         customerQueryValue: "", //input值
         userType: "-1", //用户类型
         waterMeterType: "-1", //水表类型

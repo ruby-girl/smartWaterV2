@@ -110,7 +110,7 @@ import EditDialog from "./components/EditDialog";
 import ResetDialog from "./components/ResetDialog";
 import AddDialog from "./components/AddDialog";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
   getAccountList,
   getAccountDetail,
@@ -288,9 +288,10 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
+        closeDelTip()
         cancelAccount(row.Id).then(res => {
           this.$message({
             message: res.message,
@@ -299,6 +300,8 @@ export default {
           });
           this.getList();
         });
+      }).catch(()=>{
+        closeDelTip()
       });
     },
     reset(row) {

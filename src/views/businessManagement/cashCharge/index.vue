@@ -121,6 +121,7 @@
     <fee-waiver
       :feeWaiverShow.sync="feeWaiverShow"
       :feeWaiverItem="feeWaiverItem"
+    :type="feeWaiverType"
       @getList="getList"
     />
     <select-pint :selectPintShow.sync="selectPintShow" />
@@ -143,6 +144,7 @@ import CreditCardAlready from "./components/IcType/CreditCardAlready"; //IC卡�
 import NoCreditCard from "./components/IcType/NoCreditCard"; //IC卡未刷卡
 import { OrderFeeCancel } from "@/api/cashCharge";
 import { GetCustomerDataList } from "@/api/userSetting"; ////模糊查询用户--结算成功后，重新获取账户余额
+import {closeDelTip } from "@/utils/projectLogic"; //
 export default {
   name: "cashCharge",
   components: {
@@ -214,7 +216,8 @@ export default {
       isNull:true,
        tipsDataCopy:[],//面包屑
       tipsData:[],
-      secName:'用户编号'
+      secName:'用户编号',
+      feeWaiverType:''
     };
   },
   mounted: function() {
@@ -355,9 +358,10 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        customClass: "warningBox",
+        customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
+        closeDelTip()
         OrderFeeCancel({ SA_Order_Id: id }).then(res => {
           this.$message({
             message: res.message,
@@ -366,10 +370,13 @@ export default {
           });
           this.getList();
         });
+      }).catch(()=>{
+        closeDelTip()
       });
     },
-    // 费用减免
-    feeWaiverFunc(item) {
+    // 水费费用减免
+    feeWaiverFunc(item,type) {
+      this.feeWaiverType=type
       this.feeWaiverItem = item;
       this.feeWaiverShow = true;
     },
