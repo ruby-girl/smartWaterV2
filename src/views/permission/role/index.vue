@@ -43,6 +43,7 @@
                 :visible-arrow="false"
                 content="编辑"
                 placement="bottom"
+                v-permission="['108']"
               >
                 <i class="icon iconfont iconsuoyoubiaogelidebianji" @click="handleUpdate(row)"></i>
               </el-tooltip>
@@ -53,6 +54,7 @@
                 :visible-arrow="false"
                 content="删除"
                 placement="bottom"
+                v-permission="['109']"
               >
                 <i class="icon iconfont iconsuoyoubiaogelideshanchu" @click="delRow(row)"></i>
               </el-tooltip>
@@ -99,8 +101,10 @@ import {
 } from "@/api/role";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem,isExport,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   name: "RolePermission",
+  directives: { permission },
   components: { SelectHead, Pagination, Dialog, SearchTips,ImgDialog },
   data() {
     return {
