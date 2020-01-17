@@ -71,7 +71,7 @@
   import Pagination from '@/components/Pagination/index'//分页组建
   import { GetList, Delete, GetList_Execl,GetEditObjById } from "@/api/organize"
   import { parseTime, promptInfoFun } from "@/utils/index"
-  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 
   export default {
     name: 'department',
@@ -144,6 +144,7 @@
           customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
+          closeDelTip()
           Delete({ Id: row.Id }).then(res => {
             if (res.code ==0 ) {
               promptInfoFun(this, 2, res.message);
@@ -153,7 +154,9 @@
               promptInfoFun(this, 1, res.message);
             }
           })
-        });
+        }).catch(()=>{
+          closeDelTip()
+        })
       },
       searchFun() {
         GetList(this.dp).then(res => {

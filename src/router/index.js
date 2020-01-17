@@ -285,7 +285,7 @@ export const asyncRoutes = [
       {
         path: 'businessManagement',
         component: () => import('@/views/systemManagement/businessManagement'),
-        name: 'businessManagement',
+        name: 'BusinessManagement',
         meta: {
           title: '业务流程管理',
           roles: ['175']

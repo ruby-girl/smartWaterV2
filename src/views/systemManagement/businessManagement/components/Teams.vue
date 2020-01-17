@@ -61,7 +61,7 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           iconClass: "el-icon-question questionIcon",
-          customClass: "warningBox",
+          customClass: "warningBox deleteBox",
           showClose: false
         }).then(() => {
           DeleteProcessModuleInfo({'id':id}).then(res => {//删除节点

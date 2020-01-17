@@ -404,6 +404,14 @@ export function getLabelName(id, list) {
   }
   return label
 }
-
+//删除时间 tooltip
+export function closeDelTip() {
+  setTimeout(() => {
+    let tag = document.getElementsByClassName("el-tooltip__popper")
+    for (let i = 0; i < tag.length; i++) {
+      tag[i].style.display = "none"
+    }
+  }, 50)
+}
 
 

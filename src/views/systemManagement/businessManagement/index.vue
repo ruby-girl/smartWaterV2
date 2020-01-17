@@ -20,9 +20,11 @@
   import Teams from './components/Teams'
   import Nodes from './components/Nodes'
   import { promptInfoFun } from "@/utils/index"
+  import permission from "@/directive/permission/index.js"; // 权限判断指令
 
   export default {
-    name: "businessManagement",
+    name: "BusinessManagement",
+    directives: { permission },
     components: {MenuTree: MenuTree, Teams: Teams, Nodes: Nodes},
     data(){
       return{
