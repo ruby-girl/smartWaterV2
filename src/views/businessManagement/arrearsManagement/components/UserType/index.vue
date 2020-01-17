@@ -56,7 +56,7 @@
             label="操作"
             align="center"
             class-name="small-padding"
-            width="112px"
+            width="140px"
             fixed="right"
           >
             <template slot-scope="{row}">
@@ -69,10 +69,23 @@
                 content="费用详情"
                 placement="bottom"
               >
-                <i class="icon iconfont iconbiaodan1" @click="details(row)"></i>
+                <i class="icon iconfont iconbiaodan1" style="margin-right:15px;" @click="details(row)"></i>
               </el-tooltip>
               <el-tooltip
-                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag==1002?false:true}"
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?true:false}"
+                :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'':'tooltip'"
+                :effect="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'dark':'light'"
+                :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?true:false"
+                :content="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'该笔费用不允许减免':'违约金减免'"
+                placement="bottom"
+              > 
+                <i
+                  class="icon iconfont iconjianmianshui font-19"
+                  @click="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'':feeWaiverFunc(row,'违约金')"
+                ></i>
+              </el-tooltip>
+              <el-tooltip
+                :class="{'item':true,'main-color-disabled':row.ChargeFlag==1002?false:true}"
                 :popper-class="row.ChargeFlag==1002?'tooltip':''"
                 :effect="row.ChargeFlag==1002?'light':'dark'"
                 :visible-arrow="row.ChargeFlag==1002?false:true"
@@ -82,7 +95,7 @@
                 <i class="icon iconfont iconchexiao1" @click="row.ChargeFlag==1002?reset(row.Id):''"></i>
               </el-tooltip>
               <!-- 费用类型仅为水费，OrderType==2001，才能进行减免 -->
-              <el-tooltip
+              <!-- <el-tooltip
                 :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
                 :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
                 :effect="row.ChargeFlag!==1002||row.OrderType!==2001?'dark':'light'"
@@ -91,6 +104,19 @@
                 placement="bottom"
               >
                 <i class="icon iconfont iconjianmianshui" @click="row.ChargeFlag!==1002||row.OrderType!==2001?'':feeWaiverFunc(row)"></i>
+              </el-tooltip> -->
+              <el-tooltip
+                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
+                :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
+                :effect="row.ChargeFlag!==1002||row.OrderType!==2001?'dark':'light'"
+                :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001?true:false"
+                :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'水费减免'"
+                placement="bottom"
+              > 
+                <i
+                  class="icon iconfont iconshuifeijianmian1 font-19"
+                  @click="row.ChargeFlag!==1002||row.OrderType!==2001?'':feeWaiverFunc(row,'水费')"
+                ></i>
               </el-tooltip>
               </div>
             </template>
@@ -112,6 +138,7 @@
     <fee-waiver
       :feeWaiverShow.sync="feeWaiverShow"
       :feeWaiverItem="feeWaiverItem"
+      :type="feeWaiverType"
       @getList="getList"
     />
   </div>
@@ -122,7 +149,7 @@ import Pagination from "@/components/Pagination";
 import SearchTips from "@/components/SearchTips/index";
 import { GetList, OrderFeeCancel,OrdersFeeCancels, GetList_execl } from "@/api/cashCharge";
 import MytableTotal from "@/components/TableTotal/index";
-import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import ChargesDetails from "../../../cashCharge/components/ChargesDetails"; //水费详情弹窗-共用现金收费的费用详情
 import OverDetails from "../../../cashCharge/components/OverDetails"; //除水费外其它费用详情弹窗
 import permission from "@/directive/permission/index.js"; // 权限判断指令
@@ -195,7 +222,8 @@ export default {
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: [],
-      checkedDataId: [] //批量撤销ID
+      checkedDataId: [], //批量撤销ID
+      feeWaiverType:''
     };
   },
   computed: {
@@ -323,6 +351,7 @@ export default {
         customClass: "warningBox deleteBox",
         showClose: false
         }).then(() => {
+          closeDelTip()
         OrderFeeCancel({ SA_Order_Id: id }).then(res => {
           this.$message({
             message: res.message,
@@ -331,10 +360,14 @@ export default {
           });
            this.getList();       
         })
-        })
+        }).catch(()=>{
+        closeDelTip()
+      });
     },
     // 费用减免
-    feeWaiverFunc(item) {
+    feeWaiverFunc(item,type) {
+      console.info(item)
+      this.feeWaiverType=type
       this.feeWaiverItem = item;
       this.feeWaiverShow = true;
     },
@@ -355,6 +388,7 @@ export default {
         customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
+        closeDelTip()
          OrdersFeeCancels(this.checkedDataId).then(res => {
         this.$message({
           message: res.message,
@@ -363,12 +397,9 @@ export default {
         });
         this.getList();
       });
-      })
-    },
-    // 费用减免
-    feeWaiverFunc(item) {
-      this.feeWaiverItem = item;
-      this.feeWaiverShow = true;
+      }).catch(()=>{
+        closeDelTip()
+      });
     },
     handleSelectionChange(val) {
       this.checkedDataId = val.map(item => {

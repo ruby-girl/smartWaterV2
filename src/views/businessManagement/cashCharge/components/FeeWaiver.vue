@@ -18,51 +18,27 @@
         label-width="60px"
         @submit.native.prevent
       >
-        <el-tabs v-model="activeName">
-          <el-tab-pane label="水费" name="frist">
-            <el-row class="tab-container-y">
-              <el-form-item :label="feeWaiverItem.OrderTypeStr">
-                <el-input v-model="feeWaiverItem.Money" disabled />
-              </el-form-item>
-              <div class="inline-box">
-                <div>减免为</div>
-                <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
-              </div>
-              <el-form-item>
-                <el-input
-                  v-model="inputValue"
-                  @blur="changeTwoDecimal_x($event,1)"
-                  @keyup.native="money($event,1)"
-                  maxlength="8"
-                />
-              </el-form-item>
-            </el-row>
-          </el-tab-pane>
-          <el-tab-pane label="违约金" name="two">
-            <el-row  class="tab-container-y">
-              <el-form-item label="违约金">
-                <el-input v-model="feeWaiverItem.LateFee" disabled />
-              </el-form-item>
-              <div class="inline-box">
-                <div>减免为</div>
-                <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
-              </div>
-              <el-form-item>
-                <el-input
-                  v-model="lateFeeValue"
-                  @blur="changeTwoDecimal_x($event,2)"
-                  @keyup.native="money($event,2)"
-                  maxlength="8"
-                  :disabled="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee==0?true:false"
-                />
-              </el-form-item>
-            </el-row>
-          </el-tab-pane>
-        </el-tabs>
+        <el-row class="tab-container-y">
+          <el-form-item :label="type">
+            <el-input v-model="type=='水费'?feeWaiverItem.Money:feeWaiverItem.LateFee" disabled />
+          </el-form-item>
+          <div class="inline-box">
+            <div>减免为</div>
+            <img class="arrow-point" src="@/assets/imgs/arrow_point.png" alt />
+          </div>
+          <el-form-item>
+            <el-input
+              v-model="inputValue"
+              @blur="changeTwoDecimal_x($event,1)"
+              @keyup.native="money($event,1)"
+              maxlength="8"
+            />
+          </el-form-item>
+        </el-row>
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="feeWaiver" :disabled="feeWaiverItem.OrderType==2001&&feeWaiverItem.LateFee==0&&activeName=='two'?true:false">确认</el-button>
+      <el-button size="mini" type="primary" @click="feeWaiver">确认</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
@@ -79,7 +55,8 @@ export default {
     feeWaiverShow: {
       type: Boolean,
       default: false
-    }
+    },
+    type: {}
   },
   watch: {
     feeWaiverShow() {
@@ -96,27 +73,23 @@ export default {
     return {
       dialogFormVisible: false,
       inputValue: "",
-      lateFeeValue: "", //违约金金额
       activeName: "frist"
     };
   },
   methods: {
-    close(){
-      this.lateFeeValue=''
-      this.inputValue=''
+    close() {
+      this.inputValue = "";
     },
-   feeWaiver() {
-      if (this.activeName == "two") {
-        this.OrderAfterOverdueFeeWaiverFunc(); //违约金减免
-      } else {
+    feeWaiver() {
+      if (this.type == "水费") {
         this.OrderFeeWaiverFunc();
+      } else {
+        this.OrderAfterOverdueFeeWaiverFunc(); //违约金减免
       }
     },
-    OrderFeeWaiverFunc() {//水费减免
-      if (
-        parseFloat(this.inputValue) >
-        parseFloat(this.feeWaiverItem.Money)
-      ) {
+    OrderFeeWaiverFunc() {
+      //水费减免
+      if (parseFloat(this.inputValue) > parseFloat(this.feeWaiverItem.Money)) {
         this.$message({
           message: "减免后金额不能大于减免前金额！",
           type: "error",
@@ -126,18 +99,16 @@ export default {
       }
       OrderFeeWaiver({
         SA_Order_Id: this.feeWaiverItem.Id,
-        AfterFee: this.inputValue
+        AfterFee: this.inputValue,
+        model: "现金收费"
       }).then(res => {
-        this.inputValue = "";
-        this.lateFeeValue = "";
-        this.dialogFormVisible = false;
-        this.$emit("getList");
+        this.resFunc();
       });
     },
     // 违约金减免
     OrderAfterOverdueFeeWaiverFunc() {
       if (
-        parseFloat(this.lateFeeValue) > parseFloat(this.feeWaiverItem.LateFee)
+        parseFloat(this.inputValue) > parseFloat(this.feeWaiverItem.LateFee)
       ) {
         this.$message({
           message: "减免后金额不能大于减免前金额！",
@@ -148,34 +119,29 @@ export default {
       }
       OrderAfterOverdueFeeWaiver({
         SA_Order_Id: this.feeWaiverItem.Id,
-        AfterOverdueFee: this.lateFeeValue
+        AfterOverdueFee: this.lateFeeValue,
+        model: "现金收费"
       }).then(res => {
-        this.$message({
-          message: "减免成功",
-          type: "success",
-          duration: 4000
-        });
-        this.inputValue = "";
-        this.lateFeeValue = "";
-        this.dialogFormVisible = false;
-        this.$emit("getList");
+        this.resFunc();
       });
     },
+    resFunc() {
+      this.$message({
+        message: "减免成功",
+        type: "success",
+        duration: 4000
+      });
+      this.inputValue = "";
+      this.dialogFormVisible = false;
+      this.$emit("getList");
+    },
     // 输入金额保留2位
-    money(e,n) {
-       if(n==1){
-        this.inputValue=updateMoney(e.target.value);
-      }else{
-        this.lateFeeValue=updateMoney(e.target.value);
-      }  
+    money(e, n) {
+      this.inputValue = updateMoney(e.target.value);
     },
     // 补齐小数
     changeTwoDecimal_x(e, n) {
-      if(n==1){
-        this.inputValue=changeTwoDecimal(e.target.value);
-      }else{
-        this.lateFeeValue=changeTwoDecimal(e.target.value);
-      }
+      this.inputValue = changeTwoDecimal(e.target.value);
     }
   }
 };
@@ -192,6 +158,7 @@ export default {
   }
 }
 .feewaiver-box {
+  padding-top: 20px;
   padding-bottom: 10px;
 }
 .inline-box {
@@ -204,8 +171,9 @@ export default {
     margin-bottom: -5px;
   }
 }
-.tab-container-y{
-  padding:20px;
+.tab-container-y {
+  background: #fff;
+  padding: 30px 20px 20px 20px;
 }
 </style>
 

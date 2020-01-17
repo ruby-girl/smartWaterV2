@@ -93,7 +93,7 @@ import {
   SelectBillDataList,SelectBillDataListToExcel,OrderFeeCancel
 } from "@/api/cashCharge";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem,isExport } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem,isExport,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import { parseStartTimeFunc, parseEndTimeFunc } from "@/utils/index";
 export default {
   name: "billDetails",
@@ -230,6 +230,7 @@ export default {
         customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
+        closeDelTip()
         OrderFeeCancel({SA_Order_Id:r.Id}).then(res => {
           this.$message({
             message: res.message,
@@ -238,6 +239,8 @@ export default {
           });
           this.getList();
         });
+      }).catch(()=>{
+        closeDelTip()
       });
     },
     excel() {

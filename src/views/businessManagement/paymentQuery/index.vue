@@ -104,7 +104,7 @@ import {
   SelectPayMentDataListToExcel
 } from "@/api/cashCharge";
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem, isExport } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem, isExport,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import { ICReadCardInfo, WriteCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 export default {
   name: "paymentQuery",
@@ -249,6 +249,7 @@ export default {
         customClass: "warningBox deleteBox",
         showClose: false
       }).then(() => {
+        closeDelTip()
         this.IcInfo = {};
         if (r.WaterMeterTypeId == "1102") {
           //如果为IC卡先读卡
@@ -256,6 +257,8 @@ export default {
         } else {
           this.RedPayMentDataByPayMent(r);
         }
+      }).catch(()=>{
+        closeDelTip()
       });
     },
     // 冲红
