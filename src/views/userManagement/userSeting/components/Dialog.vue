@@ -85,6 +85,7 @@
                 Id: this.param.Id,
                 AreaName: this.param.AreaName,
                 Pid: '',
+                pieName:this.param.pieName,
                 AreaNo: this.param.AreaNo
               }
               AddArea(this.param).then(res => {
