@@ -452,7 +452,17 @@ export const asyncRoutes = [
         title: '产销差供水量设置',
         roles: ['100']
       }
-    }]
+    },
+      {
+        path: 'ICConfig',
+        component: () => import('@/views/systemConfiguration/ICConfig/index'),
+        name: 'ICConfig',
+        meta: {
+          title: 'IC卡设置',
+          roles: ['100']
+        }
+      }
+    ]
   },
   {
     path: '/reportStatistics',

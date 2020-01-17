@@ -159,6 +159,10 @@ export default {
         this.selectHead.WaterMeterTypeId,
         this.WaterMeterList
       );
+      this.selectHead.AreaName = this.getSelectName(
+        this.selectHead.AreaId,
+        this.orgTree
+      );
       this.$parent.searchTableList();
     },
     getText(val, model, arr, name) {
@@ -212,6 +216,10 @@ export default {
     /deep/.el-input__inner {
       width: 106px !important;
     }
+    
   }
+  /deep/.vue-treeselect{
+      width:180px!important;
+    }
 }
 </style>
