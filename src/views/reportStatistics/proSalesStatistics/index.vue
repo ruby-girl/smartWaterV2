@@ -16,15 +16,12 @@
             :header-cell-style="{'background-color': '#F0F2F5'}"
           >
             <el-table-column type="index" fixed="left" label="#" width="60" align="center">
-              <template slot-scope="scope">
-                <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
-              </template>
             </el-table-column>
-            <el-table-column prop="name" label="水厂"></el-table-column>
-            <el-table-column prop="name" label="日期"></el-table-column>
-            <el-table-column prop="name" label="用水量"></el-table-column>
-            <el-table-column prop="name" label="供水量"></el-table-column>
-            <el-table-column prop="name" label="产销差率"></el-table-column>
+            <el-table-column prop="WaterFactoryName" label="水厂"></el-table-column>
+            <el-table-column prop="YearMonth" label="日期"></el-table-column>
+            <el-table-column prop="UseWaterYield" label="用水量"></el-table-column>
+            <el-table-column prop="GenWaterYield" label="供水量"></el-table-column>
+            <el-table-column prop="Rate" label="产销差率"></el-table-column>
           </el-table>
         </div>
       </div>
@@ -43,7 +40,7 @@ export default {
   data() {
     return {
       selectHead: {
-        SA_WaterFactory_Id: "-1", //水厂
+        SA_WaterFactory_Id: "", //水厂
         WaterFactoryName: "", //操作人
         YearMonth: "",
         tableId: "0000039"
@@ -93,6 +90,20 @@ export default {
     },
     //查询
     searchTableList() {
+      if(this.selectHead.YearMonth==""){
+        this.$message({
+          type:"warning",
+          message:"请选择日期"
+        })
+        return  false
+      }
+      if(this.selectHead.SA_WaterFactory_Id==""){
+        this.$message({
+          type:"warning",
+          message:"请选择水厂"
+        })
+         return  false
+      }
       GetReportNrw(this.selectHead).then(res => {
         this.tableData = res.data;
         this.tipsData = pushItem(this.tipsDataCopy);

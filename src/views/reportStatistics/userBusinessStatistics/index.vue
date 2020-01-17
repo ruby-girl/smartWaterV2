@@ -314,6 +314,14 @@ export default {
     },
     //查询
     searchTableList() {
+      
+      if(this.selectHead.waterFactoryId==""){
+        this.$message({
+          type:"warning",
+          message:"请选择水厂"
+        })
+         return  false
+      }
       GetReportBusiness(this.selectHead).then(res => {
         // this.detaileselectHead=
         this.tableData = res.data;
