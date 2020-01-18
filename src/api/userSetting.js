@@ -271,7 +271,28 @@ export function DelCustomerInfo(data){
   })
 }
 
+/**
+ * Ic卡设置读卡
+* */
+export function GetSetReadCardInfo(data){
+  return request({
+    url: '/ICSet/GetSetReadCardInfo',
+    method: 'post',
+    params: data
+  })
+}
 
+
+/**
+ * Ic卡设置制卡
+ * */
+export function GetSetWriteCardInfo(data){
+  return request({
+    url: '/ICSet/GetSetWriteCardInfo',
+    method: 'post',
+    data: data
+  })
+}
 
 
 
