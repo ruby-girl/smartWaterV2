@@ -10,10 +10,10 @@
       ref="formHeight"
     >
       <el-form-item
-        v-if="companyShow"
         label="水厂"
         :label-width="isShow?'70px':'40px'"
         prop="waterFactoryId"
+        v-show="show1||isShow"
       >
         <el-select
           v-model="selectHead.waterFactoryId "
@@ -22,7 +22,7 @@
           @change="getText(selectHead.waterFactoryId,'waterFactoryId',companyParentOptions,'水厂')"
           吗
         >
-          <el-option label="全部" value="-1" />
+          <el-option label="全部" v-if="companyShow" value="-1" />
           <el-option
             v-for="item in companyParentOptions"
             :key="item.Id"
@@ -34,7 +34,7 @@
       <transition-group name="fade">
         <el-form-item
           label="用户类型"
-          v-show="show1||isShow"
+          v-show="show2||isShow"
           key="userType"
           label-width="70px"
           prop="userType"
@@ -56,7 +56,7 @@
         </el-form-item>
         <el-form-item
           label="水表类型"
-          v-show="show2||isShow"
+          v-show="show3||isShow"
           key="waterMeterType"
           prop="waterMeterType"
         >
@@ -75,7 +75,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-show="show3||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
+        <el-form-item v-show="show4||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
           <el-select
             v-model="selectHead.CustomerQueryType"
             placeholder="请选择"
@@ -101,7 +101,7 @@
         <el-form-item
           label="销户操作员"
           label-width="80"
-          v-show="show4||isShow"
+          v-show="show5||isShow"
           key="createUserId"
           prop="createUserId"
         >
@@ -120,7 +120,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="销户日期" v-show="show5||isShow" key="timevalue" prop="timevalue">
+        <el-form-item label="销户日期" v-show="show6||isShow" key="timevalue" prop="timevalue">
           <el-date-picker
             v-model="selectHead.timevalue"
             type="datetimerange"
@@ -187,6 +187,7 @@ export default {
       show3: true,
       show4: true,
       show5: true,
+      show6: true,
       showBtn: false
     };
   },
@@ -213,18 +214,15 @@ export default {
       this.show3 = this.showLabel(3, val);
       this.show4 = this.showLabel(4, val);
       this.show5 = this.showLabel(5, val);
-      if (!this.showLabel(5, val)) {
+      this.show6 = this.showLabel(6, val);
+      if (!this.showLabel(6, val)) {
         this.showBtn = "ture";
       }
     },
     showLabel(n, w) {
-      if (this.companyParentOptions.length == 1) {
         if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
         return false;
-      } else {
-        if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
-        return false;
-      }
+    
     },
     getscName(id) {
       this.secNmae = getName(id);

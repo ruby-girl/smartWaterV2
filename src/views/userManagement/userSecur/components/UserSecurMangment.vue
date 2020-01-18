@@ -72,6 +72,7 @@
                   :visible-arrow="false"
                   content="复审"
                   placement="bottom"
+                  -permission="['230']"
                 >
                   <!-- <i  v-if="scope.row.RecheckStateName!='待复审'" class="icon iconfont iconlianhe1" style="color:#ccc;"></i> -->
                   <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)"></i>
@@ -111,8 +112,9 @@ import SearchTips from "@/components/SearchTips/index";
 import Pagination from "@/components/Pagination";
 import ExamSecur from "./ExamSecur";
 import { getInssured, excelInssured, getInssureDetaile } from "@/api/inSecur";
-
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
+  directives: { permission },
   name: "UserSecurMangment",
   components: { Selected, Pagination, SearchTips, ExamSecur },
 

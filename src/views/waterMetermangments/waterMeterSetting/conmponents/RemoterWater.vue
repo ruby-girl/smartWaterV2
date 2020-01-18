@@ -125,16 +125,16 @@
         </div>
         <div class="contanier">
           <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
-            <el-button size="mini" class="fl borderClass" round @click="meterRedingYC">
+            <el-button size="mini" class="fl borderClass" round @click="meterRedingYC" v-permission="['195']">
               <i class="icon iconfont">&#xe642;</i>抄表
             </el-button>
-            <el-button size="mini" class="fl borderClass" round @click="orderLockYC(1)">
+            <el-button size="mini" class="fl borderClass" round @click="orderLockYC(1)" v-permission="['196']">
               <i class="icon iconfont">&#xe646;</i>阀门锁定开
             </el-button>
-            <el-button size="mini" class="fl borderClass" round @click="orderLockYC(0)">
+            <el-button size="mini" class="fl borderClass" round @click="orderLockYC(0)" v-permission="['197']">
               <i class="icon iconfont">&#xe643;</i>阀门锁定关
             </el-button>
-            <el-button size="mini" class="fl borderClass" round @click="orderUnockYC">
+            <el-button size="mini" class="fl borderClass" round @click="orderUnockYC" v-permission="['198']">
               <i class="icon iconfont">&#xe645;</i>解锁
             </el-button>
           </div>
@@ -196,6 +196,7 @@
                     :visible-arrow="false"
                     content="查看历史详情"
                     placement="bottom"
+                    v-permission="['199']"
                   >
                     <i
                       class="icon iconfont viewHis"
@@ -210,6 +211,7 @@
                     :visible-arrow="false"
                     content="指令历史"
                     placement="bottom"
+                    v-permission="['200']"
                   >
                     <i
                       class="icon iconfont editJxWater"
@@ -263,6 +265,7 @@
 </template>
 <script>
 import TableCustom from "@/components/TableCustom/index"; //自定义表格
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import Pagination from "@/components/Pagination/index"; //分页
 import { getDictionaryOption } from "@/utils/permission";
 import {
@@ -290,6 +293,7 @@ import {
 import { async } from "q";
 export default {
   //机械表
+  directives: { permission }, 
   name: "MechanicalWater",
   components: { SearchTips, Pagination, YCWaterMeterHis, InstrctionOrder },
   data() {

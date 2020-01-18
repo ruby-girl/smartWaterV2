@@ -12,6 +12,7 @@
             round
             @click="addPlan"
             style="margin:7px 0;"
+            v-permission="['254']"
           >
             <i class="icon iconfont">&#xe689;</i>添加
           </el-button>
@@ -64,6 +65,7 @@
                   :visible-arrow="false"
                   content="编辑"
                   placement="bottom"
+                  v-permission="['255']"
                 >
                   <i class="iconStyle icon iconfont operation5" @click="edit(scope.row.Id)">&#xe69f;</i>
                 </el-tooltip>
@@ -74,6 +76,7 @@
                   :visible-arrow="false"
                   content="删除"
                   placement="bottom"
+                  v-permission="['256']"
                 >
                   <i
                     class="iconStyle icon iconfont operation4"
@@ -110,8 +113,10 @@ import AddTemplate from "./components/AddTemplate";
 import DetaileTemplate from "./components/DetaileTemplate";
 import EditTemplate from "./components/EditTemplate";
 import { getSettingList, delTemplate, detaileTemplate } from "@/api/shotMsg";
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   name: "sysSetting",
+   directives: { permission },
   components: {
     SelectHead,
     Pagination,

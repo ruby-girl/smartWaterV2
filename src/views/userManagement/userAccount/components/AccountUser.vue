@@ -99,7 +99,7 @@
     </el-row>
 
     <p class="userBtn">
-      <el-button size="small" type="primary" @click="accountBtn">确认销户</el-button>
+      <el-button size="small" type="primary" @click="accountBtn" v-permission="['228']">确认销户</el-button>
     </p>
     <select-user :selectUserShow="selectUserShow" :headQuery="params" @handleFilter="handleFilter" />
   </div>
@@ -109,9 +109,11 @@ import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import { getWaterInfo, waterAccount } from "@/api/userAccount"; //水表信息
 import SelectUser from "@/components/SelectUser/index"; //水表信息
 import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import "@/styles/userAccount.scss";
 export default {
   name: "AccountUser",
+  directives: { permission },
   components: { SelectUser },
   props: {
     editUserList: {

@@ -21,11 +21,16 @@
                 <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="SA_WaterFactory_Name" label="水厂"></el-table-column>
-            <el-table-column prop="EditTime" label="日期"></el-table-column>
-            <el-table-column prop="SYS_Model_Name" label="用水量"></el-table-column>
-            <el-table-column prop="EditUser" label="供水量"></el-table-column>
-            <el-table-column prop="Content" label="产销差率"></el-table-column>
+            <el-table-column prop="SA_WaterFactory_Name" align="center" width="200px" label="水厂"></el-table-column>
+            <el-table-column prop="EditTime" width="200px" align="center" label="操作时间"></el-table-column>
+            <el-table-column prop="SYS_Model_Name" width="200px" align="center" label="模块"></el-table-column>
+            <el-table-column prop="EditUser" width="200px" align="center" label="操作人"></el-table-column>
+            <el-table-column prop="IP" width="200px" align="center" label="操作人IP"></el-table-column>
+            <el-table-column prop="Content" width="800px" align="center" label="操作内容">
+               <template slot-scope="scope">
+                <span v-html="replaceColor(scope.row.Content)"></span>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
       </div>
@@ -49,7 +54,7 @@ export default {
         sA_WaterFactory_Id: "-1", //水厂
         sYS_Model_Name: "-1", //模块名称
         content: "", //内容
-        user_Id: "-1", //操作员
+        user_Id: -1, //操作员
         sort:"",
         filed:"",
         starDateTime:"",
@@ -83,6 +88,24 @@ export default {
         this.tableData = res.data;
         this.tipsData = pushItem(this.tipsDataCopy);
       });
+    },
+    replaceColor(str){
+      let str1=str
+      let textArr=[{name:"添加",class:"logtianjia"},{name:"编辑",class:"red"},{name:"删除",class:"logshanchu"},{name:"分配",class:"logFenPei"},
+      {name:"注销",class:"red"},{name:"重置",class:"red"},{name:"移除",class:"red"},{name:"清空",class:"red"},{name:"生成", class:"red"},
+      {name:"开启",class:"red"},{name:"关闭",class:"red"},{name:"撤销",class:"red"},{name:"减免",class:"red"},{name:"冲红",class:"red"}
+      ,{name:"调整",class:"red"},{name:"升级",class:"red"},{name:"以旧换新",class:"red"},{name:"用户互换",class:"red"},
+      {name:"开户",class:"red"},{name:"制卡",class:"red"},{name:"补卡",class:"red"},{name:"低保户申请",class:"red"},
+      {name:"过户",class:"red"} , {name:"销户",class:"red"},{name:"低保户复审",class:"red"},{name:"变更",class:"red"},{name:"审核",class:"red"},]
+      // let textArr=["添加","编辑","删除","分配","注销","重置","移除","清空","生成","开启","关闭","撤销","减免",
+      // "冲红","调整","升级","以旧换新","用户互换","开户","制卡","补卡","低保户申请","过户","销户","低保户复审","变更","审核"]
+      textArr.forEach(val=>{
+        if(str.indexOf(val.name)!=-1){
+        let rText="<span class='"+val.class+"'>"+val.name+"</span>"
+         str1=str.replace(val.name,rText)
+        }
+      })
+      return str1
     }
   },
   mounted() {
@@ -108,5 +131,23 @@ export default {
 .contanier {
   padding: 14px;
   padding-top: 0;
+}
+/deep/.red{
+  color:#f00!important
+}
+.blue{
+  color:#00f
+}
+.green{
+  color:#0f0
+}
+/deep/.logFenPei{
+  color: #B59200
+}
+/deep/.logtianjia{
+  color: #00B2A1
+}
+/deep/.logshanchu{
+  color: #FF3D3D
 }
 </style>

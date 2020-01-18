@@ -129,13 +129,13 @@
     </div>
     <div class="contanier">
       <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
-        <el-button size="mini" class="fl borderClass" round @click="orderLockWLWOpen(1)">
+        <el-button size="mini" class="fl borderClass" round @click="orderLockWLWOpen(1)" v-permission="['202']">
           <i class="icon iconfont">&#xe646;</i>阀门锁定开
         </el-button>
-        <el-button size="mini" class="fl borderClass" round @click="orderLockWLWClose(0)">
+        <el-button size="mini" class="fl borderClass" round @click="orderLockWLWClose(0)" v-permission="['203']">
           <i class="icon iconfont">&#xe643;</i>阀门锁定关
         </el-button>
-        <el-button size="mini" class="fl borderClass" round @click="orderUnockWLW(0)">
+        <el-button size="mini" class="fl borderClass" round @click="orderUnockWLW(0)" v-permission="['204']">
           <i class="icon iconfont">&#xe645;</i>解锁
         </el-button>
       </div>
@@ -191,6 +191,7 @@
                 :visible-arrow="false"
                 content="查看历史详情"
                 placement="bottom"
+                 v-permission="['205']"
               >
                 <i class="icon iconfont viewHis" @click="waterMeterWLWDetail(scope.row.Id)">&#xe670;</i>
               </el-tooltip>
@@ -254,9 +255,11 @@ import {
   ValveLockClose //关
 } from "@/api/waterMeterMang";
 import SearchTips from "@/components/SearchTips/index";
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import { delTips, getText, pushItem, getName } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   //机械表
+  directives: { permission }, 
   name: "InternetWater",
   components: { SearchTips, Pagination, Static, WLWWaterMeterHis ,EditWLWWaterMeter},
   watch: {

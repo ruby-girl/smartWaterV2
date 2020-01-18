@@ -10,10 +10,10 @@
       ref="formHeight"
     >
       <el-form-item
-        v-if="companyShow"
         label="水厂"
         :label-width="isShow?'70px':'40px'"
         prop="SA_WaterFactory_Id"
+        v-show="show1||isShow"
       >
         <el-select
           v-model="selectHead.SA_WaterFactory_Id "
@@ -21,7 +21,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyParentOptions,'水厂')"
         >
-          <el-option label="全部" value="-1" />
+          <el-option label="全部"  v-if="companyShow" value="-1" />
           <el-option
             v-for="item in companyParentOptions"
             :key="item.Id"
@@ -33,7 +33,7 @@
       <transition-group name="fade">
         <el-form-item
           label="用户类型"
-          v-show="show1||isShow"
+          v-show="show2||isShow"
           key="UserType"
           label-width="70px"
           prop="UserType"
@@ -56,7 +56,7 @@
         <el-form-item
           label="升级前水表类型"
           label-width="120px"
-          v-show="show2||isShow"
+          v-show="show3||isShow"
           key="OldWaterMeterTypeId"
           prop="OldWaterMeterTypeId"
         >
@@ -78,7 +78,7 @@
         <el-form-item
           label="升级后水表类型"
           label-width="120px"
-          v-show="show3||isShow"
+          v-show="show4||isShow"
           key="NewWaterMeterTypeId"
           prop="NewWaterMeterTypeId"
         >
@@ -97,7 +97,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-show="show4||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
+        <el-form-item v-show="show5||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
           <el-select
             v-model="selectHead.CustomerQueryType"
             placeholder="请选择"
@@ -123,7 +123,7 @@
         <el-form-item
           label="操作员"
           label-width="80"
-          v-show="show5||isShow"
+          v-show="show6||isShow"
           key="UpgradeEmpId"
           prop="UpgradeEmpId"
         >
@@ -143,7 +143,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="升级日期" v-show="show6||isShow" key="timevalue" prop="timevalue">
+        <el-form-item label="升级日期" v-show="show7||isShow" key="timevalue" prop="timevalue">
           <el-date-picker
             v-model="selectHead.timevalue"
             type="datetimerange"
@@ -214,7 +214,8 @@ export default {
       show3: true,
       show4: true,
       show5: true,
-      show6: true
+      show6: true,
+      show7: true
     };
   },
   created() {
@@ -241,15 +242,11 @@ export default {
       this.show4 = this.showLabel(4, val);
       this.show5 = this.showLabel(5, val);
       this.show6 = this.showLabel(6, val);
+      this.show7 = this.showLabel(7, val);
     },
     showLabel(n, w) {
-      if (this.companyParentOptions.length == 1) {
         if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
         return false;
-      } else {
-        if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
-        return false;
-      }
     },
     getscName(id) {
       this.secNmae = getName(id);

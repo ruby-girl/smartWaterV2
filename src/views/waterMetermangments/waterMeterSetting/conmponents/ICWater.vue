@@ -182,6 +182,7 @@
       hight="432px"
       center
       :close-on-click-modal="false"
+      v-permission="['193']" 
     >
       <iC-water-meterHis
         :hisData="hisData"
@@ -212,10 +213,12 @@ import {
 } from "@/api/waterMeterMang";
 import ICWaterMeterHis from "./intercomponents/ICWaterMeterHis";
 import EditICWaterMeter from "./intercomponents/EditICWaterMeter";
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   //机械表
   name: "ICWater",
   components: { SearchTips, Pagination, ICWaterMeterHis, EditICWaterMeter },
+  directives: { permission }, 
   props: {
     waterMeterList: {
       type: Array,

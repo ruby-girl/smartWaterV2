@@ -147,6 +147,7 @@
                 :visible-arrow="false"
                 content="编辑"
                 placement="bottom"
+                v-permission="['191']" 
               >
                 <i
                   class="icon iconfont editJxWater"
@@ -173,6 +174,7 @@
       hight="432px"
       center
       :close-on-click-modal="false"
+      v-permission="['190']" 
     >
       <water-meterHis
         :hisData="hisData"
@@ -199,6 +201,7 @@
 <script>
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem, getName } from "@/utils/projectLogic"; //搜索条件面包屑
 import {
@@ -212,6 +215,7 @@ import EditJXWaterMeter from "./intercomponents/EditJXWaterMeter";
 import { legalTime } from "@/utils/index"; //时间格式化
 export default {
   //机械表
+  directives: { permission }, 
   name: "MechanicalWater",
   components: { SearchTips, Pagination, WaterMeterHis, EditJXWaterMeter },
   props: {

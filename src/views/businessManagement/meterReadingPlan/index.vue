@@ -22,6 +22,7 @@
             type="primary"
             @click="addPlan"
             style="margin:7px 0;"
+            v-permission="['138']"
           >
             <i class="icon iconfont">&#xe689;</i>添加
           </el-button>
@@ -77,6 +78,7 @@
                     :visible-arrow="false"
                     content="生成费用"
                     placement="bottom"
+                    v-permission="['139']"
                   >
                     <i
                       class="iconStyle icon iconfont operation1"
@@ -102,6 +104,7 @@
                   :visible-arrow="false"
                   content="开启/关闭数据补录"
                   placement="bottom"
+                  v-permission="['140']"
                 >
                   <i
                     class="iconStyle icon iconfont operation2"
@@ -116,13 +119,14 @@
                   :visible-arrow="false"
                   content="开启/关闭数据补录"
                   placement="bottom"
+                  v-permission="['140']"
                 >
                   <i
                     class="iconStyle icon iconfont operation2-1"
                     @click="changeInput(scope.row.Id,true)"
                   >&#xe675;</i>
                 </el-tooltip>
-                <el-tooltip  effect="light" content="详情" :visible-arrow="false" placement="bottom">
+                <el-tooltip  effect="light" content="详情" :visible-arrow="false" placement="bottom" v-permission="['141']">
                   <i
                     class="iconStyle icon iconfont operation3 iconbiaodan1"
                     @click="meterReadingPlanDetail(scope.row.Id)"
@@ -135,6 +139,7 @@
                   :visible-arrow="false"
                   content="删除"
                   placement="bottom"
+                  v-permission="['132']"
                 >
                   <i
                     class="icon iconfont iconStyle operation4"
@@ -167,6 +172,7 @@ import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import AddReadingPlan from "./components/AddReadingPlan";
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import {
   searchPlanList,
   exportPlanList,
@@ -177,6 +183,7 @@ import {
   WhetherDisplay
 } from "@/api/plan"; //http 请求
 export default {
+  directives: { permission },
   name: "MeterReadingPlan",
   components: {
     SelectHead,

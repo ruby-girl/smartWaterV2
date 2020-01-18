@@ -32,14 +32,13 @@
       </el-form-item>
 
       <el-form-item label="模块" v-show="show2||isShow" prop="sYS_Model_Name">
-         <treeselect
-            placeholder="请选择"
-            :searchable="false"
-            v-model="selectHead.sYS_Model_Name"
-            :options="orgTree"
-            @change="getText(selectHead.sYS_Model_Name ,'AreasYS_Model_NameId',orgTree,'模块')"
-          />
-      
+        <treeselect
+          placeholder="请选择"
+          :searchable="false"
+          v-model="selectHead.sYS_Model_Name"
+          :options="orgTree"
+         
+        />
       </el-form-item>
       <el-form-item label="操作人" v-show="show3||isShow" prop="user_Id">
         <el-select
@@ -73,7 +72,8 @@
           range-separator="~"
           start-placeholder="开始月份"
           end-placeholder="结束月份"
-          default-format="yyyy-MM-dd"
+          :default-time="['00:00:00', '23:59:59']"
+          format="yyyy-MM-dd"
           value-format="yyyy-MM-dd HH:mm:ss"
           @keydown.enter.native="handleFilter"
           @change="getTime"
@@ -97,13 +97,13 @@
 <script>
 import { getDictionaryOption } from "@/utils/permission";
 import { getLabelName } from "@/utils/projectLogic"; //获取lable
-import {getBoxList} from "@/api/log"
+import { getBoxList } from "@/api/log";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 export default {
-  components:{Treeselect},
+  components: { Treeselect },
   props: {
     searchWidth: {}
   },
@@ -124,9 +124,8 @@ export default {
       show4: true,
       show5: true,
       showBtn: false,
-      orgTree:[],//模块
-      editUserList:[],//操作人
-      
+      orgTree: [], //模块
+      editUserList: [] //操作人
     };
   },
   watch: {
@@ -144,36 +143,53 @@ export default {
         }
       },
       immediate: true
+    },
+    "selectHead.sYS_Model_Name": {
+      handler() {
+        if(this.selectHead.sYS_Model_Name!=-1){
+          this.getText(this.selectHead.sYS_Model_Name ,'sYS_Model_Name','','模块')
+        }else {
+          this.getText("" ,'sYS_Model_Name','','模块')
+        }
+       
+      }
     }
   },
   methods: {
-     mapTree(org) {
-  const haveChildren =
-    Array.isArray(org.children) && org.children.length > 0;
-  if (haveChildren) {
-    return {
-      //分别将我们查询出来的值做出改变他的key
-      label: org.label,
-      id: org.label,
-      Id: org.label,
-      Name: org.label,
-      //判断它是否存在子集，若果存在就进行再次进行遍历操作，知道不存在子集便对其他的元素进行操作
-      children: org.children.map(i => this.mapTree(i))
-    };
-  } else {
-    return {
-      label: org.label,
-      id: org.label,
-      Id: org.label,
-      Name: org.label
-    }
-  }
-},
-    getTree(){
-      getBoxList().then(res=>{
+    mapTree(org) {
+      const haveChildren =
+        Array.isArray(org.children) && org.children.length > 0;
+      if (haveChildren) {
+        return {
+          //分别将我们查询出来的值做出改变他的key
+          label: org.label,
+          id: org.label,
+          Id: org.label,
+          Name: org.label,
+          //判断它是否存在子集，若果存在就进行再次进行遍历操作，知道不存在子集便对其他的元素进行操作
+          children: org.children.map(i => this.mapTree(i))
+        };
+      } else {
+        return {
+          label: org.label,
+          id: org.label,
+          Id: org.label,
+          Name: org.label
+        };
+      }
+    },
+    getTree() {
+      getBoxList().then(res => {
+        let orgTreeAll = {
+          id: "-1",
+          label: "全部",
+          Id: "-1",
+          Name: "全部"
+        };
         this.orgTree = res.data.map(org => this.mapTree(org));
+        this.orgTree.unshift(orgTreeAll);
         // this.orgTree=res.data
-      })
+      });
     },
     resetting() {
       //重置
@@ -182,7 +198,7 @@ export default {
       this.$parent.delTips("dateArr");
     },
     showLabel(n, w) {
-      if (Math.floor((w - 180) / 280) >= n  || this.isShow) return true;
+      if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
       return false;
     },
     handleFilter() {
@@ -198,16 +214,16 @@ export default {
     getTime() {
       //时间格式化
       let date = this.dateArr;
-      let dateRang=''
+      let dateRang = "";
       if (date) {
-        this.selectHead.starDateTime = date[0] 
-        this.selectHead.endDateTime = date[1] 
-dateRang=date[0] +"~"+date[1]
+        this.selectHead.starDateTime = date[0];
+        this.selectHead.endDateTime = date[1];
+        dateRang = date[0] + "~" + date[1];
         this.$emit("getText", dateRang, "dateArr", "", "日期");
       } else {
-        dateRang=''
-      this.selectHead.starDateTime =""
-        this.selectHead.endDateTime = "" 
+        dateRang = "";
+        this.selectHead.starDateTime = "";
+        this.selectHead.endDateTime = "";
         this.$emit("getText", dateRang, "dateArr", "", "日期");
       }
     }
@@ -217,7 +233,7 @@ dateRang=date[0] +"~"+date[1]
     if (this.companyOptions.length == 1) {
       this.selectHead.SA_WaterFactory_Id = this.companyOptions.Id;
     }
-    this.getTree()
+    this.getTree();
     getSelectUser().then(res => {
       this.editUserList = res.data;
     });
@@ -231,7 +247,7 @@ dateRang=date[0] +"~"+date[1]
 .el-form {
   width: 100%;
 }
-  /deep/.vue-treeselect{
-      width:180px!important;
-    }
+/deep/.vue-treeselect {
+  width: 180px !important;
+}
 </style>

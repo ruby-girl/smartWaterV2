@@ -6,10 +6,10 @@
       </div>
       <div class="contanier">
         <div class="cl-operation1 clearfix" style="margin-bottom:7px;">
-          <el-button size="mini" class="fl borderClass" round @click="send">
+          <el-button size="mini" class="fl borderClass" round @click="send" v-permission="['259']">
             <i class="icon iconfont">&#xe6b0;</i>发送
           </el-button>
-          <el-button size="mini" class="fl borderClass" round @click="sendAll">
+          <el-button size="mini" class="fl borderClass" round @click="sendAll" v-permission="['260']">
             <i class="icon iconfont">&#xe6b2;</i>发送全部用户
           </el-button>
         </div>
@@ -64,9 +64,10 @@ import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 import { getSMSList, sendShorMsg, sendShorMsgAll } from "@/api/shotMsg";
-
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   name: "sendManua",
+  directives: { permission },
   components: {
     SelectHead,
     Pagination,
