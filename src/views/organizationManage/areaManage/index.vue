@@ -3,7 +3,7 @@
     <div>
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <div class="table-setting">
-        <el-button size="mini" type="primary" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" type="primary" round @click="addNewFun" v-permission="['116']"><i class="icon iconfont">&#xe689;</i>添加</el-button>
       </div>
       <!--列表组建 s-->
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
@@ -34,13 +34,13 @@
         </template>
         <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="编辑" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip effect="light" content="编辑" placement="bottom-start"  :visible-arrow="false"  v-permission="['117']">
               <a class="operation1" @click="handleEdit(scope.$index, scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.isDelete"  :visible-arrow="false">
+            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.isDelete"  :visible-arrow="false"  v-permission="['118']">
               <a class="operation2" @click="handleDelete(scope.$index, scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
-            <el-tooltip v-else effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip v-else effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start"  :visible-arrow="false"  v-permission="['118']">
               <a style="color: #C0C8CC;margin: 10px;"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>
@@ -69,10 +69,12 @@
   import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"//http 请求
   import { parseTime } from "@/utils/index"
   import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
+  import permission from '@/directive/permission/index.js' // 权限判断指令
 
   export default {
     name: 'areaManage',
     components: { customTable, Pagination, SelectHead, Dialog, SearchTips },
+    directives: { permission },
     data() {
       return {
         ID:'',

@@ -60,10 +60,10 @@
             </template>
             <el-table-column label="操作" width="100px" align="center" fixed="right">
               <template slot-scope="scope">
-                <el-tooltip effect="light" content="查看历史记录" placement="bottom-start"  :visible-arrow="false">
+                <el-tooltip effect="light" content="查看历史记录" placement="bottom-start"  :visible-arrow="false" v-permission="['145']">
                   <a class="operation4" @click="handleHistory(scope.row)"><i class="iconfont icon iconxianjinjiaofei-lishijilu"></i></a>
                 </el-tooltip>
-                <el-tooltip effect="light" content="删除" placement="bottom-start" v-if=" scope.row.MeterReadState != 1402 "  :visible-arrow="false">
+                <el-tooltip effect="light" content="删除" placement="bottom-start" v-if=" scope.row.MeterReadState != 1402 "  :visible-arrow="false" v-permission="['144']">
                   <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
                 </el-tooltip>
               </template>
@@ -95,9 +95,11 @@
   import {parseTime, promptInfoFun} from "@/utils/index"
   import {legalTime} from "@/utils/index";
   import {delTips, getText, pushItem, closeDelTip} from "@/utils/projectLogic"; //搜索条件面包屑
+  import permission from '@/directive/permission/index.js' // 权限判断指令
 
   export default {
     name: 'meterSetUp',
+    directives: { permission },
     components: {customTable, Pagination, SelectHead, MeterPlan, SearchTips},
     data() {
       return {

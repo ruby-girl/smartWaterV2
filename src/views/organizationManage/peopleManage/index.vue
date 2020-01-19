@@ -3,7 +3,7 @@
     <div style="width: 100%;position: relative">
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <div class="table-setting">
-        <el-button size="mini" type="primary" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" type="primary" round @click="addNewFun" v-permission="['124']"><i class="icon iconfont">&#xe689;</i>添加</el-button>
       </div>
       <!--列表数据 s-->
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
@@ -52,17 +52,17 @@
         </template>
         <el-table-column label="操作" width="120px"  align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="编辑" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip effect="light" content="编辑" placement="bottom-start"  :visible-arrow="false" v-permission="['125']">
               <a class="operation1" @click="handleEdit(scope.row,1)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
             </el-tooltip>
-            <el-tooltip effect="light" content="详情" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip effect="light" content="详情" placement="bottom-start"  :visible-arrow="false" v-permission="['126']">
               <a class="operation3" @click="handleEdit(scope.row,2)"><i class="iconfont icon iconbiaodan"></i></a>
             </el-tooltip>
 
-            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.SYS_User_Id.length <= 0"  :visible-arrow="false">
+            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.SYS_User_Id.length <= 0"  :visible-arrow="false" v-permission="['127']">
               <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
-            <el-tooltip v-else effect="dark" content="人员已留有数据，不可删除" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip v-else effect="dark" content="人员已留有数据，不可删除" placement="bottom-start"  :visible-arrow="false" v-permission="['127']">
               <a style="color: #C0C8CC;margin: 10px;"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>
@@ -99,11 +99,13 @@
   import detailmponent from './components/Detail'
   import { peopleDelete, peopleUpDate, peopleGetList, ComboBoxList, linkComboBoxList , GetRoleNameList, Employee_Execl, WaterFactoryComboBoxList} from "@/api/organize"
   import { getTime } from "@/utils/index";
-  import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑\
+  import permission from '@/directive/permission/index.js' // 权限判断指令
 
   export default {
     name: 'peopleManage',
     components: {customTable, Pagination, addmponent, editmponent, detailmponent, SelectHead, SearchTips},
+    directives: { permission },
     data() {
       return {
         tableHeight: null,//表格高度

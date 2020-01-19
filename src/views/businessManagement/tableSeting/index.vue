@@ -3,8 +3,8 @@
     <div class="table-setting-box">
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <div class="table-setting">
-        <el-button size="mini" type="primary" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
-        <el-button size="mini" class="cl-operation-btn" round @click="allocationForm" ><i class="icon iconfont">&#xe6ab;</i> 表册分配</el-button>
+        <el-button size="mini" type="primary" round @click="addNewFun" v-permission="['130']"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" class="cl-operation-btn" round @click="allocationForm" v-permission="['131']" ><i class="icon iconfont">&#xe6ab;</i> 表册分配</el-button>
       </div>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
       <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border
@@ -35,16 +35,16 @@
         </template>
         <el-table-column label="操作" width="140px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="表册用户" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip effect="light" content="表册用户" placement="bottom-start"  :visible-arrow="false" v-permission="['133']">
               <a class="operation3" @click="handleUserInfo(scope.row)"><i class="iconfont icon iconbiaoceshezhi-biaoceyonghu"></i></a>
             </el-tooltip>
-            <el-tooltip effect="light" content="表册编辑" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip effect="light" content="表册编辑" placement="bottom-start"  :visible-arrow="false" v-permission="['134']">
               <a class="operation1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
             </el-tooltip>
-            <el-tooltip effect="light" content="清空" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip effect="light" content="清空" placement="bottom-start"  :visible-arrow="false" v-permission="['135']">
               <a class="operation4" @click="handleEmpty(scope.row)"><i class="iconfont icon iconbiaoceshezhi-qingkong"></i></a>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除" placement="bottom-start"  :visible-arrow="false">
+            <el-tooltip effect="light" content="删除" placement="bottom-start"  :visible-arrow="false" v-permission="['136']">
               <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>
@@ -65,7 +65,7 @@
     <!--表册用户定位弹窗 s-->
     <FormsDialog ref="formsDialog"></FormsDialog>
     <!--用户定位-->
-    <Location ref="locationDialog"></Location>
+    <Location ref="locationDialog" v-permission="['132']"></Location>
   </div>
 </template>
 
@@ -84,10 +84,12 @@
   import { WaterFactoryComboBoxListAuth, MeterReaderList } from "@/api/organize"
   import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
   import{ mapGetters } from 'vuex'
+  import permission from '@/directive/permission/index.js' // 权限判断指令
 
   export default {
     name: 'tableSeting',
     components: { customTable, Pagination, SelectHead, Dialog, AllocationForm, FormsDialog, Location, SearchTips },
+    directives: { permission },
     data() {
       return {
         tableHeight: null,//表格高度

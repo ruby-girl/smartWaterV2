@@ -3,7 +3,7 @@
     <div>
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <div class="table-setting">
-        <el-button size="mini" type="primary" round @click="addNewFun"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" type="primary" round @click="addNewFun" v-permission="['120']"><i class="icon iconfont">&#xe689;</i>添加</el-button>
       </div>
 
       <!--列表数据 s-->
@@ -35,13 +35,13 @@
         </template>
         <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="编辑" placement="bottom-start" :visible-arrow="false">
+            <el-tooltip effect="light" content="编辑" placement="bottom-start" :visible-arrow="false" v-permission="['121']">
               <a class="operation1" @click="handleEdit(scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.isDelete" :visible-arrow="false">
+            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.isDelete" :visible-arrow="false" v-permission="['122']">
               <a class="operation2" @click="handleDelete(scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
-            <el-tooltip v-else effect="dark" content="岗位已关联人员，不可删除" placement="bottom-start" :visible-arrow="false">
+            <el-tooltip v-else effect="dark" content="岗位已关联人员，不可删除" placement="bottom-start" :visible-arrow="false" v-permission="['122']">
               <a style="color: #C0C8CC;"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
             </el-tooltip>
           </template>
@@ -72,10 +72,12 @@
   import { GetList, Delete, GetList_Execl,GetEditObjById } from "@/api/organize"
   import { parseTime, promptInfoFun } from "@/utils/index"
   import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
+  import permission from '@/directive/permission/index.js' // 权限判断指令
 
   export default {
     name: 'department',
     components: { SelectHead, customTable, Pagination, AddOrEdit, SearchTips },
+    directives: { permission },
     data() {
       return {
         tableHeight: null,//表格高度
