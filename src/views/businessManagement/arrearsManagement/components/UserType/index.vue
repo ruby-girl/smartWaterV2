@@ -78,6 +78,7 @@
                 :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?true:false"
                 :content="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'该笔费用不允许减免':'违约金减免'"
                 placement="bottom"
+                v-permission="['164']"
               > 
                 <i
                   class="icon iconfont iconjianmianshui font-19"
@@ -91,20 +92,10 @@
                 :visible-arrow="row.ChargeFlag==1002?false:true"
                 :content="row.ChargeFlag==1002?'费用撤回':'该笔费用不允许撤回'"
                 placement="bottom"
+                v-permission="['163']"
               >
                 <i class="icon iconfont iconchexiao1" @click="row.ChargeFlag==1002?reset(row.Id):''"></i>
               </el-tooltip>
-              <!-- 费用类型仅为水费，OrderType==2001，才能进行减免 -->
-              <!-- <el-tooltip
-                :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
-                :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
-                :effect="row.ChargeFlag!==1002||row.OrderType!==2001?'dark':'light'"
-                :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001?true:false"
-                :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'费用减免'"
-                placement="bottom"
-              >
-                <i class="icon iconfont iconjianmianshui" @click="row.ChargeFlag!==1002||row.OrderType!==2001?'':feeWaiverFunc(row)"></i>
-              </el-tooltip> -->
               <el-tooltip
                 :class="{'item main-color':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
                 :popper-class="row.ChargeFlag!==1002||row.OrderType!==2001?'':'tooltip'"
@@ -112,6 +103,7 @@
                 :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001?true:false"
                 :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'水费减免'"
                 placement="bottom"
+                v-permission="['301']"
               > 
                 <i
                   class="icon iconfont iconshuifeijianmian1 font-19"
@@ -178,6 +170,7 @@ export default {
        }  
     },
   },
+  directives: { permission },
   data() {
     return {
       total: 0,

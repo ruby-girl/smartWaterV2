@@ -4,7 +4,7 @@
         <select-head :select-head="listQuery" @handleFilter="getList" :role-list="roleList" @getText="getText"/>
       </div>  
        <div class="section-full-container tips-container" style="padding-top:0;">
-          <el-button size="mini" class="btn-add" round @click="addWaterFactory"><i class="iconfont icontianjia"></i>添加
+          <el-button size="mini" class="btn-add" round @click="addWaterFactory" v-permission="['112']"><i class="iconfont icontianjia"></i>添加
         </el-button>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
       <div class="main-padding-20-y">
@@ -57,6 +57,7 @@
                 :visible-arrow="false"
                 content="编辑"
                 placement="bottom"
+                v-permission="['113']"
               >
                 <i class="icon iconfont iconsuoyoubiaogelidebianji" @click="handleUpdate(row)"></i>
               </el-tooltip>
@@ -67,6 +68,7 @@
                 :visible-arrow="false"
                 content="删除"
                 placement="bottom"
+                v-permission="['114']"
               >
                 <i class="icon iconfont iconsuoyoubiaogelideshanchu" @click="deleteRow(row)"></i>
               </el-tooltip>

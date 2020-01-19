@@ -5,7 +5,7 @@
       </div>
        <div class="section-full-container" style="padding-top:0;">
       <div class="main-padding-20-y tips-container">
-        <el-button size="mini" class="btn-add" round @click="addRole"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" class="btn-add" round @click="addRole" v-permission="['102']"><i class="icon iconfont">&#xe689;</i>添加</el-button>
         <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
         <el-table
           :key="tableKey"
@@ -49,6 +49,7 @@
                 :visible-arrow="row.UserStatusCode=='101'?false:true"
                 :content="row.UserStatusCode=='101'?'编辑':'该账号异常禁止操作'"
                 placement="bottom"
+                v-permission="['103']"
               >
                 <i class="icon iconfont iconsuoyoubiaogelidebianji" @click="row.UserStatusCode=='101'?handleUpdate(row):''"></i>
               </el-tooltip>
@@ -59,6 +60,7 @@
                 :visible-arrow="row.UserStatusCode=='101'?false:true"
                 :content="row.UserStatusCode=='101'?'注销':'该账号异常禁止操作'"
                 placement="bottom"
+                v-permission="['104']"
               >
                 <i class="icon iconfont iconzhuxiao" @click="row.UserStatusCode=='101'?cancel(row):''"></i>
               </el-tooltip>
@@ -71,6 +73,7 @@
                 :visible-arrow="row.UserStatusCode=='101'?false:true"
                 :content="row.UserStatusCode=='101'?'重置密码':'该账号异常禁止操作'"
                 placement="bottom"
+                v-permission="['105']"
               >
                 <i class="icon iconfont icon_zhongzhi1" @click="row.UserStatusCode=='101'?reset(row):''"></i>
               </el-tooltip>

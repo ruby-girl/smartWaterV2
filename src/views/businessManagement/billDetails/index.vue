@@ -63,6 +63,7 @@
                 :visible-arrow="row.PayType==2706?false:true"
                 :content="row.PayType==2706?'费用撤销':'该笔费用不允许撤销'"
                 placement="bottom"
+                v-permission="['160']"
               >
                 <i class="icon iconfont iconchexiao1" @click="row.PayType==2706?reset(row):''"></i>
               </el-tooltip>
@@ -95,6 +96,7 @@ import {
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem,isExport,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import { parseStartTimeFunc, parseEndTimeFunc } from "@/utils/index";
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   name: "billDetails",
   components: { SelectHead, Pagination,ChargesDetails,SearchTips,OverDetails},
@@ -144,6 +146,7 @@ export default {
       return arrayHead;
     }
   },
+  directives: { permission },
   watch: {
      $route: {
     handler: function(val, oldVal){

@@ -64,13 +64,14 @@
       <!-- 循环年e -->
        
     </div>
-    <div class="month-save-btn text-center" style="margin-top:10px;">
+    <div class="month-save-btn text-center" style="margin-top:10px;" v-permission="['282']">
           <el-button type="primary" size="mini" @click="saveMonth()">保存</el-button>
         </div>
   </div>
 </template>
 <script>
 import {SelectWaterYieldToFactory,SaveYearMonthWaterYieldInfo} from "@/api/basicConfig"
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   name: "differenceConfig",
   data() {
@@ -80,6 +81,7 @@ export default {
       waterWorksOption: []
     };
   },
+  directives: { permission },
   mounted() {
     this.waterWorksOption = this.$store.state.user.waterWorks;
     this.waterFactory=this.waterWorksOption[0].Id

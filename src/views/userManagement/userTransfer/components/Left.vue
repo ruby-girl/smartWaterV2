@@ -93,7 +93,7 @@
       <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
     </span>
     <div class="bottom-btn-box">
-      <el-button type="primary" @click="account" size="mini" style="padding:8px 14px;">确认过户</el-button>
+      <el-button type="primary" v-permission="['226']" @click="account" size="mini" style="padding:8px 14px;">确认过户</el-button>
     </div>
     <fileList :show.sync="fileShow" :file.sync="file"></fileList>
     <select-user
@@ -116,9 +116,11 @@ import SelectUser from "@/components/SelectUser";
 import AccountBalances from "./AccountBalances";
 import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 import FileList from "./FileList";
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   components: { FileList, SelectUser, AccountBalances },
-  props: { ifShow: {} },
+  props: ['ifShow'],
+  directives: { permission },
   data() {
     return {
       ifShowChild: false,

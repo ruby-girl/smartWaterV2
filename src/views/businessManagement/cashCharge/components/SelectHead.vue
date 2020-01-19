@@ -30,7 +30,7 @@
           <el-button type="primary" round="" size="mini" @click="handleFilter">
             <i class="iconfont iconsousuo"></i>搜索
           </el-button>
-          <el-button  class="special-btn" round="" size="mini" @click="handleFilterIC">
+          <el-button  class="special-btn" round="" size="mini" @click="handleFilterIC" v-permission="['152']">
             <i class="iconfont iconduka"></i>读卡
           </el-button>
         </el-form-item>
@@ -67,6 +67,7 @@
 <script>
 import { GetCustomerDataList } from "@/api/userSetting"; ////模糊查询用户
 import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   props: {
     selectHead: {
@@ -80,6 +81,7 @@ export default {
     },
     paymentNum:{}
   },
+  directives: {permission},
   watch: {
     headUser(val) {
       this.user = val;

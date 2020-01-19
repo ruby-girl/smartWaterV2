@@ -10,7 +10,11 @@
       <user-change></user-change>
     </el-tab-pane>
   </el-tabs>
-  <span v-show="!ifShowChild" class="telescopic telescopic2" @click="getUp">
+  <span v-show="!ifShowChild&&activeName=='first'" class="telescopic telescopic2" v-permission="['210']" @click="getUp">
+      水表换表
+      <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
+  </span>
+  <span v-show="!ifShowChild&&activeName=='second'" class="telescopic telescopic2" v-permission="['212']" @click="getUp">
       水表换表
       <i class="iconfont iconshouqi2" style="font-size: 12px;"></i>
   </span>
@@ -19,9 +23,11 @@
 <script>
 import OldForNew from "./OldForNew"
 import UserChange from "./UserChange"
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   components: {OldForNew,UserChange},
-  props: { ifShow: {} },
+  props: ['ifShow'],
+  directives: { permission },
   data() {
     return {
       activeName:'first',

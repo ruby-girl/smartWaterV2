@@ -68,6 +68,7 @@
                 :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?true:false"
                 :content="row.ChargeFlag!==1002||row.OrderType!==2001||row.LateFee==0?'该笔费用不允许减免':'违约金减免'"
                 placement="bottom"
+                v-permission="['154']"
               > 
                 <i
                   class="icon iconfont iconjianmianshui font-19"
@@ -82,6 +83,7 @@
                 :visible-arrow="row.ChargeFlag==1002?false:true"
                 :content="row.ChargeFlag==1002?'费用撤回':'该笔费用不允许撤回'"
                 placement="bottom"
+                v-permission="['153']"
               >
                 <i
                   class="icon iconfont iconchexiao1"
@@ -95,6 +97,7 @@
                 :visible-arrow="row.ChargeFlag!==1002||row.OrderType!==2001?true:false"
                 :content="row.ChargeFlag!==1002||row.OrderType!==2001?'该笔费用不允许减免':'水费减免'"
                 placement="bottom"
+                v-permission="['300']"
               > 
                 <i
                   class="icon iconfont iconshuifeijianmian1 font-19"
@@ -132,6 +135,7 @@
 import Pagination from "@/components/Pagination";
 import { GetOrder } from "@/api/cashCharge";
 import SearchTips from "@/components/SearchTips/index";
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   props: {
     listQuery: {
@@ -147,6 +151,7 @@ export default {
     tipsData:{},
     totalLength:{}
   },
+  directives: {permission},
   components: { Pagination,SearchTips },
   mounted() {
       this.$refs.searchTips.showExcel = false; // 先获取所有自定义字段赋值

@@ -47,7 +47,7 @@
           >
             <template slot-scope="{row}">
               <div class="display-flex justify-content-flex-center method-font">
-                <el-tooltip  class="item" popper-class="tooltip" effect="light" :visible-arrow="false"  content="变更用水性质"  placement="bottom">
+                <el-tooltip v-permission="['232']"  class="item" popper-class="tooltip" effect="light" :visible-arrow="false"  content="变更用水性质"  placement="bottom">
                   <i class="iconfont main-color iconlianhe pointer" @click="edit(row)"></i>
                 </el-tooltip>
               </div>

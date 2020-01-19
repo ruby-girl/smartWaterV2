@@ -10,7 +10,7 @@
       </div>
       <div class="section-full-container tips-container">
       <div class="display-flex justify-content-flex-justify">
-        <el-button round plain class="btn-add" size="mini" @click="add">
+        <el-button round plain class="btn-add" size="mini" @click="add" v-permission="['170']">
           <i class="iconfont icontianjia"></i>添加
         </el-button>
       </div>
@@ -59,6 +59,7 @@
                 :visible-arrow="false"
                 content="水价构成"
                 placement="bottom"
+                v-permission="['171']"
               >
                 <i class="icon iconfont iconyongshuixingzhishezhi-shuijiagoucheng"  @click="constitute(row,1)"></i>
               </el-tooltip>
@@ -69,6 +70,7 @@
                 :visible-arrow="false"
                 content="历史水价"
                 placement="bottom"
+                v-permission="['172']"
               >
                 <i class="icon iconfont iconyongshuixingzhishezhi-lishishuijia" @click="history(row)"></i>
               </el-tooltip>
@@ -79,6 +81,7 @@
                 :visible-arrow="false"
                 content="水价调整"
                 placement="bottom"
+                 v-permission="['173']"
                 v-if="row.UseState=='801'"
               >
                 <i class="icon iconfont iconyongshuixingzhishezhi-shuijiatiaozheng"  @click="handleUpdate(row)"></i>
@@ -91,6 +94,7 @@
                 content="撤销水价调整"
                 placement="bottom"
                 v-if="row.UseState=='802'"
+                v-permission="['305']"
               >
                 <i class="icon iconfont iconyongshuixingzhishezhi-chexiaoshuijiatiaozheng" @click="constitute(row,2)"></i>
               </el-tooltip>
@@ -100,6 +104,7 @@
                 effect="light"
                 :visible-arrow="false"
                 content="删除"
+                v-permission="['174']"
                 placement="bottom"
               >
                 <i class="icon iconfont iconsuoyoubiaogelideshanchu" @click="cancel(row)"></i>

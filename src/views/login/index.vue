@@ -274,6 +274,14 @@ export default {
             });
             _this.$router.push({ path: "/login" });
             break;
+          case "999": //系统配置发生变化
+            _this.$message({
+              message: "系统配置发生变化，请重新登录",
+              type: "error",
+              duration: 4000
+            });
+            _this.$router.push({ path: "/login" });
+            break;
         }
       };
 
