@@ -26,8 +26,8 @@
             <el-table-column prop="SYS_Model_Name" width="200px" align="center" label="模块"></el-table-column>
             <el-table-column prop="EditUser" width="200px" align="center" label="操作人"></el-table-column>
             <el-table-column prop="IP" width="200px" align="center" label="操作人IP"></el-table-column>
-            <el-table-column prop="Content" width="800px" align="center" label="操作内容">
-               <template slot-scope="scope">
+            <el-table-column prop="Content" width="800px" label="操作内容">
+              <template slot-scope="scope">
                 <span v-html="replaceColor(scope.row.Content)"></span>
               </template>
             </el-table-column>
@@ -49,16 +49,16 @@ export default {
   data() {
     return {
       selectHead: {
-        page:1,
-        limit:20,
+        page: 1,
+        limit: 20,
         sA_WaterFactory_Id: "-1", //水厂
         sYS_Model_Name: "-1", //模块名称
         content: "", //内容
         user_Id: -1, //操作员
-        sort:"",
-        filed:"",
-        starDateTime:"",
-        endDateTime:"",
+        sort: "",
+        filed: "",
+        starDateTime: "",
+        endDateTime: ""
       },
       tableHeight: null,
       tableData: [], //表格数据
@@ -81,7 +81,7 @@ export default {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
-   
+
     //查询
     searchTableList() {
       getLogList(this.selectHead).then(res => {
@@ -89,23 +89,45 @@ export default {
         this.tipsData = pushItem(this.tipsDataCopy);
       });
     },
-    replaceColor(str){
-      let str1=str
-      let textArr=[{name:"添加",class:"logtianjia"},{name:"编辑",class:"red"},{name:"删除",class:"logshanchu"},{name:"分配",class:"logFenPei"},
-      {name:"注销",class:"red"},{name:"重置",class:"red"},{name:"移除",class:"red"},{name:"清空",class:"red"},{name:"生成", class:"red"},
-      {name:"开启",class:"red"},{name:"关闭",class:"red"},{name:"撤销",class:"red"},{name:"减免",class:"red"},{name:"冲红",class:"red"}
-      ,{name:"调整",class:"red"},{name:"升级",class:"red"},{name:"以旧换新",class:"red"},{name:"用户互换",class:"red"},
-      {name:"开户",class:"red"},{name:"制卡",class:"red"},{name:"补卡",class:"red"},{name:"低保户申请",class:"red"},
-      {name:"过户",class:"red"} , {name:"销户",class:"red"},{name:"低保户复审",class:"red"},{name:"变更",class:"red"},{name:"审核",class:"red"},]
-      // let textArr=["添加","编辑","删除","分配","注销","重置","移除","清空","生成","开启","关闭","撤销","减免",
-      // "冲红","调整","升级","以旧换新","用户互换","开户","制卡","补卡","低保户申请","过户","销户","低保户复审","变更","审核"]
-      textArr.forEach(val=>{
-        if(str.indexOf(val.name)!=-1){
-        let rText="<span class='"+val.class+"'>"+val.name+"</span>"
-         str1=str.replace(val.name,rText)
+    replaceColor(str) {
+      let str1 = str;
+      let textArr = [
+        { name: "添加", class: "logTKJ" },
+        { name: "编辑", class: "logBSTBS" },
+        { name: "删除", class: "logSX" },
+        { name: "分配", class: "logFGY" },
+        { name: "注销", class: "logZX" },
+        { name: "重置", class: "logCSCB" },
+        { name: "移除", class: "logFGY" },
+        { name: "清空", class: "logClearAll" },
+        { name: "生成", class: "logBSTBS" },
+        { name: "开启", class: "logTKJ" },
+        { name: "开户", class: "logTKJ" },
+        { name: "关闭", class: "logFGY" },
+        { name: "撤销", class: "logCY" },
+        { name: "减免", class: "logTKJ" },
+        { name: "冲红", class: "logSXC" },
+        { name: "调整", class: "logBSTBS" },
+        { name: "升级", class: "logCSCB" },
+        { name: "以旧换新", class: "logCSCB" },
+        { name: "用户互换", class: "logCY" },
+        { name: "制卡", class: "logTran" },
+        { name: "补卡", class: "logCSCB" },
+        { name: "低保户申请", class: "logInsur" },
+        { name: "过户", class: "logTran" },
+        { name: "销户", class: "logSXC" },
+        { name: "低保户复审", class: "logInsur" },
+        { name: "变更", class: "logBSTBS" },
+        { name: "审核", class: "logBSTBS" },
+        { name: "修改", class: "logEdit" }
+      ];
+      textArr.forEach(val => {
+        if (str.indexOf(val.name) != -1) {
+          let rText = "<span class='" + val.class + "'>" + val.name + "</span>";
+          str1 = str.replace(val.name, rText);
         }
-      })
-      return str1
+      });
+      return str1;
     }
   },
   mounted() {
@@ -132,22 +154,48 @@ export default {
   padding: 14px;
   padding-top: 0;
 }
-/deep/.red{
-  color:#f00!important
+//添加 开启 开户 减免
+/deep/.logTKJ {
+  color: #00b2a1;
 }
-.blue{
-  color:#00f
+//编辑 生成 调整 变更 审核
+/deep/.logBSTBS {
+  color: #b9b300;
 }
-.green{
-  color:#0f0
+//删除 销户 冲红
+/deep/.logSXC {
+  color: #ff3d3d;
 }
-/deep/.logFenPei{
-  color: #B59200
+//撤销 用户互换
+/deep/.logCY {
+  color: #019b8b;
 }
-/deep/.logtianjia{
-  color: #00B2A1
+//分配 关闭 移除
+/deep/.logFGY {
+  color: #009253;
 }
-/deep/.logshanchu{
-  color: #FF3D3D
+//修改：#B59200
+/deep/.logEdit {
+  color: #B59200;
+}
+//注销
+/deep/.logZX {
+  color: #ff6f00;
+}
+//重置 升级 以旧换新 补卡
+/deep/.logCSCB {
+  color: #46be56;
+}
+//清空
+/deep/.logClearAll {
+  color: #b59200;
+}
+//制卡 过户
+/deep/.logTran {
+  color: #8ad120;
+}
+//低保户申请 低保户复审
+/deep/.logInsur {
+  color: #fa9806;
 }
 </style>
