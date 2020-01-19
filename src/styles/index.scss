@@ -397,13 +397,15 @@ font-size: 13px;
 }
 .vue-treeselect__menu-container div{
   line-height: 35px;
+  color:#606266;
 }
 .el-table__empty-block {
   width: 100% !important;
 }
 .vue-treeselect__control,.vue-treeselect__placeholder, .vue-treeselect__single-value{
-  height:26px !important;
-  line-height: 26px !important;
+  height:30px !important;
+  line-height: 30px !important;
+  color:#606266;
 }
 el-form-item__error{top:90%}
 .short-select-item .el-input, .short-select-item .el-input__inner{ width: 100px;}

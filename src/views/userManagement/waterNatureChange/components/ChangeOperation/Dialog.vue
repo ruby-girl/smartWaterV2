@@ -1,6 +1,6 @@
 <template>
   <!-- 编辑弹窗 -->
-  <el-dialog title="变更用水性质" :visible.sync="dialogFormVisible" :close-on-click-modal="false" top="30vh" width="500px" center>
+  <el-dialog title="变更用水性质" :visible.sync="dialogFormVisible" :close-on-click-modal="false" top="30vh" width="500px" @open="isOpenFun" center>
     <el-form
       ref="dataForm"
       :model="temp"
@@ -25,13 +25,14 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="updateData()">确认</el-button>
+      <el-button size="mini" type="primary" @click="updateData()">{{isOpen?"提交审核":"确定"}}</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 import {ConfirmChangeWaterProperty} from "@/api/system"
+import { getOpenFlag } from "@/utils/projectLogic";
 export default {
   props: {  
     temp: {},
@@ -47,7 +48,8 @@ export default {
       obj:{
           newWaterPropertyId:'',
           customerId:''
-      }
+      },
+      isOpen:false
     }
   },
   watch: {
@@ -62,6 +64,11 @@ export default {
     }
   },
   methods: {
+    isOpenFun(){
+       getOpenFlag(2907).then(val => {
+      this.isOpen = val;
+    });
+    },
     updateData() {
         this.obj.newWaterPropertyId=this.temp.SA_UseWaterType_Id
         this.obj.customerId=this.temp.Id

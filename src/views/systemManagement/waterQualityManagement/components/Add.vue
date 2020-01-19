@@ -8,6 +8,7 @@
     center
     custom-class="nopadding"
     @closed="addDialogClose"
+    @open="isOpenFun"
     :close-on-click-modal="false"
   >
     <el-form
@@ -27,7 +28,7 @@
     </el-form>
     <components :dialogStatus="dialogStatus" :is="LadderComponents" :temp="temp" ref="childrenTemp" :type-list="typeList"></components>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="createData">确认</el-button>
+      <el-button size="mini" type="primary" @click="createData">{{isOpen?"提交审核":"确定"}}</el-button>
       <el-button size="mini" @click="AdialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
@@ -36,6 +37,7 @@
 import LadderTrue from "./LadderTrue";
 import LadderFalse from "./LadderFalse";
 import {ladderChangeObj} from "@/utils/index"
+import { getOpenFlag } from "@/utils/projectLogic";
 export default {
   props: {
     temp: {
@@ -65,7 +67,7 @@ export default {
   },
   watch: {
     addShow() {
-      this.AdialogFormVisible = this.addShow;
+      this.AdialogFormVisible = this.addShow;     
     },
     AdialogFormVisible(val, oldVal) {
       if (val === oldVal) {
@@ -90,10 +92,16 @@ export default {
       LadderComponents: "LadderTrue",
       AdialogFormVisible: false,
       userOptions: [],
-      userOptionsSave: []
+      userOptionsSave: [],
+      isOpen:false
     };
   },
   methods: {
+    isOpenFun(){
+       getOpenFlag(2908).then(val => {
+      this.isOpen = val;
+    });
+    },
     updateData() {
       this.$refs["childrenTemp"].$refs["dataFormTrue"].validate(valid => {
         if (!valid) return false;

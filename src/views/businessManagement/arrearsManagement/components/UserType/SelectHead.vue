@@ -26,15 +26,15 @@
         @blur="getText(selectHead.Customer,'Customer','',secNmae)"
       />
     </el-form-item>
-    <el-form-item label="水厂：" v-if="this.waterWorks.length>1" prop="SA_WaterFactory_Id">
+    <el-form-item label="水厂："  prop="SA_WaterFactory_Id">
       <el-select
         v-model="selectHead.SA_WaterFactory_Id"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
-        @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',waterWorks,'水厂')"
+        @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',waterWorksOption,'水厂')"
       >
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option label="全部" value="-1" v-show="waterWorksOption.length>1"/>
+        <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <transition-group name="fade">
@@ -156,7 +156,8 @@ export default {
         this.getArea(val);
       },
       immediate: true
-    }
+
+    },
   },
   components: { Treeselect },
   data() {
@@ -176,7 +177,7 @@ export default {
       ],
       userType: [], //用户类型
       waterType: [], //水表类型
-      waterWorks: [], //水厂
+      waterWorksOption: [], //水厂
       orgTree: [],
       isShow: false,
       ShowIcon: true,
@@ -188,20 +189,17 @@ export default {
     this.searchWidth = document.body.clientWidth - 160; //160左侧导航宽度
     this.Enumwm = getDictionaryOption("水表类型");
     this.Enumut = getDictionaryOption("用户类型");
-     this.Enumot = getDictionaryOption("费用类型");
-    this.delEnumotOption(this.Enumot)
-    // this.Enumcf = getDictionaryOption("缴费单缴费状态");
-    this.waterWorks = this.$store.state.user.waterWorks;
-    if (this.waterWorks.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.waterWorks[0].Id;
+     let option  = getDictionaryOption("费用类型");
+    this.delEnumotOption(option)
+    this.waterWorksOption = this.$store.state.user.waterWorks;
+    if (this.waterWorksOption.length == 1) {
+      this.selectHead.SA_WaterFactory_Id = this.waterWorksOption[0].Id;
     }
   },
   methods: {
     delEnumotOption(arr){//删除不需要展示的费用类型    
-      arr.forEach((item,i)=>{    
-        if(item.Id==2006||item.Id==2007||item.Id==2008){
-          arr.splice(i,1)
-        }
+      this.Enumot=arr.filter(item=>{
+        return item.Id!=2006&&item.Id!=2007&&item.Id!=2008
       })
     },
     getTime(v) {
@@ -241,7 +239,6 @@ export default {
       this.$emit("getText", val, model, arr, name);
     },
     showLabel(n) {
-      if (this.waterWorks.length == 1) n = n - 1;
       if (Math.floor((this.searchWidth - 250) / 310) > n || this.isShow)
         return true;
       return false;

@@ -10,15 +10,15 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item label="水厂" :label-width="!isShow?'40px':''" prop="waterFactoryId" v-if="this.waterWorks.length>1">
+      <el-form-item label="水厂" :label-width="!isShow?'40px':''" prop="waterFactoryId">
         <el-select
           v-model="selectHead.waterFactoryId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.waterFactoryId,'waterFactoryId',waterWorks,'水厂')"
+          @change="getText(selectHead.waterFactoryId,'waterFactoryId',waterWorksOption,'水厂')"
         >
-          <el-option label="全部" value="-1" />
-          <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
+          <el-option label="全部" value="-1" v-show="waterWorksOption.length>1"/>
+          <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />
         </el-select>
       </el-form-item>
        <transition-group name="fade">
@@ -140,7 +140,7 @@ export default {
       editUserList: [],
       userType: [],
       waterType: [], //水表类型
-      waterWorks: [], //水厂
+      waterWorksOption: [], //水厂
       changeType: [
         { Name: "以旧换新", Id: "3401" },
         { Name: "用户互换", Id: "3402" }
@@ -154,15 +154,10 @@ export default {
       show5: true
     };
   },
-  mounted(){
-    this.waterWorks = this.$store.state.user.waterWorks;
-    console.info('看看水厂',this.$store.state.user.waterWorks)
-  },
   created() {
-    this.waterWorks = this.$store.state.user.waterWorks;
-    console.info('看看水厂',this.$store.state.user.waterWorks)
-    if (this.waterWorks.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.waterWorks[0].Id;
+    this.waterWorksOption = this.$store.state.user.waterWorks;
+    if (this.waterWorksOption.length == 1) {
+      this.selectHead.SA_WaterFactory_Id = this.waterWorksOption[0].Id;
     }
     this.userType = getDictionaryOption("用户类型");
     this.waterType = getDictionaryOption("水表类型");
@@ -177,7 +172,6 @@ export default {
       this.setLabel(this.searchWidth,true)
     },
     showLabel(n,w) {
-      if (this.waterWorks.length == 1) n = n - 1;
       if (Math.floor((w - 180) / 260) > n || this.isShow)
         return true;
       return false;

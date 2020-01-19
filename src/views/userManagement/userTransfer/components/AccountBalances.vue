@@ -4,6 +4,7 @@
     title="提示：远程智能水表请先获取表端最新数据"
     :visible.sync="dialogFormVisible"
     :close-on-click-modal="false"
+    @open="isOpenFun"
     top="30vh"
     width="400px"
     center
@@ -33,13 +34,14 @@
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="accountBalancesFunc">确认过户</el-button>
+      <el-button size="mini" type="primary" @click="accountBalancesFunc">{{isOpen?"提交审核":"确认过户"}}</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
+import { getOpenFlag } from "@/utils/projectLogic";
 export default {
   props: {
     user: {
@@ -56,7 +58,8 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
-      editUserList: []
+      editUserList: [],
+      isOpen:false
     };
   },
   watch: {
@@ -76,6 +79,11 @@ export default {
     });
   },
   methods: {
+     isOpenFun(){
+       getOpenFlag(2904).then(val => {
+      this.isOpen = val;
+    });
+    },
     accountBalancesFunc(){
       if(!this.user.IsBalanceDeposit&&!this.user.OperatorEmpId&&this.user.BalanceValue>0){
         this.$message({

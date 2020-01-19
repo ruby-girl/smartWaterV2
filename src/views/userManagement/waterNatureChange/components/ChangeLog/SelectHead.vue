@@ -56,16 +56,16 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="WaterFactoryId" label="水厂" v-show="showLabel(3)||isShow" v-if="this.waterWorks.length>1" key="WaterFactoryId">
+        <el-form-item prop="WaterFactoryId" label="水厂" v-show="showLabel(3)||isShow"  key="WaterFactoryId">
           <el-select
             v-model="selectHead.WaterFactoryId"
             placeholder="请选择"
             @keydown.enter.native="handleFilter"
-            @change="getText(selectHead.WaterFactoryId,'waterFactoryId',waterWorks,'水厂')"
+            @change="getText(selectHead.WaterFactoryId,'waterFactoryId',waterWorksOption,'水厂')"
           >
-            <el-option label="全部" value="-1" />
+            <el-option label="全部" value="-1" v-show="this.waterWorksOption.length>1"/>
             <el-option
-              v-for="item in waterWorks"
+              v-for="item in waterWorksOption"
               :key="item.Id"
               :label="item.Name"
               :value="item.Id"
@@ -133,7 +133,7 @@ export default {
       userType: [], //用户类型
       editUserList:[],//操作人
       waterType: [], //水表类型
-      waterWorks: [], //水厂
+      waterWorksOption: [], //水厂
       isShow: false,
       ShowIcon: false,
       searchWidth: 0,
@@ -142,9 +142,9 @@ export default {
   },
   created() {
     this.searchWidth = document.body.clientWidth - 160; //160左侧导航宽度
-    this.waterWorks = this.$store.state.user.waterWorks;
-    if (this.waterWorks.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.waterWorks[0].Id;
+    this.waterWorksOption = this.$store.state.user.waterWorks;
+    if (this.waterWorksOption.length == 1) {
+      this.selectHead.SA_WaterFactory_Id = this.waterWorksOption[0].Id;
     }
     getSelectUser().then((res)=>{//操作人
       this.editUserList=res.data
@@ -184,7 +184,6 @@ export default {
       this.$emit("getText", val, model, arr, name);
     },
     showLabel(n) {
-      if (this.waterWorks.length == 1) n = n - 1;
       if (Math.floor((this.searchWidth - 180) / 310) > n || this.isShow)
         return true;
       return false;

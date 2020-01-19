@@ -4,7 +4,7 @@
       <select-head :select-head="listQuery" @handleFilter="getList" @getText="getText" />
     </div>
     <div class="section-full-container tips-container" style="padding-top:0;">
-      <el-button size="mini" class="btn-add" round  @click="addRole">
+      <el-button size="mini" class="btn-add" round  @click="addRole" v-permission="['107']">
         <i class="iconfont icontianjia"></i>添加
       </el-button>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />

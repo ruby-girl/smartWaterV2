@@ -8,7 +8,7 @@
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
       >
-        <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </div>
     <!-- 配置 -->
@@ -77,17 +77,17 @@ export default {
     return {
       waterFactory: "",
       arr: [],
-      waterWorks: []
+      waterWorksOption: []
     };
   },
   mounted() {
-    this.waterWorks = this.$store.state.user.waterWorks;
-    this.waterFactory=this.waterWorks[0].Id
+    this.waterWorksOption = this.$store.state.user.waterWorks;
+    this.waterFactory=this.waterWorksOption[0].Id
     this.getWaterYieldToFactory()
   },
   methods: {
     getWaterYieldToFactory(){
-      SelectWaterYieldToFactory({factoryId:this.waterWorks[0].Id}).then(res=>{
+      SelectWaterYieldToFactory({factoryId:this.waterWorksOption[0].Id}).then(res=>{
       res.data.forEach((item,i)=>{
         item.show=false
         item.allShow=false

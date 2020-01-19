@@ -8,6 +8,7 @@
     center
     custom-class="dialog-background"
     :close-on-click-modal="false"
+    @open="isOpenFun"
     @closed="close"
   >
     <div class="feewaiver-box">
@@ -38,7 +39,7 @@
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button size="mini" type="primary" @click="feeWaiver">确认</el-button>
+      <el-button size="mini" type="primary" @click="feeWaiver">{{isOpen&&type=='违约金'?"提交审核":"确定"}}</el-button>
       <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
     </div>
   </el-dialog>
@@ -46,6 +47,7 @@
 <script>
 import { updateMoney, changeTwoDecimal } from "@/utils/index.js";
 import { OrderFeeWaiver, OrderAfterOverdueFeeWaiver } from "@/api/cashCharge";
+import { getOpenFlag } from "@/utils/projectLogic";
 export default {
   props: {
     //   减免Id
@@ -73,10 +75,15 @@ export default {
     return {
       dialogFormVisible: false,
       inputValue: "",
-      activeName: "frist"
+      isOpen:false
     };
   },
   methods: {
+    isOpenFun(){
+       getOpenFlag(2911).then(val => {
+      this.isOpen = val;
+    });
+    },
     close() {
       this.inputValue = "";
     },

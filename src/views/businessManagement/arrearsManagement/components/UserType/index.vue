@@ -366,7 +366,6 @@ export default {
     },
     // 费用减免
     feeWaiverFunc(item,type) {
-      console.info(item)
       this.feeWaiverType=type
       this.feeWaiverItem = item;
       this.feeWaiverShow = true;

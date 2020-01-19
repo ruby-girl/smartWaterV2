@@ -26,14 +26,14 @@
         style="width: 180px;float: left"
       />
     </el-form-item>
-    <el-form-item label="水厂" v-if="this.waterWorks.length>1" prop="WaterFactory">
+    <el-form-item label="水厂"  prop="WaterFactory">
       <el-select
         v-model="selectHead.WaterFactory"
         placeholder="请选择"
-        @change="getText(selectHead.WaterFactory,'WaterFactory',waterWorks,'水厂')" 
+        @change="getText(selectHead.WaterFactory,'WaterFactory',waterWorksOption,'水厂')" 
         @keydown.enter.native="handleFilter">
-        <el-option label="全部" value="-1" />
-        <el-option v-for="item in waterWorks" :key="item.Id" :label="item.Name" :value="item.Id" />
+        <el-option label="全部" value="-1" v-show="waterWorksOption.length>1"/>
+        <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
     </el-form-item>
     <el-form-item label="收款人" v-show="showLabel(2)||isShow" prop="ReceiveMoneyUser">
@@ -137,7 +137,7 @@ export default {
       payMentType:[],//缴费方式
       payMentState:[],//缴费状态
       editUserList:[],//收款人
-      waterWorks:[],//水厂
+      waterWorksOption:[],//水厂
       isShow:false,
       ShowIcon:true,
       searchWidth:0,
@@ -161,9 +161,9 @@ export default {
     getSelectUser().then(res => {
       this.editUserList = res.data;
     });
-     this.waterWorks=this.$store.state.user.waterWorks
-    if(this.waterWorks.length==1){
-      this.selectHead.WaterFactory=this.waterWorks[0].Id
+     this.waterWorksOption=this.$store.state.user.waterWorks
+    if(this.waterWorksOption.length==1){
+      this.selectHead.WaterFactory=this.waterWorksOption[0].Id
     }
     this.waterMeterType=getDictionaryOption('水表类型')
     this.payMentState=getDictionaryOption('缴费单缴费状态')
@@ -181,7 +181,6 @@ export default {
       });
     },
     showLabel(n) {
-      if (this.waterWorks.length == 1) n = n - 1;
       if (Math.floor((this.searchWidth - 180) / 310) > n || this.isShow)
         return true;
       return false;
