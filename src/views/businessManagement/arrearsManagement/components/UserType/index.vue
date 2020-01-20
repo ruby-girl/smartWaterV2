@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="section-full-container">
-      <el-button size="mini" class="special-btn" style="margin-bottom:10px" round @click="OrdersFeeCancelsFunc()">撤销所选欠费</el-button>
+      <el-button size="mini" class="special-btn" style="margin-bottom:10px" v-permission="['163']" round @click="OrdersFeeCancelsFunc()">撤销所选欠费</el-button>
       <mytable-total :list="tableTotal"></mytable-total>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
       <div class="main-padding-20-y">
