@@ -19,16 +19,18 @@
           placeholder="选择日期时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="透支量" v-if="clickNum2==6" prop="overdraftAmount">
-        <el-input v-model="param.overdraftAmount"></el-input>
+      <el-form-item label="保底量" v-if="clickNum2==6" prop="overdraftAmount">
+        <el-input v-model="param.guaranteedAmount"
+                  onkeyup="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '').replace(/\.{2,}/g, '.').replace('.', '$#$').replace(/\./g, '').replace('$#$', '.').replace(/^(\-)*(\d+)\.(\d{1}).*$/, '$1$2.$3')" maxlength="6">
+        </el-input>
         <span class="company">元</span>
       </el-form-item>
       <el-form-item label="报警量" v-if="clickNum2==6" prop="alarmVolume">
-        <el-input v-model="param.alarmVolume"></el-input>
+        <el-input v-model="param.alarmVolume" onkeyup="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '').replace(/\.{2,}/g, '.').replace('.', '$#$').replace(/\./g, '').replace('$#$', '.').replace(/^(\-)*(\d+)\.(\d{1}).*$/, '$1$2.$3')" maxlength="6"></el-input>
         <span class="company">元</span>
       </el-form-item>
       <el-form-item label="预存量" v-if="clickNum2==6" prop="prestoreAmount">
-        <el-input v-model="param.prestoreAmount"></el-input>
+        <el-input v-model="param.prestoreAmount" onkeyup="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '').replace(/\.{2,}/g, '.').replace('.', '$#$').replace(/\./g, '').replace('$#$', '.').replace(/^(\-)*(\d+)\.(\d{1}).*$/, '$1$2.$3')" maxlength="6"></el-input>
         <span class="company">元</span>
       </el-form-item>
       <el-form-item label="用水性质" v-if="clickNum2==6" prop="usetWaterTypeId">
@@ -51,6 +53,7 @@
 <script>
   import { GetSetWriteCardInfo } from "@/api/userSetting";
   import { promptInfoFun } from "@/utils/index"
+  import {  updateMoney,changeTwoDecimal  } from "@/utils/index";
 
   export default {
     name: "rightCont",
@@ -122,6 +125,9 @@
             }
           }
         })
+      },
+      setNumsType(e){
+        return e.replace(/[^\.\d]/g,'')
       }
     }
   }

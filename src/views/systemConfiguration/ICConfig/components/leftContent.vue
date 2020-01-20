@@ -18,15 +18,15 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="透支量" v-if="clickNum==6" prop="overdraftAmount">
-        <el-input v-model="param.overdraftAmount"></el-input>
+        <el-input v-model="param.overdraftAmount" onkeyup="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '').replace(/\.{2,}/g, '.').replace('.', '$#$').replace(/\./g, '').replace('$#$', '.').replace(/^(\-)*(\d+)\.(\d{1}).*$/, '$1$2.$3')" maxlength="6"></el-input>
         <span class="company">元</span>
       </el-form-item>
       <el-form-item label="报警量" v-if="clickNum==6" prop="alarmVolume">
-        <el-input v-model="param.alarmVolume"></el-input>
+        <el-input v-model="param.alarmVolume" onkeyup="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '').replace(/\.{2,}/g, '.').replace('.', '$#$').replace(/\./g, '').replace('$#$', '.').replace(/^(\-)*(\d+)\.(\d{1}).*$/, '$1$2.$3')" maxlength="6"></el-input>
         <span class="company">元</span>
       </el-form-item>
       <el-form-item label="预存量" v-if="clickNum==6" prop="prestoreAmount">
-        <el-input v-model="param.prestoreAmount"></el-input>
+        <el-input v-model="param.prestoreAmount" onkeyup="value=value.replace(/[^\d.]/g, '').replace(/^\./g, '').replace(/\.{2,}/g, '.').replace('.', '$#$').replace(/\./g, '').replace('$#$', '.').replace(/^(\-)*(\d+)\.(\d{1}).*$/, '$1$2.$3')" maxlength="6"></el-input>
         <span class="company">元</span>
       </el-form-item>
       <el-form-item label="用水性质" v-if="clickNum==6" prop="usetWaterTypeId">

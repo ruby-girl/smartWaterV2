@@ -10,19 +10,24 @@
         </h3>
         <el-form ref="form" :model="form" label-width="65px">
           <el-form-item label="产品类型">
-            <el-select v-model="form.type" placeholder="">
+            <el-select v-model="form.type" placeholder="" :disabled="true">
               <el-option label="一代水表" value="1"></el-option>
               <el-option label="二代水表" value="2"></el-option>
+              <el-option label="未知卡" value="254"></el-option>
+              <el-option label="新卡（空卡）" value="155"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="卡片类型">
-            <el-select v-model="form.cardType" placeholder="">
+            <el-select v-model="form.cardType" placeholder="" :disabled="true">
+              <el-option label="未知类型" value="99"></el-option>
               <el-option label="时间卡" value="5"></el-option>
               <el-option label="设置卡" value="6"></el-option>
               <el-option label="恢复卡" value="2"></el-option>
               <el-option label="检查卡" value="3"></el-option>
               <el-option v-show="form.type==2" label="管理卡" value="4"></el-option>
               <el-option v-show="form.type==2" label="换表卡" value="7"></el-option>
+              <el-option label="未刷卡用户卡" value="0"></el-option>
+              <el-option label="已刷卡用户卡" value="1"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -77,6 +82,69 @@
             <span>第三阶梯价格：</span>{{ cardCont.ThreePrice }}（元）
           </p>
         </div>
+        <!--用户未刷卡-->
+        <div v-show="cardContType==0" class="cardContBox">
+          <p>
+            <span>卡号：</span>{{ cardCont.CardNo }}
+          </p>
+          <p>
+            <span>充值次数：</span>{{ cardCont.RechargeCount }}（次）
+          </p>
+          <p>
+            <span>充值金额：</span>{{ cardCont.RechargeMoney }}（元）
+          </p>
+          <p>
+            <span>水表口径：</span>{{ cardCont.MeterDiameter }}
+          </p>
+          <p>
+            <span>第二阶梯量：</span>{{ cardCont.SecondAmount }}（吨）
+          </p>
+          <p>
+            <span>第三阶梯量：</span>{{ cardCont.ThirdAmount }}（吨）
+          </p>
+          <p>
+            <span>第一阶梯价格：</span>{{ cardCont.FirstPrice }}（元）
+          </p>
+          <p>
+            <span>第二阶梯价格：</span>{{ cardCont.SecondPrice }}（元）
+          </p>
+          <p>
+            <span>第三阶梯价格：</span>{{ cardCont.ThirdPrice }}（元）
+          </p>
+          <p>
+            <span>量不足提示：</span>{{ cardCont.InsufficientAmountTips }}（元）
+          </p>
+        </div>
+        <!--用户已刷卡-->
+        <div v-show="cardContType==1" class="cardContBox">
+          <p>
+            <span>卡号：</span>{{ cardCont.CardNo }}
+          </p>
+          <p>
+            <span>当月用水量：</span>{{ cardCont.ThisMonthUse }}
+          </p>
+          <p>
+            <span>前一月用水量：</span>{{ cardCont.BeforeOneUse }}
+          </p>
+          <p>
+            <span>前2月用水量：</span>{{ cardCont.BeforeTwoUse }}
+          </p>
+          <p>
+            <span>前3月用水量：</span>{{ cardCont.BeforeThreeUse }}
+          </p>
+          <p>
+            <span>前4月用水量：</span>{{ cardCont.BeforeFourUse }}
+          </p>
+          <p>
+            <span>前5月用水量：</span>{{ cardCont.BeforeFiveUse }}
+          </p>
+          <p>
+            <span>是否欠压：</span>{{ cardCont.IsBrown?'是':'否' }}
+          </p>
+          <p>
+            <span>是否强磁：</span>{{ cardCont.IsMagnetic?'是':'否' }}
+          </p>
+        </div>
       </div>
     </div>
     <div class="right_content">
@@ -103,7 +171,7 @@
           cardType:'5'
         },
         cardCont:'',
-        cardContType:0
+        cardContType:-1
       }
     },
     methods:{
@@ -121,23 +189,32 @@
                   switch (types) {
                     case 1:
                       data = res.data.ProductOneModel
+                      cardsType = data.CardType
                       break
                     case 2:
                       data = res.data.ProductTwoModel
+                      cardsType = data.CardType
+                      break
+                    case 254:
+                      cardsType = 99
+                      break
+                    case 255:
+                      cardsType = 99
                       break
                   }
-                  cardsType = data.CardType
                   this.cardContType = cardsType
                   this.form.cardType = cardsType.toString()
                   if (cardsType == 5) {//时间卡
                     this.cardCont = data.TimeCard
                   } else if (cardsType == 6) {//设置卡
                     this.cardCont = data.SettingCard
+                  }else if(cardsType==0){//用户未刷卡
+                    this.cardCont = data.UserCard
+                  }else if(cardsType==1){//用户已刷卡
+                    this.cardCont = data.UserCardCredited
                   }else {
                     this.cardCont = ''
                   }
-                  console.log(this.cardCont)
-                  console.log("卡片内容")
                 })
               }
             }
