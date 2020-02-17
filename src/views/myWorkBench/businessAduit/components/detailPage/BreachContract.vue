@@ -75,7 +75,7 @@
             <label>违约金(元)</label>
             <span>{{ otherInfoData.LateFee }}</span>
             <span class="pot"><i></i><label>减免为</label></span>
-            <span class="pot-money">{{ otherInfoData.LateFee - otherInfoData.LeteFeeFree }}</span>
+            <span class="pot-money">{{ otherInfoData.AfterOverdueFee }}</span>
           </p>
         </div>
         <p class="to-examine" v-show="!ifDetail">
@@ -135,8 +135,11 @@
         }
       },
       detailData (newVal){
+        console.log(newVal.Data)
         this.applyInfoData = newVal.Info
         this.otherInfoData = newVal.Data.order
+        this.otherInfoData.LateFee = newVal.Data.LateFee
+        this.otherInfoData.AfterOverdueFee = newVal.Data.AfterOverdueFee
       }
     },
     methods:{
