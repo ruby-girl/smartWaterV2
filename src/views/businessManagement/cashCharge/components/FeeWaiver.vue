@@ -126,7 +126,7 @@ export default {
       }
       OrderAfterOverdueFeeWaiver({
         SA_Order_Id: this.feeWaiverItem.Id,
-        AfterOverdueFee: this.lateFeeValue,
+        AfterOverdueFee: this.inputValue,
         model: "现金收费"
       }).then(res => {
         this.resFunc();

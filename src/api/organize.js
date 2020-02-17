@@ -305,9 +305,8 @@ export function BlockAreaExecl(data) {
 //通过id获取当前片区信息
 export function BlockAreaGetObjById(data) {
   return request({
-    url: '/SA_BlockArea/GetObjById',
+    url: '/SA_BlockArea/GetObjById/'+data.Id,
     method: 'post',
-    data: data
   })
 }
 
