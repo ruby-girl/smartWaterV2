@@ -3,11 +3,20 @@
     <div>
       <SelectHead ref="childSelect" @getText="getText"></SelectHead>
       <div class="table-setting">
-        <el-button size="mini" type="primary" round @click="addNewFun" v-permission="['116']"><i class="icon iconfont">&#xe689;</i>添加</el-button>
+        <el-button size="mini" type="primary" round @click="addNewFun" v-permission="['116']">
+          <i class="icon iconfont">&#xe689;</i>添加
+        </el-button>
       </div>
       <!--列表组建 s-->
-      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel"/>
-      <el-table id="table" :data="tableData" :height="tableHeight" style="width: 100%" border @sort-change="sortChanges">
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportExcel" />
+      <el-table
+        id="table"
+        :data="tableData"
+        :height="tableHeight"
+        style="width: 100%"
+        border
+        @sort-change="sortChanges"
+      >
         <el-table-column type="index" fixed="left" label="#" width="60" align="center">
           <template slot-scope="scope">
             <span>{{(sbap.page - 1) * sbap.limit+ scope.$index + 1}}</span>
@@ -22,7 +31,8 @@
             :prop="item.ColProp"
             :align="item.Position"
             :label="item.ColDesc"
-            :fixed= "item.Freeze"/>
+            :fixed="item.Freeze"
+          />
           <el-table-column
             v-else
             :key="index"
@@ -30,18 +40,45 @@
             :sortable="item.IsSortBol ? 'custom' : null"
             :prop="item.ColProp"
             :align="item.Position"
-            :label="item.ColDesc"/>
+            :label="item.ColDesc"
+          />
         </template>
         <el-table-column label="操作" width="100px" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-tooltip effect="light" content="编辑" placement="bottom-start"  :visible-arrow="false"  v-permission="['117']">
-              <a class="operation1" @click="handleEdit(scope.$index, scope.row)"><i class="iconfont icon iconsuoyoubiaogelidebianji"></i></a>
+            <el-tooltip
+              effect="light"
+              content="编辑"
+              placement="bottom-start"
+              :visible-arrow="false"
+              v-permission="['117']"
+            >
+              <a class="operation1" @click="handleEdit(scope.$index, scope.row)">
+                <i class="iconfont icon iconsuoyoubiaogelidebianji"></i>
+              </a>
             </el-tooltip>
-            <el-tooltip effect="light" content="删除" placement="bottom-start"  v-if="scope.row.isDelete"  :visible-arrow="false"  v-permission="['118']">
-              <a class="operation2" @click="handleDelete(scope.$index, scope.row)"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
+            <el-tooltip
+              effect="light"
+              content="删除"
+              placement="bottom-start"
+              v-if="scope.row.isDelete"
+              :visible-arrow="false"
+              v-permission="['118']"
+            >
+              <a class="operation2" @click="handleDelete(scope.$index, scope.row)">
+                <i class="icon iconfont iconsuoyoubiaogelideshanchu"></i>
+              </a>
             </el-tooltip>
-            <el-tooltip v-else effect="dark" content="已产生用户数据，不可进行操作" placement="bottom-start"  :visible-arrow="false"  v-permission="['118']">
-              <a style="color: #C0C8CC;margin: 10px;"><i class="icon iconfont iconsuoyoubiaogelideshanchu"></i></a>
+            <el-tooltip
+              v-else
+              effect="dark"
+              content="已产生用户数据，不可进行操作"
+              placement="bottom-start"
+              :visible-arrow="false"
+              v-permission="['118']"
+            >
+              <a style="color: #C0C8CC;margin: 10px;">
+                <i class="icon iconfont iconsuoyoubiaogelideshanchu"></i>
+              </a>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -51,7 +88,8 @@
         :total="total"
         :page.sync="sbap.page"
         :limit.sync="sbap.limit"
-        @pagination="searchFun"/>
+        @pagination="searchFun"
+      />
       <!--列表组建 e-->
     </div>
     <Dialog ref="childDialog"></Dialog>
@@ -60,168 +98,196 @@
 </template>
 
 <script>
-  import SearchTips from "@/components/SearchTips/index";
-  import '@/styles/organization.scss'
-  import Dialog from './components/Dialog'//新增或添加组建
-  import customTable from '@/components/CustomTable/index'//自定义组建
-  import SelectHead from './components/SelectHead'//查询条件组建
-  import Pagination from '@/components/Pagination/index'//分页
-  import { BlockAreaGetList, BlockAreaAdd, BlockAreaUpDate, BlockAreaDelete, BlockAreaExecl, BlockAreaGetObjById } from "@/api/organize"//http 请求
-  import { parseTime } from "@/utils/index"
-  import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
-  import permission from '@/directive/permission/index.js' // 权限判断指令
-
-  export default {
-    name: 'areaManage',
-    components: { customTable, Pagination, SelectHead, Dialog, SearchTips },
-    directives: { permission },
-    data() {
-      return {
-        ID:'',
-        waterFactory:[],//水厂数据集合
-        tableHeight: null,//表格高度
-        total: 0,
-        sbap: {//查询条件对象集
-          tableId: '0000007'
-        },
-        tableData: [],//表格数据
-        checkAllData: [],
-        checksData: [],
-        customHeight: '',//自定义高度
-        tipsData: [], //传入子组件的值
-        tipsDataCopy: [], //表单变化的值
-      }
-    },
-    computed: {
-      tableHead: function() {//获取表头信息
-        const arrayHead = []
-        const data = this.checksData
-        for (let i = 0; i < data.length; i++) { // 过滤选中列
-          if (data[i].IsCheck) {
-            arrayHead.push(data[i])
-          }
+import SearchTips from "@/components/SearchTips/index";
+import "@/styles/organization.scss";
+import Dialog from "./components/Dialog"; //新增或添加组建
+import customTable from "@/components/CustomTable/index"; //自定义组建
+import SelectHead from "./components/SelectHead"; //查询条件组建
+import Pagination from "@/components/Pagination/index"; //分页
+import {
+  BlockAreaGetList,
+  BlockAreaAdd,
+  BlockAreaUpDate,
+  BlockAreaDelete,
+  BlockAreaExecl,
+  BlockAreaGetObjById
+} from "@/api/organize"; //http 请求
+import { parseTime } from "@/utils/index";
+import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
+import permission from "@/directive/permission/index.js"; // 权限判断指令
+export default {
+  name: "areaManage",
+  components: { customTable, Pagination, SelectHead, Dialog, SearchTips },
+  directives: { permission },
+  data() {
+    return {
+      ID: "",
+      waterFactory: [], //水厂数据集合
+      tableHeight: null, //表格高度
+      total: 0,
+      sbap: {
+        //查询条件对象集
+        page: 1,
+        limit: 20,
+        tableId: "0000007"
+      },
+      tableData: [], //表格数据
+      checkAllData: [],
+      checksData: [],
+      customHeight: "", //自定义高度
+      tipsData: [], //传入子组件的值
+      tipsDataCopy: [] //表单变化的值
+    };
+  },
+  computed: {
+    tableHead: function() {
+      //获取表头信息
+      const arrayHead = [];
+      const data = this.checksData;
+      for (let i = 0; i < data.length; i++) {
+        // 过滤选中列
+        if (data[i].IsCheck) {
+          arrayHead.push(data[i]);
         }
-        return arrayHead
       }
+      return arrayHead;
+    }
+  },
+  methods: {
+    setCustomData() {
+      //表格自定义方法
+      this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom;
+      this.customHeight = this.$refs.myChild.isCustom;
     },
-    methods: {
-      setCustomData() {//表格自定义方法
-        this.$refs.myChild.isCustom = !this.$refs.myChild.isCustom
-        this.customHeight = this.$refs.myChild.isCustom
-      },
-      exportExcel() {//导出事件
-        if(this.tableData.length<=0){
-          this.$message({
-            message: '当前列表无数据，不可导出',
-            type: 'warning',
-            duration: 4000
-          });
-          return false
+    exportExcel() {
+      //导出事件
+      if (this.tableData.length <= 0) {
+        this.$message({
+          message: "当前列表无数据，不可导出",
+          type: "warning",
+          duration: 4000
+        });
+        return false;
+      }
+      BlockAreaExecl(this.sbap).then(res => {
+        window.location.href = `${this.common.excelPath}${res.data}`;
+      });
+    },
+    handleEdit(scope, row) {
+      //编辑方法
+      this.ID = row.Id;
+      this.$refs.childDialog.dialogVisible = true;
+      this.$refs.childDialog.title = "编辑";
+      let sbap = { Id: row.Id };
+      BlockAreaGetObjById(sbap).then(res => {
+        if (res.code == 0) {
+          this.$refs.childDialog.ruleForm.newAreaName = res.data.BlockAreaName;
+          this.$refs.childDialog.ruleForm.waterFactoryName = res.data.WfList;
         }
-        BlockAreaExecl(this.sbap).then(res => {
-          window.location.href = `${this.common.excelPath}${res.data}`;
-        })
-      },
-      handleEdit(scope,row) {//编辑方法
-        this.ID = row.Id
-        this.$refs.childDialog.dialogVisible = true
-        this.$refs.childDialog.title = '编辑'
-        let sbap = {Id: row.Id}
-        BlockAreaGetObjById(sbap).then(res => {
-          if (res.code == 0) {
-            this.$refs.childDialog.ruleForm.newAreaName = res.data.BlockAreaName
-            this.$refs.childDialog.ruleForm.waterFactoryName = res.data.WfList
-          }
-        })
-      },
-      addNewFun() {//新增方法
-        this.$refs.childDialog.dialogVisible = true
-        this.$refs.childDialog.title = '添加'
-      },
-      handleDelete(scope,row) {//删除方法
-        this.$confirm("是否删除当前信息", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          iconClass:"el-icon-question questionIcon",
-          customClass: "warningBox deleteBox",
-          showClose: false
-        }).then(() => {
-          closeDelTip()
-          BlockAreaDelete({Id: row.Id}).then(res => {
+      });
+    },
+    addNewFun() {
+      //新增方法
+      this.$refs.childDialog.dialogVisible = true;
+      this.$refs.childDialog.title = "添加";
+    },
+    handleDelete(scope, row) {
+      //删除方法
+      this.$confirm("是否删除当前信息", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        iconClass: "el-icon-question questionIcon",
+        customClass: "warningBox deleteBox",
+        showClose: false
+      })
+        .then(() => {
+          closeDelTip();
+          BlockAreaDelete({ Id: row.Id }).then(res => {
             if (res.code == 0) {
               this.$message({
                 message: res.message,
-                type: 'success',
+                type: "success",
                 duration: 4000
               });
-              this.searchFun()
+              this.searchFun();
             } else {
               this.$message({
                 message: res.message,
-                type: 'warning',
+                type: "warning",
                 duration: 4000
               });
             }
-          })
-        }).catch(()=>{
-          closeDelTip()
+          });
         })
-      },
-      searchFun() {//查询事件
-        BlockAreaGetList(this.sbap).then(res => {
-          if (res.code == 0 ) {
-            this.total = res.count;
-            this.tableData = res.data;
-            this.tipsData = pushItem(this.tipsDataCopy)
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'warning',
-              duration: 4000
-            });
-          }
-        })
-      },
-      sortChanges({prop, order }){//排序
-        this.sbap.filed = prop
-        this.sbap.sort=order=='ascending'?'ASC':(order=='descending'?'DESC':'')
-        if(this.tableData.length>0){
-          this.sbap.page = 1
-          this.searchFun()
+        .catch(() => {
+          closeDelTip();
+        });
+    },
+    searchFun() {
+      //查询事件
+      BlockAreaGetList(this.sbap).then(res => {
+        if (res.code == 0) {
+          this.total = res.count;
+          this.tableData = res.data;
+          this.tipsData = pushItem(this.tipsDataCopy);
+        } else {
+          this.$message({
+            message: res.message,
+            type: "warning",
+            duration: 4000
+          });
         }
-      },
-      /**
-       *val 对应绑定的参数
-       *this this对象
-       * this.tipsDataCopy   存储面包屑数据的数组
-       * param  对应搜索条件的对象名
-       */
-      delTips(val) {
-        if(val=='createStartTimes'){
-          this.$refs.childSelect.createStartTimes = []
-          this.$refs.childSelect.sbap.editStartTime = ''
-          this.$refs.childSelect.sbap.editEndTime = ''
-        }
-        this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "sbap"); //返回删除后的数据传给组件
-        this.$refs.childSelect.searchFun()
-      },
-      /**
-       *val 搜索数据值
-       *model 对应绑定的属性
-       * arr   下拉框循环的数组（输入框传“”）
-       * name  对应的搜索lable
-       */
-      //处理搜索条件,面包屑
-      getText(val, model, arr, name) {
-        let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
-        this.tipsDataCopy.push(obj);
+      });
+    },
+    sortChanges({ prop, order }) {
+      //排序
+      this.sbap.filed = prop;
+      this.sbap.sort =
+        order == "ascending" ? "ASC" : order == "descending" ? "DESC" : "";
+      if (this.tableData.length > 0) {
+        this.sbap.page = 1;
+        this.searchFun();
       }
     },
-    mounted() {
-      this.$refs.searchTips.$refs.myChild.GetTable(this.sbap.tableId); // 先获取所有自定义字段赋值
-      this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
-      this.tableHeight = document.getElementsByClassName('cl-container')[0].offsetHeight - document.getElementById('table').offsetTop - 70
-
+    /**
+     *val 对应绑定的参数
+     *this this对象
+     * this.tipsDataCopy   存储面包屑数据的数组
+     * param  对应搜索条件的对象名
+     */
+    delTips(val) {
+      if (val == "createStartTimes") {
+        this.$refs.childSelect.createStartTimes = [];
+        this.$refs.childSelect.sbap.editStartTime = "";
+        this.$refs.childSelect.sbap.editEndTime = "";
+      }
+      this.tipsDataCopy = delTips(
+        val,
+        this.$refs.childSelect,
+        this.tipsDataCopy,
+        "sbap"
+      ); //返回删除后的数据传给组件
+      this.$refs.childSelect.searchFun();
+    },
+    /**
+     *val 搜索数据值
+     *model 对应绑定的属性
+     * arr   下拉框循环的数组（输入框传“”）
+     * name  对应的搜索lable
+     */
+    //处理搜索条件,面包屑
+    getText(val, model, arr, name) {
+      let obj = getText(val, model, arr, this.tipsDataCopy, this, name); //返回的组件需要的对象
+      this.tipsDataCopy.push(obj);
     }
+  },
+  mounted() {
+    this.$refs.searchTips.$refs.myChild.GetTable(this.sbap.tableId); // 先获取所有自定义字段赋值
+    this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段
+    this.tableHeight =
+      document.getElementsByClassName("cl-container")[0].offsetHeight -
+      document.getElementById("table").offsetTop -
+      70;
   }
+};
 </script>
