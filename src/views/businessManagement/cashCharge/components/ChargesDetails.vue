@@ -181,8 +181,9 @@ export default {
         this.detail.orr.total =
           (parseFloat(this.detail.orr.PricePaid) * 1000 +
             parseFloat(this.detail.orr.LeteFeeFree) * 1000 +
-            parseFloat(this.detail.orr.waterTotal) * 1000) /
+            parseFloat(this.detail.orr.FreePrice) * 1000) /
           1000; //所有的减免
+          console.log(this.detail.orr.total)
         //  计算应收
         this.resultNum =
           (parseFloat(this.detail.TotalWaterPrice) * 1000 +
