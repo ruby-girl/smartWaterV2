@@ -259,7 +259,7 @@ export default {
       this.listQuery.Enumwm = this.query.Enumwm;
       this.listQuery.Enumut = this.query.Enumut;
       this.listQuery.Enumcf = this.query.Enumcf;
-      this.getText(this.factoryId, 'SA_WaterFactory_Id', this.$refs.head.waterWorks, '水厂');
+      this.getText(this.factoryId, 'SA_WaterFactory_Id', this.$refs.head.waterWorksOption, '水厂');
       if(this.query.timevalue.length>0) this.getText(this.query.timevalue, 'timevalue', '', '欠费日期');
       if(this.query.Enumot!=='-1') this.getText(this.query.Enumot, 'Enumot', this.$refs.head.Enumot, '费用类型');
       if(this.query.Enumwm!=='-1') this.getText(this.query.Enumwm, 'Enumwm', this.$refs.head.Enumwm, '水表类型');
