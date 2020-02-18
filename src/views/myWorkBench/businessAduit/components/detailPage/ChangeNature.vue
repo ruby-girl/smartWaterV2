@@ -2,7 +2,7 @@
   <el-dialog
     class="work-bench-detail"
     :close-on-click-modal="false"
-    top="10vh"
+    top="5vh"
     title="审核详情"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
@@ -31,7 +31,56 @@
               </p>
             </li>
           </ul>
-        </div>
+        </div>  
+            <div class="detail-moduler">
+          <h2><i></i>用户信息</h2>
+          <ul class="detail-table-info">
+            <li class="clearfix third">
+              <p>
+                <label>用户编号</label>
+                <span>{{userInfo.CustomerNo}}</span>
+              </p>
+              <p>
+                <label>用户名称 </label>
+                <span>{{userInfo.CustomerName}}</span>
+              </p>
+              <p>
+                <label>手机号码</label>
+                <span>{{userInfo.Tel}}</i></span>
+              </p>
+            </li>
+            <li class="clearfix third">
+              <p>
+                <label>所属区域</label>
+                <span>{{ userInfo.Address }}</span>
+              </p>
+              <p>
+                <label>用户类型</label>
+                <span>{{ userInfo.Address }}</span>
+              </p>
+              <p>
+                <label>用水性质</label>
+                <span>{{ userInfo.Address }}</span>
+              </p>
+            </li>
+             <li class="clearfix third">
+              <p>
+                <label>水表编号</label>
+                <span>{{ userInfo.Address }}</span>
+              </p>
+              <p>
+                <label>水表口径</label>
+                <span>{{ userInfo.Address }}</span>
+              </p>
+              <p>
+                <label>水表类型</label>
+                <span>{{ userInfo.Address }}</span>
+              </p>
+            </li>
+     
+            
+          </ul>
+        </div> 
         <div class="detail-moduler">
           <h2><i></i>用水性质详情</h2>
           <ul class="detail-table-info">
@@ -130,6 +179,7 @@
         oldWaterInfoData:{},//变更前水表信息
         applyInfoData:{},//水表信息
         waterInfos:[],
+        userInfo:{},//用户信息
         temp: {
           LadderNumber: 3,
           ladder: [
@@ -163,10 +213,11 @@
           })
         }
       },
-      detailData (newVal){//获取附件信息
+      detailData (newVal){//获取附件信息1
         this.waterInfoData = newVal.Data.NewWaterPropertyModel//新变更用水性质
         this.oldWaterInfoData = newVal.Data.OldWaterPropertyModel//老变更用水性质
         this.applyInfoData = newVal.Info
+        this.userInfo=newVal.Data.cus
         this.temp = ladderChangeArr(newVal.Data.NewWaterPropertyModel)
         this.temp1 = ladderChangeArr(newVal.Data.OldWaterPropertyModel)
         this.temp.LadderNumber = newVal.Data.NewWaterPropertyModel.LadderNumber

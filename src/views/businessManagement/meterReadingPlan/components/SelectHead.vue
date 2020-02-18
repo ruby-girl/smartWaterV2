@@ -9,7 +9,7 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item v-if="companyShow" label="水厂" :label-width="isShow?'70px':'40px'">
+      <el-form-item v-if="companyShow" label="水厂" prop="SA_WaterFactory_Id" :label-width="isShow?'70px':'40px'">
         <el-select
           v-model="selectHead.SA_WaterFactory_Id"
           placeholder="请选择"
@@ -26,7 +26,7 @@
         </el-select>
       </el-form-item>
       <transition-group name="fade">
-        <el-form-item label="计划状态" v-show="show1||isShow" key="enumPlanState" label-width="70px">
+        <el-form-item label="计划状态" v-show="show1||isShow" prop="enumPlanState" key="enumPlanState" label-width="70px">
           <el-select
             v-model="selectHead.enumPlanState"
             placeholder="请选择"
