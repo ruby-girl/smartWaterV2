@@ -208,7 +208,7 @@ export function getYCWaterInfo(data) {//根据远传表编号  获取水表信�
 }
 export function getWLWaterInfo(data) {//根据物联网编号  获取水表信息
   return request({
-    url: "/Customer/GetWLWWaterMeterByWaterMeterNo",
+    url: "/Customer/GetWLWWaterMeterABCByWaterMeterNo",
     method: 'GET',
     params: data
   })

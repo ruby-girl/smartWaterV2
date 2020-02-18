@@ -80,7 +80,7 @@
           <span class="font-weight main-color">{{detail.orr.LeteFeeFree}}</span>元
         </div> -->
         <div class="ladder-item">
-          <span class="lable-box">协议减免：</span>
+          <span class="lable-box">协议减免金额：</span>
           <span v-if="detail.orr.waterTotal>0">
             <span class="font-weight main-color">{{detail.orr.FreePrice}}</span>
             <span>（水费减免)+</span>

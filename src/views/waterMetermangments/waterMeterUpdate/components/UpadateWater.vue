@@ -208,7 +208,7 @@
     </div>
 
     <p class="userBtn">
-      <el-button  v-permission="['207']" size="small" type="primary" @click="updateWater">确认升级</el-button>
+      <el-button v-permission="['207']" size="small" type="primary" @click="updateWater">确认升级</el-button>
     </p>
     <select-user :selectUserShow="selectUserShow" :headQuery="params" @handleFilter="handleFilter" />
     <water-numDetail ref="numDetaile" />
@@ -218,7 +218,7 @@
 import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import { getWaterInfo, waterAccount } from "@/api/userAccount"; //水表信息
 import SelectUser from "@/components/SelectUser/index"; //水表信息
-import permission from '@/directive/permission/index.js' // 权限判断指令
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 import { ICReadCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
 import {
@@ -236,7 +236,7 @@ import { async } from "q";
 export default {
   name: "UpadateWater",
   components: { SelectUser, WaterNumDetail },
-directives: { permission }, 
+  directives: { permission },
   data() {
     return {
       userInfo: {
@@ -335,8 +335,15 @@ directives: { permission },
     },
     //升级请求
     updateApi() {
+      let apiData = Object.assign({}, this.UpgradeWaterNeedInfo);
+      if (
+        this.UpgradeWaterNeedInfo.WaterMeterNo == 1104 &&
+        this.waterInfo·WMType == "C"
+      ) {
+        apiData.WaterMeterNo = '1105';
+      }
       UpgradeInfo({
-        UpgradeWaterNeedInfo: this.UpgradeWaterNeedInfo,
+        UpgradeWaterNeedInfo: apiData,
         balance: this.UpgradeWaterNeedInfo.NewWaterBalance
       }).then(res => {
         if (res.code == 0) {
