@@ -99,46 +99,7 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/sysMangment',
-    redirect: '/sysMangment/page',
-    alwaysShow: true, // will always show the root menu
-    component: Layout,
-    name: "sysMangment",
-    meta: {
-      title: '短信管理',
-      icon: 'iconfont iconxiaoxixinxiduanxintixingyoujiantongzhisixin',
-      roles: ['252']
-    },
-    children: [{
-      path: 'sysSetting',
-      component: () => import('@/views/sysMangment/sysSetting/index'),
-      name: 'sysSetting',
-      meta: {
-        title: '短信设置',
-        roles: ['253']
-      }
-    },
-    {
-      path: 'smsStaues',
-      component: () => import('@/views/sysMangment/smsStaues/index'),
-      name: 'smsStaues',
-      meta: {
-        title: '短信状态查询',
-        roles: ['257']
-      }
-    },
-    {
-      path: 'sendManua',
-      component: () => import('@/views/sysMangment/sendManua/index'),
-      name: 'sendManua',
-      meta: {
-        title: '手动发送短信',
-        roles: ['258']
-      }
-    },
-    ]
-  },
+
   {
     path: '/organizationManage',
     redirect: '/organizationManage/company',
@@ -453,15 +414,15 @@ export const asyncRoutes = [
         roles: ['100']
       }
     },
-      {
-        path: 'ICConfig',
-        component: () => import('@/views/systemConfiguration/ICConfig/index'),
-        name: 'ICConfig',
-        meta: {
-          title: 'IC卡设置',
-          roles: ['100']
-        }
+    {
+      path: 'ICConfig',
+      component: () => import('@/views/systemConfiguration/ICConfig/index'),
+      name: 'ICConfig',
+      meta: {
+        title: 'IC卡设置',
+        roles: ['100']
       }
+    }
     ]
   },
   {
@@ -559,7 +520,46 @@ export const asyncRoutes = [
       },
     ]
   },
-
+  {
+    path: '/sysMangment',
+    redirect: '/sysMangment/page',
+    alwaysShow: true, // will always show the root menu
+    component: Layout,
+    name: "sysMangment",
+    meta: {
+      title: '短信管理',
+      icon: 'iconfont iconxiaoxixinxiduanxintixingyoujiantongzhisixin',
+      roles: ['252']
+    },
+    children: [{
+      path: 'sysSetting',
+      component: () => import('@/views/sysMangment/sysSetting/index'),
+      name: 'sysSetting',
+      meta: {
+        title: '短信设置',
+        roles: ['253']
+      }
+    },
+    {
+      path: 'smsStaues',
+      component: () => import('@/views/sysMangment/smsStaues/index'),
+      name: 'smsStaues',
+      meta: {
+        title: '短信状态查询',
+        roles: ['257']
+      }
+    },
+    {
+      path: 'sendManua',
+      component: () => import('@/views/sysMangment/sendManua/index'),
+      name: 'sendManua',
+      meta: {
+        title: '手动发送短信',
+        roles: ['258']
+      }
+    },
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
