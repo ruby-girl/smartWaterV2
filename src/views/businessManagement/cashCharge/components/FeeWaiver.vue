@@ -134,7 +134,7 @@ export default {
     },
     resFunc() {
       this.$message({
-        message: "减免成功",
+        message: "操作成功",
         type: "success",
         duration: 4000
       });
