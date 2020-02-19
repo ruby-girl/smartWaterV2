@@ -124,8 +124,9 @@ export default {
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
+      this.selectHead.SA_WaterFactory_Id='-1'
+      this.selectHead.enumPlanState='-1'
       this.$parent.tipsDataCopy = [];
-      
       this.$parent.delTips("warterMeterPlanDate");
     },
     showLabel(n, w) {
