@@ -77,7 +77,7 @@
             v-model="selectHead.OpId"
             placeholder="请选择"
             @keydown.enter.native="handleFilter"
-            @change="getText(selectHead.OpId,'OpId',editUserList,'水厂')"
+            @change="getText(selectHead.OpId,'OpId',editUserList,'操作员')"
           >
             <el-option label="全部" value="-1" />
             <el-option
