@@ -2,7 +2,7 @@
   <el-dialog
     class="work-bench-detail"
     :close-on-click-modal="false"
-    top="5vh"
+    top="15vh"
     title="审核详情"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
@@ -31,7 +31,7 @@
               </p>
             </li>
           </ul>
-        </div>  
+        </div>
             <div class="detail-moduler">
           <h2><i></i>用户信息</h2>
           <ul class="detail-table-info">
@@ -46,7 +46,7 @@
               </p>
               <p>
                 <label>手机号码</label>
-                <span>{{userInfo.Tel}}</i></span>
+                <span>{{userInfo.Tel}}</span>
               </p>
             </li>
             <li class="clearfix third">
@@ -77,10 +77,10 @@
                 <span>{{ userInfo.WaterMeterTypeName }}</span>
               </p>
             </li>
-     
-            
+
+
           </ul>
-        </div> 
+        </div>
         <div class="detail-moduler">
           <h2><i></i>用水性质详情</h2>
           <ul class="detail-table-info">
@@ -91,7 +91,7 @@
               </p>
               <p>
                 <label>用水性质类型</label>
-                <span>{{ waterInfoData.WaterPropertyTypeName }}</span>
+                <span> {{ oldWaterInfoData.WaterPropertyTypeName }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ waterInfoData.WaterPropertyTypeName }}</i></span>
               </p>
               <p>
                 <label>阶梯结算月数</label>
@@ -101,7 +101,7 @@
             <li class="clearfix third">
               <p>
                 <label>污水费</label>
-                <span>{{ waterInfoData.SewagePrice }}</span>
+                <span>{{ oldWaterInfoData.SewagePrice }}<i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips"> {{ waterInfoData.SewagePrice }}</i></span>
               </p>
               <p>
                 <label>其他费用1(元)</label>
@@ -127,12 +127,6 @@
                 <label>{{index+1}}阶合计单价(元/吨)</label>
                 <span>{{ temp1.ladder[index].TotalPrice }}<i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i>
                   <i class="tips">{{item.TotalPrice}} </i></span>
-              </p>
-            </li>
-            <li class="clearfix whole">
-              <p>
-                <label>开始执行日期</label>
-                <span style="padding-left: 6%;"> {{ waterInfoData.StartPlanDate }}</span>
               </p>
             </li>
           </ul>
@@ -214,6 +208,7 @@
         }
       },
       detailData (newVal){//获取附件信息1
+        console.log(newVal.Data)
         this.waterInfoData = newVal.Data.NewWaterPropertyModel//新变更用水性质
         this.oldWaterInfoData = newVal.Data.OldWaterPropertyModel//老变更用水性质
         this.applyInfoData = newVal.Info
