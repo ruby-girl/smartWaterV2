@@ -28,9 +28,12 @@ export default {
     this.$nextTick(() => {
       let _this = this;
       let id = _this.$route.query.id;
+      let PlanName = _this.$route.query.PlanName;
       if (id) {
         this.$refs.planChild1.param.SA_MeterReadPlan_Id = id;
+        this.$refs.planChild1.getText(PlanName,'SA_MeterReadPlan_Id','','抄表计划')
         _this.$refs.planChild1.searchFun();
+
       }
     });
   },

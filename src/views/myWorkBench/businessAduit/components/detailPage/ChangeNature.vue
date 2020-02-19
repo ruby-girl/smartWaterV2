@@ -52,29 +52,29 @@
             <li class="clearfix third">
               <p>
                 <label>所属区域</label>
-                <span>{{ userInfo.Address }}</span>
+                <span>{{ userInfo.AreaName }}</span>
               </p>
               <p>
                 <label>用户类型</label>
-                <span>{{ userInfo.Address }}</span>
+                <span>{{ userInfo.UserType }}</span>
               </p>
               <p>
                 <label>用水性质</label>
-                <span>{{ userInfo.Address }}</span>
+                <span>{{ userInfo.WaterPropertyName }}</span>
               </p>
             </li>
              <li class="clearfix third">
               <p>
                 <label>水表编号</label>
-                <span>{{ userInfo.Address }}</span>
+                <span>{{ userInfo.WaterMeterNo }}</span>
               </p>
               <p>
                 <label>水表口径</label>
-                <span>{{ userInfo.Address }}</span>
+                <span>{{ userInfo.WaterCaliber }}</span>
               </p>
               <p>
                 <label>水表类型</label>
-                <span>{{ userInfo.Address }}</span>
+                <span>{{ userInfo.WaterMeterTypeName }}</span>
               </p>
             </li>
      

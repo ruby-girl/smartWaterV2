@@ -129,7 +129,7 @@
                 <el-tooltip  effect="light" content="详情" :visible-arrow="false" placement="bottom" v-permission="['141']">
                   <i
                     class="iconStyle icon iconfont operation3 iconbiaodan1"
-                    @click="meterReadingPlanDetail(scope.row.Id)"
+                    @click="meterReadingPlanDetail(scope.row.Id,scope.row.PlanName)"
                   ></i>
                 </el-tooltip>
                 <el-tooltip
@@ -313,7 +313,7 @@ export default {
         this.searchTableList();
       });
     },
-    meterReadingPlanDetail(id) {
+    meterReadingPlanDetail(id,PlanName) {
       // window.localtion.href=('businessManagement/meterQuery?id='+id);
       //详情 跳转到抄表设置
       this.$router.push({
@@ -321,7 +321,8 @@ export default {
         path: "/businessManagement/meterQuery", //跳转的路径
         query: {
           //路由传参时push和query搭配使用 ，作用时传递参数
-          id: id
+          id: id,
+          PlanName:PlanName
         }
       });
     },
