@@ -72,7 +72,7 @@
                   :visible-arrow="false"
                   content="复审"
                   placement="bottom"
-                  -permission="['230']"
+                  v-permission="['230']"
                 >
                   <!-- <i  v-if="scope.row.RecheckStateName!='待复审'" class="icon iconfont iconlianhe1" style="color:#ccc;"></i> -->
                   <i class="icon iconfont iconlianhe1" @click="auitSecur(scope.row)"></i>
