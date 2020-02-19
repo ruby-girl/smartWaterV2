@@ -87,7 +87,7 @@
             <li class="clearfix third">
               <p>
                 <label>用水性质</label>
-                <span>{{ waterInfoData.UseWaterTypeName }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips"> {{ oldWaterInfoData.UseWaterTypeName }}</i></span>
+                <span>{{ oldWaterInfoData.UseWaterTypeName }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips"> {{ waterInfoData.UseWaterTypeName }}</i></span>
               </p>
               <p>
                 <label>用水性质类型</label>
@@ -95,7 +95,7 @@
               </p>
               <p>
                 <label>阶梯结算月数</label>
-                <span>{{ waterInfoData.LadderResetTime }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ oldWaterInfoData.LadderResetTime }}</i></span>
+                <span>{{ oldWaterInfoData.LadderResetTime }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ waterInfoData.LadderResetTime }}</i></span>
               </p>
             </li>
             <li class="clearfix third">
@@ -105,28 +105,28 @@
               </p>
               <p>
                 <label>其他费用1(元)</label>
-                <span>{{ waterInfoData.OtherPrice1  }}<i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ oldWaterInfoData.OtherPrice1  }}</i></span>
+                <span>{{ oldWaterInfoData.OtherPrice1  }}<i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ waterInfoData.OtherPrice1  }}</i></span>
               </p>
               <p>
                 <label>其他费用2(元)</label>
-                <span>{{ waterInfoData.OtherPrice2 }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ oldWaterInfoData.OtherPrice2 }} </i></span>
+                <span>{{ oldWaterInfoData.OtherPrice2 }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i> <i class="tips">{{ waterInfoData.OtherPrice2 }} </i></span>
               </p>
             </li>
             <li class="clearfix third" v-for="(item,index) in temp.ladder.slice(0,temp.LadderNumber)" :key="index">
               <p>
                 <label>{{index+1}}阶单价(元/吨)</label>
-                <span>{{ item.LadderPrice }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i>
-                  <i class="tips">{{ temp1.ladder[index].LadderPrice }}</i></span>
+                <span>{{ temp1.ladder[index].LadderPrice }} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i>
+                  <i class="tips">{{ item.LadderPrice }}</i></span>
               </p>
               <p>
                 <label>{{index+1}}阶起始量(吨)</label>
-                <span>{{item.LadderWaterNum}} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i>
-                  <i class="tips">{{ temp1.ladder[index].LadderWaterNum }}</i></span>
+                <span> {{ temp1.ladder[index].LadderWaterNum }}<i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i>
+                  <i class="tips">{{item.LadderWaterNum}}</i></span>
               </p>
               <p>
                 <label>{{index+1}}阶合计单价(元/吨)</label>
-                <span>{{item.TotalPrice}} <i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i>
-                  <i class="tips">{{ temp1.ladder[index].TotalPrice }}</i></span>
+                <span>{{ temp1.ladder[index].TotalPrice }}<i class="iconfont icon iconbiangeng tips" style="font-size: 12px"></i>
+                  <i class="tips">{{item.TotalPrice}} </i></span>
               </p>
             </li>
             <li class="clearfix whole">
