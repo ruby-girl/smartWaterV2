@@ -10,10 +10,10 @@
       ref="formHeight"
     >
       <el-form-item
-        v-if="companyOptions.length!=1"
         label="水厂"
         :label-width="isShow?'68px':'40px'"
         prop="WaterFactoryId"
+        v-show="show1||isShow"
       >
         <el-select
           v-model="selectHead.WaterFactoryId "
@@ -21,7 +21,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.WaterFactoryId ,'WaterFactoryId ',companyOptions,'水厂')"
         >
-          <el-option label="全部" value="-1"></el-option>
+          <el-option v-if="companyOptions.length!=1" label="全部" value="-1"></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -31,7 +31,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterMeterTypeId ">
+      <el-form-item label="水表类型" v-show="show2||isShow" prop="WaterMeterTypeId ">
         <el-select
           v-model="selectHead.WaterMeterTypeId"
           placeholder="请选择"
@@ -48,7 +48,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="日期" label-width="40px" v-show="show2||isShow">
+      <el-form-item label="日期" label-width="40px" v-show="show3||isShow">
         <el-date-picker
           v-model="dateArr"
           type="monthrange"
@@ -99,6 +99,7 @@ export default {
       isShow: false,
       show1: true,
       show2: true,
+      show3: true,
       showBtn: false
     };
   },
@@ -107,19 +108,12 @@ export default {
       handler(val, oldVal) {
         this.show1 = this.showLabel(1, val);
         this.show2 = this.showLabel(2, val);
+        this.show3 = this.showLabel(3, val);
 
-        if (this.companyOptions.length == 1) {
-          if (Math.floor((val - 200) / 280) < 3) {
-            this.showBtn = true;
-          } else {
-            this.showBtn = false;
-          }
+        if (Math.floor((val - 200) / 280) < 4) {
+          this.showBtn = true;
         } else {
-          if (Math.floor((val - 200) / 280) < 4) {
-            this.showBtn = true;
-          } else {
-            this.showBtn = false;
-          }
+          this.showBtn = false;
         }
       },
       immediate: true
@@ -144,13 +138,8 @@ export default {
       this.$parent.delTips("dateArr");
     },
     showLabel(n, w) {
-      if (this.companyOptions.length == 1) {
-        if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
-        return false;
-      } else {
-        if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
-        return false;
-      }
+      if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
+      return false;
     },
     handleFilter() {
       //水厂名字

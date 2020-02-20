@@ -16,11 +16,11 @@
           :header-cell-style="{'background-color': '#F0F2F5'}"
         >
           <el-table-column type="index" fixed="left" label="#" width="60" align="center"></el-table-column>
-          <el-table-column prop="name" label="用户编号"></el-table-column>
-          <el-table-column prop="name" label="用户姓名"></el-table-column>
-          <el-table-column prop="name" label="日期"></el-table-column>
-          <el-table-column prop="name" label="用水量"></el-table-column>
-          <el-table-column prop="name" label="增水量"></el-table-column>
+          <el-table-column prop="CustomerNo" label="用户编号"></el-table-column>
+          <el-table-column prop="CustomerName" label="用户姓名"></el-table-column>
+          <el-table-column prop="WCDate" label="日期"></el-table-column>
+          <el-table-column prop="WaterConsumption" label="用水量"></el-table-column>
+          <el-table-column prop="Growth" label="增水量"></el-table-column>
         </el-table>
       </div>
     </div>

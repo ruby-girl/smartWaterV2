@@ -15,11 +15,30 @@
           :header-cell-style="{'background-color': '#F0F2F5'}"
         >
           <el-table-column type="index" fixed="left" label="#" width="60" align="center"></el-table-column>
-          <el-table-column prop="name" label="用户编号"></el-table-column>
-          <el-table-column prop="name" label="用户姓名"></el-table-column>
-          <el-table-column prop="name" label="日期"></el-table-column>
-          <el-table-column prop="name" label="用水量"></el-table-column>
-          <el-table-column prop="name" label="增水量"></el-table-column>
+          <el-table-column prop="WaterFactoryName " label="水厂" width="180"></el-table-column>
+          <el-table-column prop="WCDate" label="日期" width="180"></el-table-column>
+          <el-table-column label="普通用户" width="180">
+            <el-table-column prop="PTUsers" label="用户数量" width="120"></el-table-column>
+            <el-table-column prop="PTConsumption" label="用水量" width="120"></el-table-column>
+            <el-table-column prop="PTConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
+          </el-table-column>
+          <el-table-column label="单位用户" width="180">
+            <el-table-column prop="DWUsers" label="用户数量" width="120"></el-table-column>
+            <el-table-column prop="DWConsumption" label="用水量" width="120"></el-table-column>
+            <el-table-column prop="DWConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
+          </el-table-column>
+          <el-table-column label="低保户" width="180">
+            <el-table-column prop="DBFUsers" label="用户数量" width="120"></el-table-column>
+            <el-table-column prop="DBFConsumption" label="用水量" width="120"></el-table-column>
+            <el-table-column prop="DBFConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
+          </el-table-column>
+          <el-table-column label="其他用户" width="180">
+            <el-table-column prop="QTUsers" label="用户数量" width="120"></el-table-column>
+            <el-table-column prop="QTConsumption" label="用水量" width="120"></el-table-column>
+            <el-table-column prop="QTConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
+          </el-table-column>
+          <el-table-column prop="TotalConsumption " label="总用水量" width="180"></el-table-column>
+
         </el-table>
       </div>
     </div>
