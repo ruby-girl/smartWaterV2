@@ -528,7 +528,7 @@ export const asyncRoutes = [
     name: "sysMangment",
     meta: {
       title: '短信管理',
-      icon: 'iconfont iconxiaoxixinxiduanxintixingyoujiantongzhisixin1',
+      icon: 'iconfont iconyoujian',
       roles: ['252']
     },
     children: [{
