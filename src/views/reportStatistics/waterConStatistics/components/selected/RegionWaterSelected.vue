@@ -43,15 +43,12 @@
       <el-form-item label="日期" label-width="110px" v-show="show3||isShow">
         <el-date-picker
           v-model="dateArr"
-          type="daterange"
+          type="monthrange"
           :editable="false"
           :unlink-panels="true"
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
           @keydown.enter.native="handleFilter"
           @change="getTime"
         />
