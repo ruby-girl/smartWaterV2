@@ -41,6 +41,7 @@
           <el-option label="全部" :value="0"></el-option>
           <el-option
             v-for="item in WaterMeterList"
+            v-show="item.Name!='IC卡表水表'"
             :key="item.Id"
             :label="item.Name"
             :value="item.Id"
@@ -204,6 +205,7 @@ export default {
   },
   created() {
     this.WaterMeterList = getDictionaryOption("水表类型");
+    console.log(this.WaterMeterList )
     this.userTypeList = getDictionaryOption("用户类型");
     this.editUserList = getDictionaryOption("口径类型");
     this.companyOptions = this.$store.state.user.waterWorks;
