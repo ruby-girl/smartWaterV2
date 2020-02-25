@@ -59,6 +59,7 @@
           end-placeholder="结束日期"
           @keydown.enter.native="handleFilter"
           @change="getTime"
+          value-format="yyyy-MM"
         />
       </el-form-item>
       <el-form-item>
@@ -158,6 +159,7 @@ export default {
       //时间格式化
       let date = this.dateArr;
       let dateStipe;
+      console.log(date)
       if (date) {
         this.selectHead.StartDate = date[0];
         this.selectHead.EndDate = date[1];

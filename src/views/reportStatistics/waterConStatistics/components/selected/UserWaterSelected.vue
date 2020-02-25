@@ -40,6 +40,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           @keydown.enter.native="handleFilter"
+          value-format="yyyy-MM"
           @change="getTime"
         />
       </el-form-item>

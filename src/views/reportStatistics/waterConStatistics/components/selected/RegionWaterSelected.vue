@@ -51,6 +51,7 @@
           end-placeholder="结束日期"
           @keydown.enter.native="handleFilter"
           @change="getTime"
+          value-format="yyyy-MM"
         />
       </el-form-item>
       <el-form-item>
