@@ -15,7 +15,7 @@
           :header-cell-style="{'background-color': '#F0F2F5'}"
         >
           <el-table-column type="index" fixed="left" label="#" width="60" align="center"></el-table-column>
-          <el-table-column prop="WaterFactoryName " label="水厂" width="180"></el-table-column>
+          <el-table-column prop="WaterFactoryName" label="水厂" width="180"></el-table-column>
           <el-table-column prop="WCDate" label="日期" width="180"></el-table-column>
           <el-table-column label="普通用户" width="180">
             <el-table-column prop="PTUsers" label="用户数量" width="120"></el-table-column>
