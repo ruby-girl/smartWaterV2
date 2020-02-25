@@ -24,6 +24,7 @@
           <el-table-column prop="CustomerName" label="姓名" width="180"></el-table-column>
           <el-table-column prop="Tel" label="电话" width="180"></el-table-column>
           <el-table-column prop="UserType" label="用户类型" width="180"></el-table-column>
+          <el-table-column prop="WaterMeterTypeId" label="水表类型" width="180"></el-table-column>
           <el-table-column prop="MeterDiameter" label="口径" width="180"></el-table-column>
           <el-table-column prop="UseWaterTypeName" label="用水性质" width="180"></el-table-column>
           <el-table-column prop="LastReadNum" label="上次读数" width="180"></el-table-column>
@@ -127,6 +128,8 @@ export default {
         this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
+
       }
 
       GetReportRate(this.orderData).then(res => {

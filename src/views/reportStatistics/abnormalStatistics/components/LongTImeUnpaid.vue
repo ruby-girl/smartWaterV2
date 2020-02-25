@@ -126,6 +126,7 @@ export default {
         this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
       }
 
       GetReportPay(this.orderData).then(res => {

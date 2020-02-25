@@ -19,15 +19,15 @@
               <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="用户编号" width="180"></el-table-column>
-          <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-          <el-table-column prop="name" label="电话" width="180"></el-table-column>
-          <el-table-column prop="name" label="地址" width="180"></el-table-column>
-          <el-table-column prop="name" label="水表类型" width="180"></el-table-column>
-          <el-table-column prop="name" label="用户类型" width="180"></el-table-column>
-          <el-table-column prop="name" label="口径" width="180"></el-table-column>
-          <el-table-column prop="name" label="用水量" width="180"></el-table-column>
-          <el-table-column prop="name" label="抄表起止日期" width="180"></el-table-column>
+          <el-table-column prop="CustomerNo" label="用户编号" width="180"></el-table-column>
+          <el-table-column prop="CustomerName" label="姓名" width="180"></el-table-column>
+          <el-table-column prop="Tel" label="电话" width="180"></el-table-column>
+          <el-table-column prop="Address" label="地址" width="180"></el-table-column>
+          <el-table-column prop="WaterMeterTypeId" label="水表类型" width="180"></el-table-column>
+          <el-table-column prop="UserType" label="用户类型" width="180"></el-table-column>
+          <el-table-column prop="MeterDiameter" label="口径" width="180"></el-table-column>
+          <el-table-column prop="TotalWaterYield" label="用水量" width="180"></el-table-column>
+          <el-table-column prop="TotalWaterYield" label="抄表起止日期" width="180"></el-table-column>
         </el-table>
         <pagination
           v-show="total>0"
@@ -124,6 +124,8 @@ export default {
         this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
+
       }
 
       GetReportYield(this.orderData).then(res => {

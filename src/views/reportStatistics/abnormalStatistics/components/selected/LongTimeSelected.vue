@@ -10,7 +10,7 @@
       ref="formHeight"
     >
       <el-form-item
-        v-if="companyOptions.length!=1"
+       v-show="show1||isShow"
         label="水厂"
         :label-width="isShow?'68px':'40px'"
         prop="SA_WaterFactory_Id"
@@ -21,7 +21,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'水厂')"
         >
-          <el-option label="全部" value=""></el-option>
+          <el-option  v-if="companyOptions.length!=1" label="全部" value=""></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -31,7 +31,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterMeter">
+      <el-form-item label="水表类型" v-show="show2||isShow" prop="WaterMeter">
         <el-select
           v-model="selectHead.WaterMeter"
           placeholder="请选择"
@@ -48,7 +48,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户类型" v-show="show2||isShow" prop="UserType">
+      <el-form-item label="用户类型" v-show="show3||isShow" prop="UserType">
         <el-select
           v-model="selectHead.UserType"
           placeholder="请选择"
@@ -64,7 +64,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="口径" v-show="show3||isShow" prop="MeterDiameter">
+      <el-form-item label="口径" v-show="show4||isShow" prop="MeterDiameter">
         <el-select
           v-model="selectHead.MeterDiameter"
           placeholder="请选择"
@@ -80,7 +80,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="未缴费起止日期" label-width="110px" v-show="show4||isShow">
+      <el-form-item label="未缴费起止日期" label-width="110px" prop="StarDateTime" v-show="show5||isShow">
         <el-date-picker
           v-model="selectHead.StarDateTime"
           type="date"
@@ -136,6 +136,7 @@ export default {
       show2: true,
       show3: true,
       show4: true,
+      show5: true,
       showBtn: false,
       pickTime: {
         disabledDate(time) {
@@ -151,19 +152,14 @@ export default {
         this.show2 = this.showLabel(2, val);
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
-        if (this.companyOptions.length == 1) {
-          if (Math.floor((val - 200) / 280) < 4) {
+        this.show5 = this.showLabel(5, val);
+       
+          if (Math.floor((val - 200) / 280) < 6) {
             this.showBtn = true;
           } else {
             this.showBtn = false;
           }
-        } else {
-          if (Math.floor((val - 200) / 280) < 5) {
-            this.showBtn = true;
-          } else {
-            this.showBtn = false;
-          }
-        }
+        
       },
       immediate: true
     }
@@ -174,16 +170,14 @@ export default {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
+      this.selectHead.MeterDiameter=0
+      this.selectHead.WaterMeter=0
+      this.selectHead.UserType=0
       this.$parent.delTips("dateArr");
     },
     showLabel(n, w) {
-      if (this.companyOptions.length == 1) {
         if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
         return false;
-      } else {
-        if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
-        return false;
-      }
     },
     handleFilter() {
       this.$parent.searchTableList();
@@ -205,19 +199,15 @@ export default {
   },
   created() {
     this.WaterMeterList = getDictionaryOption("水表类型");
-    console.log(this.WaterMeterList )
     this.userTypeList = getDictionaryOption("用户类型");
     this.editUserList = getDictionaryOption("口径类型");
     this.companyOptions = this.$store.state.user.waterWorks;
-    if (this.companyOptions.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.companyOptions.Id;
-    }
-    // getSelectUser().then(res => {
-    //   this.editUserList = res.data;
-    // });
   },
   mounted() {
     this.selectHead = this.$parent.selectHead;
+     if (this.companyOptions.length == 1) {
+      this.selectHead.SA_WaterFactory_Id = this.companyOptions[0].Id;
+    }
     // this.selectHead.StarDateTime = {
     //   disabledDate(time) {
     //     return time.getTime() < new Date();
