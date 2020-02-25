@@ -118,7 +118,7 @@ export default {
     searchTableList(num) {
        if(!this.selectHead.Pre||!this.selectHead.UpOrDown){
         this.$message({
-          message: "用水量范围为必填项",  
+          message: "水量倍率为必填项",  
           type: "warning"
         });
         return false
