@@ -336,11 +336,8 @@ export default {
     //升级请求
     updateApi() {
       let apiData = Object.assign({}, this.UpgradeWaterNeedInfo);
-      if (
-        this.UpgradeWaterNeedInfo.WaterMeterNo == 1104 &&
-        this.waterInfo·WMType == "C"
-      ) {
-        apiData.WaterMeterNo = '1105';
+      if (this.UpgradeWaterNeedInfo.WaterMeterNo == 1104) {
+        apiData.WaterMeterNo = this.waterInfo·WMType;
       }
       UpgradeInfo({
         UpgradeWaterNeedInfo: apiData,

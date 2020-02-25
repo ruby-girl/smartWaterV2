@@ -20,17 +20,18 @@
               <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
+          <el-table-column align="center" prop="SA_WaterFactory_Name" label="水厂" width="180"></el-table-column>
           <el-table-column align="center" prop="CustomerNo" label="用户编号" width="180"></el-table-column>
           <el-table-column align="center" prop="CustomerName" label="姓名" width="180"></el-table-column>
           <el-table-column align="center" prop="Tel" label="电话" width="180"></el-table-column>
           <el-table-column align="center" prop="IdentityNo" label="身份证" width="180"></el-table-column>
           <el-table-column align="center" prop="Address" label="地址" width="180"></el-table-column>
-          <el-table-column align="center" prop="WaterMeterType" label="水表类型" width="180"></el-table-column>
+          <el-table-column align="center" prop="WaterMeterTypeId" label="水表类型" width="180"></el-table-column>
           <el-table-column align="center" prop="MeterDiameter" label="口径" width="180"></el-table-column>
           <el-table-column align="center" prop="UserType" label="用户类型" width="180"></el-table-column>
           <el-table-column align="center" prop="PayDate" label="最后缴费日期" width="180"></el-table-column>
           <el-table-column align="center" prop="datediffDay" label="未缴费天数" width="180"></el-table-column>
-          <el-table-column align="center" prop="PriceSurplus" label="欠费笔数" width="180"></el-table-column>
+          <el-table-column align="center" prop="PriceSurplus" label="欠费金额" width="180"></el-table-column>
           <el-table-column align="center" prop="LastPayMoney" label="历史充值金额" width="180"></el-table-column>
           <el-table-column align="center" prop="Balance" label="账户余额" width="180"></el-table-column>
         </el-table>
@@ -126,6 +127,7 @@ export default {
         this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
       }
 
       GetReportPay(this.orderData).then(res => {

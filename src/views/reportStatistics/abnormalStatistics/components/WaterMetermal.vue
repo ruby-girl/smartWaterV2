@@ -19,20 +19,21 @@
               <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="SA_WaterFactory_Name" label="水厂" width="180"></el-table-column>
-          <el-table-column prop="CustomerNo" label="用户编号" width="180"></el-table-column>
-          <el-table-column prop="CustomerName" label="姓名" width="180"></el-table-column>
-          <el-table-column prop="Tel" label="电话" width="180"></el-table-column>
-          <el-table-column prop="UserType" label="用户类型" width="180"></el-table-column>
-          <el-table-column prop="MeterDiameter" label="口径" width="180"></el-table-column>
-          <el-table-column prop="UseWaterTypeName" label="用水性质" width="180"></el-table-column>
-          <el-table-column prop="LastReadNum" label="上次读数" width="180"></el-table-column>
-          <el-table-column prop="ReadNum" label="本次读数" width="180"></el-table-column>
-          <el-table-column prop="LastWaterYield" label="上次水量" width="180"></el-table-column>
-          <el-table-column prop="TotalWaterYield" label="本次水量" width="180"></el-table-column>
-          <el-table-column prop="Pre" label="水量倍率" width="180"></el-table-column>
-          <el-table-column prop="LastReadDate" label="本次抄表时间" width="180"></el-table-column>
-          <el-table-column prop="ReadDate" label="上次抄表时间" width="180"></el-table-column>
+          <el-table-column align="center" prop="SA_WaterFactory_Name" label="水厂" width="180"></el-table-column>
+          <el-table-column align="center" prop="CustomerNo" label="用户编号" width="180"></el-table-column>
+          <el-table-column align="center" prop="CustomerName" label="姓名" width="180"></el-table-column>
+          <el-table-column align="center" prop="Tel" label="电话" width="180"></el-table-column>
+          <el-table-column align="center" prop="UserType" label="用户类型" width="180"></el-table-column>
+          <el-table-column align="center" prop="WaterMeterTypeId" label="水表类型" width="180"></el-table-column>
+          <el-table-column align="center" prop="MeterDiameter" label="口径" width="180"></el-table-column>
+          <el-table-column align="center" prop="UseWaterTypeName" label="用水性质" width="180"></el-table-column>
+          <el-table-column align="center" prop="LastReadNum" label="上次读数" width="180"></el-table-column>
+          <el-table-column align="center" prop="ReadNum" label="本次读数" width="180"></el-table-column>
+          <el-table-column align="center" prop="LastWaterYield" label="上次水量" width="180"></el-table-column>
+          <el-table-column align="center" prop="TotalWaterYield" label="本次水量" width="180"></el-table-column>
+          <el-table-column align="center" prop="Pre" label="水量倍率" width="180"></el-table-column>
+          <el-table-column align="center" prop="LastReadDate" label="本次抄表时间" width="180"></el-table-column>
+          <el-table-column align="center" prop="ReadDate" label="上次抄表时间" width="180"></el-table-column>
         </el-table>
         <pagination
           v-show="total>0"
@@ -67,7 +68,7 @@ export default {
         StarDateTime: "",
         EndDateTime: "",
         Pre: "", //用水量
-        UpOrDown: "" //用水量
+        UpOrDown: "U" //用水量
       },
       tableHeight: null,
       tableData: [], //表格数据
@@ -115,6 +116,13 @@ export default {
     },
     //查询
     searchTableList(num) {
+       if(!this.selectHead.Pre||!this.selectHead.UpOrDown){
+        this.$message({
+          message: "水量倍率为必填项",  
+          type: "warning"
+        });
+        return false
+      }
      if(!this.selectHead.StarDateTime||!this.selectHead.EndDateTime){
         this.$message({
           message: "日期不能为空，请选择!",
@@ -127,6 +135,8 @@ export default {
         this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
+
       }
 
       GetReportRate(this.orderData).then(res => {

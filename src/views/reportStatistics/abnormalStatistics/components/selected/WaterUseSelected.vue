@@ -10,7 +10,7 @@
       ref="formHeight"
     >
       <el-form-item
-        v-if="companyOptions.length!=1"
+        v-show="show1||isShow"
         label="水厂"
         :label-width="isShow?'68px':'40px'"
         prop="SA_WaterFactory_Id"
@@ -21,7 +21,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'水厂')"
         >
-          <el-option label="全部" value="-1"></el-option>
+          <el-option v-if="companyOptions.length!=1" label="全部" value=""></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -31,7 +31,7 @@
         </el-select>
       </el-form-item>
      
-      <el-form-item label="水表类型" v-show="show1||isShow" prop="WaterMeter">
+      <el-form-item label="水表类型" v-show="show2||isShow" prop="WaterMeter">
         <el-select
           v-model="selectHead.WaterMeter"
           placeholder="请选择"
@@ -41,13 +41,14 @@
           <el-option label="全部" :value="0"></el-option>
           <el-option
             v-for="item in WaterMeterList"
+            v-show="item.Name!='IC卡表水表'"
             :key="item.Id"
             :label="item.Name"
             :value="item.Id"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户类型" v-show="show2||isShow" prop="UserType">
+      <el-form-item label="用户类型" v-show="show3||isShow" prop="UserType">
         <el-select
           v-model="selectHead.UserType"
           placeholder="请选择"
@@ -63,7 +64,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-       <el-form-item label="口径" v-show="show3||isShow" prop="MeterDiameter">
+       <el-form-item label="口径" v-show="show4||isShow" prop="MeterDiameter">
         <el-select
           v-model="selectHead.MeterDiameter"
           placeholder="请选择"
@@ -79,25 +80,25 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用水量" prop="CustomerQueryValue"  v-show="show4||isShow" class="waterNum">
+      <el-form-item label="用水量" prop="TotalWaterYield"  v-show="show5||isShow" class="waterNum">
         <el-input v-model="selectHead.TotalWaterYield" />
         <el-radio-group v-model="selectHead.UpOrDown">
-          <el-radio label="以上"></el-radio>
-          <el-radio label="以下"></el-radio>
+          <el-radio  label="U">以上</el-radio>
+          <el-radio  label="D">以下</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="抄表起止日期" label-width="110px" v-show="show5||isShow">
+      <el-form-item label="抄表起止日期" label-width="110px" v-show="show6||isShow">
         <el-date-picker
           v-model="dateArr"
-          type="daterange"
+          type="datetimerange"
           :editable="false"
           :unlink-panels="true"
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
+       :default-time="['00:00:00', '23:59:59']"
+          format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
           @keydown.enter.native="handleFilter"
           @change="getTime"
         />
@@ -140,6 +141,7 @@ export default {
       show3: true,
       show4: true,
       show5: true,
+      show6: true,
       showBtn: false
     };
   },
@@ -151,19 +153,14 @@ export default {
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
         this.show5 = this.showLabel(5, val);
-        if (this.companyOptions.length == 1) {
-          if (Math.floor((val - 200) / 280) < 5) {
+        this.show6 = this.showLabel(6, val);
+        
+          if (Math.floor((val - 200) / 280) < 7) {
             this.showBtn = true;
           } else {
             this.showBtn = false;
           }
-        } else {
-          if (Math.floor((val - 200) / 280) < 6) {
-            this.showBtn = true;
-          } else {
-            this.showBtn = false;
-          }
-        }
+        
       },
       immediate: true
     }
@@ -174,16 +171,20 @@ export default {
       //重置
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
+      this.selectHead.MeterDiameter=0
+      this.selectHead.WaterMeter=0
+      this.selectHead.UserType=0
+      this.selectHead.UpOrDown="U"
+      if(this.companyOptions.length > 1){
+      this.selectHead.SA_WaterFactory_Id=""
+
+      }
       this.$parent.delTips("dateArr");
     },
     showLabel(n, w) {
-      if (this.companyOptions.length == 1) {
-        if (Math.floor((w - 180) / 280) >= n || this.isShow) return true;
+      
+        if (Math.floor((w - 180) / 280) >= n  || this.isShow) return true;
         return false;
-      } else {
-        if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
-        return false;
-      }
     },
     handleFilter() {
       this.$parent.searchTableList();
@@ -216,15 +217,15 @@ export default {
     this.userTypeList = getDictionaryOption("用户类型");
     this.editUserList = getDictionaryOption("口径类型");
     this.companyOptions = this.$store.state.user.waterWorks;
-    if (this.companyOptions.length == 1) {
-      this.selectHead.SA_WaterFactory_Id = this.companyOptions.Id;
-    }
     // getSelectUser().then(res => {
     //   this.editUserList = res.data;
     // });
   },
   mounted() {
     this.selectHead = this.$parent.selectHead;
+    if (this.companyOptions.length == 1) {
+      this.selectHead.SA_WaterFactory_Id = this.companyOptions[0].Id;
+    }
   }
 };
 </script>

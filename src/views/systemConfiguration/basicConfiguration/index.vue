@@ -121,10 +121,8 @@
                 class="medium-select"
               >
                 <el-option
-                  :value="item.Id"
-                  :label="item.TemplateName"
-                  v-for="item in templateNmaeList"
-                  :key="item.Id"
+                  value="dbhdq"
+                  label="低保户到期提醒"
                 ></el-option>
               </el-select>
             </div>
@@ -151,10 +149,8 @@
                 v-model="postData.WaterYeildAlarmShortMsgTempleteId"
               >
                 <el-option
-                  :value="item.Id"
-                  :label="item.TemplateName"
-                  v-for="item in templateNmaeList"
-                  :key="item.Id"
+                  value="yjtx"
+                  label="用户用水预警提醒"
                 ></el-option>
               </el-select>
               <!-- 增加的预警列表 s -->
@@ -301,12 +297,12 @@ export default {
         GarbageCost: "", //垃圾费
         IsInsuredMessageNotify: "0", //是否开启低保户到期消息提醒 0关 1开 true开 false关 ,
         InsuredMessageRecheckMonth: "", //低保户到期前 x月进行对用户发送短信提醒
-        InsuredMessageShortMsgTempleteId: "", //短信模板
+        InsuredMessageShortMsgTempleteId: "dbhdq", //短信模板
         IsWaterYieldAlarmMsg: "0", // 当带阀水表用户当日用水量高于预警量时，是否发送预警消息 0否 1是
         IsSendToCustomer: "0", //当带阀水表用户当日用水量高于预警量时，是否发送短信至用户 0否 1是
         ReceiveSortMsgEmp: "", //接受短信的员工Id列表 用逗号分隔 ,
         ReceiveSortMsgEmpArr: [],
-        WaterYeildAlarmShortMsgTempleteId: "", //预计发送短信的模板 ,
+        WaterYeildAlarmShortMsgTempleteId: "yjtx", //预计发送短信的模板 ,
         CaliberAlarmVal: [], //水表口径及对应的报警值 ,例[{CaliberSize:20,AlarmVal:110},{CaliberSize:25,AlarmVal:120}]
         IsOpenCard: "0", //是否开启制卡和补卡 支持非卡表用户开卡
         IsCloseValve: "0", //远传表欠费是否关阀 0否 1是
@@ -324,9 +320,9 @@ export default {
     };
   },
   mounted() {
-    getTemplateName({ isSysTemplate: "" }).then(res => {
-      this.templateNmaeList = res.data;
-    });
+    // getTemplateName({ isSysTemplate: "" }).then(res => {
+    //   this.templateNmaeList = res.data;
+    // });
     GetBasicConfigVal().then(res => {
       res.data.NotColseTimes.forEach(item => {
         item.timevalue = [];
