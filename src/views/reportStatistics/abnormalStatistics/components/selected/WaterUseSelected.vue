@@ -80,25 +80,25 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用水量" prop="CustomerQueryValue"  v-show="show5||isShow" class="waterNum">
+      <el-form-item label="用水量" prop="TotalWaterYield"  v-show="show5||isShow" class="waterNum">
         <el-input v-model="selectHead.TotalWaterYield" />
         <el-radio-group v-model="selectHead.UpOrDown">
-     <el-radio  label="U">以上</el-radio>
+          <el-radio  label="U">以上</el-radio>
           <el-radio  label="D">以下</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="抄表起止日期" label-width="110px" v-show="show6||isShow">
         <el-date-picker
           v-model="dateArr"
-          type="daterange"
+          type="datetimerange"
           :editable="false"
           :unlink-panels="true"
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
+       :default-time="['00:00:00', '23:59:59']"
+          format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
           @keydown.enter.native="handleFilter"
           @change="getTime"
         />
@@ -174,7 +174,7 @@ export default {
       this.selectHead.MeterDiameter=0
       this.selectHead.WaterMeter=0
       this.selectHead.UserType=0
-      this.selectHead.UpOrDown="D"
+      this.selectHead.UpOrDown="U"
       if(this.companyOptions.length > 1){
       this.selectHead.SA_WaterFactory_Id=""
 

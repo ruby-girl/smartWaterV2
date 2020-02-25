@@ -63,7 +63,7 @@ export default {
         StarDateTime: "",
         EndDateTime: "",
         TotalWaterYield: "", //用水量
-        UpOrDown: "D" //用水量
+        UpOrDown: "U" //用水量
       },
       tableHeight: null,
       tableData: [], //表格数据

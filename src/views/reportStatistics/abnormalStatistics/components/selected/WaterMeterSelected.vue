@@ -89,15 +89,15 @@
       <el-form-item label="本次抄表日期" label-width="110px" v-show="show5||isShow">
         <el-date-picker
           v-model="dateArr"
-          type="daterange"
+          type="datetimerange"
           :editable="false"
           :unlink-panels="true"
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :default-time="['00:00:00', '23:59:59']"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
+          format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
           @keydown.enter.native="handleFilter"
           @change="getTime"
         />
@@ -170,7 +170,7 @@ export default {
       this.selectHead.MeterDiameter=0
       this.selectHead.WaterMeter=0
       this.selectHead.UserType=0
-      this.selectHead.UpOrDown="D"
+      this.selectHead.UpOrDown="U"
 
        if(this.companyOptions.length > 1){
       this.selectHead.SA_WaterFactory_Id=""
