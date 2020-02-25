@@ -30,6 +30,8 @@
               <el-date-picker
                 v-model="param.ReadDate"
                 type="datetime"
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="选择日期">
               </el-date-picker>
             </div>
@@ -218,7 +220,7 @@
         currentContract: {},//当前选中信息
         param: {//抄表及水量水费参数
           SA_MeterRecord_Id: '',//抄表记录ID
-          ReadDate: new Date(),//抄表时间
+          ReadDate: this.formatDateTime(new Date()),//抄表时间
           ReadNum: '',//本次读数
           Remark: '',
           IsPage: false
@@ -242,6 +244,20 @@
       }
     },
     methods: {
+      formatDateTime (date) {
+        let y = date.getFullYear();
+        let m = date.getMonth() + 1;
+        m = m < 10 ? ('0' + m) : m;
+        let d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        let h = date.getHours();
+        h=h < 10 ? ('0' + h) : h;
+        let minute = date.getMinutes();
+        minute = minute < 10 ? ('0' + minute) : minute;
+        let second=date.getSeconds();
+        second=second < 10 ? ('0' + second) : second;
+        return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+      },
       handleInput(e) {
         this.param.ReadNum = e.replace(/[^\d]/g, '');
       },
