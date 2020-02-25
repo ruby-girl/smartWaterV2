@@ -20,6 +20,7 @@
               <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
+          <el-table-column align="center" prop="SA_WaterFactory_Name" label="水厂" width="180"></el-table-column>
           <el-table-column align="center" prop="CustomerNo" label="用户编号" width="180"></el-table-column>
           <el-table-column align="center" prop="CustomerName" label="姓名" width="180"></el-table-column>
           <el-table-column align="center" prop="Tel" label="电话" width="180"></el-table-column>

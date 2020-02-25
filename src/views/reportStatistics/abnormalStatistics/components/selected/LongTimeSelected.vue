@@ -173,6 +173,10 @@ export default {
       this.selectHead.MeterDiameter=0
       this.selectHead.WaterMeter=0
       this.selectHead.UserType=0
+       if(this.companyOptions.length > 1){
+      this.selectHead.SA_WaterFactory_Id=""
+
+      }
       this.$parent.delTips("dateArr");
     },
     showLabel(n, w) {

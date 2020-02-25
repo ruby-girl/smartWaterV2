@@ -21,7 +21,7 @@
           @keydown.enter.native="handleFilter"
           @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',companyOptions,'水厂')"
         >
-          <el-option  v-if="companyOptions.length!=1" label="全部" value="-1"></el-option>
+          <el-option  v-if="companyOptions.length!=1" label="全部" value=""></el-option>
           <el-option
             v-for="item in companyOptions"
             :key="item.Id"
@@ -82,8 +82,8 @@
       <el-form-item label="水量倍率" prop="Pre" v-show="show4||isShow" class="waterNum">
         <el-input v-model="selectHead.Pre" />
         <el-radio-group v-model="selectHead.UpOrDown">
-          <el-radio label="以上"></el-radio>
-          <el-radio label="以下"></el-radio>
+          <el-radio  label="U">以上</el-radio>
+          <el-radio  label="D">以下</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="本次抄表日期" label-width="110px" v-show="show5||isShow">
@@ -170,6 +170,12 @@ export default {
       this.selectHead.MeterDiameter=0
       this.selectHead.WaterMeter=0
       this.selectHead.UserType=0
+      this.selectHead.UpOrDown="D"
+
+       if(this.companyOptions.length > 1){
+      this.selectHead.SA_WaterFactory_Id=""
+
+      }
       this.$parent.delTips("dateArr");
     },
     showLabel(n, w) {
