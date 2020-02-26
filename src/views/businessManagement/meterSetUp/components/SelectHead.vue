@@ -161,6 +161,7 @@
                 promptInfoFun(this,1,'未搜索到数据')
               }else if(res.data.length ==1){//此时有一条数据默认覆盖当前表册
                 this.param.MeterReadState = '-1'
+                this.param.SA_RegisterBookInfo_Id = res.data[0].RegisterBookId
                 this.$parent.param.SA_RegisterBookInfo_Id = res.data[0].RegisterBookId
                 this.$parent.isPage = false
                 this.$parent.searchFun();

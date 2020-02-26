@@ -49,7 +49,7 @@
         report:{
           UserType: "-1",
           UserTypeName: "",
-          WaterFactoryId: "-1",
+          WaterFactoryId: "",
           WaterFactoryName: "",
           UseWaterTypeId: "",
           UseWaterTypeName: "",
@@ -103,6 +103,7 @@
     mounted() {
       this.screenWdth = window.screen.width
       this.waterFactory = this.$store.state.user.waterWorks
+      this.$store.state.user.waterWorks.length>1 ? this.report.WaterFactoryId = '-1' : this.report.WaterFactoryId=this.$store.state.user.waterWorks[0].Id
       this.userArray = getDictionaryOption('用户类型')
       this.getWaterPorter()
     }

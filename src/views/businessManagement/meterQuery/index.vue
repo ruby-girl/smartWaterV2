@@ -33,13 +33,11 @@ export default {
         this.$refs.planChild1.param.SA_MeterReadPlan_Id = id;
         this.$refs.planChild1.getText(PlanName,'SA_MeterReadPlan_Id','','抄表计划')
         _this.$refs.planChild1.searchFun();
-
       }
     });
   },
   methods: {
     handleClick() {
-
       if (this.typeCheck == "1") {
         this.$refs.planChild1.typeCheck = this.typeCheck;
          this.$refs.planChild1.$refs.childSelect.setparams(

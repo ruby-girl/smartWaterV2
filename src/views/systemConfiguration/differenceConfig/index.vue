@@ -16,7 +16,7 @@
       <!-- 循环年 s-->
       <div class="year-box" v-for="(item,i) in arr">
         <div class="year-box-border display-flex align-items-center justify-content-flex-justify">
-          <div>{{item.TitleYear}}年</div>
+          <div style="font-size: 18px;">{{item.TitleYear}}年</div>
           <div class="year-button display-flex align-items-center">
             <span @click="edit(i)">
               <i class="iconfont iconsuoyoubiaogelidebianji"></i>
@@ -29,7 +29,7 @@
         </div>
         <!-- 循环月 -->
         <div class="display-flex align-items-center flex-wrap month-box-border" v-show="item.allShow">
-          <!-- 1月 -->    
+          <!-- 1月 -->
           <!-- 未编辑 -->
           <div
             class="month-line display-flex align-items-center"
@@ -59,10 +59,10 @@
           </div>
           <!-- 1月 -->
         </div>
-       
+
       </div>
       <!-- 循环年e -->
-       
+
     </div>
     <div class="month-save-btn text-center" style="margin-top:10px;" v-permission="['282']">
           <el-button type="primary" size="mini" @click="saveMonth()">保存</el-button>
@@ -113,7 +113,7 @@ export default {
     edit(i){
       this.arr[i].show =!this.arr[i].show
       this.arr[i].allShow =true
-     
+
     }
   }
 };

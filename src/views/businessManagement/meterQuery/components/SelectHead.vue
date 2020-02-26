@@ -216,6 +216,7 @@
     name: "SelectHead",
     data() {
       return {
+        detailPlanArry:[],
         userTypes:[
           {name:'用户编号',Id:'1'},
           {name:'姓名/简码',Id:'2'},
@@ -337,10 +338,15 @@
       },
       getPlanList(id){//通过水厂获得抄表计划，或抄表员信息
         this.getText(id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+        this.detailPlanArry = []
         if(this.typeCheck==1){//计划
           QueryMeterReadPlanByFactoryId({SA_WaterFactory_Id:id}).then(res => {
             if (res.code ==0 ) {
               this.planArry = res.data;
+              let datas = res.data
+              datas.forEach((v)=>{
+                this.detailPlanArry = v.Plans.concat(v.Plans)
+              })
               this.param1.SA_MeterReadPlan_Id = res.data[0].Plans[0].Id
               this.getCbyInfo(res.data[0].Plans[0].Id)//搜索默认抄表计划
             } else {
@@ -362,7 +368,7 @@
       getCbyInfo(id){ //获取抄表员及表册联动信息，区分抄表计划及抄表日期
         LoadRegisterBookAndMeterReader({'MeterReadPlanId' : id}).then(res => {
           if (res.code ==0 ) {
-            this.getText(id,'SA_MeterReadPlan_Id',this.planArry,'抄表计划')
+            this.getText(id,'SA_MeterReadPlan_Id',this.detailPlanArry,'抄表计划')
             this.param1.SA_MeterReader_Id = ''
             this.meterArry = res.data.MeterReaders
             this.formArry = res.data.RegisterBooks
@@ -444,7 +450,6 @@
       },
       setInforamation(msg){
         let userInfo = msg
-
         this.typeCheck = 1
         this.param1.ReadingQueryType = '1'
         this.param1.CustomerQueryValue = userInfo.CustomerNo
@@ -470,6 +475,9 @@
       $route(){//监听抄表设置 查看历史记录跳转
         if(this.$route.query.CustomerInfo){
           let userInfo = this.$route.query.CustomerInfo
+          this.getPlanList(userInfo.SA_WaterFactory_Id);
+          this.getText(userInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+          this.getCbyInfo(userInfo.SA_MeterReadPlan_Id)
           this.setInforamation(userInfo)
         }
       }

@@ -37,11 +37,13 @@
           <el-table-column
             prop="WaterPriceToLadder1"
             label="水费"
+            align="center"
             width="120">
           </el-table-column>
           <el-table-column
             prop="WaterYieldToLadder1"
             label="水量"
+            align="center"
             width="120">
           </el-table-column>
         </el-table-column>
@@ -49,11 +51,13 @@
           <el-table-column
             prop="WaterPriceToLadder2"
             label="水费"
+            align="center"
             width="120">
           </el-table-column>
           <el-table-column
             prop="WaterYieldToLadder2"
             label="水量"
+            align="center"
             width="120">
           </el-table-column>
         </el-table-column>
@@ -61,11 +65,13 @@
           <el-table-column
             prop="WaterPriceToLadder3"
             label="水费"
+            align="center"
             width="120">
           </el-table-column>
           <el-table-column
             prop="WaterYieldToLadder3"
             label="水量"
+            align="center"
             width="120">
           </el-table-column>
         </el-table-column>
@@ -73,11 +79,13 @@
           <el-table-column
             prop="WaterPriceToLadder4"
             label="水费"
+            align="center"
             width="120">
           </el-table-column>
           <el-table-column
             prop="WaterYieldToLadder4"
             label="水量"
+            align="center"
             width="120">
           </el-table-column>
         </el-table-column>
@@ -85,11 +93,13 @@
           <el-table-column
             prop="WaterPriceToLadder5"
             label="水费"
+            align="center"
             width="120">
           </el-table-column>
           <el-table-column
             prop="WaterYieldToLadder5"
             label="水量"
+            align="center"
             width="120">
           </el-table-column>
         </el-table-column>

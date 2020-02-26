@@ -31,7 +31,7 @@
           <el-option v-for="(item,index) in userArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <transition name="fade">
+     <!-- <transition name="fade">
         <el-form-item label="生效日期" v-show="screenWdth<1600?ifMore:true" prop="createStartTimes">
           <el-date-picker
             :editable="false"
@@ -47,7 +47,7 @@
             @change="getTime"
           />
         </el-form-item>
-      </transition>
+      </transition>-->
       <el-form-item>
         <i v-show="screenWdth<1600&&ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
         <i v-show="screenWdth<1600&&!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>

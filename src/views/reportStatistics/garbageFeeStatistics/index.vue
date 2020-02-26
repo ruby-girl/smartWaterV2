@@ -103,6 +103,9 @@
         if(val=='createStartTimes'){
           promptInfoFun(this,1,'日期不能为空!')
           return false
+        }else if(val=='SA_WaterFactory_Id'){
+          promptInfoFun(this,1,'水厂不能为空!')
+          return false
         }
         this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "grp"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()

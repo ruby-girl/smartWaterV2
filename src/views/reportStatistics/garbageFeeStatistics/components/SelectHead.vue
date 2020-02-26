@@ -7,7 +7,7 @@
     size="small"
     label-width="90px"
     @submit.native.prevent>
-    <el-form-item label="水厂" prop="SA_WaterFactory_Id" style="margin-left: -60px">
+    <el-form-item label="水厂" style="margin-left: -60px" >
       <el-select v-model="grp.SA_WaterFactory_Id" placeholder="请选择" size="small"  @change="getText(grp.SA_WaterFactory_Id,'SA_WaterFactory_Id',waterFactory,'水厂')">
         <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
@@ -25,7 +25,7 @@
       </el-select>
     </el-form-item>
     <transition name="fade">
-      <el-form-item label="日期" prop="createStartTimes" v-show="screenWdth<1600?ifMore:true">
+      <el-form-item label="日期"  v-show="screenWdth<1600?ifMore:true">
         <el-date-picker
           :editable="false"
           @keydown.enter.native="searchFun"
@@ -103,17 +103,19 @@
       },
       resetFun(formName){
         this.$refs[formName].resetFields();
-        this.grp.StarDateTime = ''
+        this.$parent.delTips('WaterMeter')
+        this.$parent.delTips('UserType')
+    /*    this.$parent.tipsDataCopy = []*/
+     /*   this.grp.StarDateTime = ''
         this.grp.EndDateTime = ''
-        this.createStartTimes = []
-        this.$parent.tipsDataCopy = []
-        this.searchFun()
+        this.createStartTimes = []*/
+        //this.searchFun()
       }
     },
     mounted() {
       this.screenWdth = window.screen.width
       this.waterFactory = this.$store.state.user.waterWorks
-      this.grp.SA_WaterFactory_Id = this.waterFactory[0].Id
+      //this.grp.SA_WaterFactory_Id = this.waterFactory[0].Id
       this.waterMeterArray = getDictionaryOption('水表类型')
       this.userArray = getDictionaryOption('用户类型')
     }
