@@ -77,8 +77,8 @@ export default {
     delTips(val) {
       if (val == "dateArr") {
         //当返回的model 为时间数组  置空 时间
-        this.selectHead.createStartTime = "";
-        this.selectHead.createStartTime = "";
+        this.selectHead.StarDateTime = "";
+        this.selectHead.EndDateTime = "";
         this.$refs.seachChild.dateArr = [];
       }
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");

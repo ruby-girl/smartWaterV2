@@ -3,13 +3,20 @@
     <el-form
       :inline="true"
       :model="selectHead"
-      :class="{'position-absolute-head-shadow':isShow,'head-search-form form-inline-small-input position-absolute-head':true}"
+      :class="{
+        'position-absolute-head-shadow': isShow,
+        'head-search-form form-inline-small-input position-absolute-head': true
+      }"
       size="small"
       label-width="68px"
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item v-show="show1||isShow" key="CustomerQueryType" prop="CustomerQueryValue">
+      <el-form-item
+        v-show="show1 || isShow"
+        key="CustomerQueryType"
+        prop="CustomerQueryValue"
+      >
         <el-select
           v-model="selectHead.CustomerQueryType"
           placeholder="请选择"
@@ -21,16 +28,40 @@
           <el-option label="用户编号" value="1"></el-option>
         </el-select>
         <el-input
-          v-model="selectHead.CustomerQueryType==1?selectHead.UserNo:selectHead.UserName"
+          v-if="selectHead.CustomerQueryType == 2"
+          v-model="selectHead.UserName"
           maxlength="20"
           placeholder="(长度1-30)"
           @keyup.enter.native="handleFilter"
-          @change="getText(selectHead.CustomerQueryValue,'CustomerQueryValue','',secNmae)"
+          @change="
+            getText(
+              selectHead.UserName,
+              'UserName',
+              '',
+              secNmae
+            )
+          "
+          style="width: 180px;float: left"
+        />
+        <el-input
+          v-if="selectHead.CustomerQueryType == 1"
+          v-model="selectHead.UserNo"
+          maxlength="20"
+          placeholder="(长度1-30)"
+          @keyup.enter.native="handleFilter"
+          @change="
+            getText(
+              selectHead.UserNo,
+              'UserNo',
+              '',
+              secNmae
+            )
+          "
           style="width: 180px;float: left"
         />
       </el-form-item>
 
-      <el-form-item label="日期" label-width="110px" v-show="show2||isShow">
+      <el-form-item label="日期" label-width="110px" v-show="show2 || isShow">
         <el-date-picker
           v-model="dateArr"
           type="monthrange"
@@ -45,14 +76,21 @@
         />
       </el-form-item>
       <el-form-item>
-        <span class="isShow" :class="{tro:isShow}" v-if="showBtn">
-          <i class="icon iconfont iconjianqu3" @click="isShow=!isShow"></i>
+        <span class="isShow" :class="{ tro: isShow }" v-if="showBtn">
+          <i class="icon iconfont iconjianqu3" @click="isShow = !isShow"></i>
         </span>
         <el-button round type="primary" size="mini" @click="handleFilter">
           <i class="iconfont iconsousuo"></i>
           搜索
         </el-button>
-        <el-button class="btn-resetting" round plain type="primary" size="mini" @click="resetting">
+        <el-button
+          class="btn-resetting"
+          round
+          plain
+          type="primary"
+          size="mini"
+          @click="resetting"
+        >
           <i class="iconfont icon_zhongzhi"></i>重置
         </el-button>
       </el-form-item>
@@ -79,7 +117,8 @@ export default {
       isShow: false,
       show1: true,
       show2: true,
-      showBtn: false
+      showBtn: false,
+      secNmae:"用户编号"
     };
   },
   watch: {
@@ -98,6 +137,11 @@ export default {
   },
   created() {},
   methods: {
+     getscName(id) {
+      this.secNmae = id == 1 ? "用户编号" : "用户姓名";
+      this.selectHead.UserNo=""
+      this.selectHead.UserName=""
+    },
     resetting() {
       //重置
       this.$refs["formHeight"].resetFields();
@@ -153,6 +197,7 @@ export default {
   },
   mounted() {
     this.selectHead = this.$parent.selectHead;
+    // this.selectHead.CustomerQueryType="1"
   }
 };
 </script>

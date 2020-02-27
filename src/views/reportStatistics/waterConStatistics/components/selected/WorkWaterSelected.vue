@@ -136,7 +136,7 @@ export default {
       this.$parent.delTips("dateArr");
     },
     showLabel(n, w) {
-      if (Math.floor((w - 180) / 280) >= n + 1 || this.isShow) return true;
+      if (Math.floor((w - 180) / 280) >= n  || this.isShow) return true;
       return false;
     },
     handleFilter() {

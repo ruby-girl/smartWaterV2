@@ -37,7 +37,7 @@
             <el-table-column prop="QTConsumption" label="用水量" width="120"></el-table-column>
             <el-table-column prop="QTConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
           </el-table-column>
-          <el-table-column prop="TotalConsumption " label="总用水量" width="180"></el-table-column>
+          <el-table-column prop="TotalConsumption" label="总用水量" width="180"></el-table-column>
 
         </el-table>
       </div>

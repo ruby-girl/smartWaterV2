@@ -38,6 +38,7 @@ export default {
   data() {
     return {
       selectHead: {
+        CustomerQueryType:"1",
         UserNo: "", //用户编号
         UserName: "", //用户姓名
         StartDate: "",
