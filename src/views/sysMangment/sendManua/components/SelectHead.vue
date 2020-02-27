@@ -49,18 +49,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="区域选择" v-show="show3||isShow" prop="AreaId">
-        <el-select
-          v-model="selectHead.AreaId "
-          placeholder="请选择"
-          @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.AreaId ,'AreaId',WaterMeterList,'区域选择')"
-        >
-          <el-option label="全部" :value="-1" />
-          <el-option
-            v-for="item in WaterMeterList"
-            :key="item.Id"
-            :label="item.Name"
-            :value="Number(item.Id)"
+         <treeselect
+            placeholder="请选择"
+            :searchable="false"
+            v-model="selectHead.AreaId"
+            :options="orgTree"
+            @change="getText(selectHead.AreaId ,'AreaId',orgTree,'区域')"
           />
         </el-select>
       </el-form-item>
@@ -83,11 +77,15 @@
 <script>
 import { getSelectUser } from "@/api/account"; //获取操作人下拉框
 import { getDictionaryOption } from "@/utils/permission";
-import { getName } from "@/utils/projectLogic"; //搜索条件面包屑
+import { getName ,getOrgTree } from "@/utils/projectLogic"; //搜索条件面包屑
+import { GetAreaTree } from "@/api/inSecur"; //获取区域
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
   props: {
     searchWidth: {}
   },
+  components:{Treeselect},
   data() {
     return {
       selectHead: {},
@@ -101,7 +99,8 @@ export default {
       show2: true,
       show3: true,
       showBtn: false,
-      secNmae: ""
+      secNmae: "",
+      orgTree:[]
     };
   },
   watch: {
@@ -122,8 +121,19 @@ export default {
   },
   created() {
     this.WaterMeterList = getDictionaryOption("水表类型");
+    this.getArea(0);
   },
   methods: {
+    getArea(id) {
+      getOrgTree(
+        function(res) {
+          this.orgTree = res;
+          let childrenArr = [];
+          this.selectHead.AreaId = "-1";
+        }.bind(this),
+        id
+      );
+    },
     getscName(id) {
       this.secNmae = getName(id);
     },
@@ -153,5 +163,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+  /deep/.vue-treeselect{
+      width:180px!important;
+    }
 </style>
 

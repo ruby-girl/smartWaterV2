@@ -81,7 +81,7 @@ export default {
       selectHead: {
         page: 1,
         limit: 10,
-        CustomerQueryType: "",
+        CustomerQueryType: "1",
         CustomerQueryValue: "",
         WaterTypeId: "", //水表类型
         AreaId: "", //q区域

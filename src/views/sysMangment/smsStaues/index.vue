@@ -101,7 +101,7 @@ export default {
         TimerEndTime: "",
         WaterMeterType: -1, //水表类型
         AreaId: -1, //区域
-        CustomerQueryType: "",
+        CustomerQueryType: "1",
         CustomerQueryValue: "",
         sort: "", //升序
         filed: "", //排序字段
