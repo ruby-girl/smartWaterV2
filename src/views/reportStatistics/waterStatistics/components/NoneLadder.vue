@@ -164,6 +164,7 @@ export default {
     this.$nextTick(()=>{
       this.$refs.searchTips.showTabBtn = false//隐藏自定义按钮
       this.tableHeight  = document.getElementsByClassName("cl-container")[0].offsetHeight - document.getElementById("table").offsetTop;
+      this.$refs.childSelect.getWaterPorter(false)
     })
   }
 };

@@ -31,7 +31,7 @@
       </el-form-item>
       <el-form-item label="抄表员" prop="SA_MeterReader_Id">
         <el-select v-model="param1.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getRegisterInfo">
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value="-1" v-show="meterArry.length>1"></el-option>
           <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -125,7 +125,7 @@
         </el-form-item>
       <el-form-item label="抄表员" prop="SA_MeterReader_Id">
         <el-select v-model="param2.SA_MeterReader_Id" placeholder="请选择" size="small" @change="getRegisterInfoByTime">
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value="-1" v-show="meterArry.length>1"></el-option>
           <el-option v-for="(item,index) in meterArry" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
@@ -229,7 +229,7 @@
           CustomerQueryValue: "", //用户查询值
           SA_WaterFactory_Id: "", //水厂
           SA_MeterReadPlan_Id: "", //抄表计划Id
-          SA_MeterReader_Id: "-1", //抄表员ID
+          SA_MeterReader_Id: "", //抄表员ID
           SA_RegisterBookInfo_Id: "-1", //表册Id
           UserType: "-1", //用户类型 = ['1201', '1202', '1203', '1204', '-1']
           InputEmpName: "", //录入人
@@ -250,7 +250,7 @@
           CustomerQueryValue: "", //用户查询值
           SA_WaterFactory_Id: "", //水厂
           SA_MeterReadPlan_Id: "", //抄表计划Id
-          SA_MeterReader_Id: "-1", //抄表员ID
+          SA_MeterReader_Id: "", //抄表员ID
           SA_RegisterBookInfo_Id: "-1", //表册Id
           UserType: "-1", //用户类型 = ['1201', '1202', '1203', '1204', '-1']
           InputEmpName: "", //录入人

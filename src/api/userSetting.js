@@ -296,5 +296,17 @@ export function GetSetWriteCardInfo(data){
 
 
 
+/**
+ * 用水性质有无阶梯
+ * */
+export function SelectReportWaterProperty(data){
+  return request({
+    url: '/WaterProperty/SelectReportWaterProperty',
+    method: 'post',
+    params: data
+  })
+}
+
+
 
 

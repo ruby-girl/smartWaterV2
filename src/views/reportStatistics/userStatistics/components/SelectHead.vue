@@ -22,7 +22,7 @@
     <el-form-item label="用水性质" prop="UseWaterTypeName">
       <el-select v-model="report.UseWaterTypeId" placeholder="请选择" size="small" @keyup.enter.native="searchFun" @change="getText(report.UseWaterTypeId,'UseWaterTypeId',userWterTypes,'用水性质')">
         <el-option label="全部" value="-1" v-if="userWterTypes.length>1"></el-option>
-        <el-option v-for="(item,index) in userWterTypes" :key="index" :label="item.UseWaterTypeName" :value="item.UseWaterTypeId"/>
+        <el-option v-for="(item,index) in userWterTypes" :key="index" :label="item.UseWaterTypeName" :value="item.Id"/>
       </el-select>
     </el-form-item>
     <el-form-item label="">
@@ -51,7 +51,7 @@
           UserTypeName: "",
           WaterFactoryId: "",
           WaterFactoryName: "",
-          UseWaterTypeId: "",
+          UseWaterTypeId: "-1",
           UseWaterTypeName: "",
           createUserId: "",
           createStartTime: "",
@@ -85,6 +85,7 @@
         GetWaterPropertyList(this.param).then(res => {
           if(res.code==0){
             this.userWterTypes = res.data
+            console.log(res.data)
           }
         })
       },

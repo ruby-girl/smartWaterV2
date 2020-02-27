@@ -62,7 +62,7 @@
 </template>
 
 <script>
-  import {GetWaterPropertyList} from "@/api/userSetting"
+  import { SelectReportWaterProperty } from "@/api/userSetting"
   import {getDictionaryOption} from "@/utils/permission"
   import {promptInfoFun} from "@/utils/index"
   import {getName} from "@/utils/projectLogic"
@@ -140,14 +140,10 @@
         let name = getName(this.query.CustomerQueryType)
         this.getText(text,model,arr,name)
       },
-      getWaterPorter(){//获取用水性质
-        GetWaterPropertyList(this.param).then(res => {
+      getWaterPorter(data){//获取用水性质
+        SelectReportWaterProperty({isLadder:data}).then(res => {
           if(res.code==0){
             let data = res.data
-            data.forEach(item=>{
-              item.Name = item.UseWaterTypeName
-            })
-            console.log(res.data)
             this.userWterTypes = data
           }
         })
@@ -159,7 +155,7 @@
       this.param.WaterFactoryId = this.waterFactory[0].Id
       this.waterMeterArray = getDictionaryOption('水表类型')
       this.userArray = getDictionaryOption('用户类型')
-      this.getWaterPorter()
+      //this.getWaterPorter()
     }
   }
 </script>

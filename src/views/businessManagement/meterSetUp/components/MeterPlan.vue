@@ -287,6 +287,7 @@
             } else {
               this.$parent.searchFun()
             }
+            this.checks = ['自动载入下一户']
           } else {
             promptInfoFun(this, 1, res.message)
           }

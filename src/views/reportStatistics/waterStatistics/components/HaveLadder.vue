@@ -139,11 +139,11 @@
 </template>
 
 <script>
-import SearchTips from "@/components/SearchTips/index";
-import SelectHead from "./SelectHead"; //查询条件组建
-import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
-import { WaterPropertyReportToLadder, WaterPropertyReportToLadderToExcel } from "@/api/reportInfo";
-import { promptInfoFun } from "@/utils/index";
+  import SearchTips from "@/components/SearchTips/index";
+  import SelectHead from "./SelectHead"; //查询条件组建
+  import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+  import { WaterPropertyReportToLadder, WaterPropertyReportToLadderToExcel } from "@/api/reportInfo";
+  import { promptInfoFun } from "@/utils/index";
 export default {
   components: { SelectHead, SearchTips },
   name: "plan",
@@ -154,7 +154,7 @@ export default {
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       param: { },
-    };
+    }
   },
   methods: {
     searchFun() {
@@ -222,6 +222,7 @@ export default {
     this.$nextTick(()=>{
       this.$refs.searchTips.showTabBtn = false//隐藏自定义按钮
       this.tableHeight  = document.getElementsByClassName("cl-container")[0].offsetHeight - document.getElementById("table").offsetTop;
+      this.$refs.childSelect.getWaterPorter(true)
     })
   }
 }

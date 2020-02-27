@@ -49,7 +49,7 @@
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <p v-for="(item,index) in scope.row.yichaoshu" :key="index" class="multiColumn">
+            <p v-for="(item,index) in scope.row.yingchaoshu" :key="index" class="multiColumn">
               {{item}}
             </p>
           </template>
@@ -65,7 +65,7 @@
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <p v-for="(item,index) in scope.row.yingchaoshu" :key="index" class="multiColumn">
+            <p v-for="(item,index) in scope.row.yichaoshu" :key="index" class="multiColumn">
               {{item}}
             </p>
           </template>
@@ -99,15 +99,17 @@
           min-width="200px">
           <template slot-scope="scope">
             <p v-for="(item,index) in scope.row.wanchenglv" :key="index" class="multiColumn">
-              {{item}}
+              {{item}}%
             </p>
           </template>
         </el-table-column>
         <el-table-column
-          prop="zongwanchenglv"
           label="总完成率"
           align="center"
           min-width="200px">
+          <template slot-scope="scope">
+            {{scope.row.zongwanchenglv}}%
+          </template>
         </el-table-column>
       </el-table>
     </div>
