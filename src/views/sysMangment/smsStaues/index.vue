@@ -7,9 +7,14 @@
       <div class="contanier">
         <p class="notice">
           <i class="icon iconfont" style="margin-right:5px;">&#xe69c;</i>
-          提示：当前短信剩余{{surpNum}}条，已用{{sendNum}}条
+          提示：当前短信剩余{{ surpNum }}条，已用{{ sendNum }}条
         </p>
-        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
+        <search-tips
+          :tipsData="tipsData"
+          ref="searchTips"
+          @delTips="delTips"
+          @excel="exportList"
+        />
         <div class="main-padding-20-y" id="table">
           <el-table
             :key="tableKey"
@@ -18,26 +23,39 @@
             fit
             :height="tableHeight"
             style="width: 100%;"
-            :header-cell-style="{'background-color': '#F0F2F5'}"
-            :cell-style="{'padding':'5px 0'}"
+            :header-cell-style="{ 'background-color': '#F0F2F5' }"
+            :cell-style="{ padding: '5px 0' }"
           >
-            <el-table-column type="index" fixed="left" label="#" width="60" align="center">
+            <el-table-column
+              type="index"
+              fixed="left"
+              label="#"
+              width="60"
+              align="center"
+            >
               <template slot-scope="scope">
-                <span>{{(selectHead.page - 1) * selectHead.limit+ scope.$index + 1}}</span>
+                <span>{{
+                  (selectHead.page - 1) * selectHead.limit + scope.$index + 1
+                }}</span>
               </template>
             </el-table-column>
-            <template v-for="(item ,index) in tableHeadData">
+            <template v-for="(item, index) in tableHeadData">
               <el-table-column
                 :key="index"
                 min-width="230px"
-                :sortable="item.IsSortBol?'custom':null"
+                :sortable="item.IsSortBol ? 'custom' : null"
                 :prop="item.ColProp"
                 :align="item.Position"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
               />
             </template>
-            <el-table-column label="操作" width="80px" align="center" fixed="right">
+            <el-table-column
+              label="操作"
+              width="80px"
+              align="center"
+              fixed="right"
+            >
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -49,13 +67,14 @@
                   <i
                     class="iconStyle icon iconfont operation3"
                     @click="Detail(scope.row.Id)"
-                  >&#xe653;</i>
+                    >&#xe653;</i
+                  >
                 </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
           <pagination
-            v-show="total>0"
+            v-show="total > 0"
             :total="total"
             :page.sync="selectHead.page"
             :limit.sync="selectHead.limit"
@@ -236,7 +255,7 @@ export default {
       //已发
       getSendNum().then(res => {
         if (res.code == 0) {
-          this.sendNum = res.data;
+          this.surpNum = res.data;
         }
       });
       //剩余
@@ -253,7 +272,7 @@ export default {
   }
 };
 </script>
-<style lang="scss"  scoped>
+<style lang="scss" scoped>
 .notice {
   margin: 0;
   margin-bottom: 11px;

@@ -149,7 +149,7 @@ export default {
       this.tableHeight =
         document.getElementsByClassName("onBox")[0].offsetHeight -
         document.getElementById("table").offsetTop -
-        4;
+        47;
 
       this.$refs.searchTips.showTabBtn = false;
     });

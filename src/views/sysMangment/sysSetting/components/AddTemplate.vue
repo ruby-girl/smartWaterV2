@@ -46,7 +46,7 @@
           <el-radio :label="1">定时发送</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="定时发送时间" class="datePicker">
+      <el-form-item label="定时发送时间" v-if="ShortMsgTempParam.SendModality!=0" class="datePicker">
         <el-date-picker
           :disabled="ShortMsgTempParam.SendMethod==0||ShortMsgTempParam.SendModality==0"
           v-model="ShortMsgTempParam.ResetShortMsgTemplateSendTime"
@@ -55,13 +55,13 @@
           placeholder="选择日期时间"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item class="timePicker">
+      <el-form-item class="timePicker" v-if="ShortMsgTempParam.SendModality!=0">
         <el-select v-model="ShortMsgTempParam.TimerSendStartTime" placeholder="请选择">
           <el-option v-for="item in 24" :key="item" :label="item<10?'0'+item:item" :value="item"></el-option>
         </el-select>
       </el-form-item>
-      <span style="display: inline-block;line-height: 28px;margin-top: 18px; margin-right: 10px">~</span>
-      <el-form-item class="timePicker">
+      <span v-if="ShortMsgTempParam.SendModality!=0" style="display: inline-block;line-height: 28px;margin-top: 18px; margin-right: 10px">~</span>
+      <el-form-item class="timePicker" v-if="ShortMsgTempParam.SendModality!=0">
         <el-select v-model="ShortMsgTempParam.TimerSendEndTime " placeholder="请选择">
           <el-option
             v-for="item in 24"

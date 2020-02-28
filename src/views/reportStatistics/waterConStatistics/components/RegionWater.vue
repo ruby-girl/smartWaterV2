@@ -20,6 +20,8 @@
           border
           fit
           :height="tableHeight"
+          :summary-method="getSummaries"
+          show-summary
           style="width: 100%;"
           :header-cell-style="{ 'background-color': '#F0F2F5' }"
         >
@@ -109,7 +111,7 @@
             ></el-table-column>
           </el-table-column>
           <el-table-column
-            prop="TotalConsumption "
+            prop="TotalConsumption"
             label="总用水量"
             width="180"
           ></el-table-column>
@@ -181,6 +183,35 @@ export default {
         }
       });
     },
+    getSummaries(param) {
+      const { columns, data } = param;
+      console.log(param);
+      const sums = [];
+      columns.forEach((column, index) => {
+        console.log(column);
+        if (index === 0) {
+          sums[index] = "合计";
+          return;
+        }
+      
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return "/";
+            }
+          }, 0);
+          sums[index];
+        } else {
+          sums[index] = "/";
+        }
+      });
+
+      return sums;
+    },
     //查询
     searchTableList(num) {
       if (this.selectHead.StartDate == "" || this.selectHead.StartDate == "") {
@@ -196,6 +227,7 @@ export default {
       GetReportArea(this.selectHead).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.tableData = res.data;
+        this.tableData.pop();
       });
     }
   },

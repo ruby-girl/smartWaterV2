@@ -1,44 +1,120 @@
 <template>
   <div class="onBox">
     <div ref="formHeight">
-      <select-head :searchWidth="searchWidth" @getText="getText" ref="seachChild" />
+      <select-head
+        :searchWidth="searchWidth"
+        @getText="getText"
+        ref="seachChild"
+      />
     </div>
     <div class="contanier">
-      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
+      <search-tips
+        :tipsData="tipsData"
+        ref="searchTips"
+        @delTips="delTips"
+        @excel="excel"
+      />
       <div class="main-padding-20-y" id="table">
         <el-table
           :data="tableData"
           border
           fit
           :height="tableHeight"
+          :summary-method="getSummaries"
+          show-summary
           style="width: 100%;"
-          :header-cell-style="{'background-color': '#F0F2F5'}"
+          :header-cell-style="{ 'background-color': '#F0F2F5' }"
         >
-          <el-table-column type="index" fixed="left" label="#" width="60" align="center"></el-table-column>
-          <el-table-column prop="WaterFactoryName" label="水厂" width="180"></el-table-column>
-          <el-table-column prop="WCDate" label="日期" width="180"></el-table-column>
+          <el-table-column
+            type="index"
+            fixed="left"
+            label="#"
+            width="60"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="WaterFactoryName"
+            label="水厂"
+            width="180"
+          ></el-table-column>
+          <el-table-column
+            prop="WCDate"
+            label="日期"
+            width="180"
+          ></el-table-column>
           <el-table-column label="普通用户" width="180">
-            <el-table-column prop="PTUsers" label="用户数量" width="120"></el-table-column>
-            <el-table-column prop="PTConsumption" label="用水量" width="120"></el-table-column>
-            <el-table-column prop="PTConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
+            <el-table-column
+              prop="PTUsers"
+              label="用户数量"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="PTConsumption"
+              label="用水量"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="PTConsumptionProportion"
+              label="占总用水量百分比"
+              width="200"
+            ></el-table-column>
           </el-table-column>
           <el-table-column label="单位用户" width="180">
-            <el-table-column prop="DWUsers" label="用户数量" width="120"></el-table-column>
-            <el-table-column prop="DWConsumption" label="用水量" width="120"></el-table-column>
-            <el-table-column prop="DWConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
+            <el-table-column
+              prop="DWUsers"
+              label="用户数量"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="DWConsumption"
+              label="用水量"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="DWConsumptionProportion"
+              label="占总用水量百分比"
+              width="200"
+            ></el-table-column>
           </el-table-column>
           <el-table-column label="低保户" width="180">
-            <el-table-column prop="DBFUsers" label="用户数量" width="120"></el-table-column>
-            <el-table-column prop="DBFConsumption" label="用水量" width="120"></el-table-column>
-            <el-table-column prop="DBFConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
+            <el-table-column
+              prop="DBFUsers"
+              label="用户数量"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="DBFConsumption"
+              label="用水量"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="DBFConsumptionProportion"
+              label="占总用水量百分比"
+              width="200"
+            ></el-table-column>
           </el-table-column>
           <el-table-column label="其他用户" width="180">
-            <el-table-column prop="QTUsers" label="用户数量" width="120"></el-table-column>
-            <el-table-column prop="QTConsumption" label="用水量" width="120"></el-table-column>
-            <el-table-column prop="QTConsumptionProportion" label="占总用水量百分比" width="200"></el-table-column>
+            <el-table-column
+              prop="QTUsers"
+              label="用户数量"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="QTConsumption"
+              label="用水量"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="QTConsumptionProportion"
+              label="占总用水量百分比"
+              width="200"
+            ></el-table-column>
           </el-table-column>
-          <el-table-column prop="TotalConsumption" label="总用水量" width="180"></el-table-column>
-
+          <el-table-column
+            prop="TotalConsumption"
+            label="总用水量"
+            width="180"
+          ></el-table-column>
         </el-table>
       </div>
     </div>
@@ -109,12 +185,12 @@ export default {
     },
     //查询
     searchTableList(num) {
-      if(this.selectHead.StartDate=="" || this.selectHead.StartDate==""){
+      if (this.selectHead.StartDate == "" || this.selectHead.StartDate == "") {
         this.$message({
-            type: "warning",
-            message: "请选择日期后再操作"
-          });
-          return false
+          type: "warning",
+          message: "请选择日期后再操作"
+        });
+        return false;
       }
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
@@ -122,7 +198,35 @@ export default {
       GetReportFactory(this.selectHead).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.tableData = res.data;
+        this.tableData.pop();
       });
+    },
+    getSummaries(param) {
+      const { columns, data } = param;
+      console.log(param)
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "合计";
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          sums[index];
+        } else {
+          sums[index] = "/";
+        }
+      });
+
+      return sums;
     }
   },
   mounted() {

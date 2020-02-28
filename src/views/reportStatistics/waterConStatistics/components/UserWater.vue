@@ -20,6 +20,8 @@
           border
           fit
           :height="tableHeight"
+          :summary-method="getSummaries"
+          show-summary
           style="width: 100%;"
           :header-cell-style="{ 'background-color': '#F0F2F5' }"
         >
@@ -108,12 +110,42 @@ export default {
         }
       });
     },
+    getSummaries(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "合计";
+          return;
+        }
+        if (index === 1) {
+          sums[index] = "/";
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return "/";
+            }
+          }, 0);
+          sums[index];
+        } else {
+          sums[index] = "/";
+        }
+      });
+
+      return sums;
+    },
     //查询
     searchTableList(num) {
       if (this.selectHead.StartDate == "" || this.selectHead.StartDate == "") {
         this.$message({
           type: "warning",
-           message: "请选择日期后再操作"
+          message: "请选择日期后再操作"
         });
         return false;
       }
@@ -123,6 +155,7 @@ export default {
       GetReportUser(this.selectHead).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.tableData = res.data;
+        this.tableData.pop();
       });
     }
   },
