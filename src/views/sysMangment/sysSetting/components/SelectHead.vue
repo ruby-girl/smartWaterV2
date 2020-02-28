@@ -26,7 +26,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="模板类型" v-show="show2||isShow" prop="templateType" label-width="70px">
+      <el-form-item label="模板类型" v-show="show2||isShow" prop="isSysTemplate" label-width="70px">
         <el-select
           v-model="selectHead.isSysTemplate"
           placeholder="请选择"
@@ -144,11 +144,11 @@ export default {
       sendType: [
         //模板类型
         {
-          Id: 1,
+          Id: 0,
           Name: "自动发送"
         },
         {
-          Id: 0,
+          Id: 1,
           Name: "手动发送"
         }
       ],
@@ -189,6 +189,12 @@ export default {
       this.$refs["formHeight"].resetFields();
       this.$parent.tipsDataCopy = [];
       this.$parent.delTips("warterMeterPlanDate");
+        this.selectHead.isSysTemplate=""
+        this.selectHead.templateName=""
+        this.selectHead.sendMethod=""
+        this.selectHead.isSysTemplate=""
+        this.selectHead.timerSendEndTime=""
+     
     },
     showLabel(n, w) {
       if (Math.floor((w - 180) / 280) >= n || this.isShow) {
