@@ -112,8 +112,8 @@ export default {
   watch: {
     editModel(){
        this.editModel.IsSysTemplate=this.editModel.IsSysTemplate?1:0
-       this.editModel.SendMethod=this.editModel.SendMethod?0:1
-       this.editModel.SendModality=this.editModel.SendModality?0:1
+       this.editModel.SendMethod=this.editModel.SendMethod?1:0
+       this.editModel.SendModality=this.editModel.SendModality?1:0  
       this.ShortMsgTempParam=this.editModel
     },
     editShow() {
