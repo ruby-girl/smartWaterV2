@@ -8,7 +8,7 @@
     label-width="90px"
     @submit.native.prevent>
     <!--不支持查看全部水厂 根据权限展示水厂-->
-    <el-form-item label="水厂" prop="WaterFactoryId" style="margin-left: -60px">
+    <el-form-item label="水厂" style="margin-left: -60px">
       <el-select v-model="param.WaterFactoryId" placeholder="请选择" size="small" @change="getText(param.WaterFactoryId,'WaterFactoryId',waterFactory,'水厂')">
         <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
@@ -99,10 +99,8 @@
       },
       resetFun(formName){
         this.$refs[formName].resetFields();
-        this.param.PlanStartTime = ''
-        this.param.PlanEndTime = ''
-        this.createStartTimes = []
-        this.$parent.tipsDataCopy = []
+        this.param.WaterFactoryId = this.waterFactory[0].Id
+        this.getText(this.waterFactory[0].Id,'WaterFactoryId',this.waterFactory,'水厂')
         this.searchFun()
       }
     },

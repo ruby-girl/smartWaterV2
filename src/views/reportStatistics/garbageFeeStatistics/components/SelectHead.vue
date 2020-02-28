@@ -105,17 +105,17 @@
         this.$refs[formName].resetFields();
         this.$parent.delTips('WaterMeter')
         this.$parent.delTips('UserType')
-    /*    this.$parent.tipsDataCopy = []*/
-     /*   this.grp.StarDateTime = ''
-        this.grp.EndDateTime = ''
-        this.createStartTimes = []*/
-        //this.searchFun()
+        this.grp.SA_WaterFactory_Id = this.waterFactory[0].Id
+        this.$parent.grp.SA_WaterFactory_Id = this.waterFactory[0].Id
+        //this.getText(this.waterFactory[0].Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+        this.$parent.getText(this.waterFactory[0].Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+        this.searchFun()
       }
     },
     mounted() {
       this.screenWdth = window.screen.width
       this.waterFactory = this.$store.state.user.waterWorks
-      //this.grp.SA_WaterFactory_Id = this.waterFactory[0].Id
+      this.grp.SA_WaterFactory_Id = this.waterFactory[0].Id
       this.waterMeterArray = getDictionaryOption('水表类型')
       this.userArray = getDictionaryOption('用户类型')
     }

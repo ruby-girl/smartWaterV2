@@ -178,6 +178,9 @@
         if(val=='createStartTimes'){
           promptInfoFun(this,1,'抄表计划日期不能为空！')
           return
+        }if(val=='WaterFactoryId'){
+          promptInfoFun(this,1,'水厂不能为空！')
+          return
         }
         this.tipsDataCopy = delTips(val, this.$refs.childSelect, this.tipsDataCopy, "param"); //返回删除后的数据传给组件
         this.$refs.childSelect.searchFun()
