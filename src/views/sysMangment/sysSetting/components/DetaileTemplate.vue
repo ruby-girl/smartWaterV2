@@ -28,7 +28,7 @@
       <li>
         <p>
           发送方式
-          <span>{{ShortMsgTempParam.SendMethod?"自动发送":"手动发送" }}</span>
+          <span>{{ShortMsgTempParam.SendMethod?"手动发送":"自动发送" }}</span>
         </p>
         <p>
           发送时间
