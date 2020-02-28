@@ -109,6 +109,13 @@ export default {
     },
     //查询
     searchTableList(num) {
+      if(this.selectHead.StartDate=="" || this.selectHead.StartDate==""){
+        this.$message({
+            type: "warning",
+            msg: "请选择日期后再操作"
+          });
+          return false
+      }
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
       }

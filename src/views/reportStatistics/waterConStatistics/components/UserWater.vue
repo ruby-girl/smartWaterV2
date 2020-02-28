@@ -1,11 +1,19 @@
-
 <template>
   <div class="onBox">
     <div ref="formHeight">
-      <select-head :searchWidth="searchWidth" @getText="getText" ref="seachChild" />
+      <select-head
+        :searchWidth="searchWidth"
+        @getText="getText"
+        ref="seachChild"
+      />
     </div>
     <div class="contanier">
-      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
+      <search-tips
+        :tipsData="tipsData"
+        ref="searchTips"
+        @delTips="delTips"
+        @excel="excel"
+      />
       <div class="main-padding-20-y" id="table">
         <el-table
           :data="tableData"
@@ -13,13 +21,25 @@
           fit
           :height="tableHeight"
           style="width: 100%;"
-          :header-cell-style="{'background-color': '#F0F2F5'}"
+          :header-cell-style="{ 'background-color': '#F0F2F5' }"
         >
-          <el-table-column type="index" fixed="left" label="#" width="60" align="center"></el-table-column>
+          <el-table-column
+            type="index"
+            fixed="left"
+            label="#"
+            width="60"
+            align="center"
+          ></el-table-column>
           <el-table-column prop="CustomerNo" label="用户编号"></el-table-column>
-          <el-table-column prop="CustomerName" label="用户姓名"></el-table-column>
+          <el-table-column
+            prop="CustomerName"
+            label="用户姓名"
+          ></el-table-column>
           <el-table-column prop="WCDate" label="日期"></el-table-column>
-          <el-table-column prop="WaterConsumption" label="用水量"></el-table-column>
+          <el-table-column
+            prop="WaterConsumption"
+            label="用水量"
+          ></el-table-column>
           <el-table-column prop="Growth" label="增水量"></el-table-column>
         </el-table>
       </div>
@@ -38,7 +58,7 @@ export default {
   data() {
     return {
       selectHead: {
-        CustomerQueryType:"1",
+        CustomerQueryType: "1",
         UserNo: "", //用户编号
         UserName: "", //用户姓名
         StartDate: "",
@@ -90,6 +110,13 @@ export default {
     },
     //查询
     searchTableList(num) {
+      if (this.selectHead.StartDate == "" || this.selectHead.StartDate == "") {
+        this.$message({
+          type: "warning",
+          msg: "请选择日期后再操作"
+        });
+        return false;
+      }
       if (num != 0) {
         this.orderData = Object.assign({}, this.listQuery);
       }
