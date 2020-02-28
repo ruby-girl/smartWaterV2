@@ -32,7 +32,7 @@
         <span @click="textClick('【当前时间】')">当前时间</span>
       </p>
       <el-form-item label="模板内容">
-        <el-input type="textarea" :rows="10" v-model="ShortMsgTempParam.TemplateContent"></el-input>
+        <el-input type="textarea" :rows="7" v-model="ShortMsgTempParam.TemplateContent"></el-input>
       </el-form-item>
       <el-form-item label="发送方式">
         <el-radio-group v-model="ShortMsgTempParam.SendMethod">
@@ -42,13 +42,13 @@
       </el-form-item>
       <el-form-item label="发送时间">
         <el-radio-group v-model="ShortMsgTempParam.SendModality">
-          <el-radio :disabled="ShortMsgTempParam.SendMethod==0" :label="1">及时发送</el-radio>
-          <el-radio :label="0">定时发送</el-radio>
+          <el-radio :disabled="ShortMsgTempParam.SendMethod==0" :label="0">及时发送</el-radio>
+          <el-radio :label="1">定时发送</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="定时发送时间" class="datePicker">
         <el-date-picker
-          :disabled="ShortMsgTempParam.SendMethod==0"
+          :disabled="ShortMsgTempParam.SendMethod==0||ShortMsgTempParam.SendModality==0"
           v-model="ShortMsgTempParam.ResetShortMsgTemplateSendTime"
           format="yyyy-MM-dd"
           type="date"
@@ -94,7 +94,7 @@ export default {
       AdialogFormVisible: false,
       ShortMsgTempParam: {
         Id: "",
-        IsSysTemplate: "", //模板类型
+        IsSysTemplate: 0, //模板类型
         SysTemplateType: "", //系统模板类型
         TemplateName: "", //模板名称
         TemplateContent: "", //模板内容
@@ -110,6 +110,8 @@ export default {
   watch: {
     addShow() {
       this.AdialogFormVisible = this.addShow;
+                this.ShortMsgTempParam.IsSysTemplate=0
+
     },
     AdialogFormVisible(val, oldVal) {
       if (val === oldVal) {

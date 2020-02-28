@@ -32,7 +32,7 @@
           <el-table-column align="center" prop="PayDate" label="最后缴费日期" width="180"></el-table-column>
           <el-table-column align="center" prop="datediffDay" label="未缴费天数" width="180"></el-table-column>
           <el-table-column align="center" prop="PriceSurplus" label="欠费金额" width="180"></el-table-column>
-          <el-table-column align="center" prop="LastPayMoney" label="历史充值金额" width="180"></el-table-column>
+          <el-table-column align="center" prop="LastPayMoney" label="上次充值金额" width="180"></el-table-column>
           <el-table-column align="center" prop="Balance" label="账户余额" width="180"></el-table-column>
         </el-table>
         <pagination

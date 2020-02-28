@@ -113,7 +113,7 @@ export default {
       if (this.selectHead.StartDate == "" || this.selectHead.StartDate == "") {
         this.$message({
           type: "warning",
-          msg: "请选择日期后再操作"
+           message: "请选择日期后再操作"
         });
         return false;
       }

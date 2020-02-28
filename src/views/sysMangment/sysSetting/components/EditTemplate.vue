@@ -43,13 +43,13 @@
       </el-form-item>
       <el-form-item label="发送时间">
         <el-radio-group v-model="ShortMsgTempParam.SendModality">
-          <el-radio :disabled="ShortMsgTempParam.SendMethod==0" :label="1">及时发送</el-radio>
-          <el-radio :label="0">定时发送</el-radio>
+          <el-radio :disabled="ShortMsgTempParam.SendMethod==0" :label="0">及时发送</el-radio>
+          <el-radio :label="1">定时发送</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="定时发送时间" class="datePicker">
         <el-date-picker
-          :disabled="ShortMsgTempParam.SendMethod==0"
+          :disabled="ShortMsgTempParam.SendMethod==0&&ShortMsgTempParam.SendModality==0"
           v-model="ShortMsgTempParam.ResetShortMsgTemplateSendTime"
           format="yyyy-MM-dd"
           type="date"
