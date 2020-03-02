@@ -129,13 +129,31 @@
     </div>
     <div class="contanier">
       <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
-        <el-button size="mini" class="fl borderClass" round @click="orderLockWLWOpen(1)" v-permission="['202']">
+        <el-button
+          size="mini"
+          class="fl borderClass"
+          round
+          @click="orderLockWLWOpen(1)"
+          v-permission="['202']"
+        >
           <i class="icon iconfont">&#xe646;</i>阀门锁定开
         </el-button>
-        <el-button size="mini" class="fl borderClass" round @click="orderLockWLWClose(0)" v-permission="['203']">
+        <el-button
+          size="mini"
+          class="fl borderClass"
+          round
+          @click="orderLockWLWClose(0)"
+          v-permission="['203']"
+        >
           <i class="icon iconfont">&#xe643;</i>阀门锁定关
         </el-button>
-        <el-button size="mini" class="fl borderClass" round @click="orderUnockWLW(0)" v-permission="['204']">
+        <el-button
+          size="mini"
+          class="fl borderClass"
+          round
+          @click="orderUnockWLW(0)"
+          v-permission="['204']"
+        >
           <i class="icon iconfont">&#xe645;</i>解锁
         </el-button>
       </div>
@@ -191,7 +209,7 @@
                 :visible-arrow="false"
                 content="查看历史详情"
                 placement="bottom"
-                 v-permission="['205']"
+                v-permission="['205']"
               >
                 <i class="icon iconfont viewHis" @click="waterMeterWLWDetail(scope.row.Id)">&#xe670;</i>
               </el-tooltip>
@@ -236,11 +254,11 @@
         @pagination="waterMeterWLWDetail(Bl_WaterMeter4His.Meter4Id)"
       />
     </el-dialog>
-      <editWLW-waterMeter ref="edit" :edit-show.sync="editShow" />
+    <editWLW-waterMeter ref="edit" :edit-show.sync="editShow" />
   </div>
 </template>
 <script>
-import EditWLWWaterMeter from "./intercomponents/EditWLWWaterMeter"; 
+import EditWLWWaterMeter from "./intercomponents/EditWLWWaterMeter";
 import Pagination from "@/components/Pagination/index"; //分页
 import Static from "./intercomponents/Static"; //异常统计
 import WLWWaterMeterHis from "./intercomponents/WLWWaterMeterHis"; //历史
@@ -255,13 +273,19 @@ import {
   ValveLockClose //关
 } from "@/api/waterMeterMang";
 import SearchTips from "@/components/SearchTips/index";
-import permission from '@/directive/permission/index.js' // 权限判断指令
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 import { delTips, getText, pushItem, getName } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   //机械表
-  directives: { permission }, 
+  directives: { permission },
   name: "InternetWater",
-  components: { SearchTips, Pagination, Static, WLWWaterMeterHis ,EditWLWWaterMeter},
+  components: {
+    SearchTips,
+    Pagination,
+    Static,
+    WLWWaterMeterHis,
+    EditWLWWaterMeter
+  },
   watch: {
     screenWidth: {
       handler(val, oldVal) {
@@ -324,8 +348,14 @@ export default {
         { Id: 3, Name: "正在关阀" },
         { Id: 4, Name: "阀门关到位" }
       ], //阀门状态
-      statusList: [{ Id: 0, Name: "已开户" }, { Id: 1, Name: "未开户" }], //用户开户
-      waterTypeList: [{ Id: 0, Name: "正常" }, { Id: 1, Name: "异常" }], //水表状态
+      statusList: [
+        { Id: 0, Name: "已开户" },
+        { Id: 1, Name: "未开户" }
+      ], //用户开户
+      waterTypeList: [
+        { Id: 0, Name: "正常" },
+        { Id: 1, Name: "异常" }
+      ], //水表状态
       screenWidth: null,
       showBtn: false,
       isShow: false,
@@ -336,7 +366,7 @@ export default {
       show5: true,
       show6: true,
       secNmae: "用户编号",
-      editShow:false
+      editShow: false
     };
   },
   created() {
@@ -404,16 +434,17 @@ export default {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
+    //列表查询
     searchWLWMeterInfo(num) {
       let that = this;
       this.SelectionList = "";
       if (num != 0) {
+        this.WLWQueryParam.page = 1;
         this.orderData = Object.assign({}, this.WLWQueryParam);
-        this.orderData.page = 1;
       } else {
         this.orderData.page = this.WLWQueryParam.page;
+        this.orderData.limit = this.WLWQueryParam.limit;
       }
-
       getWLWWaterInfo(that.orderData).then(res => {
         if (res.code == 0) {
           this.tipsData = pushItem(this.tipsDataCopy);
@@ -432,10 +463,9 @@ export default {
       });
     },
     edit(data) {
-    
-       this.$refs.edit.editData.SA_WaterMeter_Id =data.Id
-      this.$refs.edit.editData.AmountAlarm  = data.WaterAmountAlarm;//报警量
-      this.$refs.edit.editData.AmountOverdraft  = data.WaterAmountOverdraft;//透支量
+      this.$refs.edit.editData.SA_WaterMeter_Id = data.Id;
+      this.$refs.edit.editData.AmountAlarm = data.WaterAmountAlarm; //报警量
+      this.$refs.edit.editData.AmountOverdraft = data.WaterAmountOverdraft; //透支量
       this.editShow = true;
     },
     sortChanges({ column, prop, order }) {

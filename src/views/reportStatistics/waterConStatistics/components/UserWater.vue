@@ -1,19 +1,10 @@
 <template>
   <div class="onBox">
     <div ref="formHeight">
-      <select-head
-        :searchWidth="searchWidth"
-        @getText="getText"
-        ref="seachChild"
-      />
+      <select-head :searchWidth="searchWidth" @getText="getText" ref="seachChild" />
     </div>
     <div class="contanier">
-      <search-tips
-        :tipsData="tipsData"
-        ref="searchTips"
-        @delTips="delTips"
-        @excel="excel"
-      />
+      <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="excel" />
       <div class="main-padding-20-y" id="table">
         <el-table
           :data="tableData"
@@ -25,25 +16,20 @@
           style="width: 100%;"
           :header-cell-style="{ 'background-color': '#F0F2F5' }"
         >
-          <el-table-column
-            type="index"
-            fixed="left"
-            label="#"
-            width="60"
-            align="center"
-          ></el-table-column>
+          <el-table-column type="index" fixed="left" label="#" width="60" align="center"></el-table-column>
           <el-table-column prop="CustomerNo" label="用户编号"></el-table-column>
-          <el-table-column
-            prop="CustomerName"
-            label="用户姓名"
-          ></el-table-column>
+          <el-table-column prop="CustomerName" label="用户姓名"></el-table-column>
           <el-table-column prop="WCDate" label="日期"></el-table-column>
-          <el-table-column
-            prop="WaterConsumption"
-            label="用水量"
-          ></el-table-column>
+          <el-table-column prop="WaterConsumption" label="用水量"></el-table-column>
           <el-table-column prop="Growth" label="增水量"></el-table-column>
         </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="selectHead.page"
+          :limit.sync="selectHead.limit"
+          @pagination="searchTableList('0')"
+        />
       </div>
     </div>
   </div>
@@ -53,19 +39,23 @@
 import SelectHead from "./selected/UserWaterSelected";
 import SearchTips from "@/components/SearchTips/index";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
+import Pagination from "@/components/Pagination/index"; //分页
 import { GetReportUser, ExcelReportUser } from "@/api/reports";
 export default {
   name: "UserWater", //按用户
-  components: { SelectHead, SearchTips },
+  components: { SelectHead, SearchTips, Pagination },
   data() {
     return {
       selectHead: {
+        page: 1,
+        limit: 20,
         CustomerQueryType: "1",
         UserNo: "", //用户编号
         UserName: "", //用户姓名
         StartDate: "",
         EndDate: ""
       },
+      total: 0,
       tableHeight: null,
       tableData: [], //表格数据
       tipsData: [], //传入子组件的值
@@ -150,11 +140,17 @@ export default {
         return false;
       }
       if (num != 0) {
-        this.orderData = Object.assign({}, this.listQuery);
+        this.selectHead.page = 1;
+        this.orderData = Object.assign({}, this.selectHead);
+      } else {
+        this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
       }
-      GetReportUser(this.selectHead).then(res => {
+
+      GetReportUser(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.tableData = res.data;
+        this.total = res.count;
         this.tableData.pop();
       });
     }
@@ -165,7 +161,7 @@ export default {
       this.tableHeight =
         document.getElementsByClassName("onBox")[0].offsetHeight -
         document.getElementById("table").offsetTop -
-        4;
+        47;
 
       this.$refs.searchTips.showTabBtn = false;
     });

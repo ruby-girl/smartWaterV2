@@ -45,7 +45,8 @@
                 min-width="230px"
                 :sortable="item.IsSortBol ? 'custom' : null"
                 :prop="item.ColProp"
-                :align="item.Position"
+                                align="center"
+
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
               />
@@ -113,7 +114,7 @@ export default {
       // 查询条件
       selectHead: {
         page: 1,
-        limit: 10,
+        limit: 20,
         SendState: "", //短信状态
         TemplateId: "", //模板名称
         TimerStartTime: "", //定时发送时间
@@ -190,10 +191,12 @@ export default {
       //查询列表
       const that = this;
       if (num != 0) {
+        this.selectHead.page = 1;
         this.orderData = Object.assign({}, this.selectHead);
-        this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
+
       }
       getSelectList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
@@ -255,13 +258,13 @@ export default {
       //已发
       getSendNum().then(res => {
         if (res.code == 0) {
-          this.surpNum = res.data;
+          this.sendNum = res.count;
         }
       });
       //剩余
       getAllNum().then(res => {
         if (res.code == 0) {
-          this.sendNum = res.data;
+          this.surpNum = res.count;
         }
       });
     },

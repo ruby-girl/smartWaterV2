@@ -198,10 +198,11 @@ export default {
           this.listQuery.EndUpgradeDate.split(" ")[0] + " 23:58:59";
       }
       if (num != 0) {
+        this.orderData.listQuery = 1;
         this.orderData = Object.assign({}, this.listQuery);
-        this.orderData.page = 1;
       } else {
         this.orderData.page = this.listQuery.page;
+        this.orderData.limit = this.listQuery.limit;
       }
       waterAccountPost(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);

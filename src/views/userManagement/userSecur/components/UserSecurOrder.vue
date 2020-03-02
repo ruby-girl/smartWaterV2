@@ -159,11 +159,12 @@ export default {
         this.listQuery.EndTime =
           this.listQuery.EndTime.split(" ")[0] + " 23:58:59";
       }
-      if (num != 0) {
+        if (num != 0) {
+        this.listQuery.page = 1;
         this.orderData = Object.assign({}, this.listQuery);
-        this.orderData.page = 1;
       } else {
         this.orderData.page = this.listQuery.page;
+        this.orderData.limit = this.listQuery.limit;
       }
 
       getInssuredHis(this.orderData).then(res => {

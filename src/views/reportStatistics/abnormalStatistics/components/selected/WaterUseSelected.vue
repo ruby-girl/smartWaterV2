@@ -155,7 +155,7 @@ export default {
         this.show5 = this.showLabel(5, val);
         this.show6 = this.showLabel(6, val);
         
-          if (Math.floor((val - 200) / 280) < 7) {
+          if (Math.floor((val - 200) / 280) < 6) {
             this.showBtn = true;
           } else {
             this.showBtn = false;

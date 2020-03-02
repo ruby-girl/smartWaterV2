@@ -372,10 +372,11 @@ export default {
       let that = this;
 
       if (num != 0) {
+        this.wachMeterData.page = 1;
         this.orderData = Object.assign({}, this.wachMeterData);
-        this.orderData.page = 1;
       } else {
-        this.orderData.page = this.wachMeterData.page;
+        this.orderData.page = this.wachMeterData.page;  
+        this.orderData.limit = this.wachMeterData.limit;
       }
       searJXMeterWater(that.orderData).then(res => {
         if (res.code == 0) {

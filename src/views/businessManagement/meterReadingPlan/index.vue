@@ -384,10 +384,12 @@ export default {
 
       this.$refs.child1.getTime();
       if (num != 0) {
+        this.selectHead.page = 1;
         this.orderData = Object.assign({}, this.selectHead);
-        this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
+
       }
 
       searchPlanList(this.orderData).then(res => {
