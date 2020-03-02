@@ -13,9 +13,13 @@
           <p class="half">水表样式 <span>{{ data.WaterMeterStyleName}}</span></p>
           <p class="half">口径 <span>{{ data.MeterDiameter }}</span></p>
         </li>
-        <li class="user_line clearfix">
+        <li class="user_line clearfix" v-show="!ifCBen">
           <p class="half">报警量(吨) <span>{{ data.AlarmYield }}</span></p>
           <p class="half">透支量（吨） <span>{{ data.OverdraftYield }}</span></p>
+        </li>
+        <li class="user_line clearfix" v-show="ifCBen">
+          <p class="half">报警金额 <span>{{ data.AlarmYield }}</span></p>
+          <p class="half">透支金额 <span>{{ data.OverdraftYield }}</span></p>
         </li>
         <li class="user_line clearfix">
           <p class="half">信号强度 <span>{{ data.SignalStrength }}</span></p>
@@ -43,6 +47,7 @@
     components: { WlwWater },
     data(){
       return{
+        ifCBen:false,
         data:{},
         ReadNum:''
       }
@@ -53,6 +58,7 @@
           if(res.code==0){
             this.data = res.data
             this.ReadNum = res.data.DZReadNum
+            res.data.WaterMeterType == 1104 ? this.ifCBen = false: this.ifCBen = true //1104 AB版本 05 C版本
           }else {
             promptInfoFun(this,1,res.message)
           }

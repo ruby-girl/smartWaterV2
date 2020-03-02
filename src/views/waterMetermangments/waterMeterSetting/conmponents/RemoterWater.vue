@@ -514,10 +514,11 @@ export default {
       let that = this;
 
       if (num != 0) {
+        this.YCMeterQueryParam.page = 1;
         this.orderData = Object.assign({}, this.YCMeterQueryParam);
-        this.orderData.page = 1;
       } else {
         this.orderData.page = this.YCMeterQueryParam.page;
+        this.orderData.limit = this.YCMeterQueryParam.limit;
       }
       searYCMeterWater(that.orderData).then(res => {
         if (res.code == 0) {

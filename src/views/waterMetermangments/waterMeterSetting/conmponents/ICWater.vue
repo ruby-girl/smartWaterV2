@@ -360,13 +360,15 @@ export default {
       let obj = getText(val, model, arr, this.tipsDataCopy, this, name);
       this.tipsDataCopy.push(obj);
     },
+    //列表查询
     searchFun(num) {
       let that = this;
 
       if (num != 0) {
+        this.orderData.IcwachMeterData = 1;
         this.orderData = Object.assign({}, this.IcwachMeterData);
-        this.orderData.page = 1;
       } else {
+        this.orderData.limit = this.IcwachMeterData.limit;
         this.orderData.page = this.IcwachMeterData.page;
       }
       searICMeterWater(that.orderData).then(res => {

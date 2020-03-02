@@ -23,8 +23,8 @@ import $ from 'jquery'
 
 import * as filters from './filters' // global filters
 import VueDND from 'awe-dnd'//拖动
-Vue.prototype.baseUrl='http://192.168.2.216:10002'
-//Vue.prototype.baseUrl='http://182.151.3.0:8090'
+//Vue.prototype.baseUrl='http://192.168.2.216:10002'
+Vue.prototype.baseUrl='http://182.151.3.0:8090'
 import axios from 'axios'
 Vue.prototype.$http = axios
 

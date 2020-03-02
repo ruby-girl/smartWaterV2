@@ -15,13 +15,13 @@
       size="small"
       label-width="100px"
       @submit.native.prevent
+       :rules="rules"
     >
       <el-form-item label="模板名称">
         <el-input v-model="ShortMsgTempParam.TemplateName"></el-input>
       </el-form-item>
       <el-form-item label="模板类型">
         <el-select v-model="ShortMsgTempParam.IsSysTemplate" placeholder="请选择模板类型">
-          <el-option label="系统" :value="1"></el-option>
           <el-option label="自定义" :value="0"></el-option>
         </el-select>
       </el-form-item>
@@ -31,7 +31,7 @@
         <span @click="textClick('【用户编号】')">用户编号</span>
         <span @click="textClick('【当前时间】')">当前时间</span>
       </p>
-      <el-form-item label="模板内容">
+      <el-form-item label="模板内容" prop="TemplateContent">
         <el-input type="textarea" :rows="7" v-model="ShortMsgTempParam.TemplateContent"></el-input>
       </el-form-item>
       <el-form-item label="发送方式">
@@ -42,8 +42,8 @@
       </el-form-item>
       <el-form-item label="发送时间">
         <el-radio-group v-model="ShortMsgTempParam.SendModality">
-          <el-radio :disabled="ShortMsgTempParam.SendMethod==0" :label="0">及时发送</el-radio>
-          <el-radio :label="1">定时发送</el-radio>
+          <el-radio :disabled="ShortMsgTempParam.SendMethod==''||ShortMsgTempParam.SendMethod==0" :label="0">及时发送</el-radio>
+          <el-radio  :disabled="ShortMsgTempParam.SendMethod==''" :label="1">定时发送</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="定时发送时间" v-if="ShortMsgTempParam.SendModality!=0" class="datePicker">
@@ -60,7 +60,10 @@
           <el-option v-for="item in 24" :key="item" :label="item<10?'0'+item:item" :value="item"></el-option>
         </el-select>
       </el-form-item>
-      <span v-if="ShortMsgTempParam.SendModality!=0" style="display: inline-block;line-height: 28px;margin-top: 18px; margin-right: 10px">~</span>
+      <span
+        v-if="ShortMsgTempParam.SendModality!=0"
+        style="display: inline-block;line-height: 28px;margin-top: 18px; margin-right: 10px"
+      >~</span>
       <el-form-item class="timePicker" v-if="ShortMsgTempParam.SendModality!=0">
         <el-select v-model="ShortMsgTempParam.TimerSendEndTime " placeholder="请选择">
           <el-option
@@ -103,6 +106,9 @@ export default {
         TimerSendStartTime: "",
         TimerSendEndTime: "",
         ResetShortMsgTemplateSendTime: "" //自定义模板发送时间
+      },
+      rules: {
+        TemplateContent: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
       }
     };
   },
@@ -110,8 +116,7 @@ export default {
   watch: {
     addShow() {
       this.AdialogFormVisible = this.addShow;
-                this.ShortMsgTempParam.IsSysTemplate=0
-
+      this.ShortMsgTempParam.IsSysTemplate = 0;
     },
     AdialogFormVisible(val, oldVal) {
       if (val === oldVal) {
@@ -121,12 +126,18 @@ export default {
     }
   },
   methods: {
-    textClick(text){
-      this.ShortMsgTempParam.TemplateContent+=text
+    textClick(text) {
+      this.ShortMsgTempParam.TemplateContent += text;
     },
     addMeterReadingPlan() {
       let that = this;
-
+      if (this.ShortMsgTempParam.TemplateContent == "") {
+        that.$message({
+          message: "模板内容不能为空",
+          type: "warning"
+        });
+        return false
+      }
       addTemplate(this.ShortMsgTempParam).then(res => {
         if (res.code == 0) {
           this.AdialogFormVisible = false;
@@ -135,7 +146,7 @@ export default {
             message: res.msg ? res.msg : "添加成功",
             type: "success"
           });
-          this.ShortMsgTempParam={}
+          this.ShortMsgTempParam = {};
           this.$parent.searchTableList();
         } else {
           that.$message({

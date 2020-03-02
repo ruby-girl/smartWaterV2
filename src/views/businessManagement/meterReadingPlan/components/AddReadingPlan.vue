@@ -43,7 +43,7 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-checkbox v-model="addPlanData.IsAutoGenerateOrder">抄表计划到期后自动生成订单</el-checkbox>
+        <el-checkbox v-model="addPlanData.IsAutoGenerateOrder">抄表计划到期后自动生成费用</el-checkbox>
       </el-form-item>
     </el-form>
 
