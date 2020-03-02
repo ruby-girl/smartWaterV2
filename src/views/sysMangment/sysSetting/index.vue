@@ -39,7 +39,7 @@
                 min-width="230px"
                 :sortable="item.IsSortBol?'custom':null"
                 :prop="item.ColProp"
-                :align="item.Position"
+                align="center"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
                 :show-overflow-tooltip="true"
@@ -113,10 +113,10 @@ import AddTemplate from "./components/AddTemplate";
 import DetaileTemplate from "./components/DetaileTemplate";
 import EditTemplate from "./components/EditTemplate";
 import { getSettingList, delTemplate, detaileTemplate } from "@/api/shotMsg";
-import permission from '@/directive/permission/index.js' // 权限判断指令
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 export default {
   name: "sysSetting",
-   directives: { permission },
+  directives: { permission },
   components: {
     SelectHead,
     Pagination,
@@ -259,7 +259,7 @@ export default {
     //删除
     delTem(id) {
       let that = this;
-      console.log(event)
+      console.log(event);
       this.$confirm("是否删除当前模板信息", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -283,9 +283,7 @@ export default {
             }
           });
         })
-        .catch(() => {
-          
-        });
+        .catch(() => {});
     },
     //编辑
     edit(id) {

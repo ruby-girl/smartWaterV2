@@ -45,7 +45,8 @@
                 min-width="230px"
                 :sortable="item.IsSortBol ? 'custom' : null"
                 :prop="item.ColProp"
-                :align="item.Position"
+                                align="center"
+
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
               />
@@ -255,13 +256,13 @@ export default {
       //已发
       getSendNum().then(res => {
         if (res.code == 0) {
-          this.surpNum = res.data;
+          this.sendNum = res.count;
         }
       });
       //剩余
       getAllNum().then(res => {
         if (res.code == 0) {
-          this.sendNum = res.data;
+          this.surpNum = res.count;
         }
       });
     },

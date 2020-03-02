@@ -38,7 +38,7 @@
                 min-width="230px"
                 :sortable="item.IsSortBol?'custom':null"
                 :prop="item.ColProp"
-                :align="item.Position"
+                align="center"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
               />
