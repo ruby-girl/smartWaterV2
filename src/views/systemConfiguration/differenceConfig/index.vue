@@ -7,14 +7,16 @@
         v-model="waterFactory"
         placeholder="请选择"
         @keydown.enter.native="handleFilter"
+        @change="getWaterYieldToFactory(waterFactory)"
       >
         <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
+      <span class="difference-red"><i class="iconfont iconbiaogezidingyi-tishi"></i>此页面供水量设置将运用到报表哦那估计-产销差统计里</span>
     </div>
     <!-- 配置 -->
     <div class="bottom-box position-absolute-head">
       <!-- 循环年 s-->
-      <div class="year-box" v-for="(item,i) in arr">
+      <div class="year-box" v-for="(item,i) in arr" :key="i+'year'">
         <div class="year-box-border display-flex align-items-center justify-content-flex-justify">
           <div style="font-size: 18px;">{{item.TitleYear}}年</div>
           <div class="year-button display-flex align-items-center">
@@ -35,7 +37,7 @@
             class="month-line display-flex align-items-center"
             v-for="(n,index) in item.WaterYields"
             v-show="!item.show"
-            :key="index"
+            :key="index+'keys'"
           >
             <div class="month-box-bg">{{n.Month}}月</div>
             <div class="display-flex flex-1" style="color:#777C82;">
@@ -46,14 +48,14 @@
           <!-- 编辑状态 -->
           <div
             class="month-line display-flex align-items-center"
-            v-for="n in item.WaterYields"
+            v-for="(n,index) in item.WaterYields"
             v-show="item.show"
-            :key="n.Month+11"
+            :key="index+'key'"
           >
             <div class="month-box-bg">{{n.Month}}月</div>
             <div class="display-flex align-items-center flex-1" style="color:#777C82;">
               <div style="width:75px;text-align:center;">供水量</div>
-              <el-input size="small" v-model="n.TotalWaterYield"></el-input>
+              <el-input size="small" v-model="n.TotalWaterYield" @blur="handleInput($event,i,index)"></el-input>
               <span style="padding:0 10px;">吨</span>
             </div>
           </div>
@@ -72,6 +74,7 @@
 <script>
 import {SelectWaterYieldToFactory,SaveYearMonthWaterYieldInfo} from "@/api/basicConfig"
 import permission from "@/directive/permission/index.js"; // 权限判断指令
+import {delDecimal_float } from "@/utils/index";
 export default {
   name: "differenceConfig",
   data() {
@@ -85,11 +88,11 @@ export default {
   mounted() {
     this.waterWorksOption = this.$store.state.user.waterWorks;
     this.waterFactory=this.waterWorksOption[0].Id
-    this.getWaterYieldToFactory()
+    this.getWaterYieldToFactory(this.waterFactory)
   },
   methods: {
-    getWaterYieldToFactory(){
-      SelectWaterYieldToFactory({factoryId:this.waterWorksOption[0].Id}).then(res=>{
+    getWaterYieldToFactory(id){
+      SelectWaterYieldToFactory({factoryId:id}).then(res=>{
       res.data.forEach((item,i)=>{
         item.show=false
         item.allShow=false
@@ -99,6 +102,9 @@ export default {
       })
       this.arr=res.data
     })
+    },
+    handleInput(e, i, n) {
+      this.arr[i].WaterYields[n].TotalWaterYield = delDecimal_float(e.target.value);   
     },
     saveMonth(){
       SaveYearMonthWaterYieldInfo(this.arr).then(res=>{
@@ -124,6 +130,10 @@ export default {
   padding: 15px;
   color: #777c82;
 }
+.difference-red{
+    color:red;
+    font-size: 14px;
+  }
 .bottom-box {
   max-height: calc(100vh - 170px);
   overflow: scroll;
@@ -172,6 +182,7 @@ export default {
       border-left: 1px solid #d8e2e7;
     }
   }
+  
   .month-save-btn {
     text-align: right;
     margin: 15px 0 5px 0;

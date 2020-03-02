@@ -17,7 +17,7 @@
               <input
                 type="text"
                 class="config-input"
-                @blur="handleInput('PeopleAddYield',$event)"
+                @blur="handleInputDelDecimalFloat('PeopleAddYield',$event)"
                 v-model="postData.PeopleAddYield"
               />吨；每增加
               <input
@@ -30,7 +30,7 @@
                 增加各阶梯水量
                 <input
                   type="text"
-                  @blur="handleInput('AddPeopleNumAddYield',$event)"
+                  @blur="handleInputDelDecimalFloat('AddPeopleNumAddYield',$event)"
                   class="config-input"
                   v-model="postData.AddPeopleNumAddYield"
                 />吨。（此配置只针对居民用水）
@@ -47,7 +47,7 @@
               <input
                 type="text"
                 class="config-input"
-                @blur="handleInput('InsuredMessageWaterAllowance',$event)"
+                @blur="handleInputDelDecimalFloat('InsuredMessageWaterAllowance',$event)"
                 v-model="postData.InsuredMessageWaterAllowance"
               />吨/户表.月
             </div>
@@ -75,13 +75,13 @@
               <input
                 type="text"
                 v-model="postData.OverdueParam.InterestRate"
-                @blur="handleInput('OverdueParam',$event,'InterestRate')"
+                @blur="handleInputDelDecimalFloat('OverdueParam',$event,'InterestRate')"
                 class="config-input"
               />‰，违约金总额不高于总金额的
               <input
                 type="text"
                 class="config-input"
-                @blur="handleInput('OverdueParam',$event,'OverdueFineUpBound')"
+                @blur="handleInputDelDecimalFloat('OverdueParam',$event,'OverdueFineUpBound')"
                 v-model="postData.OverdueParam.OverdueFineUpBound"
               />％。
             </div>
@@ -92,7 +92,7 @@
               每月收费
               <input
                 type="text"
-                @blur="handleInput('GarbageCost',$event)"
+                @blur="handleInputDelDecimalFloat('GarbageCost',$event)"
                 class="config-input"
                 v-model="postData.GarbageCost"
               />元。
@@ -268,7 +268,7 @@ import ConfigSelectUser from "./components/ConfigSelectUser";
 import { AddBasicConfigInfo, GetBasicConfigVal } from "@/api/basicConfig";
 import { getTemplateName } from "@/api/shotMsg"; //获取模板下拉框
 import permission from "@/directive/permission/index.js"; // 权限判断指令
-import { delDecimal } from "@/utils/index";
+import { delDecimal,delDecimal_float } from "@/utils/index";
 export default {
   name: "basicConfig",
   components: { SwitchItem, ConfigTitle, ConfigSelectUser },
@@ -364,9 +364,13 @@ export default {
       else this.postData[model] = delDecimal(e.target.value);
     },
     handleInputForin(e, index) {
-      this.postData.CaliberAlarmVal[index].AlarmVal = delDecimal(
+      this.postData.CaliberAlarmVal[index].AlarmVal = delDecimal_float(
         e.target.value
       );
+    },
+    handleInputDelDecimalFloat(model, e, i){
+      if (i) this.postData[model][i] = delDecimal_float(e.target.value);
+      else this.postData[model] = delDecimal_float(e.target.value);    
     },
     cancel() {
       GetBasicConfigVal().then(res => {

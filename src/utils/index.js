@@ -585,14 +585,16 @@ export function delDecimal(x) {
 }
 
 // // 不补齐，删除最后的小数点 返回浮点数
-export function delDecimal_float(x) {
-  var f_x = parseFloat(x);
-  if (!f_x) {
-    return 0;
-  }
-  var f_x = Math.round(x * 100) / 100;
-  var s_x = f_x.toString();
-  return s_x;
+export function delDecimal_float(x) { 
+  x = x.replace(/^\./g, ""); //验证第一个字符是数字而不是字符
+ x = (x.match(/^\d*(\.?\d{0,2})/g)[0]) || null
+
+ if(x){
+  let a =parseFloat(x)
+  return parseFloat(x)
+ } 
+ else return 0
+
 }
 /**
  * @param {Array} arr
