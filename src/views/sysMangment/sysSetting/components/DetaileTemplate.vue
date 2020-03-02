@@ -38,7 +38,7 @@
       <li>
         <p>
           定时发送时间
-          <span>{{ShortMsgTempParam.ResetShortMsgTemplateSendTime }}</span>
+          <span>{{ShortMsgTempParam.TimerSendTime }}</span>
         </p>
       </li>
     </ul>
