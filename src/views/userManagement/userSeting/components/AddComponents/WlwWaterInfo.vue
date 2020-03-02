@@ -4,12 +4,20 @@
       <el-input v-model="data.WaterMeterNo" size="small" placeholder="按enter建查询水表信息"
                 @keyup.enter.native="GetYCWaterByWaterMeterNo"  maxlength="20"/>
     </el-form-item>
-    <el-form-item label="报警量" prop="WaterAmountAlarm">
+    <el-form-item label="报警量" prop="WaterAmountAlarm" v-show="!ifCBen">
       <el-input size="small" v-model="data.WaterAmountAlarm"/>
     </el-form-item>
-    <el-form-item label="透支量 " prop="WaterAmountOverdraft">
+    <el-form-item label="透支量 " prop="WaterAmountOverdraft" v-show="!ifCBen">
       <el-input size="small" v-model="data.WaterAmountOverdraft"/>
     </el-form-item>
+
+    <el-form-item label="报警金额" prop="WaterAmountAlarm" v-show="ifCBen">
+      <el-input size="small" v-model="data.WaterAmountAlarm"/>
+    </el-form-item>
+    <el-form-item label="透支金额" prop="WaterAmountOverdraft" v-show="ifCBen">
+      <el-input size="small" v-model="data.WaterAmountOverdraft"/>
+    </el-form-item>
+
     <el-form-item label="当前读数 " prop="TotalCumulateWater">
       <el-input :disabled="true" v-model="data.TotalCumulateWater" size="small"/>
     </el-form-item>
@@ -39,6 +47,7 @@
     name: "WlwWaterInfo",
     data() {
       return {
+        ifCBen:false,
         waterMeterStyles: [],//水表样式
         MeterDiameters: [],//水表口径
         data: {
@@ -75,6 +84,7 @@
         }).then((res) => {
             if (res.data.code == 0) {
               _this.data = res.data.data
+              res.data.data.WMType == 1104 ? _this.ifCBen = false : _this.ifCBen = true //1104 AB版本 05 C版本
             }else {
               if(res.data.message.indexOf('已绑定用户') != -1){
                 this.$confirm(res.data.message, "提示", {

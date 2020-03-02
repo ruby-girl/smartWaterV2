@@ -9,23 +9,33 @@
         <label>水表编号</label>
         <span>{{ waterData.WaterMeterNo }}</span>
       </p>
-      <p>
+      <p v-show="waterData.WaterMeterType == 1104">
         <label>报警量</label>
-        <span>{{ waterData.WaterAmountAlarm }}</span>
+        <span>{{ waterData.AlarmYield }}</span>
       </p>
-      <p>
+      <p v-show="waterData.WaterMeterType == 1104">
         <label>透支量</label>
-        <span>{{ waterData.WaterAmountOverdraft  }}</span>
+        <span>{{ waterData.OverdraftYield  }}</span>
       </p>
+
+      <p v-show="waterData.WaterMeterType == 1105">
+        <label>报警金额</label>
+        <span>{{ waterData.AlarmYield }}</span>
+      </p>
+      <p v-show="waterData.WaterMeterType == 1105">
+        <label>透支金额</label>
+        <span>{{ waterData.OverdraftYield  }}</span>
+      </p>
+
     </li>
     <li class="clearfix">
       <p>
         <label>当前读数</label>
-        <span>{{ waterData.TotalCumulateWater }}</span>
+        <span>{{ waterData.DZReadNum }}</span>
       </p>
       <p>
         <label>水表样式</label>
-        <span>{{ waterData.WaterMeterStyle=='1701'?'立式水表': '水平水表' }}</span>
+        <span>{{ waterData.WaterMeterStyleName }}</span>
       </p>
       <p>
         <label>水表口径</label>
@@ -41,7 +51,7 @@
     <li class="clearfix whole">
       <p>
         <label>备注</label>
-        <span>{{ waterData.Remark }}</span>
+        <span>{{ waterData.WaterRemark }}</span>
       </p>
     </li>
   </ul>
@@ -52,6 +62,6 @@
 
   export default {
     props: ['waterData'],
-    name: "WlMeter"
+    name: "WlMeter",
   }
 </script>
