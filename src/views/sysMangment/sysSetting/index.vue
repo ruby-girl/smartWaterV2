@@ -220,10 +220,11 @@ export default {
       }
       const that = this;
       if (num != 0) {
+        this.orderData.selectHead = 1;
         this.orderData = Object.assign({}, this.selectHead);
-        this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
+        this.orderData.limit = this.selectHead.limit;
       }
       getSettingList(this.orderData).then(res => {
         this.tableData = res.data;
@@ -259,7 +260,6 @@ export default {
     //删除
     delTem(id) {
       let that = this;
-      console.log(event);
       this.$confirm("是否删除当前模板信息", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

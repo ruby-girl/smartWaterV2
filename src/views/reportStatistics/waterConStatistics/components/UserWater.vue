@@ -140,14 +140,14 @@ export default {
         return false;
       }
       if (num != 0) {
-        this.orderData = Object.assign({}, this.listQuery);
-        this.orderData.page = 1;
+        this.selectHead.page = 1;
+        this.orderData = Object.assign({}, this.selectHead);
       } else {
         this.orderData.page = this.selectHead.page;
         this.orderData.limit = this.selectHead.limit;
       }
 
-      GetReportUser(this.selectHead).then(res => {
+      GetReportUser(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
         this.tableData = res.data;
         this.total = res.count;

@@ -80,7 +80,7 @@ export default {
       // 查询条件
       selectHead: {
         page: 1,
-        limit: 10,
+        limit: 20,
         CustomerQueryType: "1",
         CustomerQueryValue: "",
         WaterTypeId: "", //水表类型
@@ -148,10 +148,11 @@ export default {
       const that = this;
 
       if (num != 0) {
+        this.selectHead.page = 1;
         this.orderData = Object.assign({}, this.selectHead);
-        this.orderData.page = 1;
       }else {
         this.orderData.page =this.selectHead.page
+        this.orderData.limit =this.selectHead.limit
       }
       getSMSList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);

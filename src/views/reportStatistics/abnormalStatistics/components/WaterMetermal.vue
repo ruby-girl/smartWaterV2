@@ -55,7 +55,7 @@ import { GetReportRate, ExcelReportRate } from "@/api/reports";
 import { delTips, getText, pushItem } from "@/utils/projectLogic"; //搜索条件面包屑
 export default {
   name: "WaterMetermal",
-  components: { SelectHead, SearchTips,Pagination },
+  components: { SelectHead, SearchTips, Pagination },
   data() {
     return {
       selectHead: {
@@ -116,27 +116,26 @@ export default {
     },
     //查询
     searchTableList(num) {
-       if(!this.selectHead.Pre||!this.selectHead.UpOrDown){
+      if (!this.selectHead.Pre || !this.selectHead.UpOrDown) {
         this.$message({
-          message: "水量倍率为必填项",  
+          message: "水量倍率为必填项",
           type: "warning"
         });
-        return false
+        return false;
       }
-     if(!this.selectHead.StarDateTime||!this.selectHead.EndDateTime){
+      if (!this.selectHead.StarDateTime || !this.selectHead.EndDateTime) {
         this.$message({
           message: "日期不能为空，请选择!",
           type: "warning"
         });
-        return false
+        return false;
       }
       if (num != 0) {
+        this.selectHead.page = 1;
         this.orderData = Object.assign({}, this.selectHead);
-        this.orderData.page = 1;
       } else {
         this.orderData.page = this.selectHead.page;
         this.orderData.limit = this.selectHead.limit;
-
       }
 
       GetReportRate(this.orderData).then(res => {
@@ -145,7 +144,6 @@ export default {
         this.total = res.count;
       });
     }
-    
   },
   mounted() {
     this.searchWidth = this.$refs.formHeight.clientWidth;
