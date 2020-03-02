@@ -152,7 +152,7 @@ export default {
         this.show4 = this.showLabel(4, val);
         this.show5 = this.showLabel(5, val);
      
-          if (Math.floor((val - 200) / 280) < 6) {
+          if (Math.floor((val - 200) / 280) < 5) {
             this.showBtn = true;
           } else {
             this.showBtn = false;
@@ -180,7 +180,7 @@ export default {
     },
     showLabel(n, w) {
     
-        if (Math.floor((w - 180) / 280) >= n  || this.isShow) return true;
+        if (Math.floor((w - 180) / 300) >= n  || this.isShow) return true;
         return false;
     },
     handleFilter() {
