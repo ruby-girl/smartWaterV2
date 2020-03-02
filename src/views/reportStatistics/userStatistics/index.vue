@@ -26,21 +26,21 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="YCAmount"
+          prop="ICAmount"
           label="IC卡水表"
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <a class="userSeeMoreInfo" @click="getDetailInfo(scope.row,1102)">{{ scope.row.YCAmount}}</a>
+            <a class="userSeeMoreInfo" @click="getDetailInfo(scope.row,1102)">{{ scope.row.ICAmount}}</a>
           </template>
         </el-table-column>
         <el-table-column
-          prop="ICAmount"
+          prop="YCAmount"
           label="远传水表"
           align="center"
           min-width="200px">
           <template slot-scope="scope">
-            <a class="userSeeMoreInfo" @click="getDetailInfo(scope.row,1103)">{{ scope.row.ICAmount}}</a>
+            <a class="userSeeMoreInfo" @click="getDetailInfo(scope.row,1103)">{{ scope.row.YCAmount}}</a>
           </template>
         </el-table-column>
         <el-table-column
