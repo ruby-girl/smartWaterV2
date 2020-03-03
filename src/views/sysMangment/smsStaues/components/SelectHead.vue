@@ -91,7 +91,7 @@
         </el-select>
       </el-form-item>
       <el-form-item
-        label="定时发送时间"
+        label="发送日期"
         label-width="90px"
         v-show="show6||isShow"
         prop="warterMeterPlanDate"
