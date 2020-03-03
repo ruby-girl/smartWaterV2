@@ -16,7 +16,7 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="WaterMeterType"
+          prop="WaterMeterTypeName"
           min-width="120"
           label="水表类型"
           align="center">
@@ -122,13 +122,13 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="TotalPrice"
+          prop="TotalYield"
           label="共计水量"
           min-width="120"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="TotalYield"
+          prop="TotalPrice"
           label="共计水费"
           min-width="120"
           align="center">

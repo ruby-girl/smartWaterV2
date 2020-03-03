@@ -69,7 +69,7 @@
         </el-table-column>
         <el-table-column label="本期应收">
           <el-table-column
-            prop="CPollutionDischarge"
+            prop="CPrice"
             label="清水费"
             align="center"
             width="120">
