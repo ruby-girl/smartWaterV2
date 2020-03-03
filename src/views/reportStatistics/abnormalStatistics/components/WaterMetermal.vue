@@ -32,8 +32,8 @@
           <el-table-column align="center" prop="LastWaterYield" label="上次水量" width="180"></el-table-column>
           <el-table-column align="center" prop="TotalWaterYield" label="本次水量" width="180"></el-table-column>
           <el-table-column align="center" prop="Pre" label="水量倍率" width="180"></el-table-column>
-          <el-table-column align="center" prop="LastReadDate" label="本次抄表时间" width="180"></el-table-column>
-          <el-table-column align="center" prop="ReadDate" label="上次抄表时间" width="180"></el-table-column>
+          <el-table-column align="center" prop="ReadDate" label="本次抄表时间" width="180"></el-table-column>
+          <el-table-column align="center" prop="LastReadDate" label="上次抄表时间" width="180"></el-table-column>
         </el-table>
         <pagination
           v-show="total>0"
