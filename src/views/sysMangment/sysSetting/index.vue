@@ -35,6 +35,7 @@
             </el-table-column>
             <template v-for="(item ,index) in tableHeadData">
               <el-table-column
+                v-if="item.IsFreeze"
                 :key="index"
                 min-width="230px"
                 :sortable="item.IsSortBol?'custom':null"
@@ -42,6 +43,16 @@
                 align="center"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
+                :show-overflow-tooltip="true"
+              />
+              <el-table-column
+                v-else
+                :key="index"
+                min-width="230px"
+                :sortable="item.IsSortBol?'custom':null"
+                :prop="item.ColProp"
+                align="center"
+                :label="item.ColDesc"
                 :show-overflow-tooltip="true"
               />
             </template>

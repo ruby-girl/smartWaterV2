@@ -9,12 +9,7 @@
           <i class="icon iconfont" style="margin-right:5px;">&#xe69c;</i>
           提示：当前短信剩余{{ surpNum }}条，已用{{ sendNum }}条
         </p>
-        <search-tips
-          :tipsData="tipsData"
-          ref="searchTips"
-          @delTips="delTips"
-          @excel="exportList"
-        />
+        <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="exportList" />
         <div class="main-padding-20-y" id="table">
           <el-table
             :key="tableKey"
@@ -26,37 +21,37 @@
             :header-cell-style="{ 'background-color': '#F0F2F5' }"
             :cell-style="{ padding: '5px 0' }"
           >
-            <el-table-column
-              type="index"
-              fixed="left"
-              label="#"
-              width="60"
-              align="center"
-            >
+            <el-table-column type="index" fixed="left" label="#" width="60" align="center">
               <template slot-scope="scope">
-                <span>{{
+                <span>
+                  {{
                   (selectHead.page - 1) * selectHead.limit + scope.$index + 1
-                }}</span>
+                  }}
+                </span>
               </template>
             </el-table-column>
             <template v-for="(item, index) in tableHeadData">
               <el-table-column
+                v-if="item.IsFreeze"
                 :key="index"
                 min-width="230px"
-                :sortable="item.IsSortBol ? 'custom' : null"
+                :sortable="item.IsSortBol?'custom':null"
                 :prop="item.ColProp"
-                                align="center"
-
+                align="center"
                 :label="item.ColDesc"
                 :fixed="item.Freeze"
               />
+              <el-table-column
+                v-else
+                :key="index"
+                min-width="230px"
+                :sortable="item.IsSortBol?'custom':null"
+                :prop="item.ColProp"
+                align="center"
+                :label="item.ColDesc"
+              />
             </template>
-            <el-table-column
-              label="操作"
-              width="80px"
-              align="center"
-              fixed="right"
-            >
+            <el-table-column label="操作" width="80px" align="center" fixed="right">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -68,8 +63,7 @@
                   <i
                     class="iconStyle icon iconfont operation3"
                     @click="Detail(scope.row.Id)"
-                    >&#xe653;</i
-                  >
+                  >&#xe653;</i>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -196,7 +190,6 @@ export default {
       } else {
         this.orderData.page = this.selectHead.page;
         this.orderData.limit = this.selectHead.limit;
-
       }
       getSelectList(this.orderData).then(res => {
         this.tipsData = pushItem(this.tipsDataCopy);
