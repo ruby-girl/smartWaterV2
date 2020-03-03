@@ -11,7 +11,7 @@
       >
         <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />
       </el-select>
-      <span class="difference-red"><i class="iconfont iconbiaogezidingyi-tishi"></i>此页面供水量设置将运用到报表哦那估计-产销差统计里</span>
+      <span class="difference-red"><i class="iconfont iconbiaogezidingyi-tishi"></i>此页面供水量设置将运用到报表统计-产销差统计里</span>
     </div>
     <!-- 配置 -->
     <div class="bottom-box position-absolute-head">
@@ -92,6 +92,7 @@ export default {
   },
   methods: {
     getWaterYieldToFactory(id){
+      this.waterFactory=id
       SelectWaterYieldToFactory({factoryId:id}).then(res=>{
       res.data.forEach((item,i)=>{
         item.show=false
@@ -113,7 +114,7 @@ export default {
           type: "success",
           duration: 4000
         });
-         this.getWaterYieldToFactory()
+         this.getWaterYieldToFactory(this.waterFactory)
       })
     },
     edit(i){
