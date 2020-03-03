@@ -25,7 +25,7 @@
       </p>
       <p v-show="ifIcWter">
         <label>报警金额</label>
-        <span>{{ waterData.WaterYield }}</span>
+        <span>{{ waterData.AlarmMoney }}</span>
       </p>
     <!--  <p>
         <label>安装位置</label>

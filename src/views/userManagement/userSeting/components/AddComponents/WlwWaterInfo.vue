@@ -11,7 +11,7 @@
       <el-input size="small" v-model="data.WaterAmountOverdraft"/>
     </el-form-item>
 
-    <el-form-item label="报警金额" prop="WaterAmountAlarm" v-show="ifCBen">
+    <el-form-item label="" prop="WaterAmountAlarm" v-show="ifCBen">
       <el-input size="small" v-model="data.WaterAmountAlarm"/>
     </el-form-item>
     <el-form-item label="透支金额" prop="WaterAmountOverdraft" v-show="ifCBen">
