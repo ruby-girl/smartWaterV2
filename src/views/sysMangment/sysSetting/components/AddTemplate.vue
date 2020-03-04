@@ -35,20 +35,20 @@
         <el-input type="textarea" :rows="7" v-model="ShortMsgTempParam.TemplateContent"></el-input>
       </el-form-item>
       <el-form-item label="发送方式">
-        <el-radio-group v-model="ShortMsgTempParam.SendMethod">
+        <el-radio-group v-model="ShortMsgTempParam.SendMethod" @change="methodChage">
           <el-radio :label="1">手动发送</el-radio>
           <el-radio :label="0">自动发送</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="发送时间">
-        <el-radio-group v-model="ShortMsgTempParam.SendModality">
-          <el-radio :disabled="ShortMsgTempParam.SendMethod==''||ShortMsgTempParam.SendMethod==0" :label="0">及时发送</el-radio>
-          <el-radio  :disabled="ShortMsgTempParam.SendMethod==''" :label="1">定时发送</el-radio>
+        <el-radio-group v-model="ShortMsgTempParam.SendModality" :disabled="Ischange">
+          <el-radio :disabled="ShortMsgTempParam.SendMethod==0"  :label="0">及时发送</el-radio>
+          <el-radio  :label="1">定时发送</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="定时发送时间" v-if="ShortMsgTempParam.SendModality!=0" class="datePicker">
         <el-date-picker
-          :disabled="ShortMsgTempParam.SendMethod==0||ShortMsgTempParam.SendModality==0"
+          :disabled="ShortMsgTempParam.SendMethod==0"
           v-model="ShortMsgTempParam.ResetShortMsgTemplateSendTime"
           format="yyyy-MM-dd"
           type="date"
@@ -107,6 +107,7 @@ export default {
         TimerSendEndTime: "",
         ResetShortMsgTemplateSendTime: "" //自定义模板发送时间
       },
+      Ischange:true,
       rules: {
         TemplateContent: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
       }
@@ -126,6 +127,13 @@ export default {
     }
   },
   methods: {
+    //发送方式改变
+    methodChage(){
+      this.ShortMsgTempParam.SendModality=""
+      if(this.ShortMsgTempParam.SendMethod!=""){
+        this.Ischange=false
+      }
+    },
     textClick(text) {
       this.ShortMsgTempParam.TemplateContent += text;
     },
