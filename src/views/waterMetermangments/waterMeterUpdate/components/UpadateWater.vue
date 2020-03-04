@@ -177,20 +177,21 @@
               class="left-input"
             ></el-input>
           </el-form-item>
-          <el-form-item label="报警量">
+          <el-form-item :label="waterInfo·WMType=='1105'?'报警金额':'报警量'">
             <el-input
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm"
               disabled
               class="left-input"
             ></el-input>
           </el-form-item>
-          <el-form-item label="透支量">
+          <el-form-item  :label="waterInfo·WMType=='1105'?'透支金额':'透支量'">
             <el-input
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft"
               disabled
               class="left-input"
             ></el-input>
           </el-form-item>
+
           <el-form-item label="账户余额">
             <el-input
               class="totalMoney left-input"

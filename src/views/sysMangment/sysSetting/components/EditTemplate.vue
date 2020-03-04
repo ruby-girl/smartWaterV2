@@ -52,6 +52,7 @@
           :disabled="ShortMsgTempParam.SendMethod==0&&ShortMsgTempParam.SendModality==0"
           v-model="ShortMsgTempParam.ResetShortMsgTemplateSendTime"
           format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
           type="date"
           placeholder="选择日期时间"
         ></el-date-picker>
