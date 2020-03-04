@@ -9,10 +9,14 @@
       label-width="70px"
       @submit.native.prevent>
       <el-form-item prop="CustomerQueryValue">
-        <el-select v-model="query.CustomerQueryType" placeholder="请选择" class="short-select-item" style="width: 100px;float: left;">
+        <el-select v-model="query.CustomerQueryType" placeholder="请选择" class="short-select-item" style="width: 100px;float: left;"
+                   @change="getscName(query.CustomerQueryType)">
           <el-option v-for="(item,index) in dataTypes" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
-        <el-input v-model="query.CustomerQueryValue" maxlength="30" placeholder="(长度1-30)" style="width: 180px;float: left;margin-left: 10px;" @blur="setText(query.CustomerQueryValue,'CustomerQueryValue',userType)"/>
+        <el-input v-model="query.CustomerQueryValue" maxlength="30" placeholder="(长度1-30)"
+                  style="width: 180px;float: left;margin-left: 10px;"
+                  @keyup.enter.native="handleFilter"
+                  @blur="getText(query.CustomerQueryValue,'CustomerQueryValue','',secNmae)"/>
       </el-form-item>
       <el-form-item label="用户类型" prop="UserType" >
         <el-select v-model="query.UserType" placeholder="请选择" size="small" @change="getText(query.UserType,'UserType',userType,'用户类型')">
@@ -47,6 +51,7 @@
     name: "SelectHead",
     data() {
       return {
+        secNmae: "用户编号",
         dataTypes:[
           {Name:'用户编号',Id:'1'},
           {Name:'姓名/简码',Id:'2'},
@@ -88,6 +93,26 @@
       }
     },
     methods: {
+      getscName(id) {
+          switch (id) {
+            case '1':
+              this.secNmae = "用户编号"
+              break;
+            case '2':
+              this.secNmae = "姓名/简码"
+              break;
+            case '3':
+              this.secNmae = "电话"
+              break;
+            case '4':
+              this.secNmae = "证件号"
+              break;
+            case '5':
+              this.secNmae = "用户地址"
+              break;
+          }
+        this.getText(this.query.CustomerQueryValue, "CustomerQueryValue","",this.secNmae)
+      },
       /**
        * 触发父组建搜索方法
        * */
