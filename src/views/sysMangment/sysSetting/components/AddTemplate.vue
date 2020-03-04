@@ -15,10 +15,12 @@
       size="small"
       label-width="100px"
       @submit.native.prevent
-       :rules="rules"
+      :rules="rules"
     >
       <el-form-item label="模板名称">
-        <el-input v-model="ShortMsgTempParam.TemplateName"></el-input>
+        <el-input maxlength="20" v-model="ShortMsgTempParam.TemplateName"></el-input>
+        <!-- <el-input type="text" placeholder="请输入内容" v-model="ShortMsgTempParam.TemplateName" maxlength="10" show-word-limit
+        ></el-input>-->
       </el-form-item>
       <el-form-item label="模板类型">
         <el-select v-model="ShortMsgTempParam.IsSysTemplate" placeholder="请选择模板类型">
@@ -32,7 +34,13 @@
         <span @click="textClick('【当前时间】')">当前时间</span>
       </p>
       <el-form-item label="模板内容" prop="TemplateContent">
-        <el-input type="textarea" :rows="7" v-model="ShortMsgTempParam.TemplateContent"></el-input>
+        <el-input
+          type="textarea"
+          show-word-limit
+          :rows="7"
+          maxlength="150"
+          v-model="ShortMsgTempParam.TemplateContent"
+        ></el-input>
       </el-form-item>
       <el-form-item label="发送方式">
         <el-radio-group v-model="ShortMsgTempParam.SendMethod" @change="methodChage">
@@ -42,8 +50,8 @@
       </el-form-item>
       <el-form-item label="发送时间">
         <el-radio-group v-model="ShortMsgTempParam.SendModality" :disabled="Ischange">
-          <el-radio :disabled="ShortMsgTempParam.SendMethod==0"  :label="0">及时发送</el-radio>
-          <el-radio  :label="1">定时发送</el-radio>
+          <el-radio :disabled="ShortMsgTempParam.SendMethod==0" :label="0">及时发送</el-radio>
+          <el-radio :label="1">定时发送</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="定时发送时间" v-if="ShortMsgTempParam.SendModality!=0" class="datePicker">
@@ -107,9 +115,11 @@ export default {
         TimerSendEndTime: "",
         ResetShortMsgTemplateSendTime: "" //自定义模板发送时间
       },
-      Ischange:true,
+      Ischange: true,
       rules: {
-        TemplateContent: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
+        TemplateContent: [
+          { required: true, message: "请填写活动形式", trigger: "blur" }
+        ]
       }
     };
   },
@@ -128,10 +138,10 @@ export default {
   },
   methods: {
     //发送方式改变
-    methodChage(){
-      this.ShortMsgTempParam.SendModality=""
-      if(this.ShortMsgTempParam.SendMethod!=""){
-        this.Ischange=false
+    methodChage() {
+      this.ShortMsgTempParam.SendModality = "";
+      if (this.ShortMsgTempParam.SendMethod.toString() != "") {
+        this.Ischange = false;
       }
     },
     textClick(text) {
@@ -144,7 +154,7 @@ export default {
           message: "模板内容不能为空",
           type: "warning"
         });
-        return false
+        return false;
       }
       addTemplate(this.ShortMsgTempParam).then(res => {
         if (res.code == 0) {

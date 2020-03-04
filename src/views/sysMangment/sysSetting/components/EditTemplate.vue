@@ -17,7 +17,7 @@
       @submit.native.prevent
     >
       <el-form-item label="模板名称">
-        <el-input v-model="ShortMsgTempParam.TemplateName"></el-input>
+        <el-input type="text" v-model="ShortMsgTempParam.TemplateName"   maxlength="20"></el-input>
       </el-form-item>
       <el-form-item label="模板类型">
         <el-select v-model="ShortMsgTempParam.IsSysTemplate" :disabled="ShortMsgTempParam.IsSysTemplate==1||ShortMsgTempParam.SendMethod==0" placeholder="请选择模板类型">
@@ -33,7 +33,7 @@
       </p>
       
       <el-form-item label="模板内容">
-        <el-input type="textarea" :rows="10" v-model="ShortMsgTempParam.TemplateContent"></el-input>
+        <el-input type="textarea" :rows="7"   maxlength="150" v-model="ShortMsgTempParam.TemplateContent"></el-input>
       </el-form-item>
       <el-form-item label="发送方式">
         <el-radio-group v-model="ShortMsgTempParam.SendMethod" :disabled="ShortMsgTempParam.IsSysTemplate==1">
