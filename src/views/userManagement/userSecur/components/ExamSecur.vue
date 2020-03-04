@@ -69,7 +69,6 @@ export default {
   mounted() {
     //是否开启审核
     getOpenFlag(2902).then(val => {
-      console.log(val);
       this.isOpen = val;
     });
   },
@@ -101,7 +100,8 @@ export default {
             message: res.message ? res.message : "复审成功"
           });
           _this.nextTimeArr = [];
-          _this.InsuredRecheckParam = this.$options.InsuredRecheckParam;
+          _this.InsuredRecheckParam ={};
+          this.$refs.getFiles.fileList = []
           this.$parent.seachAccountOrder();
         } else {
           _this.$message({
