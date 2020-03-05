@@ -348,7 +348,7 @@
               datas.forEach((v)=>{
                 this.detailPlanArry = v.Plans.concat(v.Plans)
               })
-            //  this.param1.SA_MeterReadPlan_Id = res.data[0].Plans[0].Id
+              this.param1.SA_MeterReadPlan_Id = res.data[0].Plans[0].Id
               this.getCbyInfo(res.data[0].Plans[0].Id)//搜索默认抄表计划
             } else {
               promptInfoFun(this,1,res.message)
@@ -452,11 +452,13 @@
       setInforamation(msg){
         let userInfo = msg
         this.typeCheck = 1
-        this.param1.ReadingQueryType = '1'
-        this.param1.CustomerQueryValue = userInfo.CustomerNo
-        this.param1.SA_WaterFactory_Id = userInfo.SA_WaterFactory_Id
-        this.param1.SA_MeterReadPlan_Id = userInfo.SA_MeterReadPlan_Id
-        this.searchFun(1)
+        setTimeout(()=>{
+          this.param1.ReadingQueryType = '1'
+          this.param1.CustomerQueryValue = userInfo.CustomerNo
+          this.param1.SA_WaterFactory_Id = userInfo.SA_WaterFactory_Id
+          this.param1.SA_MeterReadPlan_Id = userInfo.SA_MeterReadPlan_Id
+          this.searchFun(1)
+        },500)
       }
     },
     computed: {
@@ -477,40 +479,39 @@
         if(this.$route.query.CustomerInfo){
           let userInfo = this.$route.query.CustomerInfo
           this.getPlanList(userInfo.SA_WaterFactory_Id);
-          this.getText(userInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
-          this.getCbyInfo(userInfo.SA_MeterReadPlan_Id)
-          this.setInforamation(userInfo)
           setTimeout(()=>{
-            this.getText(userInfo.SA_MeterReadPlan_Id,'SA_MeterReadPlan_Id',this.detailPlanArry,'抄表计划')
-          },200)
+            this.getText(userInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+            this.getCbyInfo(userInfo.SA_MeterReadPlan_Id)
+            this.setInforamation(userInfo)
+          },500)
         }
       }
     },
     mounted() {
+      this.waterFactory = this.$store.state.user.waterWorks
       this.screenWidth = window.screen.width
       this.meterData.push(getMonthStartDate())
       this.meterData.push(getMonthEndDate())
       this.param2.ReadDateStart = getMonthStartDate()+ " 00:00:00";
       this.param2.ReadDateEnd = getMonthEndDate()+ " 23:59:59";
-      this.waterFactory = this.$store.state.user.waterWorks
-      this.getPlanList(this.waterFactory[0].Id);
-      this.param1.SA_WaterFactory_Id = this.waterFactory[0].Id
       this.param2.SA_WaterFactory_Id = this.waterFactory[0].Id
-      this.screenWdth = window.screen.width
+
       this.formArry = getDictionaryOption('表册类型')
       this.meterState = getDictionaryOption('抄表状态')
       this.userArry = getDictionaryOption('用户类型')
+
       if(this.$route.query.CustomerInfo){
         let userInfo = this.$route.query.CustomerInfo
         this.getPlanList(userInfo.SA_WaterFactory_Id);
-        this.getText(userInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
-        this.getCbyInfo(userInfo.SA_MeterReadPlan_Id)
-        this.setInforamation(userInfo)
         setTimeout(()=>{
-          this.getText(userInfo.SA_MeterReadPlan_Id,'SA_MeterReadPlan_Id',this.detailPlanArry,'抄表计划')
-        },200)
+          this.getText(userInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+          this.getCbyInfo(userInfo.SA_MeterReadPlan_Id)
+          this.setInforamation(userInfo)
+        },500)
+      }else {
+        this.getPlanList(this.waterFactory[0].Id);
+        setTimeout(()=>{this.param1.SA_WaterFactory_Id = this.waterFactory[0].Id},500)
       }
-
     }
   }
 </script>
