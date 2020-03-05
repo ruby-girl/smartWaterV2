@@ -468,15 +468,16 @@
          let that=this
         if(this.$route.query.planInfo){
           let planInfo=this.$route.query.planInfo
-          this.getPlanList(planInfo.SA_WaterFactory_Id,"1");
+            that.typeCheck = 1
           // this.getText(planInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
-          this.getCbyInfo(planInfo.Id)
           setTimeout(function(){
+            that.getPlanList(planInfo.SA_WaterFactory_Id,"1");
+          },300)
+          setTimeout(function(){
+            that.getCbyInfo(planInfo.Id)
             that.param1.SA_WaterFactory_Id=planInfo.SA_WaterFactory_Id
             that.param1.SA_MeterReadPlan_Id = planInfo.Id
-            that.typeCheck = 1
             that.searchFun(1)
-
           },500)
         }
     }
