@@ -14,7 +14,7 @@
           v-model="selectHead.WaterFactoryId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.waterFactoryId,'waterFactoryId',waterWorksOption,'水厂')"
+          @change="getText(selectHead.WaterFactoryId,'WaterFactoryId',waterWorksOption,'水厂')"
         >
           <el-option label="全部" value="-1" v-show="waterWorksOption.length>1"/>
           <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />
@@ -151,6 +151,7 @@ export default {
         "",
         this.secNmae
       );
+      
     },
     getArea(id) {
       getOrgTree(
@@ -163,6 +164,9 @@ export default {
     },
     getText(val, model, arr, name) {
       this.$emit("getText", val, model, arr, name);
+      if(name=='水厂'){
+        this.getArea(val)
+      }
     },
     showLabel(n) {
       if (Math.floor((this.searchWidth - 180) / 310) > n || this.isShow)
