@@ -24,35 +24,7 @@ export default {
       date: true
     };
   },
-  activated: function() {
-    this.$nextTick(() => {
-      let _this = this;
-      let id = _this.$route.query.id;
-      let workId = _this.$route.query.workId;
-      let PlanName = _this.$route.query.PlanName;
-      let workName = _this.$route.query.workName;
-      // _this.$refs.planChild1.$refs.childSelect.param1.SA_MeterReadPlan_Id = id
-      _this.$refs.planChild1.$refs.childSelect.param1.SA_WaterFactory_Id = workId
-      if (id) {
-        _this.$refs.planChild1.param.SA_MeterReadPlan_Id = id;
-        _this.$refs.planChild1.param.SA_WaterFactory_Id = workId;
-           this.$refs.planChild1.getText(
-          workName,
-          "SA_WaterFactory_Id",
-          "",
-          "水厂"
-        );
-        this.$refs.planChild1.getText(
-          PlanName,
-          "SA_MeterReadPlan_Id",
-          "",
-          "抄表计划"
-        );
-     
-        _this.$refs.planChild1.searchFun();
-      }
-    });
-  },
+
   methods: {
     handleClick() {
       if (this.typeCheck == "1") {

@@ -177,14 +177,14 @@
               class="left-input"
             ></el-input>
           </el-form-item>
-          <el-form-item :label="waterInfo·WMType=='1105'?'报警金额':'报警量'">
+          <el-form-item :label="WMType?'报警金额':'报警量'">
             <el-input
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm"
               disabled
               class="left-input"
             ></el-input>
           </el-form-item>
-          <el-form-item  :label="waterInfo·WMType=='1105'?'透支金额':'透支量'">
+          <el-form-item  :label="WMType?'透支金额':'透支量'">
             <el-input
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft"
               disabled
@@ -244,7 +244,10 @@ export default {
         //用户信息
         BdBalance: 0
       },
-      waterInfo: {}, //水表信息
+      WMType:true,
+      waterInfo: {
+        
+      }, //水表信息
       totalMoney: 0,
       selectUserShow: false, //查询多个用户弹窗
       params: {
@@ -339,6 +342,7 @@ export default {
       let apiData = Object.assign({}, this.UpgradeWaterNeedInfo);
       if (this.UpgradeWaterNeedInfo.WaterMeterNo == 1104) {
         apiData.WaterMeterNo = this.waterInfo·WMType;
+        
       }
       UpgradeInfo({
         UpgradeWaterNeedInfo: apiData,
@@ -374,6 +378,9 @@ export default {
         this.UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft = this.waterInfo.WaterAmountOverdraft;
         this.UpgradeWaterNeedInfo.meter4Param.IMSI = this.waterInfo.IMSI;
         this.UpgradeWaterNeedInfo.WaterMeterId = this.waterInfo.Id;
+        if(this.waterInfo.WMType=="1105"){
+          this.WMType=true
+        }
       });
     },
     getYCWater(num) {
@@ -488,7 +495,7 @@ export default {
         postData.CustomerQueryType = "8";
         postData.page = 1;
         postData.limit = 20;
-        GetCustomerDataList(this.postData).then(res => {
+        GetCustomerDataList(postData).then(res => {
           if (res.code == 0) {
             this.userInfo = {};
             this.waterInfo = {};

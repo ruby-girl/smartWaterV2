@@ -30,7 +30,7 @@
        </li>
        <li class="water_detail">
          <i>5</i>
-         <span>4阶用水量：</span>
+         <span>5阶用水量：</span>
          <label>{{WaterYield5}} 吨</label>
        </li>
      </ul>
