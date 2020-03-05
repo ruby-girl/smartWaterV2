@@ -465,15 +465,19 @@
       },
       //抄表计划跳转
        planToQuery(){
+         let that=this
         if(this.$route.query.planInfo){
           let planInfo=this.$route.query.planInfo
           this.getPlanList(planInfo.SA_WaterFactory_Id,"1");
-          this.getText(planInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+          // this.getText(planInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
           this.getCbyInfo(planInfo.Id)
-          this.param1.SA_WaterFactory_Id=planInfo.SA_WaterFactory_Id
-          this.param1.SA_MeterReadPlan_Id = planInfo.Id
-          this.typeCheck = 1
-          this.searchFun(1)
+          setTimeout(function(){
+            that.param1.SA_WaterFactory_Id=planInfo.SA_WaterFactory_Id
+            that.param1.SA_MeterReadPlan_Id = planInfo.Id
+            that.typeCheck = 1
+            that.searchFun(1)
+
+          },500)
         }
     }
     },
