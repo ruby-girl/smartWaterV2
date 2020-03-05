@@ -12,12 +12,12 @@
         @getText="getText"
         ref="head"
       />
-      <user-info :headUser="headUser"/>
+      <user-info :headUser="headUser" :isIC="isIC" :icInfo="icInfo"/>
     </div>
     <!-- 表格模式 -->
     <el-row :gutter="10" class="container-bottom-box display-flex">
       <!-- 左边表格 -->
-      <el-col :md="14" :lg="16" :xl="18" class="cash-padding-bg" v-if="!isIC">
+      <el-col :md="14" :lg="16" :xl="18" class="cash-padding-bg">
         <div class="display-flex justify-content-flex-justify">
           <div class="display-flex">
             <el-tooltip
@@ -78,7 +78,7 @@
         </keep-alive>
       </el-col>
       <!-- IC卡展示内容 -->
-      <el-col
+      <!-- <el-col
         :md="14"
         :lg="16"
         :xl="18"
@@ -87,7 +87,7 @@
         :style="{'height':saveTableHeight+'px'}"
       >
         <components :is="icType" :tableData="tableData" :tableHeight="tableHeight" :icInfo="icInfo"></components>
-      </el-col>
+      </el-col> -->
       <!-- 左边表格end -->
       <!-- 右 -->
       <el-col
@@ -299,8 +299,8 @@ export default {
       this.checkedAllParent = false;
       this.tipsDataCopy = [];
        //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡 
-      if(this.icInfo.CardType==0) this.icType='NoCreditCard';
-      else this.icType='CreditCardAlready';
+      // if(this.icInfo.CardType==0) this.icType='NoCreditCard';
+      // else this.icType='CreditCardAlready';
       this.headQuery.CustomerQueryValue=""//输入框清空
     },
     // 结算成功后重新获取账户余额 --如果是IC卡需要再次读卡。查询缴费记录的数据+1

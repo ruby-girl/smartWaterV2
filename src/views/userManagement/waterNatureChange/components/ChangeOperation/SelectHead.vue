@@ -131,8 +131,11 @@ export default {
   created() {
     this.searchWidth = document.body.clientWidth - 160; //160左侧导航宽度
     this.waterWorksOption = this.$store.state.user.waterWorks;
-    if (this.waterWorksOption.length == 1) {
+    if (this.waterWorksOption.length == 1) {    
       this.selectHead.SA_WaterFactory_Id = this.waterWorksOption[0].Id;
+      this.getArea(this.selectHead.SA_WaterFactory_Id)
+    }else{
+      this.getArea(-1)
     }
     this.userType = getDictionaryOption("用户类型");
     this.waterType = getDictionaryOption("水表类型");
