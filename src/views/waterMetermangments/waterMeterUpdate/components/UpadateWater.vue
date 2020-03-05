@@ -490,8 +490,6 @@ export default {
     },
     getUser(info) {
       let postData = {};
-      console.log(1)
-      debugger
       if (info) {
         postData.CustomerQueryValue = info.UserCardCredited.CardNo;
         postData.CustomerQueryType = "8";
