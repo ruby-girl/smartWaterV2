@@ -59,6 +59,7 @@
           :disabled="ShortMsgTempParam.SendMethod==0"
           v-model="ShortMsgTempParam.ResetShortMsgTemplateSendTime"
           format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
           type="date"
           placeholder="选择日期时间"
         ></el-date-picker>
@@ -115,6 +116,18 @@ export default {
         TimerSendEndTime: "",
         ResetShortMsgTemplateSendTime: "" //自定义模板发送时间
       },
+       ShortMsgTempParamModel: {
+        Id: "",
+        IsSysTemplate: 0, //模板类型
+        SysTemplateType: "", //系统模板类型
+        TemplateName: "", //模板名称
+        TemplateContent: "", //模板内容
+        SendMethod: "", //发送方式
+        SendModality: "", //定时发送
+        TimerSendStartTime: "",
+        TimerSendEndTime: "",
+        ResetShortMsgTemplateSendTime: "" //自定义模板发送时间
+      },
       Ischange: true,
       rules: {
         TemplateContent: [
@@ -137,6 +150,7 @@ export default {
     }
   },
   methods: {
+   
     //发送方式改变
     methodChage() {
       this.ShortMsgTempParam.SendModality = "";
@@ -164,7 +178,7 @@ export default {
             message: res.msg ? res.msg : "添加成功",
             type: "success"
           });
-          this.ShortMsgTempParam = {};
+          this.ShortMsgTempParam = this.ShortMsgTempParamModel;
           this.$parent.searchTableList();
         } else {
           that.$message({

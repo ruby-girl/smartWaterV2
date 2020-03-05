@@ -38,8 +38,8 @@
             :height="tableHeight"
             style="width: 100%;"
             :header-cell-style="{'background-color': '#F0F2F5'}"
-            :cell-style="{'padding':'5px 0'}"
             @sort-change="sortChanges"
+            :cell-style="cellStyle"
           >
             <el-table-column type="index" fixed="left" label="#" width="60" align="center">
               <template slot-scope="scope">
@@ -126,7 +126,13 @@
                     @click="changeInput(scope.row.Id,true)"
                   >&#xe675;</i>
                 </el-tooltip>
-                <el-tooltip  effect="light" content="详情" :visible-arrow="false" placement="bottom" v-permission="['141']">
+                <el-tooltip
+                  effect="light"
+                  content="详情"
+                  :visible-arrow="false"
+                  placement="bottom"
+                  v-permission="['141']"
+                >
                   <i
                     class="iconStyle icon iconfont operation3 iconbiaodan1"
                     @click="meterReadingPlanDetail(scope.row.Id,scope.row.PlanName)"
@@ -170,9 +176,9 @@ import SelectHead from "./components/SelectHead"; //查询条件组件
 import customTable from "@/components/CustomTable/index"; //自定义表格
 import Pagination from "@/components/Pagination/index"; //分页
 import SearchTips from "@/components/SearchTips/index";
-import { delTips, getText, pushItem,closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
+import { delTips, getText, pushItem, closeDelTip } from "@/utils/projectLogic"; //搜索条件面包屑
 import AddReadingPlan from "./components/AddReadingPlan";
-import permission from '@/directive/permission/index.js' // 权限判断指令
+import permission from "@/directive/permission/index.js"; // 权限判断指令
 import {
   searchPlanList,
   exportPlanList,
@@ -183,7 +189,7 @@ import {
   WhetherDisplay
 } from "@/api/plan"; //http 请求
 export default {
-  directives: { permission },
+  directives: { permission },
   name: "MeterReadingPlan",
   components: {
     SelectHead,
@@ -221,7 +227,7 @@ export default {
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
-      searchWidth: 1024,
+      searchWidth: 1024
     };
   },
   computed: {
@@ -278,6 +284,20 @@ export default {
     });
   },
   methods: {
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      if (row.PlanStateName == "已完成" && column.property == "PlanStateName") {
+        return "color:#00B2A1;";
+      } else if (
+        row.PlanStateName == "未完成" &&
+        column.property == "PlanStateName"
+      ) {
+        return "color:#FF3D3D;";
+      }
+      if( row.IsAllowDataSupplementaryInputFormat == "否" &&
+        column.property == "IsAllowDataSupplementaryInputFormat"){
+          return "color:#00B2A1;";
+        }
+    },
     //删除面包屑
     delTips(val) {
       this.tipsDataCopy = delTips(val, this, this.tipsDataCopy, "selectHead");
@@ -313,16 +333,17 @@ export default {
         this.searchTableList();
       });
     },
-    meterReadingPlanDetail(id,PlanName) {
+    meterReadingPlanDetail(id, PlanName) {
       // window.localtion.href=('businessManagement/meterQuery?id='+id);
       //详情 跳转到抄表设置
+      let that=this
       this.$router.push({
         //核心语句
         path: "/businessManagement/meterQuery", //跳转的路径
         query: {
           //路由传参时push和query搭配使用 ，作用时传递参数
           id: id,
-          PlanName:PlanName
+          workId:that.selectHead.SA_WaterFactory_Id
         }
       });
     },
@@ -337,7 +358,7 @@ export default {
         showClose: false
       })
         .then(() => {
-             closeDelTip()
+          closeDelTip();
           delPlanList({ SA_MeterReadPlan_Id: id }).then(res => {
             if (res.code == 0) {
               that.$message({
@@ -354,7 +375,7 @@ export default {
           });
         })
         .catch(() => {
-          closeDelTip()
+          closeDelTip();
         });
     },
     sortChanges({ column, prop, order }) {
@@ -389,7 +410,6 @@ export default {
       } else {
         this.orderData.page = this.selectHead.page;
         this.orderData.limit = this.selectHead.limit;
-
       }
 
       searchPlanList(this.orderData).then(res => {

@@ -28,10 +28,33 @@ export default {
     this.$nextTick(() => {
       let _this = this;
       let id = _this.$route.query.id;
-      let PlanName = _this.$route.query.PlanName;
+      let workId = _this.$route.query.workId;
+      let parpentData = this.$refs.planChild1.$refs.childSelect;
       if (id) {
+        let that=this
+        setTimeout(function() {
+          let planArr = parpentData.planArry;
+          let newArr = [];
+          planArr.forEach(element => {
+            newArr.push(element.Plans);
+          });
+          that.$refs.planChild1.getText(
+            workId,
+            "SA_WaterFactory_Id",
+            parpentData.waterFactory,
+            "水厂"
+          );
+          that.$refs.planChild1.getText(
+            id,
+            "SA_MeterReadPlan_Id",
+            newArr.flat(),
+            "抄表计划"
+          );
+        }, 1000);
+
         this.$refs.planChild1.param.SA_MeterReadPlan_Id = id;
-        this.$refs.planChild1.getText(PlanName,'SA_MeterReadPlan_Id','','抄表计划')
+        this.$refs.planChild1.param.SA_WaterFactory_Id = workId;
+
         _this.$refs.planChild1.searchFun();
       }
     });
@@ -40,14 +63,14 @@ export default {
     handleClick() {
       if (this.typeCheck == "1") {
         this.$refs.planChild1.typeCheck = this.typeCheck;
-         this.$refs.planChild1.$refs.childSelect.setparams(
-        parseInt(this.typeCheck)
-      );
-      }else {
-         this.$refs.planChild2.typeCheck = this.typeCheck;
-          this.$refs.planChild2.$refs.childSelect.setparams(
-        parseInt(this.typeCheck)
-      );
+        this.$refs.planChild1.$refs.childSelect.setparams(
+          parseInt(this.typeCheck)
+        );
+      } else {
+        this.$refs.planChild2.typeCheck = this.typeCheck;
+        this.$refs.planChild2.$refs.childSelect.setparams(
+          parseInt(this.typeCheck)
+        );
       }
     }
   }
