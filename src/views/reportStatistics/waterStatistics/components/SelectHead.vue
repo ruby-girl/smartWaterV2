@@ -25,12 +25,14 @@
           <el-option v-for="(item,index) in waterMeterArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户类型" prop="CustomerType">
+      <transition name="fade">
+      <el-form-item label="用户类型" prop="CustomerType" v-show="screenWdth<1600?ifMore:true">
         <el-select v-model="param.CustomerType" placeholder="请选择" size="small" @change="getText(param.CustomerType,'CustomerType',userArray,'用户类型')">
           <el-option label="全部" value="-1" v-if="userArray.length>1"></el-option>
           <el-option v-for="(item,index) in userArray" :key="index" :label="item.Name" :value="item.Id"/>
         </el-select>
       </el-form-item>
+      </transition>
      <!-- <transition name="fade">
         <el-form-item label="生效日期" v-show="screenWdth<1600?ifMore:true" prop="createStartTimes">
           <el-date-picker
@@ -49,7 +51,7 @@
         </el-form-item>
       </transition>-->
       <el-form-item>
-        <i v-show="screenWdth<1600&&ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
+        <i v-show="screenWdth<1600&&ifMore" :class="screenWdth<1600? 'icon iconfont iconshouqi3 secondClass':'icon iconfont iconshouqi3'" @click="ifMore=!ifMore"></i>
         <i v-show="screenWdth<1600&&!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
         <el-button type="primary" size="mini" class="cl-search" round @click="searchFun(1)"><i
           class="icon iconfont">&#xe694;</i>
