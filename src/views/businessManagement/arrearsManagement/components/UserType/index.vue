@@ -206,7 +206,7 @@ export default {
       },
       tableTotal: [
         { num: 0, txt: "费用笔数" },
-        { num: 0, txt: "剩余未缴（元）" }
+        { num: 0, txt: "剩余未缴（不包含违约金）" }
       ],
       tableData: [],
       show: false,

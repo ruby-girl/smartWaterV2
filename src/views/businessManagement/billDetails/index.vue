@@ -234,7 +234,7 @@ export default {
         showClose: false
       }).then(() => {
         closeDelTip()
-        OrderFeeCancel({SA_Order_Id:r.Id}).then(res => {
+        OrderFeeCancel({SA_Order_Id:r.Id,model:'账单详情'}).then(res => {
           this.$message({
             message: res.message,
             type: "success",
