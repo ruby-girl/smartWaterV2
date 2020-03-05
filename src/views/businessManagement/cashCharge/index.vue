@@ -12,6 +12,7 @@
         @getText="getText"
         ref="head"
       />
+      <user-info :headUser="headUser"/>
     </div>
     <!-- 表格模式 -->
     <el-row :gutter="10" class="container-bottom-box display-flex">
@@ -130,6 +131,7 @@
 </template>
 <script>
 import SelectHead from "./components/SelectHead";
+import UserInfo from "./components/UserInfo";
 import TableType from "./components/TableType";
 import CardType from "./components/CardType";
 import RightBox from "./components/RightBox";
@@ -159,7 +161,8 @@ export default {
     SelectPint,
     PaymentCode,
     NoCreditCard,
-    CreditCardAlready
+    CreditCardAlready,
+    UserInfo
   },
   data() {
     return {
@@ -411,6 +414,7 @@ export default {
 .cash-padding-bg {
   padding: 12px !important;
   background: #fff;
+  position: relative;
 }
 // .padding-20 {
 //   padding: 20px !important;

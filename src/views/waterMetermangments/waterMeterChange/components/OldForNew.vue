@@ -89,15 +89,34 @@
         <el-form-item label="新水表编号" v-else>
           <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
         </el-form-item>
+        <!-- 机械表 -->
         <el-form-item label="新水表读数" prop="newRead" v-show="user.WaterMeterTypeId==1101">
           <el-input class="left-input" v-model="newUser.newRead"></el-input>
         </el-form-item>
+        <!-- 机械表 -->
+         <!-- AB版物联网 -->
+        <el-form-item label="报警量" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&user.isAB">
+          <el-input class="left-input" v-model="newUser.waterAmountAlarm"></el-input>
+        </el-form-item>
+        <el-form-item label="透支量" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&user.isAB">
+          <el-input class="left-input" v-model="newUser.waterAmountOverdraft"></el-input>
+        </el-form-item>
+        <!-- AB版物联网 -->
+        <!-- C版物联网 -->
+        <el-form-item label="报警金额" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&!user.isAB">
+          <el-input class="left-input" @blur="handleInputDelDecimalFloat('waterAmountAlarm',$event)" v-model="newUser.waterAmountAlarm"></el-input>
+        </el-form-item>
+        <el-form-item label="透支金额" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&!user.isAB">
+          <el-input class="left-input" @blur="handleInputDelDecimalFloat('waterAmountOverdraft',$event)" v-model="newUser.waterAmountOverdraft"></el-input>
+        </el-form-item>
+        <!-- C版物联网 -->
+
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" v-model="newUser.remark"></el-input>
         </el-form-item>
       </el-form>
     </div>
-    <el-form class="is-page">
+    <el-form class="is-page" v-show="user.WaterMeterTypeId=='1101'||user.WaterMeterTypeName=='1103'">
       <el-form-item label="字轮是否翻页">
         <el-radio-group v-model="newUser.isPage">
           <el-radio :label="true">是</el-radio>
@@ -121,6 +140,8 @@ import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import SelectUser from "@/components/SelectUser";
 import { ICReadCardInfo,WriteCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 import {RollBackICSettlement} from "@/api/cashCharge";
+import { GetWLWInfoByCustomerId } from "@/api/userSetting"//判断物联网是AB版还是C版
+import {delDecimal_float } from "@/utils/index";
 export default {
   components: { SelectUser },
   props: { ifShow: {} },
@@ -163,7 +184,8 @@ export default {
 
     return {
       user: {
-        WaterMeterTypeId: 1101
+        WaterMeterTypeId: 1104,
+        isAB:false
       },
       newUser: {
         customerId: "",
@@ -173,7 +195,9 @@ export default {
         newRead: "", //新水表读数（机械表必填
         meterBalance: "", //IC卡表端余额
         remark: "", //备注
-        isPage: false //是否翻页
+        isPage: false, //是否翻页
+        waterAmountAlarm:'',//报警量或报警金额（AB—C，C—AB预付费传值
+        waterAmountOverdraft:''//透支量或透支金额（AB—C，C—AB预付费传值）
       },
       params: {
         page: 1,
@@ -187,6 +211,8 @@ export default {
         newRead: [
           { required: true, trigger: "blur", validator: validateNewRead }
         ],
+        waterAmountAlarm:[{ required: true, message: "必填", trigger: "blur" }],
+        waterAmountOverdraft:[{ required: true, message: "必填", trigger: "blur" }],
         remark: [{ required: true, message: "必填", trigger: "blur" }]
       },
       oldUser: {
@@ -298,6 +324,7 @@ export default {
       }
       this.user = val;
       this.newUser.customerId = val.Id;
+      if(val.WaterMeterTypeId==1104) this.getWLW(val.Id) 
     },
     // IC卡读卡
     handleFilterIC() {
@@ -340,7 +367,8 @@ export default {
         } else if (res.data.length == 1) {
           if (info) {
             this.user = res.data[0];
-            this.newUser.customerId = res.data[0].Id;
+            this.newUser.customerId = res.data[0].Id;          
+            if(res.data[0].WaterMeterTypeId==1104) this.getWLW(res.data[0].Id)
           } else {
             //如果不是读卡数据，查询出来是IC卡用户，提示需读卡操作
             if (res.data[0].CustomerState != 1301) {
@@ -362,6 +390,9 @@ export default {
               return;
             } else {
               this.user = res.data[0];
+              if(res.data[0].WaterMeterTypeId==1104){
+                 this.getWLW(res.data[0].Id)
+              }
               this.newUser.customerId = res.data[0].Id;
             }
           }
@@ -369,6 +400,15 @@ export default {
           this.selectUserShow = true; //查找出多个，弹出用户列表，进行选择
         }
       });
+    },
+    //查询物联网为AB版还是C版
+    getWLW(Id){
+      GetWLWInfoByCustomerId({'CustomerId':Id}).then(res=>{
+        res.data.WaterMeterType == 1104 ? this.isAB = true: this.isAB = false //1104 AB版本 05 C版本
+      })
+    },
+    handleInputDelDecimalFloat(model, e){
+    this.newUser[model] = delDecimal_float(e.target.value);  
     }
   }
 };

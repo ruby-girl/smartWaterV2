@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="display-flex align-items-center justify-content-flex-justify">
+    <div class="display-flex align-items-center justify-content-flex-justify user-bottom">
       <el-form
         :inline="true"
         :model="selectHead"
@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <el-row class="head-bottom-box">
+    <!-- <el-row class="head-bottom-box">
       <el-col :md="8" :lg="3" :xl="2"><span>姓名:</span><span>{{user.CustomerName}}</span>
       </el-col>
       <el-col :md="8" :lg="4" :xl="3">
@@ -61,7 +61,7 @@
         地址:
         <span>{{user.Address}}</span>
       </el-col>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 <script>
@@ -237,6 +237,8 @@ export default {
   line-height: 30px;
   font-size: 14px;
 }
-
+.user-bottom{
+  margin-bottom: 60px;
+}
 </style>
 
