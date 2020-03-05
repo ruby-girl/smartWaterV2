@@ -128,7 +128,7 @@
       </el-form>
     </div>
     <div class="contanier">
-      <div class="cl-operation1 clearfix" style="margin-bottom:8px;">
+      <div v-if="IsPrepayment" class="cl-operation1 clearfix" style="margin-bottom:8px;">
         <el-button
           size="mini"
           class="fl borderClass"
@@ -155,6 +155,26 @@
           v-permission="['204']"
         >
           <i class="icon iconfont">&#xe645;</i>解锁
+        </el-button>
+      </div>
+      <div v-if="!IsPrepayment" class="cl-operation1 clearfix" style="margin-bottom:8px;">
+        <el-button
+          size="mini"
+          class="fl borderClass"
+          round
+          @click="orderLockWLWOpen(1)"
+          v-permission="['202']"
+        >
+          <i class="icon iconfont">&#xe646;</i>开阀
+        </el-button>
+        <el-button
+          size="mini"
+          class="fl borderClass"
+          round
+          @click="orderLockWLWClose(0)"
+          v-permission="['203']"
+        >
+          <i class="icon iconfont">&#xe643;</i>关阀
         </el-button>
       </div>
       <search-tips :tipsData="tipsData" ref="searchTips" @delTips="delTips" @excel="ExcelWLWInfo" />
@@ -272,6 +292,7 @@ import {
   ValveLockOpen, //开
   ValveLockClose //关
 } from "@/api/waterMeterMang";
+import { GetConfigValueByKey } from "@/api/index";
 import SearchTips from "@/components/SearchTips/index";
 import permission from "@/directive/permission/index.js"; // 权限判断指令
 import { delTips, getText, pushItem, getName } from "@/utils/projectLogic"; //搜索条件面包屑
@@ -366,12 +387,23 @@ export default {
       show5: true,
       show6: true,
       secNmae: "用户编号",
-      editShow: false
+      editShow: false,
+      IsPrepayment: true //是否是预付费
     };
   },
   created() {
     this.CustomerMeterStateList = getDictionaryOption("用户状态");
     this.TrafficStatusList = getDictionaryOption("远传表通讯状态");
+    GetConfigValueByKey({ configkey: "WLWCPaymentMode" }).then(res => {
+      //(0：后付费，1：预付费)
+      if (res.code == 0) {
+        if (res.data == "0") {
+          this.IsPrepayment = false;
+        } else {
+          this.IsPrepayment = true;
+        }
+      }
+    });
   },
   mounted() {
     this.tableHeight =

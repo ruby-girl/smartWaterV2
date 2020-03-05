@@ -135,21 +135,21 @@ export function DeleteMeterReading(data) {//删除抄表记录
 
 export function getWLWWaterInfo(data) {//查询
   return request({
-    url: "/WaterMeter/SelectWaterMeter4DataList",
+    url: "/WaterMeter/SelectWaterMeter45DataList",
     method: 'post',
     data
   })
 }
 export function excelWLWWaterInfo(data) {//导出
   return request({
-    url: "/WaterMeter/SelectWaterMeter4DataListToExcel",
+    url: "/WaterMeter/SelectWaterMeter45DataListToExcel",
     method: 'post',
     data
   })
 }
 export function GetMeter4ErrorTypeNum(data) {//异常统计
   return request({
-    url: "/WaterMeter/GetMeter4ErrorTypeNum",
+    url: "/WaterMeter/GetMeter45ErrorTypeNum",
     method: 'GET',
     params: data
   })

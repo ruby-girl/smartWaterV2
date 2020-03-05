@@ -135,7 +135,7 @@
                 >
                   <i
                     class="iconStyle icon iconfont operation3 iconbiaodan1"
-                    @click="meterReadingPlanDetail(scope.row.Id,scope.row.PlanName)"
+                    @click="meterReadingPlanDetail(scope.row.Id,scope.row.PlanName,scope.row.SA_WaterFactory_Id,scope.row.WaterFactoryName)"
                   ></i>
                 </el-tooltip>
                 <el-tooltip
@@ -318,6 +318,7 @@ export default {
     },
     generateOrder(id) {
       //数据绑定
+      let that=this
       GenerateOrder({ SA_MeterReadPlan_Id: id }).then(res => {
         if (res.code == 0) {
           that.$message({
@@ -333,7 +334,7 @@ export default {
         this.searchTableList();
       });
     },
-    meterReadingPlanDetail(id, PlanName) {
+    meterReadingPlanDetail(id,PlanName ,workId,workName) {
       // window.localtion.href=('businessManagement/meterQuery?id='+id);
       //详情 跳转到抄表设置
       let that=this
@@ -343,7 +344,9 @@ export default {
         query: {
           //路由传参时push和query搭配使用 ，作用时传递参数
           id: id,
-          workId:that.selectHead.SA_WaterFactory_Id
+          PlanName:PlanName,
+          workId:workId,
+          workName:workName
         }
       });
     },

@@ -29,32 +29,26 @@ export default {
       let _this = this;
       let id = _this.$route.query.id;
       let workId = _this.$route.query.workId;
-      let parpentData = this.$refs.planChild1.$refs.childSelect;
+      let PlanName = _this.$route.query.PlanName;
+      let workName = _this.$route.query.workName;
+      // _this.$refs.planChild1.$refs.childSelect.param1.SA_MeterReadPlan_Id = id
+      _this.$refs.planChild1.$refs.childSelect.param1.SA_WaterFactory_Id = workId
       if (id) {
-        let that=this
-        setTimeout(function() {
-          let planArr = parpentData.planArry;
-          let newArr = [];
-          planArr.forEach(element => {
-            newArr.push(element.Plans);
-          });
-          that.$refs.planChild1.getText(
-            workId,
-            "SA_WaterFactory_Id",
-            parpentData.waterFactory,
-            "水厂"
-          );
-          that.$refs.planChild1.getText(
-            id,
-            "SA_MeterReadPlan_Id",
-            newArr.flat(),
-            "抄表计划"
-          );
-        }, 1000);
-
-        this.$refs.planChild1.param.SA_MeterReadPlan_Id = id;
-        this.$refs.planChild1.param.SA_WaterFactory_Id = workId;
-
+        _this.$refs.planChild1.param.SA_MeterReadPlan_Id = id;
+        _this.$refs.planChild1.param.SA_WaterFactory_Id = workId;
+           this.$refs.planChild1.getText(
+          workName,
+          "SA_WaterFactory_Id",
+          "",
+          "水厂"
+        );
+        this.$refs.planChild1.getText(
+          PlanName,
+          "SA_MeterReadPlan_Id",
+          "",
+          "抄表计划"
+        );
+     
         _this.$refs.planChild1.searchFun();
       }
     });
