@@ -109,6 +109,26 @@
        * 触发父组建搜索方法
        * */
       searchFun() {
+        this.waterFactory.forEach(i=>{
+          i.Id ==  this.param.WaterFactoryId ? this.param.WaterFactoryName = i.Name :''
+        })
+
+       if(this.param.WaterMeterType == '-1'){
+         this.param.WaterMeterTypeName = '全部'
+       }else {
+         this.waterMeterArray.forEach(i=>{
+           i.Id ==  this.param.WaterMeterType ? this.param.WaterMeterTypeName = i.Name :''
+         })
+       }
+
+        if(this.param.CustomerType == '-1'){
+          this.param.CustomerTypeName = '全部'
+        }else {
+          this.userArray.forEach(i=>{
+            i.Id ==  this.param.CustomerType ? this.param.CustomerTypeName = i.Name :''
+          })
+        }
+
         this.$parent.param = Object.assign({},this.param)
         this.$parent.searchFun();
       },
