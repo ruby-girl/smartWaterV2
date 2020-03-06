@@ -72,7 +72,7 @@
           <div
             class="display-flex align-items-center justify-content-flex-justify flex-wrap secur-content"
           >
-            <div v-for="item in checkAllData">
+            <div v-for="(item,a) in checkAllData" :key="a">
               <el-tooltip
                 class="item"
                 popper-class="tooltip"
@@ -180,10 +180,16 @@ export default {
         linkComboBoxList({ SYS_Department_Id: this.user.DepartmentId }).then(
           res => {
             this.customerQueryTypeOption = res.data;
+            this.ComboBoxListByBice()
           }
         );
+      }else{
+        this.ComboBoxListByBice()
       }
-      ComboBoxListByBice(this.user).then(res => {
+    },
+    // 获取具体人员列表
+    ComboBoxListByBice(){
+       ComboBoxListByBice(this.user).then(res => {
         this.data = res.data;
         this.allId = this.data.map(item => {
           return item.Id;
