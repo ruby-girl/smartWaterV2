@@ -231,7 +231,10 @@
                 placement="bottom"
                 v-permission="['205']"
               >
-                <i class="icon iconfont viewMore" @click="waterMeterMore(scope.row.Id)">&#xe610;</i>
+                <i
+                  class="icon iconfont viewMore"
+                  @click="waterMeterMore(scope.row.Id,scope.row.V)"
+                >&#xe610;</i>
               </el-tooltip>
               <el-tooltip
                 class="item"
@@ -254,9 +257,12 @@
                 :visible-arrow="false"
                 content="编辑"
                 placement="bottom"
-                
               >
-                <i v-if="IsPrepayment" class="icon iconfont editJxWater" @click="edit(scope.row)">&#xe69f;</i>
+                <i
+                  v-if="IsPrepayment"
+                  class="icon iconfont editJxWater"
+                  @click="edit(scope.row)"
+                >&#xe69f;</i>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -289,6 +295,20 @@
         @pagination="waterMeterWLWDetail(Bl_WaterMeter4His.Meter4Id,isAB)"
       />
     </el-dialog>
+    <el-dialog
+      title="查看更多"
+      :visible.sync="viewWaterMoretory"
+      top="20vh"
+      :width="isAB=='2'&&IsPrepayment?'412px':'836px'"
+      hight="432px"
+      center
+      :close-on-click-modal="false"
+    >
+      <!-- <wLW-water-meterHis :hisData="hisData" :meterReadListParam="Bl_WaterMeter4His" /> -->
+      <more-ab-list v-if="isAB=='1'" :moreData="moreData" />
+      <more-ch-list v-if="isAB=='2'&&IsPrepayment" :moreData="moreData" />
+      <more-cy-list v-if="isAB=='2'&&!IsPrepayment" :moreData="moreData" />
+    </el-dialog>
     <editWLW-waterMeter ref="edit" :edit-show.sync="editShow" />
   </div>
 </template>
@@ -297,6 +317,9 @@ import EditWLWWaterMeter from "./intercomponents/EditWLWWaterMeter";
 import Pagination from "@/components/Pagination/index"; //分页
 import Static from "./intercomponents/Static"; //异常统计
 import WLWWaterMeterHis from "./intercomponents/WLWWaterMeterHis"; //历史
+import MoreAbList from "./moreComponents/MoreAbList"; //更多
+import MoreChList from "./moreComponents/MoreChList"; //更多
+import MoreCyList from "./moreComponents/MoreCyList"; //更多
 import { getDictionaryOption } from "@/utils/permission";
 import {
   getWLWWaterInfo, //查询
@@ -305,6 +328,9 @@ import {
   searABHisWater, //ab历史
   searCYHisWater,
   searCHHisWater,
+  GetABInfo,
+  GetCYFInfo,
+  GetCHFInfo,
   ValveUnLock, //解锁，
   ValveLockOpen, //开
   ValveLockClose //关
@@ -322,7 +348,10 @@ export default {
     Pagination,
     Static,
     WLWWaterMeterHis,
-    EditWLWWaterMeter
+    EditWLWWaterMeter,
+    MoreAbList,
+    MoreChList,
+    MoreCyList
   },
   watch: {
     screenWidth: {
@@ -368,11 +397,12 @@ export default {
         filed: "",
         tableId: ""
       },
-      isAB:"",
+      isAB: "",
       SelectionList: "",
       hisData: [],
       histotal: 0,
       viewWaterHistory: false,
+      viewWaterMoretory: false,
       tipsData: [], //传入子组件的值
       tipsDataCopy: [], //表单变化的值
       orderData: {},
@@ -406,7 +436,8 @@ export default {
       show6: true,
       secNmae: "用户编号",
       editShow: false,
-      IsPrepayment: true //是否是预付费
+      IsPrepayment: true, //是否是预付费
+      moreData: [] //更多数据
     };
   },
   created() {
@@ -513,10 +544,10 @@ export default {
       });
     },
     edit(data) {
-      if(data.V==1){
-        this.$refs.edit.IsTextChange=true
-      }else {
-        this.$refs.edit.IsTextChange=false
+      if (data.V == 1) {
+        this.$refs.edit.IsTextChange = true;
+      } else {
+        this.$refs.edit.IsTextChange = false;
       }
       this.$refs.edit.editData.SA_WaterMeter_Id = data.Id;
       this.$refs.edit.editData.AmountAlarm = data.WaterAmountAlarm; //报警量
@@ -563,10 +594,34 @@ export default {
         }
       });
     },
+    waterMeterMore(id, V) {
+      let parms = {};
+      let that = this;
+      that.isAB = V;
+      that.viewWaterMoretory = true;
+      parms.waterMeterId = id;
+       that.moreData=[]
+      if (V == 1) {
+        //ab
+        GetABInfo(parms).then(res => {
+          that.moreData.push(res.data) ;
+        });
+      } else {
+        if (that.IsPrepayment) {
+          GetCYFInfo(parms).then(res => {
+            that.moreData.push(res.data)
+          });
+        } else {
+          GetCHFInfo(parms).then(res => {
+            that.moreData.push(res.data)
+          });
+        }
+      }
+    },
     waterMeterWLWDetail(id, V) {
       //历史详情
       let that = this;
-      that.isAB=V
+      that.isAB = V;
       that.viewWaterHistory = true;
       that.Bl_WaterMeter4His.Meter4Id = id;
       if (V == 1) {

@@ -175,6 +175,28 @@ export function searCHHisWater(data) {//C(后付费)历史
     data
   })
 }
+export function GetABInfo(data) {//ab版本查看更多
+  return request({
+    url: "/WaterMeter/GetABInfo",
+    method: 'GET',
+    params:data
+  })
+}
+export function GetCYFInfo(data) {//C(预付费)查看更多
+  return request({
+    url: "/WaterMeter/GetCYFInfo",
+    method: 'GET',
+    params:data
+  })
+}
+export function GetCHFInfo(data) {//C(后付费)历史查看更多
+  return request({
+    url: "/WaterMeter/GetCHFInfo",
+    method: 'GET',
+    params:data
+  })
+}
+
 export function ValveLockOpen(data) {//锁定开
   return request({
     url: "/WaterMeter/ValveLockOpen",
