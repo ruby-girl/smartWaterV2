@@ -77,17 +77,6 @@
         ></components>
         </keep-alive>
       </el-col>
-      <!-- IC卡展示内容 -->
-      <!-- <el-col
-        :md="14"
-        :lg="16"
-        :xl="18"
-        class="cash-padding-bg ic-container"
-        v-if="isIC"
-        :style="{'height':saveTableHeight+'px'}"
-      >
-        <components :is="icType" :tableData="tableData" :tableHeight="tableHeight" :icInfo="icInfo"></components>
-      </el-col> -->
       <!-- 左边表格end -->
       <!-- 右 -->
       <el-col
@@ -142,8 +131,6 @@ import FeeWaiver from "./components/FeeWaiver"; //水费减免弹窗
 import SelectPint from "./components/SelectPint"; //选择打印机
 import PaymentCode from "./components/PaymentCode"; //扫码支付
 import {getText,pushItem} from "@/utils/projectLogic"; //搜索条件面包屑
-import CreditCardAlready from "./components/IcType/CreditCardAlready"; //IC卡已刷卡
-import NoCreditCard from "./components/IcType/NoCreditCard"; //IC卡未刷卡
 import { OrderFeeCancel } from "@/api/cashCharge";
 import { GetCustomerDataList } from "@/api/userSetting"; ////模糊查询用户--结算成功后，重新获取账户余额
 import {closeDelTip } from "@/utils/projectLogic"; //
@@ -160,8 +147,6 @@ export default {
     FeeWaiver,
     SelectPint,
     PaymentCode,
-    NoCreditCard,
-    CreditCardAlready,
     UserInfo
   },
   data() {
@@ -214,7 +199,6 @@ export default {
       selectPintShow: false, //选择打印机
       paymentCodeShow: false, //扫码支付弹窗
       isIC: false,
-      icType: "CreditCardAlready", //默认已刷卡
       unpaidMoney: '0.00', //剩余未缴
       isNull:true,
        tipsDataCopy:[],//面包屑
@@ -235,11 +219,11 @@ export default {
       this.saveTableHeight = document.body.clientHeight - formHeight - 80;
     },
     getList() {
-      if (this.type == 1&&!this.isIC){
+      if (this.type == 1){
         this.handelTips()
         this.tipsData = pushItem(this.tipsDataCopy);
         this.$refs.tableTypeCard.getList();
-      }else if(this.type == 2&&!this.isIC){  
+      }else if(this.type == 2){  
         this.$refs.tableTypeCard.getCardList()
       }   
     },
@@ -298,9 +282,13 @@ export default {
       this.listQuery.page = 1;
       this.checkedAllParent = false;
       this.tipsDataCopy = [];
+      let _this=this
+      setTimeout(function(){
+       _this.getList()
+     },800)
        //  isFirst 当卡片内充值次数为1，卡片金额为0，并且是未刷卡时，该值为true，否则为false  // this.cardInfo.CardType 0：未刷卡 1：已刷卡 
       // if(this.icInfo.CardType==0) this.icType='NoCreditCard';
-      // else this.icType='CreditCardAlready';
+      // else this.icType='CreditCardAlready';// 适配C版本需求，不单独展示IC卡信息 ICtype组件删除
       this.headQuery.CustomerQueryValue=""//输入框清空
     },
     // 结算成功后重新获取账户余额 --如果是IC卡需要再次读卡。查询缴费记录的数据+1

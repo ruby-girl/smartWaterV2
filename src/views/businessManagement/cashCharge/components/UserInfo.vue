@@ -2,7 +2,7 @@
   <div>
     <el-row class="head-bottom-box 11" v-show="!isIC">
       <el-col :md="8" :lg="3" :xl="2">
-        <span>姓名11:</span>
+        <span>姓名:</span>
         <span>{{user.CustomerName}}</span>
       </el-col>
       <el-col :md="8" :lg="4" :xl="3">
@@ -18,48 +18,53 @@
         <span>{{user.SA_WaterMeterNo}}</span>
       </el-col>
       <el-col :md="12" :lg="7" :xl="12" class="text-wrap">
-        地址3:
+        地址:
         <span>{{user.Address}}</span>
       </el-col>
     </el-row>
-
-   <div v-show="isIC">
-      <div
-      :class="{'head-bottom-box display-flex align-items-center flex-wrap':true,'show-user':isShow}"
-      v-show="icInfo.CardType==1"
-    >
-      <div class="user-item" v-for="(item,i) in list">
-        <span>{{item.label}}:</span>
-        <span>{{user[item.model]}}</span>
+    <div v-show="isIC">
+      <div v-if="icInfo.UserCardCredited">
+        <div
+          :class="{'head-bottom-box display-flex align-items-center flex-wrap':true,'show-user':isShow}"
+          v-show="icInfo.CardType==1"
+        >
+          <div class="user-item" v-for="(item,i) in list" :key="1+i">
+            <span>{{item.label}}:</span>
+            <span :class="{'addr-width':item.model=='Address'}">{{user[item.model]}}</span>
+          </div>
+          <!-- 已刷卡 -->
+          <div class="user-item" v-for="(item,i) in readList" :key="i+'s'">
+            <span>{{item.label}}:</span>
+            <span
+              v-if="item.model=='Year'"
+            >{{icInfo.UserCardCredited.Year+'-'+icInfo.UserCardCredited.Month+'-'+icInfo.UserCardCredited.Day}}</span>
+            <span
+              v-else-if="item.model=='IsMagnetic'"
+            >{{icInfo.UserCardCredited.IsMagnetic?'否':'是'}}</span>
+            <span v-else-if="item.model=='IsBrown'">{{icInfo.UserCardCredited.IsBrown?'否':'是'}}</span>
+            <span v-else>{{icInfo.UserCardCredited[item.model]}}</span>
+          </div>
+          <span class="show-more" @click="toggleShow()">{{txt}}</span>
+        </div>
       </div>
-      <!-- 已刷卡 -->
-      <div class="user-item" v-for="(item,i) in readList">
-        <span>{{item.label}}:</span>
-        <span
-          v-if="item.model=='Year'"
-        >{{icInfo.UserCardCredited.Year+'-'+icInfo.UserCardCredited.Month+'-'+icInfo.UserCardCredited.Day}}</span>
-        <span v-else-if="item.model=='IsMagnetic'">{{icInfo.UserCardCredited.IsMagnetic?'否':'是'}}</span>
-        <span v-else-if="item.model=='IsBrown'">{{icInfo.UserCardCredited.IsBrown?'否':'是'}}</span>
-        <span v-else>{{icInfo.UserCardCredited[item.model]}}</span>
+      <div v-if="icInfo.UserCard">
+        <!-- 未刷卡 -->
+        <div
+          :class="{'head-bottom-box display-flex align-items-center flex-wrap':true,'show-user':isShow}"
+          v-show="icInfo.CardType==0"
+        >
+          <div class="user-item" v-for="(item,i) in list" :key="i+'a'">
+            <span>{{item.label}}:</span>
+            <span :class="{'addr-width':item.model=='Address'}">{{user[item.model]}}</span>
+          </div>
+          <div class="user-item" v-for="(item,i) in noReadList" :key="i+'b'">
+            <span>{{item.label}}:</span>
+            <span>{{icInfo.UserCard[item.model]}}</span>
+          </div>
+          <span class="show-more" @click="toggleShow()">{{txt}}</span>
+        </div>
       </div>
-      <span class="show-more" @click="toggleShow()">{{txt}}</span>
     </div>
-    <!-- 未刷卡 -->
-    <div
-      :class="{'head-bottom-box display-flex align-items-center flex-wrap':true,'show-user':isShow}"
-      v-show="icInfo.CardType==0"
-    >
-      <div class="user-item" v-for="(item,i) in list">
-        <span>{{item.label}}:</span>
-        <span>{{user[item.model]}}</span>
-      </div>
-      <div class="user-item" v-for="(item,i) in noReadList">
-        <span>{{item.label}}:</span>
-        <span>{{icInfo.UserCard[item.model]}}</span>
-      </div>
-      <span class="show-more" @click="toggleShow()">{{txt}}</span>
-    </div>
-   </div>
   </div>
 </template>
 <script>
@@ -96,12 +101,7 @@ export default {
         { label: "前四月用水量(吨)", model: "BeforeFourUse" },
         { label: "前五月用水量(吨)", model: "BeforeFiveUse" }
       ],
-      noReadList: [
-        { label: "姓名", model: "CustomerName" },
-        { label: "水表类型", model: "WaterMeterTypeName" },
-        { label: "电话", model: "Tel" },
-        { label: "水表编号", model: "SA_WaterMeterNo" },
-        { label: "地址", model: "Address" },
+      noReadList: [     
         { label: "卡号", model: "Tel" },
         { label: "水表口径", model: "MeterDiameter" },
         { label: "充值次数", model: "RechargeCount" },
@@ -147,6 +147,7 @@ export default {
   overflow: hidden;
   z-index: 1111;
   border-radius: 4px;
+  
 }
 .show-user {
   height: auto !important;
@@ -159,13 +160,28 @@ export default {
   cursor: pointer;
 }
 .user-item {
+  height: 35px;
   font-size: 14px;
   & span:first-child {
+    height: 100%;
+    display: inline-block;
     color: #777c82;
+    display: inline-block;
+    vertical-align:top;
   }
   & span:last-child {
+    height: 100%;
+    display: inline-block;
     color: #46494c;
   }
+}
+.addr-width{
+  display: inline-block;
+  max-width: 150px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-all;
 }
 @media screen and (max-width: 1024px) {
   .user-item {
