@@ -184,7 +184,7 @@ export default {
 
     return {
       user: {
-        WaterMeterTypeId: 1104,
+        WaterMeterTypeId: 1101,
         isAB:false
       },
       newUser: {
