@@ -220,8 +220,19 @@
             />
           </template>
 
-          <el-table-column label="操作" width="100px" align="center" fixed="right">
+          <el-table-column label="操作" width="200px" align="center" fixed="right">
             <template slot-scope="scope">
+              <el-tooltip
+                class="item"
+                popper-class="tooltip"
+                effect="light"
+                :visible-arrow="false"
+                content="查看更多"
+                placement="bottom"
+                v-permission="['205']"
+              >
+                <i class="icon iconfont viewMore" @click="waterMeterMore(scope.row.Id)">&#xe610;</i>
+              </el-tooltip>
               <el-tooltip
                 class="item"
                 popper-class="tooltip"
@@ -231,7 +242,10 @@
                 placement="bottom"
                 v-permission="['205']"
               >
-                <i class="icon iconfont viewHis" @click="waterMeterWLWDetail(scope.row.Id)">&#xe670;</i>
+                <i
+                  class="icon iconfont viewHis"
+                  @click="waterMeterWLWDetail(scope.row.Id,scope.row.V)"
+                >&#xe670;</i>
               </el-tooltip>
               <el-tooltip
                 class="item"
@@ -240,8 +254,9 @@
                 :visible-arrow="false"
                 content="编辑"
                 placement="bottom"
+                
               >
-                <i class="icon iconfont editJxWater" @click="edit(scope.row)">&#xe69f;</i>
+                <i v-if="IsPrepayment" class="icon iconfont editJxWater" @click="edit(scope.row)">&#xe69f;</i>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -271,7 +286,7 @@
         :total="histotal"
         :page.sync="Bl_WaterMeter4His.page"
         :limit.sync="Bl_WaterMeter4His.limit"
-        @pagination="waterMeterWLWDetail(Bl_WaterMeter4His.Meter4Id)"
+        @pagination="waterMeterWLWDetail(Bl_WaterMeter4His.Meter4Id,isAB)"
       />
     </el-dialog>
     <editWLW-waterMeter ref="edit" :edit-show.sync="editShow" />
@@ -287,7 +302,9 @@ import {
   getWLWWaterInfo, //查询
   excelWLWWaterInfo, //导出
   GetMeter4ErrorTypeNum, //异常统计
-  searWLWHisWater, //历史
+  searABHisWater, //ab历史
+  searCYHisWater,
+  searCHHisWater,
   ValveUnLock, //解锁，
   ValveLockOpen, //开
   ValveLockClose //关
@@ -351,6 +368,7 @@ export default {
         filed: "",
         tableId: ""
       },
+      isAB:"",
       SelectionList: "",
       hisData: [],
       histotal: 0,
@@ -495,9 +513,15 @@ export default {
       });
     },
     edit(data) {
+      if(data.V==1){
+        this.$refs.edit.IsTextChange=true
+      }else {
+        this.$refs.edit.IsTextChange=false
+      }
       this.$refs.edit.editData.SA_WaterMeter_Id = data.Id;
       this.$refs.edit.editData.AmountAlarm = data.WaterAmountAlarm; //报警量
       this.$refs.edit.editData.AmountOverdraft = data.WaterAmountOverdraft; //透支量
+      this.$refs.edit.editData.V = data.V; //透支量
       this.editShow = true;
     },
     sortChanges({ column, prop, order }) {
@@ -539,15 +563,33 @@ export default {
         }
       });
     },
-    waterMeterWLWDetail(id) {
+    waterMeterWLWDetail(id, V) {
       //历史详情
       let that = this;
+      that.isAB=V
       that.viewWaterHistory = true;
       that.Bl_WaterMeter4His.Meter4Id = id;
-      searWLWHisWater(that.Bl_WaterMeter4His).then(res => {
-        that.hisData = res.data;
-        that.histotal = res.count;
-      });
+      if (V == 1) {
+        //ab
+        searABHisWater(that.Bl_WaterMeter4His).then(res => {
+          that.hisData = res.data;
+          that.histotal = res.count;
+        });
+      } else {
+        if (that.IsPrepayment) {
+          //searCYHisWater,
+          //searCHHisWater,
+          searCYHisWater(that.Bl_WaterMeter4His).then(res => {
+            that.hisData = res.data;
+            that.histotal = res.count;
+          });
+        } else {
+          searCHHisWater(that.Bl_WaterMeter4His).then(res => {
+            that.hisData = res.data;
+            that.histotal = res.count;
+          });
+        }
+      }
     },
     handleCurrentChange(val) {
       if (val) {
