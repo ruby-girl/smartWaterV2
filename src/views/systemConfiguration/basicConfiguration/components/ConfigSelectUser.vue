@@ -101,7 +101,7 @@
 <script>
 import { ComboBoxList, linkComboBoxList } from "@/api/organize";
 import { ComboBoxListByBice } from "@/api/basicConfig"; //根据不买呢 岗位获取人员
-
+// import{numGetAccount} from "@/api/account"
 export default {
   props: {
     ReceiveSortMsgEmp: {},
@@ -149,9 +149,9 @@ export default {
   },
   methods: {
     open(){
-      this.checkedArr = this.ReceiveSortMsgEmp;
+      this.checkedArr = this.ReceiveSortMsgEmp;  
       //打开弹窗 回填显示已经选中的人员（左侧无人员展示）。此刻this.user={ DepartmentId: "",JobId: ""}获取所有的人员
-      this.setCheckAllData(this.allData); 
+      this.ComboBoxListByBice('open')//open.弹窗，需回填后端返回选中的数据
     },
     close(){
       this.checkedArr=this.ReceiveSortMsgEmp//关闭弹窗，不保存 勾选的数据
@@ -188,13 +188,17 @@ export default {
       }
     },
     // 获取具体人员列表
-    ComboBoxListByBice(){
+    ComboBoxListByBice(isOpen){
        ComboBoxListByBice(this.user).then(res => {
         this.data = res.data;
+        this.allId=[]
         this.allId = this.data.map(item => {
           return item.Id;
         });
         this.allId = [...new Set(this.allId)]; //后端返回的数据会有重复的ID：一个用户多个岗位
+        if(isOpen){
+          this.setCheckAllData(this.data); 
+        }
         let newArr = this.getArrEqual(this.allId, this.checkedArr); //如果现在所有的选中项包含 新请求回来的数据，处理全选复选框
         if (newArr.length == this.allId.length) {
           //如果所有的重复数据 等于 新数据=全选
@@ -248,7 +252,7 @@ export default {
       }
     },
     handlecheckitemChange(id) {
-      this.setRightBox(id);
+      this.setRightBox(id); 
       if (
         this.checkedArr.length !== this.allId.length &&
         this.checkedArr.length < 1
@@ -281,14 +285,6 @@ export default {
       this.handlecheckitemChange(id)
     },
     confirm() {
-      if(this.checkedArr.length<1){
-        this.$message({
-            message: '请勾选工作人员接收短信的工作人员！',
-            type: "error",
-            duration: 4000
-          });
-          return
-      }
       this.dialogFormVisible=false
       this.$emit("update:ReceiveSortMsgEmp", this.checkedArr);
     }

@@ -120,10 +120,7 @@
                 size="small"
                 class="medium-select"
               >
-                <el-option
-                  value="dbhdq"
-                  label="低保户到期提醒"
-                ></el-option>
+                <el-option value="dbhdq" label="低保户到期提醒"></el-option>
               </el-select>
             </div>
           </div>
@@ -141,20 +138,20 @@
               <el-select size="small" class="small-select" v-model="postData.IsSendToCustomer">
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
-              </el-select>请选择收短信的
-              <span class="text-decoration" @click="selectUserShow=true">工作人员</span>，短信模板
-              <el-select
-                size="small"
-                class="medium-select"
-                v-model="postData.WaterYeildAlarmShortMsgTempleteId"
-              >
-                <el-option
-                  value="yjtx"
-                  label="用户用水预警提醒"
-                ></el-option>
               </el-select>
+              <div>
+                请选择收短信的
+                <span class="text-decoration" @click="selectUserShow=true">工作人员</span>，短信模板
+                <el-select
+                  size="small"
+                  class="medium-select"
+                  v-model="postData.WaterYeildAlarmShortMsgTempleteId"
+                >
+                  <el-option value="yjtx" label="用户用水预警提醒"></el-option>
+                </el-select>
+              </div>
               <!-- 增加的预警列表 s -->
-              <div v-for="(item,i) in postData.CaliberAlarmVal">
+              <div v-for="(item,i) in postData.CaliberAlarmVal" :key="i+'b'">
                 当水表口径为
                 <el-select
                   @change="filterCaliberSize()"
@@ -183,6 +180,7 @@
               </div>
               <!-- 增加的预警列表 e -->
             </div>
+
             <div>
               <switch-item label="用户欠费是否发送短信" :swithValue.sync="postData.IsSendBalanceLessMsg" />
               <switch-item
@@ -218,7 +216,7 @@
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </div>
-            <div class="font-small" v-for="(item,i) in postData.NotColseTimes">
+            <div class="font-small" v-for="(item,i) in postData.NotColseTimes" :key="i+'a'">
               <span v-show="i==0">自定义不关阀时间</span>
               <span v-show="i!==0">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>
               <el-date-picker
@@ -268,7 +266,7 @@ import ConfigSelectUser from "./components/ConfigSelectUser";
 import { AddBasicConfigInfo, GetBasicConfigVal } from "@/api/basicConfig";
 import { getTemplateName } from "@/api/shotMsg"; //获取模板下拉框
 import permission from "@/directive/permission/index.js"; // 权限判断指令
-import { delDecimal,delDecimal_float } from "@/utils/index";
+import { delDecimal, delDecimal_float } from "@/utils/index";
 export default {
   name: "basicConfig",
   components: { SwitchItem, ConfigTitle, ConfigSelectUser },
@@ -355,9 +353,13 @@ export default {
         };
         this.postData.CaliberAlarmVal.push(obj);
       }
-      this.postData.ReceiveSortMsgEmpArr = this.postData.ReceiveSortMsgEmp.split(
-        ","
-      );
+      if (this.postData.ReceiveSortMsgEmp) {
+        this.postData.ReceiveSortMsgEmpArr = this.postData.ReceiveSortMsgEmp.split(
+          ","
+        );
+      } else {
+        this.postData.ReceiveSortMsgEmpArr = [];
+      }
     },
     handleInput(model, e, i) {
       if (i) this.postData[model][i] = delDecimal(e.target.value);
@@ -368,9 +370,9 @@ export default {
         e.target.value
       );
     },
-    handleInputDelDecimalFloat(model, e, i){
+    handleInputDelDecimalFloat(model, e, i) {
       if (i) this.postData[model][i] = delDecimal_float(e.target.value);
-      else this.postData[model] = delDecimal_float(e.target.value);    
+      else this.postData[model] = delDecimal_float(e.target.value);
     },
     cancel() {
       GetBasicConfigVal().then(res => {
@@ -563,12 +565,12 @@ export default {
     line-height: 23px;
   }
 }
-.box-absolute{
+.box-absolute {
   position: absolute;
   width: 100%;
   background: #eee;
   padding-top: 10px;
-  bottom:0;
+  bottom: 0;
 }
 </style>
 
