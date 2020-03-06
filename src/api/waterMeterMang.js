@@ -154,9 +154,23 @@ export function GetMeter4ErrorTypeNum(data) {//异常统计
     params: data
   })
 }
-export function searWLWHisWater(data) {//历史
+export function searABHisWater(data) {//ab历史
   return request({
-    url: "/WaterMeter/GetMeter4ReportedDetail",
+    url: "/WaterMeter/GetMeter4ABReportedDetail",
+    method: 'POST',
+    data
+  })
+}
+export function searCYHisWater(data) {//C(预付费)历史
+  return request({
+    url: "/WaterMeter/GetMeter5CYFReportedDetail",
+    method: 'POST',
+    data
+  })
+}
+export function searCHHisWater(data) {//C(后付费)历史
+  return request({
+    url: "/WaterMeter/GetMeter5CHFReportedDetail",
     method: 'POST',
     data
   })

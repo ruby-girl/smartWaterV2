@@ -6,7 +6,7 @@
     title="水量详情"
     :visible.sync="dialogVisible"
     :before-close="handleClose"
-    width="425px"
+    width="500px"
   >
     <ul class="clearfix">
       <li class="water_detail">
@@ -150,11 +150,11 @@ export default {
       padding: 0;
     }
     .userNUm {
-      padding-left: 70px;
+      padding-left: 100px;
     }
     .startNum{
       display: inline-block;
-      width: 300px;
+      // width: 300px;
     }
   }
   // li:nth-child(2n){text-align: right}

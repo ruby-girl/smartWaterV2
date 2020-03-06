@@ -116,7 +116,7 @@ export default {
         TimerSendEndTime: "",
         ResetShortMsgTemplateSendTime: "" //自定义模板发送时间
       },
-       ShortMsgTempParamModel: {
+      ShortMsgTempParamModel: {
         Id: "",
         IsSysTemplate: 0, //模板类型
         SysTemplateType: "", //系统模板类型
@@ -150,7 +150,6 @@ export default {
     }
   },
   methods: {
-   
     //发送方式改变
     methodChage() {
       this.ShortMsgTempParam.SendModality = "";
@@ -163,6 +162,13 @@ export default {
     },
     addMeterReadingPlan() {
       let that = this;
+      if (this.ShortMsgTempParam.SendModality == "") {
+        that.$message({
+          message: "请选择发送时间",
+          type: "warning"
+        });
+        return false;
+      }
       if (this.ShortMsgTempParam.TemplateContent == "") {
         that.$message({
           message: "模板内容不能为空",

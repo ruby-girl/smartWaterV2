@@ -60,7 +60,7 @@
             v-for="item in WaterMeterList"
             :key="item.Id"
             :label="item.Name"
-            :value="Number(item.Id)"
+            :value="item.Id"
           />
         </el-select>
       </el-form-item>

@@ -327,7 +327,8 @@
           SortRegisterBookDetailMoveOut(this.mop).then(res => {
             if (res.code ==0 ) {
               promptInfoFun(this,2,res.message)
-              this.searchFun(this.flag)
+              //this.searchFun(this.flag)
+              this.getList()
             } else {
               promptInfoFun(this,1,res.message)
             }

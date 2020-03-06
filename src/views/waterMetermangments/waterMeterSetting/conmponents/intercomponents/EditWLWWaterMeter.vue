@@ -8,10 +8,10 @@
     :close-on-click-modal="false"
   >
     <el-form :inline="true" :model="editData" size="small" label-width="70px">
-      <el-form-item label="报警量">
+      <el-form-item :label="IsTextChange?'报警量':'报警金额'">
         <el-input v-model="editData.AmountAlarm" @keydown.native="checkNum" maxlength="20" />
       </el-form-item>
-      <el-form-item label="透支量">
+      <el-form-item :label="IsTextChange?'透支量':'透支金额'">
         <el-input v-model="editData.AmountOverdraft" @keydown.native="checkNum" maxlength="20" />
       </el-form-item>
     </el-form>
@@ -40,6 +40,7 @@ export default {
         AmountAlarm: "",
         AmountOverdraft: ""
       },
+      IsTextChange:true,
       copeObj: {},
       waterMeterList: [],
       MeterDiameterList: []

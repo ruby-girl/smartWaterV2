@@ -13,7 +13,7 @@
         <el-option v-for="(item,index) in waterFactory" :key="index" :label="item.Name" :value="item.Id"/>
       </el-select>
     </el-form-item>
-      <el-form-item label="抄表计划日期" prop="createStartTimes" v-show="screenWdth<1600?ifMore:true">
+      <el-form-item label="抄表计划日期" prop="createStartTimes">
         <el-date-picker
           :editable="false"
           @keydown.enter.native="searchFun"
@@ -29,8 +29,6 @@
         />
       </el-form-item>
     <el-form-item label="">
-      <i v-show="screenWdth<1600&&ifMore" class="icon iconfont iconshouqi3" @click="ifMore=!ifMore"></i>
-      <i v-show="screenWdth<1600&&!ifMore" class="icon iconfont iconjianqu3" @click="ifMore=!ifMore"></i>
       <el-button type="primary" size="mini" @click="searchFun" round><i class="icon iconfont">&#xe694;</i>查询</el-button>
       <el-button round size="mini" class="cl-reset" @click="resetFun('formName')"><i class="icon iconfont">&#xe64e;</i>重置</el-button>
     </el-form-item>
