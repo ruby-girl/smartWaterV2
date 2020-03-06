@@ -650,6 +650,8 @@ export default {
       if (val) {
         //选中行数据
         this.SelectionList = val.Id;
+      this.isAB = val.V;
+
       }
     },
     orderLockWLWOpen() {
@@ -663,7 +665,7 @@ export default {
         });
         return false;
       }
-      ValveLockOpen({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
+      ValveLockOpen({ SA_WaterMeter_Id: that.SelectionList,V:that.isAB }).then(res => {
         if (res.code == 0) {
           that.searchWLWMeterInfo();
           that.$message({
@@ -689,7 +691,7 @@ export default {
         });
         return false;
       }
-      ValveLockClose({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
+      ValveLockClose({ SA_WaterMeter_Id: that.SelectionList,V:that.isAB }).then(res => {
         if (res.code == 0) {
           that.searchWLWMeterInfo();
           that.$message({
@@ -714,7 +716,7 @@ export default {
         });
         return false;
       }
-      ValveUnLock({ SA_WaterMeter_Id: that.SelectionList }).then(res => {
+      ValveUnLock({ SA_WaterMeter_Id: that.SelectionList,V:that.isAB }).then(res => {
         if (res.code == 0) {
           that.searchWLWMeterInfo();
           that.$message({
