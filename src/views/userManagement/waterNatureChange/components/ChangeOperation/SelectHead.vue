@@ -14,7 +14,7 @@
           v-model="selectHead.WaterFactoryId"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.waterFactoryId,'waterFactoryId',waterWorksOption,'水厂')"
+          @change="getText(selectHead.WaterFactoryId,'WaterFactoryId',waterWorksOption,'水厂')"
         >
           <el-option label="全部" value="-1" v-show="waterWorksOption.length>1"/>
           <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />
@@ -131,8 +131,11 @@ export default {
   created() {
     this.searchWidth = document.body.clientWidth - 160; //160左侧导航宽度
     this.waterWorksOption = this.$store.state.user.waterWorks;
-    if (this.waterWorksOption.length == 1) {
+    if (this.waterWorksOption.length == 1) {    
       this.selectHead.SA_WaterFactory_Id = this.waterWorksOption[0].Id;
+      this.getArea(this.selectHead.SA_WaterFactory_Id)
+    }else{
+      this.getArea(-1)
     }
     this.userType = getDictionaryOption("用户类型");
     this.waterType = getDictionaryOption("水表类型");
@@ -151,6 +154,7 @@ export default {
         "",
         this.secNmae
       );
+      
     },
     getArea(id) {
       getOrgTree(
@@ -163,6 +167,9 @@ export default {
     },
     getText(val, model, arr, name) {
       this.$emit("getText", val, model, arr, name);
+      if(name=='水厂'){
+        this.getArea(val)
+      }
     },
     showLabel(n) {
       if (Math.floor((this.searchWidth - 180) / 310) > n || this.isShow)

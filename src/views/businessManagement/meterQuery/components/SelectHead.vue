@@ -336,7 +336,7 @@
           }
         })
       },
-      getPlanList(id){//通过水厂获得抄表计划，或抄表员信息
+      getPlanList(id,num){//通过水厂获得抄表计划，或抄表员信息
         this.param1.SA_MeterReadPlan_Id = ''
         this.getText(id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
         this.detailPlanArry = []
@@ -348,8 +348,11 @@
               datas.forEach((v)=>{
                 this.detailPlanArry = v.Plans.concat(v.Plans)
               })
-              this.param1.SA_MeterReadPlan_Id = res.data[0].Plans[0].Id
-              this.getCbyInfo(res.data[0].Plans[0].Id)//搜索默认抄表计划
+              if(datas.length&&num!="1"){
+                this.param1.SA_MeterReadPlan_Id = res.data[0].Plans[0].Id
+                this.getCbyInfo(res.data[0].Plans[0].Id)//搜索默认抄表计划
+
+              }
             } else {
               promptInfoFun(this,1,res.message)
             }
@@ -459,7 +462,25 @@
           this.param1.SA_MeterReadPlan_Id = userInfo.SA_MeterReadPlan_Id
           this.searchFun(1)
         },500)
-      }
+      },
+      //抄表计划跳转
+       planToQuery(){
+         let that=this
+        if(this.$route.query.planInfo){
+          let planInfo=this.$route.query.planInfo
+            that.typeCheck = 1
+          // this.getText(planInfo.SA_WaterFactory_Id,'SA_WaterFactory_Id',this.waterFactory,'水厂')
+          setTimeout(function(){
+            that.getPlanList(planInfo.SA_WaterFactory_Id,"1");
+          },300)
+          setTimeout(function(){
+            that.getCbyInfo(planInfo.Id)
+            that.param1.SA_WaterFactory_Id=planInfo.SA_WaterFactory_Id
+            that.param1.SA_MeterReadPlan_Id = planInfo.Id
+            that.searchFun(1)
+          },500)
+        }
+    }
     },
     computed: {
       ...mapGetters([
@@ -485,6 +506,8 @@
             this.setInforamation(userInfo)
           },500)
         }
+      this.planToQuery()
+
       }
     },
     mounted() {
@@ -512,6 +535,7 @@
         this.getPlanList(this.waterFactory[0].Id);
         setTimeout(()=>{this.param1.SA_WaterFactory_Id = this.waterFactory[0].Id},500)
       }
+      this.planToQuery()
     }
   }
 </script>
