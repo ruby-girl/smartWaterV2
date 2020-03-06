@@ -75,8 +75,29 @@
        * 触发父组建查询方法
        **/
       searchFun(){
-        this.$parent.report = Object.assign({},this.report)
-        this.$parent.searchFun();
+        if(this.report.WaterFactoryId == '-1'){
+          this.report.WaterFactoryName = '全部'
+        }else {
+          this.waterFactory.forEach(i=>{
+            i.Id ==  this.report.WaterFactoryId ? this.report.WaterFactoryName = i.Name :''
+          })
+        }
+        if(this.report.UserType == '-1'){
+          this.report.UserTypeName = '全部'
+        }else {
+          this.userArray.forEach(i=>{
+            i.Id ==  this.report.UserType ? this.report.UserTypeName = i.Name :''
+          })
+        }
+        if(this.report.UseWaterTypeId == '-1'){
+          this.report.UseWaterTypeName = '全部'
+        }else {
+          this.userWterTypes.forEach(i=>{
+            i.Id ==  this.report.UseWaterTypeId ? this.report.UseWaterTypeName = i.UseWaterTypeName :''
+          })
+        }
+         this.$parent.report = Object.assign({},this.report)
+         this.$parent.searchFun();
       },
       /**
        * 获取操作人信息
@@ -85,7 +106,6 @@
         GetWaterPropertyList(this.param).then(res => {
           if(res.code==0){
             this.userWterTypes = res.data
-            console.log(res.data)
           }
         })
       },

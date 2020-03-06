@@ -69,6 +69,7 @@
           SA_WaterFactory_Id:'',
           userType:'-1',
           WaterFactoryName:''
+
         },
         waterMeterArray:[],
         waterFactory:[],
@@ -98,6 +99,10 @@
        * 触发父组建查询方法
        * */
       searchFun(){
+        this.waterFactory.forEach(i=>{
+          i.Id ==  this.param.SA_WaterFactory_Id ? this.param.WaterFactoryName = i.Name :''
+        })
+
         this.$parent.param = Object.assign({},this.param)
         this.$parent.searchFun();
       },
