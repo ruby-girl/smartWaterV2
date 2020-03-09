@@ -73,7 +73,7 @@
           />
         </el-form-item>
 
-        <el-form-item
+        <!-- <el-form-item
           label="用户状态"
           v-show="show5||isShow"
           key="CustomerMeterState"
@@ -92,10 +92,10 @@
               :key="item.Id"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item
           label="开户状态"
-          v-show="show6||isShow"
+          v-show="show5||isShow"
           key="CustomerOpenAccountState"
           prop="CustomerOpenAccountState"
         >
@@ -361,7 +361,7 @@ export default {
         this.show3 = this.showLabel(3, val);
         this.show4 = this.showLabel(4, val);
         this.show5 = this.showLabel(5, val);
-        this.show6 = this.showLabel(6, val);
+        // this.show6 = this.showLabel(6, val);
       },
       immediate: true
     }
@@ -463,7 +463,7 @@ export default {
     this.checksData = this.$refs.searchTips.$refs.myChild.checkData; // 获取自定义字段中选中了字段\
     this.$nextTick(() => {
       this.screenWidth = this.$refs.formHeight.clientWidth;
-      if (Math.floor((this.screenWidth - 180) / 280) <= 6) {
+      if (Math.floor((this.screenWidth - 180) / 280) <= 5) {
         this.showBtn = true;
       } else {
         this.showBtn = false;

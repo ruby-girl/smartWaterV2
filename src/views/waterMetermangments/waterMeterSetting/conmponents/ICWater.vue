@@ -140,7 +140,7 @@
               <span>{{(IcwachMeterData.page - 1) * IcwachMeterData.limit+ scope.$index + 1}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="100px" align="center" fixed="right">
+          <el-table-column label="操作" width="200px" align="center" fixed="right">
             <template slot-scope="scope">
               <el-tooltip
                 class="item"

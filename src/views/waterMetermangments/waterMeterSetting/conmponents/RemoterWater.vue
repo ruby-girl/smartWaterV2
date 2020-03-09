@@ -3,7 +3,7 @@
     <el-container>
       <el-aside width="0">
         <ul>
-          <li v-for="itemList in deviceList">
+          <li v-for="itemList in deviceList" :key="itemList.ConcentratorNo">
             <p class="item-title">
               <i
                 class="icon iconfont showFlase"
