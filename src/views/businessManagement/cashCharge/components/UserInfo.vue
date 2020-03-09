@@ -1,7 +1,11 @@
 <template>
   <div>
-    <el-row class="head-bottom-box 11" v-show="!isIC">
-      <el-col :md="8" :lg="3" :xl="2">
+    <el-row class="head-bottom-box" v-show="!isIC">
+       <el-col :md="8" :lg="3" :xl="3">
+        <span>用户编号:</span>
+        <span>{{user.CustomerNo}}</span>
+      </el-col>
+      <el-col :md="8" :lg="3" :xl="3">
         <span>姓名:</span>
         <span>{{user.CustomerName}}</span>
       </el-col>
@@ -17,7 +21,7 @@
         水表编号:
         <span>{{user.SA_WaterMeterNo}}</span>
       </el-col>
-      <el-col :md="12" :lg="7" :xl="12" class="text-wrap">
+      <el-col :md="12" :lg="6" :xl="5" class="text-wrap">
         地址:
         <span>{{user.Address}}</span>
       </el-col>
@@ -25,7 +29,7 @@
     <div v-show="isIC">
       <div v-if="icInfo.UserCardCredited">
         <div
-          :class="{'head-bottom-box display-flex align-items-center flex-wrap':true,'show-user':isShow}"
+          :class="{'head-bottom-box-isIC display-flex align-items-center flex-wrap':true,'show-user':isShow}"
           v-show="icInfo.CardType==1"
         >
           <div class="user-item" v-for="(item,i) in list" :key="1+i">
@@ -50,7 +54,7 @@
       <div v-if="icInfo.UserCard">
         <!-- 未刷卡 -->
         <div
-          :class="{'head-bottom-box display-flex align-items-center flex-wrap':true,'show-user':isShow}"
+          :class="{'head-bottom-box-isIC display-flex align-items-center flex-wrap':true,'show-user':isShow}"
           v-show="icInfo.CardType==0"
         >
           <div class="user-item" v-for="(item,i) in list" :key="i+'a'">
@@ -81,6 +85,7 @@ export default {
       isShow: false,
       txt: "查看更多",
       list: [
+        { label: "用户编号", model: "CustomerNo" },
         { label: "姓名", model: "CustomerName" },
         { label: "水表类型", model: "WaterMeterTypeName" },
         { label: "电话", model: "Tel" },
@@ -135,19 +140,22 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.head-bottom-box {
+.head-bottom-box,.head-bottom-box-isIC {
   background: #f5f5f5;
   padding: 8px 15px 8px 15px;
   line-height: 35px;
   font-size: 14px;
-  position: absolute;
-  top: 50px;
+  
   width: calc(100% - 20px);
-  height: 50px;
-  overflow: hidden;
+  height: auto;
   z-index: 1111;
   border-radius: 4px;
-  
+}
+.head-bottom-box-isIC{
+  position: absolute;
+  top: 50px;
+  height: 50px;
+  overflow: hidden;
 }
 .show-user {
   height: auto !important;

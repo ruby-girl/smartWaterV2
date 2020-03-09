@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="display-flex align-items-center justify-content-flex-justify user-bottom">
+    <div :class="{'display-flex align-items-center justify-content-flex-justify':true,'user-bottom':isIC}">
       <el-form
         :inline="true"
         :model="selectHead"
@@ -33,6 +33,9 @@
           <el-button  class="special-btn" round="" size="mini" @click="handleFilterIC" v-permission="['152']">
             <i class="iconfont iconduka"></i>读卡
           </el-button>
+          <span v-show="isIC">
+            <span :class="{'main-color-red':icInfo.CardType==0,'main-color':icInfo.CardType==1}" style="font-size:16px;"><i class="iconfont iconbiaogezidingyi-tishi"></i>{{icInfo.CardType==0?'当前用户未刷卡':'当前用户已刷卡'}}</span>
+          </span>
         </el-form-item>
       </el-form>
       <div class="payment-records" @click="toPaymentQuery">
@@ -58,6 +61,8 @@ export default {
     headUser: {
       type: Object
     },
+    icInfo:{},
+    isIC:{},
     paymentNum:{}
   },
   directives: {permission},
@@ -217,7 +222,7 @@ export default {
   font-size: 14px;
 }
 .user-bottom{
-  margin-bottom: 60px;
+  margin-bottom: 50px;
 }
 </style>
 

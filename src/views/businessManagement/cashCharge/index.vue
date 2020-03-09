@@ -10,6 +10,7 @@
         @handleFilterIcParent="handleFilterIc"
         @clearData="clearData"
         @getText="getText"
+        :isIC="isIC"
         ref="head"
       />
       <user-info :headUser="headUser" :isIC="isIC" :icInfo="icInfo"/>
