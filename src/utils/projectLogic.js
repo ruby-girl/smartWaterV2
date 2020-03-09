@@ -63,10 +63,11 @@ export function WriteCardInfo(objJson, callback, successCallback) {
  * 用户制卡
  * param customerId 用户ID
  * obj vue 实列
+ * waterType 水表类型
  * */
 import { GetICWriteCard, RollBackICWriteCard, GetICReplaceWriteCardInfo, RollBacICkReplaceWriteCardInfo } from "@/api/userSetting";
 import { promptInfoFun } from "@/utils/index"
-export function getMarkCard(param, obj) {
+export function getMarkCard(param, obj,waterType) {
   try {
     if (FXYB_WEB_CS_ICCard) {
       GetICWriteCard(param).then(res => {//写卡
@@ -75,8 +76,19 @@ export function getMarkCard(param, obj) {
           if (ress != undefined && ress != "") {
             let dataJosn = JSON.parse(ress)//cs 制卡返回数据
             if (dataJosn.Result) {
-              promptInfoFun(obj, 2, '制卡成功');
-              obj.$router.push({ path: "/businessManagement/cashCharge" });
+              if (waterType == 1102) {//区分IC卡 是否跳转至收费界面
+                obj.$confirm("制卡成功，是否跳转至现金收费界面？", "提示", {
+                  confirmButtonText: "确定",
+                  cancelButtonText: "取消",
+                  iconClass: "el-icon-question questionIcon",
+                  customClass: "warningBox deleteBox",
+                  showClose: false
+                }).then(() => {
+                  obj.$router.push({path: "/businessManagement/cashCharge"});
+                })
+              } else {
+                promptInfoFun(obj, 2, '制卡成功');
+              }
             } else {
               RollBackICWriteCard({ businessId: res.data.BusinessId }).then(res => { })
               promptInfoFun(obj, 1, dataJosn.ErrMsg);

@@ -507,7 +507,6 @@
           },500)
         }
       this.planToQuery()
-
       }
     },
     mounted() {
@@ -524,6 +523,7 @@
       this.userArry = getDictionaryOption('用户类型')
 
       if(this.$route.query.CustomerInfo){
+
         let userInfo = this.$route.query.CustomerInfo
         this.getPlanList(userInfo.SA_WaterFactory_Id);
         setTimeout(()=>{

@@ -98,7 +98,7 @@
       getTreeData() {//获取全部区域树
         GetAreaList().then(res => {
           if (res.code ==0 ) {
-             this.oldTreeData2 = res.data.children
+             this.oldTreeData2 = res.data
           } else {
             promptInfoFun(this,1,res.message)
           }
