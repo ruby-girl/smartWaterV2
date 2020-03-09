@@ -83,9 +83,12 @@
         label-width="86px"
         style="margin-top:10px;"
       >
-        <el-form-item label="新水表编号" prop="newWaterMeterNo">
+        <el-form-item label="新水表编号" prop="newWaterMeterNo" v-show="user.WaterMeterTypeId!==1101">
           <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
-        </el-form-item>   
+        </el-form-item>
+        <el-form-item label="新水表编号" v-show="user.WaterMeterTypeId==1101">
+          <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
+        </el-form-item> 
         <!-- 机械表 -->
         <el-form-item label="新水表读数" prop="newRead" v-show="user.WaterMeterTypeId==1101">
           <el-input class="left-input" v-model="newUser.newRead"></el-input>
