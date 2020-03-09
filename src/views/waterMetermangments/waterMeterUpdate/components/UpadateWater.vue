@@ -380,6 +380,9 @@ export default {
         this.UpgradeWaterNeedInfo.WaterMeterId = this.waterInfo.Id;
         if(this.waterInfo.WMType=="1105"){
           this.WMType=true
+        }else {
+          this.WMType=false
+
         }
       });
     },
