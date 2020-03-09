@@ -16,10 +16,10 @@
     <el-table-column prop="IMSI" label="IMSI" width="150"></el-table-column>
     <el-table-column prop="SignalStrength" label="信号强度" width="150"></el-table-column>
     <el-table-column prop="BatteryVoltage" label="电池电压" width="150"></el-table-column>
-    <el-table-column prop="ErrorNo" label="异常信息" width="150"></el-table-column>
+    <el-table-column prop="ErrorStr" label="异常信息" width="150"></el-table-column>
     <el-table-column prop="TotalCumulateWater" label="水表总读数" width="150"></el-table-column>
     <el-table-column prop="RemainMoney" label="剩余金额" width="150"></el-table-column>
-    <el-table-column prop="ReceiveTime" label="上报时间" width="200"></el-table-column>
+    <el-table-column prop="ReportingTime" label="上报时间" width="200"></el-table-column>
   </el-table>
 </template>
 <script>

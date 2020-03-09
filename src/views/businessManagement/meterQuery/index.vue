@@ -24,7 +24,17 @@ export default {
       date: true
     };
   },
-
+  watch: {
+    $route(){//监听抄表设置 查看历史记录跳转
+      if(this.$route.query.CustomerInfo||this.$route.query.planInfo){
+        this.typeCheck = "1"
+        this.$refs.planChild1.typeCheck = this.typeCheck;
+        this.$refs.planChild1.$refs.childSelect.setparams(
+          parseInt(this.typeCheck)
+        );
+      }
+    }
+  },
   methods: {
     handleClick() {
       if (this.typeCheck == "1") {

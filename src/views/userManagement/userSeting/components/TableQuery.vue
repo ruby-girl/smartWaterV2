@@ -228,7 +228,8 @@
             printerType:1,//打印方式,无打印 = -1,小票 = 2801,发票 = 2802,
             payCode:''//支付码（付款码支付时该参数使用）
           }
-          getMarkCard(param,this)
+
+          getMarkCard(param,this,this.curObj.WaterMeterTypeId)
         }
       },
       patchCard(){//补卡

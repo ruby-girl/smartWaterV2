@@ -269,8 +269,10 @@
         if (ids.length <= 0)
           return
         DeleteList({idarr: ids}).then(res => {//删除未提交但已经上传的文件信息
+          if(res.code ==0){
+            this.upload.file = []
+          }
         })
-
       },
       /************************用水性质*************************/
       GetWaterProperty(){
