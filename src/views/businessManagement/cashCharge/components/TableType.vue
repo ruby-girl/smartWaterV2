@@ -77,7 +77,7 @@
               </el-tooltip>
               <!-- 违约金减免 e -->
               <el-tooltip
-                :class="{'item':true,'main-color-disabled':row.ChargeFlag!==1002||row.OrderType!==2001?true:false}"
+                :class="{'item':true,'main-color-disabled':row.ChargeFlag!==1002?true:false}"
                 :popper-class="row.ChargeFlag==1002?'tooltip':''"
                 :effect="row.ChargeFlag==1002?'light':'dark'"
                 :visible-arrow="row.ChargeFlag==1002?false:true"
