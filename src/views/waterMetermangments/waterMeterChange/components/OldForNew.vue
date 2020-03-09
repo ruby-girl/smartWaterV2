@@ -83,12 +83,9 @@
         label-width="86px"
         style="margin-top:10px;"
       >
-        <el-form-item label="新水表编号" prop="newWaterMeterNo" v-if="user.WaterMeterTypeId!==1101">
+        <el-form-item label="新水表编号" prop="newWaterMeterNo">
           <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
-        </el-form-item>
-        <el-form-item label="新水表编号" v-else>
-          <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
-        </el-form-item>
+        </el-form-item>   
         <!-- 机械表 -->
         <el-form-item label="新水表读数" prop="newRead" v-show="user.WaterMeterTypeId==1101">
           <el-input class="left-input" v-model="newUser.newRead"></el-input>
@@ -166,8 +163,7 @@ export default {
         !this.newUser.oldRead &&
         (this.user.WaterMeterTypeId == 1101 ||
           this.user.WaterMeterTypeId == 1103)
-      ) {
-        //IC卡表端余额必填
+      ) {   
         callback(new Error("必填"));
       } else {
         callback();
@@ -175,13 +171,32 @@ export default {
     };
     const validatewlwWaterYield = (rule, value, callback) => {
       if (!this.newUser.wlwWaterYield && this.user.WaterMeterTypeId == 1104) {
-        //IC卡表端余额必填
         callback(new Error("必填"));
       } else {
         callback();
       }
     };
-
+      const validateWaterAmountAlarm = (rule, value, callback) => {
+      if (!this.newUser.waterAmountAlarm && this.user.WaterMeterTypeId == 1104) {      
+        callback(new Error("必填"));
+      } else {
+        callback();
+      }
+    };
+    const validateWaterAmountOverdraft = (rule, value, callback) => {
+      if (!this.newUser.waterAmountOverdraft && this.user.WaterMeterTypeId == 1104) {      
+        callback(new Error("必填"));
+      } else {
+        callback();
+      }
+    };
+    const validateNewWaterMeterNo = (rule, value, callback) => {
+      if (!this.newUser.newWaterMeterNo && this.user.WaterMeterTypeId !== 1101) {       
+        callback(new Error("必填"));
+      } else {
+        callback();
+      }
+    };
     return {
       user: {
         WaterMeterTypeId: 1101,
@@ -207,13 +222,13 @@ export default {
       },
       selectUserShow: false,
       rules: {
-         newWaterMeterNo: [{ required: true, message: "必填", trigger: "blur" }],
         newRead: [
           { required: true, trigger: "blur", validator: validateNewRead }
         ],
-        waterAmountAlarm:[{ required: true, message: "必填", trigger: "blur" }],
-        waterAmountOverdraft:[{ required: true, message: "必填", trigger: "blur" }],
-        remark: [{ required: true, message: "必填", trigger: "blur" }]
+        waterAmountAlarm:[{ required: true, trigger: "blur", validator: validateWaterAmountAlarm }],
+        waterAmountOverdraft:[{ required: true, trigger: "blur", validator: validateWaterAmountOverdraft }],
+        remark: [{ required: true, message: "必填", trigger: "blur" }],
+        newWaterMeterNo: [{ required: true, validator: validateNewWaterMeterNo,trigger: "blur" }]
       },
       oldUser: {
         meterBalance: [
