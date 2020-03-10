@@ -326,8 +326,8 @@ export function getFileFun(data, object) {//获取附件信息,data 详情接口
       url: object.baseUrl + (fileData[i].RelativePath).replace("~", ""),
     }
     files.push(obj)
-    return files
   }
+  return files
 }
 // 表格无数据，禁止导出
 export function isExport(data) {

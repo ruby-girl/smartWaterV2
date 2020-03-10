@@ -10,7 +10,7 @@
           </p>
           <p v-show="item.type === 3?true:false"><span class="icon iconfont" style="color:#dc2e1b;font-size: 60px;">&#xe691;</span>
           </p>
-          <i @click="handlePreview(item)">{{ item.name }}</i>
+          <i @click="handlePreview(item)" :title="item.name">{{ item.name }}</i>
         </li>
       </ul>
     </div>
@@ -121,7 +121,9 @@
           color: #00B3A1;
           font: normal 14px/25px '';
           text-decoration: underline;
-          cursor: pointer
+          cursor: pointer;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
