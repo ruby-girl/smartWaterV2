@@ -209,7 +209,7 @@ export default {
       getWaterInfo({ customerId: id }).then(res => {
         if (res.code == 0) {
           this.waterInfo = res.data;
-          this.totalMoney = this.waterInfo.MeterBalance + this.userInfo.Balance;
+          this.totalMoney =  this.userInfo.Balance;
         } else {
           this.$message({
             type: "warning",

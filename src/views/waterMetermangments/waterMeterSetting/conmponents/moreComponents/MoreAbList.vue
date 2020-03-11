@@ -10,7 +10,7 @@
     <el-table-column prop="WaterAmountAlarm" align="center" label="报警量(吨)" width="150"></el-table-column>
     <el-table-column prop="WaterAmountOverdraft" align="center" label="透支量(吨)" width="150"></el-table-column>
     <el-table-column prop="MonthCumulateWater" align="center" label="当月水量(吨)" width="150"></el-table-column>
-    <el-table-column prop="LastMonthCumulateWater" align="center" label="累计水量(吨)" width="150"></el-table-column>
+    <el-table-column prop="TotalCumulateWater" align="center" label="累计水量(吨)" width="150"></el-table-column>
     <el-table-column prop="ErrorNo" align="center" label="剩余金额(元)" width="150"></el-table-column>
     <el-table-column prop="TotalCumulateWater" label="本月1阶">
       <el-table-column
@@ -20,7 +20,7 @@
         width="120"
       ></el-table-column>
       <el-table-column
-        prop="UsedWaterMoneyThisMonthStep1 "
+        prop="UsedWaterMoneyThisMonthStep1"
         align="center"
         label="水费(元)"
         width="120"
