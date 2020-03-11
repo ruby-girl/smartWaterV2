@@ -299,15 +299,15 @@
       title="查看更多"
       :visible.sync="viewWaterMoretory"
       top="20vh"
-      :width="isAB=='2'&&IsPrepayment?'412px':'836px'"
-      hight="432px"
+      :width="isAB=='2'&&!IsPrepayment?'412px':'836px'"
+      hight="200px"
       center
       :close-on-click-modal="false"
     >
       <!-- <wLW-water-meterHis :hisData="hisData" :meterReadListParam="Bl_WaterMeter4His" /> -->
       <more-ab-list v-if="isAB=='1'" :moreData="moreData" />
-      <more-ch-list v-if="isAB=='2'&&IsPrepayment" :moreData="moreData" />
-      <more-cy-list v-if="isAB=='2'&&!IsPrepayment" :moreData="moreData" />
+      <more-ch-list v-if="isAB=='2'&&!IsPrepayment" :moreData="moreData" />
+      <more-cy-list v-if="isAB=='2'&&IsPrepayment" :moreData="moreData" />
     </el-dialog>
     <editWLW-waterMeter ref="edit" :edit-show.sync="editShow" />
   </div>

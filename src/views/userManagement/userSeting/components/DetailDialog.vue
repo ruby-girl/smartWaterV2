@@ -288,7 +288,8 @@
         img{width: 100%;height: 100%}
         width: 130px;height: 130px;list-style: none;float: left;border: solid 1px #D8E2E7;margin-right: 24px;position: relative;margin-bottom: 30px;
         p{width: 100%;height:100%;overflow: hidden;margin: 0;text-align: center;line-height: 130px;}
-        i {display: block;width: 100%;text-align: center;color: #00B3A1;font:normal 14px/25px '';text-decoration: underline;cursor: pointer}
+        i {display: block;width: 100%;text-align: center;color: #00B3A1;font:normal 14px/25px '';text-decoration: underline;cursor: pointer; overflow: hidden;
+          text-overflow: ellipsis;}
       }
     }
     .user_file{padding: 0 12px;}

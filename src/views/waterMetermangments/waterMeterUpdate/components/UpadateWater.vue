@@ -304,7 +304,7 @@ export default {
           if (val) {
             this.userInfo = val.data[0];
             this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
-            this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+         
           }
         });
       });
@@ -340,8 +340,8 @@ export default {
     //升级请求
     updateApi() {
       let apiData = Object.assign({}, this.UpgradeWaterNeedInfo);
-      if (this.UpgradeWaterNeedInfo.WaterMeterNo == 1104) {
-        apiData.WaterMeterNo = this.waterInfo·WMType;
+      if (this.UpgradeWaterNeedInfo.WaterType == 1104) {
+        apiData.WaterType = this.waterInfo·WMType;
         
       }
       UpgradeInfo({
@@ -370,6 +370,7 @@ export default {
       this.UpgradeWaterNeedInfo = this.$options.data().UpgradeWaterNeedInfo;
       this.UpgradeWaterNeedInfo.WaterType = num;
       this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
+     this.UpgradeWaterNeedInfo.CustomerId =this.userInfo.Id;
     },
     getWlWWater(num) {
       getWLWaterInfo({ WaterMeterNo: num }).then(res => {
@@ -475,6 +476,7 @@ export default {
         this.checkNoMoney(val.Id);
         this.selectUserShow = false;
         this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
+        this.UpgradeWaterNeedInfo.CustomerId=this.userInfo.CustomerId
       }
       // this.getWaterMeterInfo(res.data[0].Id);
     },

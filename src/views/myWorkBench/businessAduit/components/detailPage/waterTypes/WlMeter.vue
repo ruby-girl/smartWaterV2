@@ -42,12 +42,12 @@
         <span>{{ waterData.MeterDiameter }}</span>
       </p>
     </li>
-    <li class="clearfix one-third">
+    <!--<li class="clearfix one-third">
       <p>
         <label>安装位置</label>
         <span>{{ waterData.InstallAddress }}</span>
       </p>
-    </li>
+    </li>-->
     <li class="clearfix whole">
       <p>
         <label>备注</label>

@@ -149,12 +149,12 @@ export default {
       margin: 0;
       padding: 0;
     }
-    .userNUm {
-      padding-left: 100px;
-    }
+    // .userNUm {
+    //   padding-left: 100px;
+    // }
     .startNum{
       display: inline-block;
-      // width: 300px;
+      width: 250px;
     }
   }
   // li:nth-child(2n){text-align: right}
