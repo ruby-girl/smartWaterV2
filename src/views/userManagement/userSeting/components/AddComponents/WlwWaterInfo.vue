@@ -76,7 +76,7 @@
           return
         }
         /*由于axios 异步请求导致获取不到返回值 股用以下方式解决*/
-        let url = this.baseUrl+'/api/Customer/GetWLWWaterMeterByWaterMeterNo',
+        let url = this.baseUrl+'/api/Customer/GetWLWWaterMeterABCByWaterMeterNo',
             data = {WaterMeterNo:this.data.WaterMeterNo}
         this.$http.get(url,{
           params: data,
