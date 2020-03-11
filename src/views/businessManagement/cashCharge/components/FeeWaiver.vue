@@ -87,7 +87,10 @@ export default {
     close() {
       this.inputValue = "";
     },
-    feeWaiver() {
+    feeWaiver() {     
+      if(this.inputValue==''){
+        this.inputValue=0
+      }
       if (this.type == "水费") {
         this.OrderFeeWaiverFunc();
       } else {
@@ -126,7 +129,7 @@ export default {
       }
       OrderAfterOverdueFeeWaiver({
         SA_Order_Id: this.feeWaiverItem.Id,
-        AfterOverdueFee: this.inputValue,
+        AfterOverdueFee:this.inputValue,
         model: "现金收费"
       }).then(res => {
         this.resFunc();

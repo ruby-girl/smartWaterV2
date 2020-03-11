@@ -41,7 +41,7 @@
         </el-form-item>
         <!-- 物联网 -->
         <el-form-item label="表端余额" v-show="(showInfo&&user.WaterMeterTypeId==1104)||(screeWidth>1339&&user.WaterMeterTypeId==1104)">
-          <el-input class="left-input" v-model="user.meterBalance" :disabled="true"></el-input>
+          <el-input class="left-input" v-model="user.Balance" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="地址" v-show="showInfo||screeWidth>1339">
           <el-input class="left-input" v-model="user.Address" :disabled="true"></el-input>

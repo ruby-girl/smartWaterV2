@@ -84,7 +84,7 @@
         style="margin-top:10px;"
       >
         <el-form-item label="新水表编号" prop="newWaterMeterNo" v-show="user.WaterMeterTypeId!==1101">
-          <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
+          <el-input class="left-input" v-model="newUser.newWaterMeterNo"  @keyup.enter.native="getNewWaterType(user.WaterMeterTypeId,newUser.newWaterMeterNo)"></el-input>
         </el-form-item>
         <el-form-item label="新水表编号" v-show="user.WaterMeterTypeId==1101">
           <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
@@ -95,18 +95,18 @@
         </el-form-item>
         <!-- 机械表 -->
          <!-- AB版物联网 -->
-        <el-form-item label="报警量" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&user.isAB">
+        <el-form-item label="报警量" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&newUser.isAB&&newUser.isAB!==isAB">
           <el-input class="left-input" v-model="newUser.waterAmountAlarm"></el-input>
         </el-form-item>
-        <el-form-item label="透支量" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&user.isAB">
+        <el-form-item label="透支量" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&newUser.isAB&&newUser.isAB!==isAB">
           <el-input class="left-input" v-model="newUser.waterAmountOverdraft"></el-input>
         </el-form-item>
         <!-- AB版物联网 -->
         <!-- C版物联网 -->
-        <el-form-item label="报警金额" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&!user.isAB">
+        <el-form-item label="报警金额" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&!newUser.isAB&&newUser.isAB!==isAB">
           <el-input class="left-input" @blur="handleInputDelDecimalFloat('waterAmountAlarm',$event)" v-model="newUser.waterAmountAlarm"></el-input>
         </el-form-item>
-        <el-form-item label="透支金额" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&!user.isAB">
+        <el-form-item label="透支金额" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&!newUser.isAB&&newUser.isAB!==isAB">
           <el-input class="left-input" @blur="handleInputDelDecimalFloat('waterAmountOverdraft',$event)" v-model="newUser.waterAmountOverdraft"></el-input>
         </el-form-item>
         <!-- C版物联网 -->
@@ -140,7 +140,7 @@ import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import SelectUser from "@/components/SelectUser";
 import { ICReadCardInfo,WriteCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 import {RollBackICSettlement} from "@/api/cashCharge";
-import { GetWLWInfoByCustomerId } from "@/api/userSetting"//判断物联网是AB版还是C版
+import { getWLWaterInfo } from "@/api/waterMeterMang"//判断物联网是AB版还是C版
 import {delDecimal_float } from "@/utils/index";
 export default {
   components: { SelectUser },
@@ -180,14 +180,14 @@ export default {
       }
     };
       const validateWaterAmountAlarm = (rule, value, callback) => {
-      if (!this.newUser.waterAmountAlarm && this.user.WaterMeterTypeId == 1104) {      
+      if (this.newUser.waterAmountAlarm=='' && this.user.WaterMeterTypeId == 1104&&this.newUser.isAB!==this.isAB) {      
         callback(new Error("必填"));
       } else {
         callback();
       }
     };
     const validateWaterAmountOverdraft = (rule, value, callback) => {
-      if (!this.newUser.waterAmountOverdraft && this.user.WaterMeterTypeId == 1104) {      
+      if (this.newUser.waterAmountOverdraft=='' && this.user.WaterMeterTypeId == 1104&&this.newUser.isAB!==this.isAB) {      
         callback(new Error("必填"));
       } else {
         callback();
@@ -202,9 +202,9 @@ export default {
     };
     return {
       user: {
-        WaterMeterTypeId: 1101,
-        isAB:false
+        WaterMeterTypeId: 1101
       },
+      isAB:true,
       newUser: {
         customerId: "",
         oldRead: "", //读数（机械，远传必填）
@@ -213,6 +213,7 @@ export default {
         newRead: "", //新水表读数（机械表必填
         meterBalance: "", //IC卡表端余额
         remark: "", //备注
+        isAB:false,
         isPage: false, //是否翻页
         waterAmountAlarm:'',//报警量或报警金额（AB—C，C—AB预付费传值
         waterAmountOverdraft:''//透支量或透支金额（AB—C，C—AB预付费传值）
@@ -256,6 +257,11 @@ export default {
       this.params.CustomerQueryValue = val;
       this.params.CustomerQueryType = n;
       this.getUser();
+    },
+    getNewWaterType(type,num){//新水表查询水表类型
+      if(type==1104){
+       this.getWLW(num,'newUser')
+      }
     },
     change() {
       if (!this.user.CustomerNo) {
@@ -342,7 +348,7 @@ export default {
       }
       this.user = val;
       this.newUser.customerId = val.Id;
-      if(val.WaterMeterTypeId==1104) this.getWLW(val.Id) 
+      if(val.WaterMeterTypeId==1104) this.getWLW(val.SA_WaterMeterNo) 
     },
     // IC卡读卡
     handleFilterIC() {
@@ -386,7 +392,7 @@ export default {
           if (info) {
             this.user = res.data[0];
             this.newUser.customerId = res.data[0].Id;          
-            if(res.data[0].WaterMeterTypeId==1104) this.getWLW(res.data[0].Id)
+            if(res.data[0].WaterMeterTypeId==1104) this.getWLW(res.data[0].SA_WaterMeterNo)
           } else {
             //如果不是读卡数据，查询出来是IC卡用户，提示需读卡操作
             if (res.data[0].CustomerState != 1301) {
@@ -409,7 +415,7 @@ export default {
             } else {
               this.user = res.data[0];
               if(res.data[0].WaterMeterTypeId==1104){
-                 this.getWLW(res.data[0].Id)
+                 this.getWLW(res.data[0].SA_WaterMeterNo)
               }
               this.newUser.customerId = res.data[0].Id;
             }
@@ -420,14 +426,17 @@ export default {
       });
     },
     //查询物联网为AB版还是C版
-    getWLW(Id){
-      GetWLWInfoByCustomerId({'CustomerId':Id}).then(res=>{
-        res.data.WaterMeterType == 1104 ? this.isAB = true: this.isAB = false //1104 AB版本 05 C版本
+    getWLW(Id,isNew){
+      getWLWaterInfo({WaterMeterNo:Id}).then(res=>{
+        if(isNew) res.data.WMType=== 1104 ? this.newUser.isAB = true: this.newUser.isAB = false //1104 AB版本 05 C版本
+        else res.data.WMType=== 1104 ? this.isAB = true: this.isAB = false //1104 AB版本 05 C版本
       })
     },
     handleInputDelDecimalFloat(model, e){
     this.newUser[model] = delDecimal_float(e.target.value);  
-    }
+    },
+    // 如果是AB->AB C->C,隐藏报警量透支量等输入框
+
   }
 };
 </script>
