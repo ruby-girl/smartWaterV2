@@ -186,12 +186,11 @@
           </el-form-item>
           <el-form-item :label="WMType?'透支金额':'透支量'">
             <el-input
-          oninput="if(this.value=='00'){this.value='0';}else{this.value=this.value.replace(/[^0-9]/g,'')};"
+              oninput="if(this.value=='00'){this.value='0';}else{this.value=this.value.replace(/[^0-9]/g,'')};"
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft"
               class="left-input"
             ></el-input>
           </el-form-item>
-
           <el-form-item label="账户余额">
             <el-input
               class="totalMoney left-input"
