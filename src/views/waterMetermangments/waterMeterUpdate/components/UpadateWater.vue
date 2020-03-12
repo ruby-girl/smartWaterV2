@@ -180,11 +180,13 @@
           <el-form-item :label="WMType?'报警金额':'报警量'">
             <el-input
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm"
+              oninput="if(this.value=='00'){this.value='0';}else{this.value=this.value.replace(/[^0-9]/g,'')};"
               class="left-input"
             ></el-input>
           </el-form-item>
           <el-form-item :label="WMType?'透支金额':'透支量'">
             <el-input
+          oninput="if(this.value=='00'){this.value='0';}else{this.value=this.value.replace(/[^0-9]/g,'')};"
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft"
               class="left-input"
             ></el-input>
