@@ -180,14 +180,12 @@
           <el-form-item :label="WMType?'报警金额':'报警量'">
             <el-input
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm"
-              disabled
               class="left-input"
             ></el-input>
           </el-form-item>
           <el-form-item :label="WMType?'透支金额':'透支量'">
             <el-input
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft"
-              disabled
               class="left-input"
             ></el-input>
           </el-form-item>
@@ -337,8 +335,8 @@ export default {
     //升级请求
     updateApi() {
       let apiData = Object.assign({}, this.UpgradeWaterNeedInfo);
-      if (this.UpgradeWaterNeedInfo.WaterType == 1104) {
-        apiData.WaterType = this.waterInfo·WMType;
+      if (this.WMType) {
+        apiData.WaterType = "1105";
       }
       UpgradeInfo({
         UpgradeWaterNeedInfo: apiData,
@@ -355,7 +353,7 @@ export default {
             type: "warning"
           });
         }
-        this.UpgradeWaterNeedInfo = this.$options.UpgradeWaterNeedInfo;
+        this.UpgradeWaterNeedInfo = this.$options.data().UpgradeWaterNeedInfo;
         this.userInf = {};
         this.waterInfo = {};
       });
@@ -392,7 +390,6 @@ export default {
         this.UpgradeWaterNeedInfo.meter3Param.CollectorNo = this.waterInfo.CollectorNo;
         this.UpgradeWaterNeedInfo.meter3Param.MeterDiameter = this.waterInfo.MeterDiameter;
         this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
-
       });
     },
     //当前用水量

@@ -99,7 +99,7 @@
     </el-row>
 
     <p class="userBtn">
-      <el-button size="small" type="primary" @click="accountBtn" v-permission="['228']">确认销户</el-button>
+      <el-button size="small" type="primary" @click="accountBtn" v-permission="['228']">提交销户</el-button>
     </p>
     <select-user :selectUserShow="selectUserShow" :headQuery="params" @handleFilter="handleFilter" />
   </div>

@@ -59,6 +59,42 @@ export const constantRoutes = [
 ]
 export const asyncRoutes = [
   {
+    path: '/organizationManage',
+    redirect: '/organizationManage/company',
+    component: Layout,
+    meta: {
+      title: '组织管理',
+      icon: 'iconfont iconcaidan-zuzhiguanli',
+      roles: ['110']
+    },
+    children: [
+      {
+        path: 'waterFactory',
+        name: 'waterFactoryPermission',
+        component: () => import('@/views/organizationManage/waterFactory'),
+        meta: { title: '水厂管理', roles: ['111'] }
+      },
+      {
+        path: 'areaManage',
+        name: 'areaManage',
+        component: () => import('@/views/organizationManage/areaManage/index'),
+        meta: { title: '片区管理', roles: ['115'] }
+      },
+      {
+        path: 'department',
+        name: 'department',
+        component: () => import('@/views/organizationManage/department/index'),
+        meta: { title: '部门管理', roles: ['119'] }
+      },
+      {
+        path: 'peopleManage',
+        name: 'peopleManage',
+        component: () => import('@/views/organizationManage/peopleManage/index'),
+        meta: { title: '人员管理', roles: ['123'] }
+      }
+    ]
+  },
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/page',
@@ -100,42 +136,7 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/organizationManage',
-    redirect: '/organizationManage/company',
-    component: Layout,
-    meta: {
-      title: '组织管理',
-      icon: 'iconfont iconcaidan-zuzhiguanli',
-      roles: ['110']
-    },
-    children: [
-      {
-        path: 'waterFactory',
-        name: 'waterFactoryPermission',
-        component: () => import('@/views/organizationManage/waterFactory'),
-        meta: { title: '水厂管理', roles: ['111'] }
-      },
-      {
-        path: 'areaManage',
-        name: 'areaManage',
-        component: () => import('@/views/organizationManage/areaManage/index'),
-        meta: { title: '片区管理', roles: ['115'] }
-      },
-      {
-        path: 'department',
-        name: 'department',
-        component: () => import('@/views/organizationManage/department/index'),
-        meta: { title: '部门管理', roles: ['119'] }
-      },
-      {
-        path: 'peopleManage',
-        name: 'peopleManage',
-        component: () => import('@/views/organizationManage/peopleManage/index'),
-        meta: { title: '人员管理', roles: ['123'] }
-      }
-    ]
-  },
+ 
   {
     path: '/businessManagement',
     component: Layout,
