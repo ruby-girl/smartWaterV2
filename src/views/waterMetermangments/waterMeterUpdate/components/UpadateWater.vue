@@ -184,7 +184,7 @@
               class="left-input"
             ></el-input>
           </el-form-item>
-          <el-form-item  :label="WMType?'透支金额':'透支量'">
+          <el-form-item :label="WMType?'透支金额':'透支量'">
             <el-input
               v-model="UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft"
               disabled
@@ -244,10 +244,8 @@ export default {
         //用户信息
         BdBalance: 0
       },
-      WMType:true,
-      waterInfo: {
-        
-      }, //水表信息
+      WMType: true,
+      waterInfo: {}, //水表信息
       totalMoney: 0,
       selectUserShow: false, //查询多个用户弹窗
       params: {
@@ -304,7 +302,6 @@ export default {
           if (val) {
             this.userInfo = val.data[0];
             this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
-         
           }
         });
       });
@@ -342,7 +339,6 @@ export default {
       let apiData = Object.assign({}, this.UpgradeWaterNeedInfo);
       if (this.UpgradeWaterNeedInfo.WaterType == 1104) {
         apiData.WaterType = this.waterInfo·WMType;
-        
       }
       UpgradeInfo({
         UpgradeWaterNeedInfo: apiData,
@@ -370,7 +366,7 @@ export default {
       this.UpgradeWaterNeedInfo = this.$options.data().UpgradeWaterNeedInfo;
       this.UpgradeWaterNeedInfo.WaterType = num;
       this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
-     this.UpgradeWaterNeedInfo.CustomerId =this.userInfo.Id;
+      this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
     },
     getWlWWater(num) {
       getWLWaterInfo({ WaterMeterNo: num }).then(res => {
@@ -379,11 +375,12 @@ export default {
         this.UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft = this.waterInfo.WaterAmountOverdraft;
         this.UpgradeWaterNeedInfo.meter4Param.IMSI = this.waterInfo.IMSI;
         this.UpgradeWaterNeedInfo.WaterMeterId = this.waterInfo.Id;
-        if(this.waterInfo.WMType=="1105"){
-          this.WMType=true
-        }else {
-          this.WMType=false
+        this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
 
+        if (this.waterInfo.WMType == "1105") {
+          this.WMType = true;
+        } else {
+          this.WMType = false;
         }
       });
     },
@@ -394,6 +391,8 @@ export default {
         this.UpgradeWaterNeedInfo.meter3Param.ConcentratorNo = this.waterInfo.ConcentratorNo;
         this.UpgradeWaterNeedInfo.meter3Param.CollectorNo = this.waterInfo.CollectorNo;
         this.UpgradeWaterNeedInfo.meter3Param.MeterDiameter = this.waterInfo.MeterDiameter;
+        this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+
       });
     },
     //当前用水量
@@ -476,7 +475,7 @@ export default {
         this.checkNoMoney(val.Id);
         this.selectUserShow = false;
         this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
-        this.UpgradeWaterNeedInfo.CustomerId=this.userInfo.CustomerId
+        this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.CustomerId;
       }
       // this.getWaterMeterInfo(res.data[0].Id);
     },
