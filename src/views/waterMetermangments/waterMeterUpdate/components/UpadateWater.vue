@@ -336,7 +336,7 @@ export default {
     //升级请求
     updateApi() {
       let apiData = Object.assign({}, this.UpgradeWaterNeedInfo);
-      if (this.WMType) {
+      if (this.WMType&&this.UpgradeWaterNeedInfo.WaterType=="1104") {
         apiData.WaterType = "1105";
       }
       UpgradeInfo({
@@ -369,7 +369,7 @@ export default {
     },
     getWlWWater(num) {
       getWLWaterInfo({ WaterMeterNo: num }).then(res => {
-        if (res.data.length) {
+        if (res.data) {
           this.waterInfo = res.data;
           this.UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm = this.waterInfo.WaterAmountAlarm;
           this.UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft = this.waterInfo.WaterAmountOverdraft;
