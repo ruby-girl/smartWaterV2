@@ -382,7 +382,7 @@ export default {
           } else {
             this.WMType = false;
           }
-        }else {
+        } else {
           this.$message({
             message: res.message ? res.message : "未查询到该水表信息",
             type: "warning"
@@ -397,6 +397,8 @@ export default {
         this.UpgradeWaterNeedInfo.meter3Param.ConcentratorNo = this.waterInfo.ConcentratorNo;
         this.UpgradeWaterNeedInfo.meter3Param.CollectorNo = this.waterInfo.CollectorNo;
         this.UpgradeWaterNeedInfo.meter3Param.MeterDiameter = this.waterInfo.MeterDiameter;
+        this.UpgradeWaterNeedInfo.WaterMeterId = this.waterInfo.Id;
+
         this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
       });
     },
