@@ -369,17 +369,24 @@ export default {
     },
     getWlWWater(num) {
       getWLWaterInfo({ WaterMeterNo: num }).then(res => {
-        this.waterInfo = res.data;
-        this.UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm = this.waterInfo.WaterAmountAlarm;
-        this.UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft = this.waterInfo.WaterAmountOverdraft;
-        this.UpgradeWaterNeedInfo.meter4Param.IMSI = this.waterInfo.IMSI;
-        this.UpgradeWaterNeedInfo.WaterMeterId = this.waterInfo.Id;
-        this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
+        if (res.data.length) {
+          this.waterInfo = res.data;
+          this.UpgradeWaterNeedInfo.meter4Param.WaterAmountAlarm = this.waterInfo.WaterAmountAlarm;
+          this.UpgradeWaterNeedInfo.meter4Param.WaterAmountOverdraft = this.waterInfo.WaterAmountOverdraft;
+          this.UpgradeWaterNeedInfo.meter4Param.IMSI = this.waterInfo.IMSI;
+          this.UpgradeWaterNeedInfo.WaterMeterId = this.waterInfo.Id;
+          this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
 
-        if (this.waterInfo.WMType == "1105") {
-          this.WMType = true;
-        } else {
-          this.WMType = false;
+          if (this.waterInfo.WMType == "1105") {
+            this.WMType = true;
+          } else {
+            this.WMType = false;
+          }
+        }else {
+          this.$message({
+            message: res.message ? res.message : "未查询到该水表信息",
+            type: "warning"
+          });
         }
       });
     },
