@@ -117,7 +117,7 @@ export default {
   }
   .water_detail {
     list-style-type: none;
-
+    width: 100%;
     font: normal 14px "Microsoft YaHei";
     // width: 50%;
     margin-bottom: 30px;
