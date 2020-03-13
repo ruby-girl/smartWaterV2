@@ -140,7 +140,7 @@ import { GetCustomerDataList } from "@/api/userSetting"; //回车搜索
 import SelectUser from "@/components/SelectUser";
 import { ICReadCardInfo,WriteCardInfo } from "@/utils/projectLogic"; //IC卡读卡
 import {RollBackICSettlement} from "@/api/cashCharge";
-import { getWLWaterInfo } from "@/api/waterMeterMang"//判断物联网是AB版还是C版
+import { GetWLW_ABC_WaterMeterNo } from "@/api/waterMeterMang"//判断物联网是AB版还是C版
 import {delDecimal_float } from "@/utils/index";
 export default {
   components: { SelectUser },
@@ -427,9 +427,9 @@ export default {
     },
     //查询物联网为AB版还是C版
     getWLW(Id,isNew){
-      getWLWaterInfo({WaterMeterNo:Id}).then(res=>{
-        if(isNew) res.data.WMType=== 1104 ? this.newUser.isAB = true: this.newUser.isAB = false //1104 AB版本 05 C版本
-        else res.data.WMType=== 1104 ? this.isAB = true: this.isAB = false //1104 AB版本 05 C版本
+      GetWLW_ABC_WaterMeterNo({WaterMeterNo:Id}).then(res=>{
+        if(isNew) res.data=== 1104 ? this.newUser.isAB = true: this.newUser.isAB = false //1104 AB版本 05 C版本
+        else res.data=== 1104 ? this.isAB = true: this.isAB = false //1104 AB版本 05 C版本
       })
     },
     handleInputDelDecimalFloat(model, e){

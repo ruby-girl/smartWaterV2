@@ -86,7 +86,7 @@
           <el-input class="left-input" v-model="newUser.Balance" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="表端余额" v-show="user.WaterMeterTypeId==1104">
-          <el-input class="left-input" v-model="newUser.meterBalance" :disabled="true"></el-input>
+          <el-input class="left-input" v-model="newUser.Balance" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="地址">
           <el-input class="left-input" v-model="newUser.Address" :disabled="true"></el-input>

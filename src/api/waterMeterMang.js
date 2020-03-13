@@ -249,6 +249,13 @@ export function getWLWaterInfo(data) {//根据物联网编号  获取水表信�
     params: data
   })
 }
+export function GetWLW_ABC_WaterMeterNo(data) {//根据物联网编号  获取是AB还是C，无其它错误提示的接口，肖江
+  return request({
+    url: "/Customer/GetWLW_ABC_WaterMeterNo",
+    method: 'GET',
+    params: data
+  })
+}
 export function UpgradeInfo(data) {//升级
   return request({
     url: "/WaterMeterUpgrade/SubmitUpgradeInfo?balance=" + data.balance,
