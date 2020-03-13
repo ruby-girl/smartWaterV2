@@ -10,12 +10,12 @@
       @submit.native.prevent
       ref="formHeight"
     >
-      <el-form-item label="水厂" :label-width="!isShow?'40px':''" prop="waterFactoryId">
+      <el-form-item label="水厂" :label-width="!isShow?'40px':''" prop="SA_WaterFactory_Id">
         <el-select
-          v-model="selectHead.waterFactoryId"
+          v-model="selectHead.SA_WaterFactory_Id"
           placeholder="请选择"
           @keydown.enter.native="handleFilter"
-          @change="getText(selectHead.waterFactoryId,'waterFactoryId',waterWorksOption,'水厂')"
+          @change="getText(selectHead.SA_WaterFactory_Id,'SA_WaterFactory_Id',waterWorksOption,'水厂')"
         >
           <el-option label="全部" value="-1" v-show="waterWorksOption.length>1"/>
           <el-option v-for="item in waterWorksOption" :key="item.Id" :label="item.Name" :value="item.Id" />

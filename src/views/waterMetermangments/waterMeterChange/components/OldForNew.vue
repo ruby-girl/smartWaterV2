@@ -60,7 +60,7 @@
         </el-form-item>
         <!-- 物联网账户余额-->
         <el-form-item label="账户余额" v-show="user.WaterMeterTypeId==1104">
-          <el-input class="left-input" v-model="newUser.meterBalance" :disabled="true"></el-input>
+          <el-input class="left-input" v-model="user.Balance" :disabled="true"></el-input>
         </el-form-item>
         <!-- 物联网e -->
         <el-form-item label="账户余额" v-show="user.WaterMeterTypeId!==1104">
