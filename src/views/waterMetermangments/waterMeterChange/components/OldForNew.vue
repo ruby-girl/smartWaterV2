@@ -180,18 +180,20 @@ export default {
       }
     };
       const validateWaterAmountAlarm = (rule, value, callback) => {
-      if (this.newUser.waterAmountAlarm=='' && this.user.WaterMeterTypeId == 1104&&this.newUser.isAB!==this.isAB) {      
+      if (this.newUser.waterAmountAlarm==='' && this.user.WaterMeterTypeId == 1104&&this.newUser.isAB!==this.isAB) {    
         callback(new Error("必填"));
       } else {
         callback();
       }
+     
     };
     const validateWaterAmountOverdraft = (rule, value, callback) => {
-      if (this.newUser.waterAmountOverdraft=='' && this.user.WaterMeterTypeId == 1104&&this.newUser.isAB!==this.isAB) {      
+      if (this.newUser.waterAmountOverdraft==='' && this.user.WaterMeterTypeId == 1104&&this.newUser.isAB!==this.isAB) {      
         callback(new Error("必填"));
       } else {
         callback();
       }
+      
     };
     const validateNewWaterMeterNo = (rule, value, callback) => {
       if (!this.newUser.newWaterMeterNo && this.user.WaterMeterTypeId !== 1101) {       
