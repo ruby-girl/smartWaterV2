@@ -107,9 +107,7 @@
           >
             <el-option label="用户姓名" value="2"></el-option>
             <el-option label="用户编号" value="1"></el-option>
-            <el-option label="用户电话" value="3"></el-option>
-            <el-option label="用户证件号" value="4"></el-option>
-            <el-option label="用户地址" value="5"></el-option>
+           
           </el-select>
           <el-input
             v-model="selectHead.CustomerQueryValue"
