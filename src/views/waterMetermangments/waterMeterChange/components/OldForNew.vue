@@ -84,7 +84,7 @@
         style="margin-top:10px;"
       >
         <el-form-item label="新水表编号" prop="newWaterMeterNo" v-show="user.WaterMeterTypeId!==1101">
-          <el-input class="left-input" v-model="newUser.newWaterMeterNo"  @keyup.enter.native="getNewWaterType(user.WaterMeterTypeId,newUser.newWaterMeterNo)"></el-input>
+          <el-input class="left-input" v-model="newUser.newWaterMeterNo"  @blur="getNewWaterType(user.WaterMeterTypeId,newUser.newWaterMeterNo)"></el-input>
         </el-form-item>
         <el-form-item label="新水表编号" v-show="user.WaterMeterTypeId==1101">
           <el-input class="left-input" v-model="newUser.newWaterMeterNo"></el-input>
@@ -95,18 +95,18 @@
         </el-form-item>
         <!-- 机械表 -->
          <!-- AB版物联网 -->
-        <el-form-item label="报警量" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&newUser.isAB&&newUser.isAB!==isAB">
+        <el-form-item label="报警量" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&newUser.isAB==2&&newUser.isAB!==isAB">
           <el-input class="left-input" v-model="newUser.waterAmountAlarm"></el-input>
         </el-form-item>
-        <el-form-item label="透支量" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&newUser.isAB&&newUser.isAB!==isAB">
+        <el-form-item label="透支量" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&newUser.isAB==2&&newUser.isAB!==isAB">
           <el-input class="left-input" v-model="newUser.waterAmountOverdraft"></el-input>
         </el-form-item>
         <!-- AB版物联网 -->
         <!-- C版物联网 -->
-        <el-form-item label="报警金额" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&!newUser.isAB&&newUser.isAB!==isAB">
+        <el-form-item label="报警金额" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&!newUser.isAB==2&&newUser.isAB!==isAB">
           <el-input class="left-input" @blur="handleInputDelDecimalFloat('waterAmountAlarm',$event)" v-model="newUser.waterAmountAlarm"></el-input>
         </el-form-item>
-        <el-form-item label="透支金额" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&!newUser.isAB&&newUser.isAB!==isAB">
+        <el-form-item label="透支金额" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&!newUser.isAB==2&&newUser.isAB!==isAB">
           <el-input class="left-input" @blur="handleInputDelDecimalFloat('waterAmountOverdraft',$event)" v-model="newUser.waterAmountOverdraft"></el-input>
         </el-form-item>
         <!-- C版物联网 -->
@@ -204,7 +204,7 @@ export default {
       user: {
         WaterMeterTypeId: 1101
       },
-      isAB:true,
+      isAB:0,
       newUser: {
         customerId: "",
         oldRead: "", //读数（机械，远传必填）
@@ -213,7 +213,7 @@ export default {
         newRead: "", //新水表读数（机械表必填
         meterBalance: "", //IC卡表端余额
         remark: "", //备注
-        isAB:false,
+        isAB:1,
         isPage: false, //是否翻页
         waterAmountAlarm:'',//报警量或报警金额（AB—C，C—AB预付费传值
         waterAmountOverdraft:''//透支量或透支金额（AB—C，C—AB预付费传值）
@@ -259,6 +259,7 @@ export default {
       this.getUser();
     },
     getNewWaterType(type,num){//新水表查询水表类型
+    debugger
       if(type==1104){
        this.getWLW(num,'newUser')
       }
@@ -428,8 +429,8 @@ export default {
     //查询物联网为AB版还是C版
     getWLW(Id,isNew){
       GetWLW_ABC_WaterMeterNo({WaterMeterNo:Id}).then(res=>{
-        if(isNew) res.data=== 1104 ? this.newUser.isAB = true: this.newUser.isAB = false //1104 AB版本 05 C版本
-        else res.data=== 1104 ? this.isAB = true: this.isAB = false //1104 AB版本 05 C版本
+        if(isNew) res.data=== 1104 ? this.newUser.isAB = 2: this.newUser.isAB = 1 //1104 AB版本 05 C版本
+        else res.data=== 1104 ? this.isAB = 2: this.isAB = 1 //1104 AB版本 05 C版本
       })
     },
     handleInputDelDecimalFloat(model, e){
