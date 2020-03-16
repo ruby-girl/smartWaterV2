@@ -308,14 +308,14 @@ export default {
 
     //升级
     async updateWater() {
-      if (!this.userInfo.Id) {
-        this.message({
-          message: "请查询出用户后再升级",
-          type: "warning"
-        });
-        return;
-      }
       if (this.userInfo.WaterMeterTypeName != "IC卡表水表") {
+        if (!this.UpgradeWaterNeedInfo.WaterMeterId) {
+          this.$message({
+            message: "请查询出用户后再升级",
+            type: "warning"
+          });
+          return;
+        }
         checkResidueMon({ customerId: this.userInfo.Id }).then(res => {
           checkMeterRecord({ customerId: this.userInfo.Id }).then(res => {
             this.updateApi();
@@ -340,8 +340,7 @@ export default {
         apiData.WaterType = "1105";
       }
       UpgradeInfo({
-        UpgradeWaterNeedInfo: apiData,
-        balance: this.UpgradeWaterNeedInfo.NewWaterBalance
+        UpgradeWaterNeedInfo: apiData
       }).then(res => {
         if (res.code == 0) {
           this.$message({
@@ -502,7 +501,7 @@ export default {
     getUser(info) {
       let postData = {};
       if (info) {
-       if (info.CardType !== 1) {
+        if (info.CardType !== 1) {
           this.$message({
             message: "该卡是未刷卡状态，请刷卡后再进行操作",
             type: "warning"
