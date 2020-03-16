@@ -103,10 +103,10 @@
         </el-form-item>
         <!-- AB版物联网 -->
         <!-- C版物联网 -->
-        <el-form-item label="报警金额" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&!newUser.isAB==2&&newUser.isAB!==isAB">
+        <el-form-item label="报警金额" prop="waterAmountAlarm" v-show="user.WaterMeterTypeId==1104&&newUser.isAB!==2&&newUser.isAB!==isAB">
           <el-input class="left-input" @blur="handleInputDelDecimalFloat('waterAmountAlarm',$event)" v-model="newUser.waterAmountAlarm"></el-input>
         </el-form-item>
-        <el-form-item label="透支金额" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&!newUser.isAB==2&&newUser.isAB!==isAB">
+        <el-form-item label="透支金额" prop="waterAmountOverdraft" v-show="user.WaterMeterTypeId==1104&&newUser.isAB!==2&&newUser.isAB!==isAB">
           <el-input class="left-input" @blur="handleInputDelDecimalFloat('waterAmountOverdraft',$event)" v-model="newUser.waterAmountOverdraft"></el-input>
         </el-form-item>
         <!-- C版物联网 -->
@@ -259,7 +259,6 @@ export default {
       this.getUser();
     },
     getNewWaterType(type,num){//新水表查询水表类型
-    debugger
       if(type==1104){
        this.getWLW(num,'newUser')
       }
