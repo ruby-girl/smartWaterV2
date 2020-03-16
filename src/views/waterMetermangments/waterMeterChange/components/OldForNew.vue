@@ -328,7 +328,7 @@ export default {
         })  
     },
     handleFilter(val) {
-      if (res.data[0].CustomerState != 1301) {
+      if (val.CustomerState != 1301) {
         this.$message({
           message: "请注意该用户状态不正常！",
           type: "error",
