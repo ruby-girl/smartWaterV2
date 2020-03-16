@@ -24,7 +24,7 @@ import IcWater from "./conmponents/ICWater";
 import RemoterWater from "./conmponents/RemoterWater";
 import { getDictionaryOption } from "@/utils/permission"; //获取字典项
 export default {
-  name: "WaterMeterSetting",
+  name: "waterMeterSetting",
   components: { MechanicalWater, InternetWater, IcWater, RemoterWater },
   data() {
     return {

@@ -336,7 +336,7 @@ export default {
     //升级请求
     updateApi() {
       let apiData = Object.assign({}, this.UpgradeWaterNeedInfo);
-      if (this.WMType&&this.UpgradeWaterNeedInfo.WaterType=="1104") {
+      if (this.WMType && this.UpgradeWaterNeedInfo.WaterType == "1104") {
         apiData.WaterType = "1105";
       }
       UpgradeInfo({
@@ -502,6 +502,13 @@ export default {
     getUser(info) {
       let postData = {};
       if (info) {
+       if (info.CardType !== 1) {
+          this.$message({
+            message: "该卡是未刷卡状态，请刷卡后再进行操作",
+            type: "warning"
+          });
+          return false;
+        }
         postData.CustomerQueryValue = info.UserCardCredited.CardNo;
         postData.CustomerQueryType = "8";
         postData.page = 1;
@@ -517,16 +524,6 @@ export default {
               });
               return false;
             } else {
-              if (
-                res.data[0].WaterMeterTypeName == "IC卡表水表" &&
-                info.CardType != 1
-              ) {
-                this.$message({
-                  message: "该卡是未刷卡状态，请刷卡后再进行操作",
-                  type: "warning"
-                });
-                return false;
-              }
               this.userInfo = res.data[0];
               this.UpgradeWaterNeedInfo.NewWaterBalance = this.userInfo.Balance;
               this.UpgradeWaterNeedInfo.CustomerId = this.userInfo.Id;
