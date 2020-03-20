@@ -1,0 +1,34 @@
+<template>
+  <el-table
+    :data="moreData"
+    height="360"
+    border
+    style="width: 100%;"
+    :header-cell-style="{'background-color': '#F0F2F5'}"
+  >
+    <el-table-column type="index" fixed="left" label="序号" width="60" align="center"></el-table-column>
+    <el-table-column align="center" prop="WaterAmountAlarm" label="报警金额(元)" width="150"></el-table-column>
+    <el-table-column prop="WaterAmountOverdraft" align="center" label="透支金额(元)" width="150"></el-table-column>
+    <el-table-column prop="TotalPositiveWater" align="center" label="正向累计水量(吨)" width="150"></el-table-column>
+    <el-table-column prop="TotalReverseWater" align="center" label="反向累计水量(吨)" width="150"></el-table-column>
+    <el-table-column prop="TotalBuyMoney" align="center" label="总购金额(元)" width="150"></el-table-column>
+    <el-table-column prop="TotalUsedMoney" align="center" label="总用金额(元)" width="150"></el-table-column>
+    <el-table-column prop="Balance" align="center" label="剩余金额(元)" width="150"></el-table-column>
+  </el-table>
+</template>
+<script>
+export default {
+  name: "WLWWaterMeterHis",
+  props: {
+    moreData: {
+      default: [],
+      type: Array
+    }
+  }
+};
+</script>
+<style scoped>
+.cell {
+  text-align: center;
+}
+</style>

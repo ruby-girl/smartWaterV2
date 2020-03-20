@@ -1,0 +1,226 @@
+// cover some element-ui styles
+@import './variables.scss';
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+.cell {
+  .el-tag {
+    margin-right: 0px;
+  }
+}
+
+.small-padding {
+  .cell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.fixed-width {
+  .el-button--mini {
+    padding: 5px 12px;
+    width: 60px;
+  }
+}
+.el-button--mini{
+  padding: 5px 12px;
+}
+.status-col {
+  .cell {
+    padding: 0 10px;
+    text-align: center;
+
+    .el-tag {
+      margin-right: 0px;
+    }
+  }
+}
+
+// to fixed https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+}
+// 没有padding的弹窗
+.el-dialog.nopadding .el-dialog__body{
+  padding:0 !important;
+}
+// refine element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+// fix date-picker ui bug in filter-item
+.el-range-editor.el-input__inner {
+  display: inline-flex !important;
+}
+// 警告提示框样式
+.el-message-box__wrapper .warningBox{
+  .el-message-box__content{
+    padding-top:40px;
+    padding-bottom:40px;
+    font-size: 16px;
+  }
+  .el-message-box__header{
+    background-color: $warn;
+    .el-message-box__title{
+      color:#fff !important;
+      font-size: 14px;
+    }
+  }
+}
+.el-message-box{
+ border:none;
+}
+.el-message-box__btns{
+  text-align: center;
+}
+// 消息提示样式
+.el-message{
+  top:20%;
+  padding: 18px 15px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+ .el-message__content,.el-message__icon{
+  font-size: 18px !important;
+ }
+}
+// 通用弹出框样式
+.el-dialog__wrapper .el-dialog{
+  .el-dialog__header{
+    background-color: $green;
+    padding-top:10px!important;
+    text-align: left;
+    .el-dialog__headerbtn{
+      top:12px;
+      .el-dialog__close{
+        color:#fff;
+      }
+    }
+  }
+  .el-dialog__title{
+    color:#fff !important;
+    font-size: 14px !important;
+  }
+  .el-dialog__footer{
+    text-align: center;
+  }
+}
+.el-button--mini span,.el-button--small span{
+  font-size: 14px !important;
+}
+.el-select__tags .el-tag .el-select__tags-text{
+ color:#8A9299;
+}
+
+// 统一设置输入框 长度 高度
+.el-form-item__content .el-input__inner{
+  padding-right:10px;
+  width:180px;
+  height:28px;
+  line-height: 28px;
+}
+.el-form-item--small.el-form-item{
+  margin-bottom: 10px;
+}
+// 时间选择器宽度
+.el-form-item__content .el-date-editor--daterange{
+  width:290px !important;
+}
+//年月
+.el-form-item__content .el-date-editor--monthrange{
+  width: 290px!important;
+}
+// 含时分秒
+.el-date-editor--datetimerange{
+  width:350px !important;
+}
+.short-select .el-input__inner{
+  width:100% !important;
+}
+.el-form-item--small .el-form-item__content,.el-form-item--small .el-form-item__label,.el-input--small .el-input__icon,.el-form-item--medium .el-form-item__content,.el-form-item--medium .el-form-item__label,.el-input--medium .el-input__icon{
+  line-height: 28px;
+}
+.el-form-item__label{
+  padding: 0 5px 0 0 !important;
+}
+.el-submenu__title{
+  height:40px !important;
+  line-height: 40px !important;
+}
+.el-table th > .cell{
+  font-weight: 400;
+  color:#46494C;
+}
+tbody .hover-row>td{
+  background-color: #DAF2EC !important;
+}
+.el-table--medium th{
+  padding:0;
+}
+.el-pagination__editor.el-input .el-input__inner{
+  line-height: 28px !important;
+}
+.el-table th{
+  text-align: center;
+}
+//表格选中样式
+.el-table__body tr.current-row>td{
+  background: #E6ECFA;
+}
+.el-table--medium td {
+  padding: 3px 0 !important;
+}
+// 按钮圆角样式
+.el-button--mini.is-round {
+  padding: 5px 8px;
+}
+// label离input的距离
+.head-search-form{
+  /deep/ .el-form-item .el-form-item__label{
+padding-right: 5px !important;
+}
+}
+.el-table th > .cell{
+  line-height: 34px;
+}
+.el-checkbox__input.is-disabled .el-checkbox__inner{
+  background: #b4bcc1 !important;
+}
+.section-full-container{
+  /deep/ .no-head .el-dialog__header {  
+     padding:0 20px !important;
+  }
+  /deep/ .no-head .el-dialog__header .el-dialog__headerbtn{
+    top:-20px;
+    right: -30px;
+    font-size: 30px;
+  }
+}
